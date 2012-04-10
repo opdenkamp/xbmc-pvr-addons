@@ -1,0 +1,26 @@
+WARNING: this is work in progress. Don't try to use this unless you know what you're doing.
+
+=============================
+            Linux
+=============================
+
+Start by executing:
+autoreconf -vif
+
+To install add-ons into /path/to/XBMC:
+./configure --prefix=/path/to/XBMC
+make install
+
+To build all PVR add-ons as .zip archives:
+./configure
+make zip
+
+=============================
+            OS-X
+=============================
+TODO
+
+=============================
+           Windows
+=============================
+TODO

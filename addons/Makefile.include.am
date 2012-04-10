@@ -1,0 +1,35 @@
+#
+# Makefile include for XBMC PVR add-ons
+#
+
+INCLUDES        = -I. -I$(abs_top_srcdir)/xbmc -I$(abs_top_srcdir)/lib @HOST_INCLUDES@
+WARNINGS        = -Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses
+DEFINES         = -D_LINUX -DUSE_DEMUX -D__STDC_CONSTANT_MACROS
+AM_CXXFLAGS     = -g -O2 -fPIC $(WARNINGS) $(DEFINES) @HOST_CXXFLAGS@
+LIBDIR          = @abs_top_srcdir@/addons/$(ADDONNAME)/addon
+LIB             = @abs_top_srcdir@/addons/$(ADDONNAME)/addon/$(ADDONBINNAME).pvr
+
+clean:
+	-rm -r -f $(LIB) $(ADDONBINNAME).pvr @abs_top_srcdir@/addons/$(ADDONNAME).@OS@-@ARCHITECTURE@.zip @abs_top_srcdir@/addons/.build/$(ADDONNAME) *.so *.lo *.o *.la *.a *.P *~
+
+release: $(lib_LTLIBRARIES)
+	cp -f -v .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
+	$(STRIP) -x $(ADDONBINNAME).pvr
+
+debug: $(lib_LTLIBRARIES)
+	cp -f -v .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
+
+$(LIB): @BUILD_TYPE@
+	cp -f -v $(ADDONBINNAME).pvr $(LIB)
+
+zip: $(LIB)
+	mkdir -p @abs_top_srcdir@/addons/.build
+	cp -r -f -v @abs_top_srcdir@/addons/$(ADDONNAME)/addon @abs_top_srcdir@/addons/.build/$(ADDONNAME)
+	cd @abs_top_srcdir@/addons/.build ; zip -9 -r @abs_top_srcdir@/addons/$(ADDONNAME)-@OS@-@ARCHITECTURE@.zip $(ADDONNAME)
+
+install: $(LIB)
+	mkdir -p $(prefix)
+	cp -r -f -v @abs_top_srcdir@/addons/$(ADDONNAME)/addon $(prefix)/$(ADDONNAME)
+
+all: $(LIB)
+

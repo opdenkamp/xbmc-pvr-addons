@@ -9,6 +9,7 @@ config.status
 config.guess
 config.sub
 configure
+configure.lineno
 depcomp
 install-sh
 libtool

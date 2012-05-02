@@ -293,13 +293,11 @@ void ADDON_FreeSettings()
 
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
-  pCapabilities->bSupportsTimeshift          = false;
   pCapabilities->bSupportsEPG                = true;
   pCapabilities->bSupportsRecordings         = true;
   pCapabilities->bSupportsTimers             = true;
   pCapabilities->bSupportsTV                 = true;
   pCapabilities->bSupportsRadio              = true;
-  pCapabilities->bSupportsChannelSettings    = false;
   pCapabilities->bSupportsChannelGroups      = true;
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = true;

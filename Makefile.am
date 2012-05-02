@@ -10,9 +10,9 @@ install:
 
 sync:
 	cp -f ../xbmc/cores/dvdplayer/DVDDemuxers/DVDDemuxPacket.h xbmc/DVDDemuxPacket.h
-	cp -f ../addons/library.xbmc.addon/libXBMC_addon.h         xbmc/libXBMC_addon.h
-	cp -f ../addons/library.xbmc.gui/libXBMC_gui.h             xbmc/libXBMC_gui.h
-	cp -f ../addons/library.xbmc.pvr/libXBMC_pvr.h             xbmc/libXBMC_pvr.h
+	cat ../addons/library.xbmc.addon/libXBMC_addon.h | sed 's/#include "..\/library.xbmc.addon\/libXBMC_addon.h"/#include "libXBMC_addon.h"/' > xbmc/libXBMC_addon.h
+	cat ../addons/library.xbmc.gui/libXBMC_gui.h | sed 's/#include "..\/library.xbmc.addon\/libXBMC_addon.h"/#include "libXBMC_addon.h"/' > xbmc/libXBMC_gui.h
+	cat ../addons/library.xbmc.pvr/libXBMC_pvr.h | sed 's/#include "..\/library.xbmc.addon\/libXBMC_addon.h"/#include "libXBMC_addon.h"/' > xbmc/libXBMC_pvr.h
 	cp -f ../xbmc/addons/include/xbmc_addon_cpp_dll.h          xbmc/xbmc_addon_cpp_dll.h
 	cp -f ../xbmc/addons/include/xbmc_addon_dll.h              xbmc/xbmc_addon_dll.h
 	cp -f ../xbmc/addons/include/xbmc_addon_types.h            xbmc/xbmc_addon_types.h

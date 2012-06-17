@@ -288,12 +288,8 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsRecordings      = true;
   pCapabilities->bSupportsTimers          = true;
   pCapabilities->bSupportsChannelGroups   = true;
-  pCapabilities->bSupportsChannelScan     = false;
   pCapabilities->bHandlesInputStream      = true;
   pCapabilities->bHandlesDemuxing         = true;
-  pCapabilities->bSupportsLastPlayedPosition = false;
-  pCapabilities->bSupportsRecordingFolders   = false;
-  pCapabilities->bSupportsRecordingPlayCount = false;
 
   return PVR_ERROR_NO_ERROR;
 }

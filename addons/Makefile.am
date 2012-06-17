@@ -1,5 +1,4 @@
-SUBDIRS = pvr.hts \
-          pvr.vdr.vnsi
+SUBDIRS = pvr.hts
 
 clean:
 	-rm -f *.zip

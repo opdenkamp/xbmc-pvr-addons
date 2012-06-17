@@ -31,8 +31,4 @@
  *     http://www.pulse-eight.net/
  */
 
-#if (defined(_WIN32) || defined(_WIN64))
-#include "windows/os-types.h"
-#else
-#include "posix/os-types.h"
-#endif
+#define DELETE_AND_NULL(t) while (t) { delete (t); (t) = NULL; }

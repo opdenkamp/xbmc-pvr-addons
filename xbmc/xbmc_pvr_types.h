@@ -34,6 +34,7 @@
 #endif
 #endif
 #include <string.h>
+#include <time.h>
 
 #include "xbmc_addon_types.h"
 
@@ -122,6 +123,14 @@ extern "C" {
     PVR_TIMER_STATE_CANCELLED = 5  /*!< @brief the timer was scheduled, but was cancelled */
   } PVR_TIMER_STATE;
 
+  typedef enum
+  {
+    PVR_UPDATE_RESPONSE = 0,
+    PVR_UPDATE_NEW      = 1,
+    PVR_UPDATE_REPLACE  = 2,
+    PVR_UPDATE_DELETE   = 3
+  } PVR_UPDATE_TYPE;
+
   /*!
    * @brief Properties passed to the Create() method of an add-on.
    */
@@ -129,6 +138,7 @@ extern "C" {
   {
     const char *strUserPath;           /*!< @brief path to the user profile */
     const char *strClientPath;         /*!< @brief path to this add-on */
+    void *      callbackAddress;       /*!< @brief address to the CPVRClient for this add-on */
   } PVR_PROPERTIES;
 
   /*!
@@ -146,6 +156,8 @@ extern "C" {
     bool bHandlesInputStream;           /*!< @brief (optional) true if this add-on provides an input stream. false if XBMC handles the stream. */
     bool bHandlesDemuxing;              /*!< @brief (optional) true if this add-on demultiplexes packets. */
     bool bSupportsRecordingFolders;     /*!< @brief (optional) true if the backend supports timers / recordings in folders. */
+    bool bSupportsRecordingPlayCount;   /*!< @brief (optional) true if the backend supports play count for recordings. */
+    bool bSupportsLastPlayedPosition;   /*!< @brief (optional) true if the backend supports store/retrieve of last played position for recordings. */
   } ATTRIBUTE_PACKED PVR_ADDON_CAPABILITIES;
 
   /*!
@@ -228,7 +240,7 @@ extern "C" {
   typedef struct PVR_CHANNEL_GROUP_MEMBER
   {
     const char * strGroupName;         /*!< @brief (required) name of the channel group to add the channel to */
-    unsigned int iChannelUniqueId;     /*!< @brief (required) unique id of the member */
+    unsigned int iChannelUniqueId;     /*!< @brief (required) unique id of the channel */
     unsigned int iChannelNumber;       /*!< @brief (optional) channel number within the group */
   } ATTRIBUTE_PACKED PVR_CHANNEL_GROUP_MEMBER;
 
@@ -238,7 +250,7 @@ extern "C" {
   typedef struct EPG_TAG {
     unsigned int  iUniqueBroadcastId;  /*!< @brief (required) identifier for this event */
     const char *  strTitle;            /*!< @brief (required) this event's title */
-    unsigned int  iChannelNumber;      /*!< @brief (required) the number of the channel this event occurs on */
+    unsigned int  iChannelUniqueId;    /*!< @brief (required) unique id of the channel */
     time_t        startTime;           /*!< @brief (required) start time in UTC */
     time_t        endTime;             /*!< @brief (required) end time in UTC */
     const char *  strPlotOutline;      /*!< @brief (optional) plot outline */
@@ -298,6 +310,7 @@ extern "C" {
     int           iLifetime;            /*!< @brief (optional) life time in days of this recording */
     int           iGenreType;           /*!< @brief (optional) genre type */
     int           iGenreSubType;        /*!< @brief (optional) genre sub type */
+    bool          iPlayCount;           /*!< @brief (optional) play count of this recording on the client */
   } ATTRIBUTE_PACKED PVR_RECORDING;
 
   /*!
@@ -346,6 +359,9 @@ extern "C" {
     PVR_ERROR    (__cdecl* GetRecordings)(ADDON_HANDLE handle);
     PVR_ERROR    (__cdecl* DeleteRecording)(const PVR_RECORDING &recording);
     PVR_ERROR    (__cdecl* RenameRecording)(const PVR_RECORDING &recording);
+    PVR_ERROR    (__cdecl* SetRecordingPlayCount)(const PVR_RECORDING &recording, int count);
+    PVR_ERROR    (__cdecl* SetRecordingLastPlayedPosition)(const PVR_RECORDING &recording, int lastplayedposition);
+    int          (__cdecl* GetRecordingLastPlayedPosition)(const PVR_RECORDING &recording);
     //@}
 
     /** @name PVR timer methods */

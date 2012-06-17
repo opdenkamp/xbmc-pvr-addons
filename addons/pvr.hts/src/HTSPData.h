@@ -90,6 +90,12 @@ private:
   };
   typedef std::map<int, SMessage> SMessages;
 
+  void TransferChannel(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const SChannel &channel);
+  void TransferChannelGroup(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const STag &channelGroup);
+  void TransferTimer(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const SRecording &timer);
+  void TransferRecording(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const SRecording &recording);
+  void TransferEvent(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const SEvent &event);
+
   SChannels GetChannels();
   SChannels GetChannels(int tag);
   SChannels GetChannels(STag &tag);

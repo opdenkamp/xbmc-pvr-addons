@@ -203,29 +203,140 @@ unsigned int CHTSPData::GetNumChannels()
   return GetChannels().size();
 }
 
+void CHTSPData::TransferChannel(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const SChannel &channel)
+{
+  PVR_CHANNEL tag;
+  memset(&tag, 0 , sizeof(PVR_CHANNEL));
+
+  tag.iUniqueId         = channel.id;
+  tag.bIsRadio          = channel.radio;
+  tag.iChannelNumber    = channel.num;
+  tag.strChannelName    = channel.name.c_str();
+  tag.strInputFormat    = ""; // unused
+  tag.strStreamURL      = ""; // unused
+  tag.iEncryptionSystem = channel.caid;
+  tag.strIconPath       = channel.icon.c_str();
+  tag.bIsHidden         = false;
+
+  PVR->TransferChannelEntry(handle, updateType, &tag);
+}
+
+void CHTSPData::TransferChannelGroup(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const STag &channelGroup)
+{
+  PVR_CHANNEL_GROUP tag;
+  memset(&tag, 0 , sizeof(PVR_CHANNEL_GROUP));
+
+  tag.bIsRadio     = false;
+  tag.strGroupName = channelGroup.name.c_str();
+
+  PVR->TransferChannelGroup(handle, updateType, &tag);
+}
+
+void CHTSPData::TransferTimer(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const SRecording &recording)
+{
+  PVR_TIMER tag;
+  memset(&tag, 0, sizeof(PVR_TIMER));
+
+  tag.iClientIndex      = recording.id;
+  tag.iClientChannelUid = recording.channel;
+  tag.startTime         = recording.start;
+  tag.endTime           = recording.stop;
+  tag.strTitle          = recording.title.c_str();
+  tag.strDirectory      = "/";   // unused
+  tag.strSummary        = recording.description.c_str();
+  tag.state             = (PVR_TIMER_STATE) recording.state;
+  tag.iPriority         = 0;     // unused
+  tag.iLifetime         = 0;     // unused
+  tag.bIsRepeating      = false; // unused
+  tag.firstDay          = 0;     // unused
+  tag.iWeekdays         = 0;     // unused
+  tag.iEpgUid           = 0;     // unused
+  tag.iMarginStart      = 0;     // unused
+  tag.iMarginEnd        = 0;     // unused
+  tag.iGenreType        = 0;     // unused
+  tag.iGenreSubType     = 0;     // unused
+
+  PVR->TransferTimerEntry(handle, updateType, &tag);
+}
+
+void CHTSPData::TransferRecording(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const SRecording &recording)
+{
+  PVR_RECORDING tag;
+  memset(&tag, 0, sizeof(PVR_RECORDING));
+
+  CStdString strStreamURL = "http://";
+  CStdString strRecordingId;
+  CStdString strChannelName = "";
+
+  /* lock */
+  if (g_strUsername != "")
+  {
+    strStreamURL += g_strUsername;
+    if (g_strPassword != "")
+    {
+      strStreamURL += ":";
+      strStreamURL += g_strPassword;
+    }
+    strStreamURL += "@";
+  }
+  strStreamURL.Format("%s%s:%i/dvrfile/%i", strStreamURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, recording.id);
+
+  strRecordingId.Format("%i", recording.id);
+
+  tag.strRecordingId = strRecordingId.c_str();
+  tag.strTitle       = recording.title.c_str();
+  tag.strStreamURL   = strStreamURL.c_str();
+  tag.strDirectory   = "/";
+  tag.strPlotOutline = "";
+  tag.strPlot        = recording.description.c_str();
+  tag.strChannelName = strChannelName.c_str();
+  tag.recordingTime  = recording.start;
+  tag.iDuration      = recording.stop - recording.start;
+  tag.iPriority      = 0;
+  tag.iLifetime      = 0;
+  tag.iGenreType     = 0;
+  tag.iGenreSubType  = 0;
+
+  PVR->TransferRecordingEntry(handle, updateType, &tag);
+}
+
+void CHTSPData::TransferEvent(ADDON_HANDLE handle, const PVR_UPDATE_TYPE updateType, const SEvent &event)
+{
+  EPG_TAG broadcast;
+  memset(&broadcast, 0, sizeof(EPG_TAG));
+
+  broadcast.iUniqueBroadcastId  = event.id;
+  broadcast.strTitle            = event.title.c_str();
+  broadcast.iChannelUniqueId    = event.chan_id;
+  broadcast.startTime           = event.start;
+  broadcast.endTime             = event.stop;
+  broadcast.strPlotOutline      = ""; // unused
+  broadcast.strPlot             = event.descs.c_str();
+  broadcast.strIconPath         = ""; // unused
+  broadcast.iGenreType          = (event.content & 0x0F) << 4;
+  broadcast.iGenreSubType       = event.content & 0xF0;
+  broadcast.strGenreDescription = "";
+  broadcast.firstAired          = 0;  // unused
+  broadcast.iParentalRating     = 0;  // unused
+  broadcast.iStarRating         = 0;  // unused
+  broadcast.bNotify             = false;
+  broadcast.iSeriesNumber       = 0;  // unused
+  broadcast.iEpisodeNumber      = 0;  // unused
+  broadcast.iEpisodePartNumber  = 0;  // unused
+  broadcast.strEpisodeName      = ""; // unused
+
+  PVR->TransferEpgEntry(handle, PVR_UPDATE_RESPONSE, &broadcast);
+}
+
 PVR_ERROR CHTSPData::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
   SChannels channels = GetChannels();
   for(SChannels::iterator it = channels.begin(); it != channels.end(); ++it)
   {
-    SChannel& channel = it->second;
-    if(bRadio != channel.radio)
+    if(bRadio != it->second.radio)
       continue;
 
-    PVR_CHANNEL tag;
-    memset(&tag, 0 , sizeof(PVR_CHANNEL));
-
-    tag.iUniqueId         = channel.id;
-    tag.bIsRadio          = channel.radio;
-    tag.iChannelNumber    = channel.num;
-    tag.strChannelName    = channel.name.c_str();
-    tag.strInputFormat    = ""; // unused
-    tag.strStreamURL      = ""; // unused
-    tag.iEncryptionSystem = channel.caid;
-    tag.strIconPath       = channel.icon.c_str();
-    tag.bIsHidden         = false;
-
-    PVR->TransferChannelEntry(handle, &tag);
+    TransferChannel(handle, PVR_UPDATE_RESPONSE, it->second);
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -250,30 +361,10 @@ PVR_ERROR CHTSPData::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &channel, tim
       PVR_ERROR result = GetEvent(ev, ev.id);
       if (result == PVR_ERROR_NO_ERROR)
       {
-        EPG_TAG broadcast;
-        memset(&broadcast, 0, sizeof(EPG_TAG));
+        if (ev.chan_id < 0)
+          ev.chan_id = channel.iUniqueId;
 
-        broadcast.iUniqueBroadcastId  = ev.id;
-        broadcast.strTitle            = ev.title.c_str();
-        broadcast.iChannelNumber      = ev.chan_id >= 0 ? ev.chan_id : channel.iUniqueId;
-        broadcast.startTime           = ev.start;
-        broadcast.endTime             = ev.stop;
-        broadcast.strPlotOutline      = ""; // unused
-        broadcast.strPlot             = ev.descs.c_str();
-        broadcast.strIconPath         = ""; // unused
-        broadcast.iGenreType          = (ev.content & 0x0F) << 4;
-        broadcast.iGenreSubType       = ev.content & 0xF0;
-        broadcast.strGenreDescription = "";
-        broadcast.firstAired          = 0;  // unused
-        broadcast.iParentalRating     = 0;  // unused
-        broadcast.iStarRating         = 0;  // unused
-        broadcast.bNotify             = false;
-        broadcast.iSeriesNumber       = 0;  // unused
-        broadcast.iEpisodeNumber      = 0;  // unused
-        broadcast.iEpisodePartNumber  = 0;  // unused
-        broadcast.strEpisodeName      = ""; // unused
-
-        PVR->TransferEpgEntry(handle, &broadcast);
+        TransferEvent(handle, PVR_UPDATE_RESPONSE, ev);
 
         ev.id = ev.next;
         stop = ev.stop;
@@ -368,7 +459,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
     tag.iGenreType     = 0;
     tag.iGenreSubType  = 0;
 
-    PVR->TransferRecordingEntry(handle, &tag);
+    PVR->TransferRecordingEntry(handle, PVR_UPDATE_RESPONSE, &tag);
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -421,7 +512,7 @@ PVR_ERROR CHTSPData::GetChannelGroups(ADDON_HANDLE handle)
     tag.bIsRadio     = false;
     tag.strGroupName = m_tags[iTagPtr].name.c_str();
 
-    PVR->TransferChannelGroup(handle, &tag);
+    PVR->TransferChannelGroup(handle, PVR_UPDATE_RESPONSE, &tag);
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -454,7 +545,7 @@ PVR_ERROR CHTSPData::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANN
       XBMC->Log(LOG_DEBUG, "%s - add channel %s (%d) to group '%s' channel number %d",
           __FUNCTION__, channel.name.c_str(), tag.iChannelUniqueId, group.strGroupName, channel.num);
 
-      PVR->TransferChannelGroupMember(handle, &tag);
+      PVR->TransferChannelGroupMember(handle, PVR_UPDATE_RESPONSE, &tag);
     }
   }
 
@@ -466,33 +557,7 @@ PVR_ERROR CHTSPData::GetTimers(ADDON_HANDLE handle)
   SRecordings recordings = GetDVREntries(false, true);
 
   for(SRecordings::const_iterator it = recordings.begin(); it != recordings.end(); ++it)
-  {
-    SRecording recording = it->second;
-
-    PVR_TIMER tag;
-    memset(&tag, 0, sizeof(PVR_TIMER));
-
-    tag.iClientIndex      = recording.id;
-    tag.iClientChannelUid = recording.channel;
-    tag.startTime         = recording.start;
-    tag.endTime           = recording.stop;
-    tag.strTitle          = recording.title.c_str();
-    tag.strDirectory      = "/";   // unused
-    tag.strSummary        = recording.description.c_str();
-    tag.state             = (PVR_TIMER_STATE) recording.state;
-    tag.iPriority         = 0;     // unused
-    tag.iLifetime         = 0;     // unused
-    tag.bIsRepeating      = false; // unused
-    tag.firstDay          = 0;     // unused
-    tag.iWeekdays         = 0;     // unused
-    tag.iEpgUid           = 0;     // unused
-    tag.iMarginStart      = 0;     // unused
-    tag.iMarginEnd        = 0;     // unused
-    tag.iGenreType        = 0;     // unused
-    tag.iGenreSubType     = 0;     // unused
-
-    PVR->TransferTimerEntry(handle, &tag);
-  }
+    TransferTimer(handle, PVR_UPDATE_RESPONSE, it->second);
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -830,9 +895,13 @@ void CHTSPData::ParseChannelRemove(htsmsg_t* msg)
   }
   XBMC->Log(LOG_DEBUG, "%s - id:%u", __FUNCTION__, id);
 
-  m_channels.erase(id);
+  SChannels::iterator it = m_channels.find(id);
+  if (it != m_channels.end())
+  {
+    TransferChannel(NULL, PVR_UPDATE_DELETE, it->second);
 
-  PVR->TriggerChannelUpdate();
+    m_channels.erase(it);
+  }
 }
 
 void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
@@ -915,7 +984,7 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
       __FUNCTION__, iChannelId, strName ? strName : "(null)", strIconPath ? strIconPath : "(null)", iEventId);
 
   if (bChanged)
-    PVR->TriggerChannelUpdate();
+    TransferChannel(NULL, PVR_UPDATE_DELETE, channel);
 }
 
 void CHTSPData::ParseDVREntryDelete(htsmsg_t* msg)
@@ -931,10 +1000,14 @@ void CHTSPData::ParseDVREntryDelete(htsmsg_t* msg)
 
   XBMC->Log(LOG_DEBUG, "%s - Recording %i was deleted", __FUNCTION__, id);
 
-  m_recordings.erase(id);
+  SRecordings::iterator it = m_recordings.find(id);
+  if (it != m_recordings.end())
+  {
+    TransferTimer(NULL, PVR_UPDATE_DELETE, it->second);
+    TransferRecording(NULL, PVR_UPDATE_DELETE, it->second);
 
-  PVR->TriggerTimerUpdate();
-  PVR->TriggerRecordingUpdate();
+    m_recordings.erase(id);
+  }
 }
 
 void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
@@ -992,10 +1065,10 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
 
   m_recordings[recording.id] = recording;
 
-  PVR->TriggerTimerUpdate();
+  TransferTimer(NULL, PVR_UPDATE_REPLACE, recording);
 
   if (recording.state == ST_RECORDING)
-   PVR->TriggerRecordingUpdate();
+    TransferRecording(NULL, PVR_UPDATE_REPLACE, recording);
 }
 
 bool CHTSPData::ParseEvent(htsmsg_t* msg, uint32_t id, SEvent &event)
@@ -1071,9 +1144,13 @@ void CHTSPData::ParseTagRemove(htsmsg_t* msg)
   }
   XBMC->Log(LOG_DEBUG, "%s - id:%u", __FUNCTION__, id);
 
-  m_tags.erase(id);
+  STags::iterator it = m_tags.find(id);
+  if (it != m_tags.end())
+  {
+    TransferChannelGroup(NULL, PVR_UPDATE_DELETE, it->second);
 
-  PVR->TriggerChannelGroupsUpdate();
+    m_tags.erase(id);
+  }
 }
 
 void CHTSPData::ParseTagUpdate(htsmsg_t* msg)
@@ -1113,5 +1190,5 @@ void CHTSPData::ParseTagUpdate(htsmsg_t* msg)
   XBMC->Log(LOG_DEBUG, "%s - id:%u, name:'%s', icon:'%s'"
       , __FUNCTION__, id, name ? name : "(null)", icon ? icon : "(null)");
 
-  PVR->TriggerChannelGroupsUpdate();
+  TransferChannelGroup(NULL, PVR_UPDATE_REPLACE, tag);
 }

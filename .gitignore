@@ -19,6 +19,7 @@ Makefile.in
 Makefile.include
 Makefile.include.in
 missing
+INSTALL
 
 *.o
 *.a

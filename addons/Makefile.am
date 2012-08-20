@@ -1,4 +1,5 @@
 SUBDIRS = pvr.hts \
+          pvr.mediaportal \
           pvr.vdr.vnsi
 
 clean:

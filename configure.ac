@@ -75,6 +75,7 @@ AC_SUBST(OS)
 AC_OUTPUT([Makefile
            lib/Makefile
            lib/libhts/Makefile
+           lib/tinyxml/Makefile
            addons/Makefile
            addons/pvr.hts/Makefile
            addons/pvr.vdr.vnsi/Makefile])

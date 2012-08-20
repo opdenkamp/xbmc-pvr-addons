@@ -1,4 +1,4 @@
-SUBDIRS = libhts
+SUBDIRS = libhts tinyxml
 
 zip:
 

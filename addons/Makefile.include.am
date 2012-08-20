@@ -13,23 +13,23 @@ clean:
 	-rm -r -f $(LIB) $(ADDONBINNAME).pvr @abs_top_srcdir@/addons/$(ADDONNAME).@OS@-@ARCHITECTURE@.zip @abs_top_srcdir@/addons/.build/$(ADDONNAME) *.so *.lo *.o *.la *.a *.P *~
 
 release: $(lib_LTLIBRARIES)
-	cp -f -v .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
+	cp -f .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
 	$(STRIP) -x $(ADDONBINNAME).pvr
 
 debug: $(lib_LTLIBRARIES)
-	cp -f -v .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
+	cp -f .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
 
 $(LIB): @BUILD_TYPE@
-	cp -f -v $(ADDONBINNAME).pvr $(LIB)
+	cp -f $(ADDONBINNAME).pvr $(LIB)
 
 zip: $(LIB)
 	mkdir -p @abs_top_srcdir@/addons/.build
-	cp -r -f -v @abs_top_srcdir@/addons/$(ADDONNAME)/addon @abs_top_srcdir@/addons/.build/$(ADDONNAME)
+	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon @abs_top_srcdir@/addons/.build/$(ADDONNAME)
 	cd @abs_top_srcdir@/addons/.build ; zip -9 -r @abs_top_srcdir@/addons/$(ADDONNAME)-@OS@-@ARCHITECTURE@.zip $(ADDONNAME)
 
 install: $(LIB)
 	mkdir -p $(prefix)
-	cp -r -f -v @abs_top_srcdir@/addons/$(ADDONNAME)/addon $(prefix)/$(ADDONNAME)
+	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon $(prefix)/$(ADDONNAME)
 
 all: $(LIB)
 

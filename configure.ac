@@ -77,6 +77,7 @@ AC_OUTPUT([Makefile
            lib/libhts/Makefile
            lib/tinyxml/Makefile
            addons/Makefile
+           addons/pvr.demo/Makefile
            addons/pvr.hts/Makefile
            addons/pvr.mediaportal/Makefile
            addons/pvr.vdr.vnsi/Makefile])

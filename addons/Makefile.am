@@ -1,4 +1,5 @@
-SUBDIRS = pvr.hts \
+SUBDIRS = pvr.demo \
+          pvr.hts \
           pvr.mediaportal \
           pvr.vdr.vnsi
 

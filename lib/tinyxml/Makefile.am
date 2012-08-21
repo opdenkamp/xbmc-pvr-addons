@@ -3,7 +3,8 @@ noinst_LTLIBRARIES = libtinyxml.la
 libtinyxml_la_SOURCES = tinystr.cpp \
                     tinyxml.cpp \
                     tinyxmlerror.cpp \
-                    tinyxmlparser.cpp
+                    tinyxmlparser.cpp \
+                    XMLUtils.cpp
 
 $(LIB): libtinyxml.la
 	cp -f .libs/libtinyxml.a .

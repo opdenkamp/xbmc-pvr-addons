@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platform", "platform\platform.vcxproj", "{FE4573F6-A794-4AD3-B37F-49E51F1140E6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.vcxproj", "{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhts", "..\..\lib\libhts\Win32\libhts_2010.vcxproj", "{00700E12-A63B-4E54-B962-4011A90584BD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_tvheadend", "..\..\addons\pvr.hts\project\VS2010Express\pvrclient_tvheadend.vcxproj", "{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_demo", "..\..\addons\pvr.demo\project\VS2010Express\pvrclient_demo.vcxproj", "{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_mediaportaltvserver", "..\..\addons\pvr.mediaportal\project\VS2010Express\XBMC_MediaportalTVserver.vcxproj", "{74C9642E-1988-48DC-8404-11717C355378}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_vdr_vnsi", "..\..\addons\pvr.vdr.vnsi\project\VS2010Express\pvrclient_vdr_vnsi.vcxproj", "{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE4573F6-A794-4AD3-B37F-49E51F1140E6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FE4573F6-A794-4AD3-B37F-49E51F1140E6}.Debug|Win32.Build.0 = Debug|Win32
+		{FE4573F6-A794-4AD3-B37F-49E51F1140E6}.Release|Win32.ActiveCfg = Release|Win32
+		{FE4573F6-A794-4AD3-B37F-49E51F1140E6}.Release|Win32.Build.0 = Release|Win32
+		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.Debug|Win32.Build.0 = Debug|Win32
+		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.Release|Win32.ActiveCfg = Release|Win32
+		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}.Release|Win32.Build.0 = Release|Win32
+		{00700E12-A63B-4E54-B962-4011A90584BD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{00700E12-A63B-4E54-B962-4011A90584BD}.Debug|Win32.Build.0 = Debug|Win32
+		{00700E12-A63B-4E54-B962-4011A90584BD}.Release|Win32.ActiveCfg = Release|Win32
+		{00700E12-A63B-4E54-B962-4011A90584BD}.Release|Win32.Build.0 = Release|Win32
+		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Debug|Win32.Build.0 = Debug|Win32
+		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Release|Win32.ActiveCfg = Release|Win32
+		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Release|Win32.Build.0 = Release|Win32
+		{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}.Debug|Win32.Build.0 = Debug|Win32
+		{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}.Release|Win32.ActiveCfg = Release|Win32
+		{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}.Release|Win32.Build.0 = Release|Win32
+		{74C9642E-1988-48DC-8404-11717C355378}.Debug|Win32.ActiveCfg = Debug|Win32
+		{74C9642E-1988-48DC-8404-11717C355378}.Debug|Win32.Build.0 = Debug|Win32
+		{74C9642E-1988-48DC-8404-11717C355378}.Release|Win32.ActiveCfg = Release|Win32
+		{74C9642E-1988-48DC-8404-11717C355378}.Release|Win32.Build.0 = Release|Win32
+		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Debug|Win32.Build.0 = Debug|Win32
+		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Release|Win32.ActiveCfg = Release|Win32
+		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

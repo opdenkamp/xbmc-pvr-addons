@@ -514,7 +514,7 @@ bool cVNSIChannelScan::OnResponsePacket(cResponsePacket* resp)
   {
     uint32_t strength = resp->extract_U32();
     uint32_t locked   = resp->extract_U32();
-    SetSignal(strength, locked);
+    SetSignal(strength, (locked>0));
   }
   else if (requestID == VNSI_SCANNER_DEVICE)
   {

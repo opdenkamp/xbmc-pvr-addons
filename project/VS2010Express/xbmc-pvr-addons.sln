@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhts", "..\..\lib\libhts\Win32\libhts_2010.vcxproj", "{00700E12-A63B-4E54-B962-4011A90584BD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_tvheadend", "..\..\addons\pvr.hts\project\VS2010Express\pvrclient_tvheadend.vcxproj", "{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{00700E12-A63B-4E54-B962-4011A90584BD}.Debug|Win32.Build.0 = Debug|Win32
 		{00700E12-A63B-4E54-B962-4011A90584BD}.Release|Win32.ActiveCfg = Release|Win32
 		{00700E12-A63B-4E54-B962-4011A90584BD}.Release|Win32.Build.0 = Release|Win32
+		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Debug|Win32.Build.0 = Debug|Win32
+		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Release|Win32.ActiveCfg = Release|Win32
+		{A81DC727-4D0A-4CF8-AC14-021FFF6C1E1C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

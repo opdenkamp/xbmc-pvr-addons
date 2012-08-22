@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_tvheadend", "..\.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_demo", "..\..\addons\pvr.demo\project\VS2010Express\pvrclient_demo.vcxproj", "{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_mediaportaltvserver", "..\..\addons\pvr.mediaportal\project\VS2010Express\XBMC_MediaportalTVserver.vcxproj", "{74C9642E-1988-48DC-8404-11717C355378}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -37,6 +39,10 @@ Global
 		{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}.Debug|Win32.Build.0 = Debug|Win32
 		{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}.Release|Win32.ActiveCfg = Release|Win32
 		{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}.Release|Win32.Build.0 = Release|Win32
+		{74C9642E-1988-48DC-8404-11717C355378}.Debug|Win32.ActiveCfg = Debug|Win32
+		{74C9642E-1988-48DC-8404-11717C355378}.Debug|Win32.Build.0 = Debug|Win32
+		{74C9642E-1988-48DC-8404-11717C355378}.Release|Win32.ActiveCfg = Release|Win32
+		{74C9642E-1988-48DC-8404-11717C355378}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

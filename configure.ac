@@ -58,7 +58,7 @@ case "${host}" in
     OS="darwin"
     HOST_INCLUDES="-I/opt/local/include"
     HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
-    AM_CONDITIONAL(HOST_IS_OSX, true)
+    host_os_osx="yes"
     ;;
   *-freebsd*)
     OS="freebsd"
@@ -72,6 +72,12 @@ AC_SUBST(BUILD_TYPE)
 AC_SUBST(HOST_CXXFLAGS)
 AC_SUBST(HOST_INCLUDES)
 AC_SUBST(OS)
+
+if test "x$host_os_osx" = "xyes"; then
+  AM_CONDITIONAL(HOST_IS_OSX, true)
+else
+  AM_CONDITIONAL(HOST_IS_OSX, false)
+fi
 
 AC_OUTPUT([Makefile
            lib/Makefile

@@ -58,6 +58,7 @@ case "${host}" in
     OS="darwin"
     HOST_INCLUDES="-I/opt/local/include"
     HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
+    AM_CONDITIONAL(HOST_IS_OSX, true)
     ;;
   *-freebsd*)
     OS="freebsd"

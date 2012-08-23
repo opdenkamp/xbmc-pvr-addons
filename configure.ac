@@ -65,6 +65,9 @@ case "${host}" in
     ;;
 esac
 
+use_libcurl="no"
+PKG_CHECK_MODULES([CURL],[libcurl],use_libcurl="yes",AC_MSG_WARN("CURL was not found, N7 add-on will not be available"))
+
 HOST_CXXFLAGS="-Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses -fPIC $HOST_CXXFLAGS"
 
 AC_SUBST(ARCHITECTURE)
@@ -79,6 +82,14 @@ else
   AM_CONDITIONAL(HOST_IS_OSX, false)
 fi
 
+if test "x$use_libcurl" = "xyes"; then
+  INCLUDES="$INCLUDES $CURL_CFLAGS"
+  LIBS="$LIBS $CURL_LIBS"
+  AM_CONDITIONAL(USE_CURL, true)
+else
+  AM_CONDITIONAL(USE_CURL, false)
+fi
+
 AC_OUTPUT([Makefile
            lib/Makefile
            lib/libhts/Makefile
@@ -87,5 +98,6 @@ AC_OUTPUT([Makefile
            addons/pvr.demo/Makefile
            addons/pvr.hts/Makefile
            addons/pvr.mediaportal/Makefile
+           addons/pvr.njoy/Makefile
            addons/pvr.vdr.vnsi/Makefile])
 

@@ -3,6 +3,10 @@ SUBDIRS = pvr.demo \
           pvr.mediaportal \
           pvr.vdr.vnsi
 
+if USE_CURL
+SUBDIRS += pvr.njoy
+endif
+
 clean:
 	-rm -f *.zip
 	for d in $(SUBDIRS); do if test -f $$d/Makefile; then $(MAKE) -C $$d clean; fi; done

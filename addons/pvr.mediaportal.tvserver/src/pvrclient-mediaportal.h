@@ -29,6 +29,9 @@
 #include "epg.h"
 #include "platform/threads/mutex.h"
 
+/* Use a forward declaration here. Including RTSPClient.h via TSReader.h at this point gives compile errors */
+class CTsReader;
+
 class cPVRClientMediaPortal
 {
 public:
@@ -85,6 +88,9 @@ public:
   bool SwitchChannel(const PVR_CHANNEL &channel);
   PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
   const char* GetLiveStreamURL(const PVR_CHANNEL &channel);
+  long long SeekLiveStream(long long iPosition, int iWhence = SEEK_SET);
+  long long LengthLiveStream(void);
+  long long PositionLiveStream(void);
 
   /* Record stream handling */
   bool OpenRecordedStream(const PVR_RECORDING &recording);
@@ -92,6 +98,7 @@ public:
   int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize);
   long long SeekRecordedStream(long long iPosition, int iWhence = SEEK_SET);
   long long LengthRecordedStream(void);
+  long long PositionRecordedStream(void);
 
 protected:
   MPTV::Socket           *m_tcpclient;
@@ -115,6 +122,12 @@ private:
   CGenreTable*            m_genretable;
   PLATFORM::CMutex        m_mutex;
   int64_t                 m_iLastRecordingUpdate;
+  CTsReader*              m_tsreader;
+
+  char                    m_noSignalStreamData[ 6 + 0xffff ];
+  long                    m_noSignalStreamSize;
+  long                    m_noSignalStreamReadPos;
+  bool                    m_bPlayingNoSignal;
 
   void Close();
 

@@ -14,9 +14,11 @@ LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la
 
 include ../Makefile.include.am
 
-libmediaportal_addon_la_SOURCES = src/client.cpp \
-                                  src/Cards.cpp \
+INCLUDES+=-Isrc
+
+libmediaportal_addon_la_SOURCES = src/Cards.cpp \
                                   src/channels.cpp \
+                                  src/client.cpp \
                                   src/epg.cpp \
                                   src/GenreTable.cpp \
                                   src/pvrclient-mediaportal.cpp \
@@ -24,5 +26,9 @@ libmediaportal_addon_la_SOURCES = src/client.cpp \
                                   src/Socket.cpp \
                                   src/timers.cpp \
                                   src/uri.cpp \
-                                  src/utils.cpp
+                                  src/utils.cpp \
+                                  src/lib/tsreader/FileReader.cpp \
+                                  src/lib/tsreader/MultiFileReader.cpp \
+                                  src/lib/tsreader/TSReader.cpp \
+                                  src/lib/tsreader/posix/FileSMB.cpp
 

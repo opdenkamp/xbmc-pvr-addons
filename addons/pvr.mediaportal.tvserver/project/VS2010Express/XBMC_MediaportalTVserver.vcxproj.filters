@@ -15,6 +15,18 @@
     <Filter Include="Header Files\windows">
       <UniqueIdentifier>{cf6755ea-d5a7-40b8-8b19-4334c8e5f68c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\lib%255ctsreader">
+      <UniqueIdentifier>{92e516fb-095e-4782-a9ca-355e8361e76d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\lib%255ctsreader\windows">
+      <UniqueIdentifier>{71982712-a19a-4af3-83d5-add491c3c147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lib%255ctsreader">
+      <UniqueIdentifier>{cbd532af-b6be-46ee-bcd7-1ba8c9742bdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lib%255ctsreader\windows">
+      <UniqueIdentifier>{d246253c-65e8-4771-8007-8f6863e0234d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Cards.cpp">
@@ -55,6 +67,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\windows\WindowsUtils.cpp">
       <Filter>Source Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\FileReader.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\MultiFileReader.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\TSReader.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\windows\File.cpp">
+      <Filter>Source Files\lib%255ctsreader\windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +126,21 @@
     </ClInclude>
     <ClInclude Include="..\..\src\windows\WindowsUtils.h">
       <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\FileReader.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\IFile.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\MultiFileReader.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\TSReader.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\windows\File.h">
+      <Filter>Header Files\lib%255ctsreader\windows</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

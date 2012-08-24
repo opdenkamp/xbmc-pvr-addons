@@ -55,7 +55,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>TARGET_WINDOWS;_WINSOCKAPI_;_DEBUG;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -83,7 +83,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -124,6 +124,10 @@
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\epg.cpp" />
     <ClCompile Include="..\..\src\GenreTable.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\FileReader.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\MultiFileReader.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\TSReader.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\windows\File.cpp" />
     <ClCompile Include="..\..\src\pvrclient-mediaportal.cpp" />
     <ClCompile Include="..\..\src\recordings.cpp" />
     <ClCompile Include="..\..\src\Socket.cpp" />
@@ -140,6 +144,11 @@
     <ClInclude Include="..\..\src\epg.h" />
     <ClInclude Include="..\..\src\FileUtils.h" />
     <ClInclude Include="..\..\src\GenreTable.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\FileReader.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\IFile.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\MultiFileReader.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\TSReader.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\windows\File.h" />
     <ClInclude Include="..\..\src\os-dependent.h" />
     <ClInclude Include="..\..\src\pvrclient-mediaportal.h" />
     <ClInclude Include="..\..\src\recordings.h" />

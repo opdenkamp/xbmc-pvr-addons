@@ -661,18 +661,22 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
     {
       tag.iUniqueId = channel.UID();
       tag.iChannelNumber = g_iTVServerXBMCBuild >= 102 ? channel.ExternalID() : channel.UID();
-      strncpy(tag.strChannelName, channel.Name(), sizeof(tag.strChannelName) - 1);
+      PVR_STRCPY(tag.strChannelName, channel.Name());
 #ifdef TARGET_WINDOWS
       if (bCheckForThumbs)
       {
         strIconName = strThumbPath + ToThumbFileName(channel.Name()) + ".png";
         if ( OS::CFile::Exists(strIconName) )
         {
-            strncpy(tag.strIconPath, strIconName.c_str(), sizeof(tag.strIconPath) - 1);
+          PVR_STRCPY(tag.strIconPath, strIconName.c_str());
+        }
+        else
+        {
+          PVR_STRCLR(tag.strIconPath);
         }
       }
 #else
-      memset(tag.strIconPath, 0, sizeof(tag.strIconPath));
+      PVR_STRCLR(tag.strIconPath);
 #endif
       tag.iEncryptionSystem = channel.Encrypted();
       tag.bIsRadio = bRadio;
@@ -680,7 +684,8 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
       if(channel.IsWebstream())
       {
-          strncpy(tag.strStreamURL, channel.URL(), sizeof(tag.strStreamURL) - 1);
+        PVR_STRCPY(tag.strStreamURL, channel.URL());
+        PVR_STRCLR(tag.strInputFormat);
       }
       else
       {
@@ -689,9 +694,9 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
           stream.Format("pvr://stream/radio/%i.ts", tag.iUniqueId);
         else
           stream.Format("pvr://stream/tv/%i.ts", tag.iUniqueId);
-        strncpy(tag.strStreamURL, stream.c_str(), sizeof(tag.strStreamURL) - 1);
+        PVR_STRCPY(tag.strStreamURL, stream.c_str());
       }
-      memset(tag.strInputFormat, 0, sizeof(tag.strInputFormat));
+      PVR_STRCLR(tag.strInputFormat);
 
       if( (!g_bOnlyFTA) || (tag.iEncryptionSystem==0))
       {
@@ -764,7 +769,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRad
     uri::decode(data);
 
     tag.bIsRadio = bRadio;
-    strncpy(tag.strGroupName, data.c_str(), sizeof(tag.strGroupName) - 1);
+    PVR_STRCPY(tag.strGroupName, data.c_str());
     XBMC->Log(LOG_DEBUG, "Adding %s group: %s", ((bRadio) ? "radio" : "tv"), tag.strGroupName);
     PVR->TransferChannelGroup(handle, &tag);
   }
@@ -827,7 +832,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroupMembers(ADDON_HANDLE handle, con
     {
       tag.iChannelUniqueId = channel.UID();
       tag.iChannelNumber = g_iTVServerXBMCBuild >= 102 ? channel.ExternalID() : channel.UID();
-      strncpy(tag.strGroupName, group.strGroupName, sizeof(tag.strGroupName) - 1);
+      PVR_STRCPY(tag.strGroupName, group.strGroupName);
 
 
       // Don't add encrypted channels when FTA only option is turned on
@@ -895,6 +900,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
 
     CStdString strRecordingId;
     CStdString strDirectory;
+    CStdString strEpisodeName;
     cRecording recording;
 
     recording.SetCardSettings(&m_cCards);
@@ -903,12 +909,13 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
     if (recording.ParseLine(data))
     {
       strRecordingId.Format("%i", recording.Index());
+      strEpisodeName = g_iTVServerXBMCBuild >= 105 ? recording.EpisodeName() : "";
 
-      strncpy(tag.strRecordingId, strRecordingId.c_str(), sizeof(tag.strRecordingId) - 1);
-      strncpy(tag.strTitle, recording.Title(), sizeof(tag.strTitle) - 1);
-      strncpy(tag.strPlotOutline, g_iTVServerXBMCBuild >= 105 ? recording.EpisodeName() : tag.strTitle, sizeof(tag.strPlotOutline) -1);
-      strncpy(tag.strPlot, recording.Description(), sizeof(tag.strPlot) - 1);
-      strncpy(tag.strChannelName, recording.ChannelName(), sizeof(tag.strChannelName) - 1);
+      PVR_STRCPY(tag.strRecordingId, strRecordingId.c_str());
+      PVR_STRCPY(tag.strTitle, recording.Title());
+      PVR_STRCPY(tag.strPlotOutline, g_iTVServerXBMCBuild >= 105 ? recording.EpisodeName() : tag.strTitle);
+      PVR_STRCPY(tag.strPlot, recording.Description());
+      PVR_STRCPY(tag.strChannelName, recording.ChannelName());
       tag.recordingTime  = recording.StartTime();
       tag.iDuration      = (int) recording.Duration();
       tag.iPriority      = 0; // only available for schedules, not for recordings
@@ -918,7 +925,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
 
       strDirectory = recording.Directory();
       strDirectory.Replace("\\", " - "); // XBMC supports only 1 sublevel below Recordings, so flatten the MediaPortal directory structure
-      strncpy(tag.strDirectory, strDirectory.c_str(), sizeof(tag.strDirectory) - 1); // used in XBMC as directory structure below "Recordings"
+      PVR_STRCPY(tag.strDirectory, strDirectory.c_str()); // used in XBMC as directory structure below "Recordings"
 
       if (g_bUseRecordingsDir == true)
       {
@@ -926,17 +933,17 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
         if (g_szRecordingsDir.length() > 0)
         {
           recording.SetDirectory(g_szRecordingsDir);
-          strncpy(tag.strStreamURL, recording.FilePath(), sizeof(tag.strStreamURL) - 1);
+          PVR_STRCPY(tag.strStreamURL, recording.FilePath());
         }
         else
         {
-            strncpy(tag.strStreamURL, recording.FilePath(), sizeof(tag.strStreamURL) - 1);
+          PVR_STRCPY(tag.strStreamURL, recording.FilePath());
         }
       }
       else
       {
         // Use rtsp url
-          strncpy(tag.strStreamURL, recording.Stream(), sizeof(tag.strStreamURL) - 1);
+        PVR_STRCPY(tag.strStreamURL, recording.Stream());
       }
       PVR->TransferRecordingEntry(handle, &tag);
     }
@@ -1384,9 +1391,9 @@ PVR_ERROR cPVRClientMediaPortal::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
       signalStatus.iSignal = (int) (signallevel * 655.35); // 100% is 0xFFFF 65535
       signalStatus.iSNR = (int) (signalquality * 655.35); // 100% is 0xFFFF 65535
       signalStatus.iBER = 0;
-      strncpy(signalStatus.strAdapterStatus, "timeshifting", 1023); // hardcoded for now...
+      PVR_STRCPY(signalStatus.strAdapterStatus, "timeshifting"); // hardcoded for now...
       // Fetch the name of the correct card and not just the first one...
-      strncpy(signalStatus.strAdapterName, m_cCards[m_iCurrentCard].Name.c_str(), 1023); //Size buffer is 1024 in xbmc_pvr_types.h
+      PVR_STRCPY(signalStatus.strAdapterName, m_cCards[m_iCurrentCard].Name.c_str());
     }
   }
   return PVR_ERROR_NO_ERROR;

@@ -6,7 +6,7 @@
 #
 
 ADDONBINNAME    = XBMC_Mediaportal
-ADDONNAME       = pvr.mediaportal
+ADDONNAME       = pvr.mediaportal.tvserver
 LIBNAME         = libmediaportal-addon
 lib_LTLIBRARIES = libmediaportal-addon.la
 

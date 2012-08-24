@@ -931,8 +931,23 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
       tag.iGenreSubType  = recording.GenreSubType();
 
       strDirectory = recording.Directory();
-      strDirectory.Replace("\\", " - "); // XBMC supports only 1 sublevel below Recordings, so flatten the MediaPortal directory structure
-      PVR_STRCPY(tag.strDirectory, strDirectory.c_str()); // used in XBMC as directory structure below "Recordings"
+      if (strDirectory.length() > 0)
+      {
+        strDirectory.Replace("\\", " - "); // XBMC supports only 1 sublevel below Recordings, so flatten the MediaPortal directory structure
+        PVR_STRCPY(tag.strDirectory, strDirectory.c_str()); // used in XBMC as directory structure below "Recordings"
+
+        if ((g_iTVServerXBMCBuild >= 105) && (strDirectory.Equals(tag.strTitle)) && (strEpisodeName.length() > 0))
+        {
+          strEpisodeName = recording.Title();
+          strEpisodeName+= " - ";
+          strEpisodeName+= recording.EpisodeName();
+          PVR_STRCPY(tag.strTitle, strEpisodeName.c_str());
+        }
+      }
+      else
+      {
+        PVR_STRCLR(tag.strDirectory);
+      }
 
       if (g_bUseRecordingsDir == true)
       {

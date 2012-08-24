@@ -46,10 +46,10 @@ int g_iTVServerXBMCBuild = 0;
 #define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.2.2.111"
 
 /* TVServerXBMC plugin supported versions */
-#define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.0.70"
-#define TVSERVERXBMC_MIN_VERSION_BUILD          70
-#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.1.x.109 or 1.2.2.111"
-#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  110
+#define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.0.90"
+#define TVSERVERXBMC_MIN_VERSION_BUILD          90
+#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.115"
+#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  115
 
 /************************************************************/
 /** Class interface */

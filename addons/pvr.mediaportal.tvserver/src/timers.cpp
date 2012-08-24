@@ -45,15 +45,30 @@ cTimer::cTimer()
   m_postrecordinterval = -1; // Use MediaPortal setting instead
   m_canceled           = cUndefinedDate;
   m_series             = false;
+  m_done               = false;
+  m_ismanual           = false;
+  m_isrecording        = false;
+  m_progid             = -1;
+  m_series             = false;
 }
+
 
 cTimer::cTimer(const PVR_TIMER& timerinfo)
 {
-  m_index = timerinfo.iClientIndex;
-  m_active = (timerinfo.state == PVR_TIMER_STATE_SCHEDULED || timerinfo.state == PVR_TIMER_STATE_RECORDING);
-  if(!m_active)
+  if(timerinfo.iEpgUid!=-1)
   {
-    time(&m_canceled);
+    m_progid = timerinfo.iClientIndex;
+    m_index  = timerinfo.iEpgUid;
+  }
+  else
+    m_index = timerinfo.iClientIndex;
+
+  m_done = (timerinfo.state == PVR_TIMER_STATE_COMPLETED);
+  m_active = (timerinfo.state == PVR_TIMER_STATE_SCHEDULED || timerinfo.state == PVR_TIMER_STATE_RECORDING);
+
+  if (!m_active)
+  {
+    m_canceled = Now();
   }
   else
   {
@@ -66,18 +81,35 @@ cTimer::cTimer(const PVR_TIMER& timerinfo)
   m_title = timerinfo.strTitle;
   m_directory = timerinfo.strDirectory;
   m_channel = timerinfo.iClientChannelUid;
-  m_starttime = timerinfo.startTime;
+
+  if (timerinfo.startTime <= 0)
+  {
+    // Instant timer has starttime = 0, so set current time as starttime.
+    m_starttime = Now();
+    m_ismanual = true;
+  }
+  else
+  {
+    m_starttime = timerinfo.startTime;
+    m_ismanual = false;
+  }
+
   m_endtime = timerinfo.endTime;
   //m_firstday = timerinfo.firstday;
-  m_isrecording = timerinfo.state == PVR_TIMER_STATE_RECORDING;
+  m_isrecording = (timerinfo.state == PVR_TIMER_STATE_RECORDING);
   m_priority = XBMC2MepoPriority(timerinfo.iPriority);
 
   SetKeepMethod(timerinfo.iLifetime);
+
   if(timerinfo.bIsRepeating)
   {
     m_schedtype = RepeatFlags2SchedRecType(timerinfo.iWeekdays);
-  } else {
+    m_series = true;
+  }
+  else
+  {
     m_schedtype = Once;
+    m_series = false;
   }
 
   m_prerecordinterval = timerinfo.iMarginStart;
@@ -96,11 +128,21 @@ cTimer::~cTimer()
 void cTimer::GetPVRtimerinfo(PVR_TIMER &tag)
 {
   memset(&tag, 0, sizeof(tag));
-  tag.iClientIndex      = m_index;
-  if (m_active)
-    tag.state           = PVR_TIMER_STATE_SCHEDULED;
-  else if (IsRecording())
+
+  if (m_progid != -1)
+  {
+    tag.iClientIndex    = m_progid;
+    tag.iEpgUid         = m_index;
+  }
+  else
+  {
+     tag.iClientIndex   = m_index; //Support older TVServer and Manual Schedule having a program name that does not have a match in MP EPG.
+     tag.iEpgUid        = 0;
+  }
+  if (IsRecording())
     tag.state           = PVR_TIMER_STATE_RECORDING;
+  else if (m_active)
+    tag.state           = PVR_TIMER_STATE_SCHEDULED;
   else
     tag.state           = PVR_TIMER_STATE_CANCELLED;
   tag.iClientChannelUid = m_channel;
@@ -145,7 +187,7 @@ bool cTimer::ParseLine(const char *s)
 
   Tokenize(data, schedulefields, "|");
 
-  if(schedulefields.size() >= 10)
+  if (schedulefields.size() >= 10)
   {
     // field 0 = index
     // field 1 = start date + time
@@ -165,7 +207,7 @@ bool cTimer::ParseLine(const char *s)
     // field 15 = canceled (TVServerXBMC build >= 100)
     // field 16 = series (True/False) (TVServerXBMC build >= 100)
     // field 17 = isrecording (True/False)
-
+    // field 18 = program id (EPG)
     m_index = atoi(schedulefields[0].c_str());
     m_starttime = DateTimeToTimeT(schedulefields[1]);
 
@@ -227,6 +269,11 @@ bool cTimer::ParseLine(const char *s)
       m_isrecording = false;
     }
 
+    if(schedulefields.size() >= 19)
+      m_progid = atoi(schedulefields[18].c_str());
+    else
+      m_progid = -1;
+
     return true;
   }
   return false;
@@ -283,6 +330,7 @@ int cTimer::SchedRecType2RepeatFlags(ScheduleRecordingType schedtype)
       break;
     case WorkingDays:
       weekdays = 31; // 0001 1111
+      break;
     default:
       weekdays=0;
   }
@@ -504,4 +552,13 @@ int cTimer::GetLifetime(void)
     default:
       return 0;
   }
+}
+
+time_t cTimer::Now()
+{
+  time_t now;
+
+  time(&now);
+
+  return now;
 }

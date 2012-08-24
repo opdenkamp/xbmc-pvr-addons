@@ -98,6 +98,7 @@ class cTimer
     int GetLifetime(void);
     int XBMC2MepoPriority(int xbmcprio);
     int Mepo2XBMCPriority(int mepoprio);
+    time_t Now();
 
     // MediaPortal database fields:
     int         m_index;               ///> MediaPortal id_Schedule
@@ -124,6 +125,8 @@ class cTimer
     bool        m_done;
     bool        m_ismanual;
     bool        m_isrecording;
+
+    int         m_progid;              ///> MediaPortal Program ID
 };
 
 const time_t cUndefinedDate = 946681200;   ///> 01-01-2000 00:00:00 in time_t

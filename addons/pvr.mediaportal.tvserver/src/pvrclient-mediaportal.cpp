@@ -768,10 +768,17 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRad
 
     uri::decode(data);
 
-    tag.bIsRadio = bRadio;
-    PVR_STRCPY(tag.strGroupName, data.c_str());
-    XBMC->Log(LOG_DEBUG, "Adding %s group: %s", ((bRadio) ? "radio" : "tv"), tag.strGroupName);
-    PVR->TransferChannelGroup(handle, &tag);
+    if (data.compare("All Channels") == 0)
+    {
+      XBMC->Log(LOG_DEBUG, "Skipping All Channels (%s) group", ((bRadio) ? "radio" : "tv"), tag.strGroupName);
+    }
+    else
+    {
+      tag.bIsRadio = bRadio;
+      PVR_STRCPY(tag.strGroupName, data.c_str());
+      XBMC->Log(LOG_DEBUG, "Adding %s group: %s", ((bRadio) ? "radio" : "tv"), tag.strGroupName);
+      PVR->TransferChannelGroup(handle, &tag);
+    }
   }
 
   return PVR_ERROR_NO_ERROR;

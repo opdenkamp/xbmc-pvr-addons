@@ -183,12 +183,13 @@ bool cPVRClientMediaPortal::Connect()
   {
     vector<string> fields;
     int major = 0, minor = 0, revision = 0;
-    int count = 0;
 
     // Check the version of the TVServerXBMC plugin:
     Tokenize(result, fields, "|");
     if(fields.size() == 2)
     {
+      int count = 0;
+
       // Ok, this TVServerXBMC version answers with a version string
       count = sscanf(fields[1].c_str(), "%d.%d.%d.%d", &major, &minor, &revision, &g_iTVServerXBMCBuild);
       if( count < 4 )
@@ -376,7 +377,6 @@ PVR_ERROR cPVRClientMediaPortal::GetBackendTime(time_t *localTime, int *gmtOffse
   vector<string> fields;
   int year = 0, month = 0, day = 0;
   int hour = 0, minute = 0, second = 0;
-  int count = 0;
   struct tm timeinfo;
 
   if (!IsUp())
@@ -391,6 +391,8 @@ PVR_ERROR cPVRClientMediaPortal::GetBackendTime(time_t *localTime, int *gmtOffse
 
   if(fields.size() >= 3)
   {
+    int count = 0;
+
     //[0] date + time TV Server
     //[1] UTC offset hours
     //[2] UTC offset minutes
@@ -544,12 +546,10 @@ PVR_ERROR cPVRClientMediaPortal::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &
 int cPVRClientMediaPortal::GetNumChannels(void)
 {
   string result;
-  //CStdString      command;
 
   if (!IsUp())
     return -1;
 
-  //command.Format("GetChannelCount:%s\n", g_sTVGroup.c_str());
   // Get the total channel count (radio+tv)
   // It is only used to check whether XBMC should request the channel list
   result = SendCommand("GetChannelCount:\n");
@@ -601,7 +601,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
     }
   }
 
-  if( !SendCommand2(command.c_str(), code, lines) )
+  if( !SendCommand2(command, code, lines) )
     return PVR_ERROR_SERVER_ERROR;
 
 #ifdef TARGET_WINDOWS
@@ -675,7 +675,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
       memset(tag.strIconPath, 0, sizeof(tag.strIconPath));
 #endif
       tag.iEncryptionSystem = channel.Encrypted();
-      tag.bIsRadio = bRadio; //TODO:(channel.Vpid() == 0) && (channel.Apid(0) != 0) ? true : false;
+      tag.bIsRadio = bRadio;
       tag.bIsHidden = false;
 
       if(channel.IsWebstream())
@@ -717,7 +717,6 @@ int cPVRClientMediaPortal::GetChannelGroupsAmount(void)
 
   // just tell XBMC that we have groups
   return 1;
-  //return -1; // not implemented
 }
 
 PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
@@ -784,7 +783,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroupMembers(ADDON_HANDLE handle, con
   if (!IsUp())
     return PVR_ERROR_SERVER_ERROR;
 
-  if(group.bIsRadio)
+  if (group.bIsRadio)
   {
     if (g_bRadioEnabled)
     {
@@ -803,7 +802,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroupMembers(ADDON_HANDLE handle, con
     command.Format("ListTVChannels:%s\n", uri::encode(uri::PATH_TRAITS, group.strGroupName).c_str());
   }
 
-  if (!SendCommand2(command.c_str(), code, lines))
+  if (!SendCommand2(command, code, lines))
     return PVR_ERROR_SERVER_ERROR;
 
   memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
@@ -1226,8 +1225,6 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
     XBMC->Log(LOG_ERROR, "Could not start the timeshift for channel uid=%i. %s", channelinfo.iUniqueId, result.c_str());
     if (g_iTVServerXBMCBuild>=109)
     {
-      int tvresult;
-
       Tokenize(result, timeshiftfields, "|");
       //[0] = string error message
       //[1] = TvResult (optional field. SendCommand can also return a timeout)
@@ -1256,9 +1253,9 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         //  NoPmtFound = 16,
         //};
 
-        tvresult = atoi(timeshiftfields[1].c_str());
+        int tvresult = atoi(timeshiftfields[1].c_str());
         // Display one of the localized error messages 30060-30075
-        XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30059 + (int) tvresult));
+        XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30059 + tvresult));
       }
       else
       {
@@ -1388,7 +1385,7 @@ PVR_ERROR cPVRClientMediaPortal::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
       signalStatus.iSNR = (int) (signalquality * 655.35); // 100% is 0xFFFF 65535
       signalStatus.iBER = 0;
       strncpy(signalStatus.strAdapterStatus, "timeshifting", 1023); // hardcoded for now...
-      // TODO: fetch the name of the correct card and not just the first one...
+      // Fetch the name of the correct card and not just the first one...
       strncpy(signalStatus.strAdapterName, m_cCards[m_iCurrentCard].Name.c_str(), 1023); //Size buffer is 1024 in xbmc_pvr_types.h
     }
   }

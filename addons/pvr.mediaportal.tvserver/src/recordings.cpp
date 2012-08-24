@@ -162,7 +162,7 @@ bool cRecording::ParseLine(const std::string& data)
     {
       m_genre = fields[16];
       m_channelID = atoi( fields[17].c_str() );
-      m_isRecording = stringtobool( fields[18].c_str() );
+      m_isRecording = stringtobool( fields[18] );
 
       if (m_genretable) m_genretable->GenreToTypes(m_genre, m_genre_type, m_genre_subtype);
     }

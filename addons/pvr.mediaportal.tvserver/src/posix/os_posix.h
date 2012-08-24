@@ -1,6 +1,6 @@
 #pragma once
 /*
- *      Copyright (C) 2005-2010 Team XBMC
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -21,7 +21,7 @@
 #ifndef PVRCLIENT_MEDIAPORTAL_OS_POSIX_H
 #define PVRCLIENT_MEDIAPORTAL_OS_POSIX_H
 
-typedef pthread_mutex_t criticalsection_t;
+
 typedef unsigned char byte;
 
 /* Platform dependent path separator */

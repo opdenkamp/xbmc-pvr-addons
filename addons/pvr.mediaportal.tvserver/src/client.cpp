@@ -47,7 +47,6 @@ bool        g_bDirectTSFileRead    = DEFAULT_DIRECT_TS_FR;          ///< Open th
 /* Client member variables */
 ADDON_STATUS           m_CurStatus    = ADDON_STATUS_UNKNOWN;
 cPVRClientMediaPortal *g_client       = NULL;
-bool                   g_bCreated     = false;
 std::string            g_szUserPath   = "";
 std::string            g_szClientPath = "";
 CHelper_libXBMC_addon *XBMC           = NULL;
@@ -103,13 +102,10 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
-  }
-  else
-  {
-    m_CurStatus = ADDON_STATUS_OK;
+    return m_CurStatus;
   }
 
-  g_bCreated = true;
+  m_CurStatus = ADDON_STATUS_OK;
 
   return m_CurStatus;
 }
@@ -120,22 +116,9 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 //-----------------------------------------------------------------------------
 void ADDON_Destroy()
 {
-  if ((g_bCreated) && (g_client))
-  {
-    g_client->Disconnect();
-    SAFE_DELETE(g_client);
-
-    g_bCreated = false;
-  }
-
-  if (PVR)
-  {
-    SAFE_DELETE(PVR);
-  }
-  if (XBMC)
-  {
-    SAFE_DELETE(XBMC);
-  }
+  SAFE_DELETE(g_client);
+  SAFE_DELETE(PVR);
+  SAFE_DELETE(XBMC);
 
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }
@@ -145,6 +128,10 @@ void ADDON_Destroy()
 //-----------------------------------------------------------------------------
 ADDON_STATUS ADDON_GetStatus()
 {
+  /* check whether we're still connected */
+  if (m_CurStatus == ADDON_STATUS_OK && g_client && !g_client->IsUp())
+    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+
   return m_CurStatus;
 }
 
@@ -294,7 +281,7 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   // SetSetting can occur when the addon is enabled, but TV support still
   // disabled. In that case the addon is not loaded, so we should not try
   // to change its settings.
-  if (!g_bCreated)
+  if (!XBMC)
     return ADDON_STATUS_OK;
 
   if (str == "host")
@@ -388,7 +375,7 @@ const char* GetPVRAPIVersion(void)
   return strApiVersion;
 }
 
-//-- GetAddonCapabilities ------------------------------------------------------------
+//-- GetAddonCapabilities -----------------------------------------------------
 // Tell XBMC our requirements
 //-----------------------------------------------------------------------------
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
@@ -402,6 +389,9 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   pCapabilities->bSupportsRadio              = g_bRadioEnabled;
   pCapabilities->bSupportsChannelGroups      = true;
   pCapabilities->bHandlesInputStream         = true;
+  pCapabilities->bHandlesDemuxing            = false;
+  pCapabilities->bSupportsChannelScan        = false;
+  pCapabilities->bSupportsLastPlayedPosition = false;
 
   return PVR_ERROR_NO_ERROR;
 }

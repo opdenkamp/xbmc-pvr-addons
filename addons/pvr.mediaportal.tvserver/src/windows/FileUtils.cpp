@@ -10,6 +10,8 @@ namespace OS
 
     if(dwAttr == 0xffffffff)
     {
+      return false;
+/*
       DWORD dwError = GetLastError();
       if(dwError == ERROR_FILE_NOT_FOUND)
       {
@@ -31,13 +33,14 @@ namespace OS
         // some other error has occured
         return false;
       }
+*/
     }
     else
     {
+      return true;
+/*
       if(dwAttr & FILE_ATTRIBUTE_DIRECTORY)
       {
-        return true;
-/*
         // this is a directory
         if(dwAttr & FILE_ATTRIBUTE_ARCHIVE)
           // Directory is archive file
@@ -53,12 +56,9 @@ namespace OS
           // Directory has an associated reparse point
         if(dwAttr & FILE_ATTRIBUTE_SYSTEM)
           // Directory is part or used exclusively by the operating system
-*/
       }
       else
       {
-        return true;
-/*
         // this is an ordinary file
         if(dwAttr & FILE_ATTRIBUTE_ARCHIVE)
           // File is archive file
@@ -82,8 +82,8 @@ namespace OS
           // File is part or used exclusively by the operating system
         if(dwAttr & FILE_ATTRIBUTE_TEMPORARY)
           // File is being used for temporary storage
-*/
        }
+*/
     }
 
     return true;

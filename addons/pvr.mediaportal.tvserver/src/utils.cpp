@@ -99,7 +99,7 @@ time_t DateTimeToTimeT(const std::string& datetime)
   int count;
   time_t retval;
 
-  count = sscanf(datetime.c_str(), "%d-%d-%d %d:%d:%d", &year, &month, &day, &hour, &minute, &second);
+  count = sscanf(datetime.c_str(), "%4d-%2d-%2d %2d:%2d:%2d", &year, &month, &day, &hour, &minute, &second);
 
   if(count != 6)
     return -1;

@@ -25,11 +25,10 @@
 
 cChannel::cChannel()
 {
-  name = "";
   uid = 0;
   external_id = 0;
   iswebstream = false;
-  url = "";
+  encrypted = false;
 }
 
 cChannel::~cChannel()

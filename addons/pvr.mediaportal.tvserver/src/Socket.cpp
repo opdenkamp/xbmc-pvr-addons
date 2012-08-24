@@ -61,7 +61,7 @@ Socket::~Socket()
   close();
 }
 
-bool Socket::setHostname ( const std::string host )
+bool Socket::setHostname ( const std::string& host )
 {
   if (isalpha(host.c_str()[0]))
   {
@@ -192,7 +192,7 @@ bool Socket::accept ( Socket& new_socket ) const
 }
 
 
-int Socket::send ( const std::string data )
+int Socket::send ( const std::string& data )
 {
   if (!is_valid())
   {
@@ -442,7 +442,7 @@ int Socket::recvfrom ( char* data, const int buffersize, const int minpacketsize
 }
 
 
-bool Socket::connect ( const std::string host, const unsigned short port )
+bool Socket::connect ( const std::string& host, const unsigned short port )
 {
   if ( !is_valid() )
   {

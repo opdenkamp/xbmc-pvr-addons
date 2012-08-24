@@ -178,7 +178,7 @@ class Socket
       _sockaddr.sin_port = htons ( port );
     };
 
-    bool setHostname ( const std::string host );
+    bool setHostname ( const std::string& host );
 
     // Server initialization
 
@@ -204,7 +204,7 @@ class Socket
     bool accept ( Socket& socket ) const;
 
     // Client initialization
-    bool connect ( const std::string host, const unsigned short port );
+    bool connect ( const std::string& host, const unsigned short port );
 
     bool reconnect();
 
@@ -216,7 +216,7 @@ class Socket
      * \param data    Reference to a std::string with the data to transmit
      * \return    Number of bytes send or -1 in case of an error
      */
-    int send ( const std::string data );
+    int send ( const std::string& data );
 
     /*!
      * Socket send function

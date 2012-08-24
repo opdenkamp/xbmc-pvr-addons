@@ -191,7 +191,7 @@ bool cPVRClientMediaPortal::Connect()
       int count = 0;
 
       // Ok, this TVServerXBMC version answers with a version string
-      count = sscanf(fields[1].c_str(), "%d.%d.%d.%d", &major, &minor, &revision, &g_iTVServerXBMCBuild);
+      count = sscanf(fields[1].c_str(), "%5d.%5d.%5d.%5d", &major, &minor, &revision, &g_iTVServerXBMCBuild);
       if( count < 4 )
       {
         XBMC->Log(LOG_ERROR, "Could not parse the TVServerXBMC version string '%s'", fields[1].c_str());
@@ -399,7 +399,7 @@ PVR_ERROR cPVRClientMediaPortal::GetBackendTime(time_t *localTime, int *gmtOffse
     //From CPVREpg::CPVREpg(): Expected PVREpg GMT offset is in seconds
     m_BackendUTCoffset = ((atoi(fields[1].c_str()) * 60) + atoi(fields[2].c_str())) * 60;
 
-    count = sscanf(fields[0].c_str(), "%d-%d-%d %d:%d:%d", &year, &month, &day, &hour, &minute, &second);
+    count = sscanf(fields[0].c_str(), "%4d-%2d-%2d %2d:%2d:%2d", &year, &month, &day, &hour, &minute, &second);
 
     if(count == 6)
     {
@@ -488,7 +488,7 @@ PVR_ERROR cPVRClientMediaPortal::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &
 
       XBMC->Log(LOG_DEBUG, "Found %i EPG items for channel %i\n", lines.size(), channel.iUniqueId);
 
-      for (vector<string>::iterator it = lines.begin(); it < lines.end(); it++)
+      for (vector<string>::iterator it = lines.begin(); it < lines.end(); ++it)
       {
         string& data(*it);
 
@@ -641,7 +641,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
   memset(&tag, 0, sizeof(PVR_CHANNEL));
 
-  for (vector<string>::iterator it = lines.begin(); it < lines.end(); it++)
+  for (vector<string>::iterator it = lines.begin(); it < lines.end(); ++it)
   {
     string& data(*it);
 
@@ -751,7 +751,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRad
 
   memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP));
 
-  for (vector<string>::iterator it = lines.begin(); it < lines.end(); it++)
+  for (vector<string>::iterator it = lines.begin(); it < lines.end(); ++it)
   {
     string& data(*it);
 
@@ -807,7 +807,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroupMembers(ADDON_HANDLE handle, con
 
   memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
 
-  for (vector<string>::iterator it = lines.begin(); it < lines.end(); it++)
+  for (vector<string>::iterator it = lines.begin(); it < lines.end(); ++it)
   {
     string& data(*it);
 
@@ -886,7 +886,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
 
   memset(&tag, 0, sizeof(PVR_RECORDING));
 
-  for (vector<string>::iterator it = lines.begin(); it != lines.end(); it++)
+  for (vector<string>::iterator it = lines.begin(); it != lines.end(); ++it)
   {
     string& data(*it);
     uri::decode(data);
@@ -1032,7 +1032,7 @@ PVR_ERROR cPVRClientMediaPortal::GetTimers(ADDON_HANDLE handle)
 
     memset(&tag, 0, sizeof(PVR_TIMER));
 
-    for (vector<string>::iterator it = lines.begin(); it != lines.end(); it++)
+    for (vector<string>::iterator it = lines.begin(); it != lines.end(); ++it)
     {
       string& data(*it);
       uri::decode(data);
@@ -1379,7 +1379,7 @@ PVR_ERROR cPVRClientMediaPortal::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
     int signallevel = 0;
     int signalquality = 0;
 
-    if (sscanf(result.c_str(),"%i|%i", &signallevel, &signalquality) == 2)
+    if (sscanf(result.c_str(),"%5i|%5i", &signallevel, &signalquality) == 2)
     {
       signalStatus.iSignal = (int) (signallevel * 655.35); // 100% is 0xFFFF 65535
       signalStatus.iSNR = (int) (signalquality * 655.35); // 100% is 0xFFFF 65535

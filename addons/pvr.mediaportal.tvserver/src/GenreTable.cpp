@@ -78,7 +78,7 @@ bool CGenreTable::LoadGenreXML(const std::string &filename)
 
       if ((sGenreType) && (strlen(sGenreType) > 2))
       {
-        if(sscanf(sGenreType + 2, "%x", &genre.type) != 1)
+        if(sscanf(sGenreType + 2, "%5x", &genre.type) != 1)
           genre.type = 0;
       }
       else
@@ -88,7 +88,7 @@ bool CGenreTable::LoadGenreXML(const std::string &filename)
 
       if ((sGenreSubType) && (strlen(sGenreSubType) > 2 ))
       {
-        if(sscanf(sGenreSubType + 2, "%x", &genre.subtype) != 1)
+        if(sscanf(sGenreSubType + 2, "%5x", &genre.subtype) != 1)
           genre.subtype = 0;
       }
       else
@@ -116,7 +116,7 @@ void CGenreTable::GenreToTypes(string& strGenre, int& genreType, int& genreSubTy
   // plugin) translate it into XBMC compatible (numbered) genre types
   string m_genre = strGenre;
 
-  if(m_genremap.size() > 0 && m_genre.length() > 0)
+  if(!m_genremap.empty() && !m_genre.empty())
   {
     GenreMap::iterator it;
 

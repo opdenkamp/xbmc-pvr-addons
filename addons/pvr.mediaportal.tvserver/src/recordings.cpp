@@ -40,6 +40,8 @@ cRecording::cRecording()
   m_genre_type      = 0;
   m_genre_subtype   = 0;
   m_genretable      = NULL;
+  m_scheduleID      = 0;
+  m_keepUntil       = 0;
 }
 
 
@@ -241,7 +243,7 @@ void cRecording::SplitFilePath(void)
   // card recording folder name in the the recording file name.
   if ((m_cardSettings) && (m_cardSettings->size() > 0))
   {
-    for (CCards::iterator it = m_cardSettings->begin(); it < m_cardSettings->end(); it++)
+    for (CCards::iterator it = m_cardSettings->begin(); it < m_cardSettings->end(); ++it)
     {
       // Determine whether the first part of the recording file name is shared with this card
       // Minimal name length of the RecordingFolder should be 3 (drive letter + :\)

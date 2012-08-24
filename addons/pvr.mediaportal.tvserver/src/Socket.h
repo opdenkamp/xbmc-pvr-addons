@@ -18,12 +18,17 @@
  */
 #pragma once
 
-#include "platform/sockets/tcp.h"
-
 namespace MPTV //Prevent name clash with Live555 Socket
 {
+
 //Include platform specific datatypes, header files, defines and constants:
-#if defined __WINDOWS__
+#if defined TARGET_WINDOWS
+  #define WIN32_LEAN_AND_MEAN           // Enable LEAN_AND_MEAN support
+  #pragma warning(disable:4005) // Disable "warning C4005: '_WINSOCKAPI_' : macro redefinition"
+  #include <winsock2.h>
+  #pragma warning(default:4005)
+  #include <windows.h>
+
   #ifndef NI_MAXHOST
     #define NI_MAXHOST 1025
   #endif
@@ -37,12 +42,29 @@ namespace MPTV //Prevent name clash with Live555 Socket
   #ifndef port_t
     typedef unsigned short port_t;
   #endif
-#else
+#elif defined TARGET_LINUX || defined TARGET_DARWIN
+#ifdef SOCKADDR_IN
+#undef SOCKADDR_IN
+#endif
+  #include <sys/types.h>     /* for socket,connect */
+  #include <sys/socket.h>    /* for socket,connect */
+  #include <sys/un.h>        /* for Unix socket */
+  #include <arpa/inet.h>     /* for inet_pton */
+  #include <netdb.h>         /* for gethostbyname */
+  #include <netinet/in.h>    /* for htons */
+  #include <unistd.h>        /* for read, write, close */
+  #include <errno.h>
+  #include <fcntl.h>
+
   typedef int SOCKET;
   typedef sockaddr SOCKADDR;
   typedef sockaddr_in SOCKADDR_IN;
+  #ifndef INVALID_SOCKET
   #define INVALID_SOCKET (-1)
+  #endif
   #define SOCKET_ERROR (-1)
+#else
+  #error Platform specific socket support is not yet available on this platform!
 #endif
 
 using namespace std;

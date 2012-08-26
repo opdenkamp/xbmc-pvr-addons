@@ -1,0 +1,3 @@
+tsreader:
+Sources adapted from MediaPortal v1.2.0 tsreader
+https://github.com/MediaPortal/MediaPortal-1/tree/master/DirectShowFilters

@@ -4,7 +4,7 @@
 
 INCLUDES        = -I. -I$(abs_top_srcdir)/xbmc -I$(abs_top_srcdir)/lib @HOST_INCLUDES@
 WARNINGS        = -Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses
-DEFINES         = -D_LINUX -DUSE_DEMUX -D__STDC_CONSTANT_MACROS
+DEFINES         = @ARCH_DEFINES@ -DUSE_DEMUX -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS
 AM_CXXFLAGS     = -g -O2 -fPIC $(WARNINGS) $(DEFINES) @HOST_CXXFLAGS@
 LIBDIR          = @abs_top_srcdir@/addons/$(ADDONNAME)/addon
 LIB             = @abs_top_srcdir@/addons/$(ADDONNAME)/addon/$(ADDONBINNAME).pvr

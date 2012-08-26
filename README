@@ -23,4 +23,24 @@ TODO
 =============================
            Windows
 =============================
+Building the pvr addons standalone:
+-----------------------------------
+Prepare:
+1) Install Visual C++ Express 2010 (follow the instructions on the wiki for XBMC itself)
+Compile:
+2) Open this solution from project\VS2010Express\xbmc-pvr-addons.sln
+3) Select the wanted configuration "Debug" or "Release"
+4) Press F7 to build the solution
+Install:
+Still a TODO. The buildsystem does not yet generate .zip archives
+Workaround: copy the wanted pvr addons to your XBMC installation by hand.
+Example: addons\pvr.demo\addon\*.* => YOUR_XBMC_DIR\addons\pvr.demo\*.*
+
+Building the pvr addons together with xbmc:
+-------------------------------------------
 TODO
+describe how to import the "xbmc-pvr-addons.sln" in "XBMC for Windows.sln"
+
+XBMC Windows installer with included pvr addons:
+------------------------------------------------
+Not yet possible. Still a TODO.

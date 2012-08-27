@@ -206,6 +206,11 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
   return m_data->requestChannelList(handle, bRadio);
 }
 
+unsigned int GetChannelSwitchDelay(void)
+{
+  return 1000;
+}
+
 /** UNUSED API FUNCTIONS */
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DialogChannelScan() { return PVR_ERROR_NOT_IMPLEMENTED; }

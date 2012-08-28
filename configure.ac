@@ -57,7 +57,6 @@ case "${host}" in
     ;;
   *-apple-darwin*)
     OS="darwin"
-    HOST_INCLUDES="-I/opt/local/include"
     HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
     host_os_osx="yes"
     ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN"

@@ -13,18 +13,16 @@ clean:
 	-rm -r -f $(LIB) $(ADDONBINNAME).pvr @abs_top_srcdir@/addons/$(ADDONNAME).@OS@-@ARCHITECTURE@.zip @abs_top_srcdir@/addons/.build/$(ADDONNAME) *.so *.lo *.o *.la *.a *.P *~
 
 release: $(lib_LTLIBRARIES)
-if HOST_IS_OSX
-	cp -f .libs/$(LIBNAME).dylib $(ADDONBINNAME).pvr
-else
-	cp -f .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
-endif
+	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ $(ADDONBINNAME).pvr
 	$(STRIP) -x $(ADDONBINNAME).pvr
+if HOST_IS_OSX
+	@abs_top_srcdir@/scripts/dylib_fix_paths.sh $(ADDONBINNAME).pvr
+endif
 
 debug: $(lib_LTLIBRARIES)
+	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ $(ADDONBINNAME).pvr
 if HOST_IS_OSX
-	cp -f .libs/$(LIBNAME).dylib $(ADDONBINNAME).pvr
-else
-	cp -f .libs/$(LIBNAME).so $(ADDONBINNAME).pvr
+	@abs_top_srcdir@/scripts/dylib_fix_paths.sh $(ADDONBINNAME).pvr
 endif
 
 $(LIB): @BUILD_TYPE@

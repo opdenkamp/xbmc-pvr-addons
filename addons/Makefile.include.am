@@ -36,8 +36,8 @@ zip: $(LIB)
 	cd @abs_top_srcdir@/addons/.build ; zip -9 -r @abs_top_srcdir@/addons/$(ADDONNAME)-@OS@-@ARCHITECTURE@.zip $(ADDONNAME)
 
 install: $(LIB)
-	mkdir -p $(prefix)
-	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon $(prefix)/$(ADDONNAME)
+	mkdir -p $(DESTDIR)$(prefix)
+	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon $(DESTDIR)$(prefix)/$(ADDONNAME)
 
 all: $(LIB)
 

@@ -59,11 +59,11 @@ case "${host}" in
     OS="darwin"
     HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
     host_os_osx="yes"
-    ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN"
+    ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN -D_LINUX"
     ;;
   *-freebsd*)
     OS="freebsd"
-    ARCH_DEFINES="-DTARGET_POSIX -DTARGET_FREEBSD"
+    ARCH_DEFINES="-DTARGET_POSIX -DTARGET_FREEBSD -D_LINUX"
     ;;
 esac
 

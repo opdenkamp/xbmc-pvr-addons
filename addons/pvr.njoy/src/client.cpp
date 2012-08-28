@@ -208,7 +208,7 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 unsigned int GetChannelSwitchDelay(void)
 {
-  return 1000;
+  return 2000;
 }
 
 /** UNUSED API FUNCTIONS */

@@ -6,7 +6,8 @@ INCLUDES        = -I. -I$(abs_top_srcdir)/xbmc -I$(abs_top_srcdir)/lib @HOST_INC
 WARNINGS        = -Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses
 DEFINES         = @ARCH_DEFINES@ -DUSE_DEMUX -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS
 AM_CXXFLAGS     = -g -O2 -fPIC $(WARNINGS) $(DEFINES) @HOST_CXXFLAGS@
-LIBDIR          = @abs_top_srcdir@/addons/$(ADDONNAME)/addon
+LIBDIR		= $(libdir)/xbmc/addons
+DATADIR		= $(prefix)/share/xbmc/addons
 LIB             = @abs_top_srcdir@/addons/$(ADDONNAME)/addon/$(ADDONBINNAME).pvr
 
 clean:
@@ -37,7 +38,11 @@ zip: $(LIB)
 
 install: $(LIB)
 	mkdir -p $(DESTDIR)$(prefix)
-	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon $(DESTDIR)$(prefix)/$(ADDONNAME)
+	mkdir -p $(DESTDIR)$(LIBDIR)/$(ADDONNAME)
+	mkdir -p $(DESTDIR)$(DATADIR)/$(ADDONNAME)
+	cp -f $(ADDONBINNAME).pvr $(DESTDIR)$(LIBDIR)/$(ADDONNAME)
+	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon/* $(DESTDIR)$(DATADIR)/$(ADDONNAME)
+	rm $(DESTDIR)$(DATADIR)/$(ADDONNAME)/$(ADDONBINNAME).pvr
 
 all: $(LIB)
 

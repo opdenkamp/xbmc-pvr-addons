@@ -5,7 +5,8 @@ AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, [http://www.xbmc.org])
 
-AC_PREFIX_DEFAULT(/usr)
+PREFIX_DEFAULT="/usr"
+AC_PREFIX_DEFAULT(PREFIX_DEFAULT)
 
 AC_PROG_CXX
 AC_PROG_CPP
@@ -93,6 +94,25 @@ if test "x$use_libcurl" = "xyes"; then
 else
   AM_CONDITIONAL(USE_CURL, false)
 fi
+
+if test "x${libdir}" != 'x${exec_prefix}/lib'; then
+  LIBDIR=${libdir}
+elif test "$prefix" = "NONE"; then
+  LIBDIR=$PREFIX_DEFAULT/lib/xbmc/addons
+else
+  LIBDIR=$prefix/lib/xbmc/addons
+fi
+AC_SUBST(LIBDIR)
+
+if test "x${datadir}" != 'x${datarootdir}' && test "x${datarootdir}" = 'x${prefix}/share'; then
+  DATADIR=${datadir}
+elif test "$prefix" = "NONE"; then
+  DATADIR=$PREFIX_DEFAULT/share/xbmc/addons
+else
+  DATADIR=$prefix/share/xbmc/addons 
+fi
+AC_SUBST(DATADIR)
+
 
 AC_OUTPUT([Makefile
            lib/Makefile

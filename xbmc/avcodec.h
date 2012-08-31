@@ -35,6 +35,7 @@ enum AVMediaType {
     AVMEDIA_TYPE_NB
 };
 
+#define MKBETAG(a,b,c,d) ((d) | ((c) << 8) | ((b) << 16) | ((unsigned)(a) << 24))
 
 /**
  * @file
@@ -261,14 +262,14 @@ enum CodecID {
     CODEC_ID_DXTORY,
     CODEC_ID_V410,
     CODEC_ID_XWD,
-//    CODEC_ID_Y41P       = MKBETAG('Y','4','1','P'),
+    CODEC_ID_Y41P       = MKBETAG('Y','4','1','P'),
     CODEC_ID_UTVIDEO = 0x800,
-//    CODEC_ID_ESCAPE130  = MKBETAG('E','1','3','0'),
-//    CODEC_ID_AVRP       = MKBETAG('A','V','R','P'),
+    CODEC_ID_ESCAPE130  = MKBETAG('E','1','3','0'),
+    CODEC_ID_AVRP       = MKBETAG('A','V','R','P'),
 
-//   CODEC_ID_G2M        = MKBETAG( 0 ,'G','2','M'),
-//    CODEC_ID_V308       = MKBETAG('V','3','0','8'),
-//    CODEC_ID_YUV4       = MKBETAG('Y','U','V','4'),
+    CODEC_ID_G2M        = MKBETAG( 0 ,'G','2','M'),
+    CODEC_ID_V308       = MKBETAG('V','3','0','8'),
+    CODEC_ID_YUV4       = MKBETAG('Y','U','V','4'),
 
     /* various PCM "codecs" */
     CODEC_ID_FIRST_AUDIO = 0x10000,     ///< A dummy id pointing at the start of audio codecs
@@ -414,8 +415,8 @@ enum CodecID {
     CODEC_ID_BMV_AUDIO,
     CODEC_ID_G729 = 0x15800,
     CODEC_ID_G723_1= 0x15801,
-//    CODEC_ID_FFWAVESYNTH = MKBETAG('F','F','W','S'),
-//    CODEC_ID_8SVX_RAW   = MKBETAG('8','S','V','X'),
+    CODEC_ID_FFWAVESYNTH = MKBETAG('F','F','W','S'),
+    CODEC_ID_8SVX_RAW   = MKBETAG('8','S','V','X'),
 
     /* subtitle codecs */
     CODEC_ID_FIRST_SUBTITLE = 0x17000,          ///< A dummy ID pointing at the start of subtitle codecs.
@@ -428,7 +429,7 @@ enum CodecID {
     CODEC_ID_HDMV_PGS_SUBTITLE,
     CODEC_ID_DVB_TELETEXT,
     CODEC_ID_SRT,
-//    CODEC_ID_MICRODVD   = MKBETAG('m','D','V','D'),
+    CODEC_ID_MICRODVD   = MKBETAG('m','D','V','D'),
 
     /* data codecs */
     CODEC_ID_VBI_DATA= 0x17500,
@@ -437,9 +438,9 @@ enum CodecID {
     /* other specific kind of codecs (generally used for attachments) */
     CODEC_ID_FIRST_UNKNOWN = 0x18000,           ///< A dummy ID pointing at the start of various fake codecs.
     CODEC_ID_TTF = 0x18000,
-//    CODEC_ID_BINTEXT    = MKBETAG('B','T','X','T'),
-//    CODEC_ID_XBIN       = MKBETAG('X','B','I','N'),
-//    CODEC_ID_IDF        = MKBETAG( 0 ,'I','D','F'),
+    CODEC_ID_BINTEXT    = MKBETAG('B','T','X','T'),
+    CODEC_ID_XBIN       = MKBETAG('X','B','I','N'),
+    CODEC_ID_IDF        = MKBETAG( 0 ,'I','D','F'),
 
     CODEC_ID_PROBE = 0x19000, ///< codec_id is not known (like CODEC_ID_NONE) but lavf should attempt to identify it
 

@@ -15,6 +15,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_mediaportaltvserv
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_vdr_vnsi", "..\..\addons\pvr.vdr.vnsi\project\VS2010Express\pvrclient_vdr_vnsi.vcxproj", "{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvrclient_njoy", "..\..\addons\pvr.njoy\project\VS2010Express\pvrclient_njoy.vcxproj", "{034B992A-F669-4AC3-B462-49179731066F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50} = {BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}
+		{FE4573F6-A794-4AD3-B37F-49E51F1140E6} = {FE4573F6-A794-4AD3-B37F-49E51F1140E6}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,6 +55,10 @@ Global
 		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Debug|Win32.Build.0 = Debug|Win32
 		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Release|Win32.ActiveCfg = Release|Win32
 		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Release|Win32.Build.0 = Release|Win32
+		{034B992A-F669-4AC3-B462-49179731066F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{034B992A-F669-4AC3-B462-49179731066F}.Debug|Win32.Build.0 = Debug|Win32
+		{034B992A-F669-4AC3-B462-49179731066F}.Release|Win32.ActiveCfg = Release|Win32
+		{034B992A-F669-4AC3-B462-49179731066F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

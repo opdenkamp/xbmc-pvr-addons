@@ -7,11 +7,13 @@
   <extension
     point="xbmc.pvrclient"
     library_osx="XBMC_Njoy.pvr"
-    library_linux="XBMC_Njoy.pvr"/>
+    library_linux="XBMC_Njoy.pvr"
+    library_wingl="XBMC_njoy_win32.pvr"
+    library_windx="XBMC_njoy_win32.pvr"/>
   <extension point="xbmc.addon.metadata">
     <summary></summary>
     <description></description>
-    <platform>linux osx</platform>
+    <platform>linux osx wingl windx</platform>
   </extension>
 </addon>
 

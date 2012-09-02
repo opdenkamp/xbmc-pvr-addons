@@ -58,6 +58,12 @@ const char* GetPVRAPIVersion(void)
   return strApiVersion;
 }
 
+const char* GetMininumPVRAPIVersion(void)
+{
+  static const char *strMinApiVersion = XBMC_PVR_MIN_API_VERSION;
+  return strMinApiVersion;
+}
+
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
 {
   if (!props)

@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6C839B8E-2C7D-4725-8765-D6C0C10DBC06}</ProjectGuid>
     <RootNamespace>pvrclient_demo</RootNamespace>
+    <ProjectName>pvr.demo</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

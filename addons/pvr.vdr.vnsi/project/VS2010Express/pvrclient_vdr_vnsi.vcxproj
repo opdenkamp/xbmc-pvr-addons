@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}</ProjectGuid>
     <RootNamespace>pvrclient_vdr_vnsi</RootNamespace>
+    <ProjectName>pvr.vdr.vnsi</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

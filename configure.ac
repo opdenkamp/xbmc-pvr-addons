@@ -124,6 +124,7 @@ AC_SUBST(DATADIR)
 
 AC_OUTPUT([Makefile
            lib/Makefile
+           lib/jsoncpp/Makefile
            lib/libhts/Makefile
            lib/tinyxml/Makefile
            addons/Makefile

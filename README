@@ -5,7 +5,7 @@ WARNING: this is work in progress. Don't try to use this unless you know what yo
 =============================
 
 Start by executing:
-autoreconf -vif
+./bootstrap
 
 To install add-ons into /path/to/XBMC:
 ./configure --prefix=/path/to/XBMC

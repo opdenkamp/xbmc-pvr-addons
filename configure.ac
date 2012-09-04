@@ -69,10 +69,18 @@ case "${host}" in
     ;;
 esac
 
+### External libraries checks
+# Curl
 use_libcurl="no"
 PKG_CHECK_MODULES([CURL],[libcurl],use_libcurl="yes",AC_MSG_WARN("CURL was not found, N7 add-on will not be available"))
 
+### Check for Intree building
+checkpath=".."
+AC_CHECK_FILE([$checkpath/xbmc/xbmc.h], [AM_CONDITIONAL(IS_INTREE_BUILD, true) intree=true], [AM_CONDITIONAL(IS_INTREE_BUILD, false) intree=false])
+echo "Intree build: $intree"
+
 HOST_CXXFLAGS="-Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses -fPIC $HOST_CXXFLAGS"
+
 
 AC_SUBST(ARCHITECTURE)
 AC_SUBST(BUILD_TYPE)

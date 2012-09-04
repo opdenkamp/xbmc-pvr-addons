@@ -1,0 +1,7 @@
+The ForTheRecord Argus pvr addon has the following (link) dependencies:
+
+cURL (tested against v7-21.6)
+http://curl.haxx.se/
+
+JSONcpp (tested against v0.50)
+http://jsoncpp.sourceforge.net/

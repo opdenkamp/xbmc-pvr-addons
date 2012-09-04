@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>pvrclient_mediaportaltvserver</ProjectName>
+    <ProjectName>pvr.mediaportal.tvserver</ProjectName>
     <ProjectGuid>{74C9642E-1988-48DC-8404-11717C355378}</ProjectGuid>
     <RootNamespace>XBMC_MPTV</RootNamespace>
     <Keyword>Win32Proj</Keyword>

@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{034B992A-F669-4AC3-B462-49179731066F}</ProjectGuid>
     <RootNamespace>pvrclient_njoy</RootNamespace>
+    <ProjectName>pvr.njoy</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -4,7 +4,8 @@ SUBDIRS = pvr.demo \
           pvr.vdr.vnsi
 
 if USE_CURL
-SUBDIRS += pvr.njoy
+SUBDIRS += pvr.njoy \
+           pvr.fortherecord.argus
 endif
 
 clean:

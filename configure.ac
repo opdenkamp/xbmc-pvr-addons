@@ -124,10 +124,12 @@ AC_SUBST(DATADIR)
 
 AC_OUTPUT([Makefile
            lib/Makefile
+           lib/jsoncpp/Makefile
            lib/libhts/Makefile
            lib/tinyxml/Makefile
            addons/Makefile
            addons/pvr.demo/Makefile
+           addons/pvr.fortherecord.argus/Makefile
            addons/pvr.hts/Makefile
            addons/pvr.mediaportal.tvserver/Makefile
            addons/pvr.njoy/Makefile

@@ -37,23 +37,20 @@ zip: $(LIB)
 	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon @abs_top_srcdir@/addons/.build/$(ADDONNAME)
 	cd @abs_top_srcdir@/addons/.build ; zip -9 -r @abs_top_srcdir@/addons/$(ADDONNAME)-@OS@-@ARCHITECTURE@.zip $(ADDONNAME)
 
+install: @BUILD_TYPE@
 if IS_INTREE_BUILD
-install:
 	@echo "PVR-ADDONS: Leaving make install to xbmc"
 else
-install: @BUILD_TYPE@
 	mkdir -m 755 -p $(DESTDIR)@LIBDIR@/$(ADDONNAME)
 	mkdir -m 755 -p $(DESTDIR)@DATADIR@/$(ADDONNAME)
 	cp -f $(ADDONBINNAME).pvr $(DESTDIR)@LIBDIR@/$(ADDONNAME) ; chmod 655 $(DESTDIR)@LIBDIR@/$(ADDONNAME)/$(ADDONBINNAME).pvr
 	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon/* $(DESTDIR)@DATADIR@/$(ADDONNAME) ; chmod -R o+rx $(DESTDIR)@DATADIR@/$(ADDONNAME)
 endif
 
-if IS_INTREE_BUILD
 all: @BUILD_TYPE@
+if IS_INTREE_BUILD
 	@echo "copying pvr-addons to xbmc/addons"
 	rm -rf ../../../addons/$(ADDONNAME)
 	cp -r -p -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon ../../../addons/$(ADDONNAME)
 	cp -f -p $(ADDONBINNAME).pvr ../../../addons/$(ADDONNAME)
-else
-all: @BUILD_TYPE@
 endif

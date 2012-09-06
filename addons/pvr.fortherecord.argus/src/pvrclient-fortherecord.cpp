@@ -204,7 +204,7 @@ bool cPVRClientForTheRecord::ShareErrorsFound(void)
         accessMsg = (char*) lpMsgBuf;
         LocalFree(lpMsgBuf);
       }
-#elif defined(TARGET_LINUX) || defined(TARGET_OSX)
+#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
       std::string CIFSname = sharename;
       std::string SMBPrefix = "smb://";
       if (g_szUser.length() > 0)
@@ -1137,7 +1137,7 @@ bool cPVRClientForTheRecord::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
       retval = ForTheRecord::TuneLiveStream(channel->Guid(), channel->Type(), channel->Name(), filename);
     }
 
-#if defined(TARGET_LINUX) || defined(TARGET_OSX)
+#if defined(TARGET_LINUX) || defined(TARGET_DARWIN)
     // TODO FHo: merge this code and the code that translates names from recordings
     std::string CIFSname = filename;
     std::string SMBPrefix = "smb://";

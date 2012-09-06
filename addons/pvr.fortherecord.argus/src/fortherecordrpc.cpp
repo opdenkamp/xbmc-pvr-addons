@@ -340,7 +340,7 @@ namespace ForTheRecord
 #if defined(TARGET_WINDOWS)
     char tmppath[MAX_PATH];
     GetTempPath(MAX_PATH, tmppath);
-#elif defined(TARGET_LINUX) || defined(TARGET_OSX)
+#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
     std::string tmppath = "/tmp/";
 #else
 #error implement for your OS!

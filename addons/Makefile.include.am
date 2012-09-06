@@ -17,15 +17,9 @@ endif
 release: $(lib_LTLIBRARIES)
 	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ $(ADDONBINNAME).pvr
 	$(STRIP) -x $(ADDONBINNAME).pvr
-if HOST_IS_OSX
-	@abs_top_srcdir@/scripts/dylib_fix_paths.sh $(ADDONBINNAME).pvr
-endif
 
 debug: $(lib_LTLIBRARIES)
 	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ $(ADDONBINNAME).pvr
-if HOST_IS_OSX
-	@abs_top_srcdir@/scripts/dylib_fix_paths.sh $(ADDONBINNAME).pvr
-endif
 
 $(LIB): @BUILD_TYPE@
 	cp -f $(ADDONBINNAME).pvr $(LIB)

@@ -22,6 +22,13 @@ AC_ARG_ENABLE([release],
   [use_release=$enableval],
   [use_release=no])
 
+### External libraries options
+AC_ARG_ENABLE([external-ffmpeg],
+  [AS_HELP_STRING([--enable-external-ffmpeg],
+  [enable use of external ffmpeg libraries (default is no) 'Linux only'])],
+  [use_external_ffmpeg=$enableval],
+  [use_external_ffmpeg=no])
+
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
   BUILD_TYPE="release"
@@ -69,8 +76,28 @@ case "${host}" in
   *-freebsd*)
     OS="freebsd"
     ARCH_DEFINES="-DTARGET_POSIX -DTARGET_FREEBSD -D_LINUX"
+    use_external_ffmpeg="yes"  # same as on xbmc
     ;;
 esac
+
+### External libraries checks
+# FFmpeg
+if test "$use_external_ffmpeg" = "yes"; then
+  PKG_CHECK_MODULES([FFMPEG], [libavcodec],
+                    [FFMPEG_INCLUDES="$FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"],
+                    AC_MSG_ERROR(cannot find libavcodec))
+
+  # Possible places the ffmpeg headers may be
+  AC_CHECK_HEADERS([libavcodec/avcodec.h],[FFMPEG_INCLUDES="-I$($PKG_CONFIG --variable=includedir libavcodec)/libavcodec"],
+    [AC_CHECK_HEADERS([ffmpeg/avcodec.h],[FFMPEG_INCLUDES="-I$($PKG_CONFIG --variable=includedir libavcodec)/ffmpeg"],
+      [AC_MSG_ERROR(avcodec.h not found)])
+  ])
+
+  echo "FFMPEG_INCLUDES: $FFMPEG_INCLUDES"
+fi
+AC_SUBST(FFMPEG_INCLUDES)
+
+### End external Libraries 
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then

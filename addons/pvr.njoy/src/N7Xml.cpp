@@ -96,14 +96,16 @@ void N7Xml::list_channels()
   }
   else
   {
-    m_connected = true;
-    XBMC->Log(LOG_DEBUG, "N7Xml - Connected to N7 backend.");
     TiXmlDocument xml;
     xml.Parse(strXML.c_str());
     TiXmlElement* rootXmlNode = xml.RootElement();
+    if (rootXmlNode == NULL)
+      return;
     TiXmlElement* channelsNode = rootXmlNode->FirstChildElement("channel");
     if (channelsNode)
     {
+      XBMC->Log(LOG_DEBUG, "N7Xml - Connected to N7 backend.");
+      m_connected = true;
       int iUniqueChannelId = 0;
       TiXmlNode *pChannelNode = NULL;
       while ((pChannelNode = channelsNode->IterateChildren(pChannelNode)) != NULL)

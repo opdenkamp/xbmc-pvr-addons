@@ -5,7 +5,7 @@
 #include "MythProgramInfo.h"
 #include "MythEventHandler.h"
 #include "MythTimer.h"
-#include "client.h"
+#include "../client.h"
 
 using namespace ADDON;
 

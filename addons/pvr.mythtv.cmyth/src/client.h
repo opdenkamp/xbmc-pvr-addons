@@ -23,10 +23,10 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "utils/StdString.h"
-#include "../../../addons/library.xbmc.addon/libXBMC_addon.h"
-#include "../../../addons/library.xbmc.pvr/libXBMC_pvr.h"
-#include "../../../addons/library.xbmc.gui/libXBMC_gui.h"
+#include "platform/util/StdString.h"
+#include "libXBMC_addon.h"
+#include "libXBMC_pvr.h"
+#include "libXBMC_gui.h"
 #include "libcmyth.h"
 
 #define DEFAULT_HOST          "127.0.0.1"
@@ -39,6 +39,12 @@
 #define DEFAULT_MIN_MOVIE_LENGTH 65
 #define DEFAULT_SERIES_REGEX "^(?<folder>.+?)::(?<title>.+)"
 #define DEFAULT_SERIES_IDENTIFIER ""
+
+/*!
+ * @brief PVR macros for string exchange
+ */
+#define PVR_STRCPY(dest, source) do { strncpy(dest, source, sizeof(dest)-1); dest[sizeof(dest)-1] = '\0'; } while(0)
+#define PVR_STRCLR(dest) memset(dest, 0, sizeof(dest))
 
 extern bool         g_bCreated;           ///< Shows that the Create function was successfully called
 extern int          g_iClientID;          ///< The PVR client ID used by XBMC for this driver

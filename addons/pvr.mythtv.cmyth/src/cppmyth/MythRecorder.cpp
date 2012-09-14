@@ -2,7 +2,7 @@
 #include "MythRecorder.h"
 #include "MythProgramInfo.h"
 #include "MythChannel.h"
-#include "client.h"
+#include "../client.h"
 
 using namespace ADDON;
 

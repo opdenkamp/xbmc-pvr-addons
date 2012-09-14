@@ -27,9 +27,9 @@
 #define __WINDOWS__
 #endif
 #endif
-#include "libcmyth.h"
+#include "../libcmyth.h"
 extern CHelper_libcmyth *CMYTH;
-#include "utils/StdString.h"
+#include "platform/util/StdString.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <stddef.h>

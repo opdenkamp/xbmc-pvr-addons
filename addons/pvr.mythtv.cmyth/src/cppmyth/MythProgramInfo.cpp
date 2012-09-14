@@ -1,6 +1,6 @@
 #include "MythProgramInfo.h"
 #include "MythTimestamp.h"
-#include "client.h"
+#include "../client.h"
 
 using namespace ADDON;
 

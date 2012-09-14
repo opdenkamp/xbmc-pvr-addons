@@ -28,8 +28,8 @@
 #include <stdio.h>
 
 #ifndef _LINUX
-#include "../../../addons/library.xbmc.addon/dlfcn-win32.h"
-#define LIBCMYTH_DLL "\\..\\system\\libcmyth.dll"
+#include "platform/windows/dlfcn-win32.h"
+#define LIBCMYTH_DLL "\\pvr.mythtv.cmyth\\libcmyth.dll"
 #else
 #include <dlfcn.h>
 #if defined(__APPLE__)

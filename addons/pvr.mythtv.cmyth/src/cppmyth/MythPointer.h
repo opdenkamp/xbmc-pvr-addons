@@ -1,6 +1,6 @@
 #pragma once
 
-#include "libcmyth.h"
+#include "../libcmyth.h"
 #include "../../../../lib/platform/threads/threads.h"
 
 extern CHelper_libcmyth *CMYTH;

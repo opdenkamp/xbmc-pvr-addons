@@ -13,7 +13,9 @@ EXPORTS
 	cmyth_rcv_commbreaklist
 	cmyth_get_commbreaklist
 	cmyth_conn_connect_ctrl
+	cmyth_conn_reconnect_ctrl
 	cmyth_conn_connect_event
+	cmyth_conn_reconnect_event
 	cmyth_conn_connect_file
 	cmyth_conn_connect_ring
 	cmyth_conn_connect_recorder

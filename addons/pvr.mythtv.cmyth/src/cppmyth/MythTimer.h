@@ -1,7 +1,7 @@
 #pragma once
 
-#include "libcmyth.h"
-#include "utils/StdString.h"
+#include "../libcmyth.h"
+#include "platform/util/StdString.h"
 
 class MythTimer
 {

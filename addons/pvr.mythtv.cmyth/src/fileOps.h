@@ -2,7 +2,7 @@
 #define __FILEOPS_H
 //TODO merge into MythConnection ??
 
-#include "utils/StdString.h"
+#include "platform/util/StdString.h"
 #include <vector>
 #include <map>
 #include <queue>

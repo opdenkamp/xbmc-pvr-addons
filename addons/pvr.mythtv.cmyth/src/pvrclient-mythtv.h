@@ -43,15 +43,15 @@ public:
   const char * GetBackendVersion();
   const char * GetConnectionString();
   bool GetDriveSpace(long long *iTotal, long long *iUsed);
-  PVR_ERROR GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
+  PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
   int GetNumChannels();
-  PVR_ERROR GetChannels(PVR_HANDLE handle, bool bRadio);
+  PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
   int GetRecordingsAmount(void);
-  PVR_ERROR GetRecordings(PVR_HANDLE handle);
+  PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
   PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
   int GetTimersAmount();
-  PVR_ERROR GetTimers(PVR_HANDLE handle);
+  PVR_ERROR GetTimers(ADDON_HANDLE handle);
   PVR_ERROR AddTimer(const PVR_TIMER &timer);
   PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete);
   PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
@@ -72,8 +72,8 @@ public:
   long long LengthRecordedStream();
 
   int GetChannelGroupsAmount();
-  PVR_ERROR GetChannelGroups(PVR_HANDLE handle, bool bRadio);
-  PVR_ERROR GetChannelGroupMembers(PVR_HANDLE handle, const PVR_CHANNEL_GROUP &group);
+  PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio);
+  PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group);
 
   PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook);
 

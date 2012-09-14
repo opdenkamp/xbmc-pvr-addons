@@ -107,7 +107,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   XBMC->Log(LOG_DEBUG, "Loading cmyth library...done[5/7]");
   
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
-  g_iClientID    = pvrprops->iClientId;
+  //g_iClientID    = pvrprops->iClientId;
   g_szUserPath   = pvrprops->strUserPath;
   g_szClientPath = pvrprops->strClientPath;
 
@@ -395,15 +395,27 @@ void ADDON_FreeSettings()
  * PVR Client AddOn specific public library functions
  ***********************************************************/
 
+const char* GetPVRAPIVersion(void)
+{
+  static const char *strApiVersion = XBMC_PVR_API_VERSION;
+  return strApiVersion;
+}
+
+const char* GetMininumPVRAPIVersion(void)
+{
+  static const char *strMinApiVersion = XBMC_PVR_MIN_API_VERSION;
+  return strMinApiVersion;
+}
+
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
 {
-  pCapabilities->bSupportsTimeshift          = true;
+  //pCapabilities->bSupportsTimeshift          = true;
   pCapabilities->bSupportsEPG                = true;
   pCapabilities->bSupportsRecordings         = true;
   pCapabilities->bSupportsTimers             = true;
   pCapabilities->bSupportsTV                 = true;
   pCapabilities->bSupportsRadio              = true;
-  pCapabilities->bSupportsChannelSettings    = false;
+  //pCapabilities->bSupportsChannelSettings    = false;
   pCapabilities->bSupportsChannelGroups      = true;
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = false;
@@ -440,7 +452,7 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 
 PVR_ERROR DialogChannelScan()
 {
-  return PVR_ERROR_NOT_POSSIBLE;
+  return PVR_ERROR_FAILED;
 }
 
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
@@ -454,7 +466,7 @@ return g_client->CallMenuHook(menuhook);
 /*******************************************/
 /** PVR EPG Functions                     **/
 
-PVR_ERROR GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
+PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
 	if (g_client == NULL)
 	    return PVR_ERROR_SERVER_ERROR;
@@ -465,6 +477,11 @@ PVR_ERROR GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, time_t
 /*******************************************/
 /** PVR Channel Functions                 **/
 
+unsigned int GetChannelSwitchDelay(void)
+{
+  return 2000;
+}
+
 int GetChannelsAmount()
 {
 	if (g_client == NULL)
@@ -473,7 +490,7 @@ int GetChannelsAmount()
 	return g_client->GetNumChannels();
 }
 
-PVR_ERROR GetChannels(PVR_HANDLE handle, bool bRadio)
+PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
 	if (g_client == NULL)
 			return PVR_ERROR_SERVER_ERROR;
@@ -518,7 +535,7 @@ int GetRecordingsAmount(void)
     return g_client->GetRecordingsAmount();
 }
 
-PVR_ERROR GetRecordings(PVR_HANDLE handle)
+PVR_ERROR GetRecordings(ADDON_HANDLE handle)
 {
   	if (g_client == NULL)
 			return PVR_ERROR_SERVER_ERROR;
@@ -567,7 +584,7 @@ int GetTimersAmount(void)
   return g_client->GetTimersAmount();
 }
 
-PVR_ERROR GetTimers(PVR_HANDLE handle)
+PVR_ERROR GetTimers(ADDON_HANDLE handle)
 {
   if (g_client == NULL)
 			return PVR_ERROR_SERVER_ERROR;
@@ -754,7 +771,7 @@ int GetChannelGroupsAmount(void)
 * @param bRadio True to get the radio channel groups, false to get the TV channel groups.
 * @return PVR_ERROR_NO_ERROR if the list has been fetched successfully.
 */
-PVR_ERROR GetChannelGroups(PVR_HANDLE handle, bool bRadio)
+PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
   if (g_client == NULL)
     return PVR_ERROR_SERVER_ERROR;
@@ -768,7 +785,7 @@ PVR_ERROR GetChannelGroups(PVR_HANDLE handle, bool bRadio)
 * @param group The group to get the members for.
 * @return PVR_ERROR_NO_ERROR if the list has been fetched successfully.
 */
-PVR_ERROR GetChannelGroupMembers(PVR_HANDLE handle, const PVR_CHANNEL_GROUP &group){
+PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group){
   if (g_client == NULL)
     return PVR_ERROR_SERVER_ERROR;
   return g_client->GetChannelGroupMembers(handle,group);

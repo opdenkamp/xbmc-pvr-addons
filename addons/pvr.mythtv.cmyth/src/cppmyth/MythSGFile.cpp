@@ -1,5 +1,5 @@
 #include "MythSGFile.h"
-#include "client.h"
+#include "../client.h"
 
 using namespace ADDON;
 

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "MythPointer.h"
-#include "libcmyth.h"
+#include "../libcmyth.h"
 #include <boost/shared_ptr.hpp>
-#include "utils/StdString.h"
+#include "platform/util/StdString.h"
 
 class MythChannel
 {

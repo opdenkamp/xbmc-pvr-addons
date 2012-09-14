@@ -84,11 +84,11 @@ void RecordingRule::push_back(std::pair< PVR_TIMER, MythProgramInfo > &_val)
 void RecordingRule::SaveTimerString(PVR_TIMER& timer) 
 {
   m_stringStore.push_back(boost::shared_ptr<CStdString>(new CStdString(timer.strTitle)));
-  timer.strTitle=m_stringStore.back()->c_str();
+  PVR_STRCPY(timer.strTitle,m_stringStore.back()->c_str());
   m_stringStore.push_back(boost::shared_ptr<CStdString>(new CStdString(timer.strDirectory)));
-  timer.strDirectory=m_stringStore.back()->c_str();
+  PVR_STRCPY(timer.strDirectory,m_stringStore.back()->c_str());
   m_stringStore.push_back(boost::shared_ptr<CStdString>(new CStdString(timer.strSummary)));
-  timer.strSummary=m_stringStore.back()->c_str();
+  PVR_STRCPY(timer.strSummary,m_stringStore.back()->c_str());
 }
 
 
@@ -432,7 +432,7 @@ bool PVRClientMythTV::GetDriveSpace(long long *iTotal, long long *iUsed)
   return m_con.GetDriveSpace(*iTotal,*iUsed);
 }
 
-PVR_ERROR PVRClientMythTV::GetEPGForChannel(PVR_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
+PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s - start: %i, end: %i, ChanID: %i",__FUNCTION__,iStart,iEnd,channel.iUniqueId);
@@ -497,7 +497,7 @@ int PVRClientMythTV::GetNumChannels()
   return m_channels.size();
 }
 
-PVR_ERROR PVRClientMythTV::GetChannels(PVR_HANDLE handle, bool bRadio)
+PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s - radio: %i",__FUNCTION__,bRadio);
@@ -506,20 +506,21 @@ PVR_ERROR PVRClientMythTV::GetChannels(PVR_HANDLE handle, bool bRadio)
     if (it->second.IsRadio()==bRadio&&!it->second.IsNull())
     {
       PVR_CHANNEL tag;
+      memset(&tag, 0, sizeof(PVR_CHANNEL));
       tag.bIsHidden=!it->second.Visible();
       tag.bIsRadio=it->second.IsRadio();
       tag.iUniqueId=it->first;
       tag.iChannelNumber=it->second.NumberInt(); //Use ID instead as mythtv channel number is a string?
       CStdString chanName= it->second.Name();
-      tag.strChannelName = chanName;
+      PVR_STRCPY(tag.strChannelName, chanName);
       CStdString icon = it->second.Icon();
 
       icon = GetArtWork(FILE_OPS_GET_CHAN_ICONS,icon);
 
-      tag.strIconPath = icon;
+      PVR_STRCPY(tag.strIconPath, icon);
       //Unimplemented
-      tag.strStreamURL="";
-      tag.strInputFormat="";
+      PVR_STRCPY(tag.strStreamURL, "");
+      PVR_STRCPY(tag.strInputFormat, "");
       tag.iEncryptionSystem=0;
 
 
@@ -540,7 +541,7 @@ int PVRClientMythTV::GetRecordingsAmount(void)
 }
 
 
-PVR_ERROR PVRClientMythTV::GetRecordings(PVR_HANDLE handle)
+PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
 {
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s",__FUNCTION__);
@@ -550,6 +551,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(PVR_HANDLE handle)
     if(!it->second.IsNull())
     {
       PVR_RECORDING tag;
+      memset(&tag, 0, sizeof(PVR_RECORDING));
       tag.iDuration=it->second.Duration();
       tag.recordingTime=it->second.RecStart();
       CStdString chanName=it->second.ChannelName();
@@ -557,13 +559,13 @@ PVR_ERROR PVRClientMythTV::GetRecordings(PVR_HANDLE handle)
       CStdString path=it->second.Path();
       CStdString title=it->second.Title(true);
 
-      tag.strChannelName=chanName;
-      tag.strPlot=plot;
+      PVR_STRCPY(tag.strChannelName, chanName);
+      PVR_STRCPY(tag.strPlot, plot);
       CStdString id=it->second.Path();
-      tag.strRecordingId=id;
+      PVR_STRCPY(tag.strRecordingId, id);
       CStdString group=it->second.RecordingGroup();
-      tag.strDirectory=group=="Default"?"":group;
-      tag.strTitle=title;
+      PVR_STRCPY(tag.strDirectory, group=="Default"?"":group);
+      PVR_STRCPY(tag.strTitle, title);
       int genre=Genre(it->second.Category());      
       tag.iGenreSubType=genre&0x0F;
       tag.iGenreType=genre&0xF0;
@@ -584,7 +586,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(PVR_HANDLE handle)
       if((tag.iGenreType==0x10||genre==0x00)&&tag.iDuration>(g_iMinMovieLength*60)&&!regex_series_match&&(it->second.ProgramID().substr(0,2)=="MV"||it->second.ProgramID()==""))
       {
         group.Format("%s/Movies",tag.strDirectory);
-        tag.strDirectory=group;
+        PVR_STRCPY(tag.strDirectory, group);
       }
       else
       {
@@ -597,7 +599,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(PVR_HANDLE handle)
               foldername = result.str("folder");
             if(result.length("title"))
               newtitle=result.str("title");      
-            tag.strTitle = newtitle;
+            PVR_STRCPY(tag.strTitle, newtitle);
           }
         }
         catch(...)
@@ -605,7 +607,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(PVR_HANDLE handle)
           XBMC->Log(LOG_ERROR,"%s: Malformed regulare expression : \"%s\" ",__FUNCTION__,g_szSeriesRegEx.c_str());
         }
         group.Format("%s/%s",tag.strDirectory,foldername);
-        tag.strDirectory=group;
+        PVR_STRCPY(tag.strDirectory, group);
       }
       time_t startTime = it->second.StartTime();
 
@@ -619,35 +621,16 @@ PVR_ERROR PVRClientMythTV::GetRecordings(PVR_HANDLE handle)
       if(iconPath == "")
         iconPath = m_fOps2_client->getPreviewIconPath(id+".png");
       CStdString fanartPath = GetArtWork(FILE_OPS_GET_FANART,title);
-      tag.strIconPath = iconPath.c_str();
-      tag.strFanartPath = fanartPath.c_str();
+      //tag.strIconPath = iconPath.c_str();
+      //tag.strFanartPath = fanartPath.c_str();
 
       //Unimplemented
       tag.iLifetime=0;
       tag.iPriority=0;
-      tag.strPlotOutline="";
-      tag.strStreamURL="";
+      PVR_STRCPY(tag.strPlotOutline, "");
+      PVR_STRCPY(tag.strStreamURL, "");
 
       PVR->TransferRecordingEntry(handle,&tag);
-      
-      size_t dirsep = title.find_last_of("/");
-      if(dirsep != CStdString::npos)
-      {
-        tag.strDirectory = "/All Recordings/";
-        newtitle =  title.substr(dirsep+1,title.size());
-        tag.strTitle = newtitle.c_str();
-        id.append("@");
-        tag.strRecordingId = id.c_str();
-        PVR->TransferRecordingEntry(handle,&tag);
-      }
-      else
-      {
-        tag.strDirectory = "/All Recordings/";
-        tag.strTitle = title.c_str();
-        id.append("@");
-        tag.strRecordingId = id.c_str();
-        PVR->TransferRecordingEntry(handle,&tag);
-      }
     }
   }
   if(g_bExtraDebug)
@@ -674,7 +657,7 @@ PVR_ERROR PVRClientMythTV::DeleteRecording(const PVR_RECORDING &recording)
   {
     if(g_bExtraDebug)
       XBMC->Log(LOG_DEBUG,"%s - Not Deleted",__FUNCTION__);
-    return PVR_ERROR_NOT_DELETED;
+    return PVR_ERROR_FAILED;
   }
 }
 
@@ -698,7 +681,7 @@ PVR_ERROR PVRClientMythTV::SetRecordingPlayCount(const PVR_RECORDING &recording,
   {
     if(g_bExtraDebug)
       XBMC->Log(LOG_DEBUG,"%s - Setting watched state failed: %d)",__FUNCTION__, ret);
-    return PVR_ERROR_NOT_POSSIBLE;
+    return PVR_ERROR_FAILED;
   }
 }
 
@@ -710,7 +693,7 @@ int PVRClientMythTV::GetTimersAmount(void)
   return m_timers.size();
 }
 
-PVR_ERROR PVRClientMythTV::GetTimers(PVR_HANDLE handle)
+PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
 {
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s",__FUNCTION__);
@@ -735,6 +718,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(PVR_HANDLE handle)
           for (boost::unordered_map< CStdString, MythProgramInfo >::iterator it = upcomingRecordings.begin(); it != upcomingRecordings.end(); it++)
           {
             PVR_TIMER tag;
+            memset(&tag, 0, sizeof(PVR_TIMER));
             MythProgramInfo& proginfo = it->second;
             tag.endTime=proginfo.EndTime();
             //EndTime();
@@ -749,9 +733,9 @@ PVR_ERROR PVRClientMythTV::GetTimers(PVR_HANDLE handle)
               m_db.FindProgram(tag.startTime,tag.iClientChannelUid,title,&epgProgram);
               title=epgProgram.title;
             }
-            tag.strTitle=title;
+            PVR_STRCPY(tag.strTitle, title);
             CStdString summary=proginfo.Description(); 
-            tag.strSummary=summary;
+            PVR_STRCPY(tag.strSummary, summary);
 	    if(g_bExtraDebug)
 	      XBMC->Log(LOG_DEBUG,"%s ## - State: %d - ##",__FUNCTION__,proginfo.Status());
             switch(proginfo.Status())
@@ -770,8 +754,6 @@ PVR_ERROR PVRClientMythTV::GetTimers(PVR_HANDLE handle)
               tag.state=PVR_TIMER_STATE_SCHEDULED;
               break;
             case RS_UNKNOWN:
-              tag.state=PVR_TIMER_STATE_INVALID;
-              break;
             case RS__DONT_RECORD:
             case RS_PREVIOUS_RECORDING:
             case RS_CURRENT_RECORDING:
@@ -808,7 +790,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(PVR_HANDLE handle)
             //Unimplemented
             tag.iEpgUid=0;
             tag.iLifetime=0;
-            tag.strDirectory="";
+            PVR_STRCPY(tag.strDirectory, "");
 
             std::vector< RecordingRule >::iterator recRule = std::find(m_recordingRules.begin(), m_recordingRules.end() , it->second.RecordID()); 
 
@@ -907,9 +889,9 @@ PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
   mt.Type(timer.bIsRepeating? (timer.iWeekdays==127? MythTimer::TimeslotRecord : MythTimer::WeekslotRecord) : MythTimer::SingleRecord);
   int id=m_db.AddTimer(mt);
   if(id<0)
-    return PVR_ERROR_NOT_POSSIBLE;
+    return PVR_ERROR_FAILED;
   if(!m_con.UpdateSchedules(id))
-    return PVR_ERROR_NOT_POSSIBLE;
+    return PVR_ERROR_FAILED;
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s - Done - %i",__FUNCTION__,id);
   //PVR->TriggerTimerUpdate();
@@ -918,29 +900,30 @@ PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
 
 PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
 {
-  if(g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG,"%s - title: %s, start: %i, end: %i, chanID: %i, ID: %i",__FUNCTION__,timer.strTitle,timer.startTime,timer.iClientChannelUid,timer.iClientIndex);
-  std::map< int, MythTimer > timers=m_db.GetTimers();
-  RecordingRule r = m_recordingRules[(timer.iClientIndex)>>16]; 
-  if(r.GetParent())
-    r = *r.GetParent();
-  if(r.Type()!=MythTimer::FindOneRecord && r.Type()!=MythTimer::SingleRecord)
-  {
-    CStdString line0;
-    line0.Format(XBMC->GetLocalizedString(30008)/*"This will delete the recording rule and \nan additional %i timer(s)."*/,r.size()-1);
-    if(!(GUI->Dialog_showYesNo(XBMC->GetLocalizedString(19060)/*"Delete Timer"*/,line0,"",XBMC->GetLocalizedString(30007)/*"Do you still want to delete?"*/,NULL,NULL,NULL)))
-      return PVR_ERROR_NO_ERROR; 
-  }
-  //delete related Override and Don't Record timers
-  std::vector<RecordingRule* > modifiers = r.GetModifiers();
-  for(std::vector <RecordingRule* >::iterator it = modifiers.begin(); it != modifiers.end(); it++)
-    m_db.DeleteTimer((*it)->RecordID());
-  if(!m_db.DeleteTimer(r.RecordID()))
-    return PVR_ERROR_NOT_POSSIBLE;
-  m_con.UpdateSchedules(-1);
-  if(g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG,"%s - Done",__FUNCTION__);
-  return PVR_ERROR_NO_ERROR;
+  //if(g_bExtraDebug)
+  //  XBMC->Log(LOG_DEBUG,"%s - title: %s, start: %i, end: %i, chanID: %i, ID: %i",__FUNCTION__,timer.strTitle,timer.startTime,timer.iClientChannelUid,timer.iClientIndex);
+  //std::map< int, MythTimer > timers=m_db.GetTimers();
+  //RecordingRule r = m_recordingRules[(timer.iClientIndex)>>16]; 
+  //if(r.GetParent())
+  //  r = *r.GetParent();
+  //if(r.Type()!=MythTimer::FindOneRecord && r.Type()!=MythTimer::SingleRecord)
+  //{
+  //  CStdString line0;
+  //  line0.Format(XBMC->GetLocalizedString(30008)/*"This will delete the recording rule and \nan additional %i timer(s)."*/,r.size()-1);
+  //  if(!(GUI->Dialog_showYesNo(XBMC->GetLocalizedString(19060)/*"Delete Timer"*/,line0,"",XBMC->GetLocalizedString(30007)/*"Do you still want to delete?"*/,NULL,NULL,NULL)))
+  //    return PVR_ERROR_NO_ERROR; 
+  //}
+  ////delete related Override and Don't Record timers
+  //std::vector<RecordingRule* > modifiers = r.GetModifiers();
+  //for(std::vector <RecordingRule* >::iterator it = modifiers.begin(); it != modifiers.end(); it++)
+  //  m_db.DeleteTimer((*it)->RecordID());
+  //if(!m_db.DeleteTimer(r.RecordID()))
+  //  return PVR_ERROR_FAILED;
+  //m_con.UpdateSchedules(-1);
+  //if(g_bExtraDebug)
+  //  XBMC->Log(LOG_DEBUG,"%s - Done",__FUNCTION__);
+  //return PVR_ERROR_NO_ERROR;
+  return PVR_ERROR_FAILED;
 }
 
 void PVRClientMythTV::PVRtoMythTimer(const PVR_TIMER timer, MythTimer& mt)
@@ -1022,7 +1005,7 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
     if(createNewRule && r.Type() != MythTimer::SingleRecord  )
     {
       if(!m_db.AddTimer(mt))
-        return PVR_ERROR_NOT_POSSIBLE;
+        return PVR_ERROR_FAILED;
 
       MythTimer mtold;
       PVRtoMythTimer(oldPvrTimer,mtold);
@@ -1041,12 +1024,12 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
       if(mt.Type() != MythTimer::DontRecord && mt.Type() != MythTimer::OverrideRecord)
         mt.Type(MythTimer::OverrideRecord);
       if(!m_db.AddTimer(mt))
-        return PVR_ERROR_NOT_POSSIBLE;
+        return PVR_ERROR_FAILED;
     }
     else
     {
       if(!m_db.UpdateTimer(mt))
-        return PVR_ERROR_NOT_POSSIBLE;
+        return PVR_ERROR_FAILED;
     }
     m_con.UpdateSchedules(mt.RecordID());
   }
@@ -1290,14 +1273,15 @@ int PVRClientMythTV::GetChannelGroupsAmount()
   return m_channelGroups.size();
 }
 
-PVR_ERROR PVRClientMythTV::GetChannelGroups(PVR_HANDLE handle, bool bRadio)
+PVR_ERROR PVRClientMythTV::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s - radio: %i",__FUNCTION__,bRadio);
   PVR_CHANNEL_GROUP tag;
+  memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP));
   for(boost::unordered_map< CStdString, std::vector< int > >::iterator it=m_channelGroups.begin();it!=m_channelGroups.end();it++)
   {
-    tag.strGroupName=it->first;
+    PVR_STRCPY(tag.strGroupName, it->first);
     tag.bIsRadio=bRadio;
     for(std::vector< int >::iterator it2=it->second.begin();it2!=it->second.end();it2++)
       if(m_channels.find(*it2)!=m_channels.end()&&m_channels.at(*it2).IsRadio()==bRadio)
@@ -1312,11 +1296,12 @@ PVR_ERROR PVRClientMythTV::GetChannelGroups(PVR_HANDLE handle, bool bRadio)
 
 }
 
-PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(PVR_HANDLE handle, const PVR_CHANNEL_GROUP &group)
+PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 {
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s - group: %s",__FUNCTION__,group.strGroupName);
   PVR_CHANNEL_GROUP_MEMBER tag;
+  memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
   int i=0;
   for(std::vector< int >::iterator it=m_channelGroups.at(group.strGroupName).begin();it!=m_channelGroups.at(group.strGroupName).end();it++)
   {
@@ -1327,7 +1312,7 @@ PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(PVR_HANDLE handle, const PVR_C
       {
         tag.iChannelNumber=i++;
         tag.iChannelUniqueId=chan.ID();
-        tag.strGroupName=group.strGroupName;
+        PVR_STRCPY(tag.strGroupName, group.strGroupName);
         PVR->TransferChannelGroupMember(handle,&tag);
       }
     }
@@ -1337,13 +1322,14 @@ PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(PVR_HANDLE handle, const PVR_C
 
 PVR_ERROR PVRClientMythTV::CallMenuHook(const PVR_MENUHOOK &menuhook)
 {
-  if(menuhook.iHookId == RECORDING_RULES)
-  {
-    std::map< int, MythTimer > timers=m_db.GetTimers();
-    RecordingRulesWindow wnd(timers);
-    wnd.Open();
-  }
-  return PVR_ERROR_NO_ERROR;
+  //if(menuhook.iHookId == RECORDING_RULES)
+  //{
+  //  std::map< int, MythTimer > timers=m_db.GetTimers();
+  //  RecordingRulesWindow wnd(timers);
+  //  wnd.Open();
+  //}
+  //return PVR_ERROR_NO_ERROR;
+  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 bool PVRClientMythTV::GetLiveTVPriority()

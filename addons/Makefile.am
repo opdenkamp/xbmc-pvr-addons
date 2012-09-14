@@ -1,6 +1,7 @@
 SUBDIRS = pvr.demo \
           pvr.hts \
           pvr.mediaportal.tvserver \
+          pvr.mythtv.cmyth \
           pvr.vdr.vnsi
 
 if USE_CURL

@@ -34,22 +34,22 @@
 #include <dlfcn.h>
 #if defined(__APPLE__)
 #if defined(__POWERPC__)
-#define LIBCMYTH_DLL "/../system/libcmyth-powerpc-osx.so"
+#define LIBCMYTH_DLL "/pvr.mythtv.cmyth/libcmyth-powerpc-osx.so"
 #elif defined(__arm__)
-#define LIBCMYTH_DLL "/../system/libcmyth-arm-osx.so"
+#define LIBCMYTH_DLL "/pvr.mythtv.cmyth/libcmyth-arm-osx.so"
 #else
-#define LIBCMYTH_DLL "/../system/libcmyth-x86-osx.so"
+#define LIBCMYTH_DLL "/pvr.mythtv.cmyth/libcmyth-x86-osx.so"
 #endif
 #elif defined(__x86_64__)
-#define LIBCMYTH_DLL "/../system/libcmyth-x86_64-linux.so"
+#define LIBCMYTH_DLL "/pvr.mythtv.cmyth/libcmyth-x86_64-linux.so"
 #elif defined(_POWERPC)
-#define LIBCMYTH_DLL "/../system/libcmyth-powerpc-linux.so"
+#define LIBCMYTH_DLL "/pvr.mythtv.cmyth/libcmyth-powerpc-linux.so"
 #elif defined(_POWERPC64)
-#define LIBCMYTH_DLL "/../system/libcmyth-powerpc64-linux.so"
+#define LIBCMYTH_DLL "/pvr.mythtv.cmyth/libcmyth-powerpc64-linux.so"
 #elif defined(_ARMEL)
-#define LIBCMYTH_DLL "/../system/libcmyth-arm.so"
+#define LIBCMYTH_DLL "/pvr.mythtv.cmyth/libcmyth-arm.so"
 #else /* !__x86_64__ && !__powerpc__ */
-#define LIBCMYTH_DLL "/../system/libcmyth-i486-linux.so"
+#define LIBCMYTH_DLL "/pvr.mythtv.cmyth/libcmyth-i486-linux.so"
 #endif /* __x86_64__ */
 #endif /* _LINUX */
 

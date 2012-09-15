@@ -100,6 +100,7 @@ bool MythRecorder::LiveTVChainUpdate(CStdString chainID)
 
 void MythRecorder::prog_update_callback(cmyth_proginfo_t prog)
 {
+  (void)prog;
   XBMC->Log(LOG_DEBUG,"prog_update_callback");
 
 }
@@ -171,7 +172,7 @@ bool MythRecorder::CheckChannel(MythChannel &channel)
   int retval = 0;
   CMYTH_REC_CALL( retval, retval < 0, RecorderCheckChannel( *m_recorder_t, channelNum.GetBuffer() ) );
   //m_recorder_t->Unlock();
-  return retval;
+  return retval == 1;
 }
 
 bool MythRecorder::SetChannel(MythChannel &channel)
@@ -239,7 +240,7 @@ bool MythRecorder::SetChannel(MythChannel &channel)
   return true;
 }
 
-int MythRecorder::ReadLiveTV(void* buffer,long long length)
+int MythRecorder::ReadLiveTV(void* buffer,unsigned long length)
 {
   //m_recorder_t->Lock();
   int bytesRead=0;

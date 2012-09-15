@@ -61,7 +61,7 @@ public:
   };
 
 MythEventHandler::ImpMythEventHandler::ImpMythEventHandler(CStdString server,unsigned short port)
-:m_rec(MythRecorder()),m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>()),CThread(),m_signal(),CMutex(),m_server(server),m_port(port)
+:CThread(),CMutex(),m_rec(MythRecorder()),m_signal(),m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>()),m_server(server),m_port(port)
   {
     char *cserver=strdup(server.c_str());
     cmyth_conn_t connection=CMYTH->ConnConnectEvent(cserver,port,64*1024, 16*1024);
@@ -124,7 +124,7 @@ void MythEventHandler::SetRecordingListener ( MythFile &file, CStdString recId )
 
 bool MythEventHandler::TryReconnect()
 {
-    bool retval = false;
+    int retval = 0;
     if ( m_retry_count < 10 )
     {
         XBMC->Log( LOG_DEBUG, "%s - Trying to reconnect (retry count: %d)", __FUNCTION__, m_retry_count );
@@ -132,12 +132,12 @@ bool MythEventHandler::TryReconnect()
         m_imp->m_conn_t->Lock();
         retval = CMYTH->ConnReconnectEvent( *(m_imp->m_conn_t) );
         m_imp->m_conn_t->Unlock();
-        if ( retval )
+        if ( retval == 1 )
             m_retry_count = 0;
     }
     if ( g_bExtraDebug && !retval )
         XBMC->Log( LOG_DEBUG, "%s - Unable to reconnect (retry count: %d)", __FUNCTION__, m_retry_count );
-    return retval;
+    return retval == 1;
 }
 
 
@@ -295,9 +295,9 @@ void* MythEventHandler::ImpMythEventHandler::Process(void)
     {
         XBMC->Log( LOG_NOTICE, "%s - Select returned error; reconnect event client connection", __FUNCTION__ );
         m_conn_t->Lock();
-        bool retval = CMYTH->ConnReconnectEvent( *m_conn_t );
+        int retval = CMYTH->ConnReconnectEvent( *m_conn_t );
         m_conn_t->Unlock();
-        if ( retval )
+        if ( retval == 1 )
             XBMC->Log( LOG_NOTICE, "%s - Connected client to event socket", __FUNCTION__ );
         else
             XBMC->Log( LOG_NOTICE, "%s - Could not connect client to event socket", __FUNCTION__ );

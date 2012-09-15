@@ -93,7 +93,7 @@ void RecordingRule::SaveTimerString(PVR_TIMER& timer)
 
 
 PVRClientMythTV::PVRClientMythTV()
-  :m_con(),m_pEventHandler(NULL),m_db(),m_protocolVersion(""),m_connectionString(""),m_EPGstart(0),m_EPGend(0),m_channelGroups(),m_categoryMap(),m_fOps2_client(0)
+  :m_fOps2_client(0),m_con(),m_pEventHandler(NULL),m_db(),m_protocolVersion(""),m_connectionString(""),m_EPGstart(0),m_EPGend(0),m_channelGroups(),m_categoryMap()
 {
   m_categoryMap.insert(catbimap::value_type("Movie",0x10));
   m_categoryMap.insert(catbimap::value_type("Movie", 0x10));
@@ -446,7 +446,7 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
   }
   for(std::vector< MythProgram >::iterator it=m_EPG.begin();it!=m_EPG.end();it++)
   {
-    if(it->chanid==channel.iUniqueId)
+    if((unsigned)it->chanid==channel.iUniqueId)
     {
       EPG_TAG tag;
       tag.endTime=it->endtime;
@@ -609,7 +609,6 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
         group.Format("%s/%s",tag.strDirectory,foldername);
         PVR_STRCPY(tag.strDirectory, group);
       }
-      time_t startTime = it->second.StartTime();
 
       tag.iPlayCount=it->second.IsWatched() ? 1 : 0;
 
@@ -669,12 +668,13 @@ PVR_ERROR PVRClientMythTV::SetRecordingPlayCount(const PVR_RECORDING &recording,
 
   if (count > 1) count = 1;
   if (count < 0) count = 0;
-  bool ret = m_db.SetWatchedStatus(m_recordings.at(id), count > 0);
+  int ret = m_db.SetWatchedStatus(m_recordings.at(id), count > 0);
 
   if (ret == 1)
   {
     if(g_bExtraDebug)
       XBMC->Log(LOG_DEBUG,"%s - Set watched state",__FUNCTION__);
+    PVR->TriggerRecordingUpdate();
     return PVR_ERROR_NO_ERROR;
   }
   else
@@ -923,6 +923,8 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
   //if(g_bExtraDebug)
   //  XBMC->Log(LOG_DEBUG,"%s - Done",__FUNCTION__);
   //return PVR_ERROR_NO_ERROR;
+  (void) timer;
+  (void) bForceDelete;
   return PVR_ERROR_FAILED;
 }
 
@@ -1329,6 +1331,7 @@ PVR_ERROR PVRClientMythTV::CallMenuHook(const PVR_MENUHOOK &menuhook)
   //  wnd.Open();
   //}
   //return PVR_ERROR_NO_ERROR;
+  (void)menuhook;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 

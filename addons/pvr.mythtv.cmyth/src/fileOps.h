@@ -52,8 +52,8 @@ protected:
   std::map< FILE_OPTIONS, int > m_lastSGupdate;
   std::map< CStdString, CStdString > m_icons;
   std::map< CStdString, CStdString > m_preview;
-  boost::filesystem::path m_localBasePath;
   MythConnection m_con;
+  boost::filesystem::path m_localBasePath;
   std::map< FILE_OPTIONS, CStdString > m_sg_strings;
   CEvent m_queue_content;
   struct jobItem {

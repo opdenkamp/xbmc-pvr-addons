@@ -286,6 +286,7 @@ bool ADDON_HasSettings()
 
 unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet)
 {
+  (void)sSet;
   return 0;
 }
 
@@ -427,6 +428,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
 
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* props)
 {
+  (void)props;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -500,26 +502,31 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel)
 {
+  (void)channel;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR RenameChannel(const PVR_CHANNEL &channel)
 {
+  (void)channel;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR MoveChannel(const PVR_CHANNEL &channel)
 {
+  (void)channel;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channel)
 {
+  (void)channel;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channel)
 {
+  (void)channel;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -553,6 +560,7 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
 
 PVR_ERROR RenameRecording(const PVR_RECORDING &recording)
 {
+  (void)recording;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -564,15 +572,19 @@ PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
       return g_client->SetRecordingPlayCount(recording, count);
 }
 
-PVR_ERROR    SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
 {
+  (void)recording;
+  (void)lastplayedposition;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-int  GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 {
+  (void)recording;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
+
 /*******************************************/
 /** PVR Timer Functions                   **/
 
@@ -750,7 +762,12 @@ void DemuxAbort() {}
 void DemuxReset() {}
 void DemuxFlush() {}
 
-const char * GetLiveStreamURL(const PVR_CHANNEL &channelinfo) { return ""; }
+const char * GetLiveStreamURL(const PVR_CHANNEL &channelinfo)
+{
+  (void)channelinfo;
+  return "";
+}
+
 
 //@}
 /** @name PVR channel group methods */

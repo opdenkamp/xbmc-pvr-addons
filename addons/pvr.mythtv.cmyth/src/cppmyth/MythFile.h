@@ -13,7 +13,7 @@ public:
   MythFile();
   MythFile(cmyth_file_t myth_file,MythConnection conn);
   bool IsNull();
-  int Read(void* buffer,long long length);
+  int Read(void* buffer,unsigned long length);
   long long Seek(long long offset, int whence);
   unsigned long long Duration();
   unsigned long long CurrentPosition();

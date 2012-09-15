@@ -23,6 +23,7 @@ MythTimestamp::MythTimestamp(cmyth_timestamp_t cmyth_timestamp)
   MythTimestamp::MythTimestamp(CStdString time,bool datetime)
  :m_timestamp_t(new MythPointer<cmyth_timestamp_t>())
 {
+  (void)datetime;
   *m_timestamp_t=(/*datetime?CMYTH->DatetimeFromString(time.Buffer()):*/CMYTH->TimestampFromString(time.Buffer()));
 }
  

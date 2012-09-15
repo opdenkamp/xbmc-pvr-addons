@@ -29,6 +29,10 @@
 #include "libXBMC_gui.h"
 #include "libcmyth.h"
 
+#ifdef __WINDOWS__
+#define strdup _strdup // # strdup is POSIX, _strdup should be used instead
+#endif
+
 #define DEFAULT_HOST          "127.0.0.1"
 #define DEFAULT_EXTRA_DEBUG          false
 #define DEFAULT_LIVETV_PRIORITY      false

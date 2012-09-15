@@ -14,7 +14,7 @@ extern ADDON::CHelper_libXBMC_addon *XBMC;
 using namespace ADDON;
 
 fileOps2::fileOps2(MythConnection &mythConnection)
-  :m_con(mythConnection),m_localBasePath(g_szUserPath.c_str()),m_sg_strings(),CThread(),CMutex(),m_queue_content(), m_jobqueue()
+  :CThread(),CMutex(),m_con(mythConnection),m_localBasePath(g_szUserPath.c_str()),m_sg_strings(),m_queue_content(), m_jobqueue()
 {
   m_localBasePath /= "cache";
   if(!createDirectory(m_localBasePath))
@@ -175,8 +175,7 @@ void fileOps2::cleanCache()
         for( std::vector< MythSGFile >::iterator mit = it->second.begin();mit != it->second.end(); mit++ )
         {
           CStdString mfilename = mit->Filename();
-          unsigned int mlm = mit->LastModified();
-          if(!mit->Filename().CompareNoCase(title.c_str())&&mit->LastModified()==atoi(lastmodified.c_str()))
+          if(!mit->Filename().CompareNoCase(title.c_str())&&(long)mit->LastModified()==atoi(lastmodified.c_str()))
           {
             if(boost::filesystem::file_size(dit->path())>0)
               deletefile = false;
@@ -292,9 +291,9 @@ bool fileOps2::writeFile(boost::filesystem::path destination, MythFile &source)
   {
     //char* theFileBuff = new char[theFilesLength];
     unsigned long long  totalRead = 0;
-    unsigned int buffersize = 4096;
+    long  buffersize = 4096;
     char* buffer = new char[buffersize];
-    long long  readsize = 1024;
+    long  readsize = 1024;
     while (totalRead < length)
     {
 

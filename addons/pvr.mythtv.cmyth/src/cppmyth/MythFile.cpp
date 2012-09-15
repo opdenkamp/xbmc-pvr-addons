@@ -49,7 +49,7 @@ void MythFile::UpdateDuration (unsigned long long length )
     return *m_file_t==NULL;
   }
 
-  int MythFile::Read(void* buffer,long long length)
+  int MythFile::Read(void* buffer,unsigned long length)
   {
     int bytesRead;
     CMYTH_FILE_CALL( bytesRead, bytesRead < 0, FileRead(*m_file_t, static_cast< char * >( buffer ), length ) );
@@ -66,13 +66,13 @@ void MythFile::UpdateDuration (unsigned long long length )
   unsigned long long MythFile::CurrentPosition()
   {
     unsigned long long retval = 0;
-    CMYTH_FILE_CALL( retval, retval < 0, FilePosition( *m_file_t ) );
+    CMYTH_FILE_CALL( retval, (long long)retval < 0, FilePosition( *m_file_t ) );
     return retval;
   }
   
   unsigned long long MythFile::Duration()
   {
     unsigned long long retval = 0;
-    CMYTH_FILE_CALL( retval, retval < 0, FileLength( *m_file_t ) );
+    CMYTH_FILE_CALL( retval, (long long)retval < 0, FileLength( *m_file_t ) );
     return retval;
   }

@@ -23,7 +23,7 @@ public:
   int ID();
   bool CheckChannel(MythChannel &channel);
   bool SetChannel(MythChannel &channel);
-  int ReadLiveTV(void* buffer,long long length);
+  int ReadLiveTV(void* buffer,unsigned long length);
   MythProgramInfo GetCurrentProgram();
   long long LiveTVSeek(long long offset, int whence);
   long long LiveTVDuration();

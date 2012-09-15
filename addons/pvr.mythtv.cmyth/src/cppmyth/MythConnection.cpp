@@ -124,14 +124,14 @@ bool MythConnection::IsConnected()
 
 bool MythConnection::TryReconnect()
 {
-    bool retval = false;
+    int retval = false;
     if ( m_retry_count < 10 )
     {
         m_retry_count++;
         Lock();
         retval = CMYTH->ConnReconnectCtrl( *m_conn_t );
         Unlock();
-        if ( retval )
+        if ( retval == 1 )
         {
             m_retry_count = 0;
             if ( MythConnection::m_pEventHandler && !MythConnection::m_pEventHandler->TryReconnect() )
@@ -142,7 +142,7 @@ bool MythConnection::TryReconnect()
     }
     if ( g_bExtraDebug && !retval )
         XBMC->Log( LOG_DEBUG, "%s - Unable to reconnect (retry count: %d)", __FUNCTION__, m_retry_count );
-    return retval;
+    return retval == 1;
 }
 
 MythRecorder MythConnection::GetFreeRecorder()

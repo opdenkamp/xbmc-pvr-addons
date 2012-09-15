@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+# Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platform", "platform\platform.vcxproj", "{FE4573F6-A794-4AD3-B37F-49E51F1140E6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.vcxproj", "{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}"
@@ -28,6 +28,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.fortherecord.argus", ".
 		{F3A72A50-E295-49BA-ACD7-8696907E0351} = {F3A72A50-E295-49BA-ACD7-8696907E0351}
 		{FE4573F6-A794-4AD3-B37F-49E51F1140E6} = {FE4573F6-A794-4AD3-B37F-49E51F1140E6}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.nextpvr", "..\..\addons\pvr.nextpvr\project\VS2010Express\XBMC_NextPVR.vcxproj", "{AAE3A937-C7CA-4A43-BCFC-C39C253820CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,7 +66,6 @@ Global
 		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Release|Win32.ActiveCfg = Release|Win32
 		{5ACBDC4B-75D8-49DC-926F-F6F2CC7F3F99}.Release|Win32.Build.0 = Release|Win32
 		{034B992A-F669-4AC3-B462-49179731066F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{034B992A-F669-4AC3-B462-49179731066F}.Debug|Win32.Build.0 = Debug|Win32
 		{034B992A-F669-4AC3-B462-49179731066F}.Release|Win32.ActiveCfg = Release|Win32
 		{034B992A-F669-4AC3-B462-49179731066F}.Release|Win32.Build.0 = Release|Win32
 		{F3A72A50-E295-49BA-ACD7-8696907E0351}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -72,9 +73,12 @@ Global
 		{F3A72A50-E295-49BA-ACD7-8696907E0351}.Release|Win32.ActiveCfg = Release|Win32
 		{F3A72A50-E295-49BA-ACD7-8696907E0351}.Release|Win32.Build.0 = Release|Win32
 		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Debug|Win32.Build.0 = Debug|Win32
 		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Release|Win32.ActiveCfg = Release|Win32
 		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Release|Win32.Build.0 = Release|Win32
+		{AAE3A937-C7CA-4A43-BCFC-C39C253820CC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AAE3A937-C7CA-4A43-BCFC-C39C253820CC}.Debug|Win32.Build.0 = Debug|Win32
+		{AAE3A937-C7CA-4A43-BCFC-C39C253820CC}.Release|Win32.ActiveCfg = Release|Win32
+		{AAE3A937-C7CA-4A43-BCFC-C39C253820CC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

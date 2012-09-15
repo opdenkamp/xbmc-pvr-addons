@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+    <!-- settings labels -->
+    <string id="30000">MythTV Backend Hostname eller IP</string>
+    <string id="30001">MythTV Backend Port</string>
+    <string id="30002">MythTV Database Brugernavn</string>
+    <string id="30003">MythTV Database Adgangskode</string>
+    <string id="30004">MythTV Database Navn</string>
+    <string id="30005">Inkluder mere fejlfindings-information i log-filen</string>
+</strings>
+

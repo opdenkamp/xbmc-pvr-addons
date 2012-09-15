@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+    <!-- settings labels -->
+    <string id="30000">MythTV Backend Hostname or IP</string>
+    <string id="30001">MythTV Backend Port</string>
+    <string id="30002">MythTV Database Username</string>
+    <string id="30003">MythTV Database Password</string>
+    <string id="30004">MythTV Database name</string>
+    <string id="30005">Include more debug information in the log</string>
+    <string id="30006">Recording Rules</string>
+    <string id="30007">Do you still want to delete?</string>
+    <string id="30008">This will delete the recording rule and &#xA;an additional %i timer(s).</string>	
+    <string id="30009">Allow live TV to move scheduled shows</string>	
+    <string id="30010">Minimum duration of a recording to be considered a movie</string>	
+    <string id="30011">Perl Regular Expression used to extract the foldernames and title for series</string>	
+    <string id="30012">Perl Regular Expression used to detect if the title+subtitle is a series</string>
+</strings>
+

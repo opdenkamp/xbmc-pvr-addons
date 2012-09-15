@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon
+  id="pvr.cmyth"
+  version="1.0.0"
+  name="PVR MythTV Client based on CMYTH from TSP"
+  provider-name="Jean-Luc Barriere">
+  <requires>
+    <c-pluff version="0.1"/>
+  </requires>
+  <extension
+    point="xbmc.pvrclient"
+    library_linux="XBMC_cmyth.pvr"
+    library_wingl="XBMC_cmyth_win32.pvr"
+    library_windx="XBMC_cmyth_win32.pvr" />
+  <extension point="xbmc.addon.metadata">
+    <summary>MYTHTV PVR Client</summary>
+    <description>MYTHTV PVR Client</description>
+    <disclaimer>Development status</disclaimer>
+    <platform>linux wingl windx</platform>
+  </extension>
+</addon>

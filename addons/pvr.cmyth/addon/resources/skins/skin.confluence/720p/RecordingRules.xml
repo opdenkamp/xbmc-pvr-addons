@@ -1,0 +1,339 @@
+<window>
+	<defaultcontrol>14</defaultcontrol>
+
+	<controls>
+		<include>CommonTVBackground</include>
+    <control type="group">
+			<visible>true</visible>
+			<control type="image">
+				<posx>0</posx>
+				<posy>0</posy>
+				<width>1280</width>
+				<height>720</height>
+				<texture>special://skin/backgrounds/media-overlay.png</texture>
+				<visible>Player.HasVideo + !Skin.HasSetting(ShowBackgroundVideo)</visible>
+			</control>
+			<control type="visualisation">
+				<posx>0</posx>
+				<posy>0</posy>
+				<width>1280</width>
+				<height>720</height>
+				<visible>Player.HasAudio + !Skin.HasSetting(ShowBackgroundVis)</visible>
+			</control>
+			<control type="videowindow">
+				<posx>0</posx>
+				<posy>0</posy>
+				<width>1280</width>
+				<height>720</height>
+				<visible>Player.HasVideo + !Skin.HasSetting(ShowBackgroundVideo)</visible>
+			</control>
+		</control>  
+		<include>ContentPanelBackgroundsPVR</include>
+    <control type="group">
+  			<description>Recording Rules group</description>
+  			<include>VisibleFadeEffect</include>
+  			<control type="group">
+  				<posx>80</posx>
+  				<posy>60</posy>
+  				<control type="label">
+  					<description>Channel header label</description>
+  					<posx>0</posx>
+  					<posy>20</posy>
+  					<width>220</width>
+  					<height>20</height>
+  					<font>font13_title</font>
+  					<textcolor>white</textcolor>
+  					<shadowcolor>black</shadowcolor>
+  					<align>center</align>
+  					<aligny>center</aligny>
+  					<label>19029</label>
+  				</control>
+  				<control type="label">
+  					<description>Time header label</description>
+  					<posx>580</posx>
+  					<posy>20</posy>
+  					<width>300</width>
+  					<height>20</height>
+  					<font>font13_title</font>
+  					<textcolor>white</textcolor>
+  					<shadowcolor>black</shadowcolor>
+  					<align>center</align>
+  					<aligny>center</aligny>
+  					<label>555</label>
+  				</control>
+  				<control type="label">
+  					<description>Search header label</description>
+  					<posx>220</posx>
+  					<posy>20</posy>
+  					<width>300</width>
+  					<height>20</height>
+  					<font>font13_title</font>
+  					<textcolor>white</textcolor>
+  					<shadowcolor>black</shadowcolor>
+  					<align>center</align>
+  					<aligny>center</aligny>
+  					<label>137</label>
+  				</control>
+  				<control type="label">
+  					<description>Status header label</description>
+  					<posx>940</posx>
+  					<posy>20</posy>
+  					<width>150</width>
+  					<height>20</height>
+  					<font>font13_title</font>
+  					<textcolor>white</textcolor>
+  					<shadowcolor>black</shadowcolor>
+  					<align>center</align>
+  					<aligny>center</aligny>
+  					<label>126</label>
+  				</control>
+  				<control type="image">
+  					<description>separator image</description>
+  					<posx>0</posx>
+  					<posy>50</posy>
+  					<width>1100</width>
+  					<height>1</height>
+  					<colordiffuse>88FFFFFF</colordiffuse>
+  					<texture>separator2.png</texture>
+  				</control>
+  				<control type="list" id="14">
+  					<posx>0</posx>
+  					<posy>55</posy>
+  					<width>1100</width>
+  					<height>480</height>
+  					<onup>14</onup>
+  					<ondown>14</ondown>
+  					<onleft>35</onleft>
+  					<onright>73</onright>
+  					<pagecontrol>73</pagecontrol>
+  					<scrolltime>200</scrolltime>
+  					<itemlayout height="40">
+  						<control type="image">
+  							<posx>0</posx>
+  							<posy>0</posy>
+  							<width>1100</width>
+  							<height>41</height>
+  							<texture border="5">MenuItemNF.png</texture>
+  						</control>
+  						<control type="image">
+  							<posx>220</posx>
+  							<posy>0</posy>
+  							<width>300</width>
+  							<height>40</height>
+  							<colordiffuse>33FFFFFF</colordiffuse>
+  							<texture border="5">StackFO.png</texture>
+  						</control>
+  						<control type="image">
+  							<posx>940</posx>
+  							<posy>0</posy>
+  							<width>155</width>
+  							<height>40</height>
+  							<colordiffuse>33FFFFFF</colordiffuse>
+  							<texture border="5">StackFO.png</texture>
+  						</control>
+  						<control type="image">
+  							<posx>0</posx>
+  							<posy>8</posy>
+  							<width>50</width>
+  							<height>26</height>
+  							<visible>!IsEmpty(ListItem.Date)</visible>
+  							<texture border="1">$INFO[ListItem.Icon]</texture>
+  						</control>
+  						<control type="label">
+  							<posx>50</posx>
+  							<posy>0</posy>
+  							<width>150</width>
+  							<height>40</height>
+  							<font>font12</font>
+  							<align>left</align>
+  							<aligny>center</aligny>
+  							<selectedcolor>selected</selectedcolor>
+  							<info>ListItem.Property(channel)</info>
+  						</control>
+  						<control type="label">
+  							<posx>370</posx>
+  							<posy>0</posy>
+  							<width>290</width>
+  							<height>40</height>
+  							<font>font12</font>
+  							<align>center</align>
+  							<aligny>center</aligny>
+  							<selectedcolor>selected</selectedcolor>
+  							<info>ListItem.Property(search)</info>
+  						</control>
+  						<control type="label">
+  							<posx>730</posx>
+  							<posy>0</posy>
+  							<width>400</width>
+  							<height>40</height>
+  							<font>font12</font>
+  							<align>center</align>
+  							<aligny>center</aligny>
+  							<selectedcolor>selected</selectedcolor>
+  							<info>ListItem.Property(time)</info>
+  						</control>
+  						<control type="label">
+  							<posx>1018</posx>
+  							<posy>0</posy>
+  							<width>170</width>
+  							<height>40</height>
+  							<font>font12</font>
+  							<align>center</align>
+  							<aligny>center</aligny>
+  							<selectedcolor>selected</selectedcolor>
+  							<info>ListItem.Property(status)</info>
+  						</control>
+  					</itemlayout>
+  					<focusedlayout height="40">
+  						<control type="image">
+  							<posx>0</posx>
+  							<posy>0</posy>
+  							<width>1100</width>
+  							<height>41</height>
+  							<texture border="5">MenuItemNF.png</texture>
+  						</control>
+  						<control type="image">
+  							<posx>220</posx>
+  							<posy>0</posy>
+  							<width>300</width>
+  							<height>40</height>
+  							<colordiffuse>33FFFFFF</colordiffuse>
+  							<texture border="5">StackFO.png</texture>
+  							<visible>!Control.HasFocus(14)</visible>
+  						</control>
+  						<control type="image">
+  							<posx>980</posx>
+  							<posy>0</posy>
+  							<width>120</width>
+  							<height>40</height>
+  							<colordiffuse>33FFFFFF</colordiffuse>
+  							<texture border="5">StackFO.png</texture>
+  							<visible>!Control.HasFocus(14)</visible>
+  						</control>
+  						<control type="image">
+  							<posx>220</posx>
+  							<posy>0</posy>
+  							<width>300</width>
+  							<height>40</height>
+  							<colordiffuse>88FFFFFF</colordiffuse>
+  							<texture border="5">StackFO.png</texture>
+  							<visible>Control.HasFocus(14)</visible>
+  						</control>
+  						<control type="image">
+  							<posx>940</posx>
+  							<posy>0</posy>
+  							<width>155</width>
+  							<height>40</height>
+  							<colordiffuse>88FFFFFF</colordiffuse>
+  							<texture border="5">StackFO.png</texture>
+  							<visible>Control.HasFocus(14)</visible>
+  						</control>
+  						<control type="image">
+  							<posx>0</posx>
+  							<posy>8</posy>
+  							<width>50</width>
+  							<height>26</height>
+  							<visible>!IsEmpty(ListItem.Date)</visible>
+  							<texture border="1">$INFO[ListItem.Icon]</texture>
+  						</control>
+  						<control type="label">
+  							<posx>50</posx>
+  							<posy>0</posy>
+  							<width>150</width>
+  							<height>40</height>
+  							<font>font12</font>
+  							<align>left</align>
+  							<aligny>center</aligny>
+  							<selectedcolor>selected</selectedcolor>
+  							<info>ListItem.Property(channel)</info>
+  						</control>
+  						<control type="label">
+  							<posx>370</posx>
+  							<posy>0</posy>
+  							<width>290</width>
+  							<height>40</height>
+  							<font>font12</font>
+  							<align>center</align>
+  							<aligny>center</aligny>
+  							<selectedcolor>selected</selectedcolor>
+  							<info>ListItem.Property(search)</info>
+  						</control>
+  						<control type="label">
+  							<posx>730</posx>
+  							<posy>0</posy>
+  							<width>400</width>
+  							<height>40</height>
+  							<font>font12</font>
+  							<align>center</align>
+  							<aligny>center</aligny>
+  							<selectedcolor>selected</selectedcolor>
+  							<info>ListItem.Property(time)</info>
+  						</control>
+  						<control type="label">
+  							<posx>1018</posx>
+  							<posy>0</posy>
+  							<width>150</width>
+  							<height>40</height>
+  							<font>font12</font>
+  							<align>center</align>
+  							<aligny>center</aligny>
+  							<selectedcolor>selected</selectedcolor>
+  							<info>ListItem.Property(status)</info>
+  						</control>
+  					</focusedlayout>
+  				</control>
+  				<control type="scrollbar" id="73">
+  					<posx>1105</posx>
+  					<posy>50</posy>
+  					<width>25</width>
+  					<height>480</height>
+  					<texturesliderbackground border="0,14,0,14">ScrollBarV.png</texturesliderbackground>
+  					<texturesliderbar border="0,14,0,14">ScrollBarV_bar.png</texturesliderbar>
+  					<texturesliderbarfocus border="0,14,0,14">ScrollBarV_bar_focus.png</texturesliderbarfocus>
+  					<textureslidernib>ScrollBarNib.png</textureslidernib>
+  					<textureslidernibfocus>ScrollBarNib.png</textureslidernibfocus>
+  					<onleft>11</onleft>
+  					<onright>35</onright>
+  					<showonepage>false</showonepage>
+  					<orientation>vertical</orientation>
+  				</control>
+  				<control type="image">
+  					<description>separator image</description>
+  					<posx>55</posx>
+  					<posy>540</posy>
+  					<width>1010</width>
+  					<height>1</height>
+  					<colordiffuse>88FFFFFF</colordiffuse>
+  					<texture>separator2.png</texture>
+  				</control>
+  				<control type="button" id="32">
+  					<description>Done</description>
+            <posx>55</posx>
+            <posy>545</posy>
+            <width>128</width>
+            <height>30</height>
+  					<label>20177</label>
+  					<font>font13_title</font>
+            <align>right</align>
+            <aligny>center</aligny>
+  					<texturenofocus border="5">MenuItemNF.png</texturenofocus>
+            <texturefocus border="5">MenuItemFO.png</texturefocus>
+  				</control>
+  			</control>
+  			<control type="label">
+  				<description>Page Count Label</description>
+  				<posx>40r</posx>
+  				<posy>53r</posy>
+  				<width>500</width>
+  				<height>20</height>
+  				<font>font12</font>
+  				<textcolor>grey</textcolor>
+  				<scroll>false</scroll>
+  				<align>right</align>
+  				<aligny>center</aligny>
+  				<label>([COLOR=blue]$INFO[Container(14).NumItems][/COLOR]) $LOCALIZE[19040] - $LOCALIZE[31024] ([COLOR=blue]$INFO[Container(14).CurrentPage]/$INFO[Container(14).NumPages][/COLOR])</label>
+  				<include>Window_OpenClose_Animation</include>		
+  			</control>
+  		</control>
+  	</controls>
+</window>

@@ -1,7 +1,8 @@
 SUBDIRS = pvr.demo \
           pvr.hts \
           pvr.mediaportal.tvserver \
-          pvr.vdr.vnsi
+          pvr.vdr.vnsi \
+		  pvr.nextpvr
 
 if USE_CURL
 SUBDIRS += pvr.njoy \

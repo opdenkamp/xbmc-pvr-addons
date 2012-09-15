@@ -50,7 +50,7 @@ msgstr ""
 # on-screen error messages
 ###########################
 msgctxt "#30050"
-msgid "NextPVR server is too old.:
+msgid "NextPVR server is too old."
 msgstr ""
 
 msgctxt "#30051"

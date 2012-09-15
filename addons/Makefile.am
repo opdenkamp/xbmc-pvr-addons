@@ -5,7 +5,8 @@ SUBDIRS = pvr.demo \
 
 if USE_CURL
 SUBDIRS += pvr.njoy \
-           pvr.fortherecord.argus
+           pvr.fortherecord.argus \
+           pvr.vuplus
 endif
 
 clean:

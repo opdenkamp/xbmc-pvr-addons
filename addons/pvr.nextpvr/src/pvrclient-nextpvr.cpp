@@ -783,9 +783,11 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
 				memset(&tag, 0, sizeof(tag));
 
 
-				tag.iClientIndex = atoi(pRecordingNode->FirstChildElement("id")->FirstChild()->Value());
-				tag.iClientChannelUid = atoi(pRecordingNode->FirstChildElement("channel")->FirstChild()->Value());
+				tag.iClientIndex = atoi(pRecordingNode->FirstChildElement("id")->FirstChild()->Value());				
+				tag.iClientChannelUid = atoi(pRecordingNode->FirstChildElement("channel_id")->FirstChild()->Value());
+
 				tag.state = PVR_TIMER_STATE_SCHEDULED;
+
 				//if (IsRecording())
 				//	tag.state           = PVR_TIMER_STATE_RECORDING;
 				//else if (m_active)
@@ -855,6 +857,7 @@ PVR_ERROR cPVRClientNextPVR::AddTimer(const PVR_TIMER &timerinfo)
 	{
 		if (strstr(response, "<rsp stat=\"ok\">"))
 		{
+			PVR->TriggerTimerUpdate();
 			return PVR_ERROR_NO_ERROR;
 		}
 	}
@@ -872,6 +875,7 @@ PVR_ERROR cPVRClientNextPVR::DeleteTimer(const PVR_TIMER &timer, bool bForceDele
 	{
 		if (strstr(response, "<rsp stat=\"ok\">"))
 		{
+			PVR->TriggerTimerUpdate();
 			return PVR_ERROR_NO_ERROR;
 		}
 	}

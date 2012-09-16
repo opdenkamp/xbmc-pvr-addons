@@ -1,6 +1,6 @@
 /*
- *      Copyright (C) 2011 Pulse-Eight
- *      http://www.pulse-eight.com/
+ *      Copyright (C) 2005-2012 Team XBMC
+ *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,12 @@
 #include <boost/bimap/unordered_set_of.hpp>
 #include "fileOps.h"
 //#include "../../../xbmc/xbmc_pvr_types.h"
+
+/*!
+ * @brief PVR macros for string exchange
+ */
+#define PVR_STRCPY(dest, source) do { strncpy(dest, source, sizeof(dest)-1); dest[sizeof(dest)-1] = '\0'; } while(0)
+#define PVR_STRCLR(dest) memset(dest, 0, sizeof(dest))
 
 struct PVRcmythEpgEntry
 {
@@ -77,35 +83,61 @@ public:
   PVRcmyth(void);
   virtual ~PVRcmyth(void);
   
-  //NEW
+  //General
   virtual bool Connect();
   virtual bool GetLiveTVPriority();
   virtual void SetLiveTVPriority(bool enabled);
   virtual CStdString GetArtWork(FILE_OPTIONS storageGroup, CStdString shwTitle);
+  //virtual PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook);
+  //virtual const char * GetBackendName();
+  //virtual const char * GetBackendVersion();
+  //virtual const char * GetConnectionString();
+  //virtual bool GetDriveSpace(long long *iTotal, long long *iUsed);
+  //virtual int GetNumChannels();
+
+  //Channels
+  virtual int GetChannelsAmount(void);
+  virtual PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
+  virtual bool GetChannel(const PVR_CHANNEL &channel, PVRcmythChannel &myChannel);
+  virtual int GetChannelGroupsAmount(void);
+  virtual PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio);
+  virtual PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group);
+  virtual PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
+  
+  //LiveTV
   virtual bool OpenLiveStream(const PVR_CHANNEL &channel);
   virtual void CloseLiveStream();
   virtual int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize);
   virtual long long SeekLiveStream(long long iPosition, int iWhence);
   virtual long long LengthLiveStream();
   virtual bool SwitchChannel(const PVR_CHANNEL &channel);
-  //NEW
+  virtual PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
+  //virtual int GetCurrentClientChannel();
+
+  //Timers
+  //virtual int GetTimersAmount();
+  //virtual PVR_ERROR GetTimers(ADDON_HANDLE handle);
+  //virtual PVR_ERROR AddTimer(const PVR_TIMER &timer);
+  //virtual PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete);
+  //virtual PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
+
+  //Recordings
+  //virtual int GetRecordingsAmount(void);
+  //virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle);
+  //virtual PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
+  //virtual PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
+  //virtual bool OpenRecordedStream(const PVR_RECORDING &recinfo);
+  //virtual void CloseRecordedStream();
+  //virtual int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize);
+  //virtual long long SeekRecordedStream(long long iPosition, int iWhence);
+  //virtual long long LengthRecordedStream();
   
-  virtual int GetChannelsAmount(void);
-  virtual PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
-  virtual bool GetChannel(const PVR_CHANNEL &channel, PVRcmythChannel &myChannel);
-
-  virtual int GetChannelGroupsAmount(void);
-  virtual PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio);
-  virtual PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group);
-
-  virtual PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
-
 protected:
   virtual bool LoadCategoryMap(void);
 private:
 //  std::vector<PVRcmythChannelGroup> m_groups;
 //  std::vector<PVRcmythChannel>      m_channels;
-//  time_t                           m_iEpgStart;
+//  time_t                            m_iEpgStart;
   CStdString                       m_strDefaultIcon;
   CStdString                       m_strDefaultMovie;
   

@@ -1,6 +1,6 @@
 /*
- *      Copyright (C) 2011 Pulse-Eight
- *      http://www.pulse-eight.com/
+ *      Copyright (C) 2005-2012 Team XBMC
+ *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
  *
  */
 
-//#include "tinyxml/XMLUtils.h"
 #include "PVRcmyth.h"
 #include "tools.h"
 #include <cmyth/cmyth.h>
@@ -375,6 +374,9 @@ void PVRcmyth::SetLiveTVPriority(bool enabled)
   }
 }
 
+/***********************************************************
+ * PVR Client AddOn Channels library functions
+ ***********************************************************/
 int PVRcmyth::GetChannelsAmount(void)
 {
   return m_channels.size();
@@ -393,11 +395,11 @@ PVR_ERROR PVRcmyth::GetChannels(ADDON_HANDLE handle, bool bRadio)
       tag.bIsRadio=it->second.IsRadio();
       tag.iUniqueId=it->first;
       tag.iChannelNumber=it->second.NumberInt(); //Use ID instead as mythtv channel number is a string?
-      strncpy(tag.strChannelName,it->second.Name(),sizeof(tag.strChannelName));
-      strncpy(tag.strIconPath,GetArtWork(FILE_OPS_GET_CHAN_ICONS,it->second.Icon()),sizeof(tag.strIconPath));
+      PVR_STRCPY(tag.strChannelName,it->second.Name());
+      PVR_STRCPY(tag.strIconPath,GetArtWork(FILE_OPS_GET_CHAN_ICONS,it->second.Icon()));
       //Unimplemented
-      strncpy(tag.strStreamURL,"",sizeof(tag.strStreamURL));
-      strncpy(tag.strInputFormat,"",sizeof(tag.strInputFormat));
+      PVR_STRCLR(tag.strStreamURL);
+      PVR_STRCLR(tag.strInputFormat);
       tag.iEncryptionSystem=0;
 
 
@@ -413,7 +415,7 @@ bool PVRcmyth::GetChannel(const PVR_CHANNEL &channel, PVRcmythChannel &myChannel
 {
   for (std::map< int, MythChannel >::iterator it = m_channels.begin(); it != m_channels.end(); it++)
   {
-    if (it->first == channel.iUniqueId)
+    if ((unsigned int)it->first == channel.iUniqueId)
     {
       myChannel.iUniqueId         = it->first;
       myChannel.bRadio            = it->second.IsRadio();
@@ -442,7 +444,7 @@ PVR_ERROR PVRcmyth::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
   for(boost::unordered_map< CStdString, std::vector< int > >::iterator it=m_groups.begin();it!=m_groups.end();it++)
   {
     //tag.strGroupName=it->first;
-    strncpy(tag.strGroupName,it->first,sizeof(tag.strGroupName));
+    PVR_STRCPY(tag.strGroupName,it->first);
     tag.bIsRadio=bRadio;
     for(std::vector< int >::iterator it2=it->second.begin();it2!=it->second.end();it2++)
       if(m_channels.find(*it2)!=m_channels.end()&&m_channels.at(*it2).IsRadio()==bRadio)
@@ -473,7 +475,7 @@ PVR_ERROR PVRcmyth::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNE
         tag.iChannelNumber=i++;
         tag.iChannelUniqueId=chan.ID();
         //tag.strGroupName=group.strGroupName;
-        strncpy(tag.strGroupName,group.strGroupName,sizeof(tag.strGroupName));
+        PVR_STRCPY(tag.strGroupName,group.strGroupName);
 	PVR->TransferChannelGroupMember(handle,&tag);
       }
     }
@@ -495,7 +497,7 @@ PVR_ERROR PVRcmyth::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &cha
   }
   for(std::vector< MythProgram >::iterator it=m_EPG.begin();it!=m_EPG.end();it++)
   {
-    if(it->chanid==channel.iUniqueId)
+    if((unsigned int)it->chanid==channel.iUniqueId)
     {
       EPG_TAG tag;
       tag.endTime=it->endtime;
@@ -538,6 +540,9 @@ PVR_ERROR PVRcmyth::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &cha
   return PVR_ERROR_NO_ERROR;
 }
 
+/***********************************************************
+ * PVR Client AddOn liveTV library functions
+ ***********************************************************/
 bool PVRcmyth::OpenLiveStream(const PVR_CHANNEL &channel)
 {
   if(g_bExtraDebug)
@@ -661,3 +666,72 @@ bool PVRcmyth::SwitchChannel(const PVR_CHANNEL &channel)
     XBMC->Log(LOG_DEBUG,"%s - Done",__FUNCTION__);
   return retval;
 }
+
+PVR_ERROR PVRcmyth::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
+{
+  if(g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG,"%s",__FUNCTION__);
+  MythSignal signal;
+  if ( m_pEventHandler )
+  {
+    signal=m_pEventHandler->GetSignal();
+  }
+  signalStatus.dAudioBitrate=0;
+  signalStatus.dDolbyBitrate=0;
+  signalStatus.dVideoBitrate=0;
+  signalStatus.iBER=signal.BER();
+  signalStatus.iSignal=signal.Signal();
+  signalStatus.iSNR=signal.SNR();
+  signalStatus.iUNC=signal.UNC();
+  CStdString ID;
+  CStdString adaptorStatus=signal.AdapterStatus();
+  ID.Format("Myth Recorder %i",signal.ID());
+  strcpy(signalStatus.strAdapterName,ID.Buffer());
+  strcpy(signalStatus.strAdapterStatus,adaptorStatus.Buffer());
+  if(g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG,"%s - Done",__FUNCTION__);
+  return PVR_ERROR_NO_ERROR;
+}
+
+/***********************************************************
+ * PVR Client AddOn Timers library functions
+ ***********************************************************/
+//virtual int GetTimersAmount();
+//virtual PVR_ERROR GetTimers(ADDON_HANDLE handle);
+//virtual PVR_ERROR AddTimer(const PVR_TIMER &timer);
+//virtual PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete);
+//virtual PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
+/*
+void PVRcmyth::PVRtoMythTimer(const PVR_TIMER timer, MythTimer& mt)
+{
+  CStdString category=Genre(timer.iGenreType);
+  mt.Category(category);
+  mt.ChanID(timer.iClientChannelUid);
+  mt.Callsign(m_channels.at(timer.iClientChannelUid).Callsign());
+  mt.Description(timer.strSummary);
+  mt.EndOffset(timer.iMarginEnd);
+  mt.EndTime(timer.endTime);
+  mt.Inactive(timer.state == PVR_TIMER_STATE_ABORTED ||timer.state ==  PVR_TIMER_STATE_CANCELLED);
+  mt.Priority(timer.iPriority);
+  mt.StartOffset(timer.iMarginStart);
+  mt.StartTime(timer.startTime);
+  mt.Title(timer.strTitle,true);
+  CStdString title=mt.Title(false);
+  mt.SearchType(m_db.FindProgram(timer.startTime,timer.iClientChannelUid,title,NULL)?MythTimer::NoSearch:MythTimer::ManualSearch);
+  mt.Type(timer.bIsRepeating? (timer.iWeekdays==127? MythTimer::TimeslotRecord : MythTimer::WeekslotRecord) : MythTimer::SingleRecord);
+  mt.RecordID(timer.iClientIndex);
+}
+*/
+
+/***********************************************************
+ * PVR Client AddOn Recordings library functions
+ ***********************************************************/
+//virtual int GetRecordingsAmount(void);
+//virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle);
+//virtual PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
+//virtual PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
+//virtual bool OpenRecordedStream(const PVR_RECORDING &recinfo);
+//virtual void CloseRecordedStream();
+//virtual int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize);
+//virtual long long SeekRecordedStream(long long iPosition, int iWhence);
+//virtual long long LengthRecordedStream();

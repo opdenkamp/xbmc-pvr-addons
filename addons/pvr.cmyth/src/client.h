@@ -1,7 +1,7 @@
 #pragma once
 /*
- *      Copyright (C) 2011 Pulse-Eight
- *      http://www.pulse-eight.com/
+ *      Copyright (C) 2005-2012 Team XBMC
+ *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,16 +27,16 @@ extern "C" {
   #include "cmyth/include/cmyth/cmyth.h"
 }
 
-#define DEFAULT_HOST          "127.0.0.1"
+#define DEFAULT_HOST                 "127.0.0.1"
 #define DEFAULT_EXTRA_DEBUG          false
 #define DEFAULT_LIVETV_PRIORITY      false
-#define DEFAULT_PORT 6543
-#define DEFAULT_DB_USER "mythtv"
-#define DEFAULT_DB_PASSWORD "mythtv"
-#define DEFAULT_DB_NAME "mythconverg"
-#define DEFAULT_MIN_MOVIE_LENGTH 65
-#define DEFAULT_SERIES_REGEX "^(?<folder>.+?)::(?<title>.+)"
-#define DEFAULT_SERIES_IDENTIFIER ""
+#define DEFAULT_PORT                 6543
+#define DEFAULT_DB_USER              "mythtv"
+#define DEFAULT_DB_PASSWORD          "mythtv"
+#define DEFAULT_DB_NAME              "mythconverg"
+#define DEFAULT_MIN_MOVIE_LENGTH     65
+#define DEFAULT_SERIES_REGEX         "^(?<folder>.+?)::(?<title>.+)"
+#define DEFAULT_SERIES_IDENTIFIER    ""
 
 extern bool                          m_bCreated;
 extern std::string                   g_strUserPath;

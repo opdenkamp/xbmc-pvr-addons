@@ -107,6 +107,7 @@ private:
   bool GetChannel(unsigned int number, PVR_CHANNEL &channeldata);
   bool LoadGenreXML(const std::string &filename);
   int DoRequest(const char *resource, CStdString &response);
+  bool OpenRecordingInternal(long long seekOffset);
 
   int                     m_iCurrentChannel;
   int                     m_iCurrentCard;
@@ -124,6 +125,10 @@ private:
   int64_t                 m_iLastRecordingUpdate;
   CTsReader*              m_tsreader;
   CRingBuffer			  m_incomingStreamBuffer;
+
+  char					  m_currentRecordingID[1024];
+  long long				  m_currentRecordingLength;
+  long long				  m_currentRecordingPosition;
 
   char					  m_sid[64];
 

@@ -56,7 +56,7 @@ std::string  g_strSeriesIdentifier    = DEFAULT_SERIES_IDENTIFIER;
 
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
-CHelper_libcmyth      *CMYTH          = NULL;
+//CHelper_libcmyth      *CMYTH          = NULL;
 
 extern "C" {
 
@@ -177,13 +177,13 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   XBMC->Log(LOG_DEBUG, "%s - Creating the PVR cmyth add-on", __FUNCTION__);
 
-  XBMC->Log(LOG_DEBUG, "Loading cmyth library...");
-  CMYTH = new CHelper_libcmyth;
-  if (!CMYTH->RegisterMe(hdl))
-  {
-    XBMC->Log(LOG_ERROR, "Failed to load cmyth library!");
-    return ADDON_STATUS_UNKNOWN;
-  }
+  //XBMC->Log(LOG_DEBUG, "Loading cmyth library...");
+  //CMYTH = new CHelper_libcmyth;
+  //if (!CMYTH->RegisterMe(hdl))
+  //{
+  //  XBMC->Log(LOG_ERROR, "Failed to load cmyth library!");
+  //  return ADDON_STATUS_UNKNOWN;
+  //}
   
   m_CurStatus     = ADDON_STATUS_UNKNOWN;
   g_strUserPath   = pvrprops->strUserPath;

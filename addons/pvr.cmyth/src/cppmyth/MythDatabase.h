@@ -1,6 +1,10 @@
 #pragma once
 
-#include "../libcmyth.h"
+//#include "../libcmyth.h"
+extern "C" {
+  #include "../cmyth/include/cmyth/cmyth.h"
+  #include "../cmyth/include/refmem/refmem.h"
+}
 #include <vector>
 #include <map>
 #include <boost/unordered_map.hpp>

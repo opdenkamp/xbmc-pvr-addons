@@ -1,4 +1,3 @@
-
 #include "MythFile.h"
 #include "../client.h"
 
@@ -13,14 +12,14 @@ using namespace ADDON;
  * connected to the control socket and try to re-connect if not.
  * If reconnection is ok, call 'call' again. */
 #define CMYTH_FILE_CALL( var, cond, call )  m_conn.Lock(); \
-                                            var = CMYTH->call; \
+                                            var = call; \
                                             m_conn.Unlock(); \
                                             if ( cond ) \
                                             { \
                                                 if ( !m_conn.IsConnected() && m_conn.TryReconnect() ) \
                                                 { \
                                                     m_conn.Lock(); \
-                                                    var = CMYTH->call; \
+                                                    var = call; \
                                                     m_conn.Unlock(); \
                                                 } \
                                             } \
@@ -39,7 +38,7 @@ using namespace ADDON;
 void MythFile::UpdateDuration (unsigned long long length )
  {
     int retval = 0;
-    CMYTH_FILE_CALL( retval, retval < 0, UpdateFileLength( *m_file_t, length ) );
+    CMYTH_FILE_CALL( retval, retval < 0, cmyth_update_file_length( *m_file_t, length ) );
   }
   
   bool  MythFile::IsNull()
@@ -52,27 +51,27 @@ void MythFile::UpdateDuration (unsigned long long length )
   int MythFile::Read(void* buffer,long long length)
   {
     int bytesRead;
-    CMYTH_FILE_CALL( bytesRead, bytesRead < 0, FileRead(*m_file_t, static_cast< char * >( buffer ), length ) );
+    CMYTH_FILE_CALL( bytesRead, bytesRead < 0, cmyth_file_read(*m_file_t, static_cast< char * >( buffer ), length ) );
     return bytesRead;
   }
 
   long long MythFile::Seek(long long offset, int whence)
   {
     long long retval = 0;
-    CMYTH_FILE_CALL( retval, retval < 0, FileSeek( *m_file_t, offset, whence ) );
+    CMYTH_FILE_CALL( retval, retval < 0, cmyth_file_seek( *m_file_t, offset, whence ) );
     return retval;
   }
   
   unsigned long long MythFile::CurrentPosition()
   {
     unsigned long long retval = 0;
-    CMYTH_FILE_CALL( retval, retval < 0, FilePosition( *m_file_t ) );
+    CMYTH_FILE_CALL( retval, retval < 0, cmyth_file_position( *m_file_t ) );
     return retval;
   }
   
   unsigned long long MythFile::Duration()
   {
     unsigned long long retval = 0;
-    CMYTH_FILE_CALL( retval, retval < 0, FileLength( *m_file_t ) );
+    CMYTH_FILE_CALL( retval, retval < 0, cmyth_file_length( *m_file_t ) );
     return retval;
   }

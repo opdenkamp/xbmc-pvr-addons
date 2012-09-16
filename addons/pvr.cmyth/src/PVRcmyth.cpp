@@ -19,9 +19,10 @@
  *
  */
 
-#include "tinyxml/XMLUtils.h"
+//#include "tinyxml/XMLUtils.h"
 #include "PVRcmyth.h"
 #include "tools.h"
+#include <cmyth/cmyth.h>
 
 using namespace std;
 using namespace ADDON;
@@ -33,7 +34,6 @@ PVRcmyth::PVRcmyth(void)
   m_strDefaultMovie = "";
 
   //LoadDemoData();
-  
   LoadCategoryMap();
 }
 
@@ -131,10 +131,10 @@ void Log(int l,char* msg)
 bool PVRcmyth::Connect()
 {
   if(g_bExtraDebug)
-    CMYTH->DbgAll();
+    cmyth_dbg_all();
   else
-    CMYTH->DbgLevel(CMYTH_DBG_ERROR);
-  CMYTH->SetDbgMsgcallback(Log);
+    cmyth_dbg_level(CMYTH_DBG_ERROR);
+  cmyth_set_dbg_msgcallback(Log);
   m_con=MythConnection(g_strHostname,g_iMythPort);
   if(!m_con.IsConnected())
   {

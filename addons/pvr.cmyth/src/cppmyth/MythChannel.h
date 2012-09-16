@@ -1,7 +1,11 @@
 #pragma once
 
 #include "MythPointer.h"
-#include "../libcmyth.h"
+//#include "../libcmyth.h"
+extern "C" {
+  #include "../cmyth/include/cmyth/cmyth.h"
+  #include "../cmyth/include/refmem/refmem.h"
+}
 #include <boost/shared_ptr.hpp>
 #include "../../../../lib/platform/util/StdString.h"
 

@@ -22,7 +22,10 @@
 
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
-#include "libcmyth.h"
+//#include "libcmyth.h"
+extern "C" {
+  #include "cmyth/include/cmyth/cmyth.h"
+}
 
 #define DEFAULT_HOST          "127.0.0.1"
 #define DEFAULT_EXTRA_DEBUG          false
@@ -40,7 +43,7 @@ extern std::string                   g_strUserPath;
 extern std::string                   g_strClientPath;
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr          *PVR;
-extern CHelper_libcmyth             *CMYTH;
+//extern CHelper_libcmyth             *CMYTH;
 
 /* Client Settings */
 extern std::string  g_strHostname;         ///< The Host name or IP of the mythtv server

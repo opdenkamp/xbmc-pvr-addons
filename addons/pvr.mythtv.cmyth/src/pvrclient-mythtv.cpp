@@ -537,7 +537,16 @@ int PVRClientMythTV::GetRecordingsAmount(void)
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s",__FUNCTION__);
   m_recordings=m_con.GetRecordedPrograms();
-  return m_recordings.size();
+
+  int res = 0;
+  for (boost::unordered_map< CStdString, MythProgramInfo >::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
+  {
+    if(!it->second.IsNull() && IsRecordingVisible(it->second))
+    {
+      res++;
+    }
+  }
+  return res;
 }
 
 
@@ -548,7 +557,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
   m_recordings=m_con.GetRecordedPrograms();
   for (boost::unordered_map< CStdString, MythProgramInfo >::iterator it = m_recordings.begin(); it != m_recordings.end(); it++)
   {
-    if(!it->second.IsNull())
+    if(!it->second.IsNull() && IsRecordingVisible(it->second))
     {
       PVR_RECORDING tag;
       memset(&tag, 0, sizeof(PVR_RECORDING));
@@ -635,6 +644,22 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s - Done",__FUNCTION__);
   return PVR_ERROR_NO_ERROR;
+}
+
+bool PVRClientMythTV::IsRecordingVisible(MythProgramInfo &recording)
+{
+  // Filter out recordings of special storage groups (like LiveTV or Deleted)
+
+  // When  deleting a recording, it might not be deleted immediately but marked as 'pending delete'.
+  // Depending on the protocol version the recording is moved to the group Deleted or
+  // the 'delete pending' flag is set
+  if(recording.RecordingGroup() == "LiveTV" || recording.RecordingGroup() == "Deleted" || recording.IsDeletePending())
+  {
+    XBMC->Log(LOG_DEBUG,"%s: Ignoring recording %s",__FUNCTION__,recording.Path().c_str());
+    return false;
+  }
+
+  return true;
 }
 
 PVR_ERROR PVRClientMythTV::DeleteRecording(const PVR_RECORDING &recording)

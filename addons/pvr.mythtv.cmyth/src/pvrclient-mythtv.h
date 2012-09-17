@@ -108,4 +108,5 @@ private:
   boost::unordered_map< CStdString, std::vector< int > > m_channelGroups;
   catbimap m_categoryMap;
   void PVRtoMythTimer(const PVR_TIMER timer, MythTimer& mt);
+  static bool IsRecordingVisible(MythProgramInfo &recording);
 };

@@ -33,6 +33,7 @@ public:
   CStdString Category();
   CStdString RecordingGroup();
   bool IsWatched();
+  bool IsDeletePending();
   long long uid();
   bool IsNull();
 private:

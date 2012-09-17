@@ -158,6 +158,12 @@ MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
     return (recording_flags & 0x00000200) != 0; // FL_WATCHED
   }
 
+  bool MythProgramInfo::IsDeletePending()
+  {
+    unsigned long recording_flags = CMYTH->ProginfoFlags(*m_proginfo_t);
+    return (recording_flags & 0x00000080) != 0; // FL_DELETEPENDING
+  }
+
   long long MythProgramInfo::uid()
      {
        long long retval=RecStart();

@@ -253,6 +253,56 @@ cmyth_file_length(cmyth_file_t file)
 }
 
 /*
+ * cmyth_update_file_length(cmyth_file_t file, unsigned long long newLength)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Updates a files length, with a value returned from a UPDATE_FILE_SIZE event
+ *
+ * Return Value:
+ *
+ * Sucess: a int value >= 0
+ *
+ * Failure: a int containing -errno
+ */
+int
+cmyth_update_file_length(cmyth_file_t file, unsigned long long newLength)
+{
+	if (!file) {
+		return -EINVAL;
+	}
+	file->file_length = newLength;
+	return 0;
+}
+
+/*
+ * cmyth_file_position(cmyth_file_t p)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Obtain the position in the data of a file.
+ *
+ * Return Value:
+ *
+ * Sucess: a long long value >= 0
+ *
+ * Failure: a long long containing -errno
+ */
+unsigned long long
+cmyth_file_position(cmyth_file_t file)
+{
+	if (!file) {
+		return -EINVAL;
+	}
+	return file->file_pos;
+}
+
+
+/*
  * cmyth_file_get_block(cmyth_file_t file, char *buf, unsigned long len)
  * 
  * Scope: PUBLIC
@@ -515,6 +565,89 @@ cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
     out:
 	pthread_mutex_unlock(&mutex);
 	
+	return ret;
+}
+
+long long
+cmyth_file_seek_unlocked(cmyth_file_t file, long long offset, int whence)
+{
+	char msg[128];
+	int err;
+	int count;
+	long long c;
+	long r;
+	long long ret;
+
+	if (file == NULL)
+		return -EINVAL;
+
+	if ((offset == 0) && (whence == SEEK_CUR))
+		return file->file_pos;
+
+	if ((offset == file->file_pos) && (whence == SEEK_SET))
+		return file->file_pos;
+
+	while(file->file_pos < file->file_req) {
+		c = file->file_req - file->file_pos;
+		if(c > sizeof(msg))
+			c = sizeof(msg);
+
+		if (cmyth_file_get_block(file, msg, (unsigned long)c) < 0)
+			return -1;
+	}
+
+
+	snprintf(msg, sizeof(msg),
+		 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%d[]:[]%d[]:[]%d[]:[]%d[]:[]%d",
+		 file->file_id,
+		 (int32_t)(offset >> 32),
+		 (int32_t)(offset & 0xffffffff),
+		 whence,
+		 (int32_t)(file->file_pos >> 32),
+		 (int32_t)(file->file_pos & 0xffffffff));
+
+	if ((err = cmyth_send_message(file->file_control, msg)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_send_message() failed (%d)\n",
+			  __FUNCTION__, err);
+		ret = err;
+		goto out;
+	}
+
+	if ((count=cmyth_rcv_length(file->file_control)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_rcv_length() failed (%d)\n",
+			  __FUNCTION__, count);
+		ret = count;
+		goto out;
+	}
+	if ((r=cmyth_rcv_int64(file->file_control, &err, &c, count)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_rcv_int64() failed (%d)\n",
+			  __FUNCTION__, r);
+		ret = err;
+		goto out;
+	}
+
+	switch (whence) {
+	case SEEK_SET:
+		file->file_pos = offset;
+		break;
+	case SEEK_CUR:
+		file->file_pos += offset;
+		break;
+	case SEEK_END:
+		file->file_pos = file->file_length - offset;
+		break;
+	}
+
+	file->file_req = file->file_pos;
+	if(file->file_pos > file->file_length)
+		file->file_length = file->file_pos;
+
+	ret = file->file_pos;
+
+    out:
 	return ret;
 }
 

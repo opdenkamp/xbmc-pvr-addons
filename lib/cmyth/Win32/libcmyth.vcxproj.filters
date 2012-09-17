@@ -31,6 +31,9 @@
     <ClCompile Include="..\libcmyth\freespace.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\libcmyth\input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\libcmyth\keyframe.c">
       <Filter>Source Files</Filter>
     </ClCompile>

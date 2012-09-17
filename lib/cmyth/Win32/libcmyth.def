@@ -45,6 +45,11 @@ EXPORTS
 	cmyth_file_request_block
 	cmyth_file_seek
 	cmyth_freespace_create
+	cmyth_inputlist_create
+	cmyth_input_destroy
+	cmyth_input_create
+	cmyth_rcv_free_inputlist
+	cmyth_get_free_inputlist
 	cmyth_keyframe_create
 	cmyth_keyframe_fill
 	cmyth_keyframe_string
@@ -98,6 +103,7 @@ EXPORTS
 	cmyth_chanlist_get_count
 	cmyth_channel_chanid
 	cmyth_channel_channum
+	cmyth_channel_channumstr
 	cmyth_channel_name
 	cmyth_channel_icon
 	cmyth_channel_visible
@@ -117,6 +123,8 @@ EXPORTS
 	cmyth_proginfo_category
 	cmyth_proginfo_seriesid
 	cmyth_proginfo_programid
+	cmyth_proginfo_recordid
+	cmyth_proginfo_priority
 	cmyth_proginfo_stars
 	cmyth_proginfo_playgroup
 	cmyth_proginfo_originalairdate
@@ -221,3 +229,63 @@ EXPORTS
 	cmyth_proginfo_port
 	cmyth_proginfo_season
 	cmyth_proginfo_episode
+	cmyth_mysql_update_timer
+	cmyth_mysql_delete_timer
+	cmyth_mysql_add_timer
+	cmyth_mysql_get_timers
+	cmyth_mysql_is_radio
+	cmyth_livetv_chain_duration
+	cmyth_timer_recordid
+	cmyth_timer_chanid
+	cmyth_timer_starttime
+	cmyth_timer_endtime
+	cmyth_timer_title
+	cmyth_timer_description
+	cmyth_timer_type
+	cmyth_timer_category
+	cmyth_timer_subtitle
+	cmyth_timer_priority
+	cmyth_timer_startoffset
+	cmyth_timer_endoffset
+	cmyth_timer_searchtype
+	cmyth_timer_inactive
+	cmyth_timer_callsign
+	cmyth_timer_dup_method
+	cmyth_timer_dup_in
+	cmyth_timer_rec_group
+	cmyth_timer_store_group
+	cmyth_timer_play_group
+	cmyth_timer_autotranscode
+	cmyth_timer_userjobs
+	cmyth_timer_autocommflag
+	cmyth_timer_autoexpire
+	cmyth_timer_maxepisodes
+	cmyth_timer_maxnewest
+	cmyth_timerlist_get_item
+	cmyth_timerlist_get_count
+	cmyth_mysql_get_channelgroups
+	cmyth_mysql_get_channelids_in_group
+	cmyth_channel_sourceid
+	cmyth_channel_multiplex
+	cmyth_mysql_get_recorder_list
+	cmyth_mysql_get_prog_finder_time_title_chan
+	cmyth_conn_set_setting
+	cmyth_conn_get_backend_hostname
+	cmyth_conn_get_client_hostname
+	cmyth_conn_get_setting
+	cmyth_timer_transcoder
+	cmyth_mysql_get_storagegroups
+	cmyth_mysql_get_playgroups
+	cmyth_mysql_get_recprofiles
+	cmyth_mysql_get_cardtype
+	cmyth_channel_callsign
+	cmyth_set_watched_status_mysql
+	cmyth_file_position
+	cmyth_update_file_length
+	cmyth_storagegroup_filelist
+	cmyth_storagegroup_filelist_get_item
+	cmyth_storagegroup_filelist_count
+	cmyth_storagegroup_get_filelist
+	cmyth_storagegroup_file_get_filename
+	cmyth_storagegroup_file_get_lastmodified
+	cmyth_storagegroup_file_get_size

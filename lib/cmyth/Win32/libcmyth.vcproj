@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\libcmyth\input.c"
+				>
+			</File>
+			<File
 				RelativePath="..\libcmyth\keyframe.c"
 				>
 			</File>

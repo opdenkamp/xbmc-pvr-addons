@@ -29,6 +29,347 @@
 #include <string.h>
 #include <cmyth_local.h>
 
+extern void destroy_char_array2(void* p)
+{
+	char** ptr = (char**)p;
+	if (!ptr)
+		return;
+	while (*ptr) {
+		ref_release(*ptr);
+		ptr++;
+	}
+}
+
+int cmyth_storagegroup_filelist(cmyth_conn_t control, char** *sgFilelist, char* sg2List, char*  host)
+{
+	char msg[256];
+	int res = 0;
+	int count;
+	int err = 0;
+	int i = 0;
+	char **ret;
+	int consumed; /* = profiles;*/
+	char tmp_str[32768];
+
+	if (!control) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n", __FUNCTION__);
+		return 0;
+	}
+
+	pthread_mutex_lock(&mutex);
+
+	snprintf(msg, sizeof(msg), "QUERY_SG_GETFILELIST[]:[]%s[]:[]%s[]:[][]:[]1", host, sg2List);
+
+	err = cmyth_send_message(control, msg);
+	if (err < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message() failed (%d)\n", __FUNCTION__, err);
+		res = 0;
+		goto out;
+	}
+
+	count = cmyth_rcv_length(control);
+	if (count < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_length() failed (%d)\n", __FUNCTION__, count);
+		res = 0;
+		goto out;
+	}
+
+	ret = (char**)ref_alloc(sizeof( char*) * (count + 1)); /* count + 1 ? */
+	if (!ret) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: alloc() failed for list\n", __FUNCTION__);
+		res = 0;
+		goto out;
+	}
+	ref_set_destroy((void*)ret,destroy_char_array2);
+
+	while (i < count) {
+		consumed = cmyth_rcv_string(control, &err, tmp_str, sizeof(tmp_str) - 1, count);
+		count -= consumed;
+		if (err) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed (%d)\n", __FUNCTION__, count);
+			res = 0;
+			goto out;
+		}
+		ret[res] = ref_strdup(tmp_str);
+		res++;
+	}
+
+	ret[res] = NULL;
+
+	cmyth_dbg(CMYTH_DBG_ERROR, "%s: results= %d\n", __FUNCTION__, res);
+	*sgFilelist=ret;
+
+	out:
+	pthread_mutex_unlock(&mutex);
+	return res;
+}
+
+static void
+cmyth_storagegroup_file_destroy(cmyth_storagegroup_file_t pl)
+{
+
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s\n", __FUNCTION__);
+	if (!pl) {
+		return;
+	}
+	if(pl->filename)
+		ref_release(pl->filename);
+	if(pl->storagegroup)
+		ref_release(pl->storagegroup);
+	if(pl->hostname)
+		ref_release(pl->hostname);
+}
+
+cmyth_storagegroup_file_t
+cmyth_storagegroup_file_create(void)
+{
+	cmyth_storagegroup_file_t ret = ref_alloc(sizeof(*ret));
+	memset(ret, 0, sizeof(*ret));
+
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s {\n", __FUNCTION__);
+	if (!ret) {
+		cmyth_dbg(CMYTH_DBG_DEBUG, "%s }!\n", __FUNCTION__);
+		return NULL;
+	}
+	ref_set_destroy(ret, (ref_destroy_t)cmyth_storagegroup_file_destroy);
+
+	return ret;
+}
+
+static void
+cmyth_storagegroup_filelist_destroy(cmyth_storagegroup_filelist_t pl)
+{
+	int i;
+
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s\n", __FUNCTION__);
+	if (!pl) {
+		return;
+	}
+	for (i = 0; i < pl->storagegroup_filelist_count; ++i) {
+		if (pl->storagegroup_filelist_list[i]) {
+			ref_release(pl->storagegroup_filelist_list[i]);
+		}
+		pl->storagegroup_filelist_list[i] = NULL;
+	}
+	if (pl->storagegroup_filelist_list) {
+		free(pl->storagegroup_filelist_list);
+	}
+}
+
+cmyth_storagegroup_filelist_t
+cmyth_storagegroup_filelist_create(void)
+{
+	cmyth_storagegroup_filelist_t ret;
+
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s\n", __FUNCTION__);
+	ret = ref_alloc(sizeof(*ret));
+	if (!ret) {
+		return(NULL);
+	}
+	ref_set_destroy(ret, (ref_destroy_t)cmyth_storagegroup_filelist_destroy);
+
+	ret->storagegroup_filelist_list = NULL;
+	ret->storagegroup_filelist_count = 0;
+	return ret;
+}
+
+int
+cmyth_storagegroup_update_fileinfo(cmyth_conn_t control, cmyth_storagegroup_file_t file)
+{
+	char msg[256];
+	int count;
+	int err = 0;
+	int consumed; /* = profiles;*/
+	char tmp_str[32768];
+
+	if (!control) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n", __FUNCTION__);
+		return -1;
+	}
+
+	if (!file) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no file specified\n", __FUNCTION__);
+		return -1;
+	}
+
+	snprintf(msg, sizeof(msg), "QUERY_SG_FILEQUERY[]:[]%s[]:[]%s[]:[]%s",file->hostname , file->storagegroup, file->filename);
+
+	err = cmyth_send_message(control, msg);
+	if (err < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message() failed (%d)\n", __FUNCTION__, err);
+		return -1;
+	}
+
+	count = cmyth_rcv_length(control);
+	if (count < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_length() failed (%d)\n", __FUNCTION__, count);
+		return -1;
+	}
+
+	consumed = cmyth_rcv_string(control, &err, tmp_str, sizeof(tmp_str) - 1, count);
+	count -= consumed;
+
+	if (err) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed (%d)\n", __FUNCTION__, count);
+		return -1;
+	} else if (count == 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: QUERY_SG_FILEQUERY failed(%s)\n", __FUNCTION__, tmp_str);
+		return -1;
+	}
+
+	consumed = cmyth_rcv_ulong(control, &err, &(file->modified), count);
+	count -= consumed;
+	if (err) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_ulong() failed (%d)\n", __FUNCTION__, count);
+		return -1;
+	}
+
+	consumed = cmyth_rcv_ulong(control, &err, &(file->size), count);
+	count -= consumed;
+	if (err) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_ulong_long() failed (%d)\n", __FUNCTION__, count);
+		return -1;
+	}
+
+	return 0;
+}
+
+cmyth_storagegroup_filelist_t
+cmyth_storagegroup_get_filelist(cmyth_conn_t control,char* storagegroup, char* hostname)
+{
+	char msg[256];
+	int res = 0;
+	int count = 0;
+	int err = 0;
+	int i = 0;
+	int listsize = 10;
+	cmyth_storagegroup_filelist_t ret = 0;
+	cmyth_storagegroup_file_t file = 0;
+	int consumed = 0; /* = profiles; */
+	char tmp_str[32768];
+
+	if (!control) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n", __FUNCTION__);
+		return 0;
+	}
+
+	pthread_mutex_lock(&mutex);
+
+	snprintf(msg, sizeof(msg), "QUERY_SG_GETFILELIST[]:[]%s[]:[]%s[]:[][]:[]1", hostname, storagegroup);
+
+	err = cmyth_send_message(control, msg);
+	if (err < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message() failed (%d)\n", __FUNCTION__, err);
+		goto out;
+	}
+
+	count = cmyth_rcv_length(control);
+	if (count < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_length() failed (%d)\n", __FUNCTION__, count);
+		goto out;
+	}
+
+	ret = cmyth_storagegroup_filelist_create();
+
+	if (!ret) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: alloc() failed for list\n", __FUNCTION__);
+		ref_release(ret);
+		ret = 0;
+		goto out;
+	}
+
+	ret->storagegroup_filelist_count = 0;
+	ret->storagegroup_filelist_list = malloc(listsize * sizeof(cmyth_storagegroup_file_t));
+	if (!ret->storagegroup_filelist_list) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: alloc() failed for filelist list\n", __FUNCTION__);
+		ref_release(ret);
+		ret = 0;
+		goto out;
+	}
+	while (count) {
+		consumed = cmyth_rcv_string(control, &err, tmp_str, sizeof(tmp_str) - 1, count);
+		count -= consumed;
+		if (err) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed (%d)\n", __FUNCTION__, count);
+			ref_release(ret);
+			ret = 0;
+			goto out;
+		}
+		if (res>listsize-1)
+		{
+			listsize += 10;
+			ret->storagegroup_filelist_list = realloc(ret->storagegroup_filelist_list,listsize * sizeof(cmyth_storagegroup_file_t));
+			if (!ret->storagegroup_filelist_list) {
+				cmyth_dbg(CMYTH_DBG_ERROR, "%s: realloc() failed for filelist list\n", __FUNCTION__);
+				ref_release(ret);
+				ret = 0;
+				goto out;
+			}
+		}
+		file = cmyth_storagegroup_file_create();
+		file->filename = ref_strdup(tmp_str);
+		file->storagegroup = ref_strdup(storagegroup);
+		file->hostname = ref_strdup(hostname);
+		file->size = 0;
+		file->modified = 0;
+		ret->storagegroup_filelist_list[res] = file;
+		res++;
+	}
+	ret->storagegroup_filelist_count=res;
+
+	for(i = 0;i< ret->storagegroup_filelist_count;i++) {
+		cmyth_storagegroup_update_fileinfo(control,ret->storagegroup_filelist_list[i]);
+	}
+
+	cmyth_dbg(CMYTH_DBG_ERROR, "%s: results= %d\n", __FUNCTION__, res);
+
+    out:
+	pthread_mutex_unlock(&mutex);
+	return ret;
+}
+
+int cmyth_storagegroup_filelist_count(cmyth_storagegroup_filelist_t fl)
+{
+	if (!fl) {
+		return -EINVAL;
+	}
+	return fl->storagegroup_filelist_count;
+}
+
+cmyth_storagegroup_file_t cmyth_storagegroup_filelist_get_item(cmyth_storagegroup_filelist_t fl, int index)
+{
+	if (!fl||index>=fl->storagegroup_filelist_count) {
+		return NULL;
+	}
+	ref_hold(fl->storagegroup_filelist_list[index]);
+	return fl->storagegroup_filelist_list[index];;
+ }
+
+char* cmyth_storagegroup_file_get_filename(cmyth_storagegroup_file_t file)
+{
+	if (!file) {
+		return NULL;
+	}
+	return ref_hold(file->filename);
+}
+
+unsigned long cmyth_storagegroup_file_get_lastmodified(cmyth_storagegroup_file_t file)
+{
+	if (!file) {
+		return 0;
+	}
+	return file->modified;
+}
+
+unsigned long long cmyth_storagegroup_file_get_size(cmyth_storagegroup_file_t file)
+{
+	if (!file) {
+		return 0;
+	}
+	return file->size;
+}
+
+
 /*
  * cmyth_proglist_destroy(void)
  * 

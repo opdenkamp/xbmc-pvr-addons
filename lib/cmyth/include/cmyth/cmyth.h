@@ -170,6 +170,23 @@ typedef struct cmyth_chanlist *cmyth_chanlist_t;
 struct cmyth_tvguide_progs;
 typedef struct cmyth_tvguide_progs *cmyth_tvguide_progs_t;
 
+/* fetzerch: Added to support querying of free inputs (is tunable on) */
+struct cmyth_input {
+        char *inputname;
+        unsigned long sourceid;
+        unsigned long inputid;
+        unsigned long cardid;
+        unsigned long multiplexid;
+        unsigned long livetvorder; /* new in V71 */
+};
+typedef struct cmyth_input *cmyth_input_t;
+
+struct cmyth_inputlist {
+        cmyth_input_t *input_list;
+        long input_count;
+};
+typedef struct cmyth_inputlist *cmyth_inputlist_t;
+
 /*
  * -----------------------------------------------------------------
  * Debug Output Control
@@ -238,6 +255,13 @@ extern cmyth_conn_t cmyth_conn_connect_ctrl(char *server,
 					    unsigned buflen, int tcp_rcvbuf);
 
 /**
+ * Create a control connection to a backend.
+ * \param control control handle
+ * \return integer success
+ */
+extern int cmyth_conn_reconnect_ctrl(cmyth_conn_t control);
+
+/**
  * Create an event connection to a backend.
  * \param server server hostname or ip address
  * \param port port number to connect on
@@ -248,6 +272,13 @@ extern cmyth_conn_t cmyth_conn_connect_ctrl(char *server,
 extern cmyth_conn_t cmyth_conn_connect_event(char *server,
 					     unsigned short port,
 					     unsigned buflen, int tcp_rcvbuf);
+
+/**
+ * Re-create an event connection to a backend.
+ * \param conn control handle
+ * \return integer success
+ */
+extern int cmyth_conn_reconnect_event(cmyth_conn_t conn);
 
 /**
  * Create a file connection to a backend for reading a recording.
@@ -268,10 +299,11 @@ extern cmyth_file_t cmyth_conn_connect_file(cmyth_proginfo_t prog,
  * \param control control handle
  * \param buflen buffer size for the connection to use
  * \param tcp_rcvbuf if non-zero, the TCP receive buffer size for the socket
+ * \param storage_group storage group to get from
  * \return file handle
  */
 extern cmyth_file_t cmyth_conn_connect_path(char* path, cmyth_conn_t control,
-					    unsigned buflen, int tcp_rcvbuf);
+					    unsigned buflen, int tcp_rcvbuf, char* storage_group);
 
 /**
  * Create a ring buffer connection to a recorder.
@@ -365,6 +397,30 @@ extern int cmyth_conn_get_protocol_version(cmyth_conn_t conn);
 extern char * cmyth_conn_get_setting(cmyth_conn_t conn,
                const char* hostname, const char* setting);
 
+/**
+ * Set a MythTV setting for a hostname
+ * \param conn connection handle
+ * \param hostname hostname to apply the setting to
+ * \param setting the setting name to set
+ * \param value the value of the setting
+ * \retval <0 for failure
+ */
+extern int cmyth_conn_set_setting(cmyth_conn_t conn,
+               const char* hostname, const char* setting, const char* value);
+
+/**
+ * Get the backend hostname used in the settings database
+ * \param conn connection handle
+ * \retval ref counted string with backend hostname
+ */
+extern char* cmyth_conn_get_backend_hostname(cmyth_conn_t conn);
+
+/**
+ * Get the client hostname used when creating the backend connection
+ * \param conn connection handle
+ * \retval ref counted string with client hostname
+ */
+extern char* cmyth_conn_get_client_hostname(cmyth_conn_t conn);
 /*
  * -----------------------------------------------------------------
  * Event Operations
@@ -545,6 +601,8 @@ extern cmyth_livetv_chain_t cmyth_livetv_chain_create(char * chainid);
 
 extern cmyth_file_t cmyth_livetv_get_cur_file(cmyth_recorder_t rec);
 
+extern long long cmyth_livetv_chain_duration(cmyth_recorder_t rec);
+
 extern int cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir);
 
 extern int cmyth_livetv_chain_switch_last(cmyth_recorder_t rec);
@@ -566,7 +624,7 @@ extern int cmyth_livetv_get_block(cmyth_recorder_t rec, char *buf,
                                   unsigned long len);
 
 extern int cmyth_livetv_select(cmyth_recorder_t rec, struct timeval *timeout);
-  
+
 extern int cmyth_livetv_request_block(cmyth_recorder_t rec, unsigned long len);
 
 extern long long cmyth_livetv_seek(cmyth_recorder_t rec,
@@ -588,12 +646,15 @@ extern int cmyth_tuner_type_check(cmyth_database_t db, cmyth_recorder_t rec, int
  */
 
 extern cmyth_database_t cmyth_database_init(char *host, char *db_name, char *user, char *pass);
+extern void             cmyth_database_close(cmyth_database_t db);
 extern cmyth_chanlist_t myth_tvguide_load_channels(cmyth_database_t db,
 																									 int sort_desc);
 extern int cmyth_database_set_host(cmyth_database_t db, char *host);
 extern int cmyth_database_set_user(cmyth_database_t db, char *user);
 extern int cmyth_database_set_pass(cmyth_database_t db, char *pass);
 extern int cmyth_database_set_name(cmyth_database_t db, char *name);
+
+extern int cmyth_set_watched_status_mysql(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat);
 
 /*
  * -----------------------------------------------------------------
@@ -848,6 +909,20 @@ extern char *cmyth_proginfo_programid(cmyth_proginfo_t prog);
 extern char *cmyth_proginfo_inetref(cmyth_proginfo_t prog);
 
 /**
+ * Retrieve the record ID of the matching record rule
+ * \param prog proginfo handle
+ * \return unsigned long
+ */
+extern unsigned long cmyth_proginfo_recordid(cmyth_proginfo_t prog);
+
+/**
+ * Retrieve the priority of a program
+ * \param prog proginfo handle
+ * \return long
+ */
+extern long cmyth_proginfo_priority(cmyth_proginfo_t prog);
+
+/**
  * Retrieve the critics rating (number of stars) of a program.
  * \param prog proginfo handle
  * \return null-terminated string
@@ -1007,6 +1082,10 @@ extern unsigned long long cmyth_file_start(cmyth_file_t file);
 
 extern unsigned long long cmyth_file_length(cmyth_file_t file);
 
+extern unsigned long long cmyth_file_position(cmyth_file_t file);
+
+extern int cmyth_update_file_length(cmyth_file_t file, unsigned long long newLength);
+
 extern int cmyth_file_get_block(cmyth_file_t file, char *buf,
 				unsigned long len);
 
@@ -1032,6 +1111,10 @@ extern int cmyth_file_read(cmyth_file_t file,
 extern long cmyth_channel_chanid(cmyth_channel_t channel);
 
 extern long cmyth_channel_channum(cmyth_channel_t channel);
+
+extern char * cmyth_channel_channumstr(cmyth_channel_t channel);
+
+extern char * cmyth_channel_callsign(cmyth_channel_t channel);
 
 extern char * cmyth_channel_name(cmyth_channel_t channel);
 
@@ -1067,6 +1150,17 @@ extern cmyth_commbreaklist_t cmyth_mysql_get_commbreaklist(cmyth_database_t db, 
 extern cmyth_commbreaklist_t cmyth_get_commbreaklist(cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern cmyth_commbreaklist_t cmyth_get_cutlist(cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err, cmyth_commbreaklist_t breaklist, int count);
+
+/*
+ * -------
+ * Card Input Operations
+ * -------
+ */
+extern cmyth_inputlist_t cmyth_inputlist_create(void);
+extern cmyth_input_t cmyth_input_create(void);
+extern cmyth_inputlist_t cmyth_get_free_inputlist(cmyth_recorder_t rec);
+extern int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err, cmyth_inputlist_t inputlist, int count);
+
 
 /*
  * mysql info
@@ -1122,4 +1216,107 @@ extern int cmyth_get_delete_list(cmyth_conn_t, char *, cmyth_proglist_t);
 extern int cmyth_mythtv_remove_previous_recorded(cmyth_database_t db,char *query);
 
 extern cmyth_chanlist_t cmyth_mysql_get_chanlist(cmyth_database_t db);
+
+/* tsp */
+extern int cmyth_mysql_is_radio(cmyth_database_t db, int chanid);
+
+/* timers */
+struct cmyth_timer;
+typedef struct cmyth_timer* cmyth_timer_t;
+
+struct cmyth_timerlist;
+typedef struct cmyth_timerlist* cmyth_timerlist_t;
+
+extern int cmyth_timer_recordid(cmyth_timer_t timer);
+extern int cmyth_timer_chanid(cmyth_timer_t timer);
+extern time_t cmyth_timer_starttime(cmyth_timer_t timer);
+extern time_t cmyth_timer_endtime(cmyth_timer_t timer);
+extern char* cmyth_timer_title(cmyth_timer_t timer);
+extern char* cmyth_timer_description(cmyth_timer_t timer);
+extern int cmyth_timer_type(cmyth_timer_t timer);
+extern char* cmyth_timer_category(cmyth_timer_t timer);
+extern char* cmyth_timer_subtitle(cmyth_timer_t timer);
+extern int cmyth_timer_priority(cmyth_timer_t timer);
+extern int cmyth_timer_startoffset(cmyth_timer_t timer);
+extern int cmyth_timer_endoffset(cmyth_timer_t timer);
+extern int cmyth_timer_searchtype(cmyth_timer_t timer);
+extern int cmyth_timer_inactive(cmyth_timer_t timer);
+extern char* cmyth_timer_callsign(cmyth_timer_t timer);
+extern int cmyth_timer_dup_method(cmyth_timer_t timer);
+extern int cmyth_timer_dup_in(cmyth_timer_t timer);
+extern char* cmyth_timer_rec_group(cmyth_timer_t timer);
+extern char* cmyth_timer_store_group(cmyth_timer_t timer);
+extern char* cmyth_timer_play_group(cmyth_timer_t timer);
+extern int cmyth_timer_autotranscode(cmyth_timer_t timer);
+extern int cmyth_timer_userjobs(cmyth_timer_t timer);
+extern int cmyth_timer_autocommflag(cmyth_timer_t timer);
+extern int cmyth_timer_autoexpire(cmyth_timer_t timer);
+extern int cmyth_timer_maxepisodes(cmyth_timer_t timer);
+extern int cmyth_timer_maxnewest(cmyth_timer_t timer);
+extern int cmyth_timer_transcoder(cmyth_timer_t timer);
+
+
+extern cmyth_timer_t cmyth_timerlist_get_item(cmyth_timerlist_t pl, int index);
+extern int cmyth_timerlist_get_count(cmyth_timerlist_t pl);
+
+extern cmyth_timerlist_t cmyth_mysql_get_timers(cmyth_database_t db);
+
+
+extern int cmyth_mysql_add_timer(cmyth_database_t db, int chanid, char* callsign, char* description, time_t starttime, time_t endtime, char* title, char* category, int type, char* subtitle, int priority, int startoffset,int endoffset,int searchtype, int inactive,
+  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder);
+extern int cmyth_mysql_delete_timer(cmyth_database_t db, int recordid);
+extern int cmyth_mysql_update_timer(cmyth_database_t db, int recordid, int chanid, char* callsign, char* description, time_t starttime, time_t endtime, char* title, char* category, int type, char* subtitle, int priority, int startoffset, int endoffset, int searchtype, int inactive,
+  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder);
+
+typedef struct cmyth_channelgroups {
+	char channelgroup[65];
+	unsigned int ID;
+} cmyth_channelgroups_t;
+
+extern int cmyth_mysql_get_channelgroups(cmyth_database_t db, cmyth_channelgroups_t** changroups);
+extern int cmyth_mysql_get_channelids_in_group(cmyth_database_t db, unsigned int groupid, int** chanids);
+
+extern int cmyth_channel_sourceid(cmyth_channel_t channel);
+extern int cmyth_channel_multiplex(cmyth_channel_t channel);
+
+typedef struct cmyth_rec {
+	int recid;
+	int sourceid;
+} cmyth_rec_t;
+
+extern int cmyth_mysql_get_recorder_list(cmyth_database_t db, cmyth_rec_t** reclist);
+
+extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_program_t *prog, char* title, time_t starttime, int chanid);
+
+extern int cmyth_mysql_get_storagegroups(cmyth_database_t db, char** *profiles);
+extern int cmyth_mysql_get_playgroups(cmyth_database_t db, char** *profiles);
+
+typedef struct cmyth_recprofile {
+	int id;
+	char name[128];
+	char cardtype[32];
+} cmyth_recprofile_t;
+
+extern int cmyth_mysql_get_recprofiles(cmyth_database_t db, cmyth_recprofile_t** profiles);
+
+extern char* cmyth_mysql_get_cardtype(cmyth_database_t db, int chanid);
+
+/* Get a storage group file list */
+extern int cmyth_storagegroup_filelist(cmyth_conn_t control, char** *sgFilelist, char* sg2List, char* hostname);
+
+struct cmyth_storagegroup_filelist;
+typedef struct cmyth_storagegroup_filelist* cmyth_storagegroup_filelist_t;
+
+struct cmyth_storagegroup_file;
+typedef struct cmyth_storagegroup_file* cmyth_storagegroup_file_t;
+
+extern cmyth_storagegroup_file_t cmyth_storagegroup_filelist_get_item(cmyth_storagegroup_filelist_t fl, int index);
+extern int cmyth_storagegroup_filelist_count(cmyth_storagegroup_filelist_t fl);
+
+extern cmyth_storagegroup_filelist_t cmyth_storagegroup_get_filelist(cmyth_conn_t control, char* storagegroup, char* hostname);
+
+extern char* cmyth_storagegroup_file_get_filename(cmyth_storagegroup_file_t file);
+extern unsigned long cmyth_storagegroup_file_get_lastmodified(cmyth_storagegroup_file_t file);
+extern unsigned long long cmyth_storagegroup_file_get_size(cmyth_storagegroup_file_t file);
+
 #endif /* __CMYTH_H */

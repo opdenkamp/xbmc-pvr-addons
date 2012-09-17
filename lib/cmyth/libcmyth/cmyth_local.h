@@ -38,6 +38,10 @@
 
 #if defined(_MSC_VER)
 #include "cmyth_msc.h"
+//#define PTHREAD_MUTEX_INITIALIZER NULL;
+#define PTHREAD_MUTEX_INITIALIZER InitializeCriticalSection(&mutex);
+//typedef void* pthread_mutex_t;
+typedef CRITICAL_SECTION pthread_mutex_t;
 #else
 #include <unistd.h>
 #include <sys/types.h>
@@ -82,6 +86,8 @@ struct cmyth_conn {
 	unsigned long	conn_version;	/**< protocol version */
 	volatile int	conn_hang;	/**< is connection stuck? */
 	int		conn_tcp_rcvbuf;/**< TCP receive buffer size */
+	char *          server;         /**< hostname of server */
+	unsigned short  port;           /**< port of server */
 };
 
 /* Sergio: Added to support new livetv protocol */
@@ -115,11 +121,57 @@ struct cmyth_channel {
 	char *name;
 	char *icon;
 	int visible;
+	/* tsp - added sourceID and multiplex */
+	int sourceid;
+	int multiplex;
 };
 
 struct cmyth_chanlist {
 	cmyth_channel_t *chanlist_list;
 	int chanlist_count;
+};
+
+
+/* tsp: Added timer */
+
+struct cmyth_timer {
+	int recordid;
+	int chanid;
+	time_t starttime;
+	time_t endtime;
+	char* title;
+	char* description;
+	int type;
+	char* category;
+	char* subtitle;
+	int priority;
+	int startoffset;
+	int endoffset;
+	int searchtype;
+	int inactive;
+	char* callsign;
+
+	int dup_method;
+	int dup_in;
+	char* rec_group;
+	char* store_group;
+	char* play_group;
+	int autotranscode;
+	int userjobs;
+	int autocommflag;
+	int autoexpire;
+	int maxepisodes;
+	int maxnewest;
+	int transcoder;
+	/*
+	char* profile;
+	int prefinput;
+	*/
+	};
+
+struct cmyth_timerlist {
+	cmyth_timer_t *timerlist_list;
+	int timerlist_count;
 };
 
 /* Sergio: Added to support the tvguide functionality */
@@ -143,6 +195,25 @@ struct cmyth_recorder {
 };
 
 /**
+ * MythTV proglist
+ */
+
+struct cmyth_storagegroup_filelist {
+	cmyth_storagegroup_file_t *storagegroup_filelist_list;
+	int storagegroup_filelist_count;
+};
+
+
+struct cmyth_storagegroup_file {
+	char* filename;
+	char* storagegroup;
+	char* hostname;
+	unsigned long modified;
+	unsigned long size;
+};
+
+
+/**
  * MythTV file connection
  */
 struct cmyth_file {
@@ -156,6 +227,8 @@ struct cmyth_file {
 	uint64_t file_req;	/**< current file position requested */
 	cmyth_conn_t file_control;	/**< master backend connection */
 };
+
+long long cmyth_file_seek_unlocked(cmyth_file_t file, long long offset, int whence);
 
 struct cmyth_ringbuf {
 	cmyth_conn_t conn_data;

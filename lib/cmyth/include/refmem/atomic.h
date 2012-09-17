@@ -93,7 +93,7 @@ __mvp_atomic_decrement(mvp_atomic_t *valp)
 		"lock xaddl %0, (%1);"
 		"     dec   %0;"
 		: "=r" (__val)
-		: "r" (valp), "0" (0x1)
+		: "r" (valp), "0" (-0x1)
 		: "cc", "memory"
 		);
 #elif defined __i386__

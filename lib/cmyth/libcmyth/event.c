@@ -88,16 +88,28 @@ cmyth_event_get(cmyth_conn_t conn, char * data, int len)
 		event = CMYTH_EVENT_LIVETV_CHAIN_UPDATE;
 		strncpy(data, tmp + 20, len);
 	} else if (strncmp(tmp, "SIGNAL", 6) == 0) { 
-		event = CMYTH_EVENT_SIGNAL; 
-		/* get slock, signal, seen_pat, matching_pat */ 
-		while (count > 0) { 
+		int dstlen = len;
+		event = CMYTH_EVENT_SIGNAL;
+
+		/*Get Recorder ID */
+		strncat(data, "cardid ", 7);
+		strncat(data, tmp + 7, consumed - 12);
+		strncat(data, ";", 2);
+
+		/* get slock, signal, seen_pat, matching_pat */
+		while (count > 0) {
 			/* get signalmonitorvalue name */ 
 			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count); 
 			count -= consumed; 
-
+			/*strncat(data,tmp,dstlen-2);
+			strncat(data,"=",2);
+			dstlen -= consumed;*/
 			/* get signalmonitorvalue status */ 
 			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count); 
 			count -= consumed; 
+			strncat(data,tmp,dstlen-2);
+			strncat(data,";",2);
+			dstlen -= consumed;
 		}
 	} else if (strncmp(tmp, "ASK_RECORDING", 13) == 0) {
 		event = CMYTH_EVENT_ASK_RECORDING;

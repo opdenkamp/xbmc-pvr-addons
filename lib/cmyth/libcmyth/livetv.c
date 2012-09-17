@@ -657,8 +657,10 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 		ref_release(rec->rec_livetv_file);
 		ret = rec->rec_livetv_chain->chain_current += dir;
 		rec->rec_livetv_file = ref_hold(rec->rec_livetv_chain->chain_files[ret]);
-		rec->rec_livetv_chain
+		if (rec->rec_livetv_chain->prog_update_callback) {
+			rec->rec_livetv_chain
 					->prog_update_callback(rec->rec_livetv_chain->progs[ret]);
+		}
 		ret = 1;
 	}
 
@@ -778,6 +780,34 @@ int cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, unsigned long len)
 }
 
 /*
+ * cmyth_livetv_chain_duration(cmyth_recorder_t file)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Get current chain duration
+ *
+ * Return Value:
+ *
+ * Sucess: chain duration
+ *
+ * Failure: an int containing -errno
+ */
+
+long long
+cmyth_livetv_chain_duration(cmyth_recorder_t rec)
+{
+  int cur, ct;
+  long long ret=0;
+  ct  = rec->rec_livetv_chain->chain_ct;
+  for (cur = 0; cur < ct; cur++) {
+			ret += rec->rec_livetv_chain->chain_files[cur]->file_length;
+		}
+  return ret;
+}
+
+/*
  * cmyth_livetv_chain_seek(cmyth_recorder_t file, long long offset, int whence)
  * 
  * Scope: PUBLIC
@@ -841,6 +871,9 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, long long offset, int whence)
 			offset += rec->rec_livetv_chain->chain_files[cur-1]->file_length;
 		}
 		return offset;
+	} else {
+		cur = rec->rec_livetv_chain->chain_current;
+		fp  = rec->rec_livetv_chain->chain_files[cur];
 	}
 
 	offset += fp->file_req;
@@ -866,7 +899,7 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, long long offset, int whence)
 
 	pthread_mutex_lock(&mutex);
 
-	ret = cmyth_file_seek(fp, offset, whence);
+	ret = cmyth_file_seek_unlocked(fp, offset, whence);
 
 	cur -= rec->rec_livetv_chain->chain_current;
 	if (ret >= 0 && cur) {
@@ -1016,7 +1049,14 @@ cmyth_spawn_live_tv(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf,
 			*err = "Spawn livetv failed.";
 			goto err;
 		}
- 
+
+		for(i=0; i<20; i++) {
+			if(cmyth_recorder_is_recording(rec) != 1)
+				sleep(1);
+			else
+				break;
+		}
+
 		if ((rtrn = cmyth_livetv_chain_setup(rec, tcp_rcvbuf,
 							prog_update_callback)) == NULL) {
 			*err = "Failed to setup livetv.";

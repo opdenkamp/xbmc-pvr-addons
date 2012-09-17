@@ -593,6 +593,7 @@ cmyth_recorder_change_channel(cmyth_recorder_t rec,
 	int err;
 	int ret = -1;
 	char msg[256];
+	cmyth_livetv_chain_t newchain = 0;
 
 	if (!rec) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
@@ -622,8 +623,14 @@ cmyth_recorder_change_channel(cmyth_recorder_t rec,
 
 	if(rec->rec_ring)
 		rec->rec_ring->file_pos = 0;
-	else
-		rec->rec_livetv_file->file_pos = 0;
+	else {
+		newchain = cmyth_livetv_chain_create(rec->rec_livetv_chain->chainid);
+		newchain->progs = rec->rec_livetv_chain->progs;
+		ref_release(rec->rec_livetv_file);
+		rec->rec_livetv_file = NULL;
+		ref_release(rec->rec_livetv_chain);
+		rec->rec_livetv_chain = newchain;
+	}
 
 	ret = 0;
 
@@ -660,6 +667,7 @@ cmyth_recorder_set_channel(cmyth_recorder_t rec, char *channame)
 	int err;
 	int ret = -1;
 	char msg[256];
+	cmyth_livetv_chain_t newchain = 0;
 
 	if (!rec) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
@@ -689,8 +697,14 @@ cmyth_recorder_set_channel(cmyth_recorder_t rec, char *channame)
 
 	if(rec->rec_ring)
 		rec->rec_ring->file_pos = 0;
-	else
-		rec->rec_livetv_file->file_pos = 0;
+	else {
+		newchain = cmyth_livetv_chain_create(rec->rec_livetv_chain->chainid);
+		newchain->progs = rec->rec_livetv_chain->progs;
+		ref_release(rec->rec_livetv_file);
+		rec->rec_livetv_file = NULL;
+		ref_release(rec->rec_livetv_chain);
+		rec->rec_livetv_chain = newchain;
+	}
 
 	ret = 0;
 

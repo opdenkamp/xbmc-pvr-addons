@@ -60,7 +60,7 @@ cPVRClientForTheRecord::cPVRClientForTheRecord()
 #endif
   m_channel_id_offset      = 0;
   m_epg_id_offset          = 0;
-  m_iCurrentChannel        = 0;
+  m_iCurrentChannel        = -1;
   // due to lack of static constructors, we initialize manually
   ForTheRecord::Initialize();
 #if defined(FTR_DUMPTS)
@@ -91,29 +91,39 @@ bool cPVRClientForTheRecord::Connect()
   XBMC->Log(LOG_INFO, "Connect() - Connecting to %s", g_szBaseURL.c_str());
 
   int backendversion = FTR_REST_MAXIMUM_API_VERSION;
-  int rc = ForTheRecord::Ping(backendversion);
-  if (rc == 1)
+  int rc = -2;
+  int attemps = 0;
+
+  while (rc != 0)
   {
-    backendversion = FTR_REST_MINIMUM_API_VERSION;
+    attemps++;
     rc = ForTheRecord::Ping(backendversion);
-  }
+    if (rc == 1)
+    {
+      backendversion = FTR_REST_MINIMUM_API_VERSION;
+      rc = ForTheRecord::Ping(backendversion);
+    }
+    m_iBackendVersion = backendversion;
 
-  m_iBackendVersion = backendversion;
-
-  switch (rc)
-  {
-  case 0:
-    XBMC->Log(LOG_INFO, "Ping Ok. The client and server are compatible, API version %d.\n", m_iBackendVersion);
-    break;
-  case -1:
-    XBMC->Log(LOG_NOTICE, "Ping Ok. The client is too old for the server.\n");
-    return false;
-  case 1:
-    XBMC->Log(LOG_NOTICE, "Ping Ok. The client is too new for the server.\n");
-    return false;
-  default:
-    XBMC->Log(LOG_ERROR, "Ping failed... No connection to ForTheRecord.\n");
-    return false;
+    switch (rc)
+    {
+      case 0:
+        XBMC->Log(LOG_INFO, "Ping Ok. The client and server are compatible, API version %d.\n", m_iBackendVersion);
+        break;
+      case -1:
+        XBMC->Log(LOG_NOTICE, "Ping Ok. The client is too old for the server.\n");
+        return false;
+      case 1:
+        XBMC->Log(LOG_NOTICE, "Ping Ok. The client is too new for the server.\n");
+        return false;
+      default:
+         XBMC->Log(LOG_ERROR, "Ping failed... No connection to ForTheRecord.\n");
+         usleep(1000000);
+         if (attemps > 30)
+         {
+           return false;
+         }
+    }
   }
 
   // Check the accessibility status of all the shares used by ForTheRecord tuners
@@ -718,7 +728,6 @@ PVR_ERROR cPVRClientForTheRecord::GetRecordings(ADDON_HANDLE handle)
           for (int recordingindex = 0; recordingindex < nrOfRecordings; recordingindex++)
           {
             cRecording recording;
-            //CStdString strRecordingId;
 
             cRecordingSummary recordingsummary;
             if (recordingsummary.Parse(recordingsbytitleresponse[recordingindex]) && FetchRecordingDetails(recordingsummary.RecordingId(), recording))
@@ -726,7 +735,6 @@ PVR_ERROR cPVRClientForTheRecord::GetRecordings(ADDON_HANDLE handle)
               PVR_RECORDING tag;
               memset(&tag, 0 , sizeof(tag));
 
-              //strRecordingId.Format("%i", iNumRecordings);
               strncpy(tag.strRecordingId, recording.RecordingId(), sizeof(tag.strRecordingId));
               strncpy(tag.strChannelName, recording.ChannelDisplayName(), sizeof(tag.strChannelName));
               tag.iLifetime      = MAXLIFETIME; //TODO: recording.Lifetime();
@@ -1043,22 +1051,28 @@ PVR_ERROR cPVRClientForTheRecord::DeleteTimer(const PVR_TIMER &timerinfo, bool f
                 }
               }
             }
-            retval = ForTheRecord::CancelUpcomingProgram(upcomingrecording.ScheduleId(), upcomingrecording.ChannelId(),
-              upcomingrecording.StartTime(), upcomingrecording.UpcomingProgramId());
-            if (retval < 0) 
-            {
-              XBMC->Log(LOG_ERROR, "Unable to cancel upcoming program from server.");
-              return PVR_ERROR_SERVER_ERROR;
-            }
+
             Json::Value scheduleResponse;
             retval = ForTheRecord::GetScheduleById(upcomingrecording.ScheduleId(), scheduleResponse);
             std::string schedulename = scheduleResponse["Name"].asString();
-            if (schedulename.substr(0, 7) == "XBMC - ")
+
+            if (scheduleResponse["IsOneTime"].asBool() == true)
             {
               retval = ForTheRecord::DeleteSchedule(upcomingrecording.ScheduleId());
+              if (retval < 0) 	
+              {
+                XBMC->Log(LOG_NOTICE, "Unable to delete schedule %s from server.", schedulename.c_str());
+                return PVR_ERROR_SERVER_ERROR;
+              }
+            }
+            else
+            {
+              retval = ForTheRecord::CancelUpcomingProgram(upcomingrecording.ScheduleId(), upcomingrecording.ChannelId(), 
+                upcomingrecording.StartTime(), upcomingrecording.GuideProgramId());
               if (retval < 0) 
               {
-                XBMC->Log(LOG_NOTICE, "Unable to cancel schedule %s from server.", schedulename.c_str());
+                XBMC->Log(LOG_ERROR, "Unable to cancel upcoming program from server.");
+                return PVR_ERROR_SERVER_ERROR;	
               }
             }
 
@@ -1381,7 +1395,7 @@ void cPVRClientForTheRecord::CloseLiveStream()
 #endif
     ForTheRecord::StopLiveStream();
     m_bTimeShiftStarted = false;
-    m_iCurrentChannel = 0;
+    m_iCurrentChannel = -1;
   } else {
     XBMC->Log(LOG_DEBUG, "CloseLiveStream: Nothing to do.");
   }

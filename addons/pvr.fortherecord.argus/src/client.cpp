@@ -46,7 +46,6 @@ std::string  g_szBaseURL;
 ADDON_STATUS            m_CurStatus    = ADDON_STATUS_UNKNOWN;
 cPVRClientForTheRecord *g_client       = NULL;
 bool                    g_bCreated     = false;
-//int                     g_iClientID    = -1;
 std::string             g_szUserPath   = "";
 std::string             g_szClientPath = "";
 CHelper_libXBMC_addon  *XBMC           = NULL;
@@ -92,7 +91,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
   g_client       = new cPVRClientForTheRecord();
-  // g_iClientID    = pvrprops->iClientId; removed from Frodo PVR API
   g_szUserPath   = pvrprops->strUserPath;
   g_szClientPath = pvrprops->strClientPath;
 
@@ -319,13 +317,11 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
 {
   XBMC->Log(LOG_DEBUG, "->GetProperties()");
 
-  //pCapabilities->bSupportsTimeshift          = true; // removed in Frodo PVR API
   pCapabilities->bSupportsEPG                = true;
   pCapabilities->bSupportsRecordings         = true;
   pCapabilities->bSupportsTimers             = true;
   pCapabilities->bSupportsTV                 = true;
   pCapabilities->bSupportsRadio              = g_bRadioEnabled;
-  //pCapabilities->bSupportsChannelSettings    = true; // removed in Frodo PVR API
   pCapabilities->bSupportsChannelGroups      = true;
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = false;

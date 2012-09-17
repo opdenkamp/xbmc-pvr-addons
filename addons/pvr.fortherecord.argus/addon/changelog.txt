@@ -1,3 +1,12 @@
+v0.0.1.142 (06-09-2012)
+- Use the XBMC lifetime setting for a recording when possible
+- Now can delete scheduled recordings/programs on the FTR server
+  that were created by other clients
+- At startup try to connect to FTR for 30 seconds,
+  This fixes startup problems on linux systems where the add-on is
+  started before the network interface is up (eg. OpenElec)
+- Notify user when no free tuner is found, channel is scrambled etc.
+- Shorter keep-alive delay to fix loosing Live-TV in certain cases
 v0.0.1.141 (04-09-2012)
 - Updated to Frodo PVR API
 v0.0.1.140 (03-06-2012)

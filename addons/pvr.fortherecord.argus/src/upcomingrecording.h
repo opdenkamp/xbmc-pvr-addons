@@ -36,6 +36,7 @@ private:
   std::string title;
   bool iscancelled;
   std::string upcomingprogramid;
+  std::string guideprogramid;
   std::string scheduleid;
 public:
   cUpcomingRecording(void);
@@ -52,5 +53,6 @@ public:
   const std::string& Title(void) const { return title; }
   bool IsCancelled(void) const { return iscancelled; }
   const std::string& UpcomingProgramId(void) const { return upcomingprogramid; }
+  const std::string& GuideProgramId(void) const { return guideprogramid; }
   const std::string& ScheduleId(void) const { return scheduleid; }
 };

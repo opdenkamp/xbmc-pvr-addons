@@ -1130,16 +1130,6 @@ PVR_ERROR PVRcmyth::UpdateTimer(const PVR_TIMER &timer)
 /***********************************************************
  * PVR Client AddOn Recordings library functions
  ***********************************************************/
-//virtual int GetRecordingsAmount(void);
-//virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle);
-//virtual PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
-//virtual PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
-//virtual bool OpenRecordedStream(const PVR_RECORDING &recinfo);
-//virtual void CloseRecordedStream();
-//virtual int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize);
-//virtual long long SeekRecordedStream(long long iPosition, int iWhence);
-//virtual long long LengthRecordedStream();
-
 int PVRcmyth::GetRecordingsAmount(void)
 {
   if(g_bExtraDebug)
@@ -1341,11 +1331,11 @@ void PVRcmyth::CloseRecordedStream()
 
 int PVRcmyth::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-
-  XBMC->Log(LOG_DEBUG,"%s - curPos: %i TotalLength: %i",__FUNCTION__,(int)m_file.CurrentPosition(),(int)m_file.Duration());
-
   if(g_bExtraDebug)
+  {
+    XBMC->Log(LOG_DEBUG,"%s - curPos: %i TotalLength: %i",__FUNCTION__,(int)m_file.CurrentPosition(),(int)m_file.Duration());
     XBMC->Log(LOG_DEBUG,"%s - size: %i",__FUNCTION__,iBufferSize);
+  }
   int dataread=m_file.Read(pBuffer,iBufferSize);
   if(g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s: Read %i Bytes",__FUNCTION__,dataread);

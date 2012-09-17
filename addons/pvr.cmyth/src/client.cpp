@@ -376,7 +376,6 @@ int GetCurrentClientChannel(void)
 
 bool SwitchChannel(const PVR_CHANNEL &channel)
 {
-/*
   if (g_cmyth)
   {    
     if (g_cmyth->GetChannel(channel, m_currentChannel) && g_cmyth->SwitchChannel(channel))
@@ -384,9 +383,10 @@ bool SwitchChannel(const PVR_CHANNEL &channel)
     XBMC->QueueNotification(QUEUE_WARNING,"Failed to change channel. No free tuners?");  
   }
   return false;
-*/
-  CloseLiveStream();
-  return OpenLiveStream(channel);
+  
+  //Or an others method
+  //CloseLiveStream();
+  //return OpenLiveStream(channel);
 }
 
 int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)

@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "os-dependent.h"
+#include "platform/os.h"
 #include "platform/util/timeutils.h"
 
 #include "client.h"
@@ -29,9 +29,9 @@
 #include "channels.h"
 #include "recordings.h"
 #include "epg.h"
-#include "utils.h"
+#include "misc/utils.h"
 #include "pvrclient-mediaportal.h"
-#include "lib/tsreader/TSReader.h"
+#include "tsreader/TSReader.h"
 #ifdef TARGET_WINDOWS
 #include "FileUtils.h"
 #endif

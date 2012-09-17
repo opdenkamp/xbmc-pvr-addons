@@ -35,7 +35,7 @@
 #include "TSReader.h"
 #include "client.h" //for XBMC->Log
 #include "MultiFileReader.h"
-#include "utils.h"
+#include "misc/utils.h"
 #include "platform/util/timeutils.h"
 #ifdef LIVE555
 #include "MemoryReader.h"

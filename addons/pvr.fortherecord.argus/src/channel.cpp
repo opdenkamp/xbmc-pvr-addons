@@ -19,7 +19,7 @@
 
 #include <vector>
 #include "channel.h"
-#include "utils.h"
+#include "misc/utils.h"
 #include <stdlib.h>
 #include <string.h>
 

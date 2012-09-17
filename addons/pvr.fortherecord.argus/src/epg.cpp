@@ -22,7 +22,7 @@
 using namespace std;
 
 #include "epg.h"
-#include "utils.h"
+#include "misc/utils.h"
 #include "client.h"
 #include "pvrclient-fortherecord.h"
 

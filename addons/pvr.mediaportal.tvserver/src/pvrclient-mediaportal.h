@@ -25,7 +25,7 @@
 
 /* Local includes */
 #include "Socket.h"
-#include "Cards.h"
+#include "tsreader/Cards.h"
 #include "epg.h"
 #include "platform/threads/mutex.h"
 

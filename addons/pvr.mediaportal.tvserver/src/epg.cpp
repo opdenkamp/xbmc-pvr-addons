@@ -24,7 +24,7 @@
 using namespace std;
 
 #include "epg.h"
-#include "utils.h"
+#include "misc/utils.h"
 #include "client.h"
 
 using namespace ADDON;

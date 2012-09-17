@@ -25,23 +25,18 @@
 #include "recordingsummary.h"
 #include "recording.h"
 #include "epg.h"
-#include "utils.h"
+#include "misc/utils.h"
 #include "pvrclient-fortherecord.h"
 #include "fortherecordrpc.h"
 #include "platform/util/timeutils.h"
 #include "platform/util/StdString.h"
 
 #ifdef TSREADER
-#include "lib/tsreader/TSReader.h"
+#include "tsreader/TSReader.h"
 #endif
 
 using namespace std;
 using namespace ADDON;
-
-#if !defined(TARGET_WINDOWS)
-#include "lib/filesystem/DirectorySMB.h"
-using namespace PLATFORM;
-#endif
 
 #define SIGNALQUALITY_INTERVAL 10
 
@@ -207,12 +202,12 @@ bool cPVRClientForTheRecord::ShareErrorsFound(void)
 #elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
       std::string CIFSname = sharename;
       std::string SMBPrefix = "smb://";
-      if (g_szUser.length() > 0)
+      if (g_szSMBusername.length() > 0)
       {
-        SMBPrefix += g_szUser;
-        if (g_szPass.length() > 0)
+        SMBPrefix += g_szSMBusername;
+        if (g_szSMBpassword.length() > 0)
         {
-          SMBPrefix += ":" + g_szPass;
+          SMBPrefix += ":" + g_szSMBpassword;
         }
       }
       else
@@ -227,9 +222,7 @@ bool cPVRClientForTheRecord::ShareErrorsFound(void)
       }
       CIFSname.erase(0,2);
       CIFSname.insert(0, SMBPrefix);
-      CSMBDirectory smbDir;
-      int iRc = smbDir.Open(CIFSname);
-      isAccessibleByAddon = (iRc > 0);
+      isAccessibleByAddon = XBMC->CanOpenDirectory(CIFSname.c_str());
 #else
 #error implement for your OS!
 #endif
@@ -1141,12 +1134,12 @@ bool cPVRClientForTheRecord::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
     // TODO FHo: merge this code and the code that translates names from recordings
     std::string CIFSname = filename;
     std::string SMBPrefix = "smb://";
-    if (g_szUser.length() > 0)
+    if (g_szSMBusername.length() > 0)
     {
-      SMBPrefix += g_szUser;
-      if (g_szPass.length() > 0)
+      SMBPrefix += g_szSMBusername;
+      if (g_szSMBpassword.length() > 0)
       {
-        SMBPrefix += ":" + g_szPass;
+        SMBPrefix += ":" + g_szSMBpassword;
       }
     }
     else
@@ -1219,7 +1212,6 @@ bool cPVRClientForTheRecord::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
     m_tsreader = new CTsReader();
     XBMC->Log(LOG_DEBUG, "Open TsReader");
     m_tsreader->Open(filename.c_str());
-    m_tsreader->OnZap();
     XBMC->Log(LOG_DEBUG, "Delaying %ld milliseconds.", (1000 * g_iTuneDelay));
     usleep(1000 * g_iTuneDelay);
 

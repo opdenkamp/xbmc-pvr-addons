@@ -27,13 +27,7 @@
  *    http://forums.dvbowners.com/
  */
 
-#include "os-dependent.h"
-
-#ifdef TARGET_WINDOWS
-#include "windows/File.h"
-#else
-#include "posix/FileSMB.h"
-#endif
+#include "platform/os.h"
 
 class FileReader
 {
@@ -56,7 +50,7 @@ class FileReader
     virtual int64_t OnChannelChange(void);
 
   protected:
-    PLATFORM::CFile m_hFile;        // Handle to file for streaming
+    void*    m_hFileHandle;        // Handle to file for streaming
     char*    m_pFileName;           // The filename where we stream
     int64_t  m_fileSize;
     int64_t  m_llBufferPointer;

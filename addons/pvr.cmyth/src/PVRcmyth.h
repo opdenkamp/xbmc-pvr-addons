@@ -19,21 +19,45 @@
  *
  */
 
+#include "platform/util/StdString.h"
+#include "xbmc_pvr_types.h"
+#include "client.h"
+#include "fileOps.h"
 #include "cppmyth.h"
 #include <vector>
-#include "platform/util/StdString.h"
-#include "client.h"
 #include <map>
 #include <boost/bimap.hpp>
 #include <boost/bimap/unordered_set_of.hpp>
-#include "fileOps.h"
-//#include "../../../xbmc/xbmc_pvr_types.h"
+#include <boost/shared_ptr.hpp>
 
 /*!
  * @brief PVR macros for string exchange
  */
 #define PVR_STRCPY(dest, source) do { strncpy(dest, source, sizeof(dest)-1); dest[sizeof(dest)-1] = '\0'; } while(0)
 #define PVR_STRCLR(dest) memset(dest, 0, sizeof(dest))
+
+//const int RECORDING_RULES = 30006;
+
+class RecordingRule : public MythTimer, public std::vector< std::pair< PVR_TIMER, MythProgramInfo > >
+{
+public:
+  RecordingRule(const MythTimer& timer);
+  RecordingRule& operator=(const MythTimer& t);
+  bool operator==(const int &id);
+  RecordingRule* GetParent();
+  void SetParent(RecordingRule& parent);
+  void AddModifier(RecordingRule& modifier);
+  std::vector< RecordingRule* > GetModifiers();
+  bool HasModifiers();
+  bool SameTimeslot(RecordingRule& rule);
+  void push_back(std::pair< PVR_TIMER, MythProgramInfo > &_val);
+
+private:
+  void SaveTimerString(PVR_TIMER& timer);
+  RecordingRule* m_parent;
+  std::vector< RecordingRule* > m_modifiers;
+  std::vector< boost::shared_ptr<CStdString> > m_stringStore;
+};
 
 struct PVRcmythEpgEntry
 {
@@ -115,22 +139,22 @@ public:
   //virtual int GetCurrentClientChannel();
 
   //Timers
-  //virtual int GetTimersAmount();
-  //virtual PVR_ERROR GetTimers(ADDON_HANDLE handle);
-  //virtual PVR_ERROR AddTimer(const PVR_TIMER &timer);
-  //virtual PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete);
-  //virtual PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
+  virtual int GetTimersAmount();
+  virtual PVR_ERROR GetTimers(ADDON_HANDLE handle);
+  virtual PVR_ERROR AddTimer(const PVR_TIMER &timer);
+  virtual PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete);
+  virtual PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
 
   //Recordings
-  //virtual int GetRecordingsAmount(void);
-  //virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle);
-  //virtual PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
-  //virtual PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
-  //virtual bool OpenRecordedStream(const PVR_RECORDING &recinfo);
-  //virtual void CloseRecordedStream();
-  //virtual int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize);
-  //virtual long long SeekRecordedStream(long long iPosition, int iWhence);
-  //virtual long long LengthRecordedStream();
+  virtual int GetRecordingsAmount(void);
+  virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle);
+  virtual PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
+  virtual PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
+  virtual bool OpenRecordedStream(const PVR_RECORDING &recinfo);
+  virtual void CloseRecordedStream();
+  virtual int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize);
+  virtual long long SeekRecordedStream(long long iPosition, int iWhence);
+  virtual long long LengthRecordedStream();
   
 protected:
   virtual bool LoadCategoryMap(void);
@@ -138,10 +162,10 @@ private:
 //  std::vector<PVRcmythChannelGroup> m_groups;
 //  std::vector<PVRcmythChannel>      m_channels;
 //  time_t                            m_iEpgStart;
+  CMutex m_lock;
   CStdString                       m_strDefaultIcon;
   CStdString                       m_strDefaultMovie;
   
-  //NEW
   struct mythcat{};
   struct pvrcat{};
   typedef boost::bimap<
@@ -165,14 +189,14 @@ private:
   std::vector< MythProgram > m_EPG;
   int Genre(CStdString g);
   CStdString Genre(int g);
-  CMutex m_lock;
+ 
+  MythFile m_file;
+  std::vector< RecordingRule > m_recordingRules;
+  boost::unordered_map< CStdString, MythProgramInfo > m_recordings;
+  void PVRtoMythTimer(const PVR_TIMER timer, MythTimer& mt);
   
-  //MythFile m_file;
-  //std::vector< RecordingRule > m_recordingRules;
   //std::map< int , MythChannel > m_channels;
   //std::map< int, std::vector< int > > m_sources;
-  //boost::unordered_map< CStdString, MythProgramInfo > m_recordings;
   //boost::unordered_map< CStdString, std::vector< int > > m_channelGroups;
-  //void PVRtoMythTimer(const PVR_TIMER timer, MythTimer& mt);
-
+  
 };

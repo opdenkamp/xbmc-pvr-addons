@@ -272,16 +272,21 @@ const char* GetMininumPVRAPIVersion(void)
 
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
+  //pCapabilities->bSupportsTimeshift          = true; //removed from Frodo API
   pCapabilities->bSupportsEPG                = true;
+  pCapabilities->bSupportsRecordings         = true;
+  pCapabilities->bSupportsTimers             = true;
   pCapabilities->bSupportsTV                 = true;
   pCapabilities->bSupportsRadio              = true;
   pCapabilities->bSupportsChannelGroups      = true;
   pCapabilities->bHandlesInputStream         = true;
-  //pCapabilities->bSupportsChannelSettings    = false;
-  //pCapabilities->bHandlesDemuxing            = false;
-  //pCapabilities->bSupportsChannelScan        = false;
+  pCapabilities->bHandlesDemuxing            = false;
+  pCapabilities->bSupportsChannelScan        = false;
+  pCapabilities->bHandlesDemuxing            = false;
+  pCapabilities->bSupportsChannelScan        = false;
+  pCapabilities->bSupportsRecordingFolders   = false;
   pCapabilities->bSupportsRecordingPlayCount = true;
-  //pCapabilities->bSupportsLastPlayedPosition = false;
+  pCapabilities->bSupportsLastPlayedPosition = false;
     
   return PVR_ERROR_NO_ERROR;
 }
@@ -468,26 +473,126 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
   return PVR_ERROR_SERVER_ERROR;
 }
 
-/** UNUSED API FUNCTIONS */
-int GetTimersAmount(void) { return -1; }
-PVR_ERROR GetTimers(ADDON_HANDLE handle) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR AddTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR UpdateTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingsAmount(void) { return -1; }
-PVR_ERROR GetRecordings(ADDON_HANDLE handle) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR RenameRecording(const PVR_RECORDING &recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
-bool OpenRecordedStream(const PVR_RECORDING &recording) { return false; }
-void CloseRecordedStream(void) {}
-int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0; }
-long long SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */) { return 0; }
-long long PositionRecordedStream(void) { return -1; }
-long long LengthRecordedStream(void) { return 0; }
+int GetTimersAmount(void)
+{
+  if (g_cmyth)
+    return g_cmyth->GetTimersAmount();
+  return -1;
+}
 
+PVR_ERROR GetTimers(ADDON_HANDLE handle)
+{
+  if (g_cmyth)
+    return g_cmyth->GetTimers(handle);
+  return PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR AddTimer(const PVR_TIMER &timer)
+{
+  if (g_cmyth)
+    return g_cmyth->AddTimer(timer);
+  return PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
+{
+  if (g_cmyth)
+    return g_cmyth->DeleteTimer(timer,bForceDelete);
+  return PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR UpdateTimer(const PVR_TIMER &timer)
+{
+  if (g_cmyth)
+    return g_cmyth->UpdateTimer(timer);
+  return PVR_ERROR_SERVER_ERROR;
+}
+
+int GetRecordingsAmount(void)
+{
+  if (g_cmyth)
+    return g_cmyth->GetRecordingsAmount();
+  return -1;
+}
+
+PVR_ERROR GetRecordings(ADDON_HANDLE handle)
+{
+  if (g_cmyth)
+    return g_cmyth->GetRecordings(handle);
+  return PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
+{
+  if (g_cmyth)
+    return g_cmyth->DeleteRecording(recording);
+  return PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR RenameRecording(const PVR_RECORDING &recording)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
+{
+  if (g_cmyth)
+    return g_cmyth->SetRecordingPlayCount(recording, count);
+  return PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  return -1;
+}
+
+bool OpenRecordedStream(const PVR_RECORDING &recinfo)
+{
+  if (g_cmyth)
+    return g_cmyth->OpenRecordedStream(recinfo);
+  return false;
+}
+
+void CloseRecordedStream(void)
+{
+  if (g_cmyth)
+    g_cmyth->CloseRecordedStream();
+}
+
+int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
+{
+  if (g_cmyth)
+    return g_cmyth->ReadRecordedStream(pBuffer,iBufferSize);
+  return 0;
+}
+
+long long SeekRecordedStream(long long iPosition, int iWhence)
+{
+  if (g_cmyth)
+    return g_cmyth->SeekRecordedStream(iPosition,iWhence);
+  return 0;
+}
+
+long long PositionRecordedStream(void)
+{
+  if (g_cmyth)
+    return g_cmyth->SeekRecordedStream(0,SEEK_CUR);
+  return -1;
+}
+
+long long LengthRecordedStream(void)
+{
+  if (g_cmyth)
+    return g_cmyth->LengthRecordedStream();
+  return 0;
+}
+
+/** UNUSED API FUNCTIONS */
 PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }

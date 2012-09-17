@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.cmyth"
-  version="1.0.0"
-  name="PVR MythTV Client based on CMYTH from TSP"
+  version="1.0.0.1"
+  name="PVR MythTV Client (cmyth)"
   provider-name="Jean-Luc Barriere">
   <requires>
     <c-pluff version="0.1"/>
@@ -10,12 +10,13 @@
   <extension
     point="xbmc.pvrclient"
     library_linux="XBMC_cmyth.pvr"
+    library_osx="XBMC_cmyth.pvr"
     library_wingl="XBMC_cmyth_win32.pvr"
     library_windx="XBMC_cmyth_win32.pvr" />
   <extension point="xbmc.addon.metadata">
-    <summary>MYTHTV PVR Client</summary>
-    <description>MYTHTV PVR Client</description>
-    <disclaimer>Development status</disclaimer>
-    <platform>linux wingl windx</platform>
+    <summary>PVR client to connect MythTV backend to XBMC</summary>
+    <description>MythTV frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers over embedded cmyth library and C++ code provided by Tonny Petersen (github.com/tsp).</description>
+    <disclaimer>This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
+    <platform>all</platform>
   </extension>
 </addon>

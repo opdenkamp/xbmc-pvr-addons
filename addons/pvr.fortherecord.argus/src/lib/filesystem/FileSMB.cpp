@@ -127,6 +127,17 @@ void CSMB::Init()
 
     // setup our context
     m_context = smbc_new_context();
+#ifdef DEPRECATED_SMBC_INTERFACE
+    // NOTE: Set this log level to 10 to get verbose debugging
+    smbc_setDebug(m_context, 0);
+    smbc_setFunctionAuthData(m_context, xb_smbc_auth);
+    orig_cache = smbc_getFunctionGetCachedServer(m_context);
+    smbc_setFunctionGetCachedServer(m_context, xb_smbc_cache);
+    smbc_setOptionOneSharePerServer(m_context, false);
+    smbc_setOptionBrowseMaxLmbCount(m_context, 0);
+    // NOTE: it would be nice to make this configurable
+    smbc_setTimeout(m_context, 10000);
+#else
     // Set this log level to 10 to get verbose debugging
     m_context->debug = 0;
     m_context->callbacks.auth_fn = xb_smbc_auth;
@@ -135,6 +146,7 @@ void CSMB::Init()
     m_context->options.one_share_per_server = false;
     m_context->options.browse_max_lmb_count = 0;
     m_context->timeout = 10000; //g_advancedSettings.m_sambaclienttimeout * 1000;
+#endif
 
     // initialize samba and do some hacking into the settings
     if (smbc_init_context(m_context))

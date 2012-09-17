@@ -54,6 +54,7 @@ bool cUpcomingRecording::Parse(const Json::Value& data)
   title = data["Title"].asString();
   iscancelled = data["IsCancelled"].asBool();
   upcomingprogramid = data["UpcomingProgramId"].asString();
+  guideprogramid = data["GuideProgramId"].asString();
   scheduleid = data["ScheduleId"].asString();
 
   // From the Program class pickup the C# Channel class

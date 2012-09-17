@@ -36,7 +36,6 @@
 #define DEFAULT_TUNEDELAY             200
 
 extern bool         g_bCreated;           ///< Shows that the Create function was successfully called
-//extern int          g_iClientID;          ///< The PVR client ID used by XBMC for this driver
 extern std::string  g_szUserPath;         ///< The Path to the user directory inside user profile
 extern std::string  g_szClientPath;       ///< The Path where this driver is located
 

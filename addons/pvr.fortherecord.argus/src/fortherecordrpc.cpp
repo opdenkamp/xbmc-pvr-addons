@@ -607,16 +607,7 @@ namespace ForTheRecord
         XBMC->Log(LOG_DEBUG, "TuneLiveStream result %d.", livestreamresult);
         if (livestreamresult != ForTheRecord::Succeed)
         {
-          if (livestreamresult != ForTheRecord::NoReTunePossible)
-          {
-            XBMC->Log(LOG_ERROR, "TuneLiveStream result %d.", livestreamresult);
-            return E_FAILED;
-          }
-          else
-          {
-            XBMC->Log(LOG_INFO, "Re-tune not possible.");
-            return E_NORETUNEPOSSIBLE;
-          }
+          return livestreamresult;
         }
 
         // Ok, pick up the returned LiveStream object
@@ -636,6 +627,7 @@ namespace ForTheRecord
         stream = g_current_livestream["RtspUrl"].asString();
 #endif
         XBMC->Log(LOG_DEBUG, "Tuned live stream: %s\n", stream.c_str());
+        return E_SUCCESS;
       }
       else
       {
@@ -647,7 +639,7 @@ namespace ForTheRecord
     {
       XBMC->Log(LOG_ERROR, "TuneLiveStream failed");
     }
-    return retval;
+    return E_FAILED;
   }
 
 
@@ -1135,7 +1127,7 @@ namespace ForTheRecord
     std::string modifiedtime = TimeTToWCFDate(mktime(localtime(&now)));
     char arguments[1024];
     snprintf( arguments, sizeof(arguments),
-      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"XBMC - %s\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,\"Rules\":[{\"Arguments\":[\"%s\"],\"Type\":\"TitleEquals\"},{\"Arguments\":[\"%i-%02i-%02iT00:00:00\"],\"Type\":\"OnDate\"},{\"Arguments\":[\"%02i:%02i:%02i\"],\"Type\":\"AroundTime\"},{\"Arguments\":[\"%s\"],\"Type\":\"Channels\"}],\"ScheduleId\":\"00000000-0000-0000-0000-000000000000\",\"SchedulePriority\":0,\"ScheduleType\":82,\"Version\":0}",
+      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"%s\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,\"Rules\":[{\"Arguments\":[\"%s\"],\"Type\":\"TitleEquals\"},{\"Arguments\":[\"%i-%02i-%02iT00:00:00\"],\"Type\":\"OnDate\"},{\"Arguments\":[\"%02i:%02i:%02i\"],\"Type\":\"AroundTime\"},{\"Arguments\":[\"%s\"],\"Type\":\"Channels\"}],\"ScheduleId\":\"00000000-0000-0000-0000-000000000000\",\"SchedulePriority\":0,\"ScheduleType\":82,\"Version\":0}",
       lifetimeToKeepUntilMode(lifetime), lifetimeToKeepUntilValue(lifetime), modifiedtime.c_str(), title.c_str(), postrecordseconds, prerecordseconds, title.c_str(),
       tm_start.tm_year + 1900, tm_start.tm_mon + 1, tm_start.tm_mday,
       tm_start.tm_hour, tm_start.tm_min, tm_start.tm_sec,
@@ -1187,7 +1179,7 @@ namespace ForTheRecord
     std::string modifiedtime = TimeTToWCFDate(mktime(localtime(&now)));
     char arguments[1024];
     snprintf( arguments, sizeof(arguments),
-      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"XBMC (manual) - %s\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,"
+      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"%s (manual)\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,"
       "\"Rules\":[{\"Arguments\":[\"%i-%02i-%02iT%02i:%02i:%02i\", \"%02i:%02i:%02i\"],\"Type\":\"ManualSchedule\"},{\"Arguments\":[\"%s\"],\"Type\":\"Channels\"}],\"ScheduleId\":\"00000000-0000-0000-0000-000000000000\",\"SchedulePriority\":0,\"ScheduleType\":82,\"Version\":0}",
       lifetimeToKeepUntilMode(lifetime), lifetimeToKeepUntilValue(lifetime), modifiedtime.c_str(), title.c_str(), postrecordseconds, prerecordseconds,
       tm_start.tm_year + 1900, tm_start.tm_mon + 1, tm_start.tm_mday,

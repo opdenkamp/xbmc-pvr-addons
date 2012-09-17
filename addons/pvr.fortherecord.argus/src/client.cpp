@@ -91,7 +91,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
   g_client       = new cPVRClientForTheRecord();
-  // g_iClientID    = pvrprops->iClientId; removed from Frodo PVR API
   g_szUserPath   = pvrprops->strUserPath;
   g_szClientPath = pvrprops->strClientPath;
 

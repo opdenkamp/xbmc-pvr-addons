@@ -1,0 +1,8 @@
+v1.0.0.1 (17-09-2012)
+- Update addon description
+v1.0.0 (17-09-2012)
+- Enable recordings and timers features
+v0.0.1 (16-09-2012)
+First release forked from Tonny Petersen's repository: https://github.com/tsp.
+It include support of last PVR API of XBMC mainline (frodo-alpha6) and use an embedded
+cmyth library provider by Tonny Petersen.  

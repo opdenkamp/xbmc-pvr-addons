@@ -529,7 +529,7 @@ PVR_ERROR cPVRClientNextPVR::GetChannels(ADDON_HANDLE handle, bool bRadio)
   {
 	  TiXmlDocument doc;
 	  doc.Parse(response);
-	  //if (doc.Parse(response) == true)
+	  if (doc.Parse(response) != NULL)
 	  {
 			TiXmlElement* channelsNode = doc.RootElement()->FirstChildElement("channels");
 			TiXmlElement* pChannelNode = channelsNode->FirstChildElement("channel");
@@ -541,11 +541,9 @@ PVR_ERROR cPVRClientNextPVR::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 				strcpy(tag.strChannelName, pChannelNode->FirstChildElement("name")->FirstChild()->Value());
 
-				//char url[512];
-				//sprintf(url, "http://127.0.0.1:8866/live?channel=%d&client=XBMC", tag.iChannelNumber);  
-
-				//strcpy(tag.strStreamURL, url);
-				//tag.strStreamURL = "";
+				//CStdString strStream;
+				//strStream.Format("pvr://stream/tv/%i.ts", tag.iUniqueId);
+				//strncpy(tag.strStreamURL, strStream.c_str(), sizeof(tag.strStreamURL)); 				
 				strcpy(tag.strInputFormat, "video/x-mpegts");
 
 				PVR->TransferChannelEntry(handle, &tag);
@@ -701,7 +699,12 @@ PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
 				}
 
 				tag.recordingTime = atoi(pRecordingNode->FirstChildElement("start_time_ticks")->FirstChild()->Value());
-				tag.iDuration = atoi(pRecordingNode->FirstChildElement("duration_seconds")->FirstChild()->Value());			
+				tag.iDuration = atoi(pRecordingNode->FirstChildElement("duration_seconds")->FirstChild()->Value());		
+
+				CStdString strStream;
+				strStream.Format("http://%s:%d/live?recording=%s", g_szHostname, g_iPort, tag.strRecordingId);
+				strncpy(tag.strStreamURL, strStream.c_str(), sizeof(tag.strStreamURL)); 			
+
 
 				PVR->TransferRecordingEntry(handle, &tag);
 			}
@@ -1029,6 +1032,11 @@ PVR_ERROR cPVRClientNextPVR::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 }
 
 
+
+/************************************************************/
+/** Record stream handling */
+
+
 bool cPVRClientNextPVR::OpenRecordingInternal(long long seekOffset)
 {
 	if (!m_streamingclient->create())
@@ -1076,7 +1084,7 @@ bool cPVRClientNextPVR::OpenRecordingInternal(long long seekOffset)
 			}
 
 			// extract recording length from HTTP headers
-			if (seekOffset == 0)
+			if (seekOffset == 0 && m_currentRecordingLength == 0)
 			{
 				char tempHeader[256];				
 				if (i < sizeof(tempHeader))					
@@ -1103,15 +1111,15 @@ bool cPVRClientNextPVR::OpenRecordingInternal(long long seekOffset)
 			// long blocking from now on
 			m_streamingclient->set_non_blocking(1);
 				
+			XBMC->Log(LOG_DEBUG, "OpenRecordingInternal returning 'true'");
 			return true;
 		}
 	}
 
+	XBMC->Log(LOG_DEBUG, "OpenRecordingInternal returning 'false'");
 	return false;
 }
 
-/************************************************************/
-/** Record stream handling */
 bool cPVRClientNextPVR::OpenRecordedStream(const PVR_RECORDING &recording)
 {
 	XBMC->Log(LOG_DEBUG, "OpenRecordedStream(%d:%s)", recording.strRecordingId, recording.strTitle);	
@@ -1126,7 +1134,7 @@ bool cPVRClientNextPVR::OpenRecordedStream(const PVR_RECORDING &recording)
 		return OpenRecordingInternal(0);
 	}
 
-    return false;
+    return true;
 }
 
 void cPVRClientNextPVR::CloseRecordedStream(void)
@@ -1139,7 +1147,8 @@ void cPVRClientNextPVR::CloseRecordedStream(void)
 
 int cPVRClientNextPVR::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-	XBMC->Log(LOG_DEBUG, "ReadLiveStream");
+	PLATFORM::CLockObject lock(m_mutex);
+	XBMC->Log(LOG_DEBUG, "ReadRecordedStream(%d bytes from offset %d)", iBufferSize, (int)m_currentRecordingPosition);
 
 	// do we have enough data to fill this buffer? 
 	unsigned char buf[188*100];
@@ -1157,19 +1166,28 @@ int cPVRClientNextPVR::ReadRecordedStream(unsigned char *pBuffer, unsigned int i
 	// read from buffer to return for XBMC
 	m_incomingStreamBuffer.ReadBinary(pBuffer, iBufferSize);
 	m_currentRecordingPosition += iBufferSize;
+	XBMC->Log(LOG_DEBUG, "ReadRecordedStream return %d bytes", iBufferSize);
 	return iBufferSize;
 }
 
 long long cPVRClientNextPVR::SeekRecordedStream(long long iPosition, int iWhence)
 {
+	PLATFORM::CLockObject lock(m_mutex);
+
 	if (m_currentRecordingLength != 0)
 	{
 		m_streamingclient->close();
 		if (iWhence == SEEK_END)
 			iPosition = m_currentRecordingPosition - iPosition;
+
+		XBMC->Log(LOG_DEBUG, "SeekRecordedStream(%d, %d)", (int)iPosition, iWhence);
+
 		OpenRecordingInternal(iPosition);
+		m_currentRecordingPosition = iPosition;
 		return iPosition;
 	}
+
+	XBMC->Log(LOG_DEBUG, "SeekRecordedStream returning -1");
 
 	// not supported
 	return -1;  
@@ -1179,8 +1197,11 @@ long long cPVRClientNextPVR::PositionRecordedStream(void)
 {
 	if (m_currentRecordingLength != 0)
 	{
-		return m_currentRecordingPosition;
+		XBMC->Log(LOG_DEBUG, "PositionRecordedStream returning %d", (int)m_currentRecordingPosition);
+		return m_currentRecordingPosition;	
 	}
+
+	XBMC->Log(LOG_DEBUG, "PositionRecordedStream returning -1");
 
 	// not supported
 	return -1;
@@ -1190,8 +1211,11 @@ long long  cPVRClientNextPVR::LengthRecordedStream(void)
 {
 	if (m_currentRecordingLength != 0)
 	{
+		XBMC->Log(LOG_DEBUG, "LengthRecordedStream returning %d", (int)m_currentRecordingLength);
 		return m_currentRecordingLength;
 	}
+
+	XBMC->Log(LOG_DEBUG, "LengthRecordedStream returning -1");
 
 	// not supported
 	return -1;

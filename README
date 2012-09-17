@@ -3,6 +3,13 @@ WARNING: this is work in progress. Don't try to use this unless you know what yo
 =============================
             Linux
 =============================
+Requirements:
+sudo apt-get install \
+libboost-dev \
+libboost-system-dev \
+libboost-filesystem-dev \
+libboost-regex-dev \
+libmysqlclient-dev
 
 Start by executing:
 ./bootstrap

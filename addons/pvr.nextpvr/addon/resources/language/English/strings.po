@@ -40,6 +40,9 @@ msgctxt "#30001"
 msgid "NextPVR Port (usually 8866 or 7799)"
 msgstr ""
 
+msgctxt "#30002"
+msgid "NextPVR PinCode"
+msgstr ""
 
 # Category labels
 ###########################

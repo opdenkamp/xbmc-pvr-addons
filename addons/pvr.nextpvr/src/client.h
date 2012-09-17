@@ -35,6 +35,7 @@ enum eStreamingMethod
 
 #define DEFAULT_HOST                  "127.0.0.1"
 #define DEFAULT_PORT                  8866
+#define DEFAULT_PIN                   "0000"
 #define DEFAULT_FTA_ONLY              false
 #define DEFAULT_RADIO                 true
 #define DEFAULT_TIMEOUT               10
@@ -55,6 +56,7 @@ extern std::string      g_szClientPath;       ///< The Path where this driver is
 /* Client Settings */
 extern std::string      g_szHostname;
 extern int              g_iPort;
+extern std::string      g_szPin;
 extern int              g_iConnectTimeout;
 extern int              g_iSleepOnRTSPurl;
 extern bool             g_bOnlyFTA;

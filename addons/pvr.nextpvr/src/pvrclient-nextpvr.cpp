@@ -173,7 +173,7 @@ bool cPVRClientNextPVR::Connect()
 				XBMC->Log(LOG_DEBUG, "session.initiate returns: sid=%s salt=%s", m_sid, salt);
 				
 
-				CStdString pinMD5 = PVRXBMC::XBMC_MD5::GetMD5("0000");
+				CStdString pinMD5 = PVRXBMC::XBMC_MD5::GetMD5(g_szPin);
 				pinMD5.ToLower();
 
 				// calculate combined MD5

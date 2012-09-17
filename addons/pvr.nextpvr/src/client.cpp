@@ -30,22 +30,8 @@ using namespace ADDON;
  * and exported to the other source files.
  */
 std::string      g_szHostname           = DEFAULT_HOST;                  ///< The Host name or IP of the NextPVR server
+std::string      g_szPin	            = DEFAULT_HOST;                  ///< The Host name or IP of the NextPVR server
 int              g_iPort                = DEFAULT_PORT;                  ///< The web listening port (default: 8866) 
-int              g_iConnectTimeout      = DEFAULT_TIMEOUT;               ///< The Socket connection timeout
-int              g_iSleepOnRTSPurl      = DEFAULT_SLEEP_RTSP_URL;        ///< An optional delay between tuning a channel and opening the corresponding RTSP stream in XBMC (default: 0)
-bool             g_bOnlyFTA             = DEFAULT_FTA_ONLY;              ///< Send only Free-To-Air Channels inside Channel list to XBMC
-bool             g_bRadioEnabled        = DEFAULT_RADIO;                 ///< Send also Radio channels list to XBMC
-bool             g_bHandleMessages      = DEFAULT_HANDLE_MSG;            ///< Send VDR's OSD status messages to XBMC OSD
-bool             g_bResolveRTSPHostname = DEFAULT_RESOLVE_RTSP_HOSTNAME; ///< Resolve the server hostname in the rtsp URLs to an IP at the TV Server side (default: false)
-bool             g_bReadGenre           = DEFAULT_READ_GENRE;            ///< Read the genre strings from MediaPortal and translate them into XBMC DVB genre id's (only English)
-std::string      g_szTVGroup            = DEFAULT_TVGROUP;               ///< Import only TV channels from this TV Server TV group
-std::string      g_szRadioGroup         = DEFAULT_RADIOGROUP;            ///< Import only radio channels from this TV Server radio group
-std::string      g_szSMBusername        = DEFAULT_SMBUSERNAME;           ///< Windows user account used to access share
-std::string      g_szSMBpassword        = DEFAULT_SMBPASSWORD;           ///< Windows user password used to access share
-                                                                         ///< Leave empty to use current user when running on Windows
-eStreamingMethod g_eStreamingMethod     = TSReader;
-bool             g_bFastChannelSwitch   = true;                          ///< Don't stop an existing timeshift on a channel switch
-bool             g_bUseRTSP             = false;                         ///< Use RTSP streaming when using the tsreader
 
 /* Client member variables */
 ADDON_STATUS           m_CurStatus    = ADDON_STATUS_UNKNOWN;
@@ -71,7 +57,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 {
   if (!hdl || !props)
     return ADDON_STATUS_UNKNOWN;
-
+   
   PVR_PROPERTIES* pvrprops = (PVR_PROPERTIES*)props;
 
   XBMC = new CHelper_libXBMC_addon;
@@ -181,6 +167,16 @@ void ADDON_ReadSettings(void)
     g_iPort = DEFAULT_PORT;
   }
 
+  /* Read setting "pin" from settings.xml */
+  if (XBMC->GetSetting("pin", &buffer))
+  {
+    g_szPin = buffer;
+  }
+  else
+  {
+    g_szPin = DEFAULT_PIN;
+  }
+
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "settings: host='%s', port=%i", g_szHostname.c_str(), g_iPort);
 }
@@ -216,6 +212,15 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       g_iPort = *(int*) settingValue;
       return ADDON_STATUS_NEED_RESTART;
     }
+  }
+  else if (str == "pin")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'pin'");
+    string tmp_sPin;
+    tmp_sPin = g_szPin;
+    g_szPin = (const char*) settingValue;
+    if (tmp_sPin != g_szPin)
+      return ADDON_STATUS_NEED_RESTART;
   }
   return ADDON_STATUS_OK;
 }

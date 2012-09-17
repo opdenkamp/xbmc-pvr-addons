@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\addons\library.xbmc.addon\dlfcn-win32.cpp" />
+    <ClCompile Include="..\..\..\..\..\lib\platform\windows\os-threads.cpp" />
+    <ClCompile Include="..\..\client.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythChannel.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythConnection.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythDatabase.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythEventHandler.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythFile.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythProgramInfo.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythRecorder.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythSGFile.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythSignal.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythTimer.cpp" />
+    <ClCompile Include="..\..\cppmyth\MythTimestamp.cpp" />
+    <ClCompile Include="..\..\fileOps.cpp" />
+    <ClCompile Include="..\..\pvrclient-mythtv.cpp" />
+    <ClCompile Include="..\..\recordingrules.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\addons\library.xbmc.addon\dlfcn-win32.h" />
+    <ClInclude Include="..\..\client.h" />
+    <ClInclude Include="..\..\cppmyth.h" />
+    <ClInclude Include="..\..\cppmyth\MythChannel.h" />
+    <ClInclude Include="..\..\cppmyth\MythConnection.h" />
+    <ClInclude Include="..\..\cppmyth\MythDatabase.h" />
+    <ClInclude Include="..\..\cppmyth\MythEventHandler.h" />
+    <ClInclude Include="..\..\cppmyth\MythFile.h" />
+    <ClInclude Include="..\..\cppmyth\MythPointer.h" />
+    <ClInclude Include="..\..\cppmyth\MythProgramInfo.h" />
+    <ClInclude Include="..\..\cppmyth\MythRecorder.h" />
+    <ClInclude Include="..\..\cppmyth\MythSGFile.h" />
+    <ClInclude Include="..\..\cppmyth\MythSignal.h" />
+    <ClInclude Include="..\..\cppmyth\MythTimer.h" />
+    <ClInclude Include="..\..\cppmyth\MythTimestamp.h" />
+    <ClInclude Include="..\..\fileOps.h" />
+    <ClInclude Include="..\..\libcmyth.h" />
+    <ClInclude Include="..\..\pvrclient-mythtv.h" />
+    <ClInclude Include="..\..\recordingrules.h" />
+    <ClInclude Include="..\..\tools.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\lib\cmyth\cmythimport.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A55ACC6B-837D-4784-8E41-66947B1D9B8C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>XBMC_mythtv_cmyth</RootNamespace>
+    <ProjectName>pvrclient_mythtv_cmyth</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)..\..\..\..\..\addons\pvr.mythtv.cmyth\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>XBMC_MythTV_cmyth_win32</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetExt>.pvr</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ExtensionsToDeleteOnClean>*.cdf;*.cache;*.obj;*.ilk;*.resources;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;*.tlog;*.manifest;*.res;*.pch;*.exp;*.idb;*.rep;*.xdc;*.pdb;*_manifest.rc;*.bsc;*.sbr;*.xml;*.pvr</ExtensionsToDeleteOnClean>
+    <IncludePath>$(SolutionDir)\..\..\xbmc;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)..\..\..\..\..\addons\pvr.mythtv.cmyth\</OutDir>
+    <TargetName>XBMC_MythTV_cmyth_win32</TargetName>
+    <TargetExt>.pvr</TargetExt>
+    <ExtensionsToDeleteOnClean>*.cdf;*.cache;*.obj;*.ilk;*.resources;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;*.tlog;*.manifest;*.res;*.pch;*.exp;*.idb;*.rep;*.xdc;*.pdb;*_manifest.rc;*.bsc;*.sbr;*.xml;*.pvr</ExtensionsToDeleteOnClean>
+    <IncludePath>$(SolutionDir)\..\..\xbmc;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;__STDC_CONSTANT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\project\BuildDependencies\include;..\..\..\..\..\lib\cmyth\include;..\..\..\..\win32;..\..\..\..\..\lib\ffmpeg;..\..\..\..\..\lib\ffmpeg\include;..\..\..\..\..\lib\ffmpeg\include-xbmc-win32;..\..\;..\..\pthread_win32;..\..\windows;..\..\..\..\addons\include;..\..\..\..\cores\dvdplayer\DVDDemuxers;..\..\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>..\..\..\..\..\addons\pvr.mythtv.cmyth\XBMC_mythtv_cmyth_win32.pvr</OutputFile>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies);libboost_filesystem-vc100-mt-gd.lib;libboost_system-vc100-mt-gd.lib;libboost_regex-vc100-mt-gd.lib</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmtd;libboost_filesystem-vc100-mt-gd-1_46_1;libboost_system-vc100-mt-gd-1_46_1;libboost_regex-vc100-mt-gd-1_46_1</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>../../lib</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\..\..\project\BuildDependencies\include;..\..\..\..\..\lib\cmyth\include;..\..\..\..\..\lib\ffmpeg;..\..\..\..\..\lib\ffmpeg\include;..\..\..\..\..\lib\ffmpeg\include-xbmc-win32;..\..\;..\..\pthread_win32;..\..\windows;..\..\..\..\addons\include;..\..\..\..\cores\dvdplayer\DVDDemuxers;..\..\..\..\..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;__STDC_CONSTANT_MACROS;__WINDOWS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>..\..\..\..\..\addons\pvr.mythtv.cmyth\XBMC_mythtv_cmyth_win32.pvr</OutputFile>
+      <AdditionalDependencies>ws2_32.lib;libboost_filesystem-vc100-mt.lib;libboost_system-vc100-mt.lib;libboost_regex-vc100-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmt;libboost_filesystem-vc100-mt-1_46_1;libboost_system-vc100-mt-1_46_1;libboost_regex-vc100-mt-1_46_1</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>../../lib</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy ..\..\* "E:\atom\mythtv cmyth\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

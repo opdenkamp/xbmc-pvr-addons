@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\cppmyth">
+      <UniqueIdentifier>{bf8da2ba-8002-494c-b026-b8ef3bc7b4d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cppmyth">
+      <UniqueIdentifier>{a401a7c8-645a-41c6-8a38-aafda02d84de}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\pvrclient-mythtv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\addons\library.xbmc.addon\dlfcn-win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythChannel.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythConnection.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythDatabase.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythEventHandler.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythFile.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythProgramInfo.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythRecorder.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythSignal.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythTimer.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythTimestamp.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\recordingrules.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\lib\platform\windows\os-threads.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\fileOps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cppmyth\MythSGFile.cpp">
+      <Filter>Source Files\cppmyth</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\pvrclient-mythtv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libcmyth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\addons\library.xbmc.addon\dlfcn-win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythChannel.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythConnection.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythDatabase.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythEventHandler.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythFile.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythPointer.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythProgramInfo.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythRecorder.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythSignal.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythTimer.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythTimestamp.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\recordingrules.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\fileOps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cppmyth\MythSGFile.h">
+      <Filter>Header Files\cppmyth</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\lib\cmyth\cmythimport.txt" />
+  </ItemGroup>
+</Project>

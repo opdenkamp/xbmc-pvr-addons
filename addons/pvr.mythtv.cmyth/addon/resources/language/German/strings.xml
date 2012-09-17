@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+    <!-- settings labels -->
+    <string id="30000">MythTV Backend Hostname oder IP</string>
+    <string id="30001">MythTV Backend Port</string>
+    <string id="30002">MythTV Datenbank Benutzer</string>
+    <string id="30003">MythTV Datenbank Passwort</string>
+    <string id="30004">MythTV Datenbank Name</string>
+    <string id="30005">Schreibe ausführlichere debugging Informationen in die Log-Datei</string>
+    <string id="30006">Aufnahme-Regeln</string>
+    <string id="30007">Möchtest du immer noch löschen?</string>
+    <string id="30008">Dieser Vorgang löscht die Aufnahmeregel und &#xA;zusätzlich %i Aufnahmetermine.</string>	
+    <string id="30009">Erlaube dem Live-TV etwaige geplante Aufnahmen zu verschieben</string>
+</strings>

@@ -7,8 +7,5 @@
     <setting id="db_name" type="text" label="30004" default="mythconverg" />
     <setting id="extradebug" type="bool" label="30005" default="false"   />
     <setting id="livetv_priority" type="bool" label="30009" default="false"   />
-    <setting id="min_movie_length" type="number" label="30010" default="65" />
-    <setting id="series_regex" type="text" label="30011" default="^(?<folder>.+?)::(?<title>.+)" />
-    <setting id="series_regex_id" type="text" label="30012" default="" />
 </settings>
 

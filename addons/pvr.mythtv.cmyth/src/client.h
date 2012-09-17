@@ -40,9 +40,6 @@
 #define DEFAULT_DB_USER "mythtv"
 #define DEFAULT_DB_PASSWORD "mythtv"
 #define DEFAULT_DB_NAME "mythconverg"
-#define DEFAULT_MIN_MOVIE_LENGTH 65
-#define DEFAULT_SERIES_REGEX "^(?<folder>.+?)::(?<title>.+)"
-#define DEFAULT_SERIES_IDENTIFIER ""
 
 /*!
  * @brief PVR macros for string exchange
@@ -64,9 +61,6 @@ extern CStdString   g_szMythDBname;       ///< The mythtv sql database name (def
 extern bool         g_bExtraDebug; 
 extern bool         g_bLiveTVPriority;    ///< MythTV Backend setting to allow live TV to move scheduled shows
 
-extern int          g_iMinMovieLength;  ///< Minimum length (in minutes) of a recording to be considered to be a movie
-extern CStdString   g_szSeriesRegEx;       ///< The Regular expression to use to extract the series name (and maybe also episode number)
-extern CStdString   g_szSeriesIdentifier;  ///< The optional regular expression to use to detect series
 
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;

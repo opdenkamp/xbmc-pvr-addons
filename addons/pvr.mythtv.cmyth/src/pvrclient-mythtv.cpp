@@ -573,7 +573,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       CStdString id=it->second.Path();
       PVR_STRCPY(tag.strRecordingId, id);
       CStdString group=it->second.RecordingGroup();
-      PVR_STRCPY(tag.strDirectory, group=="Default"?"":group);
+      PVR_STRCPY(tag.strDirectory, group);
       PVR_STRCPY(tag.strTitle, title);
       int genre=Genre(it->second.Category());      
       tag.iGenreSubType=genre&0x0F;
@@ -582,43 +582,11 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       CStdString foldername = it->second.Title(true);
       CStdString foldertitle = foldername;
       CStdString newtitle = title;
-      bool regex_series_match = false;
-      try {
-        boost::regex re(g_szSeriesIdentifier);
-        regex_series_match = boost::regex_match(title,re);
-      }
-      catch(...)
-      {
-        XBMC->Log(LOG_ERROR,"%s: Malformed regulare expression : \"%s\" ",__FUNCTION__,g_szSeriesIdentifier.c_str());
-      }
       
-      if((tag.iGenreType==0x10||genre==0x00)&&tag.iDuration>(g_iMinMovieLength*60)&&!regex_series_match&&(it->second.ProgramID().substr(0,2)=="MV"||it->second.ProgramID()==""))
-      {
-        group.Format("%s/Movies",tag.strDirectory);
-        PVR_STRCPY(tag.strDirectory, group);
-      }
-      else
-      {
-        try {
-          boost::regex re(g_szSeriesRegEx);
-          boost::smatch result;
-          if(boost::regex_search(foldertitle,result,re))
-          {
-            if(result.length("folder"))
-              foldername = result.str("folder");
-            if(result.length("title"))
-              newtitle=result.str("title");      
-            PVR_STRCPY(tag.strTitle, newtitle);
-          }
-        }
-        catch(...)
-        {
-          XBMC->Log(LOG_ERROR,"%s: Malformed regulare expression : \"%s\" ",__FUNCTION__,g_szSeriesRegEx.c_str());
-        }
-        group.Format("%s/%s",tag.strDirectory,foldername);
-        PVR_STRCPY(tag.strDirectory, group);
-      }
-
+      // Add recording title to directory to group everything according to its name just like MythTV does
+      group.Format("%s/%s",tag.strDirectory,it->second.Title(false));
+      PVR_STRCPY(tag.strDirectory,group);
+      
       tag.iPlayCount=it->second.IsWatched() ? 1 : 0;
 
       CStdString defIcon = GetArtWork(FILE_OPS_GET_COVERART,title);

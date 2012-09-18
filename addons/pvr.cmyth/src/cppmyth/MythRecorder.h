@@ -5,11 +5,11 @@ extern "C" {
   #include "../cmyth/include/cmyth/cmyth.h"
   #include "../cmyth/include/refmem/refmem.h"
 }
-#include "../../../../lib/platform/util/StdString.h"
+#include "platform/util/StdString.h"
 #include <boost/shared_ptr.hpp>
 #include "MythPointer.h"
 #include "MythConnection.h"
-#include "../../../../lib/platform/threads/threads.h"
+#include "platform/threads/threads.h"
 
 class MythProgramInfo;
 class MythChannel;

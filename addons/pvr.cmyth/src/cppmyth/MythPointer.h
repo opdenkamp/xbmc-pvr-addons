@@ -5,7 +5,7 @@ extern "C" {
   #include "../cmyth/include/cmyth/cmyth.h"
   #include "../cmyth/include/refmem/refmem.h"
 }
-#include "../../../../lib/platform/threads/threads.h"
+#include "platform/threads/threads.h"
 
 //extern CHelper_libcmyth *CMYTH;
 

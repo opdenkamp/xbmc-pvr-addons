@@ -21,7 +21,6 @@
 
 #include "PVRcmyth.h"
 #include "tools.h"
-#include <cmyth/cmyth.h>
 #include <boost/regex.hpp>
 
 using namespace std;
@@ -269,6 +268,34 @@ bool PVRcmyth::Connect()
   std::vector<MythRecordingProfile > rp = m_db.GetRecordingProfiles();
 
   return true;
+}
+
+const char* PVRcmyth::GetBackendName()
+{
+  if(g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG,"%s",__FUNCTION__);
+  return m_con.GetServer();
+}
+
+const char * PVRcmyth::GetBackendVersion()
+{
+  if(g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG,"%s",__FUNCTION__);
+  return m_protocolVersion;
+}
+
+const char * PVRcmyth::GetConnectionString()
+{
+  if(g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG,"%s",__FUNCTION__);
+  return m_connectionString;
+}
+
+bool PVRcmyth::GetDriveSpace(long long *iTotal, long long *iUsed)
+{
+  if(g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG,"%s",__FUNCTION__);
+  return m_con.GetDriveSpace(*iTotal,*iUsed);
 }
 
 bool PVRcmyth::LoadCategoryMap(void)

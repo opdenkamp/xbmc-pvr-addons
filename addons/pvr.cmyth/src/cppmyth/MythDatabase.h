@@ -9,7 +9,7 @@ extern "C" {
 #include <map>
 #include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
-#include "../../../../lib/platform/util/StdString.h"
+#include "platform/util/StdString.h"
 #include "MythPointer.h"
 
 class MythChannel;

@@ -293,27 +293,24 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 
 const char *GetBackendName(void)
 {
-  static const char *strBackendName = "pulse-eight demo pvr add-on";
-  return strBackendName;
+  return g_cmyth->GetBackendName();
 }
 
 const char *GetBackendVersion(void)
 {
-  static CStdString strBackendVersion = "0.1";
-  return strBackendVersion.c_str();
+  return g_cmyth->GetBackendVersion();
 }
 
 const char *GetConnectionString(void)
 {
-  static CStdString strConnectionString = "connected";
-  return strConnectionString.c_str();
+  return g_cmyth->GetConnectionString();
 }
 
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 {
-  *iTotal = 1024 * 1024 * 1024;
-  *iUsed  = 0;
-  return PVR_ERROR_NO_ERROR;
+  if(g_cmyth->GetDriveSpace(iTotal,iUsed))
+    return PVR_ERROR_NO_ERROR;
+  return PVR_ERROR_UNKNOWN;
 }
 
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)

@@ -113,10 +113,10 @@ public:
   virtual void SetLiveTVPriority(bool enabled);
   virtual CStdString GetArtWork(FILE_OPTIONS storageGroup, CStdString shwTitle);
   //virtual PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook);
-  //virtual const char * GetBackendName();
-  //virtual const char * GetBackendVersion();
-  //virtual const char * GetConnectionString();
-  //virtual bool GetDriveSpace(long long *iTotal, long long *iUsed);
+  virtual const char * GetBackendName();
+  virtual const char * GetBackendVersion();
+  virtual const char * GetConnectionString();
+  virtual bool GetDriveSpace(long long *iTotal, long long *iUsed);
   //virtual int GetNumChannels();
 
   //Channels

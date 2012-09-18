@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../../lib/platform/util/StdString.h"
+#include "platform/util/StdString.h"
 
 class MythSignal
 {

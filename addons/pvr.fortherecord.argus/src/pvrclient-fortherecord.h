@@ -17,7 +17,7 @@
  *
  */
 
-#include "os-dependent.h"
+#include "platform/os.h"
 
 #include <vector>
 

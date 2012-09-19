@@ -21,7 +21,6 @@
 #include <iostream>
 #include "../IFile.h"
 #include "platform/threads/mutex.h"
-#include "os-dependent.h"
 
 struct _SMBCCTX;
 typedef _SMBCCTX SMBCCTX;

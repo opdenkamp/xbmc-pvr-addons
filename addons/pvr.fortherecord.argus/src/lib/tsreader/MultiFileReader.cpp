@@ -41,7 +41,7 @@
 
 #if !defined(TARGET_WINDOWS)
 #include <sys/time.h>
-#include "os-dependent.h"
+#include "platform/os.h"
 #define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
 #endif
 

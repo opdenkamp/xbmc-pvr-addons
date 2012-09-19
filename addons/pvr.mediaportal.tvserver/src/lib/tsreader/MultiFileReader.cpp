@@ -33,7 +33,6 @@
 #include <algorithm>
 #include "platform/util/timeutils.h"
 #include "platform/util/StdString.h"
-#include "os-dependent.h"
 
 using namespace ADDON;
 using namespace PLATFORM;
@@ -368,7 +367,7 @@ long MultiFileReader::RefreshTSBufferFile()
       // try to clear local / remote SMB file cache. This should happen when we close the filehandle
       m_TSBufferFile.CloseFile();
       m_TSBufferFile.OpenFile();
-      Sleep(5);
+      PLATFORM::CEvent::Sleep(5);
     }
 
     if (Error)

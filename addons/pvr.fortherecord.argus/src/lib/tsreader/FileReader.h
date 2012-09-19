@@ -29,7 +29,7 @@
 
 #if defined TSREADER
 
-#include "os-dependent.h"
+#include "platform/os.h"
 #if !defined(TARGET_WINDOWS)
 #include "FileSMB.h"
 #endif

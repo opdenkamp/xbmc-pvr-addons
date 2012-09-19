@@ -23,7 +23,7 @@
 
 using namespace std;
 
-#include "os-dependent.h" //needed for snprintf
+#include "platform/os.h" //needed for snprintf
 #include "client.h"
 #include "timers.h"
 #include "utils.h"

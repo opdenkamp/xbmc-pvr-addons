@@ -23,7 +23,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "os-dependent.h"
 #include <inttypes.h>
 #include "client.h"
 #include "FileSMB.h"

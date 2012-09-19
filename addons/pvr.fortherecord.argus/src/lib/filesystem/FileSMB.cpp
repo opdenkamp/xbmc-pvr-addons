@@ -28,7 +28,6 @@
 #include "FileSMB.h"
 #include <libsmbclient.h>
 #include "platform/threads/mutex.h"
-#include "os-dependent.h"
 
 using namespace ADDON;
 

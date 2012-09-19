@@ -98,9 +98,6 @@
     <ClInclude Include="..\..\src\KeepAliveThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\os-dependent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\pvrclient-fortherecord.h">
       <Filter>Header Files</Filter>
     </ClInclude>

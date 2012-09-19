@@ -109,7 +109,6 @@
     <ClInclude Include="..\..\src\lib\tsreader\FileReader.h" />
     <ClInclude Include="..\..\src\lib\tsreader\MultiFileReader.h" />
     <ClInclude Include="..\..\src\lib\tsreader\TSReader.h" />
-    <ClInclude Include="..\..\src\os-dependent.h" />
     <ClInclude Include="..\..\src\pvrclient-fortherecord.h" />
     <ClInclude Include="..\..\src\recording.h" />
     <ClInclude Include="..\..\src\recordinggroup.h" />

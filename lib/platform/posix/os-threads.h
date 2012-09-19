@@ -31,6 +31,12 @@
  *     http://www.pulse-eight.net/
  */
 
+#if defined(TARGET_DARWIN)
+#  ifndef PTHREAD_MUTEX_RECURSIVE_NP
+#    define PTHREAD_MUTEX_RECURSIVE_NP PTHREAD_MUTEX_RECURSIVE
+#  endif
+#endif
+
 namespace PLATFORM
 {
   inline pthread_mutexattr_t *GetRecursiveMutexAttribute(void)

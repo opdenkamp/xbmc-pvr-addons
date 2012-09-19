@@ -19,7 +19,7 @@
 */
 
 #include <vector>
-#include "utils.h"
+#include "misc/utils.h"
 #include <stdlib.h>
 #include <string.h>
 #include "recording.h"
@@ -126,12 +126,12 @@ bool cRecording::Parse(const Json::Value& data)
   videoaspect = (ForTheRecord::VideoAspectRatio) data["VideoAspect"].asInt();
   std::string CIFSname = recordingfilename;
   std::string SMBPrefix = "smb://";
-  if (g_szUser.length() > 0)
+  if (g_szSMBusername.length() > 0)
   {
-    SMBPrefix += g_szUser;
-    if (g_szPass.length() > 0)
+    SMBPrefix += g_szSMBusername;
+    if (g_szSMBpassword.length() > 0)
     {
-      SMBPrefix += ":" + g_szPass;
+      SMBPrefix += ":" + g_szSMBpassword;
     }
   }
   else

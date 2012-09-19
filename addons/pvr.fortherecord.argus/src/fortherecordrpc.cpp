@@ -26,11 +26,10 @@
 
 #include <stdio.h>
 #include <sys/stat.h>
-#include "os-dependent.h"
-#include "curl/curl.h"
+#include "platform/os.h"
 #include "client.h"
 #include "pvrclient-fortherecord.h"
-#include "utils.h"
+#include "misc/utils.h"
 #include "fortherecordrpc.h"
 #include "platform/threads/mutex.h"
 
@@ -38,65 +37,6 @@ using namespace ADDON;
 
 // Some version dependent API strings
 #define FTR_GETEPG_45 "ForTheRecord/Guide/FullPrograms/%s/%i-%02i-%02iT%02i:%02i:%02i/%i-%02i-%02iT%02i:%02i:%02i/false"
-
-
-// set l_logCurl to true to enable detailed protocol info logging by CURL
-static bool l_logCurl = false;
-
-/**
- * \brief CURL callback function that receives the return data from the HTTP get/post calls
- */
-static size_t curl_write_data(void *buffer, size_t size, size_t nmemb, void *stream)
-{
-  //XBMC->Log(LOG_DEBUG, "\nwrite_data size=%i, nmemb=%i\n", size, nmemb, (char*) buffer);
-
-  // Calculate the real size of the incoming buffer
-  size_t realsize = size * nmemb;
-
-  std::string* response = (std::string*) stream;
-  // Dirty... needs some checking
-  *response += (char*) buffer;
-
-  return realsize;
-}
-
-/**
- * \brief CURL callback function that receives the return data from the HTTP get/post calls and writes it to a file
- */
-static size_t curl_write_data_to_file(void *buffer, size_t size, size_t nmemb, void *stream)
-{
-  //XBMC->Log(LOG_DEBUG, "\nwrite_data size=%i, nmemb=%i\n", size, nmemb, (char*) buffer);
-
-  int written = fwrite(buffer, size, nmemb, (FILE *) stream);
-  return written;
-}
-
-/**
- * \brief CURL debug callback function
- */
-static int my_curl_debug_callback(CURL* curl, curl_infotype infotype, char* data, size_t size, void* p)
-{
-  char *pch = new char[size +1];
-    strncpy(pch, data, size);
-    pch[size] = '\0';
-  switch(infotype)
-  {
-  case CURLINFO_TEXT:
-    XBMC->Log(LOG_DEBUG, "CURL info    : %s", pch);
-    break;
-  case CURLINFO_DATA_OUT:
-    XBMC->Log(LOG_DEBUG, "CURL data-out: %s", pch);
-    break;
-  case CURLINFO_DATA_IN:
-    XBMC->Log(LOG_DEBUG, "CURL data-in : %s", pch);
-    break;
-  default:
-    // do nothing
-    break;
-  }
-  delete [] pch;
-  return 0;
-}
 
 /**
  * \brief Namespace with ForTheRecord related code
@@ -110,8 +50,6 @@ namespace ForTheRecord
    */
   void Initialize(void)
   {
-    // due to lack of static constructors...
-    curl_global_init(CURL_GLOBAL_ALL);
   }
 
 
@@ -125,58 +63,59 @@ namespace ForTheRecord
 
   int ForTheRecordRPC(const std::string& command, const std::string& arguments, std::string& json_response)
   {
-    CURL *curl;
-    CURLcode res;
-    std::string url = g_szBaseURL + command;
-    PLATFORM::CLockObject critsec(communication_mutex);
-
-    XBMC->Log(LOG_DEBUG, "URL: %s\n", url.c_str());
-
-    curl = curl_easy_init();
-
-    if(curl)
-    {
-      struct curl_slist *chunk = NULL;
-
-      chunk = curl_slist_append(chunk, "Content-type: application/json; charset=UTF-8");
-      chunk = curl_slist_append(chunk, "Accept: application/json; charset=UTF-8");
-
-      /* Specify the URL */
-      if ((res = curl_easy_setopt(curl, CURLOPT_URL, url.c_str())) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_URL returned %d (%s).\n", res, curl_easy_strerror(res));
-      if ((res = curl_easy_setopt(curl, CURLOPT_TIMEOUT, g_iConnectTimeout)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_TIMEOUT returned %d (%s).\n", res, curl_easy_strerror(res));
-      if ((res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_HTTPHEADER returned %d (%s).\n", res, curl_easy_strerror(res));
-      /* Now specify the POST data */
-      if ((res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, arguments.c_str())) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_POSTFIELDS returned %d (%s).\n", res, curl_easy_strerror(res));
-      /* Define our callback to get called when there's data to be written */ 
-      if ((res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_WRITEFUNCTION returned %d (%s).\n", res, curl_easy_strerror(res));
-      /* Set a pointer to our struct to pass to the callback */ 
-      json_response = "";
-      if ((res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, &json_response)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_WRITEDATA returned %d (%s).\n", res, curl_easy_strerror(res));
-
-      /* debugging only */
-      if (l_logCurl)
-      {
-        if ((res = curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, my_curl_debug_callback)) != CURLE_OK)
-          XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_DEBUGFUNCTION returned %d (%s).\n", res, curl_easy_strerror(res));
-        if ((res = curl_easy_setopt(curl, CURLOPT_VERBOSE, 1)) != CURLE_OK)
-          XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_VERBOSE returned %d (%s).\n", res, curl_easy_strerror(res));
-      }
-
-      /* Perform the request */
-      if ((res = curl_easy_perform(curl)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_perform returned %d (%s).\n", res, curl_easy_strerror(res));
-
-      /* always cleanup */
-      curl_easy_cleanup(curl);
-      return 0;
-    }
-    else
+    // TODO change to use XBMC's file operations. you cannot use curl in add-ons
+//    CURL *curl;
+//    CURLcode res;
+//    std::string url = g_szBaseURL + command;
+//    PLATFORM::CLockObject critsec(communication_mutex);
+//
+//    XBMC->Log(LOG_DEBUG, "URL: %s\n", url.c_str());
+//
+//    curl = curl_easy_init();
+//
+//    if(curl)
+//    {
+//      struct curl_slist *chunk = NULL;
+//
+//      chunk = curl_slist_append(chunk, "Content-type: application/json; charset=UTF-8");
+//      chunk = curl_slist_append(chunk, "Accept: application/json; charset=UTF-8");
+//
+//      /* Specify the URL */
+//      if ((res = curl_easy_setopt(curl, CURLOPT_URL, url.c_str())) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_URL returned %d (%s).\n", res, curl_easy_strerror(res));
+//      if ((res = curl_easy_setopt(curl, CURLOPT_TIMEOUT, g_iConnectTimeout)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_TIMEOUT returned %d (%s).\n", res, curl_easy_strerror(res));
+//      if ((res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_HTTPHEADER returned %d (%s).\n", res, curl_easy_strerror(res));
+//      /* Now specify the POST data */
+//      if ((res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, arguments.c_str())) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_POSTFIELDS returned %d (%s).\n", res, curl_easy_strerror(res));
+//      /* Define our callback to get called when there's data to be written */
+//      if ((res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_WRITEFUNCTION returned %d (%s).\n", res, curl_easy_strerror(res));
+//      /* Set a pointer to our struct to pass to the callback */
+//      json_response = "";
+//      if ((res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, &json_response)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_WRITEDATA returned %d (%s).\n", res, curl_easy_strerror(res));
+//
+//      /* debugging only */
+//      if (l_logCurl)
+//      {
+//        if ((res = curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, my_curl_debug_callback)) != CURLE_OK)
+//          XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_DEBUGFUNCTION returned %d (%s).\n", res, curl_easy_strerror(res));
+//        if ((res = curl_easy_setopt(curl, CURLOPT_VERBOSE, 1)) != CURLE_OK)
+//          XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_VERBOSE returned %d (%s).\n", res, curl_easy_strerror(res));
+//      }
+//
+//      /* Perform the request */
+//      if ((res = curl_easy_perform(curl)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_perform returned %d (%s).\n", res, curl_easy_strerror(res));
+//
+//      /* always cleanup */
+//      curl_easy_cleanup(curl);
+//      return 0;
+//    }
+//    else
     {
       return E_FAILED;
     }
@@ -184,71 +123,72 @@ namespace ForTheRecord
 
   int ForTheRecordRPCToFile(const std::string& command, const std::string& arguments, std::string& filename, long& http_response)
   {
-    CURL *curl;
-    CURLcode res;
-    std::string url = g_szBaseURL + command;
-    PLATFORM::CLockObject critsec(communication_mutex);
-
-    XBMC->Log(LOG_DEBUG, "URL: %s writing to file %s\n", url.c_str(), filename.c_str());
-
-    curl = curl_easy_init();
-
-    if(curl)
-    {
-      struct curl_slist *chunk = NULL;
-
-      chunk = curl_slist_append(chunk, "Content-type: application/json; charset=UTF-8");
-      chunk = curl_slist_append(chunk, "Accept: application/json; charset=UTF-8");
-
-      /* Specify the URL */
-      if ((res = curl_easy_setopt(curl, CURLOPT_URL, url.c_str())) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_URL returned %d (%s).\n", res, curl_easy_strerror(res));
-      if ((res = curl_easy_setopt(curl, CURLOPT_TIMEOUT, g_iConnectTimeout)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_TIMEOUT returned %d (%s).\n", res, curl_easy_strerror(res));
-      if ((res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_HTTPHEADER returned %d (%s).\n", res, curl_easy_strerror(res));
-      /* Now specify the POST data */
-      if ((res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, arguments.c_str())) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_POSTFIELDS returned %d (%s).\n", res, curl_easy_strerror(res));
-      /* ask curl to write to file */ 
-      if ((res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data_to_file)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_WRITEFUNCTION returned %d (%s).\n", res, curl_easy_strerror(res));
-      /* Open the output file */
-      FILE *ofile = fopen(filename.c_str(), "w+b");
-      if (ofile == NULL)
-      {
-        XBMC->Log(LOG_ERROR, "can not open %s", filename.c_str());
-        curl_easy_cleanup(curl);
-        return E_FAILED;
-      }
-      if ((res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, ofile)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_WRITEDATA returned %d (%s).\n", res, curl_easy_strerror(res));
-
-      /* debugging only */
-      if (l_logCurl)
-      {
-        if ((res = curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, my_curl_debug_callback)) != CURLE_OK)
-          XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_DEBUGFUNCTION returned %d (%s).\n", res, curl_easy_strerror(res));
-        if ((res = curl_easy_setopt(curl, CURLOPT_VERBOSE, 1)) != CURLE_OK)
-          XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_VERBOSE returned %d (%s).\n", res, curl_easy_strerror(res));
-      }
-
-      /* Perform the request */
-      if ((res = curl_easy_perform(curl)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_perform returned %d (%s).\n", res, curl_easy_strerror(res));
-
-      /* Retrieve HTTP response code */
-      if ((res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_response)) != CURLE_OK)
-        XBMC->Log(LOG_NOTICE, "curl_easy_getinfo CURLINFO_RESPONSE_CODE returned %d (%s).\n", res, curl_easy_strerror(res));
-
-      /* close output file */
-      fclose(ofile);
-
-      /* always cleanup */
-      curl_easy_cleanup(curl);
-      return 0;
-    }
-    else
+    // TODO change to use XBMC's file operations. you cannot use curl in add-ons
+//    CURL *curl;
+//    CURLcode res;
+//    std::string url = g_szBaseURL + command;
+//    PLATFORM::CLockObject critsec(communication_mutex);
+//
+//    XBMC->Log(LOG_DEBUG, "URL: %s writing to file %s\n", url.c_str(), filename.c_str());
+//
+//    curl = curl_easy_init();
+//
+//    if(curl)
+//    {
+//      struct curl_slist *chunk = NULL;
+//
+//      chunk = curl_slist_append(chunk, "Content-type: application/json; charset=UTF-8");
+//      chunk = curl_slist_append(chunk, "Accept: application/json; charset=UTF-8");
+//
+//      /* Specify the URL */
+//      if ((res = curl_easy_setopt(curl, CURLOPT_URL, url.c_str())) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_URL returned %d (%s).\n", res, curl_easy_strerror(res));
+//      if ((res = curl_easy_setopt(curl, CURLOPT_TIMEOUT, g_iConnectTimeout)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_TIMEOUT returned %d (%s).\n", res, curl_easy_strerror(res));
+//      if ((res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_HTTPHEADER returned %d (%s).\n", res, curl_easy_strerror(res));
+//      /* Now specify the POST data */
+//      if ((res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, arguments.c_str())) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_POSTFIELDS returned %d (%s).\n", res, curl_easy_strerror(res));
+//      /* ask curl to write to file */
+//      if ((res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data_to_file)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_WRITEFUNCTION returned %d (%s).\n", res, curl_easy_strerror(res));
+//      /* Open the output file */
+//      FILE *ofile = fopen(filename.c_str(), "w+b");
+//      if (ofile == NULL)
+//      {
+//        XBMC->Log(LOG_ERROR, "can not open %s", filename.c_str());
+//        curl_easy_cleanup(curl);
+//        return E_FAILED;
+//      }
+//      if ((res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, ofile)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_WRITEDATA returned %d (%s).\n", res, curl_easy_strerror(res));
+//
+//      /* debugging only */
+//      if (l_logCurl)
+//      {
+//        if ((res = curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, my_curl_debug_callback)) != CURLE_OK)
+//          XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_DEBUGFUNCTION returned %d (%s).\n", res, curl_easy_strerror(res));
+//        if ((res = curl_easy_setopt(curl, CURLOPT_VERBOSE, 1)) != CURLE_OK)
+//          XBMC->Log(LOG_NOTICE, "curl_easy_setop CURLOPT_VERBOSE returned %d (%s).\n", res, curl_easy_strerror(res));
+//      }
+//
+//      /* Perform the request */
+//      if ((res = curl_easy_perform(curl)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_perform returned %d (%s).\n", res, curl_easy_strerror(res));
+//
+//      /* Retrieve HTTP response code */
+//      if ((res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_response)) != CURLE_OK)
+//        XBMC->Log(LOG_NOTICE, "curl_easy_getinfo CURLINFO_RESPONSE_CODE returned %d (%s).\n", res, curl_easy_strerror(res));
+//
+//      /* close output file */
+//      fclose(ofile);
+//
+//      /* always cleanup */
+//      curl_easy_cleanup(curl);
+//      return 0;
+//    }
+//    else
     {
       return E_FAILED;
     }
@@ -260,7 +200,7 @@ namespace ForTheRecord
     int retval = E_FAILED;
     retval = ForTheRecordRPC(command, arguments, response);
 
-    if (retval == CURLE_OK)
+    if (retval != E_FAILED)
     {
 #ifdef DEBUG
       // Print only the first 512 bytes, otherwise XBMC will crash...
@@ -883,33 +823,34 @@ namespace ForTheRecord
   {
     int retval = E_FAILED;
     XBMC->Log(LOG_DEBUG, "GetRecordingsForTitleUsingURL");
-    CURL *curl;
-
-    curl = curl_easy_init();
-
-    if(curl)
-    {
-      std::string command = "ForTheRecord/Control/RecordingsForProgramTitle/Television/";
-      char* pch = curl_easy_escape(curl, title.c_str(), 0);
-      command += pch;
-      curl_free(pch);
-
-      retval = ForTheRecord::ForTheRecordJSONRPC(command, "?includeNonExisting=false", response);
-      if(retval >= 0)
-      {           
-        if (response.type() != Json::arrayValue)
-        {
-          retval = E_FAILED;
-          XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingURL did not return a Json::arrayValue [%d].", response.type());
-        }
-      }
-      else
-      {
-        XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingURL remote call failed.");
-      }
-
-      curl_easy_cleanup(curl);
-    }
+    // TODO change to use XBMC's file operations. you cannot use curl in add-ons
+//    CURL *curl;
+//
+//    curl = curl_easy_init();
+//
+//    if(curl)
+//    {
+//      std::string command = "ForTheRecord/Control/RecordingsForProgramTitle/Television/";
+//      char* pch = curl_easy_escape(curl, title.c_str(), 0);
+//      command += pch;
+//      curl_free(pch);
+//
+//      retval = ForTheRecord::ForTheRecordJSONRPC(command, "?includeNonExisting=false", response);
+//      if(retval >= 0)
+//      {
+//        if (response.type() != Json::arrayValue)
+//        {
+//          retval = E_FAILED;
+//          XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingURL did not return a Json::arrayValue [%d].", response.type());
+//        }
+//      }
+//      else
+//      {
+//        XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingURL remote call failed.");
+//      }
+//
+//      curl_easy_cleanup(curl);
+//    }
     return retval;
   }
 
@@ -939,20 +880,21 @@ namespace ForTheRecord
   int GetRecordingById(const std::string& id, Json::Value& response)
   {
     int retval = E_FAILED;
-    CURL *curl;
-
-    XBMC->Log(LOG_DEBUG, "GetRecordingById");
-
-    curl = curl_easy_init();
-
-    if(curl)
-    {
-      std::string command = "ForTheRecord/Control/RecordingById/" + id;
-
-      retval = ForTheRecord::ForTheRecordJSONRPC(command, "", response);
-
-      curl_easy_cleanup(curl);
-    }
+    // TODO change to use XBMC's file operations. you cannot use curl in add-ons
+//    CURL *curl;
+//
+//    XBMC->Log(LOG_DEBUG, "GetRecordingById");
+//
+//    curl = curl_easy_init();
+//
+//    if(curl)
+//    {
+//      std::string command = "ForTheRecord/Control/RecordingById/" + id;
+//
+//      retval = ForTheRecord::ForTheRecordJSONRPC(command, "", response);
+//
+//      curl_easy_cleanup(curl);
+//    }
     return retval;
   }
 
@@ -984,32 +926,33 @@ namespace ForTheRecord
   int GetScheduleById(const std::string& id, Json::Value& response)
   {
     int retval = E_FAILED;
-    CURL *curl;
-
-    XBMC->Log(LOG_DEBUG, "GetScheduleById");
-
-    curl = curl_easy_init();
-
-    if(curl)
-    {
-      std::string command = "ForTheRecord/Scheduler/ScheduleById/" + id;
-
-      retval = ForTheRecord::ForTheRecordJSONRPC(command, "", response);
-      if(retval >= 0)
-      {           
-        if (response.type() != Json::objectValue)
-        {
-          retval = E_FAILED;
-          XBMC->Log(LOG_NOTICE, "GetScheduleById did not return a Json::objectValue [%d].", response.type());
-        }
-      }
-      else
-      {
-        XBMC->Log(LOG_NOTICE, "GetScheduleById remote call failed.");
-      }
-
-      curl_easy_cleanup(curl);
-    }
+    // TODO change to use XBMC's file operations. you cannot use curl in add-ons
+//    CURL *curl;
+//
+//    XBMC->Log(LOG_DEBUG, "GetScheduleById");
+//
+//    curl = curl_easy_init();
+//
+//    if(curl)
+//    {
+//      std::string command = "ForTheRecord/Scheduler/ScheduleById/" + id;
+//
+//      retval = ForTheRecord::ForTheRecordJSONRPC(command, "", response);
+//      if(retval >= 0)
+//      {
+//        if (response.type() != Json::objectValue)
+//        {
+//          retval = E_FAILED;
+//          XBMC->Log(LOG_NOTICE, "GetScheduleById did not return a Json::objectValue [%d].", response.type());
+//        }
+//      }
+//      else
+//      {
+//        XBMC->Log(LOG_NOTICE, "GetScheduleById remote call failed.");
+//      }
+//
+//      curl_easy_cleanup(curl);
+//    }
     return retval;
   }
 
@@ -1021,32 +964,33 @@ namespace ForTheRecord
   int GetProgramById(const std::string& id, Json::Value& response)
   {
     int retval = E_FAILED;
-    CURL *curl;
-
-    XBMC->Log(LOG_DEBUG, "GetProgramById");
-
-    curl = curl_easy_init();
-
-    if(curl)
-    {
-      std::string command = "ForTheRecord/Guide/Program/" + id;
-
-      retval = ForTheRecord::ForTheRecordJSONRPC(command, "", response);
-      if(retval >= 0)
-      {           
-        if (response.type() != Json::objectValue)
-        {
-          retval = E_FAILED;
-          XBMC->Log(LOG_NOTICE, "GetProgramById did not return a Json::objectValue [%d].", response.type());
-        }
-      }
-      else
-      {
-        XBMC->Log(LOG_NOTICE, "GetProgramById remote call failed.");
-      }
-
-      curl_easy_cleanup(curl);
-    }
+    // TODO change to use XBMC's file operations. you cannot use curl in add-ons
+//    CURL *curl;
+//
+//    XBMC->Log(LOG_DEBUG, "GetProgramById");
+//
+//    curl = curl_easy_init();
+//
+//    if(curl)
+//    {
+//      std::string command = "ForTheRecord/Guide/Program/" + id;
+//
+//      retval = ForTheRecord::ForTheRecordJSONRPC(command, "", response);
+//      if(retval >= 0)
+//      {
+//        if (response.type() != Json::objectValue)
+//        {
+//          retval = E_FAILED;
+//          XBMC->Log(LOG_NOTICE, "GetProgramById did not return a Json::objectValue [%d].", response.type());
+//        }
+//      }
+//      else
+//      {
+//        XBMC->Log(LOG_NOTICE, "GetProgramById remote call failed.");
+//      }
+//
+//      curl_easy_cleanup(curl);
+//    }
     return retval;
   }
 

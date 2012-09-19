@@ -45,8 +45,8 @@ extern std::string  g_szHostname;
 extern int          g_iPort;
 extern int          g_iConnectTimeout;
 extern bool         g_bRadioEnabled;
-extern std::string  g_szUser;
-extern std::string  g_szPass;
+extern std::string  g_szSMBusername;
+extern std::string  g_szSMBpassword;
 extern int          g_iTuneDelay;
 
 extern std::string  g_szBaseURL;

@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
-#include "Cards.h"
+#include "tsreader/Cards.h"
 #include "GenreTable.h"
 
 using namespace std;

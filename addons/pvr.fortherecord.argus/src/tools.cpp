@@ -24,7 +24,7 @@
  */
 
 #include "tools.h"
-#include "os-dependent.h"
+#include "platform/os.h"
 #include "platform/util/timeutils.h"
 
 using namespace ADDON;

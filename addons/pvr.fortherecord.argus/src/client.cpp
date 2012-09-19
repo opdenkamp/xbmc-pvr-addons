@@ -19,7 +19,7 @@
 #include "client.h"
 #include "xbmc_pvr_dll.h"
 #include "pvrclient-fortherecord.h"
-#include "utils.h"
+#include "misc/utils.h"
 #include "uri.h"
 
 using namespace std;
@@ -33,9 +33,9 @@ std::string g_szHostname           = DEFAULT_HOST;         ///< The Host name or
 int         g_iPort                = DEFAULT_PORT;         ///< The TVServerXBMC listening port (default: 49943)
 int         g_iConnectTimeout      = DEFAULT_TIMEOUT;      ///< The Socket connection timeout
 bool        g_bRadioEnabled        = DEFAULT_RADIO;        ///< Send also Radio channels list to XBMC
-                                                           ///< ForTheRecord uses shares to communicate with clients 
-std::string g_szUser               = DEFAULT_USER;         ///< Windows user account used to access share
-std::string g_szPass               = DEFAULT_PASS;         ///< Windows user password used to access share
+                                                           ///< ForTheRecord uses shares to communicate with clients
+std::string  g_szSMBusername        = DEFAULT_USER;        ///< Windows user account used to access share
+std::string  g_szSMBpassword        = DEFAULT_PASS;        ///< Windows user password used to access share
                                                            ///< Leave empty to use current user when running on Windows
 int         g_iTuneDelay           = DEFAULT_TUNEDELAY;    ///< Number of milliseconds to delay after tuning a channel
 
@@ -141,16 +141,16 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   /* read setting "user" from settings.xml */
   if (XBMC->GetSetting("user", buffer))
-    g_szUser = buffer;
+    g_szSMBusername = buffer;
   else
-    g_szUser = "";
+    g_szSMBusername = "";
   buffer[0] = 0; /* Set the end of string */
 
   /* read setting "pass" from settings.xml */
   if (XBMC->GetSetting("pass", buffer))
-    g_szPass = buffer;
+    g_szSMBpassword = buffer;
   else
-    g_szPass = "";
+    g_szSMBpassword = "";
 
   /* Read setting "tunedelay" from settings.xml */
   if (!XBMC->GetSetting("tunedelay", &g_iTuneDelay))
@@ -269,13 +269,13 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   }
   else if (str == "user")
   {
-    XBMC->Log(LOG_INFO, "Changed Setting 'user' from %s to %s", g_szUser.c_str(), (const char*) settingValue);
-    g_szUser = (const char*) settingValue;
+    XBMC->Log(LOG_INFO, "Changed Setting 'user' from %s to %s", g_szSMBusername.c_str(), (const char*) settingValue);
+    g_szSMBusername = (const char*) settingValue;
   }
   else if (str == "pass")
   {
-    XBMC->Log(LOG_INFO, "Changed Setting 'pass' from %s to %s", g_szPass.c_str(), (const char*) settingValue);
-    g_szPass = (const char*) settingValue;
+    XBMC->Log(LOG_INFO, "Changed Setting 'pass' from %s to %s", g_szSMBpassword.c_str(), (const char*) settingValue);
+    g_szSMBpassword = (const char*) settingValue;
   }
   else if (str == "tunedelay")
   {

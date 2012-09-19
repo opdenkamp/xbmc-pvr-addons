@@ -16,8 +16,7 @@ include ../Makefile.include.am
 
 INCLUDES+=-Isrc
 
-libmediaportal_addon_la_SOURCES = src/Cards.cpp \
-                                  src/channels.cpp \
+libmediaportal_addon_la_SOURCES = src/channels.cpp \
                                   src/client.cpp \
                                   src/epg.cpp \
                                   src/GenreTable.cpp \
@@ -26,9 +25,9 @@ libmediaportal_addon_la_SOURCES = src/Cards.cpp \
                                   src/Socket.cpp \
                                   src/timers.cpp \
                                   src/uri.cpp \
-                                  src/utils.cpp \
-                                  src/lib/tsreader/FileReader.cpp \
-                                  src/lib/tsreader/MultiFileReader.cpp \
-                                  src/lib/tsreader/TSReader.cpp \
-                                  src/lib/tsreader/posix/FileSMB.cpp
+                                  ../shared/misc/utils.cpp \
+                                  ../shared/tsreader/Cards.cpp \
+                                  ../shared/tsreader/FileReader.cpp \
+                                  ../shared/tsreader/MultiFileReader.cpp \
+                                  ../shared/tsreader/TSReader.cpp
 

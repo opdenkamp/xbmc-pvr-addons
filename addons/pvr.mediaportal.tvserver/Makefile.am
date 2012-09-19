@@ -29,6 +29,5 @@ libmediaportal_addon_la_SOURCES = src/Cards.cpp \
                                   src/utils.cpp \
                                   src/lib/tsreader/FileReader.cpp \
                                   src/lib/tsreader/MultiFileReader.cpp \
-                                  src/lib/tsreader/TSReader.cpp \
-                                  src/lib/tsreader/posix/FileSMB.cpp
+                                  src/lib/tsreader/TSReader.cpp
 

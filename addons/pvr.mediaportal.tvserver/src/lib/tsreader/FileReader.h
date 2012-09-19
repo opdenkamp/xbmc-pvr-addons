@@ -29,12 +29,6 @@
 
 #include "platform/os.h"
 
-#ifdef TARGET_WINDOWS
-#include "windows/File.h"
-#else
-#include "posix/FileSMB.h"
-#endif
-
 class FileReader
 {
   public:
@@ -56,7 +50,7 @@ class FileReader
     virtual int64_t OnChannelChange(void);
 
   protected:
-    PLATFORM::CFile m_hFile;        // Handle to file for streaming
+    void*    m_hFileHandle;        // Handle to file for streaming
     char*    m_pFileName;           // The filename where we stream
     int64_t  m_fileSize;
     int64_t  m_llBufferPointer;

@@ -28,14 +28,29 @@
 
 #include "FileReader.h"
 #include "client.h" //for XBMC->Log
+#include "platform/threads/threads.h"
 #include <algorithm> //std::min, std::max
 #include "platform/util/timeutils.h" // for usleep
 
 using namespace ADDON;
-using namespace PLATFORM;
+
+/* indicate that caller can handle truncated reads, where function returns before entire buffer has been filled */
+#define READ_TRUNCATED 0x01
+
+/* indicate that that caller support read in the minimum defined chunk size, this disables internal cache then */
+#define READ_CHUNKED   0x02
+
+/* use cache to access this file */
+#define READ_CACHED     0x04
+
+/* open without caching. regardless to file type. */
+#define READ_NO_CACHE  0x08
+
+/* calcuate bitrate for file while reading */
+#define READ_BITRATE   0x10
 
 FileReader::FileReader() :
-  m_hFile(),
+  m_hFileHandle(NULL),
   m_pFileName(0),
   m_fileSize(0),
   m_llBufferPointer(0),
@@ -106,10 +121,14 @@ long FileReader::OpenFile()
 
   do
   {
-    XBMC->Log(LOG_INFO, "FileReader::OpenFile() %s %s.", m_pFileName, CFile::Exists(m_pFileName) ? "exists" : "not found");
+    XBMC->Log(LOG_INFO, "FileReader::OpenFile() %s.", m_pFileName);
     // Open in readonly mode with this filename
-    if ( m_hFile.Open(m_pFileName, READ_CHUNKED) )
+    void* fileHandle = XBMC->OpenFile(m_pFileName, READ_CHUNKED);
+    if (fileHandle)
+    {
+      m_hFileHandle = fileHandle;
       break;
+    }
 
     usleep(20000);
   }
@@ -147,7 +166,11 @@ long FileReader::CloseFile()
     return S_OK;
   }
 
-  m_hFile.Close();
+  if (m_hFileHandle)
+  {
+    XBMC->CloseFile(m_hFileHandle);
+    m_hFileHandle = NULL;
+  }
 
   m_llBufferPointer = 0;
   return S_OK;
@@ -156,7 +179,7 @@ long FileReader::CloseFile()
 
 inline bool FileReader::IsFileInvalid()
 {
-  return (m_hFile.IsInvalid());
+  return m_hFileHandle == NULL;
 }
 
 
@@ -170,7 +193,7 @@ long FileReader::GetStartPosition(int64_t *lpllpos)
 int64_t FileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
 {
   //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod);
-  int64_t rc = m_hFile.Seek(llDistanceToMove, dwMoveMethod);
+  int64_t rc = XBMC->SeekFile(m_hFileHandle, llDistanceToMove, dwMoveMethod);
   //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d returns %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod, rc);
   return rc;
 }
@@ -178,13 +201,13 @@ int64_t FileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMov
 
 int64_t FileReader::GetFilePointer()
 {
-  return m_hFile.GetPosition();
+  return XBMC->GetFilePosition(m_hFileHandle);
 }
 
 
 long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
 {
-  *dwReadBytes = m_hFile.Read((void*)pbData, lDataLength);//Read file data into buffer
+  *dwReadBytes = XBMC->ReadFile(m_hFileHandle, (void*)pbData, lDataLength);//Read file data into buffer
   //XBMC->Log(LOG_DEBUG, "%s: requested read length %d actually read %d.", __FUNCTION__, lDataLength, *dwReadBytes);
 
   if (*dwReadBytes < lDataLength)
@@ -198,10 +221,10 @@ long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned
 
 int64_t FileReader::GetFileSize()
 {
-  return m_hFile.GetLength();
+  return XBMC->GetFileLength(m_hFileHandle);
 }
 
 int64_t FileReader::OnChannelChange(void)
 {
-  return m_hFile.GetPosition();
+  return XBMC->GetFilePosition(m_hFileHandle);
 }

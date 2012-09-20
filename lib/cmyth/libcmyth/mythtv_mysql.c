@@ -750,7 +750,7 @@ cmyth_get_bookmark_mark(cmyth_database_t db, cmyth_proginfo_t prog, long long bk
 	query = cmyth_mysql_query_create(db,query_str);
 
 	if (cmyth_mysql_query_param_long(query, prog->proginfo_chanId) < 0
-		|| cmyth_mysql_query_param_long(query, bk) < 0
+		|| cmyth_mysql_query_param_int64(query, (int64_t)bk) < 0
 		|| cmyth_mysql_query_param_str(query, start_ts_dt) < 0
 		) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
@@ -796,7 +796,7 @@ cmyth_get_bookmark_offset(cmyth_database_t db, long chanid, long long mark, char
 
 	query = cmyth_mysql_query_create(db,query_str);
 	if (cmyth_mysql_query_param_long(query, chanid) < 0
-		|| cmyth_mysql_query_param_long(query, mark) < 0
+		|| cmyth_mysql_query_param_int64(query, (int64_t)mark) < 0
 		|| cmyth_mysql_query_param_str(query, starttime) < 0
 		) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
@@ -823,7 +823,7 @@ cmyth_get_bookmark_offset(cmyth_database_t db, long chanid, long long mark, char
 		}
 		query = cmyth_mysql_query_create(db, query_str);
 		if (cmyth_mysql_query_param_long(query, chanid) < 0
-			|| cmyth_mysql_query_param_long(query, mark) < 0
+			|| cmyth_mysql_query_param_int64(query, (int64_t)mark) < 0
 			|| cmyth_mysql_query_param_str(query, starttime) < 0
 			) {
 			cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);

@@ -75,7 +75,7 @@ long long cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
 int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookmark)
 {
 	char *buf;
-	unsigned int len = CMYTH_TIMESTAMP_LEN + CMYTH_LONGLONG_LEN * 2 + 18;
+	unsigned int len = CMYTH_TIMESTAMP_LEN + CMYTH_LONGLONG_LEN * 2 + 18 + 2;
 	char resultstr[3];
 	int r,err;
 	int ret;
@@ -89,9 +89,10 @@ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookm
 	if (conn->conn_version >= 66) {
 		/*
 		 * Since protocol 66 mythbackend expects a single 64 bit integer rather than two 32 bit
-		 * hi and lo integers.
+		 * hi and lo integers. Nevertheless the backend (at least up to 0.25) checks
+		 * the existence of the 4th parameter, so adding a 0.
 		 */
-		sprintf(buf, "SET_BOOKMARK %ld %s %"PRIu64, prog->proginfo_chanId,
+		sprintf(buf, "SET_BOOKMARK %ld %s %"PRIu64" 0", prog->proginfo_chanId,
 				start_ts_dt, (int64_t)bookmark);
 	}
 	else {

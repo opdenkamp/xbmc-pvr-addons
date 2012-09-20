@@ -388,3 +388,17 @@ start/endoffset => DefaultStartOffset/DefaultEndOffset
     timer.StartOffset(atoi(GetSetting("NULL","DefaultEndOffset").c_str()));
         
   }
+
+int MythConnection::SetBookmark(MythProgramInfo &recording, long long bookmark)
+{
+  int retval;
+  CMYTH_CONN_CALL(retval, retval < 0, SetBookmark(*m_conn_t, *recording.m_proginfo_t, bookmark));
+  return retval;
+}
+
+long long MythConnection::GetBookmark(MythProgramInfo &recording)
+{
+  long long bookmark;
+  CMYTH_CONN_CALL(bookmark, bookmark < 0, GetBookmark(*m_conn_t, *recording.m_proginfo_t));
+  return bookmark;
+}

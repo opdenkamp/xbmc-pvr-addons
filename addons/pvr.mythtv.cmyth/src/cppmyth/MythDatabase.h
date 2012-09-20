@@ -40,6 +40,7 @@ public:
   bool IsNull();
   std::vector<MythRecordingProfile > GetRecordingProfiles();
   int SetWatchedStatus(MythProgramInfo &recording, bool watched);
+  long long GetBookmarkMark(MythProgramInfo &recording, long long bk, int mode);
 private:
   boost::shared_ptr< MythPointerThreadSafe< cmyth_database_t > > m_database_t;
 };

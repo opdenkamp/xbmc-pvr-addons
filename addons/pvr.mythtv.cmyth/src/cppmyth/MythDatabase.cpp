@@ -237,3 +237,10 @@ bool MythDatabase::IsNull()
     return true;
   return *m_database_t==NULL;
 }
+
+long long MythDatabase::GetBookmarkMark(MythProgramInfo &recording, long long bk, int mode)
+{
+  long long mark = 0;
+  CMYTH_DB_CALL(mark, mark < 0, GetBookmarkMark(*m_database_t, *recording.m_proginfo_t, bk, mode));
+  return mark;
+}

@@ -44,6 +44,8 @@ public:
   MythFile ConnectPath(CStdString filename, CStdString storageGroup);
   std::vector< CStdString > GetStorageGroupFileList_(CStdString sgGetList);
   std::vector< MythSGFile > GetStorageGroupFileList(CStdString storagegroup);
+  int SetBookmark(MythProgramInfo &recording, long long bookmark);
+  long long GetBookmark(MythProgramInfo &recording);
   
 private:
   boost::shared_ptr< MythPointerThreadSafe< cmyth_conn_t > > m_conn_t;

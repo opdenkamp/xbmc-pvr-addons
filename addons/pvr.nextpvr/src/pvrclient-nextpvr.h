@@ -58,7 +58,7 @@ public:
 
   /* Channel handling */
   int GetNumChannels(void);
-  PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
+  PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);  
 
   /* Channel group handling */
   int GetChannelGroupsAmount(void);
@@ -108,6 +108,7 @@ private:
   bool LoadGenreXML(const std::string &filename);
   int DoRequest(const char *resource, CStdString &response);
   bool OpenRecordingInternal(long long seekOffset);
+  CStdString GetChannelIcon(int channelID);
 
   int                     m_iCurrentChannel;
   int                     m_iCurrentCard;
@@ -129,6 +130,8 @@ private:
   char					  m_currentRecordingID[1024];
   long long				  m_currentRecordingLength;
   long long				  m_currentRecordingPosition;
+
+  CStdString			  m_channelIconDirectory;
 
   char					  m_sid[64];
 

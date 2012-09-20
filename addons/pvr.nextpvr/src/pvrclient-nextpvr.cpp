@@ -150,6 +150,14 @@ bool cPVRClientNextPVR::Connect()
 {
 	string result;
 
+	// find directory for storing channel icons
+	m_channelIconDirectory = getenv("XBMC_HOME");
+	m_channelIconDirectory += PATH_SEPARATOR_CHAR;
+	m_channelIconDirectory += "userdata";
+	m_channelIconDirectory += PATH_SEPARATOR_CHAR;
+	//m_channelIconDirectory += "thumbnails";
+	//m_channelIconDirectory += PATH_SEPARATOR_CHAR;
+
 	// initiate session
 	CStdString response;
 	if (DoRequest("/service?method=session.initiate&ver=1.0&device=xbmc", response) == HTTP_OK)
@@ -516,12 +524,95 @@ int cPVRClientNextPVR::GetNumChannels(void)
 	return m_iChannelCount;
 }
 
+CStdString cPVRClientNextPVR::GetChannelIcon(int channelID)
+{
+	char filename[64];
+	snprintf(filename, sizeof(filename), "nextpvr-ch%d.png", channelID);
+
+	CStdString iconFilename = m_channelIconDirectory;	
+	iconFilename += filename;
+
+	// do we already have the icon file?
+	FILE *existingIconFile = fopen(iconFilename, "r");
+	if (existingIconFile != NULL)    
+	{        
+		fclose(existingIconFile);        
+		return iconFilename;    
+	} 
+
+	// otherwise download it... (this is pretty ugly and needs more error checking)
+	if (m_tcpclient->create())
+	{		
+		if (m_tcpclient->connect(g_szHostname, g_iPort))
+		{
+			char line[256];
+			sprintf(line, "GET /service?method=channel.icon&channel_id=%d HTTP/1.0\r\n", channelID);
+			m_tcpclient->send(line, strlen(line));
+
+			sprintf(line, "Connection: close\r\n");
+			m_tcpclient->send(line, strlen(line));
+
+			sprintf(line, "\r\n");
+			m_tcpclient->send(line, strlen(line));
+
+			char buf[1024];
+			int read = m_tcpclient->receive(buf, sizeof buf, 0);
+			if (read > 0)
+			{
+				FILE *newIconFile = fopen(iconFilename, "wb");
+				if (newIconFile != NULL)
+				{
+					int written = 0;
+					// HTTP response header
+					for (int i=0; i<read; i++)
+					{
+						if (buf[i] == '\r' && buf[i+1] == '\n' && buf[i+2] == '\r' && buf[i+3] == '\n')
+						{
+							written += fwrite((unsigned char *)&buf[i+4], 1, read - (i + 4), newIconFile);
+						}
+					}
+					// rest of body
+					bool connected = true;
+					while (connected)
+					{
+						// check if we're still connected
+						//m_tcpclient->is_connected();
+
+						char buf[1024];
+						int read = m_tcpclient->receive(buf, sizeof buf, 0);
+
+						if (read == 0)
+						{
+							connected = false;
+						}
+						else if (read > 0)
+						{
+							written += fwrite(buf, 1, read, newIconFile);
+						}
+						else if (read < 0 && written > 0)
+						{
+							connected = false;
+						}		
+					}  	
+
+					// close file
+					fclose(newIconFile);
+				}				
+			}
+		}
+		m_tcpclient->close();
+		return iconFilename;
+	}
+
+
+	return "";
+}
+
 PVR_ERROR cPVRClientNextPVR::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
   PVR_CHANNEL     tag;
-  CStdString      stream;
-
-
+  CStdString      stream;  
+  
   m_iChannelCount = 0;
 
   CStdString response;
@@ -539,12 +630,22 @@ PVR_ERROR cPVRClientNextPVR::GetChannels(ADDON_HANDLE handle, bool bRadio)
 				tag.iUniqueId = atoi(pChannelNode->FirstChildElement("id")->FirstChild()->Value());
 				tag.iChannelNumber = atoi(pChannelNode->FirstChildElement("number")->FirstChild()->Value());
 
-				strcpy(tag.strChannelName, pChannelNode->FirstChildElement("name")->FirstChild()->Value());
+				PVR_STRCPY(tag.strChannelName, pChannelNode->FirstChildElement("name")->FirstChild()->Value());
+
+				// check if we need to download a channel icon
+				if (pChannelNode->FirstChildElement("icon"))
+				{
+					CStdString iconFile = GetChannelIcon(tag.iUniqueId);					
+					if (iconFile.length() > 0)
+					{
+						PVR_STRCPY(tag.strIconPath, iconFile);
+					}
+				}
 
 				//CStdString strStream;
 				//strStream.Format("pvr://stream/tv/%i.ts", tag.iUniqueId);
 				//strncpy(tag.strStreamURL, strStream.c_str(), sizeof(tag.strStreamURL)); 				
-				strcpy(tag.strInputFormat, "video/x-mpegts");
+				PVR_STRCPY(tag.strInputFormat, "video/x-mpegts");
 
 				PVR->TransferChannelEntry(handle, &tag);
 				

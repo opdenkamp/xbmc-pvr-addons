@@ -499,6 +499,10 @@ extern int cmyth_mysql_query_param_long(cmyth_mysql_query_t * query,long param);
 
 extern int cmyth_mysql_query_param_ulong(cmyth_mysql_query_t * query,unsigned long param);
 
+extern int cmyth_mysql_query_param_int64(cmyth_mysql_query_t * query,int64_t param);
+
+extern int cmyth_mysql_query_param_uint64(cmyth_mysql_query_t * query,uint64_t param);
+
 extern int cmyth_mysql_query_param_int(cmyth_mysql_query_t * query,int param);
 
 extern int cmyth_mysql_query_param_uint(cmyth_mysql_query_t * query,int param);

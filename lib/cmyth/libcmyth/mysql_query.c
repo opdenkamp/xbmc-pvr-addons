@@ -19,11 +19,14 @@
 
 #include <sys/types.h>
 #include <string.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <cmyth_local.h>
 
 #define CMYTH_ULONG_STRLEN ((sizeof(long)*3)+1)
 #define CMYTH_LONG_STRLEN (CMYTH_ULONG_STRLEN+1)
+#define CMYTH_INT64_STRLEN 24
+#define CMYTH_UINT64_STRLEN 24
 
 /**
  * Hold in-progress query
@@ -198,6 +201,22 @@ query_buffer_add_ulong(cmyth_mysql_query_t * query, long param)
     return query_buffer_add_str(query,buf);
 }
 
+static inline int
+  query_buffer_add_int64(cmyth_mysql_query_t * query, int64_t param)
+{
+  char buf[CMYTH_INT64_STRLEN];
+  sprintf(buf,"%"PRId64,param);
+  return query_buffer_add_str(query,buf);
+}
+
+static inline int
+  query_buffer_add_uint64(cmyth_mysql_query_t * query, uint64_t param)
+{
+  char buf[CMYTH_UINT64_STRLEN];
+  sprintf(buf,"%"PRIu64,param);
+  return query_buffer_add_str(query,buf);
+}
+
 /**
  * Add a long integer parameter
  * \param query the query object
@@ -226,6 +245,36 @@ cmyth_mysql_query_param_ulong(cmyth_mysql_query_t * query,unsigned long param)
     if(ret < 0)
 	return ret;
     return query_buffer_add_ulong(query,param);
+}
+
+/**
+ * Add a int64_t parameter
+ * \param query the query object
+ * \param param the integer to add
+ */
+int
+cmyth_mysql_query_param_int64(cmyth_mysql_query_t * query,int64_t param)
+{
+    int ret;
+    ret = query_begin_next_param(query);
+    if(ret < 0)
+	return ret;
+    return query_buffer_add_int64(query,param);
+}
+
+/**
+ * Add a uint64_t parameter
+ * \param query the query object
+ * \param param the integer to add
+ */
+int
+cmyth_mysql_query_param_uint64(cmyth_mysql_query_t * query,uint64_t param)
+{
+    int ret;
+    ret = query_begin_next_param(query);
+    if(ret < 0)
+	return ret;
+    return query_buffer_add_uint64(query,param);
 }
 
 /**

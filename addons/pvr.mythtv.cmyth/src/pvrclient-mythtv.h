@@ -50,6 +50,8 @@ public:
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
   PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
+  PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
+  int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
   int GetTimersAmount();
   PVR_ERROR GetTimers(ADDON_HANDLE handle);
   PVR_ERROR AddTimer(const PVR_TIMER &timer);
@@ -109,4 +111,5 @@ private:
   catbimap m_categoryMap;
   void PVRtoMythTimer(const PVR_TIMER timer, MythTimer& mt);
   static bool IsRecordingVisible(MythProgramInfo &recording);
+  float GetRecordingFrameRate(MythProgramInfo &recording);
 };

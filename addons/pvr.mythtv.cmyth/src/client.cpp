@@ -422,7 +422,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   pCapabilities->bHandlesDemuxing            = false;
   pCapabilities->bSupportsChannelScan        = false;
   pCapabilities->bSupportsRecordingPlayCount = true;
-  pCapabilities->bSupportsLastPlayedPosition = false; //TODO: add it as mythtv does support it. 
+  pCapabilities->bSupportsLastPlayedPosition = true;
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -574,15 +574,18 @@ PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
 
 PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
 {
-  (void)recording;
-  (void)lastplayedposition;
-  return PVR_ERROR_NOT_IMPLEMENTED;
+  if (g_client == NULL)
+    return PVR_ERROR_SERVER_ERROR;
+
+  return g_client->SetRecordingLastPlayedPosition(recording, lastplayedposition);
 }
 
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 {
-  (void)recording;
-  return PVR_ERROR_NOT_IMPLEMENTED;
+  if (g_client == NULL)
+    return PVR_ERROR_SERVER_ERROR;
+
+  return g_client->GetRecordingLastPlayedPosition(recording);
 }
 
 /*******************************************/

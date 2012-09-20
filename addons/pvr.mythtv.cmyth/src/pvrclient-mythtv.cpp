@@ -710,6 +710,121 @@ PVR_ERROR PVRClientMythTV::SetRecordingPlayCount(const PVR_RECORDING &recording,
   }
 }
 
+PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  // MythTV provides it's bookmarks as frame offsets whereas XBMC expects a time offset.
+  // The frame offset is calculated by: frameOffset = bookmark * frameRate.
+  long long frameOffset = 0;
+
+  if (g_bExtraDebug)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Setting Bookmark for: %s to %d", __FUNCTION__, recording.strTitle, lastplayedposition);
+  }
+
+  MythProgramInfo progInfo = m_recordings.at(recording.strRecordingId);
+
+  // Calculate the frame offset
+  frameOffset = (long long)((float)lastplayedposition * GetRecordingFrameRate(progInfo));
+  if (frameOffset < 0) frameOffset = 0;
+  if (g_bExtraDebug)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - FrameOffset: %lld)", __FUNCTION__, frameOffset);
+  }
+
+  // Write the bookmark
+  int retval = m_con.SetBookmark(progInfo, frameOffset);
+  if (retval == 1)
+  {
+    if (g_bExtraDebug)
+    {
+      XBMC->Log(LOG_ERROR, "%s - Setting Bookmark successful: %d)",__FUNCTION__);
+    }
+    return PVR_ERROR_NO_ERROR;
+  }
+  else
+  {
+    if (g_bExtraDebug)
+    {
+      XBMC->Log(LOG_ERROR, "%s - Setting Bookmark failed: %d)",__FUNCTION__, retval);
+    }
+    return PVR_ERROR_FAILED;
+  }
+}
+
+int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  // MythTV provides it's bookmarks as frame offsets whereas XBMC expects a time offset.
+  // The bookmark in seconds is calculated by: bookmark = frameOffset / frameRate.
+  int bookmark = 0;
+
+  if (g_bExtraDebug)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Reading Bookmark for: %s", __FUNCTION__, recording.strTitle);
+  }
+
+  MythProgramInfo progInfo = m_recordings.at(recording.strRecordingId);
+  long long frameOffset = m_con.GetBookmark(progInfo); // returns 0 if no bookmark was found
+  if (frameOffset > 0)
+  {
+    if (g_bExtraDebug)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - FrameOffset: %lld)", __FUNCTION__, frameOffset);
+    }
+
+    float frameRate = GetRecordingFrameRate(progInfo);
+    if (frameRate > 0)
+    {
+      bookmark = (int)((float)frameOffset / frameRate);
+      if (g_bExtraDebug)
+      {
+        XBMC->Log(LOG_DEBUG, "%s - Bookmark: %d)", __FUNCTION__, bookmark);
+      }
+    }
+  }
+
+  // Set the bookmark few seconds earlier (due to the accuracy of the above float operations)
+  bookmark = bookmark - 3;
+  if (bookmark < 0) bookmark = 0;
+  return bookmark;
+}
+
+float PVRClientMythTV::GetRecordingFrameRate(MythProgramInfo &recording)
+{
+  // MythTV uses frame offsets whereas XBMC expects a time offset.
+  // This function can be used to convert the frame offsets to time offsets and back.
+  // The average frameRate is calculated by: frameRate = frameCount / duration.
+  float frameRate = 0.0f;
+
+  if (g_bExtraDebug)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Getting Framerate for: %s)", __FUNCTION__, recording.Title(false).c_str());
+  }
+
+  // GetBookmarkMark returns the appropriate frame offset for the given byte offset (recordedseek table)
+  // This can be used to determine the frame count (by querying the max byte offset)
+  long long frameCount = m_db.GetBookmarkMark(recording, LLONG_MAX, 0);
+  if (frameCount > 0)
+  {
+    if (g_bExtraDebug)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - FrameCount: %lld)", __FUNCTION__, frameCount);
+      XBMC->Log(LOG_DEBUG, "%s - Duration: %d)", __FUNCTION__, recording.Duration());
+    }
+
+    if (recording.Duration() > 0)
+    {
+      // Calculate frameRate
+      frameRate = (float)frameCount / (float)recording.Duration();
+
+      if (g_bExtraDebug)
+      {
+        XBMC->Log(LOG_DEBUG, "%s - FrameRate: %f)", __FUNCTION__, frameRate);
+      }
+    }
+  }
+  return frameRate;
+}
+
 int PVRClientMythTV::GetTimersAmount(void)
 {
   if(g_bExtraDebug)

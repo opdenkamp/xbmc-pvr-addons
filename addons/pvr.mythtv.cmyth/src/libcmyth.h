@@ -1068,15 +1068,15 @@ if (FreespaceCreate == NULL)      { fprintf(stderr, "Unable to assign function %
 dlsym(m_libcmyth, "cmyth_get_bookmark");
 if (GetBookmark == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetBookmarkOffset      = (int (*)(cmyth_database_t db, long chanid, long long mark))
+    GetBookmarkOffset      = (int (*)(cmyth_database_t db, long chanid, long long mark, char *starttime, int mode))
 dlsym(m_libcmyth, "cmyth_get_bookmark_offset");
 if (GetBookmarkOffset == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetBookmarkMark      = (int (*)(cmyth_database_t, cmyth_proginfo_t, long long))
+    GetBookmarkMark      = (long long (*)(cmyth_database_t db, cmyth_proginfo_t prog, long long bk, int mode))
 dlsym(m_libcmyth, "cmyth_get_bookmark_mark");
 if (GetBookmarkMark == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    SetBookmark      = (int (*)(cmyth_conn_t conn, cmyth_proginfo_t prog,long long bookmark))
+    SetBookmark      = (int (*)(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookmark))
 dlsym(m_libcmyth, "cmyth_set_bookmark");
 if (SetBookmark == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
@@ -1585,8 +1585,8 @@ cmyth_channel_t (*ChanlistGetItem)(cmyth_chanlist_t pl, int index);
 int (*ChanlistGetCount)(cmyth_chanlist_t pl);
 cmyth_freespace_t (*FreespaceCreate)(void);
 long long (*GetBookmark)(cmyth_conn_t conn, cmyth_proginfo_t prog);
-int (*GetBookmarkOffset)(cmyth_database_t db, long chanid, long long mark);
-int (*GetBookmarkMark)(cmyth_database_t, cmyth_proginfo_t, long long);
+int (*GetBookmarkOffset)(cmyth_database_t db, long chanid, long long mark, char *starttime, int mode);
+long long (*GetBookmarkMark)(cmyth_database_t db, cmyth_proginfo_t prog, long long bk, int mode);
 int (*SetBookmark)(cmyth_conn_t conn, cmyth_proginfo_t prog,long long bookmark);
 cmyth_commbreaklist_t (*CommbreaklistCreate)(void);
 cmyth_commbreak_t (*CommbreakCreate)(void);

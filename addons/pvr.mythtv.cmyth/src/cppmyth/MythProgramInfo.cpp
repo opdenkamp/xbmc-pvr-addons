@@ -39,7 +39,7 @@ MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
     {
       CStdString subtitle = this->Subtitle();
       if(!subtitle.empty())
-        retval.Format("%s::%s",retval,subtitle);
+        retval.Format("%s - %s",retval,subtitle);
     }
     return retval;
   }

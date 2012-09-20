@@ -20,6 +20,19 @@ AC_ARG_ENABLE([release],
   [use_release=$enableval],
   [use_release=no])
 
+### External libraries options
+AC_ARG_ENABLE([external-libraries],
+  [AS_HELP_STRING([--enable-external-libraries],
+  [enable use of all supported external libraries (default is no) 'Linux only'])],
+  [use_external_libraries=$enableval],
+  [use_external_libraries=no])
+
+AC_ARG_ENABLE([external-ffmpeg],
+  [AS_HELP_STRING([--enable-external-ffmpeg],
+  [enable use of external ffmpeg libraries (default is no) 'Linux only'])],
+  [use_external_ffmpeg=$enableval],
+  [use_external_ffmpeg=$use_external_libraries])
+
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
   BUILD_TYPE="release"
@@ -85,6 +98,35 @@ else
   AC_CHECK_FILE([$checkpath/xbmc/xbmc.h], [AM_CONDITIONAL(IS_INTREE_BUILD, true) intree=true], [AM_CONDITIONAL(IS_INTREE_BUILD, false) intree=false])
   echo "Intree build: $intree"
 fi
+
+# FFmpeg
+if test "$use_external_ffmpeg" = "yes"; then
+  FFMPEG_LIBNAMES="libavcodec" 
+  PKG_CHECK_MODULES([FFMPEG], [$FFMPEG_LIBNAMES],
+                    [FFMPEG_INCLUDES="$FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"],
+                    AC_MSG_ERROR(missing $FFMPEG_LIBNAMES))
+
+ # Determine whether AVPacket and relevant functions are defined in libavformat
+ # or libavcodec
+  AC_CHECK_LIB([avcodec], [av_free_packet],
+  [AC_MSG_NOTICE(== AVPacket and relevant functions defined in libavcodec. ==)],
+  [AC_MSG_NOTICE(== AVPacket and relevant functions defined in libavformat. ==)
+   AC_DEFINE([AVPACKET_IN_AVFORMAT], [1], [Whether AVPacket is in libavformat.])])
+
+  # Possible places the ffmpeg headers may be
+  #AC_CHECK_HEADERS([libavcodec/avcodec.h ffmpeg/avcodec.h],, AC_MSG_ERROR(avcodec.h not found),)
+  AC_CHECK_HEADERS([libavcodec/avcodec.h],[FFMPEG_INCLUDES="-I$($PKG_CONFIG --variable=includedir libavcodec)/libavcodec"],
+    [AC_CHECK_HEADERS([ffmpeg/avcodec.h],[FFMPEG_INCLUDES="-I$($PKG_CONFIG --variable=includedir libavcodec)/ffmpeg"],
+      [AC_MSG_ERROR(avcodec.h not found)])
+  ])
+
+  echo "FFMPEG_INCLUDES: $FFMPEG_INCLUDES"
+  AM_CONDITIONAL(USE_EXTERNAL_FFMPEG, true)
+  AC_SUBST(FFMPEG_INCLUDES)
+else
+  AM_CONDITIONAL(USE_EXTERNAL_FFMPEG, false)
+fi
+
 
 HOST_CXXFLAGS="-Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses -fPIC $HOST_CXXFLAGS"
 

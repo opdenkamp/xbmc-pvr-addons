@@ -2,7 +2,12 @@
 # Makefile include for XBMC PVR add-ons
 #
 
-INCLUDES        = -I. -I$(abs_top_srcdir)/xbmc -I$(abs_top_srcdir)/lib @HOST_INCLUDES@
+if USE_EXTERNAL_FFMPEG
+  INCLUDES        = -I. @FFMPEG_INCLUDES@ -I$(abs_top_srcdir)/xbmc -I$(abs_top_srcdir)/lib @HOST_INCLUDES@
+else
+  INCLUDES        = -I. -I$(abs_top_srcdir)/xbmc -I$(abs_top_srcdir)/lib @HOST_INCLUDES@
+endif
+
 WARNINGS        = -Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses
 DEFINES         = @ARCH_DEFINES@ -DUSE_DEMUX -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS
 AM_CXXFLAGS     = -g -O2 -fPIC $(WARNINGS) $(DEFINES) @HOST_CXXFLAGS@

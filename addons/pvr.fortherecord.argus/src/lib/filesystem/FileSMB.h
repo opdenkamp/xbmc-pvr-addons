@@ -20,7 +20,7 @@
 
 #include <iostream>
 #include "platform/threads/mutex.h"
-#include "os-dependent.h"
+#include "platform/os.h"
 #include "platform/util/StdString.h"
 
 struct _SMBCCTX;

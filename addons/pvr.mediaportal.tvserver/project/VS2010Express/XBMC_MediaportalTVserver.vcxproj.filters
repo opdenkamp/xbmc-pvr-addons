@@ -100,9 +100,6 @@
     <ClInclude Include="..\..\src\GenreTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\os-dependent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\pvrclient-mediaportal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -120,9 +117,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\utils.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windows\os_windows.h">
-      <Filter>Header Files\windows</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\windows\WindowsUtils.h">
       <Filter>Header Files\windows</Filter>

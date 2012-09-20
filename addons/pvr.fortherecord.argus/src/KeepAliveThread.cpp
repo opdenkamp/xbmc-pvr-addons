@@ -18,7 +18,7 @@
  *
  */
 
-#include "os-dependent.h"
+#include "platform/os.h"
 #include "client.h" //for XBMC->Log
 #include "utils.h"
 #include "fortherecordrpc.h"

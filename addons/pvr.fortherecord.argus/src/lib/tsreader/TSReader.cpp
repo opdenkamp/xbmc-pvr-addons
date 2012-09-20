@@ -27,7 +27,7 @@
 #include "client.h" //for XBMC->Log
 #include "MultiFileReader.h"
 #include "utils.h"
-#include "os-dependent.h"
+#include "platform/os.h"
 
 using namespace ADDON;
 

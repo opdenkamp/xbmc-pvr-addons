@@ -28,7 +28,6 @@
 
 #include "FileReader.h"
 #include "client.h" //for XBMC->Log
-#include "os-dependent.h"
 #include <algorithm> //std::min, std::max
 
 using namespace ADDON;
@@ -111,7 +110,7 @@ long FileReader::OpenFile()
     if ( m_hFile.Open(m_pFileName, READ_CHUNKED) )
       break;
 
-    Sleep(20);
+    PLATFORM::CEvent::Sleep(20);
   }
   while(--Tmo);
 

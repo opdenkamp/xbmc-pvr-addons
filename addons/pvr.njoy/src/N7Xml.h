@@ -27,7 +27,7 @@ public:
   CCurlFile(void) {};
   ~CCurlFile(void) {};
 
-  bool Get(const std::string &strURL, std::string &strResult, unsigned iTimeoutSeconds = 3);
+  bool Get(const std::string &strURL, std::string &strResult);
 };
 
 class N7Xml

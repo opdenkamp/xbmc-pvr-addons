@@ -10,8 +10,6 @@ ADDONNAME       = pvr.vdr.vnsi
 LIBNAME         = libvdrvnsi-addon
 lib_LTLIBRARIES = libvdrvnsi-addon.la
 
-LIBS            = -ldl
-
 include ../Makefile.include.am
 
 libvdrvnsi_addon_la_SOURCES = src/client.cpp \

@@ -27,7 +27,7 @@
  *    http://forums.dvbowners.com/
  */
 
-#include "os-dependent.h"
+#include "platform/os.h"
 
 #ifdef TARGET_WINDOWS
 #include "windows/File.h"

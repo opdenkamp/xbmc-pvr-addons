@@ -176,8 +176,9 @@ cmyth_event_select(cmyth_conn_t conn, struct timeval *timeout)
 	int ret;
 	cmyth_socket_t fd;
 
-	cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) {\n", __FUNCTION__,
-				__FILE__, __LINE__);
+	// Trace functions might flood log
+	//cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) {\n", __FUNCTION__,
+	//			__FILE__, __LINE__);
 
 	if (conn == NULL)
 		return -EINVAL;
@@ -189,8 +190,9 @@ cmyth_event_select(cmyth_conn_t conn, struct timeval *timeout)
 
 	ret = select((int)fd+1, &fds, NULL, NULL, timeout);
 
-	cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) }\n",
-				__FUNCTION__, __FILE__, __LINE__);
+	// Trace functions might flood log
+	//cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) }\n",
+	//			__FUNCTION__, __FILE__, __LINE__);
 
 	return ret;
 }

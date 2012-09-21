@@ -2,6 +2,7 @@ XBMC NextPVR Add-on
 ----------------------------------------------
 Written by: Graeme Blackley
 HomePage:   http://www.nextpvr.com
+Contact:    http://www.nextpvr.com/contact/
 
 ----------------------------------------------
 Supported platforms:
@@ -10,7 +11,7 @@ Supported platforms:
 - OSX (should work, not tested by me)
 
 Dependencies:
-- NextPVR 2.6. May work also 2.8 (which is 2.5 + extra patches)
+- NextPVR 2.6. May work also 2.5.8 (which is 2.5 + extra patches)
 
 This addon is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

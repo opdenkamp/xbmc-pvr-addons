@@ -17,7 +17,6 @@
  *
  */
 #include "libXBMC_addon.h"
-#include "utils.h"
 #include <string>
 #include "os-dependent.h"
 #include "client.h"

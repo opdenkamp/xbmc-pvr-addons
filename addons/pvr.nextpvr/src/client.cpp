@@ -20,7 +20,7 @@
 #include "client.h"
 #include "xbmc_pvr_dll.h"
 #include "pvrclient-nextpvr.h"
-#include "utils.h"
+#include "uri.h"
 
 using namespace std;
 using namespace ADDON;

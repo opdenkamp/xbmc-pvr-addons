@@ -25,7 +25,6 @@
 #include "platform/util/timeutils.h"
 
 #include "client.h"
-#include "utils.h"
 #include "pvrclient-nextpvr.h"
 
 #include "md5.h"
@@ -113,22 +112,9 @@ std::string UriEncode(const std::string sSrc)
 cPVRClientNextPVR::cPVRClientNextPVR()
 {
   m_iCurrentChannel        = -1;
-  m_iCurrentCard           = 0;
   m_tcpclient              = new NextPVR::Socket(NextPVR::af_inet, NextPVR::pf_inet, NextPVR::sock_stream, NextPVR::tcp);
   m_streamingclient		   = new NextPVR::Socket(NextPVR::af_inet, NextPVR::pf_inet, NextPVR::sock_stream, NextPVR::tcp);
   m_bConnected             = false;
-  m_bStop                  = true;
-  m_bTimeShiftStarted      = false;
-  m_BackendUTCoffset       = 0;
-  m_BackendTime            = 0;
-  m_bStop                  = true;
-  m_noSignalStreamSize     = 0;
-  m_noSignalStreamData[0]  = '\0';
-  m_noSignalStreamReadPos  = 0;
-  m_bPlayingNoSignal       = false;
-  m_tsreader               = NULL;
-  //m_genretable             = NULL;
-  m_iLastRecordingUpdate   = 0;
   m_iChannelCount		   = 0;
   m_currentRecordingLength = 0;
 
@@ -140,8 +126,7 @@ cPVRClientNextPVR::~cPVRClientNextPVR()
   XBMC->Log(LOG_DEBUG, "->~cPVRClientNextPVR()");
   if (m_bConnected)
     Disconnect();
-  SAFE_DELETE(m_tcpclient);
-  //SAFE_DELETE(m_genretable);
+  SAFE_DELETE(m_tcpclient);  
 }
 
 
@@ -311,8 +296,8 @@ const char* cPVRClientNextPVR::GetBackendVersion(void)
 
 const char* cPVRClientNextPVR::GetConnectionString(void)
 {
-  XBMC->Log(LOG_DEBUG, "GetConnectionString: %s", m_ConnectionString.c_str());
-  return m_ConnectionString.c_str();
+  static CStdString strConnectionString = "connected";
+  return strConnectionString.c_str();
 }
 
 PVR_ERROR cPVRClientNextPVR::GetDriveSpace(long long *iTotal, long long *iUsed)
@@ -1000,6 +985,8 @@ PVR_ERROR cPVRClientNextPVR::UpdateTimer(const PVR_TIMER &timerinfo)
 
 bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 {
+	m_PlaybackURL = "";
+
 	XBMC->Log(LOG_DEBUG, "OpenLiveStream(%d:%s) (oid=%d)", channelinfo.iChannelNumber, channelinfo.strChannelName, channelinfo.iUniqueId);	
 	if (strstr(channelinfo.strStreamURL, "live?channel") == NULL)
 	{
@@ -1036,7 +1023,7 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 				int remainder = read - (i+4);
 				if (remainder > 0)
 				{
-					m_incomingStreamBuffer.WriteBinary((unsigned char *)&buf[i+4], remainder);
+					m_incomingStreamBuffer.WriteData((char *)&buf[i+4], remainder);
 				}
 
 				char header[256];
@@ -1050,6 +1037,8 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 				// long blocking from now on
 				m_streamingclient->set_non_blocking(1);
 
+				snprintf(line, sizeof(line), "http://%s:%d/live?channel=%d&client=XBMC", g_szHostname, g_iPort, channelinfo.iChannelNumber);
+				m_PlaybackURL = line;
 				return true;
 			}
 		}
@@ -1064,19 +1053,19 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
 
 	// do we have enough data to fill this buffer? 
 	unsigned char buf[188*100];
-	while (m_incomingStreamBuffer.GetMaxReadSize() < iBufferSize)
+	while (m_incomingStreamBuffer.getMaxReadSize() < iBufferSize)
 	{		
 		// no, then read more
 		int read = m_streamingclient->receive((char *)buf, sizeof buf, 0);
 		if (read > 0)
 		{
 			// write it to incoming ring buffer
-			m_incomingStreamBuffer.WriteBinary(buf, read);
+			m_incomingStreamBuffer.WriteData((char *)buf, read);
 		}
 	}
 
 	// read from buffer to return for XBMC
-	m_incomingStreamBuffer.ReadBinary(pBuffer, iBufferSize);
+	m_incomingStreamBuffer.ReadData((char *)pBuffer, iBufferSize);
 	return iBufferSize;
 }
 
@@ -1134,6 +1123,20 @@ PVR_ERROR cPVRClientNextPVR::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 }
 
 
+void Tokenize(const string& str, vector<string>& tokens, const string& delimiters = " ")
+{
+  string::size_type start_pos = 0;
+  string::size_type delim_pos = 0;
+
+  while (string::npos != delim_pos)
+  {
+    delim_pos = str.find_first_of(delimiters, start_pos);
+    tokens.push_back(str.substr(start_pos, delim_pos - start_pos));
+    start_pos = delim_pos + 1;
+    // Find next "non-delimiter"
+  }
+}
+
 
 /************************************************************/
 /** Record stream handling */
@@ -1182,7 +1185,7 @@ bool cPVRClientNextPVR::OpenRecordingInternal(long long seekOffset)
 			int remainder = read - (i+4);
 			if (remainder > 0)
 			{
-				m_incomingStreamBuffer.WriteBinary((unsigned char *)&buf[i+4], remainder);
+				m_incomingStreamBuffer.WriteData((char *)&buf[i+4], remainder);
 			}
 
 			// extract recording length from HTTP headers
@@ -1254,19 +1257,19 @@ int cPVRClientNextPVR::ReadRecordedStream(unsigned char *pBuffer, unsigned int i
 
 	// do we have enough data to fill this buffer? 
 	unsigned char buf[188*100];
-	while (m_incomingStreamBuffer.GetMaxReadSize() < iBufferSize)
+	while (m_incomingStreamBuffer.getMaxReadSize() < iBufferSize)
 	{		
 		// no, then read more
 		int read = m_streamingclient->receive((char *)buf, sizeof buf, 0);
 		if (read > 0)
 		{
 			// write it to incoming ring buffer
-			m_incomingStreamBuffer.WriteBinary(buf, read);
+			m_incomingStreamBuffer.WriteData((char *)buf, read);
 		}
 	}	
 
 	// read from buffer to return for XBMC
-	m_incomingStreamBuffer.ReadBinary(pBuffer, iBufferSize);
+	m_incomingStreamBuffer.ReadData((char *)pBuffer, iBufferSize);
 	m_currentRecordingPosition += iBufferSize;
 	XBMC->Log(LOG_DEBUG, "ReadRecordedStream return %d bytes", iBufferSize);
 	return iBufferSize;

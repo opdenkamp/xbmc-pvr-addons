@@ -28,8 +28,7 @@
 #include "platform/threads/mutex.h"
 #include "RingBuffer.h"
 
-/* Use a forward declaration here. Including RTSPClient.h via TSReader.h at this point gives compile errors */
-class CTsReader;
+#define SAFE_DELETE(p)       do { delete (p);     (p)=NULL; } while (0)
 
 class cPVRClientNextPVR
 {
@@ -109,22 +108,13 @@ private:
   int DoRequest(const char *resource, CStdString &response);
   bool OpenRecordingInternal(long long seekOffset);
   CStdString GetChannelIcon(int channelID);
+  void Close();
 
   int                     m_iCurrentChannel;
-  int                     m_iCurrentCard;
-  bool                    m_bConnected;
-  bool                    m_bStop;
-  bool                    m_bTimeShiftStarted;
-  std::string             m_ConnectionString;
-  std::string             m_PlaybackURL;
+  bool                    m_bConnected;  
   std::string             m_BackendName;
-  std::string             m_BackendVersion;
-  time_t                  m_BackendUTCoffset;
-  time_t                  m_BackendTime;
-  //CGenreTable*            m_genretable;
   PLATFORM::CMutex        m_mutex;
-  int64_t                 m_iLastRecordingUpdate;
-  CTsReader*              m_tsreader;
+
   CRingBuffer			  m_incomingStreamBuffer;
 
   char					  m_currentRecordingID[1024];
@@ -132,15 +122,10 @@ private:
   long long				  m_currentRecordingPosition;
 
   CStdString			  m_channelIconDirectory;
+  CStdString			  m_PlaybackURL;
 
   char					  m_sid[64];
 
-  char                    m_noSignalStreamData[ 6 + 0xffff ];
-  long                    m_noSignalStreamSize;
-  long                    m_noSignalStreamReadPos;
-  bool                    m_bPlayingNoSignal;
-
   int					  m_iChannelCount;  
-
-  void Close();
+  
 };

@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "os-dependent.h"
+#include "platform/os.h"
 #include "platform/util/timeutils.h"
 
 #include "client.h"
@@ -762,6 +762,7 @@ int cPVRClientNextPVR::GetNumRecordings(void)
 
 PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
 {	
+	// include already-completed recordings
 	CStdString response;
 	if (DoRequest("/service?method=recording.list&filter=ready", response) == HTTP_OK)
 	{
@@ -794,6 +795,44 @@ PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
 
 
 				PVR->TransferRecordingEntry(handle, &tag);
+			}
+		}	  
+	}
+
+	// ...and any in-progress recordings
+	if (DoRequest("/service?method=recording.list&filter=pending", response) == HTTP_OK)
+	{
+		TiXmlDocument doc;
+		if (doc.Parse(response) != NULL)
+		{
+			PVR_RECORDING   tag;
+
+			TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recordings");
+			TiXmlElement* pRecordingNode = recordingsNode->FirstChildElement("recording");
+			for( pRecordingNode; pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
+			{
+				memset(&tag, 0, sizeof(PVR_RECORDING));
+				
+				PVR_STRCPY(tag.strRecordingId, pRecordingNode->FirstChildElement("id")->FirstChild()->Value());						
+				PVR_STRCPY(tag.strTitle, pRecordingNode->FirstChildElement("name")->FirstChild()->Value());
+				PVR_STRCPY(tag.strDirectory, pRecordingNode->FirstChildElement("name")->FirstChild()->Value());
+
+				if (pRecordingNode->FirstChildElement("desc") != NULL && pRecordingNode->FirstChildElement("desc")->FirstChild() != NULL)
+				{
+					PVR_STRCPY(tag.strPlot, pRecordingNode->FirstChildElement("desc")->FirstChild()->Value());
+				}
+
+				tag.recordingTime = atoi(pRecordingNode->FirstChildElement("start_time_ticks")->FirstChild()->Value());
+				tag.iDuration = atoi(pRecordingNode->FirstChildElement("duration_seconds")->FirstChild()->Value());		
+
+				CStdString strStream;
+				strStream.Format("http://%s:%d/live?recording=%s", g_szHostname, g_iPort, tag.strRecordingId);
+				strncpy(tag.strStreamURL, strStream.c_str(), sizeof(tag.strStreamURL)); 			
+
+				if (tag.recordingTime <= time(NULL) && (tag.recordingTime + tag.iDuration) >= time(NULL))
+				{
+					PVR->TransferRecordingEntry(handle, &tag);
+				}
 			}
 		}	  
 	}

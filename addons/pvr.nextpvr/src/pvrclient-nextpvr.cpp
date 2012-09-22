@@ -836,7 +836,7 @@ PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
 			}
 		}	  
 	}
-
+	
 	return PVR_ERROR_NO_ERROR;
 }
 
@@ -915,8 +915,6 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
 				tag.iClientIndex = atoi(pRecordingNode->FirstChildElement("id")->FirstChild()->Value());				
 				tag.iClientChannelUid = atoi(pRecordingNode->FirstChildElement("channel_id")->FirstChild()->Value());
 
-				tag.state = PVR_TIMER_STATE_SCHEDULED;
-
 				//if (IsRecording())
 				//	tag.state           = PVR_TIMER_STATE_RECORDING;
 				//else if (m_active)
@@ -934,6 +932,18 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
 				}
 				
 				//PVR_STRCPY(tag.strDirectory, m_directory.c_str());
+
+				tag.state = PVR_TIMER_STATE_SCHEDULED;
+				if (pRecordingNode->FirstChildElement("status") != NULL && pRecordingNode->FirstChildElement("status")->FirstChild() != NULL)
+				{
+					char status[32];
+					PVR_STRCPY(status, pRecordingNode->FirstChildElement("status")->FirstChild()->Value());
+					if (stricmp(status, "recording") == 0)
+					{
+						tag.state = PVR_TIMER_STATE_RECORDING;
+					}
+				}
+
 
 				// start/end time
 				char start[32];

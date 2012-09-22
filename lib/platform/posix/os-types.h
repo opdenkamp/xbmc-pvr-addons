@@ -60,7 +60,6 @@ typedef socket_t serial_socket_t;
 
 typedef long LONG;
 typedef LONG HRESULT;
-typedef uint16_t Wchar_t; /* sizeof(wchar_t) = 4 bytes on Linux, but the MediaPortal buffer files have 2-byte wchars */
 
 #define _FILE_OFFSET_BITS 64
 #define FILE_BEGIN              0
@@ -71,6 +70,7 @@ typedef uint16_t Wchar_t; /* sizeof(wchar_t) = 4 bytes on Linux, but the MediaPo
 #define S_OK           0L
 #define S_FALSE        1L
 #define FAILED(Status) ((HRESULT)(Status)<0)
+#define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
 
 // Error codes
 #define ERROR_FILENAME_EXCED_RANGE 206L
@@ -122,7 +122,10 @@ typedef uint16_t Wchar_t; /* sizeof(wchar_t) = 4 bytes on Linux, but the MediaPo
 typedef unsigned char byte;
 
 /* Platform dependent path separator */
+#ifndef PATH_SEPARATOR_CHAR
 #define PATH_SEPARATOR_CHAR '/'
+#define PATH_SEPARATOR_STRING "/"
+#endif
 
 #ifdef TARGET_LINUX
 // Retrieve the number of milliseconds that have elapsed since the system was started
@@ -146,10 +149,15 @@ inline unsigned long GetTickCount(void)
 };
 #endif /* TARGET_LINUX || TARGET_DARWIN */
 
-// For TSReader
-//#include <sys/time.h>
-#define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
+/* Handling of 2-byte Windows wchar strings on non-Windows targets
+ * Used by The MediaPortal and ForTheRecord pvr addons 
+ */
+typedef uint16_t Wchar_t; /* sizeof(wchar_t) = 4 bytes on Linux, but the MediaPortal buffer files have 2-byte wchars */
 
+/* This is a replacement of the Windows wcslen() function which assumes that
+ * wchar_t is a 2-byte character.
+ * It is used for processing Windows wchar strings
+ */
 inline size_t WcsLen(const Wchar_t *str)
 {
   const unsigned short *eos = (const unsigned short*)str;
@@ -157,6 +165,10 @@ inline size_t WcsLen(const Wchar_t *str)
   return( (size_t)(eos - (const unsigned short*)str) -1);
 };
 
+/* This is a replacement of the Windows wcstombs() function which assumes that
+ * wchar_t is a 2-byte character.
+ * It is used for processing Windows wchar strings
+ */
 inline size_t WcsToMbs(char *s, const Wchar_t *w, size_t n)
 {
   size_t i = 0;

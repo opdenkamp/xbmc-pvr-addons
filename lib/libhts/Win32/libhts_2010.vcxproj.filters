@@ -10,9 +10,6 @@
     <ClInclude Include="..\hts_strtab.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\htsatomic.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\htsbuf.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -39,9 +36,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\htsatomic.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\htsbuf.c">
       <Filter>Source Files</Filter>
     </ClCompile>

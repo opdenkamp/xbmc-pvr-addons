@@ -119,26 +119,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\client.cpp" />
-    <ClCompile Include="..\..\src\GenreTable.cpp" />
     <ClCompile Include="..\..\src\md5.cpp" />
     <ClCompile Include="..\..\src\pvrclient-nextpvr.cpp" />
+    <ClCompile Include="..\..\src\RingBuffer.cpp" />
     <ClCompile Include="..\..\src\Socket.cpp" />
     <ClCompile Include="..\..\src\uri.cpp" />
-    <ClCompile Include="..\..\src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
-    <ClInclude Include="..\..\src\FileUtils.h" />
-    <ClInclude Include="..\..\src\GenreTable.h" />
     <ClInclude Include="..\..\src\md5.h" />
-    <ClInclude Include="..\..\src\os-dependent.h" />
     <ClInclude Include="..\..\src\pvrclient-nextpvr.h" />
     <ClInclude Include="..\..\src\RingBuffer.h" />
     <ClInclude Include="..\..\src\Socket.h" />
     <ClInclude Include="..\..\src\uri.h" />
-    <ClInclude Include="..\..\src\utils.h" />
-    <ClInclude Include="..\..\src\windows\os_windows.h" />
-    <ClInclude Include="..\..\src\windows\WindowsUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

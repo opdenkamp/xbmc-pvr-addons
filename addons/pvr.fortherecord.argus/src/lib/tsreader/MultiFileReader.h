@@ -62,8 +62,6 @@ class MultiFileReader : public FileReader
   protected:
     long RefreshTSBufferFile();
     long GetFileLength(const char* pFilename, int64_t &length);
-    size_t WcsLen(const void *str);
-    size_t WcsToMbs(char *s, const void *w, size_t n);
 
     //  SharedMemory* m_pSharedMemory;
     FileReader m_TSBufferFile;

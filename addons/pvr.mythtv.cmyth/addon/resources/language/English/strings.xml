@@ -14,5 +14,6 @@
     <string id="30010">Minimum duration of a recording to be considered a movie</string>	
     <string id="30011">Perl Regular Expression used to extract the foldernames and title for series</string>	
     <string id="30012">Perl Regular Expression used to detect if the title+subtitle is a series</string>
+    <string id="30013">Enable LiveTV support</string>
 </strings>
 

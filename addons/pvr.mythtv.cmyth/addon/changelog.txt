@@ -1,3 +1,6 @@
+v0.2.0
+- Added setting to enable / disable Live TV support (disbale to use the addon only for watching recordings)
+
 v0.1.0
 - Initial version based on Tonny Pettersen's work
 - Supports Live TV &amp; Recordings, listening to Radio channels, EPG and Timer

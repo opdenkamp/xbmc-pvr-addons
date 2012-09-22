@@ -38,6 +38,7 @@ CStdString   g_szMythDBuser           = DEFAULT_DB_USER;          ///< The mytht
 CStdString   g_szMythDBpassword       = DEFAULT_DB_PASSWORD;      ///< The mythtv sql password (default is mythtv)
 CStdString   g_szMythDBname           = DEFAULT_DB_NAME;          ///< The mythtv sql database name (default is mythconverg)
 bool         g_bExtraDebug            = DEFAULT_EXTRA_DEBUG;      ///< Output extensive debug information to the log
+bool         g_bLiveTV                = DEFAULT_LIVETV;           ///< LiveTV support (or recordings only)
 bool         g_bLiveTVPriority        = DEFAULT_LIVETV_PRIORITY;  ///< MythTV Backend setting to allow live TV to move scheduled shows
 ///* Client member variables */
 
@@ -171,6 +172,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     g_szMythDBname = DEFAULT_DB_NAME;
   }
   buffer[0] = 0;
+
+  /* Read setting "LiveTV" from settings.xml */
+  if (!XBMC->GetSetting("livetv", &g_bLiveTV))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'livetv' setting, falling back to '%b' as default", DEFAULT_LIVETV);
+    g_bLiveTV = DEFAULT_LIVETV;
+  }
 
   free (buffer);
 
@@ -317,6 +326,15 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       return ADDON_STATUS_OK;
     }
   }
+  else if (str == "livetv")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'livetv' from %u to %u", g_bLiveTV, *(bool*)settingValue);
+    if (g_bLiveTV != *(bool*)settingValue)
+    {
+      g_bLiveTV = *(bool*)settingValue;
+      return ADDON_STATUS_OK;
+    }
+  }
   else if (str == "livetv_priority")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'extra debug' from %u to %u", g_bLiveTVPriority, *(bool*) settingValue);
@@ -359,20 +377,29 @@ const char* GetMininumPVRAPIVersion(void)
 
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
 {
-  //pCapabilities->bSupportsTimeshift          = true;
-  pCapabilities->bSupportsEPG                = true;
-  pCapabilities->bSupportsRecordings         = true;
-  pCapabilities->bSupportsTimers             = true;
-  pCapabilities->bSupportsTV                 = true;
-  pCapabilities->bSupportsRadio              = true;
-  //pCapabilities->bSupportsChannelSettings    = false;
-  pCapabilities->bSupportsChannelGroups      = true;
-  pCapabilities->bHandlesInputStream         = true;
-  pCapabilities->bHandlesDemuxing            = false;
-  pCapabilities->bSupportsChannelScan        = false;
-  pCapabilities->bSupportsRecordingPlayCount = true;
-  pCapabilities->bSupportsLastPlayedPosition = true;
-  return PVR_ERROR_NO_ERROR;
+  if (g_client != NULL)
+  {
+    pCapabilities->bSupportsTV                 = g_bLiveTV;
+    pCapabilities->bSupportsRadio              = g_bLiveTV;
+    //pCapabilities->bSupportsChannelSettings    = false;
+    pCapabilities->bSupportsChannelGroups      = true;
+    pCapabilities->bSupportsChannelScan        = false;
+    //pCapabilities->bSupportsTimeshift          = g_bLiveTV;
+    pCapabilities->bSupportsEPG                = true;
+    pCapabilities->bSupportsTimers             = true;
+
+    pCapabilities->bHandlesInputStream           = true;
+    pCapabilities->bHandlesDemuxing              = false;
+
+    pCapabilities->bSupportsRecordings           = true;
+    pCapabilities->bSupportsRecordingPlayCount   = true;
+    pCapabilities->bSupportsLastPlayedPosition   = true;
+    return PVR_ERROR_NO_ERROR;
+  }
+  else
+  {
+    return PVR_ERROR_FAILED;
+  }
 }
 
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* props)

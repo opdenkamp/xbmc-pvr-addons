@@ -36,6 +36,7 @@
 #define DEFAULT_HOST          "127.0.0.1"
 #define DEFAULT_EXTRA_DEBUG          false
 #define DEFAULT_LIVETV_PRIORITY      false
+#define DEFAULT_LIVETV               true
 #define DEFAULT_PORT 6543
 #define DEFAULT_DB_USER "mythtv"
 #define DEFAULT_DB_PASSWORD "mythtv"
@@ -59,6 +60,7 @@ extern CStdString   g_szMythDBuser;       ///< The mythtv sql username (default 
 extern CStdString   g_szMythDBpassword;       ///< The mythtv sql password (default is mythtv)
 extern CStdString   g_szMythDBname;       ///< The mythtv sql database name (default is mythconverg)
 extern bool         g_bExtraDebug; 
+extern bool         g_bLiveTV;            ///< LiveTV support (or recordings only)
 extern bool         g_bLiveTVPriority;    ///< MythTV Backend setting to allow live TV to move scheduled shows
 
 

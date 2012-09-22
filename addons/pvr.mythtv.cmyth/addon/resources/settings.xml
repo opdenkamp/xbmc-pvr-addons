@@ -6,7 +6,7 @@
     <setting id="db_password" type="text" label="30003" default="mythtv" />
     <setting id="db_name" type="text" label="30004" default="mythconverg" />
     <setting id="extradebug" type="bool" label="30005" default="false"   />
-    <setting id="livetv" type="bool" label="30013" default="false"   />
+    <setting id="livetv" type="bool" label="30013" default="true"   />
     <setting id="livetv_priority" type="bool" label="30009" default="false"   />
 </settings>
 

@@ -33,18 +33,6 @@
 
 #if (defined(_WIN32) || defined(_WIN64))
 #include "windows/os-types.h"
-
-#ifndef PATH_SEPARATOR_CHAR
-#define PATH_SEPARATOR_CHAR '\\'
-#define PATH_SEPARATOR_STRING "\\"
-#endif
-
 #else
 #include "posix/os-types.h"
-
-#ifndef PATH_SEPARATOR_CHAR
-#define PATH_SEPARATOR_CHAR '/'
-#define PATH_SEPARATOR_STRING "/"
-#endif
-
 #endif

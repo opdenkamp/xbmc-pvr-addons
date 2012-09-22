@@ -1,0 +1,4 @@
+v0.1.0
+- Initial version based on Tonny Pettersen's work
+- Supports Live TV &amp; Recordings, listening to Radio channels, EPG and Timer
+- Supports setting / reading resume bookmarks and watched state on MythTV backend

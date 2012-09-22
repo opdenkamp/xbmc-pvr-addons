@@ -88,5 +88,40 @@
     <Filter Include="cppmyth">
       <UniqueIdentifier>{4070db56-7473-4105-a341-fadd71cb2c4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="addon">
+      <UniqueIdentifier>{a9c2652d-c1dd-4836-a42d-bc5e6db7b5a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addon\ressources">
+      <UniqueIdentifier>{a0fe23b0-74aa-42bb-8b46-fc1479c691bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addon\ressources\language">
+      <UniqueIdentifier>{eecf22a5-10a6-4cd4-b465-f803e13d25ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addon\ressources\language\German">
+      <UniqueIdentifier>{ac525b7f-aff2-4a2e-a088-020418fad63a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addon\ressources\language\English">
+      <UniqueIdentifier>{7538a637-0cc1-4889-a441-3fa567693bc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addon\ressources\language\Danish">
+      <UniqueIdentifier>{874ed3dc-c9b1-4ebf-bfb4-35f031ca179e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml">
+      <Filter>addon</Filter>
+    </None>
+    <None Include="..\..\addon\resources\language\German\strings.xml">
+      <Filter>addon\ressources\language\German</Filter>
+    </None>
+    <None Include="..\..\addon\resources\language\English\strings.xml">
+      <Filter>addon\ressources\language\English</Filter>
+    </None>
+    <None Include="..\..\addon\resources\language\Danish\strings.xml">
+      <Filter>addon\ressources\language\Danish</Filter>
+    </None>
+    <None Include="..\..\addon\resources\settings.xml">
+      <Filter>addon\ressources</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,11 +1,11 @@
 @ECHO ON
 
-IF EXIST %CD%\boost GOTO END
+IF EXIST %CD%\include\boost GOTO END
 
 SET LOC_PATH=%CD%
 SET FILES=%CD%\boost_d.txt
 
-SET CUR_PATH=%CD%\..\..\project\BuildDependencies
+SET CUR_PATH=%CD%\..\..\..\project\BuildDependencies
 SET WGET=%CUR_PATH%\bin\wget
 SET ZIP=%CUR_PATH%\bin\7za
 SET TMP_PATH=%CD%\tmp
@@ -35,9 +35,9 @@ FOR /F "tokens=*" %%f IN ('dir /B "*.tar"') DO (
   %ZIP% x -y %%f
 )
 
-xcopy boost_1_46_1-headers-win32\* "%LOC_PATH%\src\" /E /Q /I /Y
-xcopy boost_1_46_1-debug-libs-win32\* "%LOC_PATH%\src\" /E /Q /I /Y
-xcopy boost_1_46_1-libs-win32\* "%LOC_PATH%\src\" /E /Q /I /Y
+xcopy boost_1_46_1-headers-win32\* "%LOC_PATH%\include\" /E /Q /I /Y
+xcopy boost_1_46_1-debug-libs-win32\lib\* "%LOC_PATH%\lib\" /E /Q /I /Y
+xcopy boost_1_46_1-libs-win32\lib\* "%LOC_PATH%\lib\" /E /Q /I /Y
 
 cd %LOC_PATH%
 

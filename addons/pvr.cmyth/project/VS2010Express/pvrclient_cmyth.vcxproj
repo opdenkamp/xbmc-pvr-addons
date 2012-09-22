@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D21DC71E-C9ED-4FB3-AA4B-5B3F9BDC4C89}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>XBMC_cmyth</RootNamespace>
+    <ProjectName>pvr.cmyth</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\..\addon\</OutDir>
+    <TargetName>XBMC_cmyth_win32</TargetName>
+    <ExtensionsToDeleteOnClean>*.cdf;*.cache;*.obj;*.ilk;*.resources;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;*.tlog;*.manifest;*.res;*.pch;*.exp;*.idb;*.rep;*.xdc;*.pdb;*_manifest.rc;*.bsc;*.sbr;*.xml;*.pvr</ExtensionsToDeleteOnClean>
+    <TargetExt>.pvr</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\..\addon\</OutDir>
+    <TargetName>XBMC_cmyth_win32</TargetName>
+    <ExtensionsToDeleteOnClean>*.cdf;*.cache;*.obj;*.ilk;*.resources;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;*.tlog;*.manifest;*.res;*.pch;*.exp;*.idb;*.rep;*.xdc;*.pdb;*_manifest.rc;*.bsc;*.sbr;*.xml;*.pvr</ExtensionsToDeleteOnClean>
+    <TargetExt>.pvr</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;__STDC_CONSTANT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Win32\include;..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Link>
+      <OutputFile>..\..\addon\XBMC_cmyth_win32.pvr</OutputFile>
+      <AdditionalDependencies>libmysql.lib;libboost_filesystem-vc100-mt-gd.lib;libboost_system-vc100-mt-gd.lib;libboost_regex-vc100-mt-gd.lib;ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib;libboost_filesystem-vc100-mt-gd-1_46_1.lib;libboost_system-vc100-mt-gd-1_46_1.lib;libboost_regex-vc100-mt-gd-1_46_1.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;__STDC_CONSTANT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\..\Win32\include;..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>..\..\addon\XBMC_cmyth_win32.pvr</OutputFile>
+      <AdditionalDependencies>libmysql.lib;libboost_filesystem-vc100-mt.lib;libboost_system-vc100-mt.lib;libboost_regex-vc100-mt.lib;ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;libboost_filesystem-vc100-mt-1_46_1.lib;libboost_system-vc100-mt-1_46_1.lib;libboost_regex-vc100-mt-1_46_1.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
+      <Project>{fe4573f6-a794-4ad3-b37f-49e51f1140e6}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\cmyth\libcmyth\cmyth_local.h" />
+    <ClInclude Include="..\..\src\cmyth\libcmyth\safe_string.h" />
+    <ClInclude Include="..\..\src\cmyth\librefmem\refmem_local.h" />
+    <ClInclude Include="..\..\src\cppmyth.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythChannel.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythConnection.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythDatabase.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythEventHandler.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythFile.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythPointer.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythProgramInfo.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythRecorder.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythSGFile.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythSignal.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythTimer.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythTimestamp.h" />
+    <ClInclude Include="..\..\src\fileOps.h" />
+    <ClInclude Include="..\..\src\PVRcmyth.h" />
+    <ClInclude Include="..\..\src\tools.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\cmyth\libcmyth\bookmark.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\commbreak.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\connection.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\debug.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\event.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\file.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\freespace.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\input.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\keyframe.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\livetv.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\mysql_query.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\mythtv_mysql.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\posmap.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\proginfo.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\proglist.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\recorder.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\rec_num.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\ringbuf.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\socket.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\timestamp.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\utf8tolatin1.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\librefmem\alloc.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\librefmem\debug_refmem.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\src\cmyth\include;..\..\src\cmyth\Win32\include;..\..\src\cmyth\librefmem;..\..\src\cmyth\libcmyth</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_VC80_UPGRADE=0x0710;_MBCS</PreprocessorDefinitions>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythChannel.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythConnection.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythDatabase.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythEventHandler.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythFile.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythProgramInfo.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythRecorder.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythSGFile.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythSignal.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythTimer.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythTimestamp.cpp" />
+    <ClCompile Include="..\..\src\fileOps.cpp" />
+    <ClCompile Include="..\..\src\PVRcmyth.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

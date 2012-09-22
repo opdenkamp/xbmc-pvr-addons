@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\fileOps.cpp" />
+    <ClCompile Include="..\..\src\PVRcmyth.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythChannel.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythConnection.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythDatabase.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythEventHandler.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythFile.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythProgramInfo.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythRecorder.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythSGFile.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythSignal.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythTimer.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythTimestamp.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\librefmem\alloc.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\utf8tolatin1.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\bookmark.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\commbreak.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\connection.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\debug.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\librefmem\debug_refmem.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\event.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\file.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\freespace.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\input.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\keyframe.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\livetv.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\mysql_query.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\mythtv_mysql.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\posmap.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\proginfo.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\proglist.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\rec_num.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\recorder.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\ringbuf.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\socket.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmyth\libcmyth\timestamp.c">
+      <Filter>libcmyth\Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\cppmyth.h" />
+    <ClInclude Include="..\..\src\fileOps.h" />
+    <ClInclude Include="..\..\src\PVRcmyth.h" />
+    <ClInclude Include="..\..\src\tools.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythTimestamp.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythChannel.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythConnection.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythDatabase.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythEventHandler.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythFile.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythPointer.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythProgramInfo.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythRecorder.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythSGFile.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythSignal.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythTimer.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cmyth\libcmyth\cmyth_local.h">
+      <Filter>libcmyth\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cmyth\librefmem\refmem_local.h">
+      <Filter>libcmyth\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cmyth\libcmyth\safe_string.h">
+      <Filter>libcmyth\Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="libcmyth">
+      <UniqueIdentifier>{49a68fd9-37bb-48f1-ad72-532dc9b04d81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cppmyth">
+      <UniqueIdentifier>{61fff214-56c1-4ab2-9705-1dd49d4c8850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libcmyth\Source">
+      <UniqueIdentifier>{7c3352b9-ff41-4c92-960e-d5c79d31c8f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libcmyth\Header">
+      <UniqueIdentifier>{8a86b768-e2ae-40f2-9e5e-36b88232a064}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

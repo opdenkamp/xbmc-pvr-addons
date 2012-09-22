@@ -1458,14 +1458,12 @@ int cPVRClientNextPVR::DoRequest(const char *resource, CStdString &response)
 
 	CStdString tempResponse;
 
-	Sleep(100);
+	int delayed = 0;
 
 	bool connected = true;
 	while (connected)
 	{
 		// check if we're still connected
-		//m_tcpclient->is_connected();
-
 		char buf[1024];
 		int read = m_tcpclient->receive(buf, sizeof buf, 0);
 
@@ -1481,11 +1479,25 @@ int cPVRClientNextPVR::DoRequest(const char *resource, CStdString &response)
 
 			if (trace != NULL) fwrite(buf, 1, read, trace);
 		}
+		// ok...this is ugly...
 		else if (read < 0 && tempResponse.length() > 0)
 		{
-			XBMC->Log(LOG_DEBUG, "DoRequest(%s) read returned %d", resource, read);
-			connected = false;
-		}		
+			if (delayed > 500)
+			{
+				XBMC->Log(LOG_DEBUG, "DoRequest(%s) read returned %d", resource, read);
+				connected = false;
+			}
+			else
+			{
+#if defined(TARGET_LINUX) || defined(TARGET_OSX)
+				usleep(50000);
+#else
+				Sleep(50);
+#endif
+				delayed += 50;
+			}
+		}
+		
 	}  	
 
 	XBMC->Log(LOG_DEBUG, "DoRequest(%s) got total of %d bytes", resource, tempResponse.length());

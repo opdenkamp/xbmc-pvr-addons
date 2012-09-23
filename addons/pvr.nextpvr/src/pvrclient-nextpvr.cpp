@@ -410,7 +410,7 @@ PVR_ERROR cPVRClientNextPVR::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
 
   CStdString response;
   char request[512];
-  sprintf(request, "/service?method=channel.listings&channel_id=%d&start=%d&end=%d", channel.iUniqueId, iStart, iEnd);
+  sprintf(request, "/service?method=channel.listings&channel_id=%d&start=%d&end=%d", channel.iUniqueId, (int)iStart, (int)iEnd);
   if (DoRequest(request, response) == HTTP_OK)
   {
 	  TiXmlDocument doc;	  
@@ -938,7 +938,7 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
 				{
 					char status[32];
 					PVR_STRCPY(status, pRecordingNode->FirstChildElement("status")->FirstChild()->Value());
-					if (stricmp(status, "recording") == 0)
+					if (strcmp(status, "Recording") == 0)
 					{
 						tag.state = PVR_TIMER_STATE_RECORDING;
 					}
@@ -987,8 +987,8 @@ PVR_ERROR cPVRClientNextPVR::AddTimer(const PVR_TIMER &timerinfo)
 	snprintf(request, sizeof(request), "/service?method=recording.save&name=%s&channel=%d&time_t=%d&duration=%d", 
 		encodedName.c_str(),
 		timerinfo.iClientChannelUid, 
-		timerinfo.startTime, 
-		(timerinfo.endTime - timerinfo.startTime));		
+		(int)timerinfo.startTime, 
+		(int)(timerinfo.endTime - timerinfo.startTime));		
 
 	// ask NextPVR to schedule our timer
 	CStdString response;
@@ -1086,7 +1086,7 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 				// long blocking from now on
 				m_streamingclient->set_non_blocking(1);
 
-				snprintf(line, sizeof(line), "http://%s:%d/live?channel=%d&client=XBMC", g_szHostname, g_iPort, channelinfo.iChannelNumber);
+				snprintf(line, sizeof(line), "http://%s:%d/live?channel=%d&client=XBMC", g_szHostname.c_str(), g_iPort, channelinfo.iChannelNumber);
 				m_PlaybackURL = line;
 				return true;
 			}

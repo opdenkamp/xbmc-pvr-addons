@@ -2,8 +2,8 @@
 
 SETLOCAL
 
-SET CUR_PATH=%CD%
-SET TMP_PATH=%CD%\scripts\tmp
+SET CUR_PATH="%CD%"
+SET TMP_PATH="%CD%\scripts\tmp"
 
 rem can't run rmdir and md back to back. access denied error otherwise.
 IF EXIST lib rmdir lib /S /Q

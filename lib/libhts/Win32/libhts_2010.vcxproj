@@ -77,7 +77,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\hts_strtab.h" />
-    <ClInclude Include="..\htsatomic.h" />
     <ClInclude Include="..\htsbuf.h" />
     <ClInclude Include="..\htsmsg.h" />
     <ClInclude Include="..\htsmsg_binary.h" />
@@ -88,7 +87,6 @@
     <ClInclude Include="..\sha1.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\htsatomic.c" />
     <ClCompile Include="..\htsbuf.c" />
     <ClCompile Include="..\htsmsg.c" />
     <ClCompile Include="..\htsmsg_binary.c" />

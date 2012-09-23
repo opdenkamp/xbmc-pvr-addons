@@ -367,7 +367,7 @@ long MultiFileReader::RefreshTSBufferFile()
       // try to clear local / remote SMB file cache. This should happen when we close the filehandle
       m_TSBufferFile.CloseFile();
       m_TSBufferFile.OpenFile();
-      PLATFORM::CEvent::Sleep(5);
+      usleep(5000);
     }
 
     if (Error)

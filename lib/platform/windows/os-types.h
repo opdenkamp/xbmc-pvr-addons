@@ -48,8 +48,12 @@
 #define atoll(S) _atoi64(S)
 
 /* Platform dependent path separator */
+#ifndef PATH_SEPARATOR_CHAR
 #define PATH_SEPARATOR_CHAR '\\'
+#define PATH_SEPARATOR_STRING "\\"
+#endif
 
+/* Handling of 2-byte Windows wchar strings */
 #define WcsLen wcslen
 #define WcsToMbs wcstombs
 typedef wchar_t Wchar_t; /* sizeof(wchar_t) = 2 bytes on Windows */
@@ -80,7 +84,9 @@ typedef _W64 int   ssize_t;
 #define _SSIZE_T_DEFINED
 #endif
 
+/* Prevent deprecation warnings */
 #define snprintf _snprintf
+#define strnicmp _strnicmp
 
 #if defined(_MSC_VER)
 #pragma warning (push)

@@ -16,7 +16,7 @@ include ../Makefile.include.am
 
 INCLUDES+=-Isrc
 
-libmediaportal_addon_la_SOURCES = src/client.cpp \
+libnextpvr_addon_la_SOURCES = src/client.cpp \
                                   src/pvrclient-nextpvr.cpp \
                                   src/Socket.cpp \
                                   src/uri.cpp \

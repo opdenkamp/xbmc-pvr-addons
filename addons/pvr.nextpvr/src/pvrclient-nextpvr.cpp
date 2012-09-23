@@ -850,9 +850,11 @@ PVR_ERROR cPVRClientNextPVR::DeleteRecording(const PVR_RECORDING &recording)
 	{
 		if (strstr(response, "<rsp stat=\"ok\">"))
 		{
+			PVR->TriggerRecordingUpdate();
 			return PVR_ERROR_NO_ERROR;
 		}
 	}
+
 
 	return PVR_ERROR_FAILED;
 }

@@ -95,4 +95,3 @@ class MultiFileReader : public FileReader
     bool     m_bDebugOutput;
     int64_t  m_cachedFileSize;
 };
-

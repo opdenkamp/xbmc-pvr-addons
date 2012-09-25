@@ -1008,7 +1008,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
  */
 cmyth_file_t
 cmyth_conn_connect_path(char* path, cmyth_conn_t control,
-			unsigned buflen, int tcp_rcvbuf, char* sgToGetFrom)
+			unsigned buflen, int tcp_rcvbuf, char* storage_group)
 {
 	cmyth_conn_t conn = NULL;
 	char *announcement = NULL;
@@ -1056,7 +1056,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	 */
 	conn->conn_version = control->conn_version;
 
-	ann_size += strlen(path) + strlen(my_hostname) + strlen(sgToGetFrom) + 6;
+	ann_size += strlen(path) + strlen(my_hostname) + strlen(storage_group) + 6;
 	announcement = malloc(ann_size);
 	if (!announcement) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1065,9 +1065,9 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	if (control->conn_version >= 44) { /*TSP: from version 44 according to the source code*/
-		if (strlen(sgToGetFrom) > 1) {
+		if (strlen(storage_group) > 1) {
 			sprintf(announcement, "ANN FileTransfer %s 0 0 0[]:[]%s[]:[]%s",
-				  my_hostname, path, sgToGetFrom);
+				  my_hostname, path, storage_group);
 		} else {
 			sprintf(announcement, "ANN FileTransfer %s 0[]:[]%s[]:[]",  // write = false
 				  my_hostname, path);

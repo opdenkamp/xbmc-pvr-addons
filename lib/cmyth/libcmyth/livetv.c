@@ -838,6 +838,8 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, long long offset, int whence)
 	if (rec == NULL)
 		return -EINVAL;
 
+	fp = NULL;
+	cur = -1;
 	ct  = rec->rec_livetv_chain->chain_ct;
 
 	if (whence == SEEK_END) {
@@ -897,16 +899,21 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, long long offset, int whence)
 	offset -= fp->file_req;
   }
 
-	pthread_mutex_lock(&mutex);
+	if (fp && cur >=0)
+	{
+		pthread_mutex_lock(&mutex);
+		
+		ret = cmyth_file_seek_unlocked(fp, offset, whence);
 
-	ret = cmyth_file_seek_unlocked(fp, offset, whence);
-
-	cur -= rec->rec_livetv_chain->chain_current;
-	if (ret >= 0 && cur) {
-		cmyth_livetv_chain_switch(rec, cur);
+		if (ret >= 0 ) {
+			cur -= rec->rec_livetv_chain->chain_current;
+			cmyth_livetv_chain_switch(rec, cur);	
+		}
+		
+		pthread_mutex_unlock(&mutex);
 	}
-
-	pthread_mutex_unlock(&mutex);
+	else
+		return -1;
 
 	return ret;
 }

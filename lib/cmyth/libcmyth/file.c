@@ -574,7 +574,7 @@ cmyth_file_seek_unlocked(cmyth_file_t file, long long offset, int whence)
 	char msg[128];
 	int err;
 	int count;
-	long long c;
+	int64_t c;
 	long r;
 	long long ret;
 
@@ -596,15 +596,28 @@ cmyth_file_seek_unlocked(cmyth_file_t file, long long offset, int whence)
 			return -1;
 	}
 
-
-	snprintf(msg, sizeof(msg),
-		 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%d[]:[]%d[]:[]%d[]:[]%d[]:[]%d",
-		 file->file_id,
-		 (int32_t)(offset >> 32),
-		 (int32_t)(offset & 0xffffffff),
-		 whence,
-		 (int32_t)(file->file_pos >> 32),
-		 (int32_t)(file->file_pos & 0xffffffff));
+	if (file->file_control->conn_version >= 66) {
+		/*
+		 * Since protocol 66 mythbackend expects to receive a single 64 bit integer rather than
+		 * two 32 bit hi and lo integers.
+		 */
+		snprintf(msg, sizeof(msg),
+			 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%"PRIu64"[]:[]%d[]:[]%"PRIu64,
+			 file->file_id,
+			 (int64_t)offset,
+			 whence,
+			 (int64_t)file->file_pos);
+	}
+	else {
+		snprintf(msg, sizeof(msg),
+			 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%d[]:[]%d[]:[]%d[]:[]%d[]:[]%d",
+			 file->file_id,
+			 (int32_t)(offset >> 32),
+			 (int32_t)(offset & 0xffffffff),
+			 whence,
+			 (int32_t)(file->file_pos >> 32),
+			 (int32_t)(file->file_pos & 0xffffffff));
+	}
 
 	if ((err = cmyth_send_message(file->file_control, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,

@@ -1055,7 +1055,7 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
 	
 		char line[256];
-		sprintf(line, "GET /live?channel=%d&client=XBMC HTTP/1.0\r\n", channelinfo.iChannelNumber);
+		sprintf(line, "GET /live?channel=%d&client=XBMC-%s HTTP/1.0\r\n", channelinfo.iChannelNumber, m_sid); 
 		m_streamingclient->send(line, strlen(line));
 
 		sprintf(line, "Connection: close\r\n");

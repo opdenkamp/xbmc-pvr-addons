@@ -16,22 +16,22 @@ using namespace ADDON;
 
   CStdString MythSGFile::Filename()
   {
-    char* name = CMYTH->StoragegroupFileGetFilename(*m_storagegroup_file_t);
+    char* name = CMYTH->cmyth_storagegroup_file_get_filename(*m_storagegroup_file_t);
     CStdString retval(name);
-    CMYTH->RefRelease(name);
+    CMYTH->ref_release(name);
     name = 0;
     return retval;
   }
 
   unsigned long long MythSGFile::Size()
   {
-    unsigned long long retval = CMYTH->StoragegroupFileGetSize(*m_storagegroup_file_t);    
+    unsigned long long retval = CMYTH->cmyth_storagegroup_file_get_size(*m_storagegroup_file_t);
     return retval;
   }
 
   unsigned long MythSGFile::LastModified()
   {
-    unsigned long retval = CMYTH->StoragegroupFileGetLastmodified(*m_storagegroup_file_t);    
+    unsigned long retval = CMYTH->cmyth_storagegroup_file_get_lastmodified(*m_storagegroup_file_t);
     return retval;
   }
 

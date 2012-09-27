@@ -380,1296 +380,1296 @@ public:
       return false;
     }
 
-    DbgLevel      = (void (*)(int l))
+    cmyth_dbg_level      = (void (*)(int l))
 dlsym(m_libcmyth, "cmyth_dbg_level");
-if (DbgLevel == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_dbg_level == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    DbgAll      = (void (*)(void))
+    cmyth_dbg_all      = (void (*)(void))
 dlsym(m_libcmyth, "cmyth_dbg_all");
-if (DbgAll == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_dbg_all == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    DbgNone      = (void (*)(void))
+    cmyth_dbg_none      = (void (*)(void))
 dlsym(m_libcmyth, "cmyth_dbg_none");
-if (DbgNone == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_dbg_none == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    Dbg      = (void (*)(int level, char* fmt, ...))
+    cmyth_dbg      = (void (*)(int level, char* fmt, ...))
 dlsym(m_libcmyth, "cmyth_dbg");
-if (Dbg == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_dbg == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    SetDbgMsgcallback      = (void (*)(void (* msgcb)(int level,char* )))
+    cmyth_set_dbg_msgcallback      = (void (*)(void (* msgcb)(int level,char* )))
 dlsym(m_libcmyth, "cmyth_set_dbg_msgcallback");
-if (SetDbgMsgcallback == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_set_dbg_msgcallback == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnConnectCtrl      = (cmyth_conn_t (*)(char* server, unsigned short port, unsigned buflen, int tcp_rcvbuf))
+    cmyth_conn_connect_ctrl      = (cmyth_conn_t (*)(char* server, unsigned short port, unsigned buflen, int tcp_rcvbuf))
 dlsym(m_libcmyth, "cmyth_conn_connect_ctrl");
-if (ConnConnectCtrl == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_connect_ctrl == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnReconnectCtrl      = (int (*)(cmyth_conn_t control))
+    cmyth_conn_reconnect_ctrl      = (int (*)(cmyth_conn_t control))
 dlsym(m_libcmyth, "cmyth_conn_reconnect_ctrl");
-if (ConnReconnectCtrl == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_reconnect_ctrl == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnConnectEvent      = (cmyth_conn_t (*)(char* server,  unsigned short port,  unsigned buflen, int tcp_rcvbuf))
+    cmyth_conn_connect_event      = (cmyth_conn_t (*)(char* server,  unsigned short port,  unsigned buflen, int tcp_rcvbuf))
 dlsym(m_libcmyth, "cmyth_conn_connect_event");
-if (ConnConnectEvent == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_connect_event == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnReconnectEvent    = (int (*)(cmyth_conn_t conn))
+    cmyth_conn_reconnect_event    = (int (*)(cmyth_conn_t conn))
 dlsym(m_libcmyth, "cmyth_conn_reconnect_event");
-if (ConnReconnectEvent == NULL)    { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_reconnect_event == NULL)    { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnConnectFile      = (cmyth_file_t (*)(cmyth_proginfo_t prog, cmyth_conn_t control, unsigned buflen, int tcp_rcvbuf))
+    cmyth_conn_connect_file      = (cmyth_file_t (*)(cmyth_proginfo_t prog, cmyth_conn_t control, unsigned buflen, int tcp_rcvbuf))
 dlsym(m_libcmyth, "cmyth_conn_connect_file");
-if (ConnConnectFile == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_connect_file == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnConnectPath      = (cmyth_file_t (*)(char* path, cmyth_conn_t control, unsigned buflen, int tcp_rcvbuf,char* sgToGetFrom))
+    cmyth_conn_connect_path      = (cmyth_file_t (*)(char* path, cmyth_conn_t control, unsigned buflen, int tcp_rcvbuf,char* sgToGetFrom))
 dlsym(m_libcmyth, "cmyth_conn_connect_path");
-if (ConnConnectPath == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_connect_path == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnConnectRing      = (int (*)(cmyth_recorder_t rec, unsigned buflen,int tcp_rcvbuf))
+    cmyth_conn_connect_ring      = (int (*)(cmyth_recorder_t rec, unsigned buflen,int tcp_rcvbuf))
 dlsym(m_libcmyth, "cmyth_conn_connect_ring");
-if (ConnConnectRing == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_connect_ring == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnConnectRecorder      = (int (*)(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf))
+    cmyth_conn_connect_recorder      = (int (*)(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf))
 dlsym(m_libcmyth, "cmyth_conn_connect_recorder");
-if (ConnConnectRecorder == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_connect_recorder == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnCheckBlock      = (int (*)(cmyth_conn_t conn, unsigned long size))
+    cmyth_conn_check_block      = (int (*)(cmyth_conn_t conn, unsigned long size))
 dlsym(m_libcmyth, "cmyth_conn_check_block");
-if (ConnCheckBlock == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_check_block == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnGetRecorderFromNum      = (cmyth_recorder_t (*)(cmyth_conn_t conn, int num))
+    cmyth_conn_get_recorder_from_num      = (cmyth_recorder_t (*)(cmyth_conn_t conn, int num))
 dlsym(m_libcmyth, "cmyth_conn_get_recorder_from_num");
-if (ConnGetRecorderFromNum == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_get_recorder_from_num == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnGetFreeRecorder      = (cmyth_recorder_t (*)(cmyth_conn_t conn))
+    cmyth_conn_get_free_recorder      = (cmyth_recorder_t (*)(cmyth_conn_t conn))
 dlsym(m_libcmyth, "cmyth_conn_get_free_recorder");
-if (ConnGetFreeRecorder == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_get_free_recorder == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnGetFreespace      = (int (*)(cmyth_conn_t control, long long* total, long long* used))
+    cmyth_conn_get_freespace      = (int (*)(cmyth_conn_t control, long long* total, long long* used))
 dlsym(m_libcmyth, "cmyth_conn_get_freespace");
-if (ConnGetFreespace == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_get_freespace == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnHung      = (int (*)(cmyth_conn_t control))
+    cmyth_conn_hung      = (int (*)(cmyth_conn_t control))
 dlsym(m_libcmyth, "cmyth_conn_hung");
-if (ConnHung == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_hung == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnGetFreeRecorderCount      = (int (*)(cmyth_conn_t conn))
+    cmyth_conn_get_free_recorder_count      = (int (*)(cmyth_conn_t conn))
 dlsym(m_libcmyth, "cmyth_conn_get_free_recorder_count");
-if (ConnGetFreeRecorderCount == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_get_free_recorder_count == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnGetProtocolVersion      = (int (*)(cmyth_conn_t conn))
+    cmyth_conn_get_protocol_version      = (int (*)(cmyth_conn_t conn))
 dlsym(m_libcmyth, "cmyth_conn_get_protocol_version");
-if (ConnGetProtocolVersion == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_get_protocol_version == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnGetSetting      = (char* (*)(cmyth_conn_t conn,const char* hostname, const char* setting))
+    cmyth_conn_get_setting      = (char* (*)(cmyth_conn_t conn,const char* hostname, const char* setting))
 dlsym(m_libcmyth, "cmyth_conn_get_setting");
-if (ConnGetSetting == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_get_setting == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnSetSetting      = (int (*)(cmyth_conn_t conn,const char* hostname, const char* setting, const char* value))
+    cmyth_conn_set_setting      = (int (*)(cmyth_conn_t conn,const char* hostname, const char* setting, const char* value))
 dlsym(m_libcmyth, "cmyth_conn_set_setting");
-if (ConnSetSetting == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_set_setting == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnGetBackendHostname      = (char* (*)(cmyth_conn_t conn))
+    cmyth_conn_get_backend_hostname      = (char* (*)(cmyth_conn_t conn))
 dlsym(m_libcmyth, "cmyth_conn_get_backend_hostname");
-if (ConnGetBackendHostname == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_get_backend_hostname == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ConnGetClientHostname      = (char* (*)(cmyth_conn_t conn))
+    cmyth_conn_get_client_hostname      = (char* (*)(cmyth_conn_t conn))
 dlsym(m_libcmyth, "cmyth_conn_get_client_hostname");
-if (ConnGetClientHostname == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_conn_get_client_hostname == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    EventGet      = (cmyth_event_t (*)(cmyth_conn_t conn, char* data, int len))
+    cmyth_event_get      = (cmyth_event_t (*)(cmyth_conn_t conn, char* data, int len))
 dlsym(m_libcmyth, "cmyth_event_get");
-if (EventGet == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_event_get == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    EventSelect      = (int (*)(cmyth_conn_t conn, struct timeval* timeout))
+    cmyth_event_select      = (int (*)(cmyth_conn_t conn, struct timeval* timeout))
 dlsym(m_libcmyth, "cmyth_event_select");
-if (EventSelect == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_event_select == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderCreate      = (cmyth_recorder_t (*)(void))
+    cmyth_recorder_create      = (cmyth_recorder_t (*)(void))
 dlsym(m_libcmyth, "cmyth_recorder_create");
-if (RecorderCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderDup      = (cmyth_recorder_t (*)(cmyth_recorder_t p))
+    cmyth_recorder_dup      = (cmyth_recorder_t (*)(cmyth_recorder_t p))
 dlsym(m_libcmyth, "cmyth_recorder_dup");
-if (RecorderDup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_dup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderIsRecording      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_is_recording      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_is_recording");
-if (RecorderIsRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_is_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetFramerate      = (int (*)(cmyth_recorder_t rec,double* rate))
+    cmyth_recorder_get_framerate      = (int (*)(cmyth_recorder_t rec,double* rate))
 dlsym(m_libcmyth, "cmyth_recorder_get_framerate");
-if (RecorderGetFramerate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_framerate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetFramesWritten      = (long long (*)(cmyth_recorder_t rec))
+    cmyth_recorder_get_frames_written      = (long long (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_get_frames_written");
-if (RecorderGetFramesWritten == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_frames_written == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetFreeSpace      = (long long (*)(cmyth_recorder_t rec))
+    cmyth_recorder_get_free_space      = (long long (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_get_free_space");
-if (RecorderGetFreeSpace == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_free_space == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetKeyframePos      = (long long (*)(cmyth_recorder_t rec, unsigned long keynum))
+    cmyth_recorder_get_keyframe_pos      = (long long (*)(cmyth_recorder_t rec, unsigned long keynum))
 dlsym(m_libcmyth, "cmyth_recorder_get_keyframe_pos");
-if (RecorderGetKeyframePos == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_keyframe_pos == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetPositionMap      = (cmyth_posmap_t (*)(cmyth_recorder_t rec,unsigned long start,unsigned long end))
+    cmyth_recorder_get_position_map      = (cmyth_posmap_t (*)(cmyth_recorder_t rec,unsigned long start,unsigned long end))
 dlsym(m_libcmyth, "cmyth_recorder_get_position_map");
-if (RecorderGetPositionMap == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_position_map == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetRecording      = (cmyth_proginfo_t (*)(cmyth_recorder_t rec))
+    cmyth_recorder_get_recording      = (cmyth_proginfo_t (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_get_recording");
-if (RecorderGetRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderStopPlaying      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_stop_playing      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_stop_playing");
-if (RecorderStopPlaying == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_stop_playing == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderFrontendReady      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_frontend_ready      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_frontend_ready");
-if (RecorderFrontendReady == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_frontend_ready == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderCancelNextRecording      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_cancel_next_recording      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_cancel_next_recording");
-if (RecorderCancelNextRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_cancel_next_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderPause      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_pause      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_pause");
-if (RecorderPause == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_pause == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderFinishRecording      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_finish_recording      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_finish_recording");
-if (RecorderFinishRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_finish_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderToggleChannelFavorite      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_toggle_channel_favorite      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_toggle_channel_favorite");
-if (RecorderToggleChannelFavorite == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_toggle_channel_favorite == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderChangeChannel      = (int (*)(cmyth_recorder_t rec, cmyth_channeldir_t direction))
+    cmyth_recorder_change_channel      = (int (*)(cmyth_recorder_t rec, cmyth_channeldir_t direction))
 dlsym(m_libcmyth, "cmyth_recorder_change_channel");
-if (RecorderChangeChannel == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_change_channel == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderSetChannel      = (int (*)(cmyth_recorder_t rec,char* channame))
+    cmyth_recorder_set_channel      = (int (*)(cmyth_recorder_t rec,char* channame))
 dlsym(m_libcmyth, "cmyth_recorder_set_channel");
-if (RecorderSetChannel == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_set_channel == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderChangeColor      = (int (*)(cmyth_recorder_t rec, cmyth_adjdir_t direction))
+    cmyth_recorder_change_color      = (int (*)(cmyth_recorder_t rec, cmyth_adjdir_t direction))
 dlsym(m_libcmyth, "cmyth_recorder_change_color");
-if (RecorderChangeColor == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_change_color == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderChangeBrightness      = (int (*)(cmyth_recorder_t rec, cmyth_adjdir_t direction))
+    cmyth_recorder_change_brightness      = (int (*)(cmyth_recorder_t rec, cmyth_adjdir_t direction))
 dlsym(m_libcmyth, "cmyth_recorder_change_brightness");
-if (RecorderChangeBrightness == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_change_brightness == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderChangeContrast      = (int (*)(cmyth_recorder_t rec,  cmyth_adjdir_t direction))
+    cmyth_recorder_change_contrast      = (int (*)(cmyth_recorder_t rec,  cmyth_adjdir_t direction))
 dlsym(m_libcmyth, "cmyth_recorder_change_contrast");
-if (RecorderChangeContrast == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_change_contrast == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderChangeHue      = (int (*)(cmyth_recorder_t rec,  cmyth_adjdir_t direction))
+    cmyth_recorder_change_hue      = (int (*)(cmyth_recorder_t rec,  cmyth_adjdir_t direction))
 dlsym(m_libcmyth, "cmyth_recorder_change_hue");
-if (RecorderChangeHue == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_change_hue == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderCheckChannel      = (int (*)(cmyth_recorder_t rec,char* channame))
+    cmyth_recorder_check_channel      = (int (*)(cmyth_recorder_t rec,char* channame))
 dlsym(m_libcmyth, "cmyth_recorder_check_channel");
-if (RecorderCheckChannel == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_check_channel == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderCheckChannelPrefix      = (int (*)(cmyth_recorder_t rec, char* channame))
+    cmyth_recorder_check_channel_prefix      = (int (*)(cmyth_recorder_t rec, char* channame))
 dlsym(m_libcmyth, "cmyth_recorder_check_channel_prefix");
-if (RecorderCheckChannelPrefix == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_check_channel_prefix == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetCurProginfo      = (cmyth_proginfo_t (*)(cmyth_recorder_t rec))
+    cmyth_recorder_get_cur_proginfo      = (cmyth_proginfo_t (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_get_cur_proginfo");
-if (RecorderGetCurProginfo == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_cur_proginfo == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetNextProginfo      = (cmyth_proginfo_t (*)(cmyth_recorder_t rec,cmyth_proginfo_t current,cmyth_browsedir_t direction))
+    cmyth_recorder_get_next_proginfo      = (cmyth_proginfo_t (*)(cmyth_recorder_t rec,cmyth_proginfo_t current,cmyth_browsedir_t direction))
 dlsym(m_libcmyth, "cmyth_recorder_get_next_proginfo");
-if (RecorderGetNextProginfo == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_next_proginfo == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetInputName      = (int (*)(cmyth_recorder_t rec, char* name, unsigned len))
+    cmyth_recorder_get_input_name      = (int (*)(cmyth_recorder_t rec, char* name, unsigned len))
 dlsym(m_libcmyth, "cmyth_recorder_get_input_name");
-if (RecorderGetInputName == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_input_name == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderSeek      = (long long (*)(cmyth_recorder_t rec,  long long pos,  cmyth_whence_t whence,  long long curpos))
+    cmyth_recorder_seek      = (long long (*)(cmyth_recorder_t rec,  long long pos,  cmyth_whence_t whence,  long long curpos))
 dlsym(m_libcmyth, "cmyth_recorder_seek");
-if (RecorderSeek == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_seek == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderSpawnChainLivetv      = (int (*)(cmyth_recorder_t rec, char* channame))
+    cmyth_recorder_spawn_chain_livetv      = (int (*)(cmyth_recorder_t rec, char* channame))
 dlsym(m_libcmyth, "cmyth_recorder_spawn_chain_livetv");
-if (RecorderSpawnChainLivetv == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_spawn_chain_livetv == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderSpawnLivetv      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_spawn_livetv      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_spawn_livetv");
-if (RecorderSpawnLivetv == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_spawn_livetv == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderStartStream      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_start_stream      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_start_stream");
-if (RecorderStartStream == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_start_stream == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderEndStream      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_end_stream      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_end_stream");
-if (RecorderEndStream == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_end_stream == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetFilename      = (char* (*)(cmyth_recorder_t rec))
+    cmyth_recorder_get_filename      = (char* (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_get_filename");
-if (RecorderGetFilename == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_filename == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderStopLivetv      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_stop_livetv      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_stop_livetv");
-if (RecorderStopLivetv == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_stop_livetv == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderDoneRingbuf      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_done_ringbuf      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_done_ringbuf");
-if (RecorderDoneRingbuf == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_done_ringbuf == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecorderGetRecorderId      = (int (*)(cmyth_recorder_t rec))
+    cmyth_recorder_get_recorder_id      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_recorder_get_recorder_id");
-if (RecorderGetRecorderId == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_recorder_get_recorder_id == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvChainCreate      = (cmyth_livetv_chain_t (*)(char* chainid))
+    cmyth_livetv_chain_create      = (cmyth_livetv_chain_t (*)(char* chainid))
 dlsym(m_libcmyth, "cmyth_livetv_chain_create");
-if (LivetvChainCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_chain_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvChainDuration      = (long long (*)(cmyth_recorder_t rec))
+    cmyth_livetv_chain_duration      = (long long (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_livetv_chain_duration");
-if (LivetvChainDuration == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_chain_duration == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvChainSwitch      = (int (*)(cmyth_recorder_t rec, int dir))
+    cmyth_livetv_chain_switch      = (int (*)(cmyth_recorder_t rec, int dir))
 dlsym(m_libcmyth, "cmyth_livetv_chain_switch");
-if (LivetvChainSwitch == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_chain_switch == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvChainSwitchLast      = (int (*)(cmyth_recorder_t rec))
+    cmyth_livetv_chain_switch_last      = (int (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_livetv_chain_switch_last");
-if (LivetvChainSwitchLast == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_chain_switch_last == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvChainUpdate      = (int (*)(cmyth_recorder_t rec, char* chainid,int tcp_rcvbuf))
+    cmyth_livetv_chain_update      = (int (*)(cmyth_recorder_t rec, char* chainid,int tcp_rcvbuf))
 dlsym(m_libcmyth, "cmyth_livetv_chain_update");
-if (LivetvChainUpdate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_chain_update == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    SpawnLiveTv      = (cmyth_recorder_t (*)(cmyth_recorder_t rec,unsigned buflen,int tcp_rcvbuf,  void (* prog_update_callback)(cmyth_proginfo_t),char** err, char* channame))
+    cmyth_spawn_live_tv      = (cmyth_recorder_t (*)(cmyth_recorder_t rec,unsigned buflen,int tcp_rcvbuf,  void (* prog_update_callback)(cmyth_proginfo_t),char** err, char* channame))
 dlsym(m_libcmyth, "cmyth_spawn_live_tv");
-if (SpawnLiveTv == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_spawn_live_tv == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvChainSetup      = (cmyth_recorder_t (*)(cmyth_recorder_t old_rec, int tcp_rcvbuf, void (* prog_update_callback)(cmyth_proginfo_t)))
+    cmyth_livetv_chain_setup      = (cmyth_recorder_t (*)(cmyth_recorder_t old_rec, int tcp_rcvbuf, void (* prog_update_callback)(cmyth_proginfo_t)))
 dlsym(m_libcmyth, "cmyth_livetv_chain_setup");
-if (LivetvChainSetup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_chain_setup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvGetBlock      = (int (*)(cmyth_recorder_t rec, char* buf, unsigned long len))
+    cmyth_livetv_get_block      = (int (*)(cmyth_recorder_t rec, char* buf, unsigned long len))
 dlsym(m_libcmyth, "cmyth_livetv_get_block");
-if (LivetvGetBlock == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_get_block == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvSelect      = (int (*)(cmyth_recorder_t rec, struct timeval* timeout))
+    cmyth_livetv_select      = (int (*)(cmyth_recorder_t rec, struct timeval* timeout))
 dlsym(m_libcmyth, "cmyth_livetv_select");
-if (LivetvSelect == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_select == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvRequestBlock      = (int (*)(cmyth_recorder_t rec, unsigned long len))
+    cmyth_livetv_request_block      = (int (*)(cmyth_recorder_t rec, unsigned long len))
 dlsym(m_libcmyth, "cmyth_livetv_request_block");
-if (LivetvRequestBlock == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_request_block == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvSeek      = (long long (*)(cmyth_recorder_t rec,long long offset, int whence))
+    cmyth_livetv_seek      = (long long (*)(cmyth_recorder_t rec,long long offset, int whence))
 dlsym(m_libcmyth, "cmyth_livetv_seek");
-if (LivetvSeek == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_seek == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvRead      = (int (*)(cmyth_recorder_t rec,  char* buf,  unsigned long len))
+    cmyth_livetv_read      = (int (*)(cmyth_recorder_t rec,  char* buf,  unsigned long len))
 dlsym(m_libcmyth, "cmyth_livetv_read");
-if (LivetvRead == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_read == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    LivetvKeepRecording      = (int (*)(cmyth_recorder_t rec, cmyth_database_t db, int keep))
+    cmyth_livetv_keep_recording      = (int (*)(cmyth_recorder_t rec, cmyth_database_t db, int keep))
 dlsym(m_libcmyth, "cmyth_livetv_keep_recording");
-if (LivetvKeepRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_livetv_keep_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    DatabaseInit      = (cmyth_database_t (*)(char* host, char* db_name, char* user, char* pass))
+    cmyth_database_init      = (cmyth_database_t (*)(char* host, char* db_name, char* user, char* pass))
 dlsym(m_libcmyth, "cmyth_database_init");
-if (DatabaseInit == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_database_init == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    DatabaseClose     = (void (*)(cmyth_database_t db))
+    cmyth_database_close     = (void (*)(cmyth_database_t db))
 dlsym(m_libcmyth, "cmyth_database_close");
-if (DatabaseClose == NULL)     { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_database_close == NULL)     { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    DatabaseSetHost      = (int (*)(cmyth_database_t db, char* host))
+    cmyth_database_set_host      = (int (*)(cmyth_database_t db, char* host))
 dlsym(m_libcmyth, "cmyth_database_set_host");
-if (DatabaseSetHost == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_database_set_host == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    DatabaseSetUser      = (int (*)(cmyth_database_t db, char* user))
+    cmyth_database_set_user      = (int (*)(cmyth_database_t db, char* user))
 dlsym(m_libcmyth, "cmyth_database_set_user");
-if (DatabaseSetUser == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_database_set_user == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    DatabaseSetPass      = (int (*)(cmyth_database_t db, char* pass))
+    cmyth_database_set_pass      = (int (*)(cmyth_database_t db, char* pass))
 dlsym(m_libcmyth, "cmyth_database_set_pass");
-if (DatabaseSetPass == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_database_set_pass == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    DatabaseSetName      = (int (*)(cmyth_database_t db, char* name))
+    cmyth_database_set_name      = (int (*)(cmyth_database_t db, char* name))
 dlsym(m_libcmyth, "cmyth_database_set_name");
-if (DatabaseSetName == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_database_set_name == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    SetWatchedStatusMysql      = (int (*)(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat))
+    cmyth_set_watched_status_mysql      = (int (*)(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat))
 dlsym(m_libcmyth, "cmyth_set_watched_status_mysql");
-if (SetWatchedStatusMysql == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_set_watched_status_mysql == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RingbufPathname      = (char* (*)(cmyth_recorder_t rec))
+    cmyth_ringbuf_pathname      = (char* (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_ringbuf_pathname");
-if (RingbufPathname == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_ringbuf_pathname == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RingbufCreate      = (cmyth_ringbuf_t (*)(void))
+    cmyth_ringbuf_create      = (cmyth_ringbuf_t (*)(void))
 dlsym(m_libcmyth, "cmyth_ringbuf_create");
-if (RingbufCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_ringbuf_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RingbufSetup      = (cmyth_recorder_t (*)(cmyth_recorder_t old_rec))
+    cmyth_ringbuf_setup      = (cmyth_recorder_t (*)(cmyth_recorder_t old_rec))
 dlsym(m_libcmyth, "cmyth_ringbuf_setup");
-if (RingbufSetup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_ringbuf_setup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RingbufRequestBlock      = (int (*)(cmyth_recorder_t rec, unsigned long len))
+    cmyth_ringbuf_request_block      = (int (*)(cmyth_recorder_t rec, unsigned long len))
 dlsym(m_libcmyth, "cmyth_ringbuf_request_block");
-if (RingbufRequestBlock == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_ringbuf_request_block == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RingbufSelect      = (int (*)(cmyth_recorder_t rec, struct timeval* timeout))
+    cmyth_ringbuf_select      = (int (*)(cmyth_recorder_t rec, struct timeval* timeout))
 dlsym(m_libcmyth, "cmyth_ringbuf_select");
-if (RingbufSelect == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_ringbuf_select == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RingbufGetBlock      = (int (*)(cmyth_recorder_t rec,char* buf,unsigned long len))
+    cmyth_ringbuf_get_block      = (int (*)(cmyth_recorder_t rec,char* buf,unsigned long len))
 dlsym(m_libcmyth, "cmyth_ringbuf_get_block");
-if (RingbufGetBlock == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_ringbuf_get_block == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RingbufSeek      = (long long (*)(cmyth_recorder_t rec, long long offset, int whence))
+    cmyth_ringbuf_seek      = (long long (*)(cmyth_recorder_t rec, long long offset, int whence))
 dlsym(m_libcmyth, "cmyth_ringbuf_seek");
-if (RingbufSeek == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_ringbuf_seek == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RingbufRead      = (int (*)(cmyth_recorder_t rec,char* buf,unsigned long len))
+    cmyth_ringbuf_read      = (int (*)(cmyth_recorder_t rec,char* buf,unsigned long len))
 dlsym(m_libcmyth, "cmyth_ringbuf_read");
-if (RingbufRead == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_ringbuf_read == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecNumCreate      = (cmyth_rec_num_t (*)(void))
+    cmyth_rec_num_create      = (cmyth_rec_num_t (*)(void))
 dlsym(m_libcmyth, "cmyth_rec_num_create");
-if (RecNumCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_rec_num_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecNumGet      = (cmyth_rec_num_t (*)(char* host, unsigned short port, unsigned id))
+    cmyth_rec_num_get      = (cmyth_rec_num_t (*)(char* host, unsigned short port, unsigned id))
 dlsym(m_libcmyth, "cmyth_rec_num_get");
-if (RecNumGet == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_rec_num_get == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RecNumString      = (char* (*)(cmyth_rec_num_t rn))
+    cmyth_rec_num_string      = (char* (*)(cmyth_rec_num_t rn))
 dlsym(m_libcmyth, "cmyth_rec_num_string");
-if (RecNumString == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_rec_num_string == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimestampCreate      = (cmyth_timestamp_t (*)(void))
+    cmyth_timestamp_create      = (cmyth_timestamp_t (*)(void))
 dlsym(m_libcmyth, "cmyth_timestamp_create");
-if (TimestampCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timestamp_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimestampFromString      = (cmyth_timestamp_t (*)(char* str))
+    cmyth_timestamp_from_string      = (cmyth_timestamp_t (*)(char* str))
 dlsym(m_libcmyth, "cmyth_timestamp_from_string");
-if (TimestampFromString == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timestamp_from_string == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimestampFromUnixtime      = (cmyth_timestamp_t (*)(time_t l))
+    cmyth_timestamp_from_unixtime      = (cmyth_timestamp_t (*)(time_t l))
 dlsym(m_libcmyth, "cmyth_timestamp_from_unixtime");
-if (TimestampFromUnixtime == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timestamp_from_unixtime == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimestampToUnixtime      = (time_t (*)(cmyth_timestamp_t ts))
+    cmyth_timestamp_to_unixtime      = (time_t (*)(cmyth_timestamp_t ts))
 dlsym(m_libcmyth, "cmyth_timestamp_to_unixtime");
-if (TimestampToUnixtime == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timestamp_to_unixtime == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimestampToString      = (int (*)(char* str, cmyth_timestamp_t ts))
+    cmyth_timestamp_to_string      = (int (*)(char* str, cmyth_timestamp_t ts))
 dlsym(m_libcmyth, "cmyth_timestamp_to_string");
-if (TimestampToString == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timestamp_to_string == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimestampToIsostring      = (int (*)(char* str, cmyth_timestamp_t ts))
+    cmyth_timestamp_to_isostring      = (int (*)(char* str, cmyth_timestamp_t ts))
 dlsym(m_libcmyth, "cmyth_timestamp_to_isostring");
-if (TimestampToIsostring == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timestamp_to_isostring == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimestampToDisplayString      = (int (*)(char* str, cmyth_timestamp_t ts, int time_format_12))
+    cmyth_timestamp_to_display_string      = (int (*)(char* str, cmyth_timestamp_t ts, int time_format_12))
 dlsym(m_libcmyth, "cmyth_timestamp_to_display_string");
-if (TimestampToDisplayString == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timestamp_to_display_string == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    DatetimeToString      = (int (*)(char* str, cmyth_timestamp_t ts))
+    cmyth_datetime_to_string      = (int (*)(char* str, cmyth_timestamp_t ts))
 dlsym(m_libcmyth, "cmyth_datetime_to_string");
-if (DatetimeToString == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_datetime_to_string == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimestampCompare      = (int (*)(cmyth_timestamp_t ts1,cmyth_timestamp_t ts2))
+    cmyth_timestamp_compare      = (int (*)(cmyth_timestamp_t ts1,cmyth_timestamp_t ts2))
 dlsym(m_libcmyth, "cmyth_timestamp_compare");
-if (TimestampCompare == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timestamp_compare == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    KeyframeCreate      = (cmyth_keyframe_t (*)(void))
+    cmyth_keyframe_create      = (cmyth_keyframe_t (*)(void))
 dlsym(m_libcmyth, "cmyth_keyframe_create");
-if (KeyframeCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_keyframe_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    KeyframeString      = (char* (*)(cmyth_keyframe_t kf))
+    cmyth_keyframe_string      = (char* (*)(cmyth_keyframe_t kf))
 dlsym(m_libcmyth, "cmyth_keyframe_string");
-if (KeyframeString == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_keyframe_string == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    PosmapCreate      = (cmyth_posmap_t (*)(void))
+    cmyth_posmap_create      = (cmyth_posmap_t (*)(void))
 dlsym(m_libcmyth, "cmyth_posmap_create");
-if (PosmapCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_posmap_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoCreate      = (cmyth_proginfo_t (*)(void))
+    cmyth_proginfo_create      = (cmyth_proginfo_t (*)(void))
 dlsym(m_libcmyth, "cmyth_proginfo_create");
-if (ProginfoCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoStopRecording      = (int (*)(cmyth_conn_t control, cmyth_proginfo_t prog))
+    cmyth_proginfo_stop_recording      = (int (*)(cmyth_conn_t control, cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_stop_recording");
-if (ProginfoStopRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_stop_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoCheckRecording      = (int (*)(cmyth_conn_t control,  cmyth_proginfo_t prog))
+    cmyth_proginfo_check_recording      = (int (*)(cmyth_conn_t control,  cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_check_recording");
-if (ProginfoCheckRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_check_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoDeleteRecording      = (int (*)(cmyth_conn_t control,cmyth_proginfo_t prog))
+    cmyth_proginfo_delete_recording      = (int (*)(cmyth_conn_t control,cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_delete_recording");
-if (ProginfoDeleteRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_delete_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoForgetRecording      = (int (*)(cmyth_conn_t control,cmyth_proginfo_t prog))
+    cmyth_proginfo_forget_recording      = (int (*)(cmyth_conn_t control,cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_forget_recording");
-if (ProginfoForgetRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_forget_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoGetRecorderNum      = (int (*)(cmyth_conn_t control,cmyth_rec_num_t rnum,cmyth_proginfo_t prog))
+    cmyth_proginfo_get_recorder_num      = (int (*)(cmyth_conn_t control,cmyth_rec_num_t rnum,cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_get_recorder_num");
-if (ProginfoGetRecorderNum == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_get_recorder_num == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoGetFromBasename      = (cmyth_proginfo_t (*)(cmyth_conn_t control, const char* basename))
+    cmyth_proginfo_get_from_basename      = (cmyth_proginfo_t (*)(cmyth_conn_t control, const char* basename))
 dlsym(m_libcmyth, "cmyth_proginfo_get_from_basename");
-if (ProginfoGetFromBasename == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_get_from_basename == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoTitle      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_title      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_title");
-if (ProginfoTitle == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_title == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoSubtitle      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_subtitle      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_subtitle");
-if (ProginfoSubtitle == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_subtitle == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoDescription      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_description      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_description");
-if (ProginfoDescription == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_description == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoCategory      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_category      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_category");
-if (ProginfoCategory == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_category == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoChanstr      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_chanstr      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_chanstr");
-if (ProginfoChanstr == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_chanstr == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoChansign      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_chansign      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_chansign");
-if (ProginfoChansign == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_chansign == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoChanname      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_channame      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_channame");
-if (ProginfoChanname == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_channame == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoChanId      = (long (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_chan_id      = (long (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_chan_id");
-if (ProginfoChanId == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_chan_id == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoPathname      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_pathname      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_pathname");
-if (ProginfoPathname == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_pathname == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoSeriesid      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_seriesid      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_seriesid");
-if (ProginfoSeriesid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_seriesid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoProgramid      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_programid      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_programid");
-if (ProginfoProgramid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_programid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoRecordid      = (unsigned long (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_recordid      = (unsigned long (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_recordid");
-if (ProginfoRecordid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_recordid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoPriority      = (long (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_priority      = (long (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_priority");
-if (ProginfoPriority == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_priority == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoStars      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_stars      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_stars");
-if (ProginfoStars == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_stars == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoRecStart      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_rec_start      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_rec_start");
-if (ProginfoRecStart == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_rec_start == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoRecEnd      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_rec_end      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_rec_end");
-if (ProginfoRecEnd == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_rec_end == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoOriginalairdate      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_originalairdate      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_originalairdate");
-if (ProginfoOriginalairdate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_originalairdate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoRecStatus      = (cmyth_proginfo_rec_status_t (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_rec_status      = (cmyth_proginfo_rec_status_t (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_rec_status");
-if (ProginfoRecStatus == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_rec_status == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoFlags      = (unsigned long (*)(  cmyth_proginfo_t prog))
+    cmyth_proginfo_flags      = (unsigned long (*)(  cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_flags");
-if (ProginfoFlags == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_flags == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoLength      = (long long (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_length      = (long long (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_length");
-if (ProginfoLength == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_length == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoHost      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_host      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_host");
-if (ProginfoHost == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_host == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoCompare      = (int (*)(cmyth_proginfo_t a, cmyth_proginfo_t b))
+    cmyth_proginfo_compare      = (int (*)(cmyth_proginfo_t a, cmyth_proginfo_t b))
 dlsym(m_libcmyth, "cmyth_proginfo_compare");
-if (ProginfoCompare == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_compare == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoLengthSec      = (int (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_length_sec      = (int (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_length_sec");
-if (ProginfoLengthSec == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_length_sec == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoGetDetail      = (cmyth_proginfo_t (*)(cmyth_conn_t control,  cmyth_proginfo_t p))
+    cmyth_proginfo_get_detail      = (cmyth_proginfo_t (*)(cmyth_conn_t control,  cmyth_proginfo_t p))
 dlsym(m_libcmyth, "cmyth_proginfo_get_detail");
-if (ProginfoGetDetail == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_get_detail == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoStart      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_start      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_start");
-if (ProginfoStart == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_start == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoEnd      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_end      = (cmyth_timestamp_t (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_end");
-if (ProginfoEnd == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_end == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoCardId      = (long (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_card_id      = (long (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_card_id");
-if (ProginfoCardId == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_card_id == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoRecgroup      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_recgroup      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_recgroup");
-if (ProginfoRecgroup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_recgroup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoChanicon      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_chanicon      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_chanicon");
-if (ProginfoChanicon == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_chanicon == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProginfoYear      = (char* (*)(cmyth_proginfo_t prog))
+    cmyth_proginfo_year      = (char* (*)(cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proginfo_year");
-if (ProginfoYear == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proginfo_year == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProglistCreate      = (cmyth_proglist_t (*)(void))
+    cmyth_proglist_create      = (cmyth_proglist_t (*)(void))
 dlsym(m_libcmyth, "cmyth_proglist_create");
-if (ProglistCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proglist_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProglistGetAllRecorded      = (cmyth_proglist_t (*)(cmyth_conn_t control))
+    cmyth_proglist_get_all_recorded      = (cmyth_proglist_t (*)(cmyth_conn_t control))
 dlsym(m_libcmyth, "cmyth_proglist_get_all_recorded");
-if (ProglistGetAllRecorded == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proglist_get_all_recorded == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProglistGetAllPending      = (cmyth_proglist_t (*)(cmyth_conn_t control))
+    cmyth_proglist_get_all_pending      = (cmyth_proglist_t (*)(cmyth_conn_t control))
 dlsym(m_libcmyth, "cmyth_proglist_get_all_pending");
-if (ProglistGetAllPending == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proglist_get_all_pending == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProglistGetAllScheduled      = (cmyth_proglist_t (*)(cmyth_conn_t control))
+    cmyth_proglist_get_all_scheduled      = (cmyth_proglist_t (*)(cmyth_conn_t control))
 dlsym(m_libcmyth, "cmyth_proglist_get_all_scheduled");
-if (ProglistGetAllScheduled == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proglist_get_all_scheduled == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProglistGetConflicting      = (cmyth_proglist_t (*)(cmyth_conn_t control))
+    cmyth_proglist_get_conflicting      = (cmyth_proglist_t (*)(cmyth_conn_t control))
 dlsym(m_libcmyth, "cmyth_proglist_get_conflicting");
-if (ProglistGetConflicting == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proglist_get_conflicting == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProglistGetItem      = (cmyth_proginfo_t (*)(cmyth_proglist_t pl,int index))
+    cmyth_proglist_get_item      = (cmyth_proginfo_t (*)(cmyth_proglist_t pl,int index))
 dlsym(m_libcmyth, "cmyth_proglist_get_item");
-if (ProglistGetItem == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proglist_get_item == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProglistDeleteItem      = (int (*)(cmyth_proglist_t pl,cmyth_proginfo_t prog))
+    cmyth_proglist_delete_item      = (int (*)(cmyth_proglist_t pl,cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_proglist_delete_item");
-if (ProglistDeleteItem == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proglist_delete_item == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProglistGetCount      = (int (*)(cmyth_proglist_t pl))
+    cmyth_proglist_get_count      = (int (*)(cmyth_proglist_t pl))
 dlsym(m_libcmyth, "cmyth_proglist_get_count");
-if (ProglistGetCount == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proglist_get_count == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ProglistSort      = (int (*)(cmyth_proglist_t pl, int count, cmyth_proglist_sort_t sort))
+    cmyth_proglist_sort      = (int (*)(cmyth_proglist_t pl, int count, cmyth_proglist_sort_t sort))
 dlsym(m_libcmyth, "cmyth_proglist_sort");
-if (ProglistSort == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_proglist_sort == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FileData      = (cmyth_conn_t (*)(cmyth_file_t file))
+    cmyth_file_data      = (cmyth_conn_t (*)(cmyth_file_t file))
 dlsym(m_libcmyth, "cmyth_file_data");
-if (FileData == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_data == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FileStart      = (unsigned long long (*)(cmyth_file_t file))
+    cmyth_file_start      = (unsigned long long (*)(cmyth_file_t file))
 dlsym(m_libcmyth, "cmyth_file_start");
-if (FileStart == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_start == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FileLength      = (unsigned long long (*)(cmyth_file_t file))
+    cmyth_file_length      = (unsigned long long (*)(cmyth_file_t file))
 dlsym(m_libcmyth, "cmyth_file_length");
-if (FileLength == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_length == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FilePosition      = (unsigned long long (*)(cmyth_file_t file))
+    cmyth_file_position      = (unsigned long long (*)(cmyth_file_t file))
 dlsym(m_libcmyth, "cmyth_file_position");
-if (FilePosition == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_position == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    UpdateFileLength      = (int (*)(cmyth_file_t file, unsigned long long newLength))
+    cmyth_update_file_length      = (int (*)(cmyth_file_t file, unsigned long long newLength))
 dlsym(m_libcmyth, "cmyth_update_file_length");
-if (UpdateFileLength == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_update_file_length == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FileGetBlock      = (int (*)(cmyth_file_t file, char* buf,unsigned long len))
+    cmyth_file_get_block      = (int (*)(cmyth_file_t file, char* buf,unsigned long len))
 dlsym(m_libcmyth, "cmyth_file_get_block");
-if (FileGetBlock == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_get_block == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FileRequestBlock      = (int (*)(cmyth_file_t file, unsigned long len))
+    cmyth_file_request_block      = (int (*)(cmyth_file_t file, unsigned long len))
 dlsym(m_libcmyth, "cmyth_file_request_block");
-if (FileRequestBlock == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_request_block == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FileSeek      = (long long (*)(cmyth_file_t file, long long offset, int whence))
+    cmyth_file_seek      = (long long (*)(cmyth_file_t file, long long offset, int whence))
 dlsym(m_libcmyth, "cmyth_file_seek");
-if (FileSeek == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_seek == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FileSelect      = (int (*)(cmyth_file_t file, struct timeval* timeout))
+    cmyth_file_select      = (int (*)(cmyth_file_t file, struct timeval* timeout))
 dlsym(m_libcmyth, "cmyth_file_select");
-if (FileSelect == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_select == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FileSetClosedCallback      = (void (*)(cmyth_file_t file,void (* callback)(cmyth_file_t)))
+    cmyth_file_set_closed_callback      = (void (*)(cmyth_file_t file,void (* callback)(cmyth_file_t)))
 dlsym(m_libcmyth, "cmyth_file_set_closed_callback");
-if (FileSetClosedCallback == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_set_closed_callback == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FileRead      = (int (*)(cmyth_file_t file,char* buf,unsigned long len))
+    cmyth_file_read      = (int (*)(cmyth_file_t file,char* buf,unsigned long len))
 dlsym(m_libcmyth, "cmyth_file_read");
-if (FileRead == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_file_read == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChannelChanid      = (long (*)(cmyth_channel_t channel))
+    cmyth_channel_chanid      = (long (*)(cmyth_channel_t channel))
 dlsym(m_libcmyth, "cmyth_channel_chanid");
-if (ChannelChanid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_channel_chanid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChannelChannum      = (long (*)(cmyth_channel_t channel))
+    cmyth_channel_channum      = (long (*)(cmyth_channel_t channel))
 dlsym(m_libcmyth, "cmyth_channel_channum");
-if (ChannelChannum == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_channel_channum == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChannelChannumstr      = (char* (*)(cmyth_channel_t channel))
+    cmyth_channel_channumstr      = (char* (*)(cmyth_channel_t channel))
 dlsym(m_libcmyth, "cmyth_channel_channumstr");
-if (ChannelChannumstr == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_channel_channumstr == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChannelCallsign      = (char* (*)(cmyth_channel_t channel))
+    cmyth_channel_callsign      = (char* (*)(cmyth_channel_t channel))
 dlsym(m_libcmyth, "cmyth_channel_callsign");
-if (ChannelCallsign == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_channel_callsign == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChannelName      = (char* (*)(cmyth_channel_t channel))
+    cmyth_channel_name      = (char* (*)(cmyth_channel_t channel))
 dlsym(m_libcmyth, "cmyth_channel_name");
-if (ChannelName == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_channel_name == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChannelIcon      = (char* (*)(cmyth_channel_t channel))
+    cmyth_channel_icon      = (char* (*)(cmyth_channel_t channel))
 dlsym(m_libcmyth, "cmyth_channel_icon");
-if (ChannelIcon == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_channel_icon == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChannelVisible      = (int (*)(cmyth_channel_t channel))
+    cmyth_channel_visible      = (int (*)(cmyth_channel_t channel))
 dlsym(m_libcmyth, "cmyth_channel_visible");
-if (ChannelVisible == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_channel_visible == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChanlistGetItem      = (cmyth_channel_t (*)(cmyth_chanlist_t pl, int index))
+    cmyth_chanlist_get_item      = (cmyth_channel_t (*)(cmyth_chanlist_t pl, int index))
 dlsym(m_libcmyth, "cmyth_chanlist_get_item");
-if (ChanlistGetItem == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_chanlist_get_item == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChanlistGetCount      = (int (*)(cmyth_chanlist_t pl))
+    cmyth_chanlist_get_count      = (int (*)(cmyth_chanlist_t pl))
 dlsym(m_libcmyth, "cmyth_chanlist_get_count");
-if (ChanlistGetCount == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_chanlist_get_count == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    FreespaceCreate      = (cmyth_freespace_t (*)(void))
+    cmyth_freespace_create      = (cmyth_freespace_t (*)(void))
 dlsym(m_libcmyth, "cmyth_freespace_create");
-if (FreespaceCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_freespace_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetBookmark      = (long long (*)(cmyth_conn_t conn, cmyth_proginfo_t prog))
+    cmyth_get_bookmark      = (long long (*)(cmyth_conn_t conn, cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_get_bookmark");
-if (GetBookmark == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_get_bookmark == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetBookmarkOffset      = (int (*)(cmyth_database_t db, long chanid, long long mark, char *starttime, int mode))
+    cmyth_get_bookmark_offset      = (int (*)(cmyth_database_t db, long chanid, long long mark, char *starttime, int mode))
 dlsym(m_libcmyth, "cmyth_get_bookmark_offset");
-if (GetBookmarkOffset == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_get_bookmark_offset == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetBookmarkMark      = (long long (*)(cmyth_database_t db, cmyth_proginfo_t prog, long long bk, int mode))
+    cmyth_get_bookmark_mark      = (long long (*)(cmyth_database_t db, cmyth_proginfo_t prog, long long bk, int mode))
 dlsym(m_libcmyth, "cmyth_get_bookmark_mark");
-if (GetBookmarkMark == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_get_bookmark_mark == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    SetBookmark      = (int (*)(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookmark))
+    cmyth_set_bookmark      = (int (*)(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookmark))
 dlsym(m_libcmyth, "cmyth_set_bookmark");
-if (SetBookmark == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_set_bookmark == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    CommbreaklistCreate      = (cmyth_commbreaklist_t (*)(void))
+    cmyth_commbreaklist_create      = (cmyth_commbreaklist_t (*)(void))
 dlsym(m_libcmyth, "cmyth_commbreaklist_create");
-if (CommbreaklistCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_commbreaklist_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    CommbreakCreate      = (cmyth_commbreak_t (*)(void))
+    cmyth_commbreak_create      = (cmyth_commbreak_t (*)(void))
 dlsym(m_libcmyth, "cmyth_commbreak_create");
-if (CommbreakCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_commbreak_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetCommbreaklist      = (cmyth_commbreaklist_t (*)(cmyth_conn_t conn, cmyth_proginfo_t prog))
+    cmyth_get_commbreaklist      = (cmyth_commbreaklist_t (*)(cmyth_conn_t conn, cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_get_commbreaklist");
-if (GetCommbreaklist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_get_commbreaklist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetCutlist      = (cmyth_commbreaklist_t (*)(cmyth_conn_t conn, cmyth_proginfo_t prog))
+    cmyth_get_cutlist      = (cmyth_commbreaklist_t (*)(cmyth_conn_t conn, cmyth_proginfo_t prog))
 dlsym(m_libcmyth, "cmyth_get_cutlist");
-if (GetCutlist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_get_cutlist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RcvCommbreaklist      = (int (*)(cmyth_conn_t conn, int* err, cmyth_commbreaklist_t breaklist, int count))
+    cmyth_rcv_commbreaklist      = (int (*)(cmyth_conn_t conn, int* err, cmyth_commbreaklist_t breaklist, int count))
 dlsym(m_libcmyth, "cmyth_rcv_commbreaklist");
-if (RcvCommbreaklist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_rcv_commbreaklist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    InputlistCreate      = (cmyth_inputlist_t (*)(void))
+    cmyth_inputlist_create      = (cmyth_inputlist_t (*)(void))
 dlsym(m_libcmyth, "cmyth_inputlist_create");
-if (InputlistCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_inputlist_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    InputCreate       = (cmyth_input_t (*)(void))
+    cmyth_input_create       = (cmyth_input_t (*)(void))
 dlsym(m_libcmyth, "cmyth_input_create");
-if (InputCreate == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_input_create == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetFreeInputlist      = (cmyth_inputlist_t (*)(cmyth_recorder_t rec))
+    cmyth_get_free_inputlist      = (cmyth_inputlist_t (*)(cmyth_recorder_t rec))
 dlsym(m_libcmyth, "cmyth_get_free_inputlist");
-if (GetFreeInputlist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_get_free_inputlist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RcvFreeInputlist      = (int (*)(cmyth_conn_t conn, int* err, cmyth_inputlist_t inputlist, int count))
+    cmyth_rcv_free_inputlist      = (int (*)(cmyth_conn_t conn, int* err, cmyth_inputlist_t inputlist, int count))
 dlsym(m_libcmyth, "cmyth_rcv_free_inputlist");
-if (RcvFreeInputlist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_rcv_free_inputlist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetRecgroups      = (int (*)(cmyth_database_t, cmyth_recgroups_t**))
+    cmyth_mysql_get_recgroups      = (int (*)(cmyth_database_t, cmyth_recgroups_t**))
 dlsym(m_libcmyth, "cmyth_mysql_get_recgroups");
-if (MysqlGetRecgroups == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_recgroups == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlDeleteScheduledRecording      = (int (*)(cmyth_database_t db, char* query))
+    cmyth_mysql_delete_scheduled_recording      = (int (*)(cmyth_database_t db, char* query))
 dlsym(m_libcmyth, "cmyth_mysql_delete_scheduled_recording");
-if (MysqlDeleteScheduledRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_delete_scheduled_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlInsertIntoRecord      = (int (*)(cmyth_database_t db, char* query, char* query1, char* query2, char* title, char* subtitle, char* description, char* callsign))
+    cmyth_mysql_insert_into_record      = (int (*)(cmyth_database_t db, char* query, char* query1, char* query2, char* title, char* subtitle, char* description, char* callsign))
 dlsym(m_libcmyth, "cmyth_mysql_insert_into_record");
-if (MysqlInsertIntoRecord == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_insert_into_record == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetRecordidMysql      = (char* (*)(cmyth_database_t, int, char* , char* , char* , char* , char* ))
+    cmyth_get_recordid_mysql      = (char* (*)(cmyth_database_t, int, char* , char* , char* , char* , char* ))
 dlsym(m_libcmyth, "cmyth_get_recordid_mysql");
-if (GetRecordidMysql == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_get_recordid_mysql == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetOffsetMysql      = (int (*)(cmyth_database_t, int, char* , int, char* , char* , char* , char* , char* ))
+    cmyth_get_offset_mysql      = (int (*)(cmyth_database_t, int, char* , int, char* , char* , char* , char* , char* ))
 dlsym(m_libcmyth, "cmyth_get_offset_mysql");
-if (GetOffsetMysql == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_get_offset_mysql == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetProgFinderCharTitle      = (int (*)(cmyth_database_t db, cmyth_program_t**prog, time_t starttime, char* program_name))
+    cmyth_mysql_get_prog_finder_char_title      = (int (*)(cmyth_database_t db, cmyth_program_t**prog, time_t starttime, char* program_name))
 dlsym(m_libcmyth, "cmyth_mysql_get_prog_finder_char_title");
-if (MysqlGetProgFinderCharTitle == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_prog_finder_char_title == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetProgFinderTime      = (int (*)(cmyth_database_t db, cmyth_program_t**prog,  time_t starttime, char* program_name))
+    cmyth_mysql_get_prog_finder_time      = (int (*)(cmyth_database_t db, cmyth_program_t**prog,  time_t starttime, char* program_name))
 dlsym(m_libcmyth, "cmyth_mysql_get_prog_finder_time");
-if (MysqlGetProgFinderTime == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_prog_finder_time == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetGuide      = (int (*)(cmyth_database_t db, cmyth_program_t**prog, time_t starttime, time_t endtime))
+    cmyth_mysql_get_guide      = (int (*)(cmyth_database_t db, cmyth_program_t**prog, time_t starttime, time_t endtime))
 dlsym(m_libcmyth, "cmyth_mysql_get_guide");
-if (MysqlGetGuide == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_guide == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlTestdbConnection      = (int (*)(cmyth_database_t db,char**message))
+    cmyth_mysql_testdb_connection      = (int (*)(cmyth_database_t db,char**message))
 dlsym(m_libcmyth, "cmyth_mysql_testdb_connection");
-if (MysqlTestdbConnection == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_testdb_connection == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ScheduleRecording      = (int (*)(cmyth_conn_t conn, char* msg))
+    cmyth_schedule_recording      = (int (*)(cmyth_conn_t conn, char* msg))
 dlsym(m_libcmyth, "cmyth_schedule_recording");
-if (ScheduleRecording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_schedule_recording == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlEscapeChars      = (char* (*)(cmyth_database_t db, char* string))
+    cmyth_mysql_escape_chars      = (char* (*)(cmyth_database_t db, char* string))
 dlsym(m_libcmyth, "cmyth_mysql_escape_chars");
-if (MysqlEscapeChars == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_escape_chars == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetCommbreakList      = (int (*)(cmyth_database_t db, int chanid, char* start_ts_dt, cmyth_commbreaklist_t breaklist, int conn_version))
+    cmyth_mysql_get_commbreak_list      = (int (*)(cmyth_database_t db, int chanid, char* start_ts_dt, cmyth_commbreaklist_t breaklist, int conn_version))
 dlsym(m_libcmyth, "cmyth_mysql_get_commbreak_list");
-if (MysqlGetCommbreakList == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_commbreak_list == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetPrevRecorded      = (int (*)(cmyth_database_t db, cmyth_program_t**prog))
+    cmyth_mysql_get_prev_recorded      = (int (*)(cmyth_database_t db, cmyth_program_t**prog))
 dlsym(m_libcmyth, "cmyth_mysql_get_prev_recorded");
-if (MysqlGetPrevRecorded == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_prev_recorded == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    GetDeleteList      = (int (*)(cmyth_conn_t, char* , cmyth_proglist_t))
+    cmyth_get_delete_list      = (int (*)(cmyth_conn_t, char* , cmyth_proglist_t))
 dlsym(m_libcmyth, "cmyth_get_delete_list");
-if (GetDeleteList == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_get_delete_list == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MythtvRemovePreviousRecorded      = (int (*)(cmyth_database_t db,char* query))
+    cmyth_mythtv_remove_previous_recorded      = (int (*)(cmyth_database_t db,char* query))
 dlsym(m_libcmyth, "cmyth_mythtv_remove_previous_recorded");
-if (MythtvRemovePreviousRecorded == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mythtv_remove_previous_recorded == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetChanlist      = (cmyth_chanlist_t (*)(cmyth_database_t db))
+    cmyth_mysql_get_chanlist      = (cmyth_chanlist_t (*)(cmyth_database_t db))
 dlsym(m_libcmyth, "cmyth_mysql_get_chanlist");
-if (MysqlGetChanlist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_chanlist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlIsRadio      = (int (*)(cmyth_database_t db, int chanid))
+    cmyth_mysql_is_radio      = (int (*)(cmyth_database_t db, int chanid))
 dlsym(m_libcmyth, "cmyth_mysql_is_radio");
-if (MysqlIsRadio == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_is_radio == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerRecordid      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_recordid      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_recordid");
-if (TimerRecordid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_recordid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerChanid      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_chanid      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_chanid");
-if (TimerChanid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_chanid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerStarttime      = (time_t (*)(cmyth_timer_t timer))
+    cmyth_timer_starttime      = (time_t (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_starttime");
-if (TimerStarttime == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_starttime == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerEndtime      = (time_t (*)(cmyth_timer_t timer))
+    cmyth_timer_endtime      = (time_t (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_endtime");
-if (TimerEndtime == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_endtime == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerTitle      = (char* (*)(cmyth_timer_t timer))
+    cmyth_timer_title      = (char* (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_title");
-if (TimerTitle == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_title == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerDescription      = (char* (*)(cmyth_timer_t timer))
+    cmyth_timer_description      = (char* (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_description");
-if (TimerDescription == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_description == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerType      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_type      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_type");
-if (TimerType == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_type == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerCategory      = (char* (*)(cmyth_timer_t timer))
+    cmyth_timer_category      = (char* (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_category");
-if (TimerCategory == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_category == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerSubtitle      = (char* (*)(cmyth_timer_t timer))
+    cmyth_timer_subtitle      = (char* (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_subtitle");
-if (TimerSubtitle == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_subtitle == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerPriority      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_priority      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_priority");
-if (TimerPriority == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_priority == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerStartoffset      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_startoffset      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_startoffset");
-if (TimerStartoffset == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_startoffset == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerEndoffset      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_endoffset      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_endoffset");
-if (TimerEndoffset == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_endoffset == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerSearchtype      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_searchtype      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_searchtype");
-if (TimerSearchtype == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_searchtype == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerInactive      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_inactive      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_inactive");
-if (TimerInactive == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_inactive == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerCallsign      = (char* (*)(cmyth_timer_t timer))
+    cmyth_timer_callsign      = (char* (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_callsign");
-if (TimerCallsign == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_callsign == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerDupMethod      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_dup_method      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_dup_method");
-if (TimerDupMethod == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_dup_method == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerDupIn      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_dup_in      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_dup_in");
-if (TimerDupIn == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_dup_in == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerRecGroup      = (char* (*)(cmyth_timer_t timer))
+    cmyth_timer_rec_group      = (char* (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_rec_group");
-if (TimerRecGroup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_rec_group == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerStoreGroup      = (char* (*)(cmyth_timer_t timer))
+    cmyth_timer_store_group      = (char* (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_store_group");
-if (TimerStoreGroup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_store_group == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerPlayGroup      = (char* (*)(cmyth_timer_t timer))
+    cmyth_timer_play_group      = (char* (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_play_group");
-if (TimerPlayGroup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_play_group == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerAutotranscode      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_autotranscode      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_autotranscode");
-if (TimerAutotranscode == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_autotranscode == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerUserjobs      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_userjobs      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_userjobs");
-if (TimerUserjobs == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_userjobs == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerAutocommflag      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_autocommflag      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_autocommflag");
-if (TimerAutocommflag == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_autocommflag == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerAutoexpire      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_autoexpire      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_autoexpire");
-if (TimerAutoexpire == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_autoexpire == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerMaxepisodes      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_maxepisodes      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_maxepisodes");
-if (TimerMaxepisodes == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_maxepisodes == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerMaxnewest      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_maxnewest      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_maxnewest");
-if (TimerMaxnewest == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_maxnewest == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerTranscoder      = (int (*)(cmyth_timer_t timer))
+    cmyth_timer_transcoder      = (int (*)(cmyth_timer_t timer))
 dlsym(m_libcmyth, "cmyth_timer_transcoder");
-if (TimerTranscoder == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timer_transcoder == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerlistGetItem      = (cmyth_timer_t (*)(cmyth_timerlist_t pl, int index))
+    cmyth_timerlist_get_item      = (cmyth_timer_t (*)(cmyth_timerlist_t pl, int index))
 dlsym(m_libcmyth, "cmyth_timerlist_get_item");
-if (TimerlistGetItem == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timerlist_get_item == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    TimerlistGetCount      = (int (*)(cmyth_timerlist_t pl))
+    cmyth_timerlist_get_count      = (int (*)(cmyth_timerlist_t pl))
 dlsym(m_libcmyth, "cmyth_timerlist_get_count");
-if (TimerlistGetCount == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_timerlist_get_count == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetTimers      = (cmyth_timerlist_t (*)(cmyth_database_t db))
+    cmyth_mysql_get_timers      = (cmyth_timerlist_t (*)(cmyth_database_t db))
 dlsym(m_libcmyth, "cmyth_mysql_get_timers");
-if (MysqlGetTimers == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_timers == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlAddTimer      = (int (*)(cmyth_database_t db, int chanid,char* callsign,char* description, time_t starttime, time_t endtime,char* title,char* category,int type,char* subtitle,int priority,int startoffset,int endoffset,int searchtype,int inactive,  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder))
+    cmyth_mysql_add_timer      = (int (*)(cmyth_database_t db, int chanid,char* callsign,char* description, time_t starttime, time_t endtime,char* title,char* category,int type,char* subtitle,int priority,int startoffset,int endoffset,int searchtype,int inactive,  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder))
 dlsym(m_libcmyth, "cmyth_mysql_add_timer");
-if (MysqlAddTimer == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_add_timer == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlDeleteTimer      = (int (*)(cmyth_database_t db, int recordid))
+    cmyth_mysql_delete_timer      = (int (*)(cmyth_database_t db, int recordid))
 dlsym(m_libcmyth, "cmyth_mysql_delete_timer");
-if (MysqlDeleteTimer == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_delete_timer == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlUpdateTimer      = (int (*)(cmyth_database_t db, int recordid, int chanid,char* callsign,char* description, time_t starttime, time_t endtime,char* title,char* category, int type,char* subtitle,int priority,int startoffset,int endoffset,int searchtype,int inactive,  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder))
+    cmyth_mysql_update_timer      = (int (*)(cmyth_database_t db, int recordid, int chanid,char* callsign,char* description, time_t starttime, time_t endtime,char* title,char* category, int type,char* subtitle,int priority,int startoffset,int endoffset,int searchtype,int inactive,  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder))
 dlsym(m_libcmyth, "cmyth_mysql_update_timer");
-if (MysqlUpdateTimer == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_update_timer == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetChannelgroups      = (int (*)(cmyth_database_t db,cmyth_channelgroups_t** changroups))
+    cmyth_mysql_get_channelgroups      = (int (*)(cmyth_database_t db,cmyth_channelgroups_t** changroups))
 dlsym(m_libcmyth, "cmyth_mysql_get_channelgroups");
-if (MysqlGetChannelgroups == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_channelgroups == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetChannelidsInGroup      = (int (*)(cmyth_database_t db,unsigned int groupid,int** chanids))
+    cmyth_mysql_get_channelids_in_group      = (int (*)(cmyth_database_t db,unsigned int groupid,int** chanids))
 dlsym(m_libcmyth, "cmyth_mysql_get_channelids_in_group");
-if (MysqlGetChannelidsInGroup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_channelids_in_group == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChannelSourceid      = (int (*)(cmyth_channel_t channel))
+    cmyth_channel_sourceid      = (int (*)(cmyth_channel_t channel))
 dlsym(m_libcmyth, "cmyth_channel_sourceid");
-if (ChannelSourceid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_channel_sourceid == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    ChannelMultiplex      = (int (*)(cmyth_channel_t channel))
+    cmyth_channel_multiplex      = (int (*)(cmyth_channel_t channel))
 dlsym(m_libcmyth, "cmyth_channel_multiplex");
-if (ChannelMultiplex == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_channel_multiplex == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetRecorderList      = (int (*)(cmyth_database_t db,cmyth_rec_t** reclist))
+    cmyth_mysql_get_recorder_list      = (int (*)(cmyth_database_t db,cmyth_rec_t** reclist))
 dlsym(m_libcmyth, "cmyth_mysql_get_recorder_list");
-if (MysqlGetRecorderList == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_recorder_list == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetProgFinderTimeTitleChan      = (int (*)(cmyth_database_t db,cmyth_program_t* prog, char* title,time_t starttime,int chanid))
+    cmyth_mysql_get_prog_finder_time_title_chan      = (int (*)(cmyth_database_t db,cmyth_program_t* prog, char* title,time_t starttime,int chanid))
 dlsym(m_libcmyth, "cmyth_mysql_get_prog_finder_time_title_chan");
-if (MysqlGetProgFinderTimeTitleChan == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_prog_finder_time_title_chan == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetStoragegroups      = (int (*)(cmyth_database_t db, char*** profiles))
+    cmyth_mysql_get_storagegroups      = (int (*)(cmyth_database_t db, char*** profiles))
 dlsym(m_libcmyth, "cmyth_mysql_get_storagegroups");
-if (MysqlGetStoragegroups == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_storagegroups == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetPlaygroups      = (int (*)(cmyth_database_t db, char*** profiles))
+    cmyth_mysql_get_playgroups      = (int (*)(cmyth_database_t db, char*** profiles))
 dlsym(m_libcmyth, "cmyth_mysql_get_playgroups");
-if (MysqlGetPlaygroups == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_playgroups == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetRecprofiles      = (int (*)(cmyth_database_t db, cmyth_recprofile_t** profiles))
+    cmyth_mysql_get_recprofiles      = (int (*)(cmyth_database_t db, cmyth_recprofile_t** profiles))
 dlsym(m_libcmyth, "cmyth_mysql_get_recprofiles");
-if (MysqlGetRecprofiles == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_recprofiles == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    MysqlGetCardtype      = (char* (*)(cmyth_database_t db, int chanid))
+    cmyth_mysql_get_cardtype      = (char* (*)(cmyth_database_t db, int chanid))
 dlsym(m_libcmyth, "cmyth_mysql_get_cardtype");
-if (MysqlGetCardtype == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_mysql_get_cardtype == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    StoragegroupFilelist      = (int (*)(cmyth_conn_t control, char*** sgFilelist, char* sg2List, char*  mythostname))
+    cmyth_storagegroup_filelist      = (int (*)(cmyth_conn_t control, char*** sgFilelist, char* sg2List, char*  mythostname))
 dlsym(m_libcmyth, "cmyth_storagegroup_filelist");
-if (StoragegroupFilelist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_storagegroup_filelist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    StoragegroupFilelistGetItem      = (cmyth_storagegroup_file_t (*)(cmyth_storagegroup_filelist_t fl, int index))
+    cmyth_storagegroup_filelist_get_item      = (cmyth_storagegroup_file_t (*)(cmyth_storagegroup_filelist_t fl, int index))
 dlsym(m_libcmyth, "cmyth_storagegroup_filelist_get_item");
-if (StoragegroupFilelistGetItem == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_storagegroup_filelist_get_item == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    StoragegroupFilelistCount      = (int (*)(cmyth_storagegroup_filelist_t fl))
+    cmyth_storagegroup_filelist_count      = (int (*)(cmyth_storagegroup_filelist_t fl))
 dlsym(m_libcmyth, "cmyth_storagegroup_filelist_count");
-if (StoragegroupFilelistCount == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_storagegroup_filelist_count == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    StoragegroupGetFilelist      = (cmyth_storagegroup_filelist_t (*)(cmyth_conn_t control,char* storagegroup, char* hostname))
+    cmyth_storagegroup_get_filelist      = (cmyth_storagegroup_filelist_t (*)(cmyth_conn_t control,char* storagegroup, char* hostname))
 dlsym(m_libcmyth, "cmyth_storagegroup_get_filelist");
-if (StoragegroupGetFilelist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_storagegroup_get_filelist == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    StoragegroupFileGetFilename      = (char* (*)(cmyth_storagegroup_file_t file))
+    cmyth_storagegroup_file_get_filename      = (char* (*)(cmyth_storagegroup_file_t file))
 dlsym(m_libcmyth, "cmyth_storagegroup_file_get_filename");
-if (StoragegroupFileGetFilename == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_storagegroup_file_get_filename == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    StoragegroupFileGetLastmodified      = (unsigned long (*)(cmyth_storagegroup_file_t file))
+    cmyth_storagegroup_file_get_lastmodified      = (unsigned long (*)(cmyth_storagegroup_file_t file))
 dlsym(m_libcmyth, "cmyth_storagegroup_file_get_lastmodified");
-if (StoragegroupFileGetLastmodified == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_storagegroup_file_get_lastmodified == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    StoragegroupFileGetSize      = (unsigned long long (*)(cmyth_storagegroup_file_t file))
+    cmyth_storagegroup_file_get_size      = (unsigned long long (*)(cmyth_storagegroup_file_t file))
 dlsym(m_libcmyth, "cmyth_storagegroup_file_get_size");
-if (StoragegroupFileGetSize == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (cmyth_storagegroup_file_get_size == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RefRelease      = (void (*)(void* p))
+    ref_release      = (void (*)(void* p))
 dlsym(m_libcmyth, "ref_release");
-if (RefRelease == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (ref_release == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RefHold      = (void* (*)(void* p))
+    ref_hold      = (void* (*)(void* p))
 dlsym(m_libcmyth, "ref_hold");
-if (RefHold == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (ref_hold == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RefStrdup      = (char* (*)(char* str))
+    ref_strdup      = (char* (*)(char* str))
 dlsym(m_libcmyth, "ref_strdup");
-if (RefStrdup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (ref_strdup == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RefRealloc      = (void* (*)(void* p, size_t len))
+    ref_realloc      = (void* (*)(void* p, size_t len))
 dlsym(m_libcmyth, "ref_realloc");
-if (RefRealloc == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (ref_realloc == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RefSetDestroy      = (void (*)(void* block, ref_destroy_t func))
+    ref_set_destroy      = (void (*)(void* block, ref_destroy_t func))
 dlsym(m_libcmyth, "ref_set_destroy");
-if (RefSetDestroy == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (ref_set_destroy == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
-    RefAllocShow      = (void (*)(void))
+    ref_alloc_show      = (void (*)(void))
 dlsym(m_libcmyth, "ref_alloc_show");
-if (RefAllocShow == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
+if (ref_alloc_show == NULL)      { fprintf(stderr, "Unable to assign function %s\n", dlerror()); return false; }
 
   return true;
   }
 
 //dll functions
 
-void (*DbgLevel)(int l);
-void (*DbgAll)(void);
-void (*DbgNone)(void);
-void (*Dbg)(int level, char* fmt, ...);
-void (*SetDbgMsgcallback)(void (* msgcb)(int level,char* ));
-cmyth_conn_t (*ConnConnectCtrl)(char* server, unsigned short port, unsigned buflen, int tcp_rcvbuf);
-int (*ConnReconnectCtrl)(cmyth_conn_t control);
-cmyth_conn_t (*ConnConnectEvent)(char* server,  unsigned short port,  unsigned buflen, int tcp_rcvbuf);
-int (*ConnReconnectEvent)(cmyth_conn_t conn);
-cmyth_file_t (*ConnConnectFile)(cmyth_proginfo_t prog, cmyth_conn_t control, unsigned buflen, int tcp_rcvbuf);
-cmyth_file_t (*ConnConnectPath)(char* path, cmyth_conn_t control, unsigned buflen, int tcp_rcvbuf,char* sgToGetFrom);
-int (*ConnConnectRing)(cmyth_recorder_t rec, unsigned buflen,int tcp_rcvbuf);
-int (*ConnConnectRecorder)(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf);
-int (*ConnCheckBlock)(cmyth_conn_t conn, unsigned long size);
-cmyth_recorder_t (*ConnGetRecorderFromNum)(cmyth_conn_t conn, int num);
-cmyth_recorder_t (*ConnGetFreeRecorder)(cmyth_conn_t conn);
-int (*ConnGetFreespace)(cmyth_conn_t control, long long* total, long long* used);
-int (*ConnHung)(cmyth_conn_t control);
-int (*ConnGetFreeRecorderCount)(cmyth_conn_t conn);
-int (*ConnGetProtocolVersion)(cmyth_conn_t conn);
-char* (*ConnGetSetting)(cmyth_conn_t conn,const char* hostname, const char* setting);
-int (*ConnSetSetting)(cmyth_conn_t conn,const char* hostname, const char* setting, const char* value);
-char* (*ConnGetBackendHostname)(cmyth_conn_t conn);
-char* (*ConnGetClientHostname)(cmyth_conn_t conn);
-cmyth_event_t (*EventGet)(cmyth_conn_t conn, char* data, int len);
-int (*EventSelect)(cmyth_conn_t conn, struct timeval* timeout);
-cmyth_recorder_t (*RecorderCreate)(void);
-cmyth_recorder_t (*RecorderDup)(cmyth_recorder_t p);
-int (*RecorderIsRecording)(cmyth_recorder_t rec);
-int (*RecorderGetFramerate)(cmyth_recorder_t rec,double* rate);
-long long (*RecorderGetFramesWritten)(cmyth_recorder_t rec);
-long long (*RecorderGetFreeSpace)(cmyth_recorder_t rec);
-long long (*RecorderGetKeyframePos)(cmyth_recorder_t rec, unsigned long keynum);
-cmyth_posmap_t (*RecorderGetPositionMap)(cmyth_recorder_t rec,unsigned long start,unsigned long end);
-cmyth_proginfo_t (*RecorderGetRecording)(cmyth_recorder_t rec);
-int (*RecorderStopPlaying)(cmyth_recorder_t rec);
-int (*RecorderFrontendReady)(cmyth_recorder_t rec);
-int (*RecorderCancelNextRecording)(cmyth_recorder_t rec);
-int (*RecorderPause)(cmyth_recorder_t rec);
-int (*RecorderFinishRecording)(cmyth_recorder_t rec);
-int (*RecorderToggleChannelFavorite)(cmyth_recorder_t rec);
-int (*RecorderChangeChannel)(cmyth_recorder_t rec, cmyth_channeldir_t direction);
-int (*RecorderSetChannel)(cmyth_recorder_t rec,char* channame);
-int (*RecorderChangeColor)(cmyth_recorder_t rec, cmyth_adjdir_t direction);
-int (*RecorderChangeBrightness)(cmyth_recorder_t rec, cmyth_adjdir_t direction);
-int (*RecorderChangeContrast)(cmyth_recorder_t rec,  cmyth_adjdir_t direction);
-int (*RecorderChangeHue)(cmyth_recorder_t rec,  cmyth_adjdir_t direction);
-int (*RecorderCheckChannel)(cmyth_recorder_t rec,char* channame);
-int (*RecorderCheckChannelPrefix)(cmyth_recorder_t rec, char* channame);
-cmyth_proginfo_t (*RecorderGetCurProginfo)(cmyth_recorder_t rec);
-cmyth_proginfo_t (*RecorderGetNextProginfo)(cmyth_recorder_t rec,cmyth_proginfo_t current,cmyth_browsedir_t direction);
-int (*RecorderGetInputName)(cmyth_recorder_t rec, char* name, unsigned len);
-long long (*RecorderSeek)(cmyth_recorder_t rec,  long long pos,  cmyth_whence_t whence,  long long curpos);
-int (*RecorderSpawnChainLivetv)(cmyth_recorder_t rec, char* channame);
-int (*RecorderSpawnLivetv)(cmyth_recorder_t rec);
-int (*RecorderStartStream)(cmyth_recorder_t rec);
-int (*RecorderEndStream)(cmyth_recorder_t rec);
-char* (*RecorderGetFilename)(cmyth_recorder_t rec);
-int (*RecorderStopLivetv)(cmyth_recorder_t rec);
-int (*RecorderDoneRingbuf)(cmyth_recorder_t rec);
-int (*RecorderGetRecorderId)(cmyth_recorder_t rec);
-cmyth_livetv_chain_t (*LivetvChainCreate)(char* chainid);
-long long (*LivetvChainDuration)(cmyth_recorder_t rec);
-int (*LivetvChainSwitch)(cmyth_recorder_t rec, int dir);
-int (*LivetvChainSwitchLast)(cmyth_recorder_t rec);
-int (*LivetvChainUpdate)(cmyth_recorder_t rec, char* chainid,int tcp_rcvbuf);
-cmyth_recorder_t (*SpawnLiveTv)(cmyth_recorder_t rec,unsigned buflen,int tcp_rcvbuf,  void (* prog_update_callback)(cmyth_proginfo_t),char** err, char* channame);
-cmyth_recorder_t (*LivetvChainSetup)(cmyth_recorder_t old_rec, int tcp_rcvbuf, void (* prog_update_callback)(cmyth_proginfo_t));
-int (*LivetvGetBlock)(cmyth_recorder_t rec, char* buf, unsigned long len);
-int (*LivetvSelect)(cmyth_recorder_t rec, struct timeval* timeout);
-int (*LivetvRequestBlock)(cmyth_recorder_t rec, unsigned long len);
-long long (*LivetvSeek)(cmyth_recorder_t rec,long long offset, int whence);
-int (*LivetvRead)(cmyth_recorder_t rec,  char* buf,  unsigned long len);
-int (*LivetvKeepRecording)(cmyth_recorder_t rec, cmyth_database_t db, int keep);
-cmyth_database_t (*DatabaseInit)(char* host, char* db_name, char* user, char* pass);
-void (*DatabaseClose)(cmyth_database_t db);
-int (*DatabaseSetHost)(cmyth_database_t db, char* host);
-int (*DatabaseSetUser)(cmyth_database_t db, char* user);
-int (*DatabaseSetPass)(cmyth_database_t db, char* pass);
-int (*DatabaseSetName)(cmyth_database_t db, char* name);
-int (*SetWatchedStatusMysql)(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat);
-char* (*RingbufPathname)(cmyth_recorder_t rec);
-cmyth_ringbuf_t (*RingbufCreate)(void);
-cmyth_recorder_t (*RingbufSetup)(cmyth_recorder_t old_rec);
-int (*RingbufRequestBlock)(cmyth_recorder_t rec, unsigned long len);
-int (*RingbufSelect)(cmyth_recorder_t rec, struct timeval* timeout);
-int (*RingbufGetBlock)(cmyth_recorder_t rec,char* buf,unsigned long len);
-long long (*RingbufSeek)(cmyth_recorder_t rec, long long offset, int whence);
-int (*RingbufRead)(cmyth_recorder_t rec,char* buf,unsigned long len);
-cmyth_rec_num_t (*RecNumCreate)(void);
-cmyth_rec_num_t (*RecNumGet)(char* host, unsigned short port, unsigned id);
-char* (*RecNumString)(cmyth_rec_num_t rn);
-cmyth_timestamp_t (*TimestampCreate)(void);
-cmyth_timestamp_t (*TimestampFromString)(char* str);
-cmyth_timestamp_t (*TimestampFromUnixtime)(time_t l);
-time_t (*TimestampToUnixtime)(cmyth_timestamp_t ts);
-int (*TimestampToString)(char* str, cmyth_timestamp_t ts);
-int (*TimestampToIsostring)(char* str, cmyth_timestamp_t ts);
-int (*TimestampToDisplayString)(char* str, cmyth_timestamp_t ts, int time_format_12);
-int (*DatetimeToString)(char* str, cmyth_timestamp_t ts);
-int (*TimestampCompare)(cmyth_timestamp_t ts1,cmyth_timestamp_t ts2);
-cmyth_keyframe_t (*KeyframeCreate)(void);
-char* (*KeyframeString)(cmyth_keyframe_t kf);
-cmyth_posmap_t (*PosmapCreate)(void);
-cmyth_proginfo_t (*ProginfoCreate)(void);
-int (*ProginfoStopRecording)(cmyth_conn_t control, cmyth_proginfo_t prog);
-int (*ProginfoCheckRecording)(cmyth_conn_t control,  cmyth_proginfo_t prog);
-int (*ProginfoDeleteRecording)(cmyth_conn_t control,cmyth_proginfo_t prog);
-int (*ProginfoForgetRecording)(cmyth_conn_t control,cmyth_proginfo_t prog);
-int (*ProginfoGetRecorderNum)(cmyth_conn_t control,cmyth_rec_num_t rnum,cmyth_proginfo_t prog);
-cmyth_proginfo_t (*ProginfoGetFromBasename)(cmyth_conn_t control, const char* basename);
-char* (*ProginfoTitle)(cmyth_proginfo_t prog);
-char* (*ProginfoSubtitle)(cmyth_proginfo_t prog);
-char* (*ProginfoDescription)(cmyth_proginfo_t prog);
-char* (*ProginfoCategory)(cmyth_proginfo_t prog);
-char* (*ProginfoChanstr)(cmyth_proginfo_t prog);
-char* (*ProginfoChansign)(cmyth_proginfo_t prog);
-char* (*ProginfoChanname)(cmyth_proginfo_t prog);
-long (*ProginfoChanId)(cmyth_proginfo_t prog);
-char* (*ProginfoPathname)(cmyth_proginfo_t prog);
-char* (*ProginfoSeriesid)(cmyth_proginfo_t prog);
-char* (*ProginfoProgramid)(cmyth_proginfo_t prog);
-unsigned long (*ProginfoRecordid)(cmyth_proginfo_t prog);
-long (*ProginfoPriority)(cmyth_proginfo_t prog);
-char* (*ProginfoStars)(cmyth_proginfo_t prog);
-cmyth_timestamp_t (*ProginfoRecStart)(cmyth_proginfo_t prog);
-cmyth_timestamp_t (*ProginfoRecEnd)(cmyth_proginfo_t prog);
-cmyth_timestamp_t (*ProginfoOriginalairdate)(cmyth_proginfo_t prog);
-cmyth_proginfo_rec_status_t (*ProginfoRecStatus)(cmyth_proginfo_t prog);
-unsigned long (*ProginfoFlags)(  cmyth_proginfo_t prog);
-long long (*ProginfoLength)(cmyth_proginfo_t prog);
-char* (*ProginfoHost)(cmyth_proginfo_t prog);
-int (*ProginfoCompare)(cmyth_proginfo_t a, cmyth_proginfo_t b);
-int (*ProginfoLengthSec)(cmyth_proginfo_t prog);
-cmyth_proginfo_t (*ProginfoGetDetail)(cmyth_conn_t control,  cmyth_proginfo_t p);
-cmyth_timestamp_t (*ProginfoStart)(cmyth_proginfo_t prog);
-cmyth_timestamp_t (*ProginfoEnd)(cmyth_proginfo_t prog);
-long (*ProginfoCardId)(cmyth_proginfo_t prog);
-char* (*ProginfoRecgroup)(cmyth_proginfo_t prog);
-char* (*ProginfoChanicon)(cmyth_proginfo_t prog);
-char* (*ProginfoYear)(cmyth_proginfo_t prog);
-cmyth_proglist_t (*ProglistCreate)(void);
-cmyth_proglist_t (*ProglistGetAllRecorded)(cmyth_conn_t control);
-cmyth_proglist_t (*ProglistGetAllPending)(cmyth_conn_t control);
-cmyth_proglist_t (*ProglistGetAllScheduled)(cmyth_conn_t control);
-cmyth_proglist_t (*ProglistGetConflicting)(cmyth_conn_t control);
-cmyth_proginfo_t (*ProglistGetItem)(cmyth_proglist_t pl,int index);
-int (*ProglistDeleteItem)(cmyth_proglist_t pl,cmyth_proginfo_t prog);
-int (*ProglistGetCount)(cmyth_proglist_t pl);
-int (*ProglistSort)(cmyth_proglist_t pl, int count, cmyth_proglist_sort_t sort);
-cmyth_conn_t (*FileData)(cmyth_file_t file);
-unsigned long long (*FileStart)(cmyth_file_t file);
-unsigned long long (*FileLength)(cmyth_file_t file);
-unsigned long long (*FilePosition)(cmyth_file_t file);
-int (*UpdateFileLength)(cmyth_file_t file, unsigned long long newLength);
-int (*FileGetBlock)(cmyth_file_t file, char* buf,unsigned long len);
-int (*FileRequestBlock)(cmyth_file_t file, unsigned long len);
-long long (*FileSeek)(cmyth_file_t file, long long offset, int whence);
-int (*FileSelect)(cmyth_file_t file, struct timeval* timeout);
-void (*FileSetClosedCallback)(cmyth_file_t file,void (* callback)(cmyth_file_t));
-int (*FileRead)(cmyth_file_t file,char* buf,unsigned long len);
-long (*ChannelChanid)(cmyth_channel_t channel);
-long (*ChannelChannum)(cmyth_channel_t channel);
-char* (*ChannelChannumstr)(cmyth_channel_t channel);
-char* (*ChannelCallsign)(cmyth_channel_t channel);
-char* (*ChannelName)(cmyth_channel_t channel);
-char* (*ChannelIcon)(cmyth_channel_t channel);
-int (*ChannelVisible)(cmyth_channel_t channel);
-cmyth_channel_t (*ChanlistGetItem)(cmyth_chanlist_t pl, int index);
-int (*ChanlistGetCount)(cmyth_chanlist_t pl);
-cmyth_freespace_t (*FreespaceCreate)(void);
-long long (*GetBookmark)(cmyth_conn_t conn, cmyth_proginfo_t prog);
-int (*GetBookmarkOffset)(cmyth_database_t db, long chanid, long long mark, char *starttime, int mode);
-long long (*GetBookmarkMark)(cmyth_database_t db, cmyth_proginfo_t prog, long long bk, int mode);
-int (*SetBookmark)(cmyth_conn_t conn, cmyth_proginfo_t prog,long long bookmark);
-cmyth_commbreaklist_t (*CommbreaklistCreate)(void);
-cmyth_commbreak_t (*CommbreakCreate)(void);
-cmyth_commbreaklist_t (*GetCommbreaklist)(cmyth_conn_t conn, cmyth_proginfo_t prog);
-cmyth_commbreaklist_t (*GetCutlist)(cmyth_conn_t conn, cmyth_proginfo_t prog);
-int (*RcvCommbreaklist)(cmyth_conn_t conn, int* err, cmyth_commbreaklist_t breaklist, int count);
-cmyth_inputlist_t (*InputlistCreate)(void);
-cmyth_input_t (*InputCreate)(void);
-cmyth_inputlist_t (*GetFreeInputlist)(cmyth_recorder_t rec);
-int (*RcvFreeInputlist)(cmyth_conn_t conn, int* err, cmyth_inputlist_t inputlist, int count);
-int (*MysqlGetRecgroups)(cmyth_database_t, cmyth_recgroups_t**);
-int (*MysqlDeleteScheduledRecording)(cmyth_database_t db, char* query);
-int (*MysqlInsertIntoRecord)(cmyth_database_t db, char* query, char* query1, char* query2, char* title, char* subtitle, char* description, char* callsign);
-char* (*GetRecordidMysql)(cmyth_database_t, int, char* , char* , char* , char* , char* );
-int (*GetOffsetMysql)(cmyth_database_t, int, char* , int, char* , char* , char* , char* , char* );
-int (*MysqlGetProgFinderCharTitle)(cmyth_database_t db, cmyth_program_t**prog, time_t starttime, char* program_name);
-int (*MysqlGetProgFinderTime)(cmyth_database_t db, cmyth_program_t**prog,  time_t starttime, char* program_name);
-int (*MysqlGetGuide)(cmyth_database_t db, cmyth_program_t**prog, time_t starttime, time_t endtime);
-int (*MysqlTestdbConnection)(cmyth_database_t db,char**message);
-int (*ScheduleRecording)(cmyth_conn_t conn, char* msg);
-char* (*MysqlEscapeChars)(cmyth_database_t db, char* string);
-int (*MysqlGetCommbreakList)(cmyth_database_t db, int chanid, char* start_ts_dt, cmyth_commbreaklist_t breaklist, int conn_version);
-int (*MysqlGetPrevRecorded)(cmyth_database_t db, cmyth_program_t**prog);
-int (*GetDeleteList)(cmyth_conn_t, char* , cmyth_proglist_t);
-int (*MythtvRemovePreviousRecorded)(cmyth_database_t db,char* query);
-cmyth_chanlist_t (*MysqlGetChanlist)(cmyth_database_t db);
-int (*MysqlIsRadio)(cmyth_database_t db, int chanid);
-int (*TimerRecordid)(cmyth_timer_t timer);
-int (*TimerChanid)(cmyth_timer_t timer);
-time_t (*TimerStarttime)(cmyth_timer_t timer);
-time_t (*TimerEndtime)(cmyth_timer_t timer);
-char* (*TimerTitle)(cmyth_timer_t timer);
-char* (*TimerDescription)(cmyth_timer_t timer);
-int (*TimerType)(cmyth_timer_t timer);
-char* (*TimerCategory)(cmyth_timer_t timer);
-char* (*TimerSubtitle)(cmyth_timer_t timer);
-int (*TimerPriority)(cmyth_timer_t timer);
-int (*TimerStartoffset)(cmyth_timer_t timer);
-int (*TimerEndoffset)(cmyth_timer_t timer);
-int (*TimerSearchtype)(cmyth_timer_t timer);
-int (*TimerInactive)(cmyth_timer_t timer);
-char* (*TimerCallsign)(cmyth_timer_t timer);
-int (*TimerDupMethod)(cmyth_timer_t timer);
-int (*TimerDupIn)(cmyth_timer_t timer);
-char* (*TimerRecGroup)(cmyth_timer_t timer);
-char* (*TimerStoreGroup)(cmyth_timer_t timer);
-char* (*TimerPlayGroup)(cmyth_timer_t timer);
-int (*TimerAutotranscode)(cmyth_timer_t timer);
-int (*TimerUserjobs)(cmyth_timer_t timer);
-int (*TimerAutocommflag)(cmyth_timer_t timer);
-int (*TimerAutoexpire)(cmyth_timer_t timer);
-int (*TimerMaxepisodes)(cmyth_timer_t timer);
-int (*TimerMaxnewest)(cmyth_timer_t timer);
-int (*TimerTranscoder)(cmyth_timer_t timer);
-cmyth_timer_t (*TimerlistGetItem)(cmyth_timerlist_t pl, int index);
-int (*TimerlistGetCount)(cmyth_timerlist_t pl);
-cmyth_timerlist_t (*MysqlGetTimers)(cmyth_database_t db);
-int (*MysqlAddTimer)(cmyth_database_t db, int chanid,char* callsign,char* description, time_t starttime, time_t endtime,char* title,char* category,int type,char* subtitle,int priority,int startoffset,int endoffset,int searchtype,int inactive,  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder);
-int (*MysqlDeleteTimer)(cmyth_database_t db, int recordid);
-int (*MysqlUpdateTimer)(cmyth_database_t db, int recordid, int chanid,char* callsign,char* description, time_t starttime, time_t endtime,char* title,char* category, int type,char* subtitle,int priority,int startoffset,int endoffset,int searchtype,int inactive,  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder);
-int (*MysqlGetChannelgroups)(cmyth_database_t db,cmyth_channelgroups_t** changroups);
-int (*MysqlGetChannelidsInGroup)(cmyth_database_t db,unsigned int groupid,int** chanids);
-int (*ChannelSourceid)(cmyth_channel_t channel);
-int (*ChannelMultiplex)(cmyth_channel_t channel);
-int (*MysqlGetRecorderList)(cmyth_database_t db,cmyth_rec_t** reclist);
-int (*MysqlGetProgFinderTimeTitleChan)(cmyth_database_t db,cmyth_program_t* prog, char* title,time_t starttime,int chanid);
-int (*MysqlGetStoragegroups)(cmyth_database_t db, char*** profiles);
-int (*MysqlGetPlaygroups)(cmyth_database_t db, char*** profiles);
-int (*MysqlGetRecprofiles)(cmyth_database_t db, cmyth_recprofile_t** profiles);
-char* (*MysqlGetCardtype)(cmyth_database_t db, int chanid);
-int (*StoragegroupFilelist)(cmyth_conn_t control, char*** sgFilelist, char* sg2List, char*  mythostname);
-cmyth_storagegroup_file_t (*StoragegroupFilelistGetItem)(cmyth_storagegroup_filelist_t fl, int index);
-int (*StoragegroupFilelistCount)(cmyth_storagegroup_filelist_t fl);
-cmyth_storagegroup_filelist_t (*StoragegroupGetFilelist)(cmyth_conn_t control,char* storagegroup, char* hostname);
-char* (*StoragegroupFileGetFilename)(cmyth_storagegroup_file_t file);
-unsigned long (*StoragegroupFileGetLastmodified)(cmyth_storagegroup_file_t file);
-unsigned long long (*StoragegroupFileGetSize)(cmyth_storagegroup_file_t file);
-void (*RefRelease)(void* p);
-void* (*RefHold)(void* p);
-char* (*RefStrdup)(char* str);
-void* (*RefRealloc)(void* p, size_t len);
-void (*RefSetDestroy)(void* block, ref_destroy_t func);
-void (*RefAllocShow)(void);
+void (*cmyth_dbg_level)(int l);
+void (*cmyth_dbg_all)(void);
+void (*cmyth_dbg_none)(void);
+void (*cmyth_dbg)(int level, char* fmt, ...);
+void (*cmyth_set_dbg_msgcallback)(void (* msgcb)(int level,char* ));
+cmyth_conn_t (*cmyth_conn_connect_ctrl)(char* server, unsigned short port, unsigned buflen, int tcp_rcvbuf);
+int (*cmyth_conn_reconnect_ctrl)(cmyth_conn_t control);
+cmyth_conn_t (*cmyth_conn_connect_event)(char* server,  unsigned short port,  unsigned buflen, int tcp_rcvbuf);
+int (*cmyth_conn_reconnect_event)(cmyth_conn_t conn);
+cmyth_file_t (*cmyth_conn_connect_file)(cmyth_proginfo_t prog, cmyth_conn_t control, unsigned buflen, int tcp_rcvbuf);
+cmyth_file_t (*cmyth_conn_connect_path)(char* path, cmyth_conn_t control, unsigned buflen, int tcp_rcvbuf,char* sgToGetFrom);
+int (*cmyth_conn_connect_ring)(cmyth_recorder_t rec, unsigned buflen,int tcp_rcvbuf);
+int (*cmyth_conn_connect_recorder)(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf);
+int (*cmyth_conn_check_block)(cmyth_conn_t conn, unsigned long size);
+cmyth_recorder_t (*cmyth_conn_get_recorder_from_num)(cmyth_conn_t conn, int num);
+cmyth_recorder_t (*cmyth_conn_get_free_recorder)(cmyth_conn_t conn);
+int (*cmyth_conn_get_freespace)(cmyth_conn_t control, long long* total, long long* used);
+int (*cmyth_conn_hung)(cmyth_conn_t control);
+int (*cmyth_conn_get_free_recorder_count)(cmyth_conn_t conn);
+int (*cmyth_conn_get_protocol_version)(cmyth_conn_t conn);
+char* (*cmyth_conn_get_setting)(cmyth_conn_t conn,const char* hostname, const char* setting);
+int (*cmyth_conn_set_setting)(cmyth_conn_t conn,const char* hostname, const char* setting, const char* value);
+char* (*cmyth_conn_get_backend_hostname)(cmyth_conn_t conn);
+char* (*cmyth_conn_get_client_hostname)(cmyth_conn_t conn);
+cmyth_event_t (*cmyth_event_get)(cmyth_conn_t conn, char* data, int len);
+int (*cmyth_event_select)(cmyth_conn_t conn, struct timeval* timeout);
+cmyth_recorder_t (*cmyth_recorder_create)(void);
+cmyth_recorder_t (*cmyth_recorder_dup)(cmyth_recorder_t p);
+int (*cmyth_recorder_is_recording)(cmyth_recorder_t rec);
+int (*cmyth_recorder_get_framerate)(cmyth_recorder_t rec,double* rate);
+long long (*cmyth_recorder_get_frames_written)(cmyth_recorder_t rec);
+long long (*cmyth_recorder_get_free_space)(cmyth_recorder_t rec);
+long long (*cmyth_recorder_get_keyframe_pos)(cmyth_recorder_t rec, unsigned long keynum);
+cmyth_posmap_t (*cmyth_recorder_get_position_map)(cmyth_recorder_t rec,unsigned long start,unsigned long end);
+cmyth_proginfo_t (*cmyth_recorder_get_recording)(cmyth_recorder_t rec);
+int (*cmyth_recorder_stop_playing)(cmyth_recorder_t rec);
+int (*cmyth_recorder_frontend_ready)(cmyth_recorder_t rec);
+int (*cmyth_recorder_cancel_next_recording)(cmyth_recorder_t rec);
+int (*cmyth_recorder_pause)(cmyth_recorder_t rec);
+int (*cmyth_recorder_finish_recording)(cmyth_recorder_t rec);
+int (*cmyth_recorder_toggle_channel_favorite)(cmyth_recorder_t rec);
+int (*cmyth_recorder_change_channel)(cmyth_recorder_t rec, cmyth_channeldir_t direction);
+int (*cmyth_recorder_set_channel)(cmyth_recorder_t rec,char* channame);
+int (*cmyth_recorder_change_color)(cmyth_recorder_t rec, cmyth_adjdir_t direction);
+int (*cmyth_recorder_change_brightness)(cmyth_recorder_t rec, cmyth_adjdir_t direction);
+int (*cmyth_recorder_change_contrast)(cmyth_recorder_t rec,  cmyth_adjdir_t direction);
+int (*cmyth_recorder_change_hue)(cmyth_recorder_t rec,  cmyth_adjdir_t direction);
+int (*cmyth_recorder_check_channel)(cmyth_recorder_t rec,char* channame);
+int (*cmyth_recorder_check_channel_prefix)(cmyth_recorder_t rec, char* channame);
+cmyth_proginfo_t (*cmyth_recorder_get_cur_proginfo)(cmyth_recorder_t rec);
+cmyth_proginfo_t (*cmyth_recorder_get_next_proginfo)(cmyth_recorder_t rec,cmyth_proginfo_t current,cmyth_browsedir_t direction);
+int (*cmyth_recorder_get_input_name)(cmyth_recorder_t rec, char* name, unsigned len);
+long long (*cmyth_recorder_seek)(cmyth_recorder_t rec,  long long pos,  cmyth_whence_t whence,  long long curpos);
+int (*cmyth_recorder_spawn_chain_livetv)(cmyth_recorder_t rec, char* channame);
+int (*cmyth_recorder_spawn_livetv)(cmyth_recorder_t rec);
+int (*cmyth_recorder_start_stream)(cmyth_recorder_t rec);
+int (*cmyth_recorder_end_stream)(cmyth_recorder_t rec);
+char* (*cmyth_recorder_get_filename)(cmyth_recorder_t rec);
+int (*cmyth_recorder_stop_livetv)(cmyth_recorder_t rec);
+int (*cmyth_recorder_done_ringbuf)(cmyth_recorder_t rec);
+int (*cmyth_recorder_get_recorder_id)(cmyth_recorder_t rec);
+cmyth_livetv_chain_t (*cmyth_livetv_chain_create)(char* chainid);
+long long (*cmyth_livetv_chain_duration)(cmyth_recorder_t rec);
+int (*cmyth_livetv_chain_switch)(cmyth_recorder_t rec, int dir);
+int (*cmyth_livetv_chain_switch_last)(cmyth_recorder_t rec);
+int (*cmyth_livetv_chain_update)(cmyth_recorder_t rec, char* chainid,int tcp_rcvbuf);
+cmyth_recorder_t (*cmyth_spawn_live_tv)(cmyth_recorder_t rec,unsigned buflen,int tcp_rcvbuf,  void (* prog_update_callback)(cmyth_proginfo_t),char** err, char* channame);
+cmyth_recorder_t (*cmyth_livetv_chain_setup)(cmyth_recorder_t old_rec, int tcp_rcvbuf, void (* prog_update_callback)(cmyth_proginfo_t));
+int (*cmyth_livetv_get_block)(cmyth_recorder_t rec, char* buf, unsigned long len);
+int (*cmyth_livetv_select)(cmyth_recorder_t rec, struct timeval* timeout);
+int (*cmyth_livetv_request_block)(cmyth_recorder_t rec, unsigned long len);
+long long (*cmyth_livetv_seek)(cmyth_recorder_t rec,long long offset, int whence);
+int (*cmyth_livetv_read)(cmyth_recorder_t rec,  char* buf,  unsigned long len);
+int (*cmyth_livetv_keep_recording)(cmyth_recorder_t rec, cmyth_database_t db, int keep);
+cmyth_database_t (*cmyth_database_init)(char* host, char* db_name, char* user, char* pass);
+void (*cmyth_database_close)(cmyth_database_t db);
+int (*cmyth_database_set_host)(cmyth_database_t db, char* host);
+int (*cmyth_database_set_user)(cmyth_database_t db, char* user);
+int (*cmyth_database_set_pass)(cmyth_database_t db, char* pass);
+int (*cmyth_database_set_name)(cmyth_database_t db, char* name);
+int (*cmyth_set_watched_status_mysql)(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat);
+char* (*cmyth_ringbuf_pathname)(cmyth_recorder_t rec);
+cmyth_ringbuf_t (*cmyth_ringbuf_create)(void);
+cmyth_recorder_t (*cmyth_ringbuf_setup)(cmyth_recorder_t old_rec);
+int (*cmyth_ringbuf_request_block)(cmyth_recorder_t rec, unsigned long len);
+int (*cmyth_ringbuf_select)(cmyth_recorder_t rec, struct timeval* timeout);
+int (*cmyth_ringbuf_get_block)(cmyth_recorder_t rec,char* buf,unsigned long len);
+long long (*cmyth_ringbuf_seek)(cmyth_recorder_t rec, long long offset, int whence);
+int (*cmyth_ringbuf_read)(cmyth_recorder_t rec,char* buf,unsigned long len);
+cmyth_rec_num_t (*cmyth_rec_num_create)(void);
+cmyth_rec_num_t (*cmyth_rec_num_get)(char* host, unsigned short port, unsigned id);
+char* (*cmyth_rec_num_string)(cmyth_rec_num_t rn);
+cmyth_timestamp_t (*cmyth_timestamp_create)(void);
+cmyth_timestamp_t (*cmyth_timestamp_from_string)(char* str);
+cmyth_timestamp_t (*cmyth_timestamp_from_unixtime)(time_t l);
+time_t (*cmyth_timestamp_to_unixtime)(cmyth_timestamp_t ts);
+int (*cmyth_timestamp_to_string)(char* str, cmyth_timestamp_t ts);
+int (*cmyth_timestamp_to_isostring)(char* str, cmyth_timestamp_t ts);
+int (*cmyth_timestamp_to_display_string)(char* str, cmyth_timestamp_t ts, int time_format_12);
+int (*cmyth_datetime_to_string)(char* str, cmyth_timestamp_t ts);
+int (*cmyth_timestamp_compare)(cmyth_timestamp_t ts1,cmyth_timestamp_t ts2);
+cmyth_keyframe_t (*cmyth_keyframe_create)(void);
+char* (*cmyth_keyframe_string)(cmyth_keyframe_t kf);
+cmyth_posmap_t (*cmyth_posmap_create)(void);
+cmyth_proginfo_t (*cmyth_proginfo_create)(void);
+int (*cmyth_proginfo_stop_recording)(cmyth_conn_t control, cmyth_proginfo_t prog);
+int (*cmyth_proginfo_check_recording)(cmyth_conn_t control,  cmyth_proginfo_t prog);
+int (*cmyth_proginfo_delete_recording)(cmyth_conn_t control,cmyth_proginfo_t prog);
+int (*cmyth_proginfo_forget_recording)(cmyth_conn_t control,cmyth_proginfo_t prog);
+int (*cmyth_proginfo_get_recorder_num)(cmyth_conn_t control,cmyth_rec_num_t rnum,cmyth_proginfo_t prog);
+cmyth_proginfo_t (*cmyth_proginfo_get_from_basename)(cmyth_conn_t control, const char* basename);
+char* (*cmyth_proginfo_title)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_subtitle)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_description)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_category)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_chanstr)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_chansign)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_channame)(cmyth_proginfo_t prog);
+long (*cmyth_proginfo_chan_id)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_pathname)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_seriesid)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_programid)(cmyth_proginfo_t prog);
+unsigned long (*cmyth_proginfo_recordid)(cmyth_proginfo_t prog);
+long (*cmyth_proginfo_priority)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_stars)(cmyth_proginfo_t prog);
+cmyth_timestamp_t (*cmyth_proginfo_rec_start)(cmyth_proginfo_t prog);
+cmyth_timestamp_t (*cmyth_proginfo_rec_end)(cmyth_proginfo_t prog);
+cmyth_timestamp_t (*cmyth_proginfo_originalairdate)(cmyth_proginfo_t prog);
+cmyth_proginfo_rec_status_t (*cmyth_proginfo_rec_status)(cmyth_proginfo_t prog);
+unsigned long (*cmyth_proginfo_flags)(  cmyth_proginfo_t prog);
+long long (*cmyth_proginfo_length)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_host)(cmyth_proginfo_t prog);
+int (*cmyth_proginfo_compare)(cmyth_proginfo_t a, cmyth_proginfo_t b);
+int (*cmyth_proginfo_length_sec)(cmyth_proginfo_t prog);
+cmyth_proginfo_t (*cmyth_proginfo_get_detail)(cmyth_conn_t control,  cmyth_proginfo_t p);
+cmyth_timestamp_t (*cmyth_proginfo_start)(cmyth_proginfo_t prog);
+cmyth_timestamp_t (*cmyth_proginfo_end)(cmyth_proginfo_t prog);
+long (*cmyth_proginfo_card_id)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_recgroup)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_chanicon)(cmyth_proginfo_t prog);
+char* (*cmyth_proginfo_year)(cmyth_proginfo_t prog);
+cmyth_proglist_t (*cmyth_proglist_create)(void);
+cmyth_proglist_t (*cmyth_proglist_get_all_recorded)(cmyth_conn_t control);
+cmyth_proglist_t (*cmyth_proglist_get_all_pending)(cmyth_conn_t control);
+cmyth_proglist_t (*cmyth_proglist_get_all_scheduled)(cmyth_conn_t control);
+cmyth_proglist_t (*cmyth_proglist_get_conflicting)(cmyth_conn_t control);
+cmyth_proginfo_t (*cmyth_proglist_get_item)(cmyth_proglist_t pl,int index);
+int (*cmyth_proglist_delete_item)(cmyth_proglist_t pl,cmyth_proginfo_t prog);
+int (*cmyth_proglist_get_count)(cmyth_proglist_t pl);
+int (*cmyth_proglist_sort)(cmyth_proglist_t pl, int count, cmyth_proglist_sort_t sort);
+cmyth_conn_t (*cmyth_file_data)(cmyth_file_t file);
+unsigned long long (*cmyth_file_start)(cmyth_file_t file);
+unsigned long long (*cmyth_file_length)(cmyth_file_t file);
+unsigned long long (*cmyth_file_position)(cmyth_file_t file);
+int (*cmyth_update_file_length)(cmyth_file_t file, unsigned long long newLength);
+int (*cmyth_file_get_block)(cmyth_file_t file, char* buf,unsigned long len);
+int (*cmyth_file_request_block)(cmyth_file_t file, unsigned long len);
+long long (*cmyth_file_seek)(cmyth_file_t file, long long offset, int whence);
+int (*cmyth_file_select)(cmyth_file_t file, struct timeval* timeout);
+void (*cmyth_file_set_closed_callback)(cmyth_file_t file,void (* callback)(cmyth_file_t));
+int (*cmyth_file_read)(cmyth_file_t file,char* buf,unsigned long len);
+long (*cmyth_channel_chanid)(cmyth_channel_t channel);
+long (*cmyth_channel_channum)(cmyth_channel_t channel);
+char* (*cmyth_channel_channumstr)(cmyth_channel_t channel);
+char* (*cmyth_channel_callsign)(cmyth_channel_t channel);
+char* (*cmyth_channel_name)(cmyth_channel_t channel);
+char* (*cmyth_channel_icon)(cmyth_channel_t channel);
+int (*cmyth_channel_visible)(cmyth_channel_t channel);
+cmyth_channel_t (*cmyth_chanlist_get_item)(cmyth_chanlist_t pl, int index);
+int (*cmyth_chanlist_get_count)(cmyth_chanlist_t pl);
+cmyth_freespace_t (*cmyth_freespace_create)(void);
+long long (*cmyth_get_bookmark)(cmyth_conn_t conn, cmyth_proginfo_t prog);
+int (*cmyth_get_bookmark_offset)(cmyth_database_t db, long chanid, long long mark, char *starttime, int mode);
+long long (*cmyth_get_bookmark_mark)(cmyth_database_t db, cmyth_proginfo_t prog, long long bk, int mode);
+int (*cmyth_set_bookmark)(cmyth_conn_t conn, cmyth_proginfo_t prog,long long bookmark);
+cmyth_commbreaklist_t (*cmyth_commbreaklist_create)(void);
+cmyth_commbreak_t (*cmyth_commbreak_create)(void);
+cmyth_commbreaklist_t (*cmyth_get_commbreaklist)(cmyth_conn_t conn, cmyth_proginfo_t prog);
+cmyth_commbreaklist_t (*cmyth_get_cutlist)(cmyth_conn_t conn, cmyth_proginfo_t prog);
+int (*cmyth_rcv_commbreaklist)(cmyth_conn_t conn, int* err, cmyth_commbreaklist_t breaklist, int count);
+cmyth_inputlist_t (*cmyth_inputlist_create)(void);
+cmyth_input_t (*cmyth_input_create)(void);
+cmyth_inputlist_t (*cmyth_get_free_inputlist)(cmyth_recorder_t rec);
+int (*cmyth_rcv_free_inputlist)(cmyth_conn_t conn, int* err, cmyth_inputlist_t inputlist, int count);
+int (*cmyth_mysql_get_recgroups)(cmyth_database_t, cmyth_recgroups_t**);
+int (*cmyth_mysql_delete_scheduled_recording)(cmyth_database_t db, char* query);
+int (*cmyth_mysql_insert_into_record)(cmyth_database_t db, char* query, char* query1, char* query2, char* title, char* subtitle, char* description, char* callsign);
+char* (*cmyth_get_recordid_mysql)(cmyth_database_t, int, char* , char* , char* , char* , char* );
+int (*cmyth_get_offset_mysql)(cmyth_database_t, int, char* , int, char* , char* , char* , char* , char* );
+int (*cmyth_mysql_get_prog_finder_char_title)(cmyth_database_t db, cmyth_program_t**prog, time_t starttime, char* program_name);
+int (*cmyth_mysql_get_prog_finder_time)(cmyth_database_t db, cmyth_program_t**prog,  time_t starttime, char* program_name);
+int (*cmyth_mysql_get_guide)(cmyth_database_t db, cmyth_program_t**prog, time_t starttime, time_t endtime);
+int (*cmyth_mysql_testdb_connection)(cmyth_database_t db,char**message);
+int (*cmyth_schedule_recording)(cmyth_conn_t conn, char* msg);
+char* (*cmyth_mysql_escape_chars)(cmyth_database_t db, char* string);
+int (*cmyth_mysql_get_commbreak_list)(cmyth_database_t db, int chanid, char* start_ts_dt, cmyth_commbreaklist_t breaklist, int conn_version);
+int (*cmyth_mysql_get_prev_recorded)(cmyth_database_t db, cmyth_program_t**prog);
+int (*cmyth_get_delete_list)(cmyth_conn_t, char* , cmyth_proglist_t);
+int (*cmyth_mythtv_remove_previous_recorded)(cmyth_database_t db,char* query);
+cmyth_chanlist_t (*cmyth_mysql_get_chanlist)(cmyth_database_t db);
+int (*cmyth_mysql_is_radio)(cmyth_database_t db, int chanid);
+int (*cmyth_timer_recordid)(cmyth_timer_t timer);
+int (*cmyth_timer_chanid)(cmyth_timer_t timer);
+time_t (*cmyth_timer_starttime)(cmyth_timer_t timer);
+time_t (*cmyth_timer_endtime)(cmyth_timer_t timer);
+char* (*cmyth_timer_title)(cmyth_timer_t timer);
+char* (*cmyth_timer_description)(cmyth_timer_t timer);
+int (*cmyth_timer_type)(cmyth_timer_t timer);
+char* (*cmyth_timer_category)(cmyth_timer_t timer);
+char* (*cmyth_timer_subtitle)(cmyth_timer_t timer);
+int (*cmyth_timer_priority)(cmyth_timer_t timer);
+int (*cmyth_timer_startoffset)(cmyth_timer_t timer);
+int (*cmyth_timer_endoffset)(cmyth_timer_t timer);
+int (*cmyth_timer_searchtype)(cmyth_timer_t timer);
+int (*cmyth_timer_inactive)(cmyth_timer_t timer);
+char* (*cmyth_timer_callsign)(cmyth_timer_t timer);
+int (*cmyth_timer_dup_method)(cmyth_timer_t timer);
+int (*cmyth_timer_dup_in)(cmyth_timer_t timer);
+char* (*cmyth_timer_rec_group)(cmyth_timer_t timer);
+char* (*cmyth_timer_store_group)(cmyth_timer_t timer);
+char* (*cmyth_timer_play_group)(cmyth_timer_t timer);
+int (*cmyth_timer_autotranscode)(cmyth_timer_t timer);
+int (*cmyth_timer_userjobs)(cmyth_timer_t timer);
+int (*cmyth_timer_autocommflag)(cmyth_timer_t timer);
+int (*cmyth_timer_autoexpire)(cmyth_timer_t timer);
+int (*cmyth_timer_maxepisodes)(cmyth_timer_t timer);
+int (*cmyth_timer_maxnewest)(cmyth_timer_t timer);
+int (*cmyth_timer_transcoder)(cmyth_timer_t timer);
+cmyth_timer_t (*cmyth_timerlist_get_item)(cmyth_timerlist_t pl, int index);
+int (*cmyth_timerlist_get_count)(cmyth_timerlist_t pl);
+cmyth_timerlist_t (*cmyth_mysql_get_timers)(cmyth_database_t db);
+int (*cmyth_mysql_add_timer)(cmyth_database_t db, int chanid,char* callsign,char* description, time_t starttime, time_t endtime,char* title,char* category,int type,char* subtitle,int priority,int startoffset,int endoffset,int searchtype,int inactive,  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder);
+int (*cmyth_mysql_delete_timer)(cmyth_database_t db, int recordid);
+int (*cmyth_mysql_update_timer)(cmyth_database_t db, int recordid, int chanid,char* callsign,char* description, time_t starttime, time_t endtime,char* title,char* category, int type,char* subtitle,int priority,int startoffset,int endoffset,int searchtype,int inactive,  int dup_method, int dup_in, char* rec_group, char* store_group, char* play_group, int autotranscode, int userjobs, int autocommflag, int autoexpire, int maxepisodes, int maxnewest, int transcoder);
+int (*cmyth_mysql_get_channelgroups)(cmyth_database_t db,cmyth_channelgroups_t** changroups);
+int (*cmyth_mysql_get_channelids_in_group)(cmyth_database_t db,unsigned int groupid,int** chanids);
+int (*cmyth_channel_sourceid)(cmyth_channel_t channel);
+int (*cmyth_channel_multiplex)(cmyth_channel_t channel);
+int (*cmyth_mysql_get_recorder_list)(cmyth_database_t db,cmyth_rec_t** reclist);
+int (*cmyth_mysql_get_prog_finder_time_title_chan)(cmyth_database_t db,cmyth_program_t* prog, char* title,time_t starttime,int chanid);
+int (*cmyth_mysql_get_storagegroups)(cmyth_database_t db, char*** profiles);
+int (*cmyth_mysql_get_playgroups)(cmyth_database_t db, char*** profiles);
+int (*cmyth_mysql_get_recprofiles)(cmyth_database_t db, cmyth_recprofile_t** profiles);
+char* (*cmyth_mysql_get_cardtype)(cmyth_database_t db, int chanid);
+int (*cmyth_storagegroup_filelist)(cmyth_conn_t control, char*** sgFilelist, char* sg2List, char*  mythostname);
+cmyth_storagegroup_file_t (*cmyth_storagegroup_filelist_get_item)(cmyth_storagegroup_filelist_t fl, int index);
+int (*cmyth_storagegroup_filelist_count)(cmyth_storagegroup_filelist_t fl);
+cmyth_storagegroup_filelist_t (*cmyth_storagegroup_get_filelist)(cmyth_conn_t control,char* storagegroup, char* hostname);
+char* (*cmyth_storagegroup_file_get_filename)(cmyth_storagegroup_file_t file);
+unsigned long (*cmyth_storagegroup_file_get_lastmodified)(cmyth_storagegroup_file_t file);
+unsigned long long (*cmyth_storagegroup_file_get_size)(cmyth_storagegroup_file_t file);
+void (*ref_release)(void* p);
+void* (*ref_hold)(void* p);
+char* (*ref_strdup)(char* str);
+void* (*ref_realloc)(void* p, size_t len);
+void (*ref_set_destroy)(void* block, ref_destroy_t func);
+void (*ref_alloc_show)(void);
 
 
 

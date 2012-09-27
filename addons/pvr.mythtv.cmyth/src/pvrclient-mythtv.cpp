@@ -348,10 +348,10 @@ void Log(int l,char* msg)
 bool PVRClientMythTV::Connect()
 {
   if(g_bExtraDebug)
-    CMYTH->DbgAll();
+    CMYTH->cmyth_dbg_all();
   else
-    CMYTH->DbgLevel(CMYTH_DBG_ERROR);
-  CMYTH->SetDbgMsgcallback(Log);
+    CMYTH->cmyth_dbg_level(CMYTH_DBG_ERROR);
+  CMYTH->cmyth_set_dbg_msgcallback(Log);
   m_con=MythConnection(g_szHostname,g_iMythPort);
   if(!m_con.IsConnected())
   {
@@ -768,7 +768,7 @@ float PVRClientMythTV::GetRecordingFrameRate(MythProgramInfo &recording)
     XBMC->Log(LOG_DEBUG, "%s - Getting Framerate for: %s)", __FUNCTION__, recording.Title(false).c_str());
   }
 
-  // GetBookmarkMark returns the appropriate frame offset for the given byte offset (recordedseek table)
+  // cmyth_get_bookmark_mark returns the appropriate frame offset for the given byte offset (recordedseek table)
   // This can be used to determine the frame count (by querying the max byte offset)
   long long frameCount = m_db.GetBookmarkMark(recording, LLONG_MAX, 0);
   if (frameCount > 0)

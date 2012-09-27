@@ -114,7 +114,7 @@ private:
   time_t m_endtime;    
 	CStdString m_title;
 	CStdString m_description;  
-  TimerType m_type;      
+  TimerTypes m_type;
 	CStdString m_category;
   CStdString m_subtitle;
   int m_priority;

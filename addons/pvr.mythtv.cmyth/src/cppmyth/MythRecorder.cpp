@@ -37,7 +37,7 @@ using namespace ADDON;
                                                    { \
                                                        m_conn.Lock(); \
                                                        if ( var != NULL ) \
-                                                           CMYTH->RefRelease( var ); \
+                                                           CMYTH->ref_release( var ); \
                                                        var = CMYTH->call; \
                                                        m_conn.Unlock(); \
                                                    } \
@@ -64,7 +64,7 @@ bool MythRecorder::SpawnLiveTV(MythChannel &channel)
   //check channel
   *livechainupdated=0;
   cmyth_recorder_t recorder = NULL;
-  CMYTH_REC_CALL( recorder, recorder == NULL, SpawnLiveTv( *m_recorder_t, 64*1024, 16*1024, MythRecorder::prog_update_callback, &pErr, channelNum.GetBuffer() ) );
+  CMYTH_REC_CALL( recorder, recorder == NULL, cmyth_spawn_live_tv( *m_recorder_t, 64*1024, 16*1024, MythRecorder::prog_update_callback, &pErr, channelNum.GetBuffer() ) );
   *m_recorder_t=recorder;
   int i=20;
   while(*livechainupdated==0&&i--!=0)
@@ -89,7 +89,7 @@ bool MythRecorder::LiveTVChainUpdate(CStdString chainID)
   char* buffer=strdup(chainID.c_str());
   //m_recorder_t->Lock();
   int retval = 0;
-  CMYTH_REC_CALL( retval, retval < 0, LivetvChainUpdate( *m_recorder_t, buffer, 16*1024 ) );
+  CMYTH_REC_CALL( retval, retval < 0, cmyth_livetv_chain_update( *m_recorder_t, buffer, 16*1024 ) );
   if(retval != 0)
     XBMC->Log(LOG_ERROR,"LiveTVChainUpdate failed on chainID: %s",buffer);
   *livechainupdated=1;
@@ -119,7 +119,7 @@ bool MythRecorder::IsRecording()
 {
   //m_recorder_t->Lock();
   int retval = 0;
-  CMYTH_REC_CALL( retval, retval < 0, RecorderIsRecording( *m_recorder_t ) );
+  CMYTH_REC_CALL( retval, retval < 0, cmyth_recorder_is_recording( *m_recorder_t ) );
   //m_recorder_t->Unlock();
   return retval==1;
 }
@@ -130,7 +130,7 @@ bool MythRecorder::IsTunable(MythChannel &channel)
 
   XBMC->Log(LOG_DEBUG,"%s: called for recorder %i, channel %i",__FUNCTION__,ID(),channel.ID());
 
-  cmyth_inputlist_t inputlist=CMYTH->GetFreeInputlist(*m_recorder_t);
+  cmyth_inputlist_t inputlist=CMYTH->cmyth_get_free_inputlist(*m_recorder_t);
 
   bool ret = false;
   for (int i=0; i < inputlist->input_count; ++i)
@@ -154,7 +154,7 @@ bool MythRecorder::IsTunable(MythChannel &channel)
     break;
   }
 
-  CMYTH->RefRelease(inputlist);
+  CMYTH->ref_release(inputlist);
   m_conn.Unlock();
 
   if (!ret)
@@ -170,7 +170,7 @@ bool MythRecorder::CheckChannel(MythChannel &channel)
   //m_recorder_t->Lock();
   CStdString channelNum=channel.Number();
   int retval = 0;
-  CMYTH_REC_CALL( retval, retval < 0, RecorderCheckChannel( *m_recorder_t, channelNum.GetBuffer() ) );
+  CMYTH_REC_CALL( retval, retval < 0, cmyth_recorder_check_channel( *m_recorder_t, channelNum.GetBuffer() ) );
   //m_recorder_t->Unlock();
   return retval == 1;
 }
@@ -188,7 +188,7 @@ bool MythRecorder::SetChannel(MythChannel &channel)
     return false;
   }
   CStdString channelNum=channel.Number();
-  if(CMYTH->RecorderPause(*m_recorder_t)!=0)
+  if(CMYTH->cmyth_recorder_pause(*m_recorder_t)!=0)
   {
     XBMC->Log(LOG_ERROR,"%s: Failed to pause recorder %i",__FUNCTION__,ID());
     //m_recorder_t->Unlock();
@@ -202,14 +202,14 @@ bool MythRecorder::SetChannel(MythChannel &channel)
     m_conn.Unlock();
     return false;
   }
-  if(CMYTH->RecorderSetChannel(*m_recorder_t,channelNum.GetBuffer())!=0)
+  if(CMYTH->cmyth_recorder_set_channel(*m_recorder_t,channelNum.GetBuffer())!=0)
   {
     XBMC->Log(LOG_ERROR,"%s: Failed to change recorder %i to channel %s",__FUNCTION__,ID(),channel.Name().c_str());
     //m_recorder_t->Unlock();
     m_conn.Unlock();
     return false;
   }
-  if(CMYTH->LivetvChainSwitchLast(*m_recorder_t)!=1)
+  if(CMYTH->cmyth_livetv_chain_switch_last(*m_recorder_t)!=1)
   {
     XBMC->Log(LOG_ERROR,"%s: Failed to switch chain for recorder %i",__FUNCTION__,ID(),channel.Name().c_str());
     //m_recorder_t->Unlock();
@@ -244,7 +244,7 @@ int MythRecorder::ReadLiveTV(void* buffer,unsigned long length)
 {
   //m_recorder_t->Lock();
   int bytesRead=0;
-  CMYTH_REC_CALL( bytesRead, bytesRead < 0, LivetvRead( *m_recorder_t, static_cast<char*>( buffer ), length ) );
+  CMYTH_REC_CALL( bytesRead, bytesRead < 0, cmyth_livetv_read( *m_recorder_t, static_cast<char*>( buffer ), length ) );
   //m_recorder_t->Unlock();
   return bytesRead;
 }
@@ -253,7 +253,7 @@ MythProgramInfo MythRecorder::GetCurrentProgram()
 {
   //m_recorder_t->Lock();
   cmyth_proginfo_t proginfo = NULL;
-  CMYTH_REC_CALL_REF( proginfo, proginfo == NULL, RecorderGetCurProginfo( *m_recorder_t ) );
+  CMYTH_REC_CALL_REF( proginfo, proginfo == NULL, cmyth_recorder_get_cur_proginfo( *m_recorder_t ) );
   MythProgramInfo retval = proginfo;
   //m_recorder_t->Unlock();
   return retval;
@@ -263,7 +263,7 @@ long long MythRecorder::LiveTVSeek(long long offset, int whence)
 {
   //m_recorder_t->Lock();
   long long retval = 0;
-  CMYTH_REC_CALL( retval, retval < 0, LivetvSeek( *m_recorder_t, offset, whence ) );
+  CMYTH_REC_CALL( retval, retval < 0, cmyth_livetv_seek( *m_recorder_t, offset, whence ) );
   //m_recorder_t->Unlock();
   return retval;
 }
@@ -272,7 +272,7 @@ long long MythRecorder::LiveTVDuration()
 {
   //m_recorder_t->Lock();
   long long retval = 0;
-  CMYTH_REC_CALL( retval, retval < 0, LivetvChainDuration( *m_recorder_t ) );
+  CMYTH_REC_CALL( retval, retval < 0, cmyth_livetv_chain_duration( *m_recorder_t ) );
   //m_recorder_t->Unlock();
   return retval;
 }
@@ -280,13 +280,13 @@ long long MythRecorder::LiveTVDuration()
 int MythRecorder::ID()
 {
   int retval = 0;
-  CMYTH_REC_CALL( retval, retval < 0, RecorderGetRecorderId( *m_recorder_t ) );
+  CMYTH_REC_CALL( retval, retval < 0, cmyth_recorder_get_recorder_id( *m_recorder_t ) );
   return retval;
 }
 
  bool  MythRecorder::Stop()
  {
    int retval = 0;
-   CMYTH_REC_CALL( retval, retval < 0, RecorderStopLivetv( *m_recorder_t ) );
+   CMYTH_REC_CALL( retval, retval < 0, cmyth_recorder_stop_livetv( *m_recorder_t ) );
    return retval==0;
  }

@@ -23,18 +23,18 @@ MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
   CStdString MythProgramInfo::ProgramID()
   {
     CStdString retval;
-    char* progId=CMYTH->ProginfoProgramid(*m_proginfo_t);
+    char* progId=CMYTH->cmyth_proginfo_programid(*m_proginfo_t);
     retval=progId;
-    CMYTH->RefRelease(progId);
+    CMYTH->ref_release(progId);
     return retval;
   }
 
   CStdString MythProgramInfo::Title(bool subtitleEncoded)
   {
     CStdString retval;
-    char* title=CMYTH->ProginfoTitle(*m_proginfo_t);
+    char* title=CMYTH->cmyth_proginfo_title(*m_proginfo_t);
     retval=title;
-    CMYTH->RefRelease(title);
+    CMYTH->ref_release(title);
     if(subtitleEncoded)
     {
       CStdString subtitle = this->Subtitle();
@@ -47,9 +47,9 @@ MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
   CStdString MythProgramInfo::Subtitle()
   {
     CStdString retval;
-    char* subtitle=CMYTH->ProginfoSubtitle(*m_proginfo_t);
+    char* subtitle=CMYTH->cmyth_proginfo_subtitle(*m_proginfo_t);
     retval=subtitle;
-    CMYTH->RefRelease(subtitle);
+    CMYTH->ref_release(subtitle);
     return retval;
   }
 
@@ -57,45 +57,45 @@ MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
    {
     CStdString retval;
     
-    char* path=CMYTH->ProginfoPathname(*m_proginfo_t);
- //   XBMC->Log(LOG_DEBUG,"ProgInfo path: %s, status %i",path,CMYTH->ProginfoRecStatus(*m_proginfo_t));
+    char* path=CMYTH->cmyth_proginfo_pathname(*m_proginfo_t);
+ //   XBMC->Log(LOG_DEBUG,"ProgInfo path: %s, status %i",path,CMYTH->cmyth_proginfo_rec_status(*m_proginfo_t));
     retval=path;
-    CMYTH->RefRelease(path);
+    CMYTH->ref_release(path);
     return retval;
   }
 
   CStdString MythProgramInfo::Description()
   {
     CStdString retval;
-    char* desc=CMYTH->ProginfoDescription(*m_proginfo_t);
+    char* desc=CMYTH->cmyth_proginfo_description(*m_proginfo_t);
     retval=desc;
-    CMYTH->RefRelease(desc);
+    CMYTH->ref_release(desc);
     return retval;
   }
 
   CStdString MythProgramInfo::ChannelName()
     {
     CStdString retval;
-    char* chan=CMYTH->ProginfoChanname(*m_proginfo_t);
+    char* chan=CMYTH->cmyth_proginfo_channame(*m_proginfo_t);
     retval=chan;
-    CMYTH->RefRelease(chan);
+    CMYTH->ref_release(chan);
     return retval;
   }
 
   int  MythProgramInfo::ChannelID()
   {
-    return CMYTH->ProginfoChanId(*m_proginfo_t);
+    return CMYTH->cmyth_proginfo_chan_id(*m_proginfo_t);
   }
 
   unsigned long MythProgramInfo::RecordID()
   {
-    return CMYTH->ProginfoRecordid(*m_proginfo_t);
+    return CMYTH->cmyth_proginfo_recordid(*m_proginfo_t);
   }
 
   time_t MythProgramInfo::RecStart()
   {
     time_t retval;
-    MythTimestamp time=CMYTH->ProginfoRecStart(*m_proginfo_t);
+    MythTimestamp time=CMYTH->cmyth_proginfo_rec_start(*m_proginfo_t);
     retval=time.UnixTime();
     return retval;
   }
@@ -103,7 +103,7 @@ MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
   time_t MythProgramInfo::StartTime()
   {
     time_t retval;
-    MythTimestamp time=CMYTH->ProginfoStart(*m_proginfo_t);
+    MythTimestamp time=CMYTH->cmyth_proginfo_start(*m_proginfo_t);
     retval=time.UnixTime();
     return retval;
   }
@@ -111,56 +111,56 @@ MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
   time_t MythProgramInfo::EndTime()
   {
     time_t retval;
-    MythTimestamp time=CMYTH->ProginfoEnd(*m_proginfo_t);
+    MythTimestamp time=CMYTH->cmyth_proginfo_end(*m_proginfo_t);
     retval=time.UnixTime();
     return retval;
   }
 
   int MythProgramInfo::Priority()
   {
-    return CMYTH->ProginfoPriority(*m_proginfo_t);//Might want to use recpriority2 instead.
+    return CMYTH->cmyth_proginfo_priority(*m_proginfo_t);//Might want to use recpriority2 instead.
   }
 
   MythProgramInfo::record_status MythProgramInfo::Status()
   {
-    return CMYTH->ProginfoRecStatus(*m_proginfo_t);
+    return CMYTH->cmyth_proginfo_rec_status(*m_proginfo_t);
   }
 
   int MythProgramInfo::Duration()
   {
-    MythTimestamp end=CMYTH->ProginfoRecEnd(*m_proginfo_t);
-    MythTimestamp start=CMYTH->ProginfoRecStart(*m_proginfo_t);
+    MythTimestamp end=CMYTH->cmyth_proginfo_rec_end(*m_proginfo_t);
+    MythTimestamp start=CMYTH->cmyth_proginfo_rec_start(*m_proginfo_t);
     return end.UnixTime()-start.UnixTime();
-    return CMYTH->ProginfoLengthSec(*m_proginfo_t);
+    return CMYTH->cmyth_proginfo_length_sec(*m_proginfo_t);
   }
 
   CStdString MythProgramInfo::Category()
   {
     CStdString retval;
-    char* cat=CMYTH->ProginfoCategory(*m_proginfo_t);
+    char* cat=CMYTH->cmyth_proginfo_category(*m_proginfo_t);
     retval=cat;
-    CMYTH->RefRelease(cat);
+    CMYTH->ref_release(cat);
     return retval;
     }
 
   CStdString MythProgramInfo::RecordingGroup()
   {
     CStdString retval;
-    char* recgroup=CMYTH->ProginfoRecgroup(*m_proginfo_t);
+    char* recgroup=CMYTH->cmyth_proginfo_recgroup(*m_proginfo_t);
     retval=recgroup;
-    CMYTH->RefRelease(recgroup);
+    CMYTH->ref_release(recgroup);
     return retval;
   }
 
   bool MythProgramInfo::IsWatched()
   {
-    unsigned long recording_flags = CMYTH->ProginfoFlags(*m_proginfo_t);
+    unsigned long recording_flags = CMYTH->cmyth_proginfo_flags(*m_proginfo_t);
     return (recording_flags & 0x00000200) != 0; // FL_WATCHED
   }
 
   bool MythProgramInfo::IsDeletePending()
   {
-    unsigned long recording_flags = CMYTH->ProginfoFlags(*m_proginfo_t);
+    unsigned long recording_flags = CMYTH->cmyth_proginfo_flags(*m_proginfo_t);
     return (recording_flags & 0x00000080) != 0; // FL_DELETEPENDING
   }
 

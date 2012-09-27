@@ -12,7 +12,7 @@ template <class T> class MythPointer
 public:
   ~MythPointer()
   {
-    CMYTH->RefRelease(m_mythpointer);
+    CMYTH->ref_release(m_mythpointer);
     m_mythpointer=0;
   }
   MythPointer()

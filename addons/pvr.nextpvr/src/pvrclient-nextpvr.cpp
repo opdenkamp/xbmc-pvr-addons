@@ -29,11 +29,7 @@
 
 #include "md5.h"
 
-#if defined(TARGET_LINUX) || defined(TARGET_OSX)
-#include "tinyxml.h"
-#else
-#include "tinyXML/tinyxml.h"
-#endif
+#include "tinyxml/tinyxml.h"
 
 #if defined(TARGET_WINDOWS)
   #define atoll(S) _atoi64(S) 

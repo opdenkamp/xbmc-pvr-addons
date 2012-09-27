@@ -40,7 +40,7 @@ public:
   bool init(uint32_t requestID);
   bool initScan(uint32_t opCode);
   bool initStatus(uint32_t opCode);
-  bool initStream(uint32_t opCode, uint32_t streamID, uint32_t duration, int64_t dts, int64_t pts);
+  bool initStream(uint32_t opCode, uint32_t streamID, uint32_t duration, int64_t pts, int64_t dts);
   void finalise();
   void finaliseStream();
   bool copyin(const uint8_t* src, uint32_t len);
@@ -56,6 +56,8 @@ public:
 
   uint8_t* getPtr() { return buffer; }
   uint32_t getLen() { return bufUsed; }
+  uint32_t getStreamHeaderLength() { return headerLengthStream; } ;
+  void     setLen(uint32_t len) { bufUsed = len; }
 
 private:
   uint8_t* buffer;

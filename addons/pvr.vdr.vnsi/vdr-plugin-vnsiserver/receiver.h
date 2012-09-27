@@ -35,6 +35,7 @@
 #include <vdr/ringbuffer.h>
 
 #include "demuxer.h"
+#include "responsepacket.h"
 
 class cxSocket;
 class cChannel;
@@ -83,16 +84,7 @@ private:
   cTimeMs           m_last_tick;
   bool              m_SignalLost;
   bool              m_IFrameSeen;
-
-  struct {
-    uint32_t channel;
-    uint32_t opcode;
-    uint32_t id;
-    uint32_t duration;
-    uint8_t pts[sizeof(int64_t)];
-    uint8_t dts[sizeof(int64_t)];
-    uint32_t length;
-  } m_streamHeader;
+  cResponsePacket   m_streamHeader;
 
 protected:
   virtual void Action(void);

@@ -687,10 +687,9 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
 
       CStdString strFanartPath = GetArtWork(FILE_OPS_GET_FANART, title);
 
-      // TODO: This can be enabled as soon as xbmc pvr code supports images
-      //PVR_STRCPY(tag.strIconPath, = strIconPath.c_str());
-      //PVR_STRCPY(tag.strThumbnailPath, = strIconPath.c_str());
-      //PVR_STRCPY(tag.strFanartPath, = strFanartPath.c_str());
+      PVR_STRCPY(tag.strIconPath, strIconPath.c_str());
+      PVR_STRCPY(tag.strThumbnailPath, strIconPath.c_str());
+      PVR_STRCPY(tag.strFanartPath, strFanartPath.c_str());
 
       // Unimplemented
       tag.iLifetime = 0;

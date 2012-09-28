@@ -27,7 +27,10 @@
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
 #include "libXBMC_gui.h"
-#include "libcmyth.h"
+
+extern "C" {
+  #include <cmyth/cmyth.h>
+};
 
 #ifdef __WINDOWS__
 #define strdup _strdup // # strdup is POSIX, _strdup should be used instead
@@ -67,7 +70,6 @@ extern bool         g_bLiveTVPriority;    ///< MythTV Backend setting to allow l
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr   *PVR;
-extern CHelper_libcmyth *CMYTH;
 extern CHelper_libXBMC_gui   *GUI;
 
 #endif /* CLIENT_H */

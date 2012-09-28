@@ -1,10 +1,13 @@
 #pragma once
 
-#include "../libcmyth.h"
 #include "platform/util/StdString.h"
 #include <boost/shared_ptr.hpp>
 #include "MythPointer.h"
 #include "MythFile.h"
+
+extern "C" {
+#include <cmyth/cmyth.h>
+};
 
 class MythRecorder;
 class MythSignal;

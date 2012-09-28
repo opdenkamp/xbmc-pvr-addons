@@ -1,7 +1,4 @@
 #include "MythSGFile.h"
-#include "../client.h"
-
-using namespace ADDON;
 
  MythSGFile::MythSGFile()
    :m_storagegroup_file_t(new MythPointer<cmyth_storagegroup_file_t>())
@@ -16,22 +13,22 @@ using namespace ADDON;
 
   CStdString MythSGFile::Filename()
   {
-    char* name = CMYTH->cmyth_storagegroup_file_get_filename(*m_storagegroup_file_t);
+    char* name = cmyth_storagegroup_file_get_filename(*m_storagegroup_file_t);
     CStdString retval(name);
-    CMYTH->ref_release(name);
+    ref_release(name);
     name = 0;
     return retval;
   }
 
   unsigned long long MythSGFile::Size()
   {
-    unsigned long long retval = CMYTH->cmyth_storagegroup_file_get_size(*m_storagegroup_file_t);
+    unsigned long long retval = cmyth_storagegroup_file_get_size(*m_storagegroup_file_t);
     return retval;
   }
 
   unsigned long MythSGFile::LastModified()
   {
-    unsigned long retval = CMYTH->cmyth_storagegroup_file_get_lastmodified(*m_storagegroup_file_t);
+    unsigned long retval = cmyth_storagegroup_file_get_lastmodified(*m_storagegroup_file_t);
     return retval;
   }
 

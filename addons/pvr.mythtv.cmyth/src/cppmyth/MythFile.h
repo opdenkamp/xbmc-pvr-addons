@@ -2,8 +2,11 @@
 
 #include "MythPointer.h"
 #include "MythConnection.h"
-#include "../libcmyth.h"
 #include <boost/shared_ptr.hpp>
+
+extern "C" {
+#include <cmyth/cmyth.h>
+};
 
 template < class T > class MythPointer;
 

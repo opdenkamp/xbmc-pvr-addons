@@ -13,14 +13,14 @@ using namespace ADDON;
  * connected to the control socket and try to re-connect if not.
  * If reconnection is ok, call 'call' again. */
 #define CMYTH_FILE_CALL( var, cond, call )  m_conn.Lock(); \
-                                            var = CMYTH->call; \
+                                            var = call; \
                                             m_conn.Unlock(); \
                                             if ( cond ) \
                                             { \
                                                 if ( !m_conn.IsConnected() && m_conn.TryReconnect() ) \
                                                 { \
                                                     m_conn.Lock(); \
-                                                    var = CMYTH->call; \
+                                                    var = call; \
                                                     m_conn.Unlock(); \
                                                 } \
                                             } \

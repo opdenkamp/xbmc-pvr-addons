@@ -1,8 +1,8 @@
 #include "MythTimer.h"
 
-#include "../client.h"
-
-using namespace ADDON;
+extern "C" {
+#include <refmem/refmem.h>
+};
 
 /*
  *              MythTimer
@@ -16,42 +16,42 @@ MythTimer::MythTimer()
 
 
   MythTimer::MythTimer(cmyth_timer_t cmyth_timer,bool release)
-    : m_recordid(CMYTH->cmyth_timer_recordid(cmyth_timer)),
-    m_chanid(CMYTH->cmyth_timer_chanid(cmyth_timer)),
+    : m_recordid(cmyth_timer_recordid(cmyth_timer)),
+    m_chanid(cmyth_timer_chanid(cmyth_timer)),
     m_callsign(""),
-    m_starttime(CMYTH->cmyth_timer_starttime(cmyth_timer)),
-    m_endtime(CMYTH->cmyth_timer_endtime(cmyth_timer)),
+    m_starttime(cmyth_timer_starttime(cmyth_timer)),
+    m_endtime(cmyth_timer_endtime(cmyth_timer)),
     m_title(""),
     m_description(""),
-    m_type(static_cast<TimerType>(CMYTH->cmyth_timer_type(cmyth_timer))),
+    m_type(static_cast<TimerType>(cmyth_timer_type(cmyth_timer))),
     m_category(""),
     m_subtitle(""),
-    m_priority(CMYTH->cmyth_timer_priority(cmyth_timer)),
-    m_startoffset(CMYTH->cmyth_timer_startoffset(cmyth_timer)),
-    m_endoffset(CMYTH->cmyth_timer_endoffset(cmyth_timer)),
-    m_searchtype(static_cast<TimerSearchType>(CMYTH->cmyth_timer_searchtype(cmyth_timer))),
-    m_inactive(CMYTH->cmyth_timer_inactive(cmyth_timer)!=0),
-    m_dupmethod(static_cast< DuplicateControlMethods >(CMYTH->cmyth_timer_dup_method(cmyth_timer))),
-    m_dupin(static_cast< CheckDuplicatesInTypes >(CMYTH->cmyth_timer_dup_in(cmyth_timer))),
+    m_priority(cmyth_timer_priority(cmyth_timer)),
+    m_startoffset(cmyth_timer_startoffset(cmyth_timer)),
+    m_endoffset(cmyth_timer_endoffset(cmyth_timer)),
+    m_searchtype(static_cast<TimerSearchType>(cmyth_timer_searchtype(cmyth_timer))),
+    m_inactive(cmyth_timer_inactive(cmyth_timer)!=0),
+    m_dupmethod(static_cast< DuplicateControlMethods >(cmyth_timer_dup_method(cmyth_timer))),
+    m_dupin(static_cast< CheckDuplicatesInTypes >(cmyth_timer_dup_in(cmyth_timer))),
     m_recgroup(""),
     m_storegroup(""),
     m_playgroup(""),
-    m_autotranscode(CMYTH->cmyth_timer_autotranscode(cmyth_timer) == 1),
-    m_userjobs(CMYTH->cmyth_timer_userjobs(cmyth_timer)),
-    m_autocommflag(CMYTH->cmyth_timer_autocommflag(cmyth_timer) == 1),
-    m_autoexpire(CMYTH->cmyth_timer_autoexpire(cmyth_timer) == 1),
-    m_maxepisodes(CMYTH->cmyth_timer_maxepisodes(cmyth_timer)),
-    m_maxnewest(CMYTH->cmyth_timer_maxnewest(cmyth_timer) == 1),
-    m_transcoder(CMYTH->cmyth_timer_transcoder(cmyth_timer))
+    m_autotranscode(cmyth_timer_autotranscode(cmyth_timer) == 1),
+    m_userjobs(cmyth_timer_userjobs(cmyth_timer)),
+    m_autocommflag(cmyth_timer_autocommflag(cmyth_timer) == 1),
+    m_autoexpire(cmyth_timer_autoexpire(cmyth_timer) == 1),
+    m_maxepisodes(cmyth_timer_maxepisodes(cmyth_timer)),
+    m_maxnewest(cmyth_timer_maxnewest(cmyth_timer) == 1),
+    m_transcoder(cmyth_timer_transcoder(cmyth_timer))
   {
-    char *title = CMYTH->cmyth_timer_title(cmyth_timer);
-    char *description = CMYTH->cmyth_timer_description(cmyth_timer);
-    char *category = CMYTH->cmyth_timer_category(cmyth_timer);
-    char *subtitle = CMYTH->cmyth_timer_subtitle(cmyth_timer);
-    char *callsign = CMYTH->cmyth_timer_callsign(cmyth_timer);
-    char *recgroup = CMYTH->cmyth_timer_rec_group(cmyth_timer);
-    char *storegroup = CMYTH->cmyth_timer_store_group(cmyth_timer);
-    char *playgroup = CMYTH->cmyth_timer_play_group(cmyth_timer);
+    char *title = cmyth_timer_title(cmyth_timer);
+    char *description = cmyth_timer_description(cmyth_timer);
+    char *category = cmyth_timer_category(cmyth_timer);
+    char *subtitle = cmyth_timer_subtitle(cmyth_timer);
+    char *callsign = cmyth_timer_callsign(cmyth_timer);
+    char *recgroup = cmyth_timer_rec_group(cmyth_timer);
+    char *storegroup = cmyth_timer_store_group(cmyth_timer);
+    char *playgroup = cmyth_timer_play_group(cmyth_timer);
 
     m_title = title;
     m_description = description;
@@ -62,16 +62,16 @@ MythTimer::MythTimer()
     m_storegroup = storegroup;
     m_playgroup = playgroup;
 
-    CMYTH->ref_release(title);
-    CMYTH->ref_release(description);
-    CMYTH->ref_release(category);
-    CMYTH->ref_release(subtitle);
-    CMYTH->ref_release(callsign);
-    CMYTH->ref_release(recgroup);
-    CMYTH->ref_release(storegroup);
-    CMYTH->ref_release(playgroup);
+    ref_release(title);
+    ref_release(description);
+    ref_release(category);
+    ref_release(subtitle);
+    ref_release(callsign);
+    ref_release(recgroup);
+    ref_release(storegroup);
+    ref_release(playgroup);
     if(release)
-      CMYTH->ref_release(cmyth_timer);
+      ref_release(cmyth_timer);
   }
 
   int MythTimer::RecordID() const

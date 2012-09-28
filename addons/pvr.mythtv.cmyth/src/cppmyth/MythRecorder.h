@@ -1,11 +1,14 @@
 #pragma once
 
-#include "../libcmyth.h"
 #include "platform/util/StdString.h"
 #include <boost/shared_ptr.hpp>
 #include "MythPointer.h"
 #include "MythConnection.h"
 #include "../../../../lib/platform/threads/threads.h"
+
+extern "C" {
+#include <cmyth/cmyth.h>
+};
 
 class MythProgramInfo;
 class MythChannel;

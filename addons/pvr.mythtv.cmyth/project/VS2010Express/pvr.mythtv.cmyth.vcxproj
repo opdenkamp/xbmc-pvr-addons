@@ -43,12 +43,14 @@
     <ClInclude Include="..\..\src\cppmyth\MythTimer.h" />
     <ClInclude Include="..\..\src\cppmyth\MythTimestamp.h" />
     <ClInclude Include="..\..\src\fileOps.h" />
-    <ClInclude Include="..\..\src\libcmyth.h" />
     <ClInclude Include="..\..\src\pvrclient-mythtv.h" />
     <ClInclude Include="..\..\src\recordingrules.h" />
     <ClInclude Include="..\..\src\tools.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\lib\cmyth\Win32\libcmyth.vcxproj">
+      <Project>{f9e6874d-60a8-49ba-9393-a2105e63abcf}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
       <Project>{fe4573f6-a794-4ad3-b37f-49e51f1140e6}</Project>
     </ProjectReference>
@@ -97,12 +99,14 @@
     <TargetExt>.pvr</TargetExt>
     <TargetName>XBMC_mythtv_cmyth_win32</TargetName>
     <OutDir>..\..\addon\</OutDir>
-    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
     <CustomBuildBeforeTargets />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>XBMC_MythTV_cmyth_win32</TargetName>
-    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,9 +123,14 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <CustomBuildStep>
-      <Command>copy /B /Y "$(SolutionDir)libs\libcmyth_dll\Debug\*" "$(TargetDir)"</Command>
-      <Inputs>$(SolutionDir)libs\libcmyth_dll\Release\libcmyth.dll;%(Inputs)</Inputs>
-      <Outputs>$(TargetDir)libcmyth.dll</Outputs>
+      <Command>
+      </Command>
+      <Inputs>
+      </Inputs>
+      <Outputs>
+      </Outputs>
+      <Message>
+      </Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,11 +152,16 @@
       <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>
-      <Command>copy /B /Y "$(SolutionDir)libs\libcmyth_dll\Release\*" "$(TargetDir)"</Command>
+      <Command>
+      </Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(TargetDir)libcmyth.dll;%(Outputs)</Outputs>
-      <Inputs>$(SolutionDir)libs\libcmyth_dll\Release\libcmyth.dll;%(Inputs)</Inputs>
+      <Outputs>
+      </Outputs>
+      <Inputs>
+      </Inputs>
+      <Message>
+      </Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -348,10 +348,10 @@ void Log(int l,char* msg)
 bool PVRClientMythTV::Connect()
 {
   if(g_bExtraDebug)
-    CMYTH->cmyth_dbg_all();
+    cmyth_dbg_all();
   else
-    CMYTH->cmyth_dbg_level(CMYTH_DBG_ERROR);
-  CMYTH->cmyth_set_dbg_msgcallback(Log);
+    cmyth_dbg_level(CMYTH_DBG_ERROR);
+  cmyth_set_dbg_msgcallback(Log);
   m_con=MythConnection(g_szHostname,g_iMythPort);
   if(!m_con.IsConnected())
   {
@@ -862,10 +862,10 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
               tag.state=PVR_TIMER_STATE_SCHEDULED;
               break;
             case RS_UNKNOWN:
-            case RS__DONT_RECORD:
+            case RS_DONT_RECORD:
             case RS_PREVIOUS_RECORDING:
             case RS_CURRENT_RECORDING:
-            case RS_EARLIER_SHOWING:
+            case RS_EARLIER_RECORDING:
             case RS_TOO_MANY_RECORDINGS:
             case RS_NOT_LISTED:
             case RS_CONFLICT:

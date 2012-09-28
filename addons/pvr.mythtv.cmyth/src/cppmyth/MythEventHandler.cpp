@@ -64,7 +64,7 @@ MythEventHandler::ImpMythEventHandler::ImpMythEventHandler(CStdString server,uns
 :CThread(),CMutex(),m_rec(MythRecorder()),m_signal(),m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>()),m_server(server),m_port(port)
   {
     char *cserver=strdup(server.c_str());
-    cmyth_conn_t connection=CMYTH->cmyth_conn_connect_event(cserver,port,64*1024, 16*1024);
+    cmyth_conn_t connection=cmyth_conn_connect_event(cserver,port,64*1024, 16*1024);
     free(cserver);
     *m_conn_t=connection;
   }
@@ -73,7 +73,7 @@ MythEventHandler::ImpMythEventHandler::ImpMythEventHandler(CStdString server,uns
   MythEventHandler::ImpMythEventHandler::~ImpMythEventHandler()
   {
     StopThread(30);
-    CMYTH->ref_release(*m_conn_t);
+    ref_release(*m_conn_t);
     *m_conn_t=0;
   }
 
@@ -130,7 +130,7 @@ bool MythEventHandler::TryReconnect()
         XBMC->Log( LOG_DEBUG, "%s - Trying to reconnect (retry count: %d)", __FUNCTION__, m_retry_count );
         m_retry_count++;
         m_imp->m_conn_t->Lock();
-        retval = CMYTH->cmyth_conn_reconnect_event( *(m_imp->m_conn_t) );
+        retval = cmyth_conn_reconnect_event( *(m_imp->m_conn_t) );
         m_imp->m_conn_t->Unlock();
         if ( retval == 1 )
             m_retry_count = 0;
@@ -235,12 +235,12 @@ void* MythEventHandler::ImpMythEventHandler::Process(void)
   {
     int select = 0;
     m_conn_t->Lock();
-    select = CMYTH->cmyth_event_select(*m_conn_t,&timeout);
+    select = cmyth_event_select(*m_conn_t,&timeout);
     m_conn_t->Unlock();
     if(select>0)
     {
         m_conn_t->Lock();
-        myth_event=CMYTH->cmyth_event_get(*m_conn_t,databuf,2048);
+        myth_event=cmyth_event_get(*m_conn_t,databuf,2048);
         m_conn_t->Unlock();
         if(g_bExtraDebug)
             XBMC->Log(LOG_DEBUG,"EVENT ID: %s, EVENT databuf: %s",events[myth_event],databuf);
@@ -291,11 +291,11 @@ void* MythEventHandler::ImpMythEventHandler::Process(void)
         databuf[0]=0;
 
     }
-    else if ( select < 0 || CMYTH->cmyth_conn_hung( *m_conn_t ) )
+    else if ( select < 0 || cmyth_conn_hung( *m_conn_t ) )
     {
         XBMC->Log( LOG_NOTICE, "%s - Select returned error; reconnect event client connection", __FUNCTION__ );
         m_conn_t->Lock();
-        int retval = CMYTH->cmyth_conn_reconnect_event( *m_conn_t );
+        int retval = cmyth_conn_reconnect_event( *m_conn_t );
         m_conn_t->Unlock();
         if ( retval == 1 )
             XBMC->Log( LOG_NOTICE, "%s - Connected client to event socket", __FUNCTION__ );

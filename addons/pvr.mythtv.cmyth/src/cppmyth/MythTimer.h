@@ -1,7 +1,10 @@
 #pragma once
 
-#include "../libcmyth.h"
 #include "platform/util/StdString.h"
+
+extern "C" {
+#include <cmyth/cmyth.h>
+};
 
 class MythTimer
 {

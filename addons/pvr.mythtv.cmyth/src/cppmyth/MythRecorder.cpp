@@ -14,14 +14,14 @@ using namespace ADDON;
  * connected to the control socket and try to re-connect if not.
  * If reconnection is ok, call 'call' again. */
 #define CMYTH_REC_CALL( var, cond, call )  m_conn.Lock(); \
-                                           var = CMYTH->call; \
+                                           var = call; \
                                            m_conn.Unlock(); \
                                            if ( cond ) \
                                            { \
                                                if ( !m_conn.IsConnected() && m_conn.TryReconnect() ) \
                                                { \
                                                    m_conn.Lock(); \
-                                                   var = CMYTH->call; \
+                                                   var = call; \
                                                    m_conn.Unlock(); \
                                                } \
                                            } \
@@ -29,7 +29,7 @@ using namespace ADDON;
 /* Similar to CMYTH_CONN_CALL, but it will release 'var' if it was not NULL
  * right before calling 'call' again. */
 #define CMYTH_REC_CALL_REF( var, cond, call )  m_conn.Lock(); \
-                                               var = CMYTH->call; \
+                                               var = call; \
                                                m_conn.Unlock(); \
                                                if ( cond ) \
                                                { \
@@ -37,8 +37,8 @@ using namespace ADDON;
                                                    { \
                                                        m_conn.Lock(); \
                                                        if ( var != NULL ) \
-                                                           CMYTH->ref_release( var ); \
-                                                       var = CMYTH->call; \
+                                                           ref_release( var ); \
+                                                       var = call; \
                                                        m_conn.Unlock(); \
                                                    } \
                                                } \
@@ -130,7 +130,7 @@ bool MythRecorder::IsTunable(MythChannel &channel)
 
   XBMC->Log(LOG_DEBUG,"%s: called for recorder %i, channel %i",__FUNCTION__,ID(),channel.ID());
 
-  cmyth_inputlist_t inputlist=CMYTH->cmyth_get_free_inputlist(*m_recorder_t);
+  cmyth_inputlist_t inputlist=cmyth_get_free_inputlist(*m_recorder_t);
 
   bool ret = false;
   for (int i=0; i < inputlist->input_count; ++i)
@@ -154,7 +154,7 @@ bool MythRecorder::IsTunable(MythChannel &channel)
     break;
   }
 
-  CMYTH->ref_release(inputlist);
+  ref_release(inputlist);
   m_conn.Unlock();
 
   if (!ret)
@@ -188,7 +188,7 @@ bool MythRecorder::SetChannel(MythChannel &channel)
     return false;
   }
   CStdString channelNum=channel.Number();
-  if(CMYTH->cmyth_recorder_pause(*m_recorder_t)!=0)
+  if(cmyth_recorder_pause(*m_recorder_t)!=0)
   {
     XBMC->Log(LOG_ERROR,"%s: Failed to pause recorder %i",__FUNCTION__,ID());
     //m_recorder_t->Unlock();
@@ -202,14 +202,14 @@ bool MythRecorder::SetChannel(MythChannel &channel)
     m_conn.Unlock();
     return false;
   }
-  if(CMYTH->cmyth_recorder_set_channel(*m_recorder_t,channelNum.GetBuffer())!=0)
+  if(cmyth_recorder_set_channel(*m_recorder_t,channelNum.GetBuffer())!=0)
   {
     XBMC->Log(LOG_ERROR,"%s: Failed to change recorder %i to channel %s",__FUNCTION__,ID(),channel.Name().c_str());
     //m_recorder_t->Unlock();
     m_conn.Unlock();
     return false;
   }
-  if(CMYTH->cmyth_livetv_chain_switch_last(*m_recorder_t)!=1)
+  if(cmyth_livetv_chain_switch_last(*m_recorder_t)!=1)
   {
     XBMC->Log(LOG_ERROR,"%s: Failed to switch chain for recorder %i",__FUNCTION__,ID(),channel.Name().c_str());
     //m_recorder_t->Unlock();

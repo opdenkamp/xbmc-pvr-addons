@@ -10,6 +10,9 @@ ADDONNAME       = pvr.mythtv.cmyth
 LIBNAME         = libmythtvcmyth-addon
 lib_LTLIBRARIES = libmythtvcmyth-addon.la
 
+LIBS            = @abs_top_srcdir@/lib/cmyth/libcmyth.la
+
+AM_CPPFLAGS = -I$(abs_top_srcdir)/lib/cmyth/include
 AM_LDFLAGS = -lboost_system -lboost_filesystem -lboost_regex -ldl
 
 include ../Makefile.include.am
@@ -29,8 +32,4 @@ libmythtvcmyth_addon_la_SOURCES = src/client.cpp \
                                   src/cppmyth/MythSignal.cpp \
                                   src/cppmyth/MythTimer.cpp \
                                   src/cppmyth/MythTimestamp.cpp
-
-all-local: @abs_top_srcdir@/lib/cmyth/libcmyth.la
-	@echo copy libcmyth to addon directory
-	cp @abs_top_srcdir@/lib/cmyth/.libs/libcmyth.so addon/libcmyth-@ARCHITECTURE@-@OS@.so
 

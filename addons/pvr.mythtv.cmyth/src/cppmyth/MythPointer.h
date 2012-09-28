@@ -1,9 +1,11 @@
 #pragma once
 
-#include "../libcmyth.h"
 #include "../../../../lib/platform/threads/threads.h"
 
-extern CHelper_libcmyth *CMYTH;
+extern "C" {
+#include <cmyth/cmyth.h>
+#include <refmem/refmem.h>
+};
 
 using namespace PLATFORM;
 
@@ -12,7 +14,7 @@ template <class T> class MythPointer
 public:
   ~MythPointer()
   {
-    CMYTH->ref_release(m_mythpointer);
+    ref_release(m_mythpointer);
     m_mythpointer=0;
   }
   MythPointer()

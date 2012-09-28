@@ -1,12 +1,15 @@
 #pragma once
 
-#include "../libcmyth.h"
 #include <vector>
 #include <map>
 #include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
 #include "platform/util/StdString.h"
 #include "MythPointer.h"
+
+extern "C" {
+#include <cmyth/cmyth.h>
+};
 
 class MythChannel;
 class MythTimer;

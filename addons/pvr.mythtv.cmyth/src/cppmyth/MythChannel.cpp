@@ -1,6 +1,10 @@
 #include "MythChannel.h"
 #include "../client.h"
 
+extern "C" {
+#include <refmem/refmem.h>
+};
+
 using namespace ADDON;
 
 /*
@@ -20,55 +24,55 @@ MythChannel::MythChannel()
 
 int  MythChannel::ID()
 {
-  return CMYTH->cmyth_channel_chanid(*m_channel_t);
+  return cmyth_channel_chanid(*m_channel_t);
 }
 
 int  MythChannel::NumberInt()
 {
-  return CMYTH->cmyth_channel_channum(*m_channel_t);
+  return cmyth_channel_channum(*m_channel_t);
 }
 
 CStdString MythChannel::Number()
 {
-  CStdString retval( CMYTH->cmyth_channel_channumstr(*m_channel_t));
+  CStdString retval( cmyth_channel_channumstr(*m_channel_t));
   return retval;
 } 
 
  CStdString MythChannel::Callsign()
 {
-  CStdString retval( CMYTH->cmyth_channel_callsign(*m_channel_t));
+  CStdString retval( cmyth_channel_callsign(*m_channel_t));
   return retval;
 } 
 
 int MythChannel::SourceID()
 {
-  return CMYTH->cmyth_channel_sourceid(*m_channel_t);
+  return cmyth_channel_sourceid(*m_channel_t);
 }
 
 int MythChannel::MultiplexID()
 {
-  return CMYTH->cmyth_channel_multiplex(*m_channel_t);
+  return cmyth_channel_multiplex(*m_channel_t);
 }
 
 CStdString  MythChannel::Name()
 {
-  char* cChan=CMYTH->cmyth_channel_name(*m_channel_t);
+  char* cChan=cmyth_channel_name(*m_channel_t);
   CStdString retval(cChan);
-  CMYTH->ref_release(cChan);
+  ref_release(cChan);
   return retval;
 }
 
 CStdString  MythChannel::Icon()
 {
-  char* cIcon=CMYTH->cmyth_channel_icon(*m_channel_t);
+  char* cIcon=cmyth_channel_icon(*m_channel_t);
   CStdString retval(cIcon);
-  CMYTH->ref_release(cIcon);
+  ref_release(cIcon);
   return retval;
 }
 
 bool  MythChannel::Visible()
 {
-  return CMYTH->cmyth_channel_visible(*m_channel_t)>0;
+  return cmyth_channel_visible(*m_channel_t)>0;
 }
 
 bool MythChannel::IsRadio()

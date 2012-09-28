@@ -59,7 +59,6 @@ PVRClientMythTV       *g_client       = NULL;
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
 CHelper_libXBMC_gui   *GUI            = NULL;
-CHelper_libcmyth      *CMYTH          = NULL;
 
 
 extern "C" {
@@ -95,15 +94,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_UNKNOWN;
   XBMC->Log(LOG_DEBUG, "Register handle @ libXBMC_gui...done[4/7]");
 
-  XBMC->Log(LOG_DEBUG, "Loading cmyth library...");
-  CMYTH = new CHelper_libcmyth;
-  if (!CMYTH->RegisterMe(hdl))
-  {
-    XBMC->Log(LOG_ERROR, "Failed to load cmyth library!");
-    return ADDON_STATUS_UNKNOWN;
-  }
-  XBMC->Log(LOG_DEBUG, "Loading cmyth library...done[5/7]");
-  
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
   //g_iClientID    = pvrprops->iClientId;
   g_szUserPath   = pvrprops->strUserPath;
@@ -242,11 +232,6 @@ void ADDON_Destroy()
     GUI = NULL;
   }
 
-  if (CMYTH)
-  {
-    delete(CMYTH);
-    CMYTH = NULL;
-  }
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }
 

@@ -753,22 +753,30 @@ extern cmyth_posmap_t cmyth_posmap_create(void);
  * Program recording status.
  */
 typedef enum {
-	RS_DELETED = -5,
-	RS_STOPPED = -4,
+	RS_TUNING = -10,
+	RS_FAILED = -9,
+	RS_TUNER_BUSY = -8,
+	RS_LOW_DISKSPACE = -7,
+	RS_CANCELLED = -6,
+	RS_MISSED = -5,
+	RS_ABORTED = -4,
 	RS_RECORDED = -3,
 	RS_RECORDING = -2,
 	RS_WILL_RECORD = -1,
+	RS_UNKNOWN = 0,
 	RS_DONT_RECORD = 1,
 	RS_PREVIOUS_RECORDING = 2,
 	RS_CURRENT_RECORDING = 3,
 	RS_EARLIER_RECORDING = 4,
 	RS_TOO_MANY_RECORDINGS = 5,
-	RS_CANCELLED = 6,
+	RS_NOT_LISTED = 6,
 	RS_CONFLICT = 7,
 	RS_LATER_SHOWING = 8,
 	RS_REPEAT = 9,
-	RS_LOW_DISKSPACE = 11,
-	RS_TUNER_BUSY = 12,
+	RS_INACTIVE = 10,
+	RS_NEVER_RECORD = 11,
+	RS_OFFLINE = 12,
+	RS_OTHER_SHOWING = 13
 } cmyth_proginfo_rec_status_t;
 
 /**

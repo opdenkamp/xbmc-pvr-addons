@@ -162,8 +162,11 @@ void cVNSIClient::Action(void)
       kaTimeStamp = ntohl(kaTimeStamp);
 
       uint8_t buffer[8];
-      *(uint32_t*)&buffer[0] = htonl(3); // KA CHANNEL
-      *(uint32_t*)&buffer[4] = htonl(kaTimeStamp);
+      uint32_t ul;
+      ul = htonl(3); // KA CHANNEL
+      memcpy(&buffer[0], &ul, sizeof(uint32_t));
+      ul = htonl(kaTimeStamp);
+      memcpy(&buffer[4], &ul, sizeof(uint32_t));
       if (!m_socket.write(buffer, 8))
       {
         ERRORLOG("Could not send back KA reply");
@@ -792,7 +795,7 @@ bool cVNSIClient::processRecStream_GetIFrame() /* OPCODE 45 */
   m_resp->finalise();
   m_socket.write(m_resp->getPtr(), m_resp->getLen());
 
-  DEBUGLOG("Wrote GNIF reply to client %llu %u %u", rfilePosition, rframeNumber, rframeLength);
+  DEBUGLOG("Wrote GNIF reply to client %lu %u %u", rfilePosition, rframeNumber, rframeLength);
   return true;
 }
 

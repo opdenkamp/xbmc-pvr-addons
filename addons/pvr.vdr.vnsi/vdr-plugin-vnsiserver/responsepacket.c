@@ -70,9 +70,15 @@ bool cResponsePacket::init(uint32_t requestID)
 {
   initBuffers();
 
-  *(uint32_t*)&buffer[0] = htonl(VNSI_CHANNEL_REQUEST_RESPONSE); // RR channel
-  *(uint32_t*)&buffer[4] = htonl(requestID);
-  *(uint32_t*)&buffer[userDataLenPos] = 0;
+  uint32_t ul;
+
+  ul = htonl(VNSI_CHANNEL_REQUEST_RESPONSE);                     // RR channel
+  memcpy(&buffer[0], &ul, sizeof(uint32_t));
+  ul = htonl(requestID);
+  memcpy(&buffer[4], &ul, sizeof(uint32_t));
+  ul = 0;
+  memcpy(&buffer[userDataLenPos], &ul, sizeof(uint32_t));
+
   bufUsed = headerLength;
 
   return true;
@@ -82,9 +88,15 @@ bool cResponsePacket::initScan(uint32_t opCode)
 {
   initBuffers();
 
-  *(uint32_t*)&buffer[0] = htonl(VNSI_CHANNEL_SCAN); // RR channel
-  *(uint32_t*)&buffer[4] = htonl(opCode);
-  *(uint32_t*)&buffer[userDataLenPos] = 0;
+  uint32_t ul;
+
+  ul = htonl(VNSI_CHANNEL_SCAN);                     // RR channel
+  memcpy(&buffer[0], &ul, sizeof(uint32_t));
+  ul = htonl(opCode);
+  memcpy(&buffer[4], &ul, sizeof(uint32_t));
+  ul = 0;
+  memcpy(&buffer[userDataLenPos], &ul, sizeof(uint32_t));
+
   bufUsed = headerLength;
 
   return true;
@@ -94,25 +106,42 @@ bool cResponsePacket::initStatus(uint32_t opCode)
 {
   initBuffers();
 
-  *(uint32_t*)&buffer[0] = htonl(VNSI_CHANNEL_STATUS); // RR channel
-  *(uint32_t*)&buffer[4] = htonl(opCode);
-  *(uint32_t*)&buffer[userDataLenPos] = 0;
+  uint32_t ul;
+
+  ul = htonl(VNSI_CHANNEL_STATUS);                     // RR channel
+  memcpy(&buffer[0], &ul, sizeof(uint32_t));
+  ul = htonl(opCode);
+  memcpy(&buffer[4], &ul, sizeof(uint32_t));
+  ul = 0;
+  memcpy(&buffer[userDataLenPos], &ul, sizeof(uint32_t));
+
   bufUsed = headerLength;
 
   return true;
 }
 
-bool cResponsePacket::initStream(uint32_t opCode, uint32_t streamID, uint32_t duration, int64_t dts, int64_t pts)
+bool cResponsePacket::initStream(uint32_t opCode, uint32_t streamID, uint32_t duration, int64_t pts, int64_t dts)
 {
   initBuffers();
 
-  *(uint32_t*)&buffer[0]  = htonl(VNSI_CHANNEL_STREAM); // stream channel
-  *(uint32_t*)&buffer[4]  = htonl(opCode);         // Stream packet operation code
-  *(uint32_t*)&buffer[8]  = htonl(streamID);       // Stream ID
-  *(uint32_t*)&buffer[12] = htonl(duration);       // Duration
-  *(int64_t*) &buffer[16] = __cpu_to_be64(dts);    // DTS
-  *(int64_t*) &buffer[24] = __cpu_to_be64(pts);    // PTS
-  *(uint32_t*)&buffer[userDataLenPosStream] = 0;
+  uint32_t ul;
+  uint64_t ull;
+
+  ul =  htonl(VNSI_CHANNEL_STREAM);            // stream channel
+  memcpy(&buffer[0], &ul, sizeof(uint32_t));
+  ul = htonl(opCode);                          // Stream packet operation code
+  memcpy(&buffer[4], &ul, sizeof(uint32_t));
+  ul = htonl(streamID);                        // Stream ID
+  memcpy(&buffer[8], &ul, sizeof(uint32_t));
+  ul = htonl(duration);                        // Duration
+  memcpy(&buffer[12], &ul, sizeof(uint32_t));
+  ull = __cpu_to_be64(pts);                    // PTS
+  memcpy(&buffer[16], &ull, sizeof(uint64_t));
+  ull = __cpu_to_be64(dts);                    // DTS
+  memcpy(&buffer[24], &ull, sizeof(uint64_t));
+  ul = 0;
+  memcpy(&buffer[userDataLenPosStream], &ul, sizeof(uint32_t));
+
   bufUsed = headerLengthStream;
 
   return true;
@@ -120,12 +149,14 @@ bool cResponsePacket::initStream(uint32_t opCode, uint32_t streamID, uint32_t du
 
 void cResponsePacket::finalise()
 {
-  *(uint32_t*)&buffer[userDataLenPos] = htonl(bufUsed - headerLength);
+  uint32_t ul = htonl(bufUsed - headerLength);
+  memcpy(&buffer[userDataLenPos], &ul, sizeof(uint32_t));
 }
 
 void cResponsePacket::finaliseStream()
 {
-  *(uint32_t*)&buffer[userDataLenPosStream] = htonl(bufUsed - headerLengthStream);
+  uint32_t ul = htonl(bufUsed - headerLengthStream);
+  memcpy(&buffer[userDataLenPosStream], &ul, sizeof(uint32_t));
 }
 
 
@@ -162,7 +193,8 @@ bool cResponsePacket::add_String(const char* string)
 bool cResponsePacket::add_U32(uint32_t ul)
 {
   if (!checkExtend(sizeof(uint32_t))) return false;
-  *(uint32_t*)&buffer[bufUsed] = htonl(ul);
+  uint32_t tmp = htonl(ul);
+  memcpy(&buffer[bufUsed], &tmp, sizeof(uint32_t));
   bufUsed += sizeof(uint32_t);
   return true;
 }
@@ -178,7 +210,8 @@ bool cResponsePacket::add_U8(uint8_t c)
 bool cResponsePacket::add_S32(int32_t l)
 {
   if (!checkExtend(sizeof(int32_t))) return false;
-  *(int32_t*)&buffer[bufUsed] = htonl(l);
+  int32_t tmp = htonl(l);
+  memcpy(&buffer[bufUsed], &tmp, sizeof(int32_t));
   bufUsed += sizeof(int32_t);
   return true;
 }
@@ -186,7 +219,8 @@ bool cResponsePacket::add_S32(int32_t l)
 bool cResponsePacket::add_U64(uint64_t ull)
 {
   if (!checkExtend(sizeof(uint64_t))) return false;
-  *(uint64_t*)&buffer[bufUsed] = __cpu_to_be64(ull);
+  uint64_t tmp = __cpu_to_be64(ull);
+  memcpy(&buffer[bufUsed], &tmp, sizeof(uint64_t));
   bufUsed += sizeof(uint64_t);
   return true;
 }
@@ -195,8 +229,9 @@ bool cResponsePacket::add_double(double d)
 {
   if (!checkExtend(sizeof(double))) return false;
   uint64_t ull;
-  memcpy(&ull,&d,sizeof(double));
-  *(uint64_t*)&buffer[bufUsed] = __cpu_to_be64(ull);
+  memcpy(&ull, &d, sizeof(double));
+  ull = __cpu_to_be64(ull);
+  memcpy(&buffer[bufUsed], &ull, sizeof(uint64_t));
   bufUsed += sizeof(uint64_t);
   return true;
 }

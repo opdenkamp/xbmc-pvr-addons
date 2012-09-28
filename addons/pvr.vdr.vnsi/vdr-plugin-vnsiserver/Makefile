@@ -15,20 +15,22 @@ VERSION = $(shell grep 'static const char \*VERSION *=' vnsi.h | awk '{ print $$
 
 ### The C++ compiler and options:
 
-OPTLEVEL ?= 2
-CXXFLAGS = -O$(OPTLEVEL) -g -Wall -Woverloaded-virtual -fPIC -DPIC
+CXX      ?= g++
+CXXFLAGS ?= -g -O3 -fPIC -Wall -Werror=overloaded-virtual -Wno-parentheses
 
 ### The directory environment:
 
-DVBDIR = ../../../../DVB
-VDRDIR = ../../..
-LIBDIR = ../../lib
+VDRDIR ?= ../../..
+LIBDIR = $(VDRDIR)/PLUGINS/lib
 TMPDIR = /tmp
+
+### Make sure that necessary options are included:
+
+-include $(VDRDIR)/Make.global
 
 ### Allow user defined options to overwrite defaults:
 
 -include $(VDRDIR)/Make.config
--include $(VDRDIR)/Make.global
 
 ### The version number of VDR (taken from VDR's "config.h"):
 
@@ -41,15 +43,9 @@ PACKAGE = vdr-$(ARCHIVE)
 
 ### Includes and Defines (add further entries here):
 
-INCLUDES += -I$(VDRDIR)/include -I$(DVBDIR)/include -I$(VDRDIR)
+INCLUDES += -I$(VDRDIR)/include -I$(VDRDIR)
 
-DEFINES += -DPLUGIN_NAME_I18N='"$(PLUGIN)"' -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -DVNSI_SERVER_VERSION='"$(VERSION)"'
-ifeq ($(DEBUG),1)
-  DEFINES += -DDEBUG
-endif
-ifeq ($(CONSOLEDEBUG),1)
-  DEFINES += -DCONSOLEDEBUG
-endif
+DEFINES += -D_GNU_SOURCE -DPLUGIN_NAME_I18N='"$(PLUGIN)"' -DVNSI_SERVER_VERSION='"$(VERSION)"'
 
 ### The object files (add further files here):
 
@@ -67,7 +63,7 @@ all-redirect: all
 
 # Dependencies:
 
-MAKEDEP = g++ -MM -MG
+MAKEDEP = $(CXX) -MM -MG
 DEPFILE = .dependencies
 $(DEPFILE): Makefile
 	@$(MAKEDEP) $(DEFINES) $(INCLUDES) $(OBJS:%.o=%.c) > $@

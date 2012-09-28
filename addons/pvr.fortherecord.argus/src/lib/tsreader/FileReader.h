@@ -27,12 +27,7 @@
  *    http://forums.dvbowners.com/
  */
 
-#if defined TSREADER
-
 #include "platform/os.h"
-#if !defined(TARGET_WINDOWS)
-#include "FileSMB.h"
-#endif
 
 class FileReader
 {
@@ -47,7 +42,7 @@ class FileReader
     virtual long CloseFile();
     virtual long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
     virtual bool IsFileInvalid();
-    virtual unsigned long SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
+    virtual int64_t SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
     virtual int64_t GetFilePointer();
     virtual void OnZap(void);
     virtual int64_t GetFileSize();
@@ -56,17 +51,10 @@ class FileReader
     void SetDebugOutput(bool bDebugOutput);
 
   protected:
-#if defined(TARGET_WINDOWS)
-    HANDLE   m_hFile;               // Handle to file for streaming
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-    PLATFORM::CFile m_hFile;        // Handle to file for streaming
-#endif
+    void*    m_hFile;               // Handle to file for streaming
     char*    m_pFileName;           // The filename where we stream
-    bool     m_bReadOnly;
     int64_t  m_fileSize;
     int64_t  m_fileStartPos;
 
     bool     m_bDebugOutput;
 };
-
-#endif //_WIN32 && TSREADER

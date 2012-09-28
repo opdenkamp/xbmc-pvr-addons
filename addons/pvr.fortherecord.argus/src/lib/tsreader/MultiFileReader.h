@@ -27,8 +27,6 @@
  *    http://forums.dvbowners.com/
  */
 
-#if defined TSREADER
-
 #include "FileReader.h"
 #include <vector>
 #include <string>
@@ -54,7 +52,8 @@ class MultiFileReader : public FileReader
     virtual long CloseFile();
     virtual long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
     virtual bool IsFileInvalid();
-    virtual unsigned long SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
+
+    virtual int64_t SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
     virtual int64_t GetFilePointer();
     virtual int64_t GetFileSize();
     virtual void OnZap(void);
@@ -63,7 +62,6 @@ class MultiFileReader : public FileReader
     long RefreshTSBufferFile();
     long GetFileLength(const char* pFilename, int64_t &length);
 
-    //  SharedMemory* m_pSharedMemory;
     FileReader m_TSBufferFile;
     int64_t m_startPosition;
     int64_t m_endPosition;
@@ -76,9 +74,6 @@ class MultiFileReader : public FileReader
 
     FileReader m_TSFile;
     long     m_TSFileId;
-    bool     m_bReadOnly;
     bool     m_bDelay;
     bool     m_bDebugOutput;
 };
-
-#endif

@@ -16,8 +16,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef TSREADER
-
 // Code below is work in progress and not yet finished
 //
 // DONE:
@@ -41,7 +39,7 @@ CTsReader::CTsReader()
 #endif
 }
 
-long CTsReader::Open(const char* pszFileName)//, const AM_MEDIA_TYPE *pmt)
+long CTsReader::Open(const char* pszFileName)
 {
   XBMC->Log(LOG_DEBUG, "CTsReader::Open(%s)", pszFileName);
 
@@ -129,7 +127,7 @@ void CTsReader::Close()
   }
 }
 
-unsigned long CTsReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
+int64_t CTsReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
 {
   return m_fileReader->SetFilePointer(llDistanceToMove, dwMoveMethod);
 }
@@ -159,5 +157,3 @@ long long CTsReader::sigmaCount()
   return liCount.QuadPart;
 }
 #endif
-
-#endif //TSREADER

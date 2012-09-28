@@ -1110,6 +1110,9 @@ extern void cmyth_file_set_closed_callback(cmyth_file_t file,
 extern int cmyth_file_read(cmyth_file_t file,
 			   char *buf,
 			   unsigned long len);
+
+extern int cmyth_file_data_conn_fd(cmyth_file_t file);
+
 /*
  * -----------------------------------------------------------------
  * Channel Operations

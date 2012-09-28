@@ -665,7 +665,7 @@ cmyth_file_seek_unlocked(cmyth_file_t file, long long offset, int whence)
 }
 
 /*
- * cmyth_file_read(cmyth_recorder_t rec, char *buf, unsigned long len)
+ * cmyth_file_read(cmyth_file_read file, char *buf, unsigned long len)
  * 
  * Scope: PUBLIC
  *

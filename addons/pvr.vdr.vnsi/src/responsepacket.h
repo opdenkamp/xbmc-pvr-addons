@@ -29,10 +29,12 @@ class cResponsePacket
     cResponsePacket();
     ~cResponsePacket();
 
-    void setResponse(uint32_t requestID, uint8_t* packet, uint32_t packetLength);
-    void setStatus(uint32_t requestID, uint8_t* packet, uint32_t packetLength);
+    void setResponse(uint8_t* packet, uint32_t packetLength);
+    void setStatus(uint8_t* packet, uint32_t packetLength);
+    void setStream(uint8_t* packet, uint32_t packetLength);
 
-    void setStream(uint32_t opcodeID, uint32_t streamID, uint32_t duration, int64_t dts, int64_t pts, uint8_t* packet, uint32_t packetLength);
+    void extractHeader();
+    void extractStreamHeader();
 
     bool noResponse() { return (userData == NULL); };
     int  serverError();
@@ -61,7 +63,12 @@ class cResponsePacket
     // If you call this, the memory becomes yours. Free with free()
     uint8_t* getUserData();
 
+    uint8_t* getHeader() { return header; };
+    unsigned int getStreamHeaderLength() { return 32; };
+    unsigned int getHeaderLength() { return 8; };
+
   private:
+    uint8_t  header[36];
     uint8_t* userData;
     uint32_t userDataLength;
     uint32_t packetPos;

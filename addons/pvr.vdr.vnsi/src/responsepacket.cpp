@@ -53,32 +53,57 @@ cResponsePacket::~cResponsePacket()
   }
 }
 
-void cResponsePacket::setResponse(uint32_t trequestID, uint8_t* tuserData, uint32_t tuserDataLength)
+void cResponsePacket::setResponse(uint8_t* tuserData, uint32_t tuserDataLength)
 {
   channelID       = VNSI_CHANNEL_REQUEST_RESPONSE;
-  requestID       = trequestID;
   userData        = tuserData;
   userDataLength  = tuserDataLength;
+  packetPos       = 0;
 }
 
-void cResponsePacket::setStatus(uint32_t trequestID, uint8_t* tuserData, uint32_t tuserDataLength)
+void cResponsePacket::setStatus(uint8_t* tuserData, uint32_t tuserDataLength)
 {
   channelID       = VNSI_CHANNEL_STATUS;
-  requestID       = trequestID;
   userData        = tuserData;
   userDataLength  = tuserDataLength;
+  packetPos       = 0;
 }
 
-void cResponsePacket::setStream(uint32_t topcodeID, uint32_t tstreamID, uint32_t tduration, int64_t tdts, int64_t tpts, uint8_t* tuserData, uint32_t tuserDataLength)
+void cResponsePacket::setStream(uint8_t* tuserData, uint32_t tuserDataLength)
 {
   channelID       = VNSI_CHANNEL_STREAM;
-  opcodeID        = topcodeID;
-  streamID        = tstreamID;
-  duration        = tduration;
-  dts             = tdts;
-  pts             = tpts;
+  // set pointer to user data
   userData        = tuserData;
   userDataLength  = tuserDataLength;
+  packetPos       = 0;
+}
+
+void cResponsePacket::extractHeader()
+{
+  // set data pointers to header first
+  userData = header;
+  userDataLength = sizeof(header);
+  packetPos = 0;
+
+  requestID = extract_U32();
+  userDataLength = extract_U32();
+}
+
+void cResponsePacket::extractStreamHeader()
+{
+  channelID = VNSI_CHANNEL_STREAM;
+
+  // set data pointers to header first
+  userData = header;
+  userDataLength = sizeof(header);
+  packetPos = 0;
+
+  opcodeID = extract_U32();
+  streamID = extract_U32();
+  duration = extract_U32();
+  pts      = extract_U64();
+  dts      = extract_U64();
+  userDataLength = extract_U32();
 }
 
 bool cResponsePacket::end()
@@ -115,7 +140,9 @@ uint8_t cResponsePacket::extract_U8()
 uint32_t cResponsePacket::extract_U32()
 {
   if ((packetPos + sizeof(uint32_t)) > userDataLength) return 0;
-  uint32_t ul = ntohl(*(uint32_t*)&userData[packetPos]);
+  uint32_t ul;
+  memcpy(&ul, &userData[packetPos], sizeof(uint32_t));
+  ul = ntohl(ul);
   packetPos += sizeof(uint32_t);
   return ul;
 }
@@ -123,7 +150,9 @@ uint32_t cResponsePacket::extract_U32()
 uint64_t cResponsePacket::extract_U64()
 {
   if ((packetPos + sizeof(uint64_t)) > userDataLength) return 0;
-  uint64_t ull = ntohll(*(uint64_t*)&userData[packetPos]);
+  uint64_t ull;
+  memcpy(&ull, &userData[packetPos], sizeof(uint64_t));
+  ull = ntohll(ull);
   packetPos += sizeof(uint64_t);
   return ull;
 }
@@ -131,7 +160,9 @@ uint64_t cResponsePacket::extract_U64()
 double cResponsePacket::extract_Double()
 {
   if ((packetPos + sizeof(uint64_t)) > userDataLength) return 0;
-  uint64_t ull = ntohll(*(uint64_t*)&userData[packetPos]);
+  uint64_t ull;
+  memcpy(&ull, &userData[packetPos], sizeof(uint64_t));
+  ull = ntohll(ull);
   double d;
   memcpy(&d,&ull,sizeof(double));
   packetPos += sizeof(uint64_t);
@@ -141,7 +172,9 @@ double cResponsePacket::extract_Double()
 int32_t cResponsePacket::extract_S32()
 {
   if ((packetPos + sizeof(int32_t)) > userDataLength) return 0;
-  int32_t l = ntohl(*(int32_t*)&userData[packetPos]);
+  int32_t l;
+  memcpy(&l, &userData[packetPos], sizeof(int32_t));
+  l = ntohl(l);
   packetPos += sizeof(int32_t);
   return l;
 }
@@ -149,7 +182,9 @@ int32_t cResponsePacket::extract_S32()
 int64_t cResponsePacket::extract_S64()
 {
   if ((packetPos + sizeof(int64_t)) > userDataLength) return 0;
-  int64_t ll = ntohll(*(int64_t*)&userData[packetPos]);
+  int64_t ll;
+  memcpy(&ll, &userData[packetPos], sizeof(int64_t));
+  ll = ntohll(ll);
   packetPos += sizeof(int64_t);
   return ll;
 }

@@ -792,7 +792,7 @@ bool cVNSIClient::processRecStream_GetIFrame() /* OPCODE 45 */
   m_resp->finalise();
   m_socket.write(m_resp->getPtr(), m_resp->getLen());
 
-  DEBUGLOG("Wrote GNIF reply to client %llu %u %u", rfilePosition, rframeNumber, rframeLength);
+  DEBUGLOG("Wrote GNIF reply to client %lu %u %u", rfilePosition, rframeNumber, rframeLength);
   return true;
 }
 

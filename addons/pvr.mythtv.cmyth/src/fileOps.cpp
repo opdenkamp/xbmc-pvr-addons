@@ -13,7 +13,7 @@
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 using namespace ADDON;
 
-fileOps2::fileOps2(MythConnection &mythConnection)
+FileOps::FileOps(MythConnection &mythConnection)
   :CThread(),CMutex(),m_con(mythConnection),m_localBasePath(g_szUserPath.c_str()),m_sg_strings(),m_queue_content(), m_jobqueue()
 {
   m_localBasePath /= "cache";
@@ -35,7 +35,7 @@ fileOps2::fileOps2(MythConnection &mythConnection)
   CreateThread();
 }
 
-CStdString fileOps2::getChannelIconPath(CStdString remotePath)
+CStdString FileOps::getChannelIconPath(CStdString remotePath)
 {
   //Check local directory
   if(remotePath == "")
@@ -59,7 +59,7 @@ CStdString fileOps2::getChannelIconPath(CStdString remotePath)
   if(!boost::filesystem::exists(localFilePath))
   {      
     Lock();
-    fileOps2::jobItem job(localFilePath, "/channels/"+remoteFilename,"");
+    FileOps::jobItem job(localFilePath, "/channels/"+remoteFilename,"");
     m_jobqueue.push(job);
     m_queue_content.Signal();
     Unlock();
@@ -69,7 +69,7 @@ CStdString fileOps2::getChannelIconPath(CStdString remotePath)
 
 }
 
-CStdString fileOps2::getPreviewIconPath(CStdString remotePath)
+CStdString FileOps::getPreviewIconPath(CStdString remotePath)
 {
   //Check local directory
   if(g_bExtraDebug)
@@ -85,7 +85,7 @@ CStdString fileOps2::getPreviewIconPath(CStdString remotePath)
   if(!boost::filesystem::exists(localFilePath))
   {      
     Lock();
-    fileOps2::jobItem job(localFilePath, remoteFilename,"Default");
+    FileOps::jobItem job(localFilePath, remoteFilename,"Default");
     m_jobqueue.push(job);
     m_queue_content.Signal();
     Unlock();
@@ -94,7 +94,7 @@ CStdString fileOps2::getPreviewIconPath(CStdString remotePath)
   return localFilePath.string();
 }
 
-CStdString fileOps2::getArtworkPath(CStdString title,FILE_OPTIONS Get_What)
+CStdString FileOps::getArtworkPath(CStdString title,FILE_OPTIONS Get_What)
 {
   CStdString retval;
   //update remote filelist
@@ -135,14 +135,14 @@ CStdString fileOps2::getArtworkPath(CStdString title,FILE_OPTIONS Get_What)
     return localFilePath.string();
   //else add to "files to fetch" and return expected path
   Lock();
-  fileOps2::jobItem job(localFilePath, it->Filename(), m_sg_strings.at(Get_What));
+  FileOps::jobItem job(localFilePath, it->Filename(), m_sg_strings.at(Get_What));
   m_jobqueue.push(job);
   m_queue_content.Signal();
   Unlock();
   return localFilePath.string();
 }
 
-fileOps2::~fileOps2()
+FileOps::~FileOps()
 {
   cleanCache();
   StopThread(-1); //Set stopping. don't wait as we need to signal the thread first.
@@ -150,7 +150,7 @@ fileOps2::~fileOps2()
   StopThread(); //wait for thread to stop;
 }
 
-void fileOps2::cleanCache()
+void FileOps::cleanCache()
 {
   //Need to be redone at some time. Too much repeated code. But at least it works now.
   try{
@@ -222,7 +222,7 @@ void fileOps2::cleanCache()
   }
 }
 
-void* fileOps2::Process()
+void* FileOps::Process()
 {
   time_t curTime;
   time_t lastCacheClean;
@@ -234,7 +234,7 @@ void* fileOps2::Process()
     while(!m_jobqueue.empty()&&!IsStopped())
     {
       Lock();
-      fileOps2::jobItem job = m_jobqueue.front();
+      FileOps::jobItem job = m_jobqueue.front();
       m_jobqueue.pop();
       Unlock();
       try
@@ -263,7 +263,7 @@ void* fileOps2::Process()
   return NULL;
 }
 
-bool fileOps2::writeFile(boost::filesystem::path destination, MythFile &source)
+bool FileOps::writeFile(boost::filesystem::path destination, MythFile &source)
 {
 #if defined(BOOST_FILESYSTEM_VERSION) && BOOST_FILESYSTEM_VERSION >= 3
   CStdString parentPath = destination.parent_path().c_str();
@@ -340,7 +340,7 @@ bool fileOps2::writeFile(boost::filesystem::path destination, MythFile &source)
   }
 }
 
-bool fileOps2::createDirectory(boost::filesystem::path dirPath, bool hasFilename/* = false */)
+bool FileOps::createDirectory(boost::filesystem::path dirPath, bool hasFilename/* = false */)
 {
   if(hasFilename)
     return boost::filesystem::is_directory(dirPath.parent_path())?true:boost::filesystem::create_directory(dirPath.parent_path());

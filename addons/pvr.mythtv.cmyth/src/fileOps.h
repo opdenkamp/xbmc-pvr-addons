@@ -34,11 +34,11 @@ typedef enum
   } FILE_OPTIONS;
   
 
-class fileOps2 : public CThread, public CMutex
+class FileOps : public CThread, public CMutex
 {
 public:
-  fileOps2(MythConnection &mythConnection);
-   virtual ~fileOps2();
+  FileOps(MythConnection &mythConnection);
+   virtual ~FileOps();
   CStdString getArtworkPath(CStdString title,FILE_OPTIONS Get_What);
   CStdString getChannelIconPath(CStdString remotePath);
   CStdString getPreviewIconPath(CStdString remotePath);
@@ -62,7 +62,7 @@ protected:
     CStdString storageGroup;
     jobItem(boost::filesystem::path localFilename,CStdString remoteFilename,CStdString storageGroup):localFilename(localFilename),remoteFilename(remoteFilename),storageGroup(storageGroup){}    
   };
-  std::queue< fileOps2::jobItem > m_jobqueue;
+  std::queue< FileOps::jobItem > m_jobqueue;
 
 };
 

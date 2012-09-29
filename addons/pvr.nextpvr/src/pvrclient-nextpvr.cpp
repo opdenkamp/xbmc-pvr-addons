@@ -131,13 +131,21 @@ bool cPVRClientNextPVR::Connect()
 {
 	string result;
 
+#ifdef TARGET_WINDOWS
 	// find directory for storing channel icons
-	m_channelIconDirectory = getenv("XBMC_HOME");
+	m_channelIconDirectory = getenv("APPDATA");
+	m_channelIconDirectory += PATH_SEPARATOR_CHAR;
+	m_channelIconDirectory += "XBMC";
 	m_channelIconDirectory += PATH_SEPARATOR_CHAR;
 	m_channelIconDirectory += "userdata";
 	m_channelIconDirectory += PATH_SEPARATOR_CHAR;
-	//m_channelIconDirectory += "thumbnails";
-	//m_channelIconDirectory += PATH_SEPARATOR_CHAR;
+	m_channelIconDirectory += "addon_data";
+	m_channelIconDirectory += PATH_SEPARATOR_CHAR;
+	m_channelIconDirectory += "pvr.nextpvr";
+	m_channelIconDirectory += PATH_SEPARATOR_CHAR;
+#else 
+	m_channelIconDirectory = "/tmp/";
+#endif
 
 	// initiate session
 	CStdString response;

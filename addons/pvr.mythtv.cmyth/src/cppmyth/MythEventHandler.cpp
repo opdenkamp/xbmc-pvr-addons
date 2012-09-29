@@ -72,7 +72,7 @@ MythEventHandler::ImpMythEventHandler::ImpMythEventHandler(CStdString server,uns
 
   MythEventHandler::ImpMythEventHandler::~ImpMythEventHandler()
   {
-    StopThread(30);
+    StopThread();
     ref_release(*m_conn_t);
     *m_conn_t=0;
   }
@@ -294,6 +294,10 @@ void* MythEventHandler::ImpMythEventHandler::Process(void)
     else if ( select < 0 || cmyth_conn_hung( *m_conn_t ) )
     {
         XBMC->Log( LOG_NOTICE, "%s - Select returned error; reconnect event client connection", __FUNCTION__ );
+
+        if (!m_conn_t)
+          break;
+
         m_conn_t->Lock();
         int retval = cmyth_conn_reconnect_event( *m_conn_t );
         m_conn_t->Unlock();

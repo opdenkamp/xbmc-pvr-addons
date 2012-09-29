@@ -72,10 +72,10 @@ struct DemuxPacket;
 #define PVR_STREAM_MAX_STREAMS 20
 
 /* current PVR API version */
-#define XBMC_PVR_API_VERSION "1.2.0"
+#define XBMC_PVR_API_VERSION "1.3.0"
 
 /* min. PVR API version */
-#define XBMC_PVR_MIN_API_VERSION "1.2.0"
+#define XBMC_PVR_MIN_API_VERSION "1.3.0"
 
 #ifdef __cplusplus
 extern "C" {
@@ -209,6 +209,7 @@ extern "C" {
     unsigned int iEncryptionSystem;                                    /*!< @brief (optional) the encryption ID or CaID of this channel */
     char         strIconPath[PVR_ADDON_URL_STRING_LENGTH];             /*!< @brief (optional) path to the channel icon (if present) */
     bool         bIsHidden;                                            /*!< @brief (optional) true if this channel is marked as hidden */
+    bool         bCanTimeshift;                                        /*!< @brief (optional) true if the backend allows for timeshifting this channel */
   } ATTRIBUTE_PACKED PVR_CHANNEL;
 
   typedef struct PVR_CHANNEL_GROUP
@@ -310,6 +311,7 @@ extern "C" {
     int          (__cdecl* ReadLiveStream)(unsigned char*, unsigned int);
     long long    (__cdecl* SeekLiveStream)(long long, int);
     long long    (__cdecl* PositionLiveStream)(void);
+    void         (__cdecl* PauseLiveStream)(bool);
     long long    (__cdecl* LengthLiveStream)(void);
     int          (__cdecl* GetCurrentClientChannel)(void);
     bool         (__cdecl* SwitchChannel)(const PVR_CHANNEL&);
@@ -321,6 +323,7 @@ extern "C" {
     long long    (__cdecl* SeekRecordedStream)(long long, int);
     long long    (__cdecl* PositionRecordedStream)(void);
     long long    (__cdecl* LengthRecordedStream)(void);
+    void         (__cdecl* PauseRecordedStream)(bool);
     void         (__cdecl* DemuxReset)(void);
     void         (__cdecl* DemuxAbort)(void);
     void         (__cdecl* DemuxFlush)(void);

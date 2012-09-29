@@ -97,16 +97,16 @@ void RecordingRule::SaveTimerString(PVR_TIMER &timer)
 }
 
 PVRClientMythTV::PVRClientMythTV()
- : m_fileOps(NULL)
- , m_con()
+ : m_con()
  , m_pEventHandler(NULL)
  , m_db()
+ , m_fileOps(NULL)
  , m_protocolVersion("")
  , m_connectionString("")
+ , m_categoryMap()
  , m_EPGstart(0)
  , m_EPGend(0)
  , m_channelGroups()
- , m_categoryMap()
 {
   m_categoryMap.insert(catbimap::value_type("Movie",0x10));
   m_categoryMap.insert(catbimap::value_type("Movie", 0x10));
@@ -560,7 +560,7 @@ PVR_ERROR PVRClientMythTV::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - radio: %i", __FUNCTION__, bRadio);
 
-  for (boost::unordered_map<CStdString, std::vector<int>>::iterator it = m_channelGroups.begin(); it != m_channelGroups.end(); it++)
+  for (boost::unordered_map<CStdString, std::vector<int> >::iterator it = m_channelGroups.begin(); it != m_channelGroups.end(); it++)
   {
     PVR_CHANNEL_GROUP tag;
     memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP));

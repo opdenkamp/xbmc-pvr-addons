@@ -2,7 +2,8 @@ SUBDIRS = pvr.demo \
           pvr.hts \
           pvr.mediaportal.tvserver \
           pvr.vdr.vnsi \
-          pvr.njoy
+          pvr.njoy \
+          pvr.vuplus
 
 if USE_CURL
 SUBDIRS += pvr.fortherecord.argus

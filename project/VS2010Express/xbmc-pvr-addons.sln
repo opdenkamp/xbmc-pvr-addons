@@ -23,12 +23,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.njoy", "..\..\addons\pv
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjsoncpp", "..\..\lib\jsoncpp\project\VS2010Express\libjsoncpp.vcxproj", "{F3A72A50-E295-49BA-ACD7-8696907E0351}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.fortherecord.argus", "..\..\addons\pvr.fortherecord.argus\project\VS2010Express\pvr.fortherecord.argus.vcxproj", "{8A82D2E1-F76F-427C-9479-FE70DA02825D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F3A72A50-E295-49BA-ACD7-8696907E0351} = {F3A72A50-E295-49BA-ACD7-8696907E0351}
-		{FE4573F6-A794-4AD3-B37F-49E51F1140E6} = {FE4573F6-A794-4AD3-B37F-49E51F1140E6}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32

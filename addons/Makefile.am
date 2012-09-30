@@ -4,10 +4,6 @@ SUBDIRS = pvr.demo \
           pvr.vdr.vnsi \
           pvr.njoy
 
-if USE_CURL
-SUBDIRS += pvr.fortherecord.argus
-endif
-
 clean:
 	-rm -f *.zip
 	for d in $(SUBDIRS); do if test -f $$d/Makefile; then $(MAKE) -C $$d clean; fi; done

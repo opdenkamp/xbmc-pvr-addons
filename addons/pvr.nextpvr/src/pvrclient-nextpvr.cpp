@@ -1093,6 +1093,13 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 					memset(header, 0, sizeof(header));
 					memcpy(header, buf, i);
 					XBMC->Log(LOG_DEBUG, "%s", header);
+
+					if (strstr(header, "HTTP/1.1 404") != NULL)
+					{
+						XBMC->Log(LOG_DEBUG, "Unable to start channel. 404");
+						return false;
+					}
+
 				}
 
 				// long blocking from now on

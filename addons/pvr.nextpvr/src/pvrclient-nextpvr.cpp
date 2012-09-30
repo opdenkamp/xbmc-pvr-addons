@@ -1097,6 +1097,7 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 					if (strstr(header, "HTTP/1.1 404") != NULL)
 					{
 						XBMC->Log(LOG_DEBUG, "Unable to start channel. 404");
+						XBMC->QueueNotification(QUEUE_INFO, "Tuner not available");
 						return false;
 					}
 

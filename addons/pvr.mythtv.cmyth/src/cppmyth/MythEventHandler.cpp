@@ -162,7 +162,7 @@ void MythEventHandler::ImpMythEventHandler::UpdateFilesize(CStdString signal)
     if(g_bExtraDebug)
       XBMC->Log(LOG_DEBUG,"EVENT: %s, --UPDATING CURRENT RECORDING LENGTH-- EVENT msg: %s %ll",
 	  __FUNCTION__,uniqId.c_str(),length);
-    m_file.UpdateDuration(length);
+    m_file.UpdateLength(length);
   }
 }
 

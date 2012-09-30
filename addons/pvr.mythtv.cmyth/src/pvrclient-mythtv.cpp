@@ -1439,7 +1439,7 @@ void PVRClientMythTV::CloseRecordedStream()
 
 int PVRClientMythTV::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-  XBMC->Log(LOG_DEBUG,"%s - curPos: %i TotalLength: %i", __FUNCTION__, (int)m_file.CurrentPosition(), (int)m_file.Duration());
+  XBMC->Log(LOG_DEBUG,"%s - curPos: %i TotalLength: %i", __FUNCTION__, (int)m_file.Position(), (int)m_file.Length());
 
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s - size: %i", __FUNCTION__, iBufferSize);
@@ -1478,7 +1478,7 @@ long long PVRClientMythTV::LengthRecordedStream()
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  long long retval = m_file.Duration();
+  long long retval = m_file.Length();
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done - duration: %i", __FUNCTION__, retval);
   return retval;

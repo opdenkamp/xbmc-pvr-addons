@@ -282,7 +282,7 @@ bool FileOps::writeFile(boost::filesystem::path destination, MythFile &source)
       __FUNCTION__,parentPath.c_str());
     return false;
   }
-  unsigned long long length = source.Duration(); 
+  unsigned long long length = source.Length();
   
   FILE*  writeFile = fopen(destination.string().c_str(),"w");
   //std::ofstream writeFile(destination.string(),std::ios_base::binary /*| std::ios_base::trunc*/);

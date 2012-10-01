@@ -1118,8 +1118,6 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
 int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-	XBMC->Log(LOG_DEBUG, "ReadLiveStream");
-
 	// do we have enough data to fill this buffer? 
 	bool bufferMore = true;
 	unsigned char buf[188*100];

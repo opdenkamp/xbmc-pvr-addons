@@ -81,7 +81,7 @@ bool Socket::setHostname ( const std::string& host )
   return true;
 }
 
-bool Socket::is_connected()
+bool Socket::read_ready()
 {
 	fd_set fdset; 
 
@@ -439,7 +439,14 @@ int Socket::receive ( char* data, const unsigned int buffersize, const unsigned 
 
     if ( status == SOCKET_ERROR )
     {
-      errormessage( getLastError(), "Socket::receive" );
+      int lasterror = getLastError();
+#if defined(TARGET_LINUX) || defined(TARGET_OSX)
+      if ( lasterror != EAGAIN && lasterror != EWOULDBLOCK )
+        errormessage( lasterror, "Socket::receive" );
+#else
+      if ( lasterror != WSAEWOULDBLOCK)
+        errormessage( lasterror, "Socket::receive" );
+#endif
       return status;
     }
 

@@ -283,7 +283,7 @@ class Socket
 
     bool is_valid() const;
 
-	bool is_connected();
+	bool read_ready();
 
   private:
 

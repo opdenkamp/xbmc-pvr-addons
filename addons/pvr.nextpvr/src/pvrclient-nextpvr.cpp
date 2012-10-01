@@ -1121,15 +1121,38 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
 	XBMC->Log(LOG_DEBUG, "ReadLiveStream");
 
 	// do we have enough data to fill this buffer? 
+	bool bufferMore = true;
 	unsigned char buf[188*100];
-	while (m_incomingStreamBuffer.getMaxReadSize() < iBufferSize)
+	while (bufferMore)
+	//while (m_incomingStreamBuffer.getMaxReadSize() < iBufferSize)
 	{		
-		// no, then read more
-		int read = m_streamingclient->receive((char *)buf, sizeof buf, 0);
-		if (read > 0)
+		if (m_incomingStreamBuffer.getMaxWriteSize() < sizeof(buf))
+			bufferMore = false;
+
+		if (bufferMore)
 		{
-			// write it to incoming ring buffer
-			m_incomingStreamBuffer.WriteData((char *)buf, read);
+			int read = m_streamingclient->receive((char *)buf, sizeof buf, 0);
+			if (read > 0)
+			{
+				// write it to incoming ring buffer
+				m_incomingStreamBuffer.WriteData((char *)buf, read);
+			}
+			else
+			{
+				if (m_incomingStreamBuffer.getMaxReadSize() >= iBufferSize)
+				{
+					// got enough data to continue
+					bufferMore = false;
+				}
+				else
+				{
+#if defined(TARGET_LINUX) || defined(TARGET_OSX)
+					usleep(5000);
+#else
+					Sleep(5);
+#endif
+				}
+			}
 		}
 	}
 

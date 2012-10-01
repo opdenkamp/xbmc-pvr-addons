@@ -85,7 +85,9 @@ uint8_t cRequestPacket::extract_U8()
 uint32_t cRequestPacket::extract_U32()
 {
   if ((packetPos + sizeof(uint32_t)) > userDataLength) return 0;
-  uint32_t ul = ntohl(*(uint32_t*)&userData[packetPos]);
+  uint32_t ul;
+  memcpy(&ul, &userData[packetPos], sizeof(uint32_t));
+  ul = ntohl(ul);
   packetPos += sizeof(uint32_t);
   return ul;
 }
@@ -93,7 +95,9 @@ uint32_t cRequestPacket::extract_U32()
 uint64_t cRequestPacket::extract_U64()
 {
   if ((packetPos + sizeof(uint64_t)) > userDataLength) return 0;
-  uint64_t ull = __be64_to_cpu(*(uint64_t*)&userData[packetPos]);
+  uint64_t ull;
+  memcpy(&ull, &userData[packetPos], sizeof(uint64_t));
+  ull = __be64_to_cpu(ull);
   packetPos += sizeof(uint64_t);
   return ull;
 }
@@ -101,9 +105,11 @@ uint64_t cRequestPacket::extract_U64()
 double cRequestPacket::extract_Double()
 {
   if ((packetPos + sizeof(uint64_t)) > userDataLength) return 0;
-  uint64_t ull = __be64_to_cpu(*(uint64_t*)&userData[packetPos]);
+  uint64_t ull;
+  memcpy(&ull, &userData[packetPos], sizeof(uint64_t));
+  ull = __be64_to_cpu(ull);
   double d;
-  memcpy(&d,&ull,sizeof(double));
+  memcpy(&d, &ull, sizeof(double));
   packetPos += sizeof(uint64_t);
   return d;
 }
@@ -111,7 +117,9 @@ double cRequestPacket::extract_Double()
 int32_t cRequestPacket::extract_S32()
 {
   if ((packetPos + sizeof(int32_t)) > userDataLength) return 0;
-  int32_t l = ntohl(*(int32_t*)&userData[packetPos]);
+  int32_t l;
+  memcpy(&l, &userData[packetPos], sizeof(int32_t));
+  l = ntohl(l);
   packetPos += sizeof(int32_t);
   return l;
 }

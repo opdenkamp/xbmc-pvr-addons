@@ -158,14 +158,8 @@ bool cVNSISession::Login()
 cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int iDatapacketTimeout /*= 10000*/)
 {
   uint32_t channelID = 0;
-  uint32_t requestID;
   uint32_t userDataLength = 0;
   uint8_t* userData = NULL;
-  uint32_t streamID;
-  uint32_t duration;
-  uint32_t opCodeID;
-  int64_t  dts = 0;
-  int64_t  pts = 0;
 
   cResponsePacket* vresp = NULL;
 
@@ -179,16 +173,17 @@ cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int 
   channelID = ntohl(channelID);
   if (channelID == VNSI_CHANNEL_STREAM)
   {
-    if (!readData((uint8_t*)&m_streamPacketHeader, sizeof(m_streamPacketHeader), iDatapacketTimeout)) return NULL;
+    vresp = new cResponsePacket();
 
-    opCodeID = ntohl(m_streamPacketHeader.opCodeID);
-    streamID = ntohl(m_streamPacketHeader.streamID);
-    duration = ntohl(m_streamPacketHeader.duration);
-    pts = ntohll(*(int64_t*)m_streamPacketHeader.pts);
-    dts = ntohll(*(int64_t*)m_streamPacketHeader.dts);
-    userDataLength = ntohl(m_streamPacketHeader.userDataLength);
+    if (!readData(vresp->getHeader(), vresp->getStreamHeaderLength(), iDatapacketTimeout))
+    {
+      delete vresp;
+      return NULL;
+    }
+    vresp->extractStreamHeader();
+    userDataLength = vresp->getUserDataLength();
 
-    if(opCodeID == VNSI_STREAM_MUXPKT) 
+    if(vresp->getOpCodeID() == VNSI_STREAM_MUXPKT)
     {
       DemuxPacket* p = PVR->AllocateDemuxPacket(userDataLength);
       userData = (uint8_t*)p;
@@ -198,6 +193,7 @@ cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int 
         if (!readData(p->pData, userDataLength, iDatapacketTimeout))
         {
           PVR->FreeDemuxPacket(p);
+          delete vresp;
           return NULL;
         }
       }
@@ -209,19 +205,23 @@ cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int 
       if (!readData(userData, userDataLength, iDatapacketTimeout))
       {
         free(userData);
+        delete vresp;
         return NULL;
       }
     }
-
-    vresp = new cResponsePacket();
-    vresp->setStream(opCodeID, streamID, duration, dts, pts, userData, userDataLength);
+    vresp->setStream(userData, userDataLength);
   }
   else
   {
-    if (!readData((uint8_t*)&m_responsePacketHeader, sizeof(m_responsePacketHeader), iDatapacketTimeout)) return NULL;
+    vresp = new cResponsePacket();
 
-    requestID = ntohl(m_responsePacketHeader.requestID);
-    userDataLength = ntohl(m_responsePacketHeader.userDataLength);
+    if (!readData(vresp->getHeader(), vresp->getHeaderLength(), iDatapacketTimeout))
+    {
+      delete vresp;
+      return NULL;
+    }
+    vresp->extractHeader();
+    userDataLength = vresp->getUserDataLength();
 
     if (userDataLength > 5000000) return NULL; // how big can these packets get?
     userData = NULL;
@@ -232,15 +232,15 @@ cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int 
       if (!readData(userData, userDataLength, iDatapacketTimeout))
       {
         free(userData);
+        delete vresp;
         return NULL;
       }
     }
 
-    vresp = new cResponsePacket();
     if (channelID == VNSI_CHANNEL_STATUS)
-      vresp->setStatus(requestID, userData, userDataLength);
+      vresp->setStatus(userData, userDataLength);
     else
-      vresp->setResponse(requestID, userData, userDataLength);
+      vresp->setResponse(userData, userDataLength);
   }
 
   return vresp;

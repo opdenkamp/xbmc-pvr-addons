@@ -380,6 +380,12 @@ extern "C"
   long long LengthLiveStream(void);
 
   /*!
+   * @brief Notify the pvr addon that XBMC (un)paused the live stream
+   * @remarks Pause is only supported if the current channel's bCanTimeshift property is set to true
+   */
+  void PauseLiveStream(bool bPaused);
+
+  /*!
    * @return The channel number on the backend of the live stream that's currently being read.
    * @remarks Required if bHandlesInputStream or bHandlesDemuxing is set to true. Return -1 if this add-on won't provide this function.
    */
@@ -465,6 +471,11 @@ extern "C"
    * @remarks Optional, and only used if bSupportsRecordings is set to true. Return -1 if this add-on won't provide this function.
    */
   long long LengthRecordedStream(void);
+
+  /*!
+   * @brief Notify the pvr addon that XBMC (un)paused the recording stream
+   */
+  void PauseRecordedStream(bool bPaused);
   //@}
 
   /** @name PVR demultiplexer methods
@@ -563,6 +574,7 @@ extern "C"
     pClient->SeekLiveStream                 = SeekLiveStream;
     pClient->PositionLiveStream             = PositionLiveStream;
     pClient->LengthLiveStream               = LengthLiveStream;
+    pClient->PauseLiveStream                = PauseLiveStream;
     pClient->GetCurrentClientChannel        = GetCurrentClientChannel;
     pClient->SwitchChannel                  = SwitchChannel;
     pClient->SignalStatus                   = SignalStatus;
@@ -575,6 +587,7 @@ extern "C"
     pClient->SeekRecordedStream             = SeekRecordedStream;
     pClient->PositionRecordedStream         = PositionRecordedStream;
     pClient->LengthRecordedStream           = LengthRecordedStream;
+    pClient->PauseRecordedStream            = PauseRecordedStream;
 
     pClient->DemuxReset                     = DemuxReset;
     pClient->DemuxAbort                     = DemuxAbort;

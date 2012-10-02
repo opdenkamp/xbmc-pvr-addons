@@ -695,6 +695,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
       {
         PVR_STRCPY(tag.strStreamURL, channel.URL());
         PVR_STRCLR(tag.strInputFormat);
+        tag.bCanTimeshift = false;
       }
       else
       {
@@ -707,6 +708,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
             PVR_STRCPY(tag.strInputFormat, "video/x-mpegts");
           else
             PVR_STRCLR(tag.strInputFormat);
+          tag.bCanTimeshift = true;
         }
         else
         {
@@ -1526,6 +1528,11 @@ long long cPVRClientMediaPortal::PositionLiveStream(void)
   return m_tsreader->GetFilePointer();
 }
 
+void cPVRClientMediaPortal::PauseLiveStream(bool bPaused)
+{
+  XBMC->Log(LOG_DEBUG, "PauseLiveStream(%i)", (int) bPaused);
+}
+
 bool cPVRClientMediaPortal::SwitchChannel(const PVR_CHANNEL &channel)
 {
   if (((int)channel.iUniqueId) == m_iCurrentChannel)
@@ -1731,6 +1738,11 @@ long long  cPVRClientMediaPortal::LengthRecordedStream(void)
     return -1;
   }
   return m_tsreader->GetFileSize();
+}
+
+void cPVRClientMediaPortal::PauseRecordedStream(bool bPaused)
+{
+  XBMC->Log(LOG_DEBUG, "PauseRecordedStream(%i)", (int) bPaused);
 }
 
 /*

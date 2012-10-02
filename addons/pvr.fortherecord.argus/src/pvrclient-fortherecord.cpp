@@ -500,6 +500,7 @@ PVR_ERROR cPVRClientForTheRecord::GetChannels(ADDON_HANDLE handle, bool bRadio)
 #ifdef TSREADER
         memset(tag.strStreamURL, 0, sizeof(tag.strStreamURL));
         strncpy(tag.strInputFormat, "video/x-mpegts", sizeof(tag.strInputFormat));
+        tag.bCanTimeshift = true;
 #else
         //Use GetLiveStreamURL to fetch an rtsp stream
         if(bRadio)

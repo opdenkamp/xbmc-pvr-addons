@@ -14,7 +14,7 @@ class MythFile;
 class MythProgramInfo;
 class MythEventHandler;
 class MythTimer;
-class MythSGFile;
+class MythStorageGroupFile;
 
 
 class MythConnection 
@@ -46,7 +46,7 @@ public:
   void DefaultTimer(MythTimer &timer);
   MythFile ConnectPath(CStdString filename, CStdString storageGroup);
   std::vector< CStdString > GetStorageGroupFileList_(CStdString sgGetList);
-  std::vector< MythSGFile > GetStorageGroupFileList(CStdString storagegroup);
+  std::vector< MythStorageGroupFile > GetStorageGroupFileList(CStdString storagegroup);
   int SetBookmark(MythProgramInfo &recording, long long bookmark);
   long long GetBookmark(MythProgramInfo &recording);
   

@@ -28,7 +28,7 @@ libmythtvcmyth_addon_la_SOURCES = src/client.cpp \
                                   src/cppmyth/MythFile.cpp \
                                   src/cppmyth/MythProgramInfo.cpp \
                                   src/cppmyth/MythRecorder.cpp \
-                                  src/cppmyth/MythSGFile.cpp \
+                                  src/cppmyth/MythStorageGroupFile.cpp \
                                   src/cppmyth/MythSignal.cpp \
                                   src/cppmyth/MythTimer.cpp \
                                   src/cppmyth/MythTimestamp.cpp

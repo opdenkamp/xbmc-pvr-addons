@@ -83,19 +83,19 @@ bool RecordingRule::SameTimeslot(RecordingRule &rule) const
   case MythTimer::SingleRecord:
   case MythTimer::OverrideRecord:
   case MythTimer::DontRecord:
-    return rStarttime == starttime && rule.EndTime() == EndTime() && rule.ChanID() == ChanID();
+    return rStarttime == starttime && rule.EndTime() == EndTime() && rule.ChannelID() == ChannelID();
   case MythTimer::FindDailyRecord:
   case MythTimer::FindWeeklyRecord:
   case MythTimer::FindOneRecord:
     return rule.Title(false) == Title(false);
   case MythTimer::TimeslotRecord:
-    return rule.Title(false) == Title(false) && daytime(&starttime) == daytime(&rStarttime) &&  rule.ChanID() == ChanID();
+    return rule.Title(false) == Title(false) && daytime(&starttime) == daytime(&rStarttime) &&  rule.ChannelID() == ChannelID();
   case MythTimer::ChannelRecord:
-    return rule.Title(false) == Title(false) && rule.ChanID() == ChanID(); //TODO: dup
+    return rule.Title(false) == Title(false) && rule.ChannelID() == ChannelID(); //TODO: dup
   case MythTimer::AllRecord:
     return rule.Title(false) == Title(false); //TODO: dup
   case MythTimer::WeekslotRecord:
-    return rule.Title(false) == Title(false) && daytime(&starttime) == daytime(&rStarttime) && weekday(&starttime) == weekday(&rStarttime) && rule.ChanID() == ChanID();
+    return rule.Title(false) == Title(false) && daytime(&starttime) == daytime(&rStarttime) && weekday(&starttime) == weekday(&rStarttime) && rule.ChannelID() == ChannelID();
   }
   return false;
 }
@@ -403,7 +403,7 @@ bool PVRClientMythTV::Connect()
 
   // Test database connection
   CStdString db_test;
-  if (!m_db.TestConnection(db_test))
+  if (!m_db.TestConnection(&db_test))
   {
     XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s %s/%s\n%s", g_szMythDBname.c_str(), g_szHostname.c_str(), g_szMythDBuser.c_str(), g_szMythDBpassword.c_str(), db_test.c_str());
     if (m_pEventHandler)
@@ -428,9 +428,6 @@ bool PVRClientMythTV::Connect()
   m_channelGroups = m_db.GetChannelGroups();
   if (m_channelGroups.empty())
     XBMC->Log(LOG_INFO,"%s: No channel groups", __FUNCTION__);
-
-  // Get recording profiles
-  std::vector<MythRecordingProfile> rp = m_db.GetRecordingProfiles();
 
   return true;
 }
@@ -466,7 +463,7 @@ bool PVRClientMythTV::GetDriveSpace(long long *iTotal, long long *iUsed)
 PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG,"%s - start: %i, end: %i, ChanID: %i", __FUNCTION__, iStart, iEnd, channel.iUniqueId);
+    XBMC->Log(LOG_DEBUG,"%s - start: %i, end: %i, ChannelID: %i", __FUNCTION__, iStart, iEnd, channel.iUniqueId);
 
   if (iStart != m_EPGstart && iEnd != m_EPGend)
   {
@@ -1030,20 +1027,20 @@ PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
   MythTimer mt;
   m_con.DefaultTimer(mt);
   CStdString category = Genre(timer.iGenreType);
-  mt.Category(category);
-  mt.ChanID(timer.iClientChannelUid);
-  mt.Callsign(m_channels.at(timer.iClientChannelUid).Callsign());
-  mt.Description(timer.strSummary);
-  mt.EndOffset(timer.iMarginEnd);
-  mt.EndTime(timer.endTime);
-  mt.Inactive(timer.state == PVR_TIMER_STATE_ABORTED ||timer.state ==  PVR_TIMER_STATE_CANCELLED);
-  mt.Priority(timer.iPriority);
-  mt.StartOffset(timer.iMarginStart);
-  mt.StartTime(timer.startTime);
-  mt.Title(timer.strTitle, true);
+  mt.SetCategory(category);
+  mt.SetChannelID(timer.iClientChannelUid);
+  mt.SetCallsign(m_channels.at(timer.iClientChannelUid).Callsign());
+  mt.SetDescription(timer.strSummary);
+  mt.SetEndOffset(timer.iMarginEnd);
+  mt.SetEndTime(timer.endTime);
+  mt.SetInactive(timer.state == PVR_TIMER_STATE_ABORTED ||timer.state ==  PVR_TIMER_STATE_CANCELLED);
+  mt.SetPriority(timer.iPriority);
+  mt.SetStartOffset(timer.iMarginStart);
+  mt.SetStartTime(timer.startTime);
+  mt.SetTitle(timer.strTitle, true);
   CStdString title = mt.Title(false);
-  mt.SearchType(m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, NULL) ? MythTimer::NoSearch : MythTimer::ManualSearch);
-  mt.Type(timer.bIsRepeating ? (timer.iWeekdays == 127 ? MythTimer::TimeslotRecord : MythTimer::WeekslotRecord) : MythTimer::SingleRecord);
+  mt.SetSearchType(m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, NULL) ? MythTimer::NoSearch : MythTimer::ManualSearch);
+  mt.SetType(timer.bIsRepeating ? (timer.iWeekdays == 127 ? MythTimer::TimeslotRecord : MythTimer::WeekslotRecord) : MythTimer::SingleRecord);
 
   int id = m_db.AddTimer(mt);
   if (id<0)
@@ -1092,21 +1089,21 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
 void PVRClientMythTV::PVRtoMythTimer(const PVR_TIMER timer, MythTimer &mt)
 {
   CStdString category = Genre(timer.iGenreType);
-  mt.Category(category);
-  mt.ChanID(timer.iClientChannelUid);
-  mt.Callsign(m_channels.at(timer.iClientChannelUid).Callsign());
-  mt.Description(timer.strSummary);
-  mt.EndOffset(timer.iMarginEnd);
-  mt.EndTime(timer.endTime);
-  mt.Inactive(timer.state == PVR_TIMER_STATE_ABORTED ||timer.state ==  PVR_TIMER_STATE_CANCELLED);
-  mt.Priority(timer.iPriority);
-  mt.StartOffset(timer.iMarginStart);
-  mt.StartTime(timer.startTime);
-  mt.Title(timer.strTitle,true);
+  mt.SetCategory(category);
+  mt.SetChannelID(timer.iClientChannelUid);
+  mt.SetCallsign(m_channels.at(timer.iClientChannelUid).Callsign());
+  mt.SetDescription(timer.strSummary);
+  mt.SetEndOffset(timer.iMarginEnd);
+  mt.SetEndTime(timer.endTime);
+  mt.SetInactive(timer.state == PVR_TIMER_STATE_ABORTED ||timer.state ==  PVR_TIMER_STATE_CANCELLED);
+  mt.SetPriority(timer.iPriority);
+  mt.SetStartOffset(timer.iMarginStart);
+  mt.SetStartTime(timer.startTime);
+  mt.SetTitle(timer.strTitle,true);
   CStdString title = mt.Title(false);
-  mt.SearchType(m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, NULL) ? MythTimer::NoSearch : MythTimer::ManualSearch);
-  mt.Type(timer.bIsRepeating ? (timer.iWeekdays == 127 ? MythTimer::TimeslotRecord : MythTimer::WeekslotRecord) : MythTimer::SingleRecord);
-  mt.RecordID(timer.iClientIndex);
+  mt.SetSearchType(m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, NULL) ? MythTimer::NoSearch : MythTimer::ManualSearch);
+  mt.SetType(timer.bIsRepeating ? (timer.iWeekdays == 127 ? MythTimer::TimeslotRecord : MythTimer::WeekslotRecord) : MythTimer::SingleRecord);
+  mt.SetRecordID(timer.iClientIndex);
 }
 
 PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
@@ -1121,9 +1118,9 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
     bool createNewOverrideRule = false;
     MythTimer mt;
     PVRtoMythTimer(timer, mt);
-    mt.Description(oldPvrTimer.strSummary); // Fix broken description
-    mt.Inactive(false);
-    mt.RecordID(r.RecordID());
+    mt.SetDescription(oldPvrTimer.strSummary); // Fix broken description
+    mt.SetInactive(false);
+    mt.SetRecordID(r.RecordID());
 
     // These should trigger a manual search or a new rule
     if (oldPvrTimer.iClientChannelUid != timer.iClientChannelUid ||
@@ -1142,13 +1139,13 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
       if (r.Type() != MythTimer::SingleRecord && !createNewRule)
       {
         if (timer.state == PVR_TIMER_STATE_ABORTED || timer.state == PVR_TIMER_STATE_CANCELLED)
-          mt.Type(MythTimer::DontRecord);
+          mt.SetType(MythTimer::DontRecord);
         else
-          mt.Type(MythTimer::OverrideRecord);
+          mt.SetType(MythTimer::OverrideRecord);
         createNewOverrideRule = true;
       }
       else
-        mt.Inactive(timer.state == PVR_TIMER_STATE_ABORTED || timer.state == PVR_TIMER_STATE_CANCELLED);
+        mt.SetInactive(timer.state == PVR_TIMER_STATE_ABORTED || timer.state == PVR_TIMER_STATE_CANCELLED);
     }
 
     // These can be updated without triggering a new rule
@@ -1159,9 +1156,9 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
 
     CStdString title = timer.strTitle;
     if (createNewRule)
-      mt.SearchType(m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, NULL) ? MythTimer::NoSearch : MythTimer::ManualSearch);
+      mt.SetSearchType(m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, NULL) ? MythTimer::NoSearch : MythTimer::ManualSearch);
     if (createNewOverrideRule && r.SearchType() == MythTimer::ManualSearch)
-      mt.SearchType(MythTimer::ManualSearch);
+      mt.SetSearchType(MythTimer::ManualSearch);
 
     if (r.Type() == MythTimer::DontRecord || r.Type() == MythTimer::OverrideRecord)
       createNewOverrideRule = false;
@@ -1173,9 +1170,9 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
 
       MythTimer mtold;
       PVRtoMythTimer(oldPvrTimer, mtold);
-      mtold.Type(MythTimer::DontRecord);
-      mtold.Inactive(false);
-      mtold.RecordID(r.RecordID());
+      mtold.SetType(MythTimer::DontRecord);
+      mtold.SetInactive(false);
+      mtold.SetRecordID(r.RecordID());
       int id = r.RecordID();
       if (r.Type() == MythTimer::DontRecord || r.Type() == MythTimer::OverrideRecord)
         m_db.UpdateTimer(mtold);
@@ -1186,7 +1183,7 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
     else if (createNewOverrideRule &&  r.Type() != MythTimer::SingleRecord )
     {
       if (mt.Type() != MythTimer::DontRecord && mt.Type() != MythTimer::OverrideRecord)
-        mt.Type(MythTimer::OverrideRecord);
+        mt.SetType(MythTimer::OverrideRecord);
       if (!m_db.AddTimer(mt))
         return PVR_ERROR_FAILED;
     }

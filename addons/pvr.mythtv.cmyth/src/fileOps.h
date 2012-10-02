@@ -6,7 +6,7 @@
 #include <vector>
 #include <map>
 #include <queue>
-#include "cppmyth/MythSGFile.h"
+#include "cppmyth/MythStorageGroupFile.h"
 #include "../../../lib/platform/threads/threads.h"
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 // Use v3, if it's available.
@@ -44,11 +44,11 @@ public:
   CStdString getPreviewIconPath(CStdString remotePath);
 protected:
   bool createDirectory(boost::filesystem::path dirPath, bool hasFilename = false);
-  bool localFileExists(MythSGFile &remotefile, boost::filesystem::path dirPath);
+  bool localFileExists(MythStorageGroupFile &remotefile, boost::filesystem::path dirPath);
   void* Process();
   bool writeFile(boost::filesystem::path destination, MythFile &source); 
   void cleanCache();
-  std::map< FILE_OPTIONS, std::vector< MythSGFile > > m_SGFilelist;
+  std::map< FILE_OPTIONS, std::vector< MythStorageGroupFile > > m_SGFilelist;
   std::map< FILE_OPTIONS, int > m_lastSGupdate;
   std::map< CStdString, CStdString > m_icons;
   std::map< CStdString, CStdString > m_preview;

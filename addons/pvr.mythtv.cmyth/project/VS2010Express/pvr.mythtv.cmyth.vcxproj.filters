@@ -26,9 +26,6 @@
     <ClCompile Include="..\..\src\cppmyth\MythRecorder.cpp">
       <Filter>cppmyth</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\cppmyth\MythSGFile.cpp">
-      <Filter>cppmyth</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\cppmyth\MythSignal.cpp">
       <Filter>cppmyth</Filter>
     </ClCompile>
@@ -36,6 +33,9 @@
       <Filter>cppmyth</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\cppmyth\MythTimestamp.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythStorageGroupFile.cpp">
       <Filter>cppmyth</Filter>
     </ClCompile>
   </ItemGroup>
@@ -73,13 +73,13 @@
     <ClInclude Include="..\..\src\cppmyth\MythRecorder.h">
       <Filter>cppmyth</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\cppmyth\MythSGFile.h">
-      <Filter>cppmyth</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\cppmyth\MythSignal.h">
       <Filter>cppmyth</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\cppmyth\MythTimer.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythStorageGroupFile.h">
       <Filter>cppmyth</Filter>
     </ClInclude>
   </ItemGroup>

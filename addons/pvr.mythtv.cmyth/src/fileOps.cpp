@@ -119,7 +119,7 @@ CStdString FileOps::getArtworkPath(CStdString title,FILE_OPTIONS Get_What)
 #endif
   }
   boost::regex re(re_string.c_str());
-  std::vector< MythSGFile >::iterator it = m_SGFilelist.at(Get_What).begin();
+  std::vector< MythStorageGroupFile >::iterator it = m_SGFilelist.at(Get_What).begin();
   for(;it!=m_SGFilelist.at(Get_What).end()&&!boost::regex_match(it->Filename(),re);it++);
   if(it==m_SGFilelist.at(Get_What).end())
   {
@@ -156,7 +156,7 @@ void FileOps::cleanCache()
   try{
   boost::regex re("^([[:digit:]]{1,20})_(.*)");
   boost::smatch match;
-  for(std::map< FILE_OPTIONS, std::vector< MythSGFile > >::iterator it = m_SGFilelist.begin();it != m_SGFilelist.end(); it++)
+  for(std::map< FILE_OPTIONS, std::vector< MythStorageGroupFile > >::iterator it = m_SGFilelist.begin();it != m_SGFilelist.end(); it++)
   {
     boost::filesystem::path dirPath = m_localBasePath;
     dirPath /= m_sg_strings.at(it->first).c_str();     
@@ -172,7 +172,7 @@ void FileOps::cleanCache()
       {
         std::string lastmodified = std::string(match[1].first,match[1].second);
         std::string title = std::string(match[2].first,match[2].second);
-        for( std::vector< MythSGFile >::iterator mit = it->second.begin();mit != it->second.end(); mit++ )
+        for( std::vector< MythStorageGroupFile >::iterator mit = it->second.begin();mit != it->second.end(); mit++ )
         {
           CStdString mfilename = mit->Filename();
           if(!mit->Filename().CompareNoCase(title.c_str())&&(long)mit->LastModified()==atoi(lastmodified.c_str()))

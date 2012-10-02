@@ -1,4 +1,23 @@
 #pragma once
+/*
+ *      Copyright (C) 2005-2012 Team XBMC
+ *      http://www.xbmc.org
+ *
+ *  This Program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2, or (at your option)
+ *  any later version.
+ *
+ *  This Program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #include "platform/util/StdString.h"
 
@@ -9,27 +28,10 @@ extern "C" {
 class MythTimer
 {
   friend class MythDatabase;
+
 public:
-  MythTimer();
-  MythTimer(cmyth_timer_t cmyth_timer,bool release=true);
-  int RecordID() const;
-  void RecordID(int recordid);
-  int ChanID() const;
-  void ChanID(int chanid);
-  CStdString Callsign() const;
-  void Callsign(const CStdString& chancallsign);
-  time_t StartTime() const;
-  void StartTime(time_t starttime);
-  time_t EndTime() const;
-  void EndTime(time_t endtime);
-  CStdString Title(bool subtitleEncoded) const;
-  void Title(const CStdString& title,bool subtitleEncoded);
-  CStdString Subtitle() const;
-  void Subtitle(const CStdString& subtitle);
-  CStdString Description() const;
-  void Description(const CStdString& description);
-  typedef enum TimerTypes
-{
+  enum TimerType
+  {
     NotRecording = 0,
     SingleRecord = 1,
     TimeslotRecord,
@@ -41,93 +43,140 @@ public:
     DontRecord,
     FindDailyRecord,
     FindWeeklyRecord
-} TimerType;
-  TimerType Type() const;
-  void Type(TimerType type);
-  CStdString Category() const;
-  void Category(const CStdString& category);
-  int StartOffset() const;
-  void StartOffset(int startoffset);
-  int EndOffset() const;
-  void EndOffset(int endoffset);
-  int Priority() const;
-  void Priority(int priority);
-  bool Inactive() const;
-  void Inactive(bool inactive);
+  };
 
-typedef enum TimerSearchTypes
-{
+  enum TimerSearchType
+  {
     NoSearch = 0,
     PowerSearch,
     TitleSearch,
     KeywordSearch,
     PeopleSearch,
     ManualSearch
-} TimerSearchType;
-  TimerSearchType SearchType() const;
-  void SearchType(TimerSearchType searchtype);
-  typedef enum DuplicateControlMethods
-  {
-    CheckNone     = 0x01,
-    CheckSub      = 0x02,
-    CheckDesc     = 0x04,
-    CheckSubDesc  = 0x06,
-    CheckSubThenDesc = 0x08
-  }  DuplicateControlMethod;
-  typedef enum CheckDuplicatesInTypes
-  {
-    InRecorded     = 0x01,
-    InOldRecorded  = 0x02,
-    InAll          = 0x0F,
-    NewEpi         = 0x10
-  } CheckDuplicatesInType;
+  };
 
-  DuplicateControlMethod DupMethod();
-  void DupMethod(DuplicateControlMethod method);
-  CheckDuplicatesInType CheckDupIn();
-  void CheckDupIn(CheckDuplicatesInType in);
-  CStdString RecGroup();
-  void RecGroup(CStdString group);
-  CStdString StoreGroup();
-  void StoreGroup(CStdString group);
-  CStdString PlayGroup();
-  void PlayGroup(CStdString group);
-  bool AutoTranscode();
-  void AutoTranscode(bool enable);
-  bool Userjob(int jobnumber);
-  void Userjob(int jobnumber, bool enable);
-  int Userjobs();
-  void Userjobs(int jobs);
-  bool AutoCommFlag();
-  void AutoCommFlag(bool enable);
-  bool AutoExpire();
-  void AutoExpire(bool enable);
-  int MaxEpisodes();
-  void MaxEpisodes(int max);
-  bool NewExpireOldRecord();
-  void NewExpireOldRecord(bool enable);
-  int Transcoder();
-  void Transcoder(int transcoder);
+  enum TimerDuplicateControlMethod
+  {
+    CheckNone                    = 0x01,
+    CheckSubtitle                = 0x02,
+    CheckDescription             = 0x04,
+    CheckSubtitleAndDescription  = 0x06,
+    CheckSubtitleThenDescription = 0x08
+  };
+
+  enum TimerCheckDuplicatesInType
+  {
+    InRecorded    = 0x01,
+    InOldRecorded = 0x02,
+    InAll         = 0x0F,
+    NewEpi        = 0x10
+  };
+
+  MythTimer();
+  MythTimer(cmyth_timer_t cmyth_timer, bool release = true);
+
+  int RecordID() const;
+  void SetRecordID(int recordid);
+
+  int ChannelID() const;
+  void SetChannelID(int channelid);
+
+  CStdString Callsign() const;
+  void SetCallsign(const CStdString &callsign);
+
+  time_t StartTime() const;
+  void SetStartTime(time_t starttime);
+
+  time_t EndTime() const;
+  void SetEndTime(time_t endtime);
+
+  CStdString Title(bool subtitleEncoded) const;
+  void SetTitle(const CStdString &title, bool subtitleEncoded);
+
+  CStdString Subtitle() const;
+  void SetSubtitle(const CStdString &subtitle);
+
+  CStdString Description() const;
+  void SetDescription(const CStdString &description);
+
+  TimerType Type() const;
+  void SetType(TimerType type);
+
+  CStdString Category() const;
+  void SetCategory(const CStdString &category);
+
+  int StartOffset() const;
+  void SetStartOffset(int startoffset);
+
+  int EndOffset() const;
+  void SetEndOffset(int endoffset);
+
+  int Priority() const;
+  void SetPriority(int priority);
+
+  bool Inactive() const;
+  void SetInactive(bool inactive);
+
+  TimerSearchType SearchType() const;
+  void SetSearchType(TimerSearchType searchtype);
+
+  TimerDuplicateControlMethod DuplicateControlMethod() const;
+  void SetDuplicateControlMethod(TimerDuplicateControlMethod method);
+
+  TimerCheckDuplicatesInType CheckDuplicatesInType() const;
+  void SetCheckDuplicatesInType(TimerCheckDuplicatesInType in);
+
+  CStdString RecordingGroup() const;
+  void SetRecordingGroup(const CStdString &group);
+
+  CStdString StorageGroup() const;
+  void SetStorageGroup(const CStdString &group);
+
+  CStdString PlaybackGroup() const;
+  void SetPlaybackGroup(const CStdString &group);
+
+  bool AutoTranscode() const;
+  void SetAutoTranscode(bool enable);
+
+  bool UserJob(int jobnumber) const;
+  void SetUserJob(int jobnumber, bool enable);
+
+  int UserJobs() const;
+  void SetUserJobs(int jobs);
+
+  bool AutoCommFlag() const;
+  void SetAutoCommFlag(bool enable);
+
+  bool AutoExpire() const;
+  void SetAutoExpire(bool enable);
+
+  int MaxEpisodes() const;
+  void SetMaxEpisodes(int max);
+
+  bool NewExpiresOldRecord() const;
+  void SetNewExpiresOldRecord(bool enable);
+
+  int Transcoder() const;
+  void SetTranscoder(int transcoder);
 
 private:
   int m_recordid;
-  int m_chanid; 
+  int m_channelid;
   CStdString m_callsign;
-  time_t m_starttime;  
-  time_t m_endtime;    
-	CStdString m_title;
-	CStdString m_description;  
-  TimerTypes m_type;
-	CStdString m_category;
+  time_t m_starttime;
+  time_t m_endtime;
+  CStdString m_title;
+  CStdString m_description;
+  TimerType m_type;
+  CStdString m_category;
   CStdString m_subtitle;
   int m_priority;
   int m_startoffset;
   int m_endoffset;
   TimerSearchType m_searchtype;
   bool m_inactive;
-
-  DuplicateControlMethod m_dupmethod;
-  CheckDuplicatesInType m_dupin;
+  TimerDuplicateControlMethod m_dupmethod;
+  TimerCheckDuplicatesInType m_dupin;
   CStdString m_recgroup;
   CStdString m_storegroup;
   CStdString m_playgroup;

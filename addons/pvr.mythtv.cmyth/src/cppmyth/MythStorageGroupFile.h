@@ -1,3 +1,4 @@
+#pragma once
 /*
  *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
@@ -18,44 +19,28 @@
  *
  */
 
-#include "MythSignal.h"
+#include "MythConnection.h"
 
-MythSignal::MythSignal()
-  : m_AdapterStatus()
-  , m_SNR(0)
-  , m_Signal(0)
-  , m_BER(0)
-  , m_UNC(0)
-  , m_ID(0)
-{
-}
+#include <boost/shared_ptr.hpp>
 
-CStdString MythSignal::AdapterStatus() const
-{
-  return m_AdapterStatus;
-}
+extern "C" {
+#include <cmyth/cmyth.h>
+};
 
-int MythSignal::SNR() const
-{
-  return m_SNR;
-}
+template <class T> class MythPointer;
 
-int MythSignal::Signal() const
+class MythStorageGroupFile
 {
-  return m_Signal;
-}
+public:
+  MythStorageGroupFile();
+  MythStorageGroupFile(cmyth_storagegroup_file_t myth_storagegroup_file);
 
-long MythSignal::BER() const
-{
-  return m_BER;
-}
+  bool IsNull() const;
 
-long MythSignal::UNC() const
-{
-  return m_UNC;
-}
+  CStdString Filename();
+  unsigned long long Size();
+  unsigned long LastModified();
 
-int MythSignal::ID() const
-{
-  return m_ID;
-}
+private:
+  boost::shared_ptr<MythPointer<cmyth_storagegroup_file_t> > m_storagegroup_file_t;
+};

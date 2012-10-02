@@ -1,7 +1,7 @@
 #include "MythConnection.h"
 #include "MythRecorder.h"
 #include "MythFile.h"
-#include "MythSGFile.h"
+#include "MythStorageGroupFile.h"
 #include "MythProgramInfo.h"
 #include "MythEventHandler.h"
 #include "MythTimer.h"
@@ -86,18 +86,18 @@ std::vector< CStdString > MythConnection::GetStorageGroupFileList_(CStdString sg
     return retval;
   }
 
-std::vector< MythSGFile > MythConnection::GetStorageGroupFileList(CStdString storagegroup)
+std::vector< MythStorageGroupFile > MythConnection::GetStorageGroupFileList(CStdString storagegroup)
 {
     CStdString hostname = GetBackendHostname();
     cmyth_storagegroup_filelist_t filelist = NULL;
     CMYTH_CONN_CALL_REF( filelist, filelist == NULL, cmyth_storagegroup_get_filelist( *m_conn_t, storagegroup.Buffer(), hostname.Buffer() ) );
     Lock();
     int len=cmyth_storagegroup_filelist_count(filelist);
-    std::vector< MythSGFile >  retval(len);
+    std::vector< MythStorageGroupFile >  retval(len);
     for(int i=0;i<len;i++)
     {
       cmyth_storagegroup_file_t file=cmyth_storagegroup_filelist_get_item(filelist,i);
-      retval.push_back(MythSGFile(file));
+      retval.push_back(MythStorageGroupFile(file));
     }
     ref_release(filelist);
     Unlock();
@@ -376,16 +376,16 @@ start/endoffset => DefaultStartOffset/DefaultEndOffset
 
   void MythConnection::DefaultTimer(MythTimer &timer)
   {
-    timer.AutoTranscode(atoi(GetSetting("NULL","AutoTranscode").c_str())>0);
-    timer.Userjob(1,atoi(GetSetting("NULL","AutoRunUserJob1").c_str())>0);
-    timer.Userjob(2,atoi(GetSetting("NULL","AutoRunUserJob2").c_str())>0);
-    timer.Userjob(3,atoi(GetSetting("NULL","AutoRunUserJob3").c_str())>0);
-    timer.Userjob(4,atoi(GetSetting("NULL","AutoRunUserJob4").c_str())>0);
-    timer.AutoCommFlag(atoi(GetSetting("NULL","AutoCommercialFlag").c_str())>0);
-    timer.AutoExpire(atoi(GetSetting("NULL","AutoExpireDefault").c_str())>0);
-    timer.Transcoder(atoi(GetSetting("NULL","DefaultTranscoder").c_str()));
-    timer.StartOffset(atoi(GetSetting("NULL","DefaultStartOffset").c_str()));
-    timer.StartOffset(atoi(GetSetting("NULL","DefaultEndOffset").c_str()));
+    timer.SetAutoTranscode(atoi(GetSetting("NULL","AutoTranscode").c_str())>0);
+    timer.SetUserJob(1,atoi(GetSetting("NULL","AutoRunUserJob1").c_str())>0);
+    timer.SetUserJob(2,atoi(GetSetting("NULL","AutoRunUserJob2").c_str())>0);
+    timer.SetUserJob(3,atoi(GetSetting("NULL","AutoRunUserJob3").c_str())>0);
+    timer.SetUserJob(4,atoi(GetSetting("NULL","AutoRunUserJob4").c_str())>0);
+    timer.SetAutoCommFlag(atoi(GetSetting("NULL","AutoCommercialFlag").c_str())>0);
+    timer.SetAutoExpire(atoi(GetSetting("NULL","AutoExpireDefault").c_str())>0);
+    timer.SetTranscoder(atoi(GetSetting("NULL","DefaultTranscoder").c_str()));
+    timer.SetStartOffset(atoi(GetSetting("NULL","DefaultStartOffset").c_str()));
+    timer.SetStartOffset(atoi(GetSetting("NULL","DefaultEndOffset").c_str()));
         
   }
 

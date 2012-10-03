@@ -33,7 +33,7 @@
 #include <algorithm>
 #include "platform/util/timeutils.h"
 #include "platform/util/StdString.h"
-#include "os-dependent.h"
+#include "platform/threads/threads.h"
 
 using namespace ADDON;
 using namespace PLATFORM;
@@ -368,7 +368,7 @@ long MultiFileReader::RefreshTSBufferFile()
       // try to clear local / remote SMB file cache. This should happen when we close the filehandle
       m_TSBufferFile.CloseFile();
       m_TSBufferFile.OpenFile();
-      Sleep(5);
+      usleep(5000);
     }
 
     if (Error)
@@ -609,12 +609,11 @@ long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
   length = 0;
 
   // Try to open the file
-  CFile hFile;
-  struct stat64 filestatus;
-  if (hFile.Open(pFilename) && hFile.Stat(&filestatus) >= 0)
+  void* hFile;
+  if (((hFile = XBMC->OpenFile(pFilename, 0)) != NULL))
   {
-    length = (int64_t) filestatus.st_size;
-    hFile.Close();
+    length = XBMC->GetFileLength(hFile);
+    XBMC->CloseFile(hFile);
   }
   else
   {

@@ -14,9 +14,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -73,10 +72,10 @@ struct DemuxPacket;
 #define PVR_STREAM_MAX_STREAMS 20
 
 /* current PVR API version */
-#define XBMC_PVR_API_VERSION "1.2.0"
+#define XBMC_PVR_API_VERSION "1.3.0"
 
 /* min. PVR API version */
-#define XBMC_PVR_MIN_API_VERSION "1.2.0"
+#define XBMC_PVR_MIN_API_VERSION "1.3.0"
 
 #ifdef __cplusplus
 extern "C" {

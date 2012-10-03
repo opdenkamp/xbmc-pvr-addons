@@ -1,7 +1,7 @@
 WARNING: this is work in progress. Don't try to use this unless you know what you're doing.
 
 =============================
-            Linux
+       Linux, OS-X, BSD
 =============================
 
 Start by executing:
@@ -16,11 +16,6 @@ To build all PVR add-ons as .zip archives:
 make zip
 
 =============================
-            OS-X
-=============================
-TODO
-
-=============================
            Windows
 =============================
 Building the pvr addons standalone:
@@ -28,11 +23,9 @@ Building the pvr addons standalone:
 Prepare:
 1) Install Visual C++ Express 2010 (follow the instructions on the wiki for XBMC itself)
 Compile:
-2) Download the build dependencies.
-   Run the following batch file: project\BuildDependences\DownloadBuildDeps.bat
-3) Open this solution from project\VS2010Express\xbmc-pvr-addons.sln
-4) Select the wanted configuration "Debug" or "Release"
-5) Press F7 to build the solution
+2) Open this solution from project\VS2010Express\xbmc-pvr-addons.sln
+3) Select the wanted configuration "Debug" or "Release"
+4) Press F7 to build the solution
 Install:
 Still a TODO. The buildsystem does not yet generate .zip archives
 Workaround: copy the wanted pvr addons to your XBMC installation by hand.

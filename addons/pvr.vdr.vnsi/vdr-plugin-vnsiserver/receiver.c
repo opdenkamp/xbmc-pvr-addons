@@ -508,6 +508,11 @@ void cLivePatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Le
       INFOLOG("Currently unknown new streams found, receiver and demuxers reinited\n");
       m_Streamer->RequestStreamChange();
     }
+    else if (!m_Streamer->m_Receiver)
+    {
+      m_Streamer->m_Receiver  = new cLiveReceiver(m_Streamer, m_Channel, m_Streamer->m_Priority, m_Streamer->m_Pids);
+      m_Streamer->m_Device->AttachReceiver(m_Streamer->m_Receiver);
+    }
   }
 }
 
@@ -818,9 +823,7 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
       if (m_NumStreams > 0 && m_Socket)
       {
         dsyslog("VNSI: Creating new live Receiver");
-        m_Receiver  = new cLiveReceiver(this, m_Channel, m_Priority, m_Pids);
         m_PatFilter = new cLivePatFilter(this, m_Channel);
-        m_Device->AttachReceiver(m_Receiver);
         m_Device->AttachFilter(m_PatFilter);
       }
 
@@ -910,18 +913,15 @@ void cLiveStreamer::sendStreamPacket(sStreamPacket *pkt)
 
   m_IFrameSeen = true;
 
-  m_streamHeader.channel  = htonl(VNSI_CHANNEL_STREAM);     // stream channel
-  m_streamHeader.opcode   = htonl(VNSI_STREAM_MUXPKT);      // Stream packet operation code
+  if (!m_streamHeader.initStream(VNSI_STREAM_MUXPKT, pkt->id, pkt->duration, pkt->pts, pkt->dts))
+  {
+    ERRORLOG("stream response packet init fail");
+    return;
+  }
+  m_streamHeader.setLen(m_streamHeader.getStreamHeaderLength() + pkt->size);
+  m_streamHeader.finaliseStream();
 
-  m_streamHeader.id       = htonl(pkt->id);                 // Stream ID
-  m_streamHeader.duration = htonl(pkt->duration);           // Duration
-
-  *(int64_t*)&m_streamHeader.dts = __cpu_to_be64(pkt->dts); // DTS
-  *(int64_t*)&m_streamHeader.pts = __cpu_to_be64(pkt->pts); // PTS
-
-  m_streamHeader.length   = htonl(pkt->size);               // Data length
-  m_Socket->write(&m_streamHeader, sizeof(m_streamHeader), -1, true);
-
+  m_Socket->write(m_streamHeader.getPtr(), m_streamHeader.getStreamHeaderLength(), -1, true);
   m_Socket->write(pkt->data, pkt->size);
 
   m_last_tick.Set(0);

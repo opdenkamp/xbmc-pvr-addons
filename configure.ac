@@ -5,6 +5,8 @@ AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, [http://www.xbmc.org])
 
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([no])])
+
 PREFIX_DEFAULT="/usr/local"
 AC_PREFIX_DEFAULT($PREFIX_DEFAULT)
 
@@ -70,11 +72,6 @@ case "${host}" in
     ;;
 esac
 
-### External libraries checks
-# Curl
-use_libcurl="no"
-PKG_CHECK_MODULES([CURL],[libcurl],use_libcurl="yes",AC_MSG_WARN("CURL was not found, N7 add-on will not be available"))
-
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then
   # don't call AC_CHECK_FILE when (maybe) cross-compiling
@@ -100,14 +97,6 @@ if test "x$host_os_osx" = "xyes"; then
   AM_CONDITIONAL(HOST_IS_OSX, true)
 else
   AM_CONDITIONAL(HOST_IS_OSX, false)
-fi
-
-if test "x$use_libcurl" = "xyes"; then
-  INCLUDES="$INCLUDES $CURL_CFLAGS"
-  LIBS="$LIBS $CURL_LIBS"
-  AM_CONDITIONAL(USE_CURL, true)
-else
-  AM_CONDITIONAL(USE_CURL, false)
 fi
 
 if test "x${libdir}" != 'x${exec_prefix}/lib'; then

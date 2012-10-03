@@ -30,7 +30,6 @@
 
 #include "FileReader.h"
 #include "client.h" //for XBMC->Log
-#include "os-dependent.h"
 #include <algorithm> //std::min, std::max
 #include "utils.h"
 #include "platform/util/timeutils.h" // for usleep

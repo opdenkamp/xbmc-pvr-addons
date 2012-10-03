@@ -1,145 +1,114 @@
-#ifndef __MVP_ATOMIC_H
-#define __MVP_ATOMIC_H
-
-#ifdef __APPLE__
-#pragma GCC optimization_level 0
-#endif
+#pragma once
+/*
+ *      Copyright (C) 2005-2012 Team XBMC
+ *      http://www.xbmc.org
+ *
+ *  This Program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2, or (at your option)
+ *  any later version.
+ *
+ *  This Program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #ifdef _MSC_VER
 #include <windows.h>
 #endif
-/**
- * Atomically incremente a reference count variable.
- * \param valp address of atomic variable
- * \return incremented reference count
- */
-typedef	unsigned mvp_atomic_t;
-static inline unsigned
-__mvp_atomic_increment(mvp_atomic_t *valp)
+
+// the only safe way to be absolutly sure that
+// gcc intrinsics are present when using an unknown GCC
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4))
+  #define HAS_GCC_INTRINSICS
+#elif defined(TARGET_DARWIN)
+  // safe under darwin gcc-4.2, llvm-gcc-4.2 and clang
+  #define HAS_GCC_INTRINSICS
+#elif defined(TARGET_FREEBSD)
+  // safe under freebsd gcc-4.2 and clang
+  #define HAS_GCC_INTRINSICS
+#endif
+
+///////////////////////////////////////////////////////////////////////////
+// 32-bit atomic increment
+// Returns new value of *pAddr
+///////////////////////////////////////////////////////////////////////////
+static inline long atomic_inc(volatile long* pAddr)
 {
-	mvp_atomic_t __val;
-#if defined __i486__ || defined __i586__ || defined __i686__
-	__asm__ __volatile__(
-		"lock xaddl %0, (%1);"
-		"     inc   %0;"
-		: "=r" (__val)
-		: "r" (valp), "0" (0x1)
-		: "cc", "memory"
-		);
-#elif defined __i386__
-	asm volatile (".byte 0xf0, 0x0f, 0xc1, 0x02" /*lock; xaddl %eax, (%edx) */
-		      : "=a" (__val)
-		      : "0" (1), "m" (*valp), "d" (valp)
-		      : "memory");
-	/* on the x86 __val is the pre-increment value, so normalize it. */
-	++__val;
-#elif defined __powerpc__ || defined __ppc__
-	asm volatile ("1:	lwarx   %0,0,%1\n"
-		      "	addic.   %0,%0,1\n"
-		      "	dcbt    %0,%1\n"
-		      "	stwcx.  %0,0,%1\n"
-		      "	bne-    1b\n"
-		      "	isync\n"
-		      : "=&r" (__val)
-		      : "r" (valp)
-		      : "cc", "memory");
-#elif defined _MSC_VER
-  __val = InterlockedIncrement(valp);
-#else
-	/*
-	 * Don't know how to atomic increment for a generic architecture
-	 * so punt and just increment the value.
-	 */
-#ifdef _WIN32
-  #pragma message("unknown architecture, atomic increment is not...");
-#else
-  #warning unknown architecture, atomic increment is not...
+#if defined(HAS_GCC_INTRINSICS)
+  return __sync_add_and_fetch(pAddr, 1);
+
+#elif defined(__ppc__) || defined(__powerpc__) // PowerPC
+  long val;
+  __asm__ __volatile__ (
+    "sync             \n"
+    "1: lwarx  %0, 0, %1 \n"
+    "addic  %0, %0, 1 \n"
+    "stwcx. %0, 0, %1 \n"
+    "bne-   1b        \n"
+    "isync"
+    : "=&r" (val)
+    : "r" (pAddr)
+    : "cc", "xer", "memory");
+  return val;
+
+#elif defined(__arm__) && !defined(__ARM_ARCH_5__)
+  register long val;
+  asm volatile (
+    "dmb      ish            \n" // Memory barrier. Make sure all memory accesses appearing before this complete before any that appear after
+    "1:                     \n"
+    "ldrex   %0, [%1]       \n" // (val = *pAddr)
+    "add     %0,  #1        \n" // (val += 1)
+    "strex   r1,  %0, [%1]      \n"
+    "cmp     r1,   #0       \n"
+    "bne     1b             \n"
+    "dmb     ish            \n" // Memory barrier.
+    : "=&r" (val)
+    : "r"(pAddr)
+    : "r1"
+    );
+  return val;
+
+#elif defined(__mips__)
+// TODO:
+  long val;
+  #error AtomicIncrement undefined for mips
+  return val;
+
+#elif defined(WIN32)
+  long val;
+  __asm
+  {
+    mov eax, pAddr ;
+    lock inc dword ptr [eax] ;
+    mov eax, [eax] ;
+    mov val, eax ;
+  }
+  return val;
+
+#elif defined(__x86_64__)
+  register long result;
+  __asm__ __volatile__ (
+    "lock/xaddq %q0, %1"
+    : "=r" (result), "=m" (*pAddr)
+    : "0" ((long) (1)), "m" (*pAddr));
+  return *pAddr;
+
+#else // Linux / OSX86 (GCC)
+  register long reg __asm__ ("eax") = 1;
+  __asm__ __volatile__ (
+    "lock/xadd %0, %1 \n"
+    "inc %%eax"
+    : "+r" (reg)
+    : "m" (*pAddr)
+    : "memory" );
+  return reg;
+
 #endif
-	__val = ++(*valp);
-#endif
-	return __val;
 }
-
-/**
- * Atomically decrement a reference count variable.
- * \param valp address of atomic variable
- * \return decremented reference count
- */
-static inline unsigned
-__mvp_atomic_decrement(mvp_atomic_t *valp)
-{
-	mvp_atomic_t __val;
-#if defined __i486__ || defined __i586__ || defined __i686__
-	__asm__ __volatile__(
-		"lock xaddl %0, (%1);"
-		"     dec   %0;"
-		: "=r" (__val)
-		: "r" (valp), "0" (0x1)
-		: "cc", "memory"
-		);
-#elif defined __i386__
-	asm volatile (".byte 0xf0, 0x0f, 0xc1, 0x02" /*lock; xaddl %eax, (%edx) */
-		      : "=a" (__val)
-		      : "0" (-1), "m" (*valp), "d" (valp)
-		      : "memory");
-	/* __val is the pre-decrement value, so normalize it */
-	--__val;
-#elif defined __powerpc__ || defined __ppc__
-	asm volatile ("1:	lwarx   %0,0,%1\n"
-		      "	addic.   %0,%0,-1\n"
-		      "	dcbt    %0,%1\n"
-		      "	stwcx.  %0,0,%1\n"
-		      "	bne-    1b\n"
-		      "	isync\n"
-		      : "=&r" (__val)
-		      : "r" (valp)
-		      : "cc", "memory");
-#elif defined __sparcv9__
-	mvp_atomic_t __newval, __oldval = (*valp);
-	do
-		{
-			__newval = __oldval - 1;
-			__asm__ ("cas	[%4], %2, %0"
-				 : "=r" (__oldval), "=m" (*valp)
-				 : "r" (__oldval), "m" (*valp), "r"((valp)), "0" (__newval));
-		}
-	while (__newval != __oldval);
-	/*  The value for __val is in '__oldval' */
-	__val = __oldval;
-#elif defined _MSC_VER
-  __val = InterlockedDecrement(valp);
-#else
-	/*
-	 * Don't know how to atomic decrement for a generic architecture
-	 * so punt and just decrement the value.
-	 */
-//#warning unknown architecture, atomic decrement is not...
-	__val = --(*valp);
-#endif
-	return __val;
-}
-#define mvp_atomic_inc __mvp_atomic_inc
-static inline int mvp_atomic_inc(mvp_atomic_t *a) {
-	return __mvp_atomic_increment(a);
-};
-
-#define mvp_atomic_dec __mvp_atomic_dec
-static inline int mvp_atomic_dec(mvp_atomic_t *a) {
-	return __mvp_atomic_decrement(a);
-};
-
-#define mvp_atomic_dec_and_test __mvp_atomic_dec_and_test
-static inline int mvp_atomic_dec_and_test(mvp_atomic_t *a) {
-	return (__mvp_atomic_decrement(a) == 0);
-};
-
-#define mvp_atomic_set __mvp_atomic_set
-static inline void mvp_atomic_set(mvp_atomic_t *a, unsigned val) {
-	*a = val;
-};
-
-#ifdef __APPLE__
-#pragma GCC optimization_level reset
-#endif
-
-#endif  /* __MVP_ATOMIC_H */

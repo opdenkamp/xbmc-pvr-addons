@@ -216,7 +216,7 @@ htsmsg_t* CHTSPConnection::ReadResult(htsmsg_t* m, bool sequence)
   uint32_t iSequence = 0;
   if(sequence)
   {
-    iSequence = mvp_atomic_inc(&g_iPacketSequence);
+    iSequence = HTSPNextSequenceNumber();
     htsmsg_add_u32(m, "seq", iSequence);
   }
 
@@ -288,7 +288,7 @@ bool CHTSPConnection::SendGreeting(void)
   m = htsmsg_create_map();
   htsmsg_add_str(m, "method", "hello");
   htsmsg_add_str(m, "clientname", "XBMC Media Center");
-  htsmsg_add_u32(m, "htspversion", 1);
+  htsmsg_add_u32(m, "htspversion", 6);
 
   /* read welcome */
   if((m = ReadResult(m)) == NULL)
@@ -303,6 +303,7 @@ bool CHTSPConnection::SendGreeting(void)
   m_strServerName = server;
   m_strVersion    = version;
   m_iProtocol     = proto;
+  XBMC->Log(LOG_DEBUG, "CHTSPConnection - %s - using protocol v%d", __FUNCTION__, m_iProtocol);
 
   if(chall && chall_len)
   {

@@ -87,7 +87,7 @@ void cRecPlayer::scan()
     m_segments.Append(segment);
 
     m_totalLength += s.st_size;
-    INFOLOG("File %i found, size: %llu, totalLength now %llu", i, s.st_size, m_totalLength);
+    INFOLOG("File %i found, size: %lu, totalLength now %lu", i, s.st_size, m_totalLength);
   }
 
   m_totalFrames = m_indexFile->Last();
@@ -188,13 +188,13 @@ int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
 
   // seek to position
   if(lseek(m_file, filePosition, SEEK_SET) == -1) {
-    ERRORLOG("unable to seek to position: %llu", filePosition);
+    ERRORLOG("unable to seek to position: %lu", filePosition);
     return 0;
   }
 
   // try to read the block
   int bytes_read = read(m_file, buffer, amount);
-  INFOLOG("read %i bytes from file %i at position %llu", bytes_read, segmentNumber, filePosition);
+  INFOLOG("read %i bytes from file %i at position %lu", bytes_read, segmentNumber, filePosition);
 
   if(bytes_read <= 0) {
     return 0;

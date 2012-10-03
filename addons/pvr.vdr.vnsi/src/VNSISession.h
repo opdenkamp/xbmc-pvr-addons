@@ -81,19 +81,4 @@ private:
   std::string               m_server;
   std::string               m_version;
   bool                      m_connectionLost;
-
-  struct {
-        uint32_t opCodeID;
-        uint32_t streamID;
-        uint32_t duration;
-        uint8_t pts[sizeof(int64_t)];
-        uint8_t dts[sizeof(int64_t)];
-        uint32_t userDataLength;
-  } m_streamPacketHeader;
-
-  struct {
-        uint32_t requestID;
-        uint32_t userDataLength;
-  } m_responsePacketHeader;
-
 };

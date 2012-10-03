@@ -31,7 +31,7 @@
 * debugging is set to a max of 10 for release builds (see local.h)
 */
 
-#include "os-dependent.h"
+#include "platform/os.h"
 #include "client.h"
 #include "DirectorySMB.h"
 #include "platform/threads/mutex.h"

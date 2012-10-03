@@ -32,7 +32,6 @@
 #include "client.h" //for XBMC->Log
 #include <string>
 #include "utils.h"
-#include <wchar.h>
 #include <algorithm>
 #include "platform/util/timeutils.h"
 #include "platform/util/StdString.h"
@@ -41,7 +40,7 @@
 
 #if !defined(TARGET_WINDOWS)
 #include <sys/time.h>
-#include "os-dependent.h"
+#include "platform/os.h"
 #define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)
 #endif
 
@@ -274,13 +273,7 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
   return S_OK;
 }
 
-#if ULONG_MAX == 4294967295
-#define TSBUFFERLONG long
-#elif UINT_MAX == 4294967295
-#define TSBUFFERLONG int 
-#else
-#error long and int are both longer than 32-bit
-#endif
+
 long MultiFileReader::RefreshTSBufferFile()
 {
   if (m_TSBufferFile.IsFileInvalid())
@@ -291,14 +284,12 @@ long MultiFileReader::RefreshTSBufferFile()
 
   long result;
   int64_t currentPosition;
-  TSBUFFERLONG filesAdded, filesRemoved;
-  TSBUFFERLONG filesAdded2, filesRemoved2;
-  long Error;
-  long Loop=10;
+  int32_t filesAdded, filesRemoved;
+  int32_t filesAdded2, filesRemoved2;
+  long Error = 0;
+  long Loop = 10;
 
-  //char* pBuffer;
-  wchar_t* pBuffer = NULL;
-
+  Wchar_t* pBuffer = NULL;
   do
   {
     Error = 0;
@@ -310,8 +301,8 @@ long MultiFileReader::RefreshTSBufferFile()
 
     int64_t fileLength = m_TSBufferFile.GetFileSize();
 
-    // Min file length is Header ( int64_t + long + long ) + filelist ( > 0 ) + Footer ( long + long ) 
-    if (fileLength <= (int64_t)(sizeof(int64_t) + sizeof(filesAdded) + sizeof(filesRemoved) + sizeof(wchar_t) + sizeof(filesAdded2) + sizeof(filesRemoved2)))
+    // Min file length is Header ( int64_t + int32_t + int32_t ) + filelist ( > 0 ) + Footer ( int32_t + int32_t )
+    if (fileLength <= (int64_t)(sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved) + sizeof(wchar_t) + sizeof(filesAdded2) + sizeof(filesRemoved2)))
     {
       if (m_bDebugOutput)
       {
@@ -322,7 +313,7 @@ long MultiFileReader::RefreshTSBufferFile()
 
     m_TSBufferFile.SetFilePointer(0, FILE_BEGIN);
 
-    unsigned long readLength = sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved);
+    uint32_t readLength = sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved);
     unsigned char* readBuffer = new unsigned char[readLength];
 
     result = m_TSBufferFile.Read(readBuffer, readLength, &bytesRead);
@@ -330,12 +321,11 @@ long MultiFileReader::RefreshTSBufferFile()
     if (!SUCCEEDED(result) || bytesRead!=readLength)
       Error |= 0x02;
 
-    if(Error == 0)
+    if (Error == 0)
     {
       currentPosition = *((int64_t*)(readBuffer + 0));
-		  filesAdded = *((TSBUFFERLONG*)(readBuffer + sizeof(int64_t)));
-		  filesRemoved = *((TSBUFFERLONG*)(readBuffer + sizeof(int64_t) + sizeof(filesAdded)));
-      // XBMC->Log(LOG_DEBUG, "MultiFileReader::RefreshTSBufferFile() currentPosition %lli", currentPosition);
+      filesAdded = *((int32_t*)(readBuffer + sizeof(currentPosition)));
+      filesRemoved = *((int32_t*)(readBuffer + sizeof(currentPosition) + sizeof(filesAdded)));
     }
 
     delete[] readBuffer;
@@ -344,22 +334,17 @@ long MultiFileReader::RefreshTSBufferFile()
     if ((m_filesAdded == filesAdded) && (m_filesRemoved == filesRemoved)) 
       break;
 
-    int64_t remainingLength = fileLength - sizeof(int64_t) - sizeof(filesAdded) - sizeof(filesRemoved) - sizeof(filesAdded2) - sizeof(filesRemoved2) ;
+    int64_t remainingLength = fileLength - sizeof(currentPosition) - sizeof(filesAdded) - sizeof(filesRemoved) - sizeof(filesAdded2) - sizeof(filesRemoved2);
 
     // Above 100kb seems stupid and figure out a problem !!!
     if (remainingLength > 100000)
-      Error=0x10;;
+      Error |= 0x10;
   
-    pBuffer = (wchar_t*) new char[(unsigned int)remainingLength];
+    pBuffer = (Wchar_t*) new char[(unsigned int)remainingLength];
 
-    result = m_TSBufferFile.Read((unsigned char*) pBuffer, (uint32_t)remainingLength, &bytesRead);
-    if (!SUCCEEDED(result)||  (int64_t)bytesRead != remainingLength) Error=0x20;
-
-    //unsigned char* pb = (unsigned char*) pBuffer;
-    //for (unsigned long i = 0; i < bytesRead; i++)
-    //{
-    //  XBMC->Log(LOG_DEBUG, "%s: pBuffer byte[%d] == %x.", __FUNCTION__, i, pb[i]);
-    //}
+    result = m_TSBufferFile.Read((unsigned char*) pBuffer, (uint32_t) remainingLength, &bytesRead);
+    if ( !SUCCEEDED(result) || (int64_t) bytesRead != remainingLength)
+      Error |= 0x20;
 
     readLength = sizeof(filesAdded) + sizeof(filesRemoved);
 
@@ -370,10 +355,10 @@ long MultiFileReader::RefreshTSBufferFile()
     if (!SUCCEEDED(result) || bytesRead != readLength) 
       Error |= 0x40;
 
-    if(Error == 0)
+    if (Error == 0)
     {
-      filesAdded2 = *((TSBUFFERLONG*)(readBuffer + 0));
-      filesRemoved2 = *((TSBUFFERLONG*)(readBuffer + sizeof(filesAdded2)));
+      filesAdded2 = *((int32_t*)(readBuffer + 0));
+      filesRemoved2 = *((int32_t*)(readBuffer + sizeof(filesAdded2)));
     }
 
     delete[] readBuffer;
@@ -476,7 +461,7 @@ long MultiFileReader::RefreshTSBufferFile()
     // Create a list of files in the .tsbuffer file.
     std::vector<std::string> filenames;
 
-    wchar_t* pwCurrFile = pBuffer;    //Get a pointer to the first wchar filename string in pBuffer
+    Wchar_t* pwCurrFile = pBuffer;    //Get a pointer to the first wchar filename string in pBuffer
     long length = WcsLen(pwCurrFile);
 
     //XBMC->Log(LOG_DEBUG, "%s: WcsLen(%d), sizeof(wchar_t) == %d.", __FUNCTION__, length, sizeof(wchar_t));
@@ -514,15 +499,7 @@ long MultiFileReader::RefreshTSBufferFile()
       }
       
       // Move the wchar buffer pointer to the next wchar string
-#if defined(TARGET_WINDOWS)
       pwCurrFile += (length + 1);
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-      unsigned short *pus = (unsigned short *) pwCurrFile;
-      pus += (length + 1);
-      pwCurrFile = (wchar_t *) pus;
-#else
-#error Implement pointer adjustment for 16-bit wchars for your OS!
-#endif
       length = WcsLen(pwCurrFile);
     }
 
@@ -683,41 +660,6 @@ int64_t MultiFileReader::GetFileSize()
 {
   RefreshTSBufferFile();
   return m_endPosition - m_startPosition;
-}
-
-// The ts.tsbuffer file will contain 'Windows' wchars which are
-// 16 bit each, this is the platform independent wcslen
-size_t MultiFileReader::WcsLen(const void *str)
-{
-#if defined(TARGET_WINDOWS)
-  return wcslen((const wchar_t *)str);
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  const unsigned short *eos = (const unsigned short*)str;
-  while( *eos++ ) ;
-  return( (size_t)(eos - (const unsigned short*)str) -1);
-#else
-#endif
-}
-
-// The ts.tsbuffer file will contain 'Windows' wchars which are
-// 16 bit each, this is the platform independent wcstombs
-size_t MultiFileReader::WcsToMbs(char *s, const void *w, size_t n)
-{
-#if defined(TARGET_WINDOWS)
-  return wcstombs(s, (const wchar_t *)w, n);
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  size_t i = 0;
-  const unsigned short *wc = (const unsigned short*) w;
-  while(wc[i] && (i < n))
-  {
-    s[i] = wc[i];
-    ++i;
-  }
-  if (i < n) s[i] = '\0';
-
-  return (i);
-#else
-#endif
 }
 
 void MultiFileReader::OnZap(void)

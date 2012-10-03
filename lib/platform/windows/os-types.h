@@ -39,6 +39,25 @@
 #define _WINSOCKAPI_
 #endif
 
+#define WIN32_LEAN_AND_MEAN           // Enable LEAN_AND_MEAN support
+#define NOMINMAX                      // don't define min() and max() to prevent a clash with std::min() and std::max
+#include <windows.h>
+#include <wchar.h>
+
+/* String to 64-bit int */
+#define atoll(S) _atoi64(S)
+
+/* Platform dependent path separator */
+#ifndef PATH_SEPARATOR_CHAR
+#define PATH_SEPARATOR_CHAR '\\'
+#define PATH_SEPARATOR_STRING "\\"
+#endif
+
+/* Handling of 2-byte Windows wchar strings */
+#define WcsLen wcslen
+#define WcsToMbs wcstombs
+typedef wchar_t Wchar_t; /* sizeof(wchar_t) = 2 bytes on Windows */
+
 #pragma warning(disable:4005) // Disable "warning C4005: '_WINSOCKAPI_' : macro redefinition"
 #include <winsock2.h>
 #pragma warning(default:4005)
@@ -65,7 +84,9 @@ typedef _W64 int   ssize_t;
 #define _SSIZE_T_DEFINED
 #endif
 
+/* Prevent deprecation warnings */
 #define snprintf _snprintf
+#define strnicmp _strnicmp
 
 #if defined(_MSC_VER)
 #pragma warning (push)

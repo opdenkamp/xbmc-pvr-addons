@@ -2,12 +2,8 @@ SUBDIRS = pvr.demo \
           pvr.hts \
           pvr.mediaportal.tvserver \
           pvr.vdr.vnsi \
-          pvr.nextpvr
-
-if USE_CURL
-SUBDIRS += pvr.njoy \
-           pvr.fortherecord.argus
-endif
+          pvr.nextpvr \
+          pvr.njoy
 
 clean:
 	-rm -f *.zip

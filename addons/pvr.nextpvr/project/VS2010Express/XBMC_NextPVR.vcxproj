@@ -76,7 +76,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy D:\Downloads\XBMC\xbmc-pvr-addons\addons\pvr.nextpvr\addon\* D:\Downloads\XBMC\xbmc\addons\pvr.nextpvr</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

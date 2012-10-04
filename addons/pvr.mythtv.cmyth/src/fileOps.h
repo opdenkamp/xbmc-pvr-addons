@@ -7,7 +7,7 @@
 #include <map>
 #include <queue>
 #include "cppmyth/MythStorageGroupFile.h"
-#include "../../../lib/platform/threads/threads.h"
+#include <platform/threads/threads.h>
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 // Use v3, if it's available.
 #if defined(BOOST_FILESYSTEM_VERSION)
@@ -34,7 +34,7 @@ typedef enum
   } FILE_OPTIONS;
   
 
-class FileOps : public CThread, public CMutex
+class FileOps : public PLATFORM::CThread, public PLATFORM::CMutex
 {
 public:
   FileOps(MythConnection &mythConnection);
@@ -55,7 +55,7 @@ protected:
   MythConnection m_con;
   boost::filesystem::path m_localBasePath;
   std::map< FILE_OPTIONS, CStdString > m_sg_strings;
-  CEvent m_queue_content;
+  PLATFORM::CEvent m_queue_content;
   struct jobItem {
     boost::filesystem::path localFilename;
     CStdString remoteFilename;

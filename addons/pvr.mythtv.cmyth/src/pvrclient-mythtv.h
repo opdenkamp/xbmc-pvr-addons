@@ -22,6 +22,7 @@
 #include "fileOps.h"
 
 #include <xbmc_pvr_types.h>
+#include <platform/threads/mutex.h>
 
 #include <map>
 #include <boost/bimap.hpp>
@@ -126,7 +127,7 @@ private:
   MythDatabase m_db;
   MythRecorder m_rec;
   FileOps *m_fileOps;
-  CMutex m_lock;
+  PLATFORM::CMutex m_lock;
   MythFile m_file;
 
   CStdString m_protocolVersion;

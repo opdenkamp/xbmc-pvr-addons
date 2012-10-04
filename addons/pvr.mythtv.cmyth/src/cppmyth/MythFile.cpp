@@ -19,6 +19,7 @@
  */
 
 #include "MythFile.h"
+#include "MythPointer.h"
 
 /* Call 'call', then if 'cond' condition is true see if we're still
  * connected to the control socket and try to re-connect if not.

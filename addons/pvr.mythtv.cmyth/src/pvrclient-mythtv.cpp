@@ -436,7 +436,7 @@ const char *PVRClientMythTV::GetBackendName()
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
-  return m_con.GetServer();
+  return m_con.GetBackendName();
 }
 
 const char *PVRClientMythTV::GetBackendVersion() const
@@ -1414,7 +1414,7 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recinfo)
 
   m_file = m_con.ConnectFile(m_recordings.at(id));
   if (m_pEventHandler)
-    m_pEventHandler->SetRecordingListener(m_file, id);
+    m_pEventHandler->SetRecordingListener(id, m_file);
 
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done - %i", __FUNCTION__, !m_file.IsNull());

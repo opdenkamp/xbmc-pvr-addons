@@ -1,9 +1,28 @@
 #pragma once
+/*
+ *      Copyright (C) 2005-2012 Team XBMC
+ *      http://www.xbmc.org
+ *
+ *  This Program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2, or (at your option)
+ *  any later version.
+ *
+ *  This Program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #include "platform/util/StdString.h"
+
 #include <boost/shared_ptr.hpp>
 #include <boost/unordered_map.hpp>
-#include "MythPointer.h"
 
 extern "C" {
 #include <cmyth/cmyth.h>
@@ -16,44 +35,60 @@ class MythEventHandler;
 class MythTimer;
 class MythStorageGroupFile;
 
+template <class T> class MythPointer;
+template <class T> class MythPointerThreadSafe;
 
 class MythConnection 
 {
 public:
   MythConnection();
-  MythConnection(CStdString server,unsigned short port);
-  MythRecorder GetFreeRecorder();
-  MythRecorder GetRecorder(int n);
-  MythEventHandler * CreateEventHandler();
-  boost::unordered_map< CStdString, MythProgramInfo > GetRecordedPrograms();
-  boost::unordered_map< CStdString, MythProgramInfo > GetPendingPrograms();
-  boost::unordered_map< CStdString, MythProgramInfo > GetScheduledPrograms();
-  bool DeleteRecording(MythProgramInfo &recording);
-  bool IsConnected();
-  bool TryReconnect();
-  CStdString GetServer();
-  int GetProtocolVersion();
-  bool GetDriveSpace(long long &total,long long &used);
-  bool UpdateSchedules(int id);
-  MythFile ConnectFile(MythProgramInfo &recording);
-  bool IsNull();
+  MythConnection(const CStdString &server, unsigned short port);
+
+  MythEventHandler *CreateEventHandler();
+
+  bool IsNull() const;
   void Lock();
   void Unlock();
-  CStdString GetSetting(CStdString hostname,CStdString setting);
-  bool SetSetting(CStdString hostname,CStdString setting,CStdString value);
+
+  // Server
+  bool IsConnected();
+  bool TryReconnect();
+  CStdString GetBackendName() const;
   CStdString GetHostname();
   CStdString GetBackendHostname();
+  int GetProtocolVersion();
+  bool GetDriveSpace(long long &total, long long &used);
+  CStdString GetSetting(const CStdString &hostname, const CStdString &setting);
+  bool SetSetting(const CStdString &hostname, const CStdString &setting, const CStdString &value);
+
+  // Recorders
+  MythRecorder GetFreeRecorder();
+  MythRecorder GetRecorder(int n);
+
+  // Recordings
+  bool DeleteRecording(MythProgramInfo &recording);
+  boost::unordered_map<CStdString, MythProgramInfo> GetRecordedPrograms();
+
+  // Timers
+  boost::unordered_map<CStdString, MythProgramInfo> GetPendingPrograms();
+  boost::unordered_map<CStdString, MythProgramInfo> GetScheduledPrograms();
+  bool UpdateSchedules(int id);
   void DefaultTimer(MythTimer &timer);
-  MythFile ConnectPath(CStdString filename, CStdString storageGroup);
-  std::vector< CStdString > GetStorageGroupFileList_(CStdString sgGetList);
-  std::vector< MythStorageGroupFile > GetStorageGroupFileList(CStdString storagegroup);
-  int SetBookmark(MythProgramInfo &recording, long long bookmark);
+
+  // Files
+  MythFile ConnectFile(MythProgramInfo &recording);
+  MythFile ConnectPath(const CStdString &filename, const CStdString &storageGroup);
+  std::vector<MythStorageGroupFile> GetStorageGroupFileList(const CStdString &storageGroup);
+
+  // Bookmarks
   long long GetBookmark(MythProgramInfo &recording);
-  
+  int SetBookmark(MythProgramInfo &recording, long long bookmark);
+
 private:
-  boost::shared_ptr< MythPointerThreadSafe< cmyth_conn_t > > m_conn_t;
+  boost::shared_ptr<MythPointerThreadSafe<cmyth_conn_t> > m_conn_t;
   CStdString m_server;
   unsigned short m_port;
-  int m_retry_count;
-  static MythEventHandler * m_pEventHandler;
+  int m_retryCount;
+
+  static MythEventHandler *s_pEventHandler;
 };

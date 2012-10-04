@@ -28,6 +28,7 @@
 #include <boost/regex.hpp>
 
 using namespace ADDON;
+using namespace PLATFORM;
 
 RecordingRule::RecordingRule(const MythTimer &timer)
   : MythTimer(timer)
@@ -1204,7 +1205,7 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s - chanID: %i, channumber: %i", __FUNCTION__, channel.iUniqueId, channel.iChannelNumber);
 
-  SingleLock<PLATFORM::CMutex> lock(&m_lock);
+  CLockObject lock(m_lock);
   if (m_rec.IsNull())
   {
     MythChannel chan = m_channels.at(channel.iUniqueId);
@@ -1249,7 +1250,7 @@ void PVRClientMythTV::CloseLiveStream()
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  SingleLock<PLATFORM::CMutex> lock(&m_lock);
+  CLockObject lock(m_lock);
 
   if (m_pEventHandler)
     m_pEventHandler->PreventLiveChainUpdate();
@@ -1274,7 +1275,7 @@ int PVRClientMythTV::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuffer
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - size: %i", __FUNCTION__, iBufferSize);
 
-  SingleLock<PLATFORM::CMutex> lock(&m_lock);
+  CLockObject lock(m_lock);
 
   if (m_rec.IsNull())
     return -1;
@@ -1292,7 +1293,7 @@ int PVRClientMythTV::GetCurrentClientChannel()
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  SingleLock<PLATFORM::CMutex> lock(&m_lock);
+  CLockObject lock(m_lock);
 
   if (m_rec.IsNull())
     return -1;
@@ -1332,7 +1333,7 @@ long long PVRClientMythTV::SeekLiveStream(long long iPosition, int iWhence)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - pos: %i, whence: %i", __FUNCTION__, iPosition, iWhence);
 
-  SingleLock<PLATFORM::CMutex> lock(&m_lock);
+  CLockObject lock(m_lock);
 
   if (m_rec.IsNull())
     return -1;
@@ -1358,7 +1359,7 @@ long long PVRClientMythTV::LengthLiveStream()
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  SingleLock<PLATFORM::CMutex> lock(&m_lock);
+  CLockObject lock(m_lock);
 
   if (m_rec.IsNull())
     return -1;

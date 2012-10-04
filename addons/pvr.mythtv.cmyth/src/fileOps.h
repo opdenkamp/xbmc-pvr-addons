@@ -1,69 +1,126 @@
-#ifndef __FILEOPS_H
-#define __FILEOPS_H
-//TODO merge into MythConnection ??
+#pragma once
+/*
+ *      Copyright (C) 2005-2012 Team XBMC
+ *      http://www.xbmc.org
+ *
+ *  This Program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2, or (at your option)
+ *  any later version.
+ *
+ *  This Program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with XBMC; see the file COPYING.  If not, write to
+ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  http://www.gnu.org/copyleft/gpl.html
+ *
+ */
 
-#include "platform/util/StdString.h"
+#include "cppmyth/MythStorageGroupFile.h"
+
+#include <platform/util/StdString.h>
+#include <platform/threads/threads.h>
+
 #include <vector>
 #include <map>
-#include <queue>
-#include "cppmyth/MythStorageGroupFile.h"
-#include <platform/threads/threads.h>
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-// Use v3, if it's available.
-#if defined(BOOST_FILESYSTEM_VERSION)
-#define BOOST_FILESYSTEM_VERSION 3
-#endif
-#include <boost/filesystem.hpp>
-
-
+#include <list>
 
 class MythConnection;
-
-typedef enum
-  {
-    FILE_OPS_GET_COVERART,
-    FILE_OPS_GET_FANART, 
-    FILE_OPS_GET_CHAN_ICONS, //TODO: channel icons will be available as a storage group in v.0.25
-    FILE_OPS_GET_BANNER,
-    FILE_OPS_GET_SCREENSHOT,
-    FILE_OPS_GET_POSTER,
-    FILE_OPS_GET_BACKCOVER,
-    FILE_OPS_GET_INSIDECOVER,
-    FILE_OPS_GET_CD_IMAGE,
-    FILE_OPS_GET_THUMBNAIL
-  } FILE_OPTIONS;
-  
 
 class FileOps : public PLATFORM::CThread, public PLATFORM::CMutex
 {
 public:
-  FileOps(MythConnection &mythConnection);
-   virtual ~FileOps();
-  CStdString getArtworkPath(CStdString title,FILE_OPTIONS Get_What);
-  CStdString getChannelIconPath(CStdString remotePath);
-  CStdString getPreviewIconPath(CStdString remotePath);
-protected:
-  bool createDirectory(boost::filesystem::path dirPath, bool hasFilename = false);
-  bool localFileExists(MythStorageGroupFile &remotefile, boost::filesystem::path dirPath);
-  void* Process();
-  bool writeFile(boost::filesystem::path destination, MythFile &source); 
-  void cleanCache();
-  std::map< FILE_OPTIONS, std::vector< MythStorageGroupFile > > m_SGFilelist;
-  std::map< FILE_OPTIONS, int > m_lastSGupdate;
-  std::map< CStdString, CStdString > m_icons;
-  std::map< CStdString, CStdString > m_preview;
-  MythConnection m_con;
-  boost::filesystem::path m_localBasePath;
-  std::map< FILE_OPTIONS, CStdString > m_sg_strings;
-  PLATFORM::CEvent m_queue_content;
-  struct jobItem {
-    boost::filesystem::path localFilename;
-    CStdString remoteFilename;
-    CStdString storageGroup;
-    jobItem(boost::filesystem::path localFilename,CStdString remoteFilename,CStdString storageGroup):localFilename(localFilename),remoteFilename(remoteFilename),storageGroup(storageGroup){}    
+  enum FileType
+  {
+    FileTypeCoverart,
+    FileTypeFanart,
+    FileTypeChannelIcon,
+    FileTypeBanner,
+    FileTypeScreenshot,
+    FileTypePoster,
+    FileTypeBackcover,
+    FileTypeInsidecover,
+    FileTypeCDImage,
+    FileTypeThumbnail
   };
-  std::queue< FileOps::jobItem > m_jobqueue;
 
+  static std::vector<FileType> GetFileTypes()
+  {
+    std::vector<FileType> ret;
+    ret.push_back(FileTypeCoverart);
+    ret.push_back(FileTypeFanart);
+    ret.push_back(FileTypeChannelIcon);
+    ret.push_back(FileTypeBanner);
+    ret.push_back(FileTypeScreenshot);
+    ret.push_back(FileTypePoster);
+    ret.push_back(FileTypeBackcover);
+    ret.push_back(FileTypeInsidecover);
+    ret.push_back(FileTypeCDImage);
+    ret.push_back(FileTypeThumbnail);
+    return ret;
+  }
+
+  static const char *GetFolderNameByFileType(FileType fileType)
+  {
+    switch(fileType) {
+    case FileTypeCoverart: return "coverart";
+    case FileTypeFanart: return "fanart";
+    case FileTypeChannelIcon: return "ChannelIcons";
+    case FileTypeBanner: return "banner";
+    case FileTypeScreenshot: return "screenshot";
+    case FileTypePoster: return "poster";
+    case FileTypeBackcover: return "backcover";
+    case FileTypeInsidecover: return "insidecover";
+    case FileTypeCDImage: return "cdimage";
+      // FileTypeThumbnail: Thumbnails are located within their recording folders
+    default: return "";
+    }
+  }
+
+  static const int c_timeoutProcess       = 10;       // Wake the thread every 10s
+  static const int c_timeoutCacheCleaning = 60*60*24; // Clean the cache every 24h
+
+  FileOps(MythConnection &mythConnection);
+  virtual ~FileOps();
+
+  CStdString GetArtworkPath(const CStdString &title, FileType fileType);
+  CStdString GetChannelIconPath(const CStdString &remotePath);
+  CStdString GetPreviewIconPath(const CStdString &remotePath);
+
+protected:
+  void* Process();
+
+  bool CacheFile(const CStdString &destination, MythFile &source);
+  void CleanCache();
+
+  static CStdString GetFileName(const CStdString &path, char separator = PATH_SEPARATOR_CHAR);
+  static CStdString GetDirectoryName(const CStdString &path, char separator = PATH_SEPARATOR_CHAR);
+
+  std::map<FileType, std::vector<MythStorageGroupFile> > m_StorageGroupFileList;
+  std::map<FileType, std::time_t> m_StorageGroupFileListLastUpdated;
+  std::map<CStdString, CStdString> m_icons;
+  std::map<CStdString, CStdString> m_preview;
+  MythConnection m_con;
+
+  CStdString m_localBasePath;
+
+  struct JobItem {
+    JobItem(const CStdString &localFilename, const CStdString &remoteFilename, const CStdString &storageGroup)
+      : m_localFilename(localFilename)
+      , m_remoteFilename(remoteFilename)
+      , m_storageGroup(storageGroup)
+    {
+    }
+
+    CStdString m_localFilename;
+    CStdString m_remoteFilename;
+    CStdString m_storageGroup;
+  };
+
+  PLATFORM::CEvent m_queueContent;
+  std::list<FileOps::JobItem> m_jobQueue;
 };
-
-#endif

@@ -547,7 +547,7 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
       tag.bIsHidden = !it->second.Visible();
       tag.bIsRadio = it->second.IsRadio();
 
-      CStdString icon = GetArtWork(FILE_OPS_GET_CHAN_ICONS, it->second.Icon());
+      CStdString icon = GetArtWork(FileOps::FileTypeChannelIcon, it->second.Icon());
       PVR_STRCPY(tag.strIconPath, icon);
 
       // Unimplemented
@@ -682,11 +682,11 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       PVR_STRCPY(tag.strDirectory, strDirectory);
 
       // Images
-      CStdString strIconPath = GetArtWork(FILE_OPS_GET_COVERART, title);
+      CStdString strIconPath = GetArtWork(FileOps::FileTypeCoverart, title);
       if (strIconPath.IsEmpty())
-        strIconPath = m_fileOps->getPreviewIconPath(id + ".png");
+        strIconPath = m_fileOps->GetPreviewIconPath(id + ".png");
 
-      CStdString strFanartPath = GetArtWork(FILE_OPS_GET_FANART, title);
+      CStdString strFanartPath = GetArtWork(FileOps::FileTypeFanart, title);
 
       PVR_STRCPY(tag.strIconPath, strIconPath.c_str());
       PVR_STRCPY(tag.strThumbnailPath, strIconPath.c_str());
@@ -1524,15 +1524,15 @@ void PVRClientMythTV::SetLiveTVPriority(bool enabled)
   }
 }
 
-CStdString PVRClientMythTV::GetArtWork(FILE_OPTIONS storageGroup, const CStdString &shwTitle)
+CStdString PVRClientMythTV::GetArtWork(FileOps::FileType storageGroup, const CStdString &shwTitle)
 {
-  if (storageGroup == FILE_OPS_GET_COVERART || storageGroup == FILE_OPS_GET_FANART)
+  if (storageGroup == FileOps::FileTypeCoverart || storageGroup == FileOps::FileTypeFanart)
   {
-    return m_fileOps->getArtworkPath(shwTitle, storageGroup);
+    return m_fileOps->GetArtworkPath(shwTitle, storageGroup);
   }
-  else if (storageGroup == FILE_OPS_GET_CHAN_ICONS)
+  else if (storageGroup == FileOps::FileTypeChannelIcon)
   {
-    return m_fileOps->getChannelIconPath(shwTitle);
+    return m_fileOps->GetChannelIconPath(shwTitle);
   }
   else
   {

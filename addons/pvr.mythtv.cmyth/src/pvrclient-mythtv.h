@@ -164,5 +164,5 @@ private:
   std::vector<RecordingRule> m_recordingRules;
   void PVRtoMythTimer(const PVR_TIMER timer, MythTimer &mt);
 
-  CStdString GetArtWork(FILE_OPTIONS storageGroup, const CStdString &shwTitle);
+  CStdString GetArtWork(FileOps::FileType storageGroup, const CStdString &shwTitle);
 };

@@ -118,7 +118,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies);libboost_filesystem-vc100-mt-gd.lib;libboost_system-vc100-mt-gd.lib;libboost_regex-vc100-mt-gd.lib</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>libcmtd;libboost_filesystem-vc100-mt-gd-1_46_1;libboost_system-vc100-mt-gd-1_46_1;libboost_regex-vc100-mt-gd-1_46_1;libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmtd;libboost_system-vc100-mt-gd-1_46_1;libboost_regex-vc100-mt-gd-1_46_1;libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
@@ -148,7 +148,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>ws2_32.lib;libboost_filesystem-vc100-mt.lib;libboost_system-vc100-mt.lib;libboost_regex-vc100-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>libcmt;libboost_filesystem-vc100-mt-1_46_1;libboost_system-vc100-mt-1_46_1;libboost_regex-vc100-mt-1_46_1</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmt;libboost_system-vc100-mt-1_46_1;libboost_regex-vc100-mt-1_46_1</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>

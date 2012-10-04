@@ -13,7 +13,7 @@ lib_LTLIBRARIES = libmythtvcmyth-addon.la
 LIBS            = @abs_top_srcdir@/lib/cmyth/libcmyth.la
 
 AM_CPPFLAGS = -I$(abs_top_srcdir)/lib/cmyth/include
-AM_LDFLAGS = -lboost_system -lboost_filesystem -lboost_regex -ldl
+AM_LDFLAGS = -lboost_system -lboost_regex -ldl
 
 include ../Makefile.include.am
 

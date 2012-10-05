@@ -25,6 +25,8 @@
 using namespace std;
 using namespace ADDON;
 
+#define PVR_MIN_API_VERSION "1.2.0"
+
 /* User adjustable settings are saved here.
  * Default values are defined inside client.h
  * and exported to the other source files.
@@ -148,7 +150,7 @@ void ADDON_ReadSettings(void)
   /* Connection settings */
   /***********************/
   if (XBMC->GetSetting("host", &buffer))
-  {
+  { 
     g_szHostname = buffer;
     uri::decode(g_szHostname);
   }
@@ -247,7 +249,7 @@ const char* GetPVRAPIVersion(void)
 
 const char* GetMininumPVRAPIVersion(void)
 {
-  static const char *strMinApiVersion = XBMC_PVR_MIN_API_VERSION;
+  static const char *strMinApiVersion = PVR_MIN_API_VERSION;
   return strMinApiVersion;
 }
 

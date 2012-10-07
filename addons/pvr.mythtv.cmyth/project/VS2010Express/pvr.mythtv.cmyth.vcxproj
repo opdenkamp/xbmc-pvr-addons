@@ -55,10 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\addon\addon.xml" />
-    <None Include="..\..\addon\resources\language\Danish\strings.xml" />
-    <None Include="..\..\addon\resources\language\English\strings.xml" />
-    <None Include="..\..\addon\resources\language\German\strings.xml" />
-    <None Include="..\..\addon\resources\settings.xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A55ACC6B-837D-4784-8E41-66947B1D9B8C}</ProjectGuid>

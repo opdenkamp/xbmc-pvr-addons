@@ -37,7 +37,7 @@ static inline unsigned
 __mvp_atomic_increment(mvp_atomic_t *valp)
 {
 	mvp_atomic_t __val;
-#if defined __i486__ || defined __i586__ || defined __i686__
+#if defined __i486__ || defined __i586__ || defined __i686__ || defined __x86_64__
 	__asm__ __volatile__(
 		"lock xaddl %0, (%1);"
 		"     inc   %0;"
@@ -88,7 +88,7 @@ static inline unsigned
 __mvp_atomic_decrement(mvp_atomic_t *valp)
 {
 	mvp_atomic_t __val;
-#if defined __i486__ || defined __i586__ || defined __i686__
+#if defined __i486__ || defined __i586__ || defined __i686__ || defined __x86_64__
 	__asm__ __volatile__(
 		"lock xaddl %0, (%1);"
 		"     dec   %0;"
@@ -132,7 +132,11 @@ __mvp_atomic_decrement(mvp_atomic_t *valp)
 	 * Don't know how to atomic decrement for a generic architecture
 	 * so punt and just decrement the value.
 	 */
-//#warning unknown architecture, atomic decrement is not...
+#ifdef _WIN32
+  #pragma message("unknown architecture, atomic decrement is not...");
+#else
+  #warning unknown architecture, atomic decrement is not...
+#endif
 	__val = --(*valp);
 #endif
 	return __val;

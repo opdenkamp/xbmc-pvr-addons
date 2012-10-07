@@ -1493,6 +1493,9 @@ cmyth_proginfo_parse_url(cmyth_proginfo_t p)
 	char *host = NULL;
 	char *port = NULL;
 	char *path = NULL;
+	char *placed = NULL;
+	int ip6 = 0;
+	char *eaddr = NULL; 
 
         if (!p || ! p->proginfo_url ||
 	    (!strcmp(p->proginfo_url, "none")) ||
@@ -1511,12 +1514,32 @@ cmyth_proginfo_parse_url(cmyth_proginfo_t p)
 		 * <host>:<port>/<filename>.
 		 */
 		host = p->proginfo_url + strlen(service);
-		port = strchr(host, ':');
-		if (!port) {
+		
+		/* JLB: addr ipv6 look like [...] */
+		eaddr = strchr(host,'/');
+		if (!eaddr) {
+			eaddr = host + strlen(host) + 1;
+		}
+		if ( (unsigned char)*host == '[' ) {
+			placed = strchr(host,']');
+			if (placed && placed < eaddr && (unsigned char)*(++placed) == ':') {
+				ip6 = 1;
+				port = placed;
+			}
+			else {
+				goto out;
+			}
+		}
+		else {
+			port = strchr(host, ':');
+		}
+		if (!port || port > eaddr) {
 			/*
 			 * This does not seem to be a proper URL, so
 			 * just assume it is a filename, and get out.
 			 */
+			host = NULL;
+			port = NULL;
 			goto out;
 		}
 		port = port + 1;
@@ -1531,17 +1554,34 @@ cmyth_proginfo_parse_url(cmyth_proginfo_t p)
 	}
 
     out:
-	if (host && port && path) {
-		char tmp = *(port - 1);
-		*(port - 1) = '\0';
-		if (p->proginfo_host)
-			ref_release(p->proginfo_host);
-		p->proginfo_host = ref_strdup(host);
-		*(port - 1) = tmp;
-		tmp = *(path);
-		*(path) = '\0';
-		p->proginfo_port = atoi(port);
-		*(path) = tmp;
+	if (host && port) {
+		char tmp;
+	        if (ip6 == 1) {
+			++host;
+			tmp = *(port - 2);
+			*(port - 2) = '\0';
+			if (p->proginfo_host)
+				ref_release(p->proginfo_host);
+			p->proginfo_host = ref_strdup(host);
+			*(port - 2) = tmp;
+		}
+		else {
+			tmp = *(port - 1);
+			*(port - 1) = '\0';
+			if (p->proginfo_host)
+				ref_release(p->proginfo_host);
+			p->proginfo_host = ref_strdup(host);
+			*(port - 1) = tmp;
+		}
+		if (path) {
+			tmp = *(path);
+			*(path) = '\0';
+			p->proginfo_port = atoi(port);
+			*(path) = tmp;
+		}
+		else {
+			p->proginfo_port = atoi(port);
+		}
 	} else {
 		if (p->proginfo_host)
 			ref_release(p->proginfo_host);
@@ -1696,7 +1736,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_long";
+		failed = "cmyth_rcv_string";
 		goto fail;
 	}
 	buf->proginfo_chanId = atoi(tmp_str);

@@ -100,6 +100,7 @@ struct cmyth_livetv_chain {
 	cmyth_proginfo_t *progs;
 	char **chain_urls;
 	cmyth_file_t *chain_files; /* File pointers for the urls */
+	int livetv_watch; /* JLB: Manage program breaks */
 };
 
 /* Sergio: Added to clean up database interaction */

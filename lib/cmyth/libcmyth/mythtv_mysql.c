@@ -1577,7 +1577,7 @@ cmyth_mysql_get_timers(cmyth_database_t db)
 	MYSQL_ROW row;
 	const char *query_str = "SELECT recordid, chanid, UNIX_TIMESTAMP(ADDTIME(startdate,starttime)), UNIX_TIMESTAMP(ADDTIME(enddate,endtime)),title,description, type, category, subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod,	dupin, recgroup, storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | (autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder FROM record ORDER BY recordid";
 	int rows=0;
-  cmyth_timer_t timer;
+	cmyth_timer_t timer;
 	cmyth_timerlist_t timerlist;
 
 	cmyth_mysql_query_t * query;

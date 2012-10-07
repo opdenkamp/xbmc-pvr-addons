@@ -78,10 +78,11 @@ cmyth_event_get(cmyth_conn_t conn, char * data, int len)
 		event = CMYTH_EVENT_SCHEDULE_CHANGE;
 	} else if (strncmp(tmp, "DONE_RECORDING", 14) == 0) {
 		event = CMYTH_EVENT_DONE_RECORDING;
+		strncpy(data, tmp + 15, len);
 	} else if (strncmp(tmp, "QUIT_LIVETV", 11) == 0) {
 		event = CMYTH_EVENT_QUIT_LIVETV;
 	} else if (strncmp(tmp, "LIVETV_WATCH", 12) == 0) {
-		event = CMYTH_EVENT_WATCH_LIVETV;
+		event = CMYTH_EVENT_LIVETV_WATCH;
 		strncpy(data, tmp + 13, len);
 	/* Sergio: Added to support the new live tv protocol */
 	} else if (strncmp(tmp, "LIVETV_CHAIN UPDATE", 19) == 0) {

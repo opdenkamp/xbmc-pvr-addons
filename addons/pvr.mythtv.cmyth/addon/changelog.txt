@@ -1,3 +1,8 @@
+v0.3.0
+- Transifex localizations (https://www.transifex.com/projects/p/pvrmythtvcmyth)
+- Support for recording images (icon, thumbnail, fanart)
+- Fixed: Preview images of new recordings were not cached
+
 v0.2.0
 - Added setting to enable / disable Live TV support (disbale to use the addon only for watching recordings)
 

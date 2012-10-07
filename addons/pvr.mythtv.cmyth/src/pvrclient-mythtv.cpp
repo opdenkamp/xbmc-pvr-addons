@@ -922,6 +922,14 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
   boost::unordered_map<CStdString, MythProgramInfo> upcomingRecordings = m_con.GetPendingPrograms();
   for (boost::unordered_map<CStdString, MythProgramInfo>::iterator it = upcomingRecordings.begin(); it != upcomingRecordings.end(); it++)
   {
+    // When deleting a timer from mythweb, it might happen that it's removed from database
+    // but it's still present over mythprotocol. Skip those timers, because timers.at would crash.
+    if (timers.count(it->second.RecordID()) == 0)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Skipping timer that is no more in database", __FUNCTION__);
+      continue;
+    }
+
     PVR_TIMER tag;
     memset(&tag, 0, sizeof(PVR_TIMER));
 

@@ -21,7 +21,6 @@
 #include "pvrclient-mythtv.h"
 
 #include "client.h"
-#include "recordingRules.h"
 #include "tools.h"
 
 #include <time.h>
@@ -1491,13 +1490,6 @@ long long PVRClientMythTV::LengthRecordedStream()
 
 PVR_ERROR PVRClientMythTV::CallMenuHook(const PVR_MENUHOOK &menuhook)
 {
-  //if(menuhook.iHookId == RECORDING_RULES)
-  //{
-  //  std::map< int, MythTimer > timers=m_db.GetTimers();
-  //  RecordingRulesWindow wnd(timers);
-  //  wnd.Open();
-  //}
-  //return PVR_ERROR_NO_ERROR;
   (void)menuhook;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }

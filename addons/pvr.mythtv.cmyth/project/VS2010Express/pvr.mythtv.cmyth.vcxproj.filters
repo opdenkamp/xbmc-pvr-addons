@@ -4,7 +4,6 @@
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\fileOps.cpp" />
     <ClCompile Include="..\..\src\pvrclient-mythtv.cpp" />
-    <ClCompile Include="..\..\src\recordingrules.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythChannel.cpp">
       <Filter>cppmyth</Filter>
     </ClCompile>
@@ -44,7 +43,6 @@
     <ClInclude Include="..\..\src\cppmyth.h" />
     <ClInclude Include="..\..\src\fileOps.h" />
     <ClInclude Include="..\..\src\pvrclient-mythtv.h" />
-    <ClInclude Include="..\..\src\recordingrules.h" />
     <ClInclude Include="..\..\src\tools.h" />
     <ClInclude Include="..\..\src\cppmyth\MythTimestamp.h">
       <Filter>cppmyth</Filter>

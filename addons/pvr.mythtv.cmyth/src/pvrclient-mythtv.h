@@ -28,8 +28,6 @@
 #include <boost/bimap.hpp>
 #include <boost/bimap/unordered_set_of.hpp>
 
-const int RECORDING_RULES = 30006;
-
 class RecordingRule : public MythTimer, public std::vector<std::pair<PVR_TIMER, MythProgramInfo> >
 {
 public:

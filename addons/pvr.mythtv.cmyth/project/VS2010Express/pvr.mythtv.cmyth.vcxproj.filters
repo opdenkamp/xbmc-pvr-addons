@@ -93,5 +93,8 @@
     <None Include="..\..\addon\addon.xml">
       <Filter>addon</Filter>
     </None>
+    <None Include="..\..\addon\changelog.txt">
+      <Filter>addon</Filter>
+    </None>
   </ItemGroup>
 </Project>

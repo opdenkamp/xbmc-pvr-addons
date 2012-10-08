@@ -448,9 +448,9 @@ cmyth_datetime_to_string(char *str, cmyth_timestamp_t ts)
 		ts->timestamp_hour,
 		ts->timestamp_minute,
 		ts->timestamp_second);
-	cmyth_dbg(CMYTH_DBG_ERROR, "original timestamp string: %s \n",str);
+	//cmyth_dbg(CMYTH_DBG_ERROR, "original timestamp string: %s \n",str);
 	sprintf(str,"%lu",(unsigned long) t_datetime);
-	cmyth_dbg(CMYTH_DBG_ERROR, "time in seconds: %s \n",str);
+	//cmyth_dbg(CMYTH_DBG_ERROR, "time in seconds: %s \n",str);
 	
 	return 0;
 }

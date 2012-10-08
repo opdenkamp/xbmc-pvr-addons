@@ -441,7 +441,6 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
 {
   XBMC->Log(LOG_DEBUG, "->GetProperties()");
 
-  //pCapabilities->bSupportsTimeshift          = true; //removed from Frodo API
   pCapabilities->bSupportsEPG                = true;
   pCapabilities->bSupportsRecordings         = true;
   pCapabilities->bSupportsTimers             = true;
@@ -812,6 +811,28 @@ const char * GetLiveStreamURL(const PVR_CHANNEL &channel)
     return "";
   else
     return g_client->GetLiveStreamURL(channel);
+}
+
+bool CanPauseStream(void)
+{
+  if (g_client)
+    return g_client->CanPauseAndSeek();
+
+  return false;
+}
+
+void PauseStream(bool bPaused)
+{
+  if (g_client)
+    g_client->PauseStream(bPaused);
+}
+
+bool CanSeekStream(void)
+{
+  if (g_client)
+    return g_client->CanPauseAndSeek();
+
+  return false;
 }
 
 /** UNUSED API FUNCTIONS */

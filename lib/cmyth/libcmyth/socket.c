@@ -1736,7 +1736,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_long";
+		failed = "cmyth_rcv_string";
 		goto fail;
 	}
 	buf->proginfo_chanId = atoi(tmp_str);

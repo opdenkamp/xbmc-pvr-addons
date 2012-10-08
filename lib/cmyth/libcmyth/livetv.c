@@ -1024,8 +1024,8 @@ int cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, unsigned long len)
 {
 	int ret, retry;
 
-	cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) {\n", 
-        __FUNCTION__,	__FILE__, __LINE__);
+//	cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) {\n",
+//        __FUNCTION__,	__FILE__, __LINE__);
 
 	if (rec == NULL) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
@@ -1045,8 +1045,8 @@ int cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, unsigned long len)
 		}
 	} while(retry);
 
-	cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) }\n",
-				__FUNCTION__, __FILE__, __LINE__);
+//	cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) }\n",
+//				__FUNCTION__, __FILE__, __LINE__);
 
 	return ret;
 }

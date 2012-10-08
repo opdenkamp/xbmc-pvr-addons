@@ -33,8 +33,13 @@ HOST_INCLUDES=""
 HOST_CXXFLAGS=""
 ARCH_DEFINES="-DTARGET_POSIX -DTARGET_LINUX -D_LINUX"
 DYN_LIB_EXT="so"
-
+TARGET_LDFLAGS=""
 case "${host}" in
+  arm-*-linux-androideabi)
+    TARGET_LDFLAGS="-avoid-version -no-undefined"
+    OS="android"
+    ARCHITECTURE="arm"
+    ;;
   arm*-*-linux*)
     OS="linux"
     ARCHITECTURE="arm"
@@ -92,6 +97,7 @@ AC_SUBST(HOST_INCLUDES)
 AC_SUBST(OS)
 AC_SUBST(ARCH_DEFINES)
 AC_SUBST(DYN_LIB_EXT)
+AC_SUBST(TARGET_LDFLAGS)
 
 if test "x$host_os_osx" = "xyes"; then
   AM_CONDITIONAL(HOST_IS_OSX, true)

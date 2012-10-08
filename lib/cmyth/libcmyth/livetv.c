@@ -972,7 +972,9 @@ int cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, unsigned long len)
 		}
 		if (ret == 0) {
 			/* eof, switch to next file */
+			pthread_mutex_lock(&mutex);
 			retry = cmyth_livetv_chain_switch(rec, 1);
+			pthread_mutex_unlock(&mutex);
 		}
 	} while(retry);
 

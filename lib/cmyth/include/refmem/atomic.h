@@ -132,7 +132,11 @@ __mvp_atomic_decrement(mvp_atomic_t *valp)
 	 * Don't know how to atomic decrement for a generic architecture
 	 * so punt and just decrement the value.
 	 */
-//#warning unknown architecture, atomic decrement is not...
+#ifdef _WIN32
+  #pragma message("unknown architecture, atomic decrement is not...");
+#else
+  #warning unknown architecture, atomic decrement is not...
+#endif
 	__val = --(*valp);
 #endif
 	return __val;

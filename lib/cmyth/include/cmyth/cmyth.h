@@ -114,7 +114,7 @@ typedef enum {
 	CMYTH_EVENT_SCHEDULE_CHANGE,
 	CMYTH_EVENT_DONE_RECORDING,
 	CMYTH_EVENT_QUIT_LIVETV,
-	CMYTH_EVENT_WATCH_LIVETV,
+	CMYTH_EVENT_LIVETV_WATCH,
 	CMYTH_EVENT_LIVETV_CHAIN_UPDATE,
 	CMYTH_EVENT_SIGNAL,
 	CMYTH_EVENT_ASK_RECORDING,
@@ -605,10 +605,18 @@ extern long long cmyth_livetv_chain_duration(cmyth_recorder_t rec);
 
 extern int cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir);
 
+extern int cmyth_livetv_chain_switch_unlocked(cmyth_recorder_t rec, int dir);
+
 extern int cmyth_livetv_chain_switch_last(cmyth_recorder_t rec);
 
 extern int cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid,
 						int tcp_rcvbuf);
+
+/* JLB: Manage program breaks */
+extern int cmyth_livetv_watch(cmyth_recorder_t rec, char * msg);
+
+/* JLB: Manage program breaks */
+extern int cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg);
 
 extern cmyth_recorder_t cmyth_spawn_live_tv(cmyth_recorder_t rec,
 										unsigned buflen,

@@ -1422,9 +1422,7 @@ cmyth_recorder_spawn_chain_livetv(cmyth_recorder_t rec, char* channame)
 	}
 
 	/* Create an empty livetv chain with the ID used in the spawn command */
-	snprintf(msg, sizeof(msg),
-		"live-%s-%s[]:[]",
-		  myhostname, datestr);
+	snprintf(msg, sizeof(msg), "live-%s-%s", myhostname, datestr);
 	rec->rec_livetv_chain = cmyth_livetv_chain_create(msg);
 
 	ret = 0;

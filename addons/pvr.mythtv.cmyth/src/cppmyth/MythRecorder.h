@@ -50,6 +50,8 @@ public:
 
   bool SpawnLiveTV(MythChannel &channel);
   bool SetChannel(MythChannel &channel);
+  bool LiveTVWatch(const CStdString &msg);
+  bool LiveTVDoneRecording(const CStdString &msg);
   bool LiveTVChainUpdate(const CStdString &chainid);
   int ReadLiveTV(void *buffer, unsigned long length);
   long long LiveTVSeek(long long offset, int whence);

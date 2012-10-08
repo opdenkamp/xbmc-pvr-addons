@@ -1,5 +1,6 @@
 v0.0.1.141 (04-09-2012)
 - Updated to Frodo PVR API
+- Add timeshift support for Frodo
 v0.0.1.140 (03-06-2012)
 - Fixed deletion of recordings due to api change
 - Fixed instant-record failed due to start time set to 1970 by XBMC

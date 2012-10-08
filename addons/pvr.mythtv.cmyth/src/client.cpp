@@ -457,7 +457,7 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 
 unsigned int GetChannelSwitchDelay(void)
 {
-  return 2000;
+  return 0;
 }
 
 int GetChannelsAmount()

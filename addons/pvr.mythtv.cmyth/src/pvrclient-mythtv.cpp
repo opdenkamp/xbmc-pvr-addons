@@ -663,7 +663,8 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       tag.iDuration = it->second.Duration();
       tag.iPlayCount = it->second.IsWatched() ? 1 : 0;
 
-      CStdString id = it->second.Path();
+      CStdString id = it->second.StrUID();
+      CStdString path = it->second.Path();
       CStdString title = it->second.Title(true);
 
       PVR_STRCPY(tag.strRecordingId, id);
@@ -683,7 +684,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       // Images
       CStdString strIconPath = GetArtWork(FileOps::FileTypeCoverart, title);
       if (strIconPath.IsEmpty())
-        strIconPath = m_fileOps->GetPreviewIconPath(id + ".png");
+        strIconPath = m_fileOps->GetPreviewIconPath(path + ".png");
 
       CStdString strFanartPath = GetArtWork(FileOps::FileTypeFanart, title);
 

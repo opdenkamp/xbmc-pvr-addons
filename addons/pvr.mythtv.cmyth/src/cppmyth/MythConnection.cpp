@@ -240,7 +240,9 @@ boost::unordered_map<CStdString, MythProgramInfo> MythConnection::GetRecordedPro
   {
     cmyth_proginfo_t cmprog = cmyth_proglist_get_item(proglist, i);
     MythProgramInfo prog = cmyth_proginfo_get_detail(*m_conn_t, cmprog);
-    retval.insert(std::pair<CStdString, MythProgramInfo>(prog.Path().c_str(), prog));
+    if (!prog.IsNull()) {
+      retval.insert(std::pair<CStdString,MythProgramInfo>(prog.StrUID().c_str(),prog));
+    }
   }
   ref_release(proglist);
 
@@ -260,9 +262,9 @@ boost::unordered_map<CStdString, MythProgramInfo> MythConnection::GetPendingProg
   for (int i = 0; i < len; i++)
   {
     MythProgramInfo prog = cmyth_proglist_get_item(proglist, i);
-    CStdString filename;
-    filename.Format("%i_%i", prog.ChannelID(), prog.StartTime());
-    retval.insert(std::pair<CStdString,MythProgramInfo>(filename.c_str(), prog));
+    if (!prog.IsNull()) {
+      retval.insert(std::pair<CStdString,MythProgramInfo>(prog.StrUID().c_str(),prog));
+    }
   }
   ref_release(proglist);
 
@@ -283,7 +285,9 @@ boost::unordered_map<CStdString, MythProgramInfo> MythConnection::GetScheduledPr
   {
     cmyth_proginfo_t cmprog = cmyth_proglist_get_item(proglist, i);
     MythProgramInfo prog = cmyth_proginfo_get_detail(*m_conn_t, cmprog);
-    retval.insert(std::pair<CStdString,MythProgramInfo>(prog.Path().c_str(), prog));
+    if (!prog.IsNull()) {
+      retval.insert(std::pair<CStdString,MythProgramInfo>(prog.StrUID().c_str(),prog));
+    }
   }
   ref_release(proglist);
 

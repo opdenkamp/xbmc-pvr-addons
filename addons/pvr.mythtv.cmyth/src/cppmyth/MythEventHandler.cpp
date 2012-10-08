@@ -111,7 +111,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
     "CMYTH_EVENT_SCHEDULE_CHANGE",
     "CMYTH_EVENT_DONE_RECORDING",
     "CMYTH_EVENT_QUIT_LIVETV",
-    "CMYTH_EVENT_WATCH_LIVETV",
+    "CMYTH_EVENT_LIVETV_WATCH",
     "CMYTH_EVENT_LIVETV_CHAIN_UPDATE",
     "CMYTH_EVENT_SIGNAL",
     "CMYTH_EVENT_ASK_RECORDING",
@@ -163,6 +163,42 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
           if (g_bExtraDebug)
             XBMC->Log(LOG_NOTICE, "%s - Event chain update: No recorder", __FUNCTION__);
         Unlock();
+      }
+
+      if(myth_event==CMYTH_EVENT_LIVETV_WATCH)
+      {
+	  if(g_bExtraDebug)
+	    XBMC->Log(LOG_NOTICE,"%s: LIVETV_WATCH - recoder %s",__FUNCTION__,databuf);
+
+	  Lock();
+	  if(!m_recorder.IsNull())
+	  {
+	      bool retval=m_recorder.LiveTVWatch(databuf);
+	      if(g_bExtraDebug)
+		  XBMC->Log(LOG_NOTICE, "%s: LIVETV_WATCH: %s", __FUNCTION__, (retval)?"true":"false");
+	  }
+	  else
+	      if(g_bExtraDebug)
+		  XBMC->Log(LOG_NOTICE, "%s: LIVETV_WATCH - No recorder", __FUNCTION__);
+	  Unlock();
+      }
+
+      if(myth_event==CMYTH_EVENT_DONE_RECORDING)
+      {
+	  if(g_bExtraDebug)
+	    XBMC->Log(LOG_NOTICE, "%s: DONE_RECORDING - recoder %s", __FUNCTION__, databuf);
+
+	  Lock();
+	  if(!m_recorder.IsNull())
+	  {
+	      bool retval=m_recorder.LiveTVDoneRecording(databuf);
+	      if(g_bExtraDebug)
+		  XBMC->Log(LOG_NOTICE, "%s: DONE_RECORDING: %s", __FUNCTION__, (retval)?"true":"false");
+	  }
+	  else
+	      if(g_bExtraDebug)
+		  XBMC->Log(LOG_NOTICE,"%s: DONE_RECORDING - No recorder",__FUNCTION__);
+	  Unlock();
       }
 
       if (myth_event == CMYTH_EVENT_SIGNAL)

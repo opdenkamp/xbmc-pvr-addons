@@ -50,6 +50,20 @@ long long MythProgramInfo::UID()
   return retval;
 }
 
+CStdString MythProgramInfo::StrUID()
+{
+  CStdString retval;
+  char * buf;
+  buf = (char*) malloc (40);
+  memset(buf,0,40);
+  sprintf(buf,"%d_%ld_",ChannelID(),RecordID());
+  time_t starttime = StartTime();
+  strftime(buf+strlen(buf), 14, "%Y%m%d%H%M%S", localtime(&starttime));
+  retval = buf;
+  free(buf);
+  return retval;
+}
+
 CStdString MythProgramInfo::ProgramID()
 {
   char* progId = cmyth_proginfo_programid(*m_proginfo_t);

@@ -42,6 +42,7 @@ public:
   bool IsNull() const;
 
   long long UID();
+  CStdString StrUID();
   CStdString ProgramID();
   CStdString Title(bool subtitleEncoded);
   CStdString Subtitle();

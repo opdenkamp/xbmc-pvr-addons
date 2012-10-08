@@ -162,14 +162,16 @@ bool MythRecorder::SpawnLiveTV(MythChannel &channel)
   CMYTH_REC_CALL(recorder, recorder == NULL, cmyth_spawn_live_tv(*m_recorder_t, 64*1024, 16*1024, MythRecorder::prog_update_callback, &pErr, const_cast<char*>(channel.Number().c_str())));
   *m_recorder_t = recorder;
 
-  int i = 20;
-  while (*m_liveChainUpdated == 0 && i-- != 0)
-  {
-    // m_recorder_t->Unlock();
+  /* JLB
+   * wait chain update for 5000ms before continue
+   */
+  int i=0;
+  while ( *m_liveChainUpdated == 0 && i < 5000 ) {
     m_conn.Unlock();
     usleep(100000);
     m_conn.Lock();
-    // m_recorder_t->Lock();
+    i += 100;
+    XBMC->Log(LOG_DEBUG,"%s: Delay channel switch: %d", __FUNCTION__, i);
   }
 
   // m_recorder_t->Unlock();
@@ -251,6 +253,32 @@ bool MythRecorder::SetChannel(MythChannel &channel)
 
   return true;
 }
+
+/* JLB
+* Manage program breaks.
+* Trigger on event LIVETV_WATCH
+*/
+bool MythRecorder::LiveTVWatch(const CStdString &msg)
+{
+  int retval = 0;
+  CMYTH_REC_CALL(retval, retval < 0, cmyth_livetv_watch(*m_recorder_t, const_cast<char*>(msg.c_str())));
+  if(retval != 0)
+    XBMC->Log(LOG_ERROR,"LiveTVWatch failed, message was: %s", msg.c_str());
+  return retval==0;
+}
+/* JLB
+* Manage program breaks.
+* Trigger on event DONE_RECORDING
+*/
+bool MythRecorder::LiveTVDoneRecording(const CStdString &msg)
+{
+  int retval = 0;
+  CMYTH_REC_CALL( retval, retval < 0, cmyth_livetv_done_recording(*m_recorder_t, const_cast<char*>(msg.c_str())));
+  if(retval != 0)
+    XBMC->Log(LOG_ERROR,"LiveTVDoneRecording failed, message was: %s", msg.c_str());
+  return retval==0;
+}
+
 
 bool MythRecorder::LiveTVChainUpdate(const CStdString &chainid)
 {

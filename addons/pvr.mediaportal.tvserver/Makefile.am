@@ -30,4 +30,5 @@ libmediaportal_addon_la_SOURCES = src/Cards.cpp \
                                   src/lib/tsreader/FileReader.cpp \
                                   src/lib/tsreader/MultiFileReader.cpp \
                                   src/lib/tsreader/TSReader.cpp
+libmediaportal_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

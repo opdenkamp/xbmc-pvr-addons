@@ -9,7 +9,8 @@
     library_osx="XBMC_Njoy.pvr"
     library_linux="XBMC_Njoy.pvr"
     library_wingl="XBMC_njoy_win32.pvr"
-    library_windx="XBMC_njoy_win32.pvr"/>
+    library_windx="XBMC_njoy_win32.pvr"
+    library_android="libXBMC_njoy.so"/>
   <extension point="xbmc.addon.metadata">
     <summary></summary>
     <description></description>

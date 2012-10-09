@@ -2,6 +2,7 @@ SUBDIRS = pvr.demo \
           pvr.hts \
           pvr.mediaportal.tvserver \
           pvr.vdr.vnsi \
+          pvr.nextpvr \
           pvr.njoy
 
 clean:

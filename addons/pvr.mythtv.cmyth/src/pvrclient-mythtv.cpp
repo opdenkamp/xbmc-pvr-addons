@@ -1216,6 +1216,9 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
   CLockObject lock(m_lock);
   if (m_rec.IsNull())
   {
+    // Suspend fileOps to avoid connection hang
+    m_fileOps->Suspend();
+
     MythChannel chan = m_channels.at(channel.iUniqueId);
     for (std::vector<int>::iterator it = m_sources.at(chan.SourceID()).begin(); it != m_sources.at(chan.SourceID()).end(); it++)
     {
@@ -1237,6 +1240,9 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
         m_pEventHandler->SetRecorder(m_rec); // Redundant
       }
     }
+
+    // Resume fileOps
+    m_fileOps->Resume();
 
     if (g_bExtraDebug)
       XBMC->Log(LOG_DEBUG,"%s - Done", __FUNCTION__);
@@ -1271,6 +1277,9 @@ void PVRClientMythTV::CloseLiveStream()
     m_pEventHandler->SetRecorder(m_rec);
     m_pEventHandler->AllowLiveChainUpdate();
   }
+
+  // Resume fileOps
+  m_fileOps->Resume();
 
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
@@ -1417,6 +1426,9 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recinfo)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - title: %s, ID: %s, duration: %i", __FUNCTION__, recinfo.strTitle, recinfo.strRecordingId, recinfo.iDuration);
 
+  // Suspend fileOps to avoid connection hang
+  m_fileOps->Suspend();
+
   CStdString id = recinfo.strRecordingId;
   if (*id.rbegin() == '@')
     id = id.substr(0, id.size() - 1);
@@ -1424,6 +1436,10 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recinfo)
   m_file = m_con.ConnectFile(m_recordings.at(id));
   if (m_pEventHandler)
     m_pEventHandler->SetRecordingListener(id, m_file);
+
+  // Resume fileOps
+  if (m_file.IsNull())
+    m_fileOps->Resume();
 
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done - %i", __FUNCTION__, !m_file.IsNull());
@@ -1437,6 +1453,9 @@ void PVRClientMythTV::CloseRecordedStream()
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
   m_file = MythFile();
+
+  // Resume fileOps
+  m_fileOps->Resume();
 
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);

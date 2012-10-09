@@ -6,23 +6,23 @@ INCLUDES        = -I. -I$(abs_top_srcdir)/xbmc -I$(abs_top_srcdir)/lib @HOST_INC
 WARNINGS        = -Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses
 DEFINES         = @ARCH_DEFINES@ -DUSE_DEMUX -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS
 AM_CXXFLAGS     = -g -O2 -fPIC $(WARNINGS) $(DEFINES) @HOST_CXXFLAGS@
-LIB             = @abs_top_srcdir@/addons/$(ADDONNAME)/addon/$(ADDONBINNAME).pvr
+LIB             = @abs_top_srcdir@/addons/$(ADDONNAME)/addon/@BINPREFIX@$(ADDONBINNAME)@BIN_EXT@
 
 clean:
-	-rm -r -f $(LIB) $(ADDONBINNAME).pvr @abs_top_srcdir@/addons/$(ADDONNAME).@OS@-@ARCHITECTURE@.zip @abs_top_srcdir@/addons/.build/$(ADDONNAME) *.so *.lo *.o *.la *.a *.P *~
+	-rm -r -f $(LIB) @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@ @abs_top_srcdir@/addons/$(ADDONNAME).@OS@-@ARCHITECTURE@.zip @abs_top_srcdir@/addons/.build/$(ADDONNAME) *.so *.lo *.o *.la *.a *.P *~
 if IS_INTREE_BUILD
 	rm -rf ../../../addons/$(ADDONNAME)
 endif
 
 release: $(lib_LTLIBRARIES)
-	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ $(ADDONBINNAME).pvr
-	$(STRIP) -x $(ADDONBINNAME).pvr
+	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@
+	$(STRIP) -x @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@
 
 debug: $(lib_LTLIBRARIES)
-	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ $(ADDONBINNAME).pvr
+	cp -f .libs/$(LIBNAME).@DYN_LIB_EXT@ @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@
 
 $(LIB): @BUILD_TYPE@
-	cp -f $(ADDONBINNAME).pvr $(LIB)
+	cp -f @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@ $(LIB)
 
 zip: $(LIB)
 	mkdir -p @abs_top_srcdir@/addons/.build
@@ -35,7 +35,7 @@ if IS_INTREE_BUILD
 else
 	mkdir -m 755 -p $(DESTDIR)@LIBDIR@/$(ADDONNAME)
 	mkdir -m 755 -p $(DESTDIR)@DATADIR@/$(ADDONNAME)
-	cp -f $(ADDONBINNAME).pvr $(DESTDIR)@LIBDIR@/$(ADDONNAME) ; chmod 655 $(DESTDIR)@LIBDIR@/$(ADDONNAME)/$(ADDONBINNAME).pvr
+	cp -f @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@ $(DESTDIR)@LIBDIR@/$(ADDONNAME) ; chmod 655 $(DESTDIR)@LIBDIR@/$(ADDONNAME)/@BINPREFIX@$(ADDONBINNAME)@BIN_EXT@
 	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon/* $(DESTDIR)@DATADIR@/$(ADDONNAME) ; chmod -R o+rx $(DESTDIR)@DATADIR@/$(ADDONNAME)
 endif
 
@@ -44,5 +44,5 @@ if IS_INTREE_BUILD
 	@echo "copying pvr-addons to xbmc/addons"
 	rm -rf ../../../addons/$(ADDONNAME)
 	cp -r -p -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon ../../../addons/$(ADDONNAME)
-	cp -f -p $(ADDONBINNAME).pvr ../../../addons/$(ADDONNAME)
+	cp -f -p @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@ ../../../addons/$(ADDONNAME)
 endif

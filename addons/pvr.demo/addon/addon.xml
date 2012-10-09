@@ -11,7 +11,8 @@
     point="xbmc.pvrclient"
     library_linux="XBMC_Demo.pvr"
     library_wingl="XBMC_Demo_win32.pvr"
-    library_windx="XBMC_Demo_win32.pvr" />
+    library_windx="XBMC_Demo_win32.pvr"
+    library_android="libXBMC_Demo.so" />
   <extension point="xbmc.addon.metadata">
     <summary>Demo PVR Client</summary>
     <description>Demo PVR Client</description>

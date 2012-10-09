@@ -12,7 +12,8 @@
     library_linux="XBMC_VDR_vnsi.pvr"
     library_osx="XBMC_VDR_vnsi.pvr"
     library_wingl="XBMC_VDR_vnsi_WIN32.pvr"
-    library_windx="XBMC_VDR_vnsi_WIN32.pvr"/>
+    library_windx="XBMC_VDR_vnsi_WIN32.pvr"
+    library_android="libXBMC_VDR_vnsi.so"/>
   <extension point="xbmc.addon.metadata">
     <summary>PVR client to connect VDR to XBMC over the VNSI interface</summary>
     <description>VDR frontend; supporting streaming of Live TV &amp; Recordings, EPG, Timers over the VNSI plugin</description>

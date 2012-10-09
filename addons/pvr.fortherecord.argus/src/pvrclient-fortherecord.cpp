@@ -1606,3 +1606,17 @@ const char* cPVRClientForTheRecord::GetLiveStreamURL(const PVR_CHANNEL &channeli
   XBMC->Log(LOG_DEBUG, "<-GetLiveStreamURL returns URL(%s)", m_PlaybackURL.c_str());
   return m_PlaybackURL.c_str();
 }
+
+void cPVRClientForTheRecord::PauseStream(bool bPaused)
+{
+  //TODO: add m_tsreader->Pause() her when adding RTSP streaming support
+}
+
+bool cPVRClientForTheRecord::CanPauseAndSeek()
+{
+#ifdef TSREADER
+  if (m_tsreader)
+    return true;
+#endif
+  return false;
+}

@@ -298,4 +298,7 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED
 void DemuxAbort(void) {}
 DemuxPacket* DemuxRead(void) { return NULL; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
+void PauseStream(bool bPaused) {}
+bool CanPauseStream(void) { return false; }
+bool CanSeekStream(void) { return false; }
 }

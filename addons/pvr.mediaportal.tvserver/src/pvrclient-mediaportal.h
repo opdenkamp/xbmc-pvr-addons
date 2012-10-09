@@ -91,6 +91,8 @@ public:
   long long SeekLiveStream(long long iPosition, int iWhence = SEEK_SET);
   long long LengthLiveStream(void);
   long long PositionLiveStream(void);
+  bool CanPauseAndSeek(void);
+  void PauseStream(bool bPaused);
 
   /* Record stream handling */
   bool OpenRecordedStream(const PVR_RECORDING &recording);

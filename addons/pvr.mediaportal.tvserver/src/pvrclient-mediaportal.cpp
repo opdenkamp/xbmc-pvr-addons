@@ -42,13 +42,13 @@ using namespace ADDON;
 int g_iTVServerXBMCBuild = 0;
 
 /* PVR client version (don't forget to update also the addon.xml and the Changelog.txt files) */
-#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.2.3.116"
+#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.2.3.117"
 
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.0.90"
 #define TVSERVERXBMC_MIN_VERSION_BUILD          90
-#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.115"
-#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  115
+#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.116"
+#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  116
 
 /************************************************************/
 /** Class interface */
@@ -1753,4 +1753,18 @@ const char* cPVRClientMediaPortal::GetLiveStreamURL(const PVR_CHANNEL &channelin
   {
     return m_PlaybackURL.c_str();
   }
+}
+
+void cPVRClientMediaPortal::PauseStream(bool bPaused)
+{
+  if (m_tsreader)
+    m_tsreader->Pause();
+}
+
+bool cPVRClientMediaPortal::CanPauseAndSeek()
+{
+  if (m_tsreader)
+    return true;
+  else
+    return false;
 }

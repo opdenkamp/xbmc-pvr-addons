@@ -91,6 +91,8 @@ public:
   int GetCurrentClientChannel();
   bool SwitchChannel(const PVR_CHANNEL &channel);
   PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
+  bool CanPauseAndSeek(void);
+  void PauseStream(bool bPaused);
 
   /* Record stream handling */
   bool OpenRecordedStream(const PVR_RECORDING &recording);
@@ -99,7 +101,6 @@ public:
   long long SeekRecordedStream(long long iPosition, int iWhence = SEEK_SET);
   long long LengthRecordedStream(void);
   long long PositionRecordedStream(void);
-
 
   /* Used for rtsp streaming */
   const char* GetLiveStreamURL(const PVR_CHANNEL &channel);

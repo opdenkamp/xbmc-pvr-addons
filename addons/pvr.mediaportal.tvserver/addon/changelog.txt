@@ -1,3 +1,6 @@
+v1.2.3.117
+- Added: timeshift support for XBMC Frodo
+
 v1.2.3.116:
 - Fixed: playback of recordings with non-ASCII characters
 - Added: Hungarian translation

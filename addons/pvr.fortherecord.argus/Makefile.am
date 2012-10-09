@@ -37,4 +37,5 @@ libfortherecord_addon_la_SOURCES = src/activerecording.cpp \
                                    src/lib/tsreader/FileReader.cpp \
                                    src/lib/tsreader/MultiFileReader.cpp \
                                    src/lib/tsreader/TSReader.cpp
+libfortherecord_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

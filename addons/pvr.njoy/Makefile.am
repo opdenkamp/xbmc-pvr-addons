@@ -16,4 +16,5 @@ include ../Makefile.include.am
 
 libpvrnjoy_addon_la_SOURCES = src/client.cpp \
                               src/N7Xml.cpp
+libpvrnjoy_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

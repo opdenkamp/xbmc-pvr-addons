@@ -12,7 +12,8 @@
     library_linux="XBMC_ForTheRecord.pvr"
     library_osx="XBMC_ForTheRecord.pvr"
     library_wingl="XBMC_ForTheRecord_win32.pvr"
-    library_windx="XBMC_ForTheRecord_win32.pvr"/>
+    library_windx="XBMC_ForTheRecord_win32.pvr"
+    library_android="libXBMC_ForTheRecord.so"/>
   <extension point="xbmc.addon.metadata">
     <summary>XBMC frontend for the ForTheRecord PVR http://www.4therecord.eu/</summary>
     <description>ForTheRecord PVR frontend. Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and schedules.</description>

@@ -21,4 +21,4 @@ libvdrvnsi_addon_la_SOURCES = src/client.cpp \
                               src/requestpacket.cpp \
                               src/responsepacket.cpp \
                               src/tools.cpp
-
+libvdrvnsi_addon_la_LDFLAGS = @TARGET_LDFLAGS@

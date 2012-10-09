@@ -91,6 +91,9 @@ public:
   CStdString GetChannelIconPath(const CStdString &remotePath);
   CStdString GetPreviewIconPath(const CStdString &remotePath);
 
+  void Suspend();
+  void Resume();
+
 protected:
   void* Process();
 

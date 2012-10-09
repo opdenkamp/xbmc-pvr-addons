@@ -175,8 +175,33 @@ CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
   return localFilename;
 }
 
+void FileOps::Suspend()
+{
+  XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
+  if (IsRunning())
+  {
+    XBMC->Log(LOG_DEBUG, "%s Stopping Thread", __FUNCTION__);
+    StopThread(-1); // Set stopping. don't wait as we need to signal the thread first
+    m_queueContent.Signal();
+    StopThread(); // Wait for thread to stop
+  }
+}
+
+void FileOps::Resume()
+{
+  XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
+  if (IsStopped())
+  {
+    XBMC->Log(LOG_DEBUG, "%s Resuming Thread", __FUNCTION__);
+    Clear();
+    CreateThread();
+  }
+}
+
 void* FileOps::Process()
 {
+  XBMC->Log(LOG_DEBUG, "%s FileOps Thread Started", __FUNCTION__);
+
   std::time_t lastRunCacheClean = std::time(NULL);
   std::list<FileOps::JobItem> jobQueueDelayed;
 
@@ -236,6 +261,8 @@ void* FileOps::Process()
       lastRunCacheClean = now;
     }
   }
+
+  XBMC->Log(LOG_DEBUG, "%s FileOps Thread Stopped", __FUNCTION__);
   return NULL;
 }
 

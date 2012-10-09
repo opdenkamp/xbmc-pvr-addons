@@ -23,6 +23,7 @@
 #include "xbmc_pvr_dll.h"
 #include <stdlib.h>
 #include "VuData.h"
+#include "platform/util/util.h"
 
 using namespace std;
 using namespace ADDON;
@@ -166,19 +167,16 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   XBMC = new CHelper_libXBMC_addon;
   if (!XBMC->RegisterMe(hdl))
   {
-    delete XBMC;
-    XBMC = NULL;
-    return ADDON_STATUS_UNKNOWN;
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
   PVR = new CHelper_libXBMC_pvr;
   if (!PVR->RegisterMe(hdl))
   {
-    delete PVR;
-    delete XBMC;
-    PVR = NULL;
-    XBMC = NULL;
-    return ADDON_STATUS_UNKNOWN;
+    SAFE_DELETE(PVR);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
   XBMC->Log(LOG_DEBUG, "%s - Creating VU+ PVR-Client", __FUNCTION__);

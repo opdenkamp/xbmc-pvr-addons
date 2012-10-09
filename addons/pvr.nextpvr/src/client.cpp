@@ -66,7 +66,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   if (!XBMC->RegisterMe(hdl))
   {
     SAFE_DELETE(XBMC);
-    return ADDON_STATUS_UNKNOWN;
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
   PVR = new CHelper_libXBMC_pvr;
@@ -74,7 +74,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   {
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
-    return ADDON_STATUS_UNKNOWN;
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
   XBMC->Log(LOG_INFO, "Creating NextPVR PVR-Client");

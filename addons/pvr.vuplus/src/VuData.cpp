@@ -603,6 +603,12 @@ bool Vu::Open()
   
   m_bIsConnected = GetDeviceInfo();
 
+  if (!m_bIsConnected)
+  {
+    XBMC->Log(LOG_ERROR, "%s It seem's that the webinterface cannot be reached. Make sure that you set the correct configuration options in the addon settings!", __FUNCTION__);
+    return false;
+  }
+
   LoadLocations();
 
   LoadChannelData();

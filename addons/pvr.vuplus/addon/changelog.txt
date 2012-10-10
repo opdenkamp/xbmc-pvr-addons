@@ -1,3 +1,7 @@
+0.3.3:
+- add: support for storing the last played positions for recordings. These will be stored in the file recordings.xml
+- fix: if the webinterface cannot be loaded, deactivate the addon
+
 0.3.2:
 - fix: continue to load channels even if we do not have any radio channels
 

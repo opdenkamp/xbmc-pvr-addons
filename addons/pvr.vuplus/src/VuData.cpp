@@ -684,7 +684,6 @@ void  *Vu::Process()
 
   CLockObject lock(m_mutex);
   m_started.Broadcast();
-  //XBMC->Log(LOG_DEBUG, "%s - exiting", __FUNCTION__);
 
   return NULL;
 }
@@ -976,6 +975,8 @@ PVR_ERROR Vu::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 Vu::~Vu() 
 {
+  StoreLastPlayedPositions();
+
   StopThread();
   
   m_channels.clear();  
@@ -1389,6 +1390,9 @@ PVR_ERROR Vu::DeleteTimer(const PVR_TIMER &timer)
 
 PVR_ERROR Vu::GetRecordings(ADDON_HANDLE handle)
 {
+  if (m_iNumRecordings != 0)
+    StoreLastPlayedPositions();
+
   m_iNumRecordings = 0;
   m_recordings.clear();
 
@@ -1400,6 +1404,8 @@ PVR_ERROR Vu::GetRecordings(ADDON_HANDLE handle)
       return PVR_ERROR_SERVER_ERROR;
     }
   }
+
+  RestoreLastPlayedPositions();
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -1453,6 +1459,8 @@ bool Vu::GetRecordingFromLocation(ADDON_HANDLE handle, CStdString strRecordingFo
     int iTmp;
 
     VuRecording recording;
+
+    recording.iLastPlayedPosition = 0;
     if (XMLUtils::GetString(pNode, "e2servicereference", strTmp))
       recording.strRecordingId = strTmp;
 
@@ -1858,3 +1866,165 @@ CStdString Vu::URLEncodeInline(const CStdString& str)
   }
   return quotedStr;
 }
+
+int Vu::GetRecordingIndex(CStdString strStreamURL)  
+{
+  for (unsigned int i = 0;i<m_recordings.size();  i++) 
+  {
+    if (!strStreamURL.compare(m_recordings[i].strStreamURL))
+      return i;
+  }
+  return -1;
+}
+
+PVR_ERROR Vu::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  int iRecordId = GetRecordingIndex(recording.strStreamURL);
+
+  if (iRecordId == -1)
+  {
+    XBMC->Log(LOG_ERROR, "%s Could not set lastplayedposition for recording!", __FUNCTION__);
+    return PVR_ERROR_SERVER_ERROR;
+  }
+
+  m_recordings.at(iRecordId).iLastPlayedPosition = lastplayedposition;
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+bool Vu::SetRecordingLastPlayedPosition(CStdString strStreamURL, int lastplayedposition)
+{
+  XBMC->Log(LOG_DEBUG, "%s Set lastplayedposition '%d' for recording '%s'", __FUNCTION__, lastplayedposition, strStreamURL.c_str());  
+  int iRecordId = GetRecordingIndex(strStreamURL);
+
+  if (iRecordId == -1)
+  {
+    XBMC->Log(LOG_DEBUG, "%s Could not set lastplayedposition for recording!", __FUNCTION__);
+    return false;
+  }
+
+  m_recordings.at(iRecordId).iLastPlayedPosition = lastplayedposition;
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+int Vu::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  int iRecordId = GetRecordingIndex(recording.strStreamURL);
+
+  if (iRecordId == -1)
+  {
+    XBMC->Log(LOG_ERROR, "%s Could not get lastplayedposition for recording!", __FUNCTION__);
+    return PVR_ERROR_SERVER_ERROR;
+  }
+
+  return m_recordings.at(iRecordId).iLastPlayedPosition;
+}
+
+bool Vu::StoreLastPlayedPositions()
+{
+  std::ofstream stream;
+  
+  CStdString strFileName;
+  strFileName.Format("%srecordings.xml", g_strChannelDataPath.c_str());
+  stream.open(strFileName.c_str());
+
+  if(stream.fail())
+  {
+    return false;
+  }
+
+  stream << "<recordingsdata>\n";
+  stream << "\t<recordingslist>\n";
+  for (unsigned int iRecordingsPtr = 0; iRecordingsPtr < m_recordings.size(); iRecordingsPtr++)
+  {
+    VuRecording &recording = m_recordings.at(iRecordingsPtr);
+    stream << "\t\t<recording>\n";
+
+    CStdString strTmp = recording.strStreamURL;
+    Escape(strTmp, "&", "&amp;");
+    Escape(strTmp, "<", "&lt;");
+    Escape(strTmp, ">", "&gt;");
+
+    stream << "\t\t\t<streamurl>" << strTmp;
+    stream << "</streamurl>\n";
+    
+    int i = recording.iLastPlayedPosition;
+
+    stream << "\t\t\t<lastplayedposition>" << i;
+    stream << "</lastplayedposition>\n";
+    stream << "\t\t</recording>\n";
+  }
+
+  stream << "\t</recordingslist>\n";
+    
+  stream << "</recordingsdata>\n";
+  stream.close();
+
+  return true;
+}
+
+bool Vu::RestoreLastPlayedPositions()
+{
+  XBMC->Log(LOG_DEBUG, "%s Load recording data from file: '%srecordings.xml'", __FUNCTION__, g_strChannelDataPath.c_str());
+
+  CStdString strFileName;
+  strFileName.Format("%srecordings.xml", g_strChannelDataPath.c_str());
+  
+  TiXmlDocument xmlDoc;
+  if (!xmlDoc.LoadFile(strFileName))
+  {
+    XBMC->Log(LOG_DEBUG, "Unable to parse XML: %s at line %d", xmlDoc.ErrorDesc(), xmlDoc.ErrorRow());
+    return false;
+  }
+
+  XBMC->Log(LOG_DEBUG, "%s Parsing recording data.", __FUNCTION__);
+
+  TiXmlHandle hDoc(&xmlDoc);
+  TiXmlElement* pElem;
+  TiXmlHandle hRoot(0);
+
+  pElem = hDoc.FirstChildElement().Element();
+  
+  if (!pElem)
+  {
+    XBMC->Log(LOG_DEBUG, "%s Could not find root element", __FUNCTION__);
+    return false;
+  }
+
+  hRoot = TiXmlHandle(pElem);
+
+  // Get the recordingslist
+  pElem = hRoot.FirstChild("recordingslist").Element(); 
+  
+  if (!pElem)
+  {
+    XBMC->Log(LOG_DEBUG, "%s Could not find <recordingslist> element", __FUNCTION__);
+    return false;
+  }
+
+  TiXmlElement* pNode = pElem->FirstChildElement("recording");
+
+  if (!pNode)
+  {
+    XBMC->Log(LOG_DEBUG, "Could not find <recording> element");
+    return false;
+  }
+
+  for (; pNode != NULL; pNode = pNode->NextSiblingElement("recording"))
+  {
+    CStdString strTmp;
+    int iTmp;
+
+    if (!XMLUtils::GetInt(pNode, "lastplayedposition", iTmp))
+      continue;
+
+    if (!XMLUtils::GetString(pNode, "streamurl", strTmp))
+      continue;
+
+    SetRecordingLastPlayedPosition(strTmp, iTmp);
+  }
+
+  return true;
+}
+

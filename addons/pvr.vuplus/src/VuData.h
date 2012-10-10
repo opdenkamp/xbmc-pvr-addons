@@ -142,6 +142,7 @@ struct VuRecording
   std::string strRecordingId;
   time_t startTime;
   int iDuration;
+  int iLastPlayedPosition;
   std::string strTitle;
   std::string strStreamURL;
   std::string strPlot;
@@ -169,17 +170,17 @@ private:
   std::vector<VuRecording> m_recordings;
   std::vector<VuChannelGroup> m_groups;
   std::vector<std::string> m_locations;
-
   bool m_bInitial;
   unsigned int m_iClientIndexCounter;
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;
- 
 
   // functions
   void StoreChannelData();
   void LoadChannelData();
+  bool StoreLastPlayedPositions();
+  bool RestoreLastPlayedPositions();
   CStdString GetHttpXML(CStdString& url);
   int GetChannelNumber(CStdString strServiceReference);
   bool SendSimpleCommand(const CStdString& strCommandURL, CStdString& strResult, bool bIgnoreResult = false);
@@ -191,6 +192,7 @@ private:
   std::vector<VuTimer> LoadTimers();
   void TimerUpdates();
   bool GetDeviceInfo();
+  int GetRecordingIndex(CStdString);
 
   // helper functions
   static long TimeStringToSeconds(const CStdString &timeString);
@@ -217,6 +219,9 @@ public:
   int GetTimersAmount(void);
   PVR_ERROR GetTimers(ADDON_HANDLE handle);
   PVR_ERROR AddTimer(const PVR_TIMER &timer);
+  PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
+  bool SetRecordingLastPlayedPosition(CStdString strStreamURL, int lastplayedposition);
+  int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
   PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
   PVR_ERROR DeleteTimer(const PVR_TIMER &timer);
   bool GetRecordingFromLocation(ADDON_HANDLE handle, CStdString strRecordingFolder);

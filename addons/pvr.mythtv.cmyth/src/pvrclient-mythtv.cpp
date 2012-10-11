@@ -429,6 +429,11 @@ bool PVRClientMythTV::Connect()
   if (m_channelGroups.empty())
     XBMC->Log(LOG_INFO,"%s: No channel groups", __FUNCTION__);
 
+  // Get recordings
+  m_recordings = m_con.GetRecordedPrograms();
+  if (m_recordings.empty())
+    XBMC->Log(LOG_INFO,"%s: No recordings", __FUNCTION__);
+
   return true;
 }
 

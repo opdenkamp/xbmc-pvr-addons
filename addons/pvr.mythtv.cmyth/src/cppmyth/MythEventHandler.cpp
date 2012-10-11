@@ -343,11 +343,6 @@ bool MythEventHandler::TryReconnect()
   return retval == 1;
 }
 
-void MythEventHandler::Stop()
-{
-  m_imp.reset();
-}
-
 void MythEventHandler::PreventLiveChainUpdate()
 {
   m_imp->Lock();

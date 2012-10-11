@@ -90,5 +90,5 @@ private:
   unsigned short m_port;
   int m_retryCount;
 
-  static MythEventHandler *s_pEventHandler;
+  MythEventHandler *m_pEventHandler;
 };

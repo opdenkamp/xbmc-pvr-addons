@@ -67,8 +67,9 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   XBMC->Log(LOG_DEBUG, "%s: channel icon: %s", __FUNCTION__, remoteFilename.c_str());
 
   // Check local directory
-  if (m_icons.count(remoteFilename) > 0)
-    return m_icons.at(remoteFilename);
+  std::map<CStdString, CStdString>::iterator it = m_icons.find(remoteFilename);
+  if (it != m_icons.end())
+    return it->second;
 
   // Determine filename
   CStdString localFilename = m_localBasePath + "channels" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
@@ -92,8 +93,9 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
   XBMC->Log(LOG_DEBUG, "%s: preview icon: %s", __FUNCTION__, remoteFilename.c_str());
 
   // Check local directory
-  if (m_preview.count(remoteFilename) > 0)
-    return m_preview[remoteFilename];
+  std::map<CStdString, CStdString>::iterator it = m_preview.find(remoteFilename);
+  if (it != m_preview.end())
+    return it->second;
 
   // Determine local filename
   CStdString localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');

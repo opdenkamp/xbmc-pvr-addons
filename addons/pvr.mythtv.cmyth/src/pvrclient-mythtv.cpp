@@ -299,7 +299,6 @@ PVRClientMythTV::~PVRClientMythTV()
 
   if (m_pEventHandler)
   {
-    m_pEventHandler->Stop();
     delete m_pEventHandler;
     m_pEventHandler = NULL;
   }
@@ -396,8 +395,6 @@ bool PVRClientMythTV::Connect()
   if (m_db.IsNull())
   {
     XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s %s/%s", g_szMythDBname.c_str(), g_szHostname.c_str(), g_szMythDBuser.c_str(), g_szMythDBpassword.c_str());
-    if (m_pEventHandler)
-      m_pEventHandler->Stop();
     return false;
   }
 
@@ -406,8 +403,6 @@ bool PVRClientMythTV::Connect()
   if (!m_db.TestConnection(&db_test))
   {
     XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s %s/%s\n%s", g_szMythDBname.c_str(), g_szHostname.c_str(), g_szMythDBuser.c_str(), g_szMythDBpassword.c_str(), db_test.c_str());
-    if (m_pEventHandler)
-      m_pEventHandler->Stop();
     return false;
   }
 
@@ -428,6 +423,11 @@ bool PVRClientMythTV::Connect()
   m_channelGroups = m_db.GetChannelGroups();
   if (m_channelGroups.empty())
     XBMC->Log(LOG_INFO,"%s: No channel groups", __FUNCTION__);
+
+  // Get recordings
+  m_recordings = m_con.GetRecordedPrograms();
+  if (m_recordings.empty())
+    XBMC->Log(LOG_INFO,"%s: No recordings", __FUNCTION__);
 
   return true;
 }
@@ -729,21 +729,26 @@ PVR_ERROR PVRClientMythTV::DeleteRecording(const PVR_RECORDING &recording)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  CStdString id = recording.strRecordingId;
-  if (*id.rbegin() == '@')
-    id = id.substr(0, id.size() - 1);
-
-  bool ret = m_con.DeleteRecording(m_recordings.at(id));
-  if (ret && m_recordings.erase(recording.strRecordingId))
+  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  if (it != m_recordings.end())
   {
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG, "%s - Deleted", __FUNCTION__);
-    return PVR_ERROR_NO_ERROR;
+    bool ret = m_con.DeleteRecording(it->second);
+    if (ret)
+    {
+      m_recordings.erase(it);
+      if (g_bExtraDebug)
+        XBMC->Log(LOG_DEBUG, "%s - Deleted recording %s", __FUNCTION__, recording.strRecordingId);
+      return PVR_ERROR_NO_ERROR;
+    }
+    else
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Failed to delete recording %s", __FUNCTION__, recording.strRecordingId);
+      return PVR_ERROR_FAILED;
+    }
   }
   else
   {
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG, "%s - Not Deleted", __FUNCTION__);
+    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
     return PVR_ERROR_FAILED;
   }
 }
@@ -752,23 +757,30 @@ PVR_ERROR PVRClientMythTV::SetRecordingPlayCount(const PVR_RECORDING &recording,
 {
   XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  CStdString id = recording.strRecordingId;
-
   if (count > 1) count = 1;
   if (count < 0) count = 0;
-  int ret = m_db.SetWatchedStatus(m_recordings.at(id), count > 0);
 
-  if (ret == 1)
+  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  if (it != m_recordings.end())
   {
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG, "%s - Set watched state", __FUNCTION__);
-    PVR->TriggerRecordingUpdate();
-    return PVR_ERROR_NO_ERROR;
+    int ret = m_db.SetWatchedStatus(it->second, count > 0);
+
+    if (ret == 1)
+    {
+      if (g_bExtraDebug)
+        XBMC->Log(LOG_DEBUG, "%s - Set watched state for %s", __FUNCTION__, recording.strRecordingId);
+      PVR->TriggerRecordingUpdate();
+      return PVR_ERROR_NO_ERROR;
+    }
+    else
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Failed setting watched state for: %s: %d)", __FUNCTION__, recording.strRecordingId, ret);
+      return PVR_ERROR_FAILED;
+    }
   }
   else
   {
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG, "%s - Setting watched state failed: %d)", __FUNCTION__, ret);
+    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
     return PVR_ERROR_FAILED;
   }
 }
@@ -784,32 +796,39 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
     XBMC->Log(LOG_DEBUG, "%s - Setting Bookmark for: %s to %d", __FUNCTION__, recording.strTitle, lastplayedposition);
   }
 
-  MythProgramInfo progInfo = m_recordings.at(recording.strRecordingId);
-
-  // Calculate the frame offset
-  frameOffset = (long long)((float)lastplayedposition * GetRecordingFrameRate(progInfo));
-  if (frameOffset < 0) frameOffset = 0;
-  if (g_bExtraDebug)
+  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  if (it != m_recordings.end())
   {
-    XBMC->Log(LOG_DEBUG, "%s - FrameOffset: %lld)", __FUNCTION__, frameOffset);
-  }
-
-  // Write the bookmark
-  int retval = m_con.SetBookmark(progInfo, frameOffset);
-  if (retval == 1)
-  {
+    // Calculate the frame offset
+    frameOffset = (long long)((float)lastplayedposition * GetRecordingFrameRate(it->second));
+    if (frameOffset < 0) frameOffset = 0;
     if (g_bExtraDebug)
     {
-      XBMC->Log(LOG_ERROR, "%s - Setting Bookmark successful: %d)", __FUNCTION__);
+      XBMC->Log(LOG_DEBUG, "%s - FrameOffset: %lld)", __FUNCTION__, frameOffset);
     }
-    return PVR_ERROR_NO_ERROR;
+
+    // Write the bookmark
+    int retval = m_con.SetBookmark(it->second, frameOffset);
+    if (retval == 1)
+    {
+      if (g_bExtraDebug)
+      {
+        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark successful: %d)", __FUNCTION__);
+      }
+      return PVR_ERROR_NO_ERROR;
+    }
+    else
+    {
+      if (g_bExtraDebug)
+      {
+        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark failed: %d)", __FUNCTION__, retval);
+      }
+      return PVR_ERROR_FAILED;
+    }
   }
   else
   {
-    if (g_bExtraDebug)
-    {
-      XBMC->Log(LOG_ERROR, "%s - Setting Bookmark failed: %d)", __FUNCTION__, retval);
-    }
+    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
     return PVR_ERROR_FAILED;
   }
 }
@@ -825,24 +844,32 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
     XBMC->Log(LOG_DEBUG, "%s - Reading Bookmark for: %s", __FUNCTION__, recording.strTitle);
   }
 
-  MythProgramInfo progInfo = m_recordings.at(recording.strRecordingId);
-  long long frameOffset = m_con.GetBookmark(progInfo); // returns 0 if no bookmark was found
-  if (frameOffset > 0)
+  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  if (it != m_recordings.end())
   {
-    if (g_bExtraDebug)
+    long long frameOffset = m_con.GetBookmark(it->second); // returns 0 if no bookmark was found
+    if (frameOffset > 0)
     {
-      XBMC->Log(LOG_DEBUG, "%s - FrameOffset: %lld)", __FUNCTION__, frameOffset);
-    }
-
-    float frameRate = GetRecordingFrameRate(progInfo);
-    if (frameRate > 0)
-    {
-      bookmark = (int)((float)frameOffset / frameRate);
       if (g_bExtraDebug)
       {
-        XBMC->Log(LOG_DEBUG, "%s - Bookmark: %d)", __FUNCTION__, bookmark);
+        XBMC->Log(LOG_DEBUG, "%s - FrameOffset: %lld)", __FUNCTION__, frameOffset);
+      }
+
+      float frameRate = GetRecordingFrameRate(it->second);
+      if (frameRate > 0)
+      {
+        bookmark = (int)((float)frameOffset / frameRate);
+        if (g_bExtraDebug)
+        {
+          XBMC->Log(LOG_DEBUG, "%s - Bookmark: %d)", __FUNCTION__, bookmark);
+        }
       }
     }
+  }
+  else
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
+    return PVR_ERROR_FAILED;
   }
 
   // Set the bookmark few seconds earlier (due to the accuracy of the above float operations)
@@ -1414,30 +1441,35 @@ PVR_ERROR PVRClientMythTV::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
   return PVR_ERROR_NO_ERROR;
 }
 
-bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recinfo)
+bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)
 {
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s - title: %s, ID: %s, duration: %i", __FUNCTION__, recinfo.strTitle, recinfo.strRecordingId, recinfo.iDuration);
+    XBMC->Log(LOG_DEBUG, "%s - title: %s, ID: %s, duration: %i", __FUNCTION__, recording.strTitle, recording.strRecordingId, recording.iDuration);
 
-  // Suspend fileOps to avoid connection hang
-  m_fileOps->Suspend();
+  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  if (it != m_recordings.end())
+  {
+    // Suspend fileOps to avoid connection hang
+    m_fileOps->Suspend();
 
-  CStdString id = recinfo.strRecordingId;
-  if (*id.rbegin() == '@')
-    id = id.substr(0, id.size() - 1);
+    m_file = m_con.ConnectFile(it->second);
+    if (m_pEventHandler)
+      m_pEventHandler->SetRecordingListener(recording.strRecordingId, m_file);
 
-  m_file = m_con.ConnectFile(m_recordings.at(id));
-  if (m_pEventHandler)
-    m_pEventHandler->SetRecordingListener(id, m_file);
+    // Resume fileOps
+    if (m_file.IsNull())
+      m_fileOps->Resume();
 
-  // Resume fileOps
-  if (m_file.IsNull())
-    m_fileOps->Resume();
+    if (g_bExtraDebug)
+      XBMC->Log(LOG_DEBUG, "%s - Done - %i", __FUNCTION__, !m_file.IsNull());
 
-  if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s - Done - %i", __FUNCTION__, !m_file.IsNull());
-
-  return !m_file.IsNull();
+    return !m_file.IsNull();
+  }
+  else
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
+    return false;
+  }
 }
 
 void PVRClientMythTV::CloseRecordedStream()

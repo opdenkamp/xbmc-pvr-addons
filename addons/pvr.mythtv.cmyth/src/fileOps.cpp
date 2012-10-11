@@ -64,7 +64,8 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   if (remoteFilename == "")
     return "";
 
-  XBMC->Log(LOG_DEBUG, "%s: channel icon: %s", __FUNCTION__, remoteFilename.c_str());
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG, "%s: channel icon: %s", __FUNCTION__, remoteFilename.c_str());
 
   // Check local directory
   std::map<CStdString, CStdString>::iterator it = m_icons.find(remoteFilename);
@@ -73,7 +74,8 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
 
   // Determine filename
   CStdString localFilename = m_localBasePath + "channels" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
-  XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
 
   if (!XBMC->FileExists(localFilename, true))
   {
@@ -90,7 +92,8 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
 
 CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
 {
-  XBMC->Log(LOG_DEBUG, "%s: preview icon: %s", __FUNCTION__, remoteFilename.c_str());
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG, "%s: preview icon: %s", __FUNCTION__, remoteFilename.c_str());
 
   // Check local directory
   std::map<CStdString, CStdString>::iterator it = m_preview.find(remoteFilename);
@@ -99,7 +102,8 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
 
   // Determine local filename
   CStdString localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
-  XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
 
   if (!XBMC->FileExists(localFilename, true))
   {
@@ -124,15 +128,19 @@ CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
   if (m_StorageGroupFileList.count(fileType) == 0 ||
     std::difftime(now, m_StorageGroupFileListLastUpdated[fileType]) > 30)
   {
-    XBMC->Log(LOG_DEBUG, "%s Getting storage group file list for type: %s (%s - %s)", __FUNCTION__, GetFolderNameByFileType(fileType), std::asctime(std::localtime(&now)), std::asctime(std::localtime(&m_StorageGroupFileListLastUpdated[fileType])));
+    if (g_bExtraDebug)
+      XBMC->Log(LOG_DEBUG, "%s Getting storage group file list for type: %s (%s - %s)", __FUNCTION__, GetFolderNameByFileType(fileType), std::asctime(std::localtime(&now)), std::asctime(std::localtime(&m_StorageGroupFileListLastUpdated[fileType])));
 
     m_StorageGroupFileList[fileType] = m_con.GetStorageGroupFileList(GetFolderNameByFileType(fileType));
     m_StorageGroupFileListLastUpdated[fileType] = now;
 
-    std::vector<MythStorageGroupFile>::iterator it;
-    for (it = m_StorageGroupFileList[fileType].begin(); it != m_StorageGroupFileList[fileType].end(); ++it)
+    if (g_bExtraDebug)
     {
-      XBMC->Log(LOG_DEBUG, "%s %s - %s", __FUNCTION__, GetFolderNameByFileType(fileType), it->Filename().c_str());
+      std::vector<MythStorageGroupFile>::iterator it;
+      for (it = m_StorageGroupFileList[fileType].begin(); it != m_StorageGroupFileList[fileType].end(); ++it)
+      {
+        XBMC->Log(LOG_DEBUG, "%s %s - %s", __FUNCTION__, GetFolderNameByFileType(fileType), it->Filename().c_str());
+      }
     }
   }
 
@@ -220,7 +228,8 @@ void* FileOps::Process()
       m_jobQueue.pop_front();
       Unlock();
 
-      XBMC->Log(LOG_DEBUG,"%s Job fetched: local: %s, remote: %s, storagegroup: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
+      if (g_bExtraDebug)
+        XBMC->Log(LOG_DEBUG,"%s Job fetched: local: %s, remote: %s, storagegroup: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
       m_con.Lock();
 
       MythFile file = m_con.ConnectPath(job.m_remoteFilename, job.m_storageGroup);
@@ -228,7 +237,8 @@ void* FileOps::Process()
       {
         if (CacheFile(job.m_localFilename.c_str(), file))
         {
-          XBMC->Log(LOG_DEBUG, "%s File Cached: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
+          if (g_bExtraDebug)
+            XBMC->Log(LOG_DEBUG, "%s File Cached: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
         }
         else
         {
@@ -290,7 +300,8 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
     CStdString cacheDirectory = GetDirectoryName(localFilename);
     if (XBMC->DirectoryExists(cacheDirectory.c_str()) || XBMC->CreateDirectory(cacheDirectory.c_str()))
     {
-      XBMC->Log(LOG_DEBUG, "%s: Created cache directory: %s", __FUNCTION__, cacheDirectory.c_str());
+      if (g_bExtraDebug)
+        XBMC->Log(LOG_DEBUG, "%s: Created cache directory: %s", __FUNCTION__, cacheDirectory.c_str());
 
       if (!(file = XBMC->OpenFileForWrite(localFilename.c_str(), true)))
       {

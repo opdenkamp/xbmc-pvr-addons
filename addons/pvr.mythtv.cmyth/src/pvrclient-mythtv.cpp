@@ -1286,7 +1286,7 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
 }
 
 
-void PVRClientMythTV::CloseLiveStream()
+void PVRClientMythTV::CloseLiveStream(bool bNoResume)
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
@@ -1306,7 +1306,8 @@ void PVRClientMythTV::CloseLiveStream()
   }
 
   // Resume fileOps
-  m_fileOps->Resume();
+  if (!bNoResume)
+    m_fileOps->Resume();
 
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
@@ -1353,12 +1354,15 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
 
   bool retval = false;
 
-  CloseLiveStream();
+  CloseLiveStream(true);
   retval = OpenLiveStream(channelinfo);
 
   if (!retval)
+  {
     XBMC->Log(LOG_ERROR, "%s - Failed to reopening Livestream", __FUNCTION__);
-
+    m_fileOps->Resume();
+  }
+  
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
 

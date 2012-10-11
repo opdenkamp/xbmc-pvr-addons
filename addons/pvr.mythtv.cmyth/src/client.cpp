@@ -648,7 +648,7 @@ void CloseLiveStream(void)
   if (g_client == NULL)
     return;
 
-  g_client->CloseLiveStream();
+  g_client->CloseLiveStream(false);
 }
 
 int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)

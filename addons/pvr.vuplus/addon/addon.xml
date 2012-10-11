@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.vuplus"
-  version="0.3.3"
+  version="0.3.4"
   name="VU+ / Enigma2 Client"
   provider-name="Joerg Dembski">
   <requires>

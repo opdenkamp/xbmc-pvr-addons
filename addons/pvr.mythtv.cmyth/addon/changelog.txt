@@ -1,3 +1,6 @@
+v0.4.0
+- OSX support
+
 v0.3.0
 - Transifex localizations (https://www.transifex.com/projects/p/pvrmythtvcmyth)
 - Support for recording images (icon, thumbnail, fanart)

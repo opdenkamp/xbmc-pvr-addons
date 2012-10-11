@@ -21,56 +21,45 @@
 
 #include "client.h"
 #include "xbmc_pvr_dll.h"
-#include "HTSPData.h"
-#include "HTSPDemux.h"
-#include "platform/threads/mutex.h"
-#include "platform/util/atomic.h"
+#include <stdlib.h>
+#include "VuData.h"
 #include "platform/util/util.h"
 
 using namespace std;
 using namespace ADDON;
-using namespace PLATFORM;
 
 bool         m_bCreated  = false;
 ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
-int          g_iClientId = -1;
-long         g_iPacketSequence = 0;
+//int          g_iClientId = -1;
 
 /* User adjustable settings are saved here.
  * Default values are defined inside client.h
  * and exported to the other source files.
  */
 std::string g_strHostname             = DEFAULT_HOST;
-int         g_iPortHTSP               = DEFAULT_HTSP_PORT;
-int         g_iPortHTTP               = DEFAULT_HTTP_PORT;
 int         g_iConnectTimeout         = DEFAULT_CONNECT_TIMEOUT;
-int         g_iResponseTimeout        = DEFAULT_RESPONSE_TIMEOUT;
+int         g_iPortStream             = DEFAULT_STREAM_PORT;
+int         g_iPortWeb                = DEFAULT_WEB_PORT;
+int         g_iUpdateInterval         = DEFAULT_UPDATE_INTERVAL;
 std::string g_strUsername             = "";
+std::string g_strRecordingPath        = "";
 std::string g_strPassword             = "";
-std::string g_strUserPath             = "";
-std::string g_strClientPath           = "";
+std::string g_szUserPath              = "";
+std::string g_strIconPath             = "";
+bool        g_bAutomaticTimerlistCleanup = false;
+bool        g_bZap                    = false;
+bool        g_bCheckForGroupUpdates   = true;
+bool        g_bCheckForChannelUpdates = true;
+bool        g_bOnlyCurrentLocation    = false;
+bool        g_bSetPowerstate          = false;
+bool        g_bOnlyOneGroup           = false;
+std::string g_strOneGroup             = "";
+std::string g_szClientPath            = "";
+std::string g_strChannelDataPath      = "/tmp/";
 
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
-CHTSPDemux *           HTSPDemuxer    = NULL;
-CHTSPData *            HTSPData       = NULL;
-CMutex g_seqMutex;
-
-uint32_t HTSPNextSequenceNumber(void)
-{
-  long lSequence = atomic_inc(&g_iPacketSequence);
-
-  if ((uint32_t)lSequence != lSequence)
-  {
-    CLockObject lock(g_seqMutex);
-    if ((uint32_t)g_iPacketSequence != g_iPacketSequence)
-      g_iPacketSequence = 0;
-
-    lSequence = atomic_inc(&g_iPacketSequence);
-  }
-
-  return (uint32_t)lSequence;
-}
+Vu                *VuData             = NULL;
 
 extern "C" {
 
@@ -93,30 +82,79 @@ void ADDON_ReadSettings(void)
   else
     g_strUsername = "";
   buffer[0] = 0; /* Set the end of string */
+  
+  /* read setting "recordingpath" from settings.xml */
+  if (XBMC->GetSetting("recordingpath", buffer))
+    g_strRecordingPath = buffer;
+  else
+    g_strRecordingPath = "";
+  buffer[0] = 0; /* Set the end of string */
 
   /* read setting "pass" from settings.xml */
   if (XBMC->GetSetting("pass", buffer))
     g_strPassword = buffer;
   else
     g_strPassword = "";
+  
+  /* read setting "streamport" from settings.xml */
+  if (!XBMC->GetSetting("streamport", &g_iPortStream))
+    g_iPortStream = DEFAULT_STREAM_PORT;
+  
+  /* read setting "webport" from settings.xml */
+  if (!XBMC->GetSetting("webport", &g_iPortWeb))
+    g_iPortWeb = DEFAULT_WEB_PORT;
+  
+  /* read setting "onlycurrent" from settings.xml */
+  if (!XBMC->GetSetting("onlycurrent", &g_bOnlyCurrentLocation))
+    g_bOnlyCurrentLocation = false;
+  
+  /* read setting "setpowerstate" from settings.xml */
+  if (!XBMC->GetSetting("setpowerstate", &g_bSetPowerstate))
+    g_bSetPowerstate = false;
+  
+  /* read setting "checkgroups" from settings.xml */
+  if (!XBMC->GetSetting("checkgroups", &g_bCheckForGroupUpdates))
+    g_bCheckForGroupUpdates = true;
+  
+  /* read setting "showcompleted" from settings.xml */
+  if (!XBMC->GetSetting("checkchannels", &g_bCheckForChannelUpdates))
+    g_bCheckForChannelUpdates = true;
+  
+  /* read setting "zap" from settings.xml */
+  if (!XBMC->GetSetting("zap", &g_bZap))
+    g_bZap = false;
 
+  /* read setting "onlyonegroup" from settings.xml */
+  if (!XBMC->GetSetting("onlyonegroup", &g_bOnlyOneGroup))
+    g_bOnlyOneGroup = false;
+  
+  /* read setting "onegroup" from settings.xml */
+  if (XBMC->GetSetting("onegroup", buffer))
+    g_strOneGroup = buffer;
+  else
+    g_strOneGroup = "";
+
+  /* read setting "timerlistcleanup" from settings.xml */
+  if (!XBMC->GetSetting("timerlistcleanup", &g_bAutomaticTimerlistCleanup))
+    g_bAutomaticTimerlistCleanup = false;
+
+  /* read setting "updateint" from settings.xml */
+  if (!XBMC->GetSetting("updateint", &g_iUpdateInterval))
+    g_iConnectTimeout = DEFAULT_UPDATE_INTERVAL;
+
+  /* read setting "iconpath" from settings.xml */
+  if (XBMC->GetSetting("iconpath", buffer))
+    g_strIconPath = buffer;
+  else
+    g_strIconPath = "";
+  
+  /* read setting "channeldatapath" from settings.xml */
+  if (XBMC->GetSetting("channeldatapath", buffer))
+    g_strChannelDataPath = buffer;
+  else
+    g_strChannelDataPath = "/tmp/";
+  
   free (buffer);
-
-  /* read setting "htsp_port" from settings.xml */
-  if (!XBMC->GetSetting("htsp_port", &g_iPortHTSP))
-    g_iPortHTSP = DEFAULT_HTSP_PORT;
-
-  /* read setting "http_port" from settings.xml */
-  if (!XBMC->GetSetting("http_port", &g_iPortHTTP))
-    g_iPortHTTP = DEFAULT_HTTP_PORT;
-
-  /* read setting "connect_timeout" from settings.xml */
-  if (!XBMC->GetSetting("connect_timeout", &g_iConnectTimeout))
-    g_iConnectTimeout = DEFAULT_CONNECT_TIMEOUT;
-
-  /* read setting "read_timeout" from settings.xml */
-  if (!XBMC->GetSetting("response_timeout", &g_iResponseTimeout))
-    g_iResponseTimeout = DEFAULT_RESPONSE_TIMEOUT;
 }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
@@ -141,21 +179,22 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
-  XBMC->Log(LOG_DEBUG, "%s - Creating Tvheadend PVR-Client", __FUNCTION__);
+  XBMC->Log(LOG_DEBUG, "%s - Creating VU+ PVR-Client", __FUNCTION__);
 
   m_CurStatus     = ADDON_STATUS_UNKNOWN;
-  g_strUserPath   = pvrprops->strUserPath;
-  g_strClientPath = pvrprops->strClientPath;
+  //g_iClientId     = pvrprops->iClientId; //removed from Frodo PVR API
+  g_szUserPath   = pvrprops->strUserPath;
+  g_szClientPath  = pvrprops->strClientPath;
 
   ADDON_ReadSettings();
 
-  HTSPData = new CHTSPData;
-  if (!HTSPData->Open())
+  VuData = new Vu;
+  if (!VuData->Open()) 
   {
-    delete HTSPData;
+    delete VuData;
     delete PVR;
     delete XBMC;
-    HTSPData = NULL;
+    VuData = NULL;
     PVR = NULL;
     XBMC = NULL;
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
@@ -170,7 +209,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 ADDON_STATUS ADDON_GetStatus()
 {
   /* check whether we're still connected */
-  if (m_CurStatus == ADDON_STATUS_OK && !HTSPData->IsConnected())
+  if (m_CurStatus == ADDON_STATUS_OK && !VuData->IsConnected())
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
 
   return m_CurStatus;
@@ -180,13 +219,14 @@ void ADDON_Destroy()
 {
   if (m_bCreated)
   {
-    if (HTSPData)
-    {
-      delete HTSPData;
-      HTSPData = NULL;
-    }
     m_bCreated = false;
   }
+
+  if (VuData)
+  {
+    VuData->SendPowerstate();
+  }
+  
 
   if (PVR)
   {
@@ -198,6 +238,12 @@ void ADDON_Destroy()
   {
     delete XBMC;
     XBMC = NULL;
+  }
+
+  if (VuData)
+  {
+    delete VuData;
+    VuData = NULL;
   }
 
   m_CurStatus = ADDON_STATUS_UNKNOWN;
@@ -245,41 +291,23 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       return ADDON_STATUS_NEED_RESTART;
     }
   }
-  else if (str == "htsp_port")
-  {
-    if (g_iPortHTSP != *(int*) settingValue)
-    {
-      XBMC->Log(LOG_INFO, "%s - Changed Setting 'htsp_port' from %u to %u", __FUNCTION__, g_iPortHTSP, *(int*) settingValue);
-      g_iPortHTSP = *(int*) settingValue;
-      return ADDON_STATUS_NEED_RESTART;
-    }
-  }
-  else if (str == "http_port")
-  {
-    if (g_iPortHTTP != *(int*) settingValue)
-    {
-      XBMC->Log(LOG_INFO, "%s - Changed Setting 'port' from %u to %u", __FUNCTION__, g_iPortHTTP, *(int*) settingValue);
-      g_iPortHTTP = *(int*) settingValue;
-      return ADDON_STATUS_NEED_RESTART;
-    }
-  }
-  else if (str == "connect_timeout")
+  else if (str == "streamport")
   {
     int iNewValue = *(int*) settingValue + 1;
-    if (g_iConnectTimeout != iNewValue)
+    if (g_iPortStream != iNewValue)
     {
-      XBMC->Log(LOG_INFO, "%s - Changed Setting 'connect_timeout' from %u to %u", __FUNCTION__, g_iConnectTimeout, iNewValue);
-      g_iConnectTimeout = iNewValue;
+      XBMC->Log(LOG_INFO, "%s - Changed Setting 'streamport' from %u to %u", __FUNCTION__, g_iPortStream, iNewValue);
+      g_iPortStream = iNewValue;
       return ADDON_STATUS_OK;
     }
   }
-  else if (str == "response_timeout")
+  else if (str == "webport")
   {
     int iNewValue = *(int*) settingValue + 1;
-    if (g_iResponseTimeout != iNewValue)
+    if (g_iPortWeb != iNewValue)
     {
-      XBMC->Log(LOG_INFO, "%s - Changed Setting 'response_timeout' from %u to %u", __FUNCTION__, g_iResponseTimeout, iNewValue);
-      g_iResponseTimeout = iNewValue;
+      XBMC->Log(LOG_INFO, "%s - Changed Setting 'webport' from %u to %u", __FUNCTION__, g_iPortWeb, iNewValue);
+      g_iPortWeb = iNewValue;
       return ADDON_STATUS_OK;
     }
   }
@@ -312,251 +340,230 @@ const char* GetMininumPVRAPIVersion(void)
 
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
+  //pCapabilities->bSupportsChannelSettings = false;
+  //pCapabilities->bSupportsTimeshift       = false;
   pCapabilities->bSupportsEPG             = true;
   pCapabilities->bSupportsTV              = true;
   pCapabilities->bSupportsRadio           = true;
   pCapabilities->bSupportsRecordings      = true;
   pCapabilities->bSupportsTimers          = true;
   pCapabilities->bSupportsChannelGroups   = true;
+  pCapabilities->bSupportsChannelScan     = false;
   pCapabilities->bHandlesInputStream      = true;
-  pCapabilities->bHandlesDemuxing         = true;
+  pCapabilities->bHandlesDemuxing         = false;
+  pCapabilities->bSupportsLastPlayedPosition = true;
 
   return PVR_ERROR_NO_ERROR;
 }
 
 const char *GetBackendName(void)
 {
-  static const char *strBackendName = HTSPData ? HTSPData->GetServerName() : "unknown";
+  static const char *strBackendName = VuData ? VuData->GetServerName() : "unknown";
   return strBackendName;
 }
 
 const char *GetBackendVersion(void)
 {
-  static CStdString strBackendVersion;
-  if (HTSPData)
-    strBackendVersion.Format("%s (Protocol: %i)", HTSPData->GetVersion(), HTSPData->GetProtocol());
-  return strBackendVersion.c_str();
+  static const char *strBackendVersion = "UNKNOWN";
+  return strBackendVersion;
 }
+
+static CStdString strConnectionString;
 
 const char *GetConnectionString(void)
 {
-  static CStdString strConnectionString;
-  if (HTSPData)
-    strConnectionString.Format("%s:%i%s", g_strHostname.c_str(), g_iPortHTSP, HTSPData->IsConnected() ? "" : " (Not connected!)");
+  if (VuData)
+    strConnectionString.Format("%s%s", g_strHostname.c_str(), VuData->IsConnected() ? "" : " (Not connected!)");
   else
-    strConnectionString.Format("%s:%i (addon error!)", g_strHostname.c_str(), g_iPortHTSP);
+    strConnectionString.Format("%s (addon error!)", g_strHostname.c_str());
   return strConnectionString.c_str();
 }
 
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  if (HTSPData->GetDriveSpace(iTotal, iUsed))
-    return PVR_ERROR_NO_ERROR;
-
   return PVR_ERROR_SERVER_ERROR;
 }
 
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->GetEpg(handle, channel, iStart, iEnd);
+  return VuData->GetEPGForChannel(handle, channel, iStart, iEnd);
 }
 
 int GetChannelsAmount(void)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return 0;
 
-  return HTSPData->GetNumChannels();
+  return VuData->GetChannelsAmount();
 }
 
 PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->GetChannels(handle, bRadio);
+  return VuData->GetChannels(handle, bRadio);
 }
 
 int GetRecordingsAmount(void)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
-    return 0;
+  if (!VuData || !VuData->IsConnected())
+    return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->GetNumRecordings();
+  return VuData->GetRecordingsAmount();
 }
 
 PVR_ERROR GetRecordings(ADDON_HANDLE handle)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->GetRecordings(handle);
+  return VuData->GetRecordings(handle);
 }
 
 PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->DeleteRecording(recording);
+  return VuData->DeleteRecording(recording);
 }
 
 PVR_ERROR RenameRecording(const PVR_RECORDING &recording)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return HTSPData->RenameRecording(recording, recording.strTitle);
+  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 int GetTimersAmount(void)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return 0;
 
-  return HTSPData->GetNumTimers();
+  return VuData->GetTimersAmount();
 }
 
 PVR_ERROR GetTimers(ADDON_HANDLE handle)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->GetTimers(handle);
+  return VuData->GetTimers(handle);
 }
 
 PVR_ERROR AddTimer(const PVR_TIMER &timer)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->AddTimer(timer);
+  return VuData->AddTimer(timer);
 }
 
 PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->DeleteTimer(timer, bForceDelete);
+  return VuData->DeleteTimer(timer);
 }
 
 PVR_ERROR UpdateTimer(const PVR_TIMER &timer)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return timer.state == PVR_TIMER_STATE_CANCELLED || timer.state == PVR_TIMER_STATE_ABORTED ?
-      HTSPData->DeleteTimer(timer, false) :
-      HTSPData->UpdateTimer(timer);
-}
-
-bool OpenLiveStream(const PVR_CHANNEL &channel)
-{
-  CloseLiveStream();
-
-  if (!HTSPData || !HTSPData->IsConnected())
-    return false;
-
-  HTSPDemuxer = new CHTSPDemux;
-  return HTSPDemuxer->Open(channel);
-}
-
-void CloseLiveStream(void)
-{
-  if (HTSPDemuxer)
-  {
-    HTSPDemuxer->Close();
-    delete HTSPDemuxer;
-    HTSPDemuxer = NULL;
-  }
+  return VuData->UpdateTimer(timer);
 }
 
 int GetCurrentClientChannel(void)
 {
-  if (HTSPDemuxer)
-    return HTSPDemuxer->CurrentChannel();
+  if (!VuData || !VuData->IsConnected())
+    return PVR_ERROR_SERVER_ERROR;
 
-  return -1;
+  return VuData->GetCurrentClientChannel();
 }
 
 bool SwitchChannel(const PVR_CHANNEL &channel)
 {
-  if (HTSPDemuxer)
-    return HTSPDemuxer->SwitchChannel(channel);
+  if (!VuData || !VuData->IsConnected())
+    return false;
 
-  return false;
-}
-
-PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
-{
-  if (HTSPDemuxer && HTSPDemuxer->GetStreamProperties(pProperties))
-    return PVR_ERROR_NO_ERROR;
-
-  return PVR_ERROR_SERVER_ERROR;
-}
-
-PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
-{
-  if (HTSPDemuxer && HTSPDemuxer->GetSignalStatus(signalStatus))
-    return PVR_ERROR_NO_ERROR;
-
-  return PVR_ERROR_FAILED;
-}
-
-void DemuxAbort(void)
-{
-  if (HTSPDemuxer)
-    HTSPDemuxer->Abort();
-}
-
-DemuxPacket* DemuxRead(void)
-{
-  if (HTSPDemuxer)
-    return HTSPDemuxer->Read();
-  else
-    return NULL;
+  return VuData->SwitchChannel(channel);
 }
 
 int GetChannelGroupsAmount(void)
 {
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->GetNumChannelGroups();
+  return VuData->GetNumChannelGroups();
 }
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
-  /* tvheadend doesn't support separated groups, so we only support TV groups */
   if (bRadio)
     return PVR_ERROR_NO_ERROR;
 
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->GetChannelGroups(handle);
+  return VuData->GetChannelGroups(handle);
 }
 
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 {
-  /* tvheadend doesn't support separated groups, so we only support TV groups */
   if (group.bIsRadio)
     return PVR_ERROR_NO_ERROR;
 
-  if (!HTSPData || !HTSPData->IsConnected())
+  if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return HTSPData->GetChannelGroupMembers(handle, group);
+  return VuData->GetChannelGroupMembers(handle, group);
+}
+
+void CloseLiveStream(void) 
+{ 
+  VuData->CloseLiveStream();
+};
+
+bool OpenLiveStream(const PVR_CHANNEL &channel) 
+{ 
+  if (!VuData || !VuData->IsConnected())
+    return false;
+
+  return VuData->OpenLiveStream(channel);
+}
+
+const char * GetLiveStreamURL(const PVR_CHANNEL &channel) 
+{ 
+  if (!VuData || !VuData->IsConnected())
+    return "";
+
+  return VuData->GetLiveStreamURL(channel);
+}
+PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) 
+{ 
+  if (!VuData || !VuData->IsConnected())
+    return PVR_ERROR_SERVER_ERROR;
+
+  return VuData->SetRecordingLastPlayedPosition(recording, lastplayedposition);
+}
+
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) 
+{ 
+  if (!VuData || !VuData->IsConnected())
+    return -1;
+
+  return VuData->GetRecordingLastPlayedPosition(recording);
 }
 
 /** UNUSED API FUNCTIONS */
+PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus) { return PVR_ERROR_NO_ERROR; }
+PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties) { return PVR_ERROR_NOT_IMPLEMENTED; } 
+void DemuxAbort(void) { return; }
+DemuxPacket* DemuxRead(void) { return NULL; }
 PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
@@ -576,10 +583,7 @@ int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0;
 long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */) { return -1; }
 long long PositionLiveStream(void) { return -1; }
 long long LengthLiveStream(void) { return -1; }
-const char * GetLiveStreamURL(const PVR_CHANNEL &channel) { return ""; }
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 void PauseStream(bool bPaused) {}
 bool CanPauseStream(void) { return false; }

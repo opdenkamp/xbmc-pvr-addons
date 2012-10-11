@@ -1,0 +1,22 @@
+XBMC NextPVR Add-on
+----------------------------------------------
+Written by: Graeme Blackley
+HomePage:   http://www.nextpvr.com
+Contact:    http://www.nextpvr.com/contact/
+
+----------------------------------------------
+Supported platforms:
+- Windows
+- Linux
+- OSX (should work, not tested by me)
+
+Dependencies:
+- NextPVR 2.6. May work also 2.5.8 (which is 2.5 + extra patches)
+
+This addon is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+any later version.
+See the file LICENSE.GPL for more information.
+
+

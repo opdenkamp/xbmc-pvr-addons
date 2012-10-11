@@ -25,6 +25,7 @@
 #include "VNSIRecording.h"
 #include "VNSIData.h"
 #include "VNSIChannelScan.h"
+#include "platform/util/util.h"
 
 #include <sstream>
 #include <string>
@@ -70,23 +71,25 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   XBMC = new CHelper_libXBMC_addon;
   if (!XBMC->RegisterMe(hdl))
   {
-    delete XBMC;
-    XBMC = NULL;
-    return ADDON_STATUS_UNKNOWN;
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
   GUI = new CHelper_libXBMC_gui;
   if (!GUI->RegisterMe(hdl))
-    return ADDON_STATUS_UNKNOWN;
+  {
+    SAFE_DELETE(GUI);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
 
   PVR = new CHelper_libXBMC_pvr;
   if (!PVR->RegisterMe(hdl))
   {
-    delete PVR;
-    delete XBMC;
-    PVR = NULL;
-    XBMC = NULL;
-    return ADDON_STATUS_UNKNOWN;
+    SAFE_DELETE(PVR);
+    SAFE_DELETE(GUI);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
   XBMC->Log(LOG_DEBUG, "Creating VDR VNSI PVR-Client");

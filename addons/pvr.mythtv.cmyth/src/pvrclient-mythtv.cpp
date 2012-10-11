@@ -1244,7 +1244,8 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
   if (m_rec.IsNull())
   {
     // Suspend fileOps to avoid connection hang
-    m_fileOps->Suspend();
+    if (m_fileOps->IsRunning())
+      m_fileOps->Suspend();
 
     MythChannel chan = m_channels.at(channel.iUniqueId);
     for (std::vector<int>::iterator it = m_sources.at(chan.SourceID()).begin(); it != m_sources.at(chan.SourceID()).end(); it++)
@@ -1314,6 +1315,31 @@ void PVRClientMythTV::CloseLiveStream()
   return;
 }
 
+void PVRClientMythTV::CloseLiveStreamForReopening()
+{
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
+
+  CLockObject lock(m_lock);
+
+  if (m_pEventHandler)
+    m_pEventHandler->PreventLiveChainUpdate();
+
+  m_rec.Stop();
+  m_rec = MythRecorder();
+
+  if (m_pEventHandler)
+  {
+    m_pEventHandler->SetRecorder(m_rec);
+    m_pEventHandler->AllowLiveChainUpdate();
+  }
+
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
+
+  return;
+}
+
 int PVRClientMythTV::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
   if (g_bExtraDebug)
@@ -1353,11 +1379,14 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
 
   bool retval = false;
 
-  CloseLiveStream();
+  CloseLiveStreamForReopening();
   retval = OpenLiveStream(channelinfo);
 
   if (!retval)
+  {
     XBMC->Log(LOG_ERROR, "%s - Failed to reopening Livestream", __FUNCTION__);
+    m_fileOps->Resume();
+  }
 
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);

@@ -97,6 +97,7 @@ public:
   // LiveTV
   bool OpenLiveStream(const PVR_CHANNEL &channel);
   void CloseLiveStream();
+  void CloseLiveStreamForReopening();
   int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize);
   int GetCurrentClientChannel();
   bool SwitchChannel(const PVR_CHANNEL &channelinfo);

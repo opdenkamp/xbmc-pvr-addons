@@ -70,13 +70,13 @@ extern "C" {
 ADDON_STATUS ADDON_Create(void *hdl, void *props)
 {
   if (!hdl)
-    return ADDON_STATUS_UNKNOWN;
+    return ADDON_STATUS_PERMANENT_FAILURE;
 
   // Register handles
   XBMC = new CHelper_libXBMC_addon;
 
   if (!XBMC->RegisterMe(hdl))
-    return ADDON_STATUS_UNKNOWN;
+    return ADDON_STATUS_PERMANENT_FAILURE;
 
   XBMC->Log(LOG_DEBUG, "Creating MythTV cmyth PVR-Client");
 
@@ -86,7 +86,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   if (!props)
   {
     SAFE_DELETE(XBMC);
-    return ADDON_STATUS_UNKNOWN;
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
   XBMC->Log(LOG_DEBUG, "Checking props...done");
   PVR_PROPERTIES* pvrprops = (PVR_PROPERTIES*)props;
@@ -96,7 +96,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   if (!PVR->RegisterMe(hdl))
   {
     SAFE_DELETE(XBMC);
-    return ADDON_STATUS_UNKNOWN;
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
   XBMC->Log(LOG_DEBUG, "Register handle @ libXBMC_addon...done");
 
@@ -106,7 +106,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   {
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
-    return ADDON_STATUS_UNKNOWN;
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
   XBMC->Log(LOG_DEBUG, "Register handle @ libXBMC_gui...done");
 
@@ -199,7 +199,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     SAFE_DELETE(GUI);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
-    m_CurStatus = ADDON_STATUS_UNKNOWN;
+    m_CurStatus = ADDON_STATUS_NEED_SETTINGS;
     return m_CurStatus;
   }
   XBMC->Log(LOG_DEBUG,"Creating PVRClientMythTV...done");

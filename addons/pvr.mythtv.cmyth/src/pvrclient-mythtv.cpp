@@ -299,7 +299,6 @@ PVRClientMythTV::~PVRClientMythTV()
 
   if (m_pEventHandler)
   {
-    m_pEventHandler->Stop();
     delete m_pEventHandler;
     m_pEventHandler = NULL;
   }
@@ -396,8 +395,6 @@ bool PVRClientMythTV::Connect()
   if (m_db.IsNull())
   {
     XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s %s/%s", g_szMythDBname.c_str(), g_szHostname.c_str(), g_szMythDBuser.c_str(), g_szMythDBpassword.c_str());
-    if (m_pEventHandler)
-      m_pEventHandler->Stop();
     return false;
   }
 
@@ -406,8 +403,6 @@ bool PVRClientMythTV::Connect()
   if (!m_db.TestConnection(&db_test))
   {
     XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s %s/%s\n%s", g_szMythDBname.c_str(), g_szHostname.c_str(), g_szMythDBuser.c_str(), g_szMythDBpassword.c_str(), db_test.c_str());
-    if (m_pEventHandler)
-      m_pEventHandler->Stop();
     return false;
   }
 

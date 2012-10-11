@@ -40,7 +40,6 @@ public:
   MythEventHandler(const CStdString &server, unsigned short port);
 
   bool TryReconnect();
-  void Stop();
 
   void PreventLiveChainUpdate();
   void AllowLiveChainUpdate();

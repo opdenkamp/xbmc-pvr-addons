@@ -64,6 +64,7 @@ bool cVNSIDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
     props->stream[i].iWidth          = m_Streams.stream[i].iWidth;
     props->stream[i].iFPSRate        = m_Streams.stream[i].iFPSRate;
     props->stream[i].iFPSScale       = m_Streams.stream[i].iFPSScale;
+    props->stream[i].fAspect         = m_Streams.stream[i].fAspect;
     props->stream[i].strLanguage[0]  = m_Streams.stream[i].strLanguage[0];
     props->stream[i].strLanguage[1]  = m_Streams.stream[i].strLanguage[1];
     props->stream[i].strLanguage[2]  = m_Streams.stream[i].strLanguage[2];

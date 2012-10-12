@@ -56,12 +56,14 @@ bool cVNSIDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
   props->iStreamCount = m_Streams.iStreamCount;
   for (unsigned int i = 0; i < m_Streams.iStreamCount; i++)
   {
-    props->stream[i].iStreamIndex           = m_Streams.stream[i].iStreamIndex;
-    props->stream[i].iPhysicalId       = m_Streams.stream[i].iPhysicalId;
-    props->stream[i].iCodecType   = m_Streams.stream[i].iCodecType;
-    props->stream[i].iCodecId     = m_Streams.stream[i].iCodecId;
-    props->stream[i].iHeight       = m_Streams.stream[i].iHeight;
-    props->stream[i].iWidth        = m_Streams.stream[i].iWidth;
+    props->stream[i].iStreamIndex    = m_Streams.stream[i].iStreamIndex;
+    props->stream[i].iPhysicalId     = m_Streams.stream[i].iPhysicalId;
+    props->stream[i].iCodecType      = m_Streams.stream[i].iCodecType;
+    props->stream[i].iCodecId        = m_Streams.stream[i].iCodecId;
+    props->stream[i].iHeight         = m_Streams.stream[i].iHeight;
+    props->stream[i].iWidth          = m_Streams.stream[i].iWidth;
+    props->stream[i].iFPSRate        = m_Streams.stream[i].iFPSRate;
+    props->stream[i].iFPSScale       = m_Streams.stream[i].iFPSScale;
     props->stream[i].strLanguage[0]  = m_Streams.stream[i].strLanguage[0];
     props->stream[i].strLanguage[1]  = m_Streams.stream[i].strLanguage[1];
     props->stream[i].strLanguage[2]  = m_Streams.stream[i].strLanguage[2];

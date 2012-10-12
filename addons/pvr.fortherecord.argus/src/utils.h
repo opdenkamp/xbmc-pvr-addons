@@ -20,6 +20,7 @@
 #include <string>
 #include <json/json.h>
 #include "platform/util/StdString.h"
+#include "platform/util/util.h"
 
 namespace Json
 {
@@ -39,7 +40,3 @@ namespace UTF8Util
   CStdStringA ConvertUTF16ToUTF8(const WCHAR * pszTextUTF16);
 }
 #endif
-
-/** Delete macros that make the pointer NULL again */
-#define SAFE_DELETE(p)       do { delete (p);     (p)=NULL; } while (0)
-#define SAFE_DELETE_ARRAY(p) do { delete[] (p);   (p)=NULL; } while (0)

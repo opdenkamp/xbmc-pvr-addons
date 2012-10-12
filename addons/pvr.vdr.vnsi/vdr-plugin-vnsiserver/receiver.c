@@ -62,6 +62,8 @@ cLiveReceiver::cLiveReceiver(cLiveStreamer *Streamer, const cChannel *Channel, i
  : cReceiver(Channel, Priority)
  , m_Streamer(Streamer)
 {
+  SetPids(NULL);
+  AddPids(Pids);
   DEBUGLOG("Starting live receiver");
 }
 

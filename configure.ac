@@ -29,6 +29,13 @@ AC_ARG_ENABLE([external-ffmpeg],
   [use_external_ffmpeg=$enableval],
   [use_external_ffmpeg=no])
 
+### mysql option
+AC_ARG_ENABLE([mysql],
+  [AS_HELP_STRING([--disable-mysql],
+  [disable mysql])],
+  [use_mysql=$enableval],
+  [use_mysql=yes])
+
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
   BUILD_TYPE="release"
@@ -156,6 +163,19 @@ else
 fi
 AC_SUBST(DATADIR)
 
+# mysql
+if test "$use_mysql" = "yes"; then
+  AC_PATH_PROG(MYSQL_CONFIG, mysql_config, "no")
+  if test "x$MYSQL_CONFIG" != "xno"; then
+    AC_DEFINE([HAVE_MYSQL],[1],["Define to 1 if you have the `mysql' library (-lmysqlclient)."])
+    MYSQL_INCLUDES=`$MYSQL_CONFIG --include`
+    MYSQL_LIBS=`$MYSQL_CONFIG --libs`
+    AC_SUBST(MYSQL_INCLUDES)
+    AC_SUBST(MYSQL_LIBS)
+  else
+    AC_MSG_ERROR("Could not find mysql_config")
+  fi
+fi
 
 AC_OUTPUT([Makefile
            lib/Makefile

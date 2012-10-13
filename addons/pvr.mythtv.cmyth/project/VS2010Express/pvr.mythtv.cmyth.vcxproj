@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\categories.cpp" />
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythChannel.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythConnection.cpp" />
@@ -27,6 +28,7 @@
     <ClCompile Include="..\..\src\pvrclient-mythtv.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\categories.h" />
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\cppmyth.h" />
     <ClInclude Include="..\..\src\cppmyth\MythChannel.h" />

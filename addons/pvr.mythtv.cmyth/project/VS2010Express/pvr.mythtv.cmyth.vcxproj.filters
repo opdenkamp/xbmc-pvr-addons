@@ -37,6 +37,7 @@
     <ClCompile Include="..\..\src\cppmyth\MythStorageGroupFile.cpp">
       <Filter>cppmyth</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\categories.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
@@ -80,6 +81,7 @@
     <ClInclude Include="..\..\src\cppmyth\MythStorageGroupFile.h">
       <Filter>cppmyth</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\categories.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cppmyth">

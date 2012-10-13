@@ -122,170 +122,11 @@ PVRClientMythTV::PVRClientMythTV()
  , m_fileOps(NULL)
  , m_protocolVersion("")
  , m_connectionString("")
- , m_categoryMap()
+ , m_categories()
  , m_EPGstart(0)
  , m_EPGend(0)
  , m_channelGroups()
 {
-  m_categoryMap.insert(catbimap::value_type("Movie",0x10));
-  m_categoryMap.insert(catbimap::value_type("Movie", 0x10));
-  m_categoryMap.insert(catbimap::value_type("Movie - Detective/Thriller", 0x11));
-  m_categoryMap.insert(catbimap::value_type("Movie - Adventure/Western/War", 0x12));
-  m_categoryMap.insert(catbimap::value_type("Movie - Science Fiction/Fantasy/Horror", 0x13));
-  m_categoryMap.insert(catbimap::value_type("Movie - Comedy", 0x14));
-  m_categoryMap.insert(catbimap::value_type("Movie - Soap/melodrama/folkloric", 0x15));
-  m_categoryMap.insert(catbimap::value_type("Movie - Romance", 0x16));
-  m_categoryMap.insert(catbimap::value_type("Movie - Serious/Classical/Religious/Historical Movie/Drama", 0x17));
-  m_categoryMap.insert(catbimap::value_type("Movie - Adult   ", 0x18));
-  m_categoryMap.insert(catbimap::value_type("Drama", 0x1F)); // MythTV use 0xF0 but xbmc doesn't implement this.
-  m_categoryMap.insert(catbimap::value_type("News", 0x20));
-  m_categoryMap.insert(catbimap::value_type("News/weather report", 0x21));
-  m_categoryMap.insert(catbimap::value_type("News magazine", 0x22));
-  m_categoryMap.insert(catbimap::value_type("Documentary", 0x23));
-  m_categoryMap.insert(catbimap::value_type("Intelligent Programmes", 0x24));
-  m_categoryMap.insert(catbimap::value_type("Entertainment", 0x30));
-  m_categoryMap.insert(catbimap::value_type("Game Show", 0x31));
-  m_categoryMap.insert(catbimap::value_type("Variety Show", 0x32));
-  m_categoryMap.insert(catbimap::value_type("Talk Show", 0x33));
-  m_categoryMap.insert(catbimap::value_type("Sports", 0x40));
-  m_categoryMap.insert(catbimap::value_type("Special Events (World Cup, World Series, etc)", 0x41));
-  m_categoryMap.insert(catbimap::value_type("Sports Magazines", 0x42));
-  m_categoryMap.insert(catbimap::value_type("Football (Soccer)", 0x43));
-  m_categoryMap.insert(catbimap::value_type("Tennis/Squash", 0x44));
-  m_categoryMap.insert(catbimap::value_type("Misc. Team Sports", 0x45));
-  m_categoryMap.insert(catbimap::value_type("Athletics", 0x46));
-  m_categoryMap.insert(catbimap::value_type("Motor Sport", 0x47));
-  m_categoryMap.insert(catbimap::value_type("Water Sport", 0x48));
-  m_categoryMap.insert(catbimap::value_type("Winter Sports", 0x49));
-  m_categoryMap.insert(catbimap::value_type("Equestrian", 0x4A));
-  m_categoryMap.insert(catbimap::value_type("Martial Sports", 0x4B));
-  m_categoryMap.insert(catbimap::value_type("Kids", 0x50));
-  m_categoryMap.insert(catbimap::value_type("Pre-School Children's Programmes", 0x51));
-  m_categoryMap.insert(catbimap::value_type("Entertainment Programmes for 6 to 14", 0x52));
-  m_categoryMap.insert(catbimap::value_type("Entertainment Programmes for 10 to 16", 0x53));
-  m_categoryMap.insert(catbimap::value_type("Informational/Educational", 0x54));
-  m_categoryMap.insert(catbimap::value_type("Cartoons/Puppets", 0x55));
-  m_categoryMap.insert(catbimap::value_type("Music/Ballet/Dance", 0x60));
-  m_categoryMap.insert(catbimap::value_type("Rock/Pop", 0x61));
-  m_categoryMap.insert(catbimap::value_type("Classical Music", 0x62));
-  m_categoryMap.insert(catbimap::value_type("Folk Music", 0x63));
-  m_categoryMap.insert(catbimap::value_type("Jazz", 0x64));
-  m_categoryMap.insert(catbimap::value_type("Musical/Opera", 0x65));
-  m_categoryMap.insert(catbimap::value_type("Ballet", 0x66));
-  m_categoryMap.insert(catbimap::value_type("Arts/Culture", 0x70));
-  m_categoryMap.insert(catbimap::value_type("Performing Arts", 0x71));
-  m_categoryMap.insert(catbimap::value_type("Fine Arts", 0x72));
-  m_categoryMap.insert(catbimap::value_type("Religion", 0x73));
-  m_categoryMap.insert(catbimap::value_type("Popular Culture/Traditional Arts", 0x74));
-  m_categoryMap.insert(catbimap::value_type("Literature", 0x75));
-  m_categoryMap.insert(catbimap::value_type("Film/Cinema", 0x76));
-  m_categoryMap.insert(catbimap::value_type("Experimental Film/Video", 0x77));
-  m_categoryMap.insert(catbimap::value_type("Broadcasting/Press", 0x78));
-  m_categoryMap.insert(catbimap::value_type("New Media", 0x79));
-  m_categoryMap.insert(catbimap::value_type("Arts/Culture Magazines", 0x7A));
-  m_categoryMap.insert(catbimap::value_type("Fashion", 0x7B));
-  m_categoryMap.insert(catbimap::value_type("Social/Policical/Economics", 0x80));
-  m_categoryMap.insert(catbimap::value_type("Magazines/Reports/Documentary", 0x81));
-  m_categoryMap.insert(catbimap::value_type("Economics/Social Advisory", 0x82));
-  m_categoryMap.insert(catbimap::value_type("Remarkable People", 0x83));
-  m_categoryMap.insert(catbimap::value_type("Education/Science/Factual", 0x90));
-  m_categoryMap.insert(catbimap::value_type("Nature/animals/Environment", 0x91));
-  m_categoryMap.insert(catbimap::value_type("Technology/Natural Sciences", 0x92));
-  m_categoryMap.insert(catbimap::value_type("Medicine/Physiology/Psychology", 0x93));
-  m_categoryMap.insert(catbimap::value_type("Foreign Countries/Expeditions", 0x94));
-  m_categoryMap.insert(catbimap::value_type("Social/Spiritual Sciences", 0x95));
-  m_categoryMap.insert(catbimap::value_type("Further Education", 0x96));
-  m_categoryMap.insert(catbimap::value_type("Languages", 0x97));
-  m_categoryMap.insert(catbimap::value_type("Leisure/Hobbies", 0xA0));
-  m_categoryMap.insert(catbimap::value_type("Tourism/Travel", 0xA1));
-  m_categoryMap.insert(catbimap::value_type("Handicraft", 0xA2));
-  m_categoryMap.insert(catbimap::value_type("Motoring", 0xA3));
-  m_categoryMap.insert(catbimap::value_type("Fitness & Health", 0xA4));
-  m_categoryMap.insert(catbimap::value_type("Cooking", 0xA5));
-  m_categoryMap.insert(catbimap::value_type("Advertizement/Shopping", 0xA6));
-  m_categoryMap.insert(catbimap::value_type("Gardening", 0xA7));
-  m_categoryMap.insert(catbimap::value_type("Original Language", 0xB0));
-  m_categoryMap.insert(catbimap::value_type("Black & White", 0xB1));
-  m_categoryMap.insert(catbimap::value_type("\"Unpublished\" Programmes", 0xB2));
-  m_categoryMap.insert(catbimap::value_type("Live Broadcast", 0xB3));
-
-  m_categoryMap.insert(catbimap::value_type("Community", 0));
-  m_categoryMap.insert(catbimap::value_type("Fundraiser", 0));
-  m_categoryMap.insert(catbimap::value_type("Bus./financial", 0));
-  m_categoryMap.insert(catbimap::value_type("Variety", 0));
-  m_categoryMap.insert(catbimap::value_type("Romance-comedy", 0xC6));
-  m_categoryMap.insert(catbimap::value_type("Sports event", 0x40));
-  m_categoryMap.insert(catbimap::value_type("Sports talk", 0x40));
-  m_categoryMap.insert(catbimap::value_type("Computers", 0x92));
-  m_categoryMap.insert(catbimap::value_type("How-to", 0xA2));
-  m_categoryMap.insert(catbimap::value_type("Religious", 0x73));
-  m_categoryMap.insert(catbimap::value_type("Parenting", 0));
-  m_categoryMap.insert(catbimap::value_type("Art", 0x70));
-  m_categoryMap.insert(catbimap::value_type("Musical comedy", 0x64));
-  m_categoryMap.insert(catbimap::value_type("Environment", 0x91));
-  m_categoryMap.insert(catbimap::value_type("Politics", 0x80));
-  m_categoryMap.insert(catbimap::value_type("Animated", 0x55));
-  m_categoryMap.insert(catbimap::value_type("Gaming", 0));
-  m_categoryMap.insert(catbimap::value_type("Interview", 0x24));
-  m_categoryMap.insert(catbimap::value_type("Historical drama", 0xC7));
-  m_categoryMap.insert(catbimap::value_type("Biography", 0));
-  m_categoryMap.insert(catbimap::value_type("Home improvement", 0));
-  m_categoryMap.insert(catbimap::value_type("Hunting", 0xA0));
-  m_categoryMap.insert(catbimap::value_type("Outdoors", 0xA0));
-  m_categoryMap.insert(catbimap::value_type("Auto", 0x47));
-  m_categoryMap.insert(catbimap::value_type("Auto racing", 0x47));
-  m_categoryMap.insert(catbimap::value_type("Horror", 0xC4));
-  m_categoryMap.insert(catbimap::value_type("Medical", 0x93));
-  m_categoryMap.insert(catbimap::value_type("Romance", 0xC6));
-  m_categoryMap.insert(catbimap::value_type("Spanish", 0x97));
-  m_categoryMap.insert(catbimap::value_type("Adults only", 0xC8));
-  m_categoryMap.insert(catbimap::value_type("Musical", 0x64));
-  m_categoryMap.insert(catbimap::value_type("Self improvement", 0xA0));
-  m_categoryMap.insert(catbimap::value_type("Pro wrestling", 0x40));
-  m_categoryMap.insert(catbimap::value_type("Wrestling", 0x40));
-  m_categoryMap.insert(catbimap::value_type("Fishing", 0));
-  m_categoryMap.insert(catbimap::value_type("Agriculture", 0));
-  m_categoryMap.insert(catbimap::value_type("Arts/crafts", 0x70));
-  m_categoryMap.insert(catbimap::value_type("Technology", 0x92));
-  m_categoryMap.insert(catbimap::value_type("Docudrama", 0xC0));
-  m_categoryMap.insert(catbimap::value_type("Science fiction", 0xC3));
-  m_categoryMap.insert(catbimap::value_type("Paranormal", 0));
-  m_categoryMap.insert(catbimap::value_type("Comedy", 0xC4));
-  m_categoryMap.insert(catbimap::value_type("Science", 0));
-  m_categoryMap.insert(catbimap::value_type("Travel", 0));
-  m_categoryMap.insert(catbimap::value_type("Adventure", 0));
-  m_categoryMap.insert(catbimap::value_type("Suspense", 0xC1));
-  m_categoryMap.insert(catbimap::value_type("History", 0));
-  m_categoryMap.insert(catbimap::value_type("Collectibles", 0));
-  m_categoryMap.insert(catbimap::value_type("Crime", 0));
-  m_categoryMap.insert(catbimap::value_type("French", 0));
-  m_categoryMap.insert(catbimap::value_type("House/garden", 0));
-  m_categoryMap.insert(catbimap::value_type("Action", 0));
-  m_categoryMap.insert(catbimap::value_type("Fantasy", 0));
-  m_categoryMap.insert(catbimap::value_type("Mystery", 0));
-  m_categoryMap.insert(catbimap::value_type("Health", 0));
-  m_categoryMap.insert(catbimap::value_type("Comedy-drama", 0));
-  m_categoryMap.insert(catbimap::value_type("Special", 0));
-  m_categoryMap.insert(catbimap::value_type("Holiday", 0));
-  m_categoryMap.insert(catbimap::value_type("Weather", 0));
-  m_categoryMap.insert(catbimap::value_type("Western", 0));
-  m_categoryMap.insert(catbimap::value_type("Children", 0));
-  m_categoryMap.insert(catbimap::value_type("Nature", 0));
-  m_categoryMap.insert(catbimap::value_type("Animals", 0));
-  m_categoryMap.insert(catbimap::value_type("Public affairs", 0));
-  m_categoryMap.insert(catbimap::value_type("Educational", 0));
-  m_categoryMap.insert(catbimap::value_type("Shopping", 0xA6));
-  m_categoryMap.insert(catbimap::value_type("Consumer", 0));
-  m_categoryMap.insert(catbimap::value_type("Soap", 0));
-  m_categoryMap.insert(catbimap::value_type("Newsmagazine", 0));
-  m_categoryMap.insert(catbimap::value_type("Exercise", 0));
-  m_categoryMap.insert(catbimap::value_type("Music", 0x60));
-  m_categoryMap.insert(catbimap::value_type("Game show", 0));
-  m_categoryMap.insert(catbimap::value_type("Sitcom", 0));
-  m_categoryMap.insert(catbimap::value_type("Talk", 0));
-  m_categoryMap.insert(catbimap::value_type("Crime drama", 0));
-  m_categoryMap.insert(catbimap::value_type("Sports non-event", 0x40));
-  m_categoryMap.insert(catbimap::value_type("Reality", 0));
 }
 
 PVRClientMythTV::~PVRClientMythTV()
@@ -301,37 +142,6 @@ PVRClientMythTV::~PVRClientMythTV()
     delete m_pEventHandler;
     m_pEventHandler = NULL;
   }
-}
-
-int PVRClientMythTV::Genre(CStdString g)
-{
-  int retval = 0;
-  //XBMC->Log(LOG_DEBUG, "- %s - ## Genre ## - %s -", __FUNCTION__, g.c_str());
-  try
-  {
-    if (m_categoryMap.by< mythcat >().count(g))
-      retval=m_categoryMap.by< mythcat >().at(g);
-
-  }
-  catch(std::out_of_range)
-  {
-  }
-  //XBMC->Log(LOG_DEBUG, "- %s - ## Genre ## - ret: %d -", __FUNCTION__, retval);
-  return retval;
-}
-
-CStdString PVRClientMythTV::Genre(int g)
-{
-  CStdString retval = "";
-  try
-  {
-    if (m_categoryMap.by<pvrcat>().count(g))
-      retval = m_categoryMap.by<pvrcat>().at(g);
-  }
-  catch(std::out_of_range)
-  {
-  }
-  return retval;
 }
 
 void Log(int level, char *msg)
@@ -493,7 +303,7 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
       tag.strPlot = it->description;
       tag.iUniqueBroadcastId = (tag.startTime << 16) + (tag.iChannelNumber & 0xffff);
 
-      int genre = Genre(it->category);
+      int genre = m_categories.Category(it->category);
       tag.iGenreSubType = genre & 0x0F;
       tag.iGenreType = genre & 0xF0;
 
@@ -671,7 +481,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       PVR_STRCPY(tag.strPlot, it->second.Description());
       PVR_STRCPY(tag.strChannelName, it->second.ChannelName());
 
-      int genre = Genre(it->second.Category());
+      int genre = m_categories.Category(it->second.Category());
       tag.iGenreSubType = genre&0x0F;
       tag.iGenreType = genre&0xF0;
 
@@ -970,7 +780,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     tag.firstDay = 0;
     tag.iWeekdays = 0;
 
-    int genre = Genre(it->second.Category());
+    int genre = m_categories.Category(it->second.Category());
     tag.iGenreSubType = genre & 0x0F;
     tag.iGenreType = genre & 0xF0;
 
@@ -1060,7 +870,7 @@ PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
 
   MythTimer mt;
   m_con.DefaultTimer(mt);
-  CStdString category = Genre(timer.iGenreType);
+  CStdString category = m_categories.Category(timer.iGenreType);
   mt.SetCategory(category);
   mt.SetChannelID(timer.iClientChannelUid);
   mt.SetCallsign(m_channels.at(timer.iClientChannelUid).Callsign());
@@ -1122,7 +932,7 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
 
 void PVRClientMythTV::PVRtoMythTimer(const PVR_TIMER timer, MythTimer &mt)
 {
-  CStdString category = Genre(timer.iGenreType);
+  CStdString category = m_categories.Category(timer.iGenreType);
   mt.SetCategory(category);
   mt.SetChannelID(timer.iClientChannelUid);
   mt.SetCallsign(m_channels.at(timer.iClientChannelUid).Callsign());

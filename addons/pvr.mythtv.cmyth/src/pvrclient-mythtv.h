@@ -20,13 +20,10 @@
 
 #include "cppmyth.h"
 #include "fileOps.h"
+#include "categories.h"
 
 #include <xbmc_pvr_types.h>
 #include <platform/threads/mutex.h>
-
-#include <map>
-#include <boost/bimap.hpp>
-#include <boost/bimap/unordered_set_of.hpp>
 
 class RecordingRule : public MythTimer, public std::vector<std::pair<PVR_TIMER, MythProgramInfo> >
 {
@@ -135,16 +132,7 @@ private:
   CStdString m_connectionString;
 
   // Categories
-  struct mythcat{};
-  struct pvrcat{};
-  typedef boost::bimap<
-    boost::bimaps::unordered_set_of<boost::bimaps::tagged<CStdString, mythcat>, boost::hash<CStdString> >,
-    boost::bimaps::tagged<int, pvrcat>
-    > catbimap;
-  catbimap m_categoryMap;
-
-  int Genre(CStdString g);
-  CStdString Genre(int g);
+  Categories m_categories;
 
   // EPG
   time_t m_EPGstart;

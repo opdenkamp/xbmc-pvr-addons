@@ -22,7 +22,9 @@ libcmyth_la_SOURCES = bookmark.c \
                      debug.c \
                      utf8tolatin1.c
 
-INCLUDES=-I../include/
+INCLUDES=-I../include/ $(MYSQL_INCLUDES)
+
+AM_LDFLAGS = $(MYSQL_LIBS)
 
 $(LIB): libcmyth.la
 	cp -f .libs/libcmyth.a .

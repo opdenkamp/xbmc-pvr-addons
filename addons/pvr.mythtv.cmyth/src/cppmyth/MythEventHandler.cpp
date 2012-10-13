@@ -76,6 +76,7 @@ public:
   MythRecorder m_recorder;
   MythSignal m_signal;
 
+  bool m_playback;
   CStdString m_currentRecordID;
   MythFile m_currentFile;
 };
@@ -88,6 +89,7 @@ MythEventHandler::MythEventHandlerPrivate::MythEventHandlerPrivate(const CStdStr
   , m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>())
   , m_recorder(MythRecorder())
   , m_signal()
+  , m_playback(false)
 {
   *m_conn_t = cmyth_conn_connect_event(const_cast<char*>(m_server.c_str()), port, 64 * 1024, 16 * 1024);
 }
@@ -214,10 +216,11 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         PVR->TriggerRecordingUpdate();
       }
 
-      if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_ADD ||
+      if (!m_playback && (
+          myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_ADD ||
           myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_DELETE ||
           myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_UPDATE ||
-          myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE)
+          myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE))
       {
         if (g_bExtraDebug)
           XBMC->Log(LOG_NOTICE, "%s - Event recording list change", __FUNCTION__);
@@ -363,6 +366,27 @@ void MythEventHandler::SetRecorder(const MythRecorder &recorder)
   m_imp->Lock();
   m_imp->m_recorder = recorder;
   m_imp->Unlock();
+}
+
+void MythEventHandler::EnablePlayback()
+{
+  m_imp->Lock();
+  m_imp->m_playback = true;
+  m_imp->Unlock();
+  XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
+}
+
+void MythEventHandler::DisablePlayback()
+{
+  m_imp->Lock();
+  m_imp->m_playback = false;
+  m_imp->Unlock();
+  XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
+}
+
+bool MythEventHandler::IsPlaybackActive() const
+{
+  return m_imp->m_playback;
 }
 
 void MythEventHandler::SetRecordingListener(const CStdString &recordid, const MythFile &file)

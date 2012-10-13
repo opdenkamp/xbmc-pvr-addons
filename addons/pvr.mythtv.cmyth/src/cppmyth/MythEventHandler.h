@@ -48,6 +48,9 @@ public:
 
   void SetRecorder(const MythRecorder &recorder);
   void SetRecordingListener(const CStdString &recordid, const MythFile &file);
+  void EnablePlayback();
+  void DisablePlayback();
+  bool IsPlaybackActive() const;
 
 private:
   class MythEventHandlerPrivate; // Needs to be within MythEventHandler to inherit friend permissions

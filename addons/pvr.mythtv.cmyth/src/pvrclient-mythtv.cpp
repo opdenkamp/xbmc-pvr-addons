@@ -460,6 +460,9 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
+  if (m_pEventHandler && m_pEventHandler->IsPlaybackActive())
+    return PVR_ERROR_NO_ERROR;
+
   m_recordings = m_con.GetRecordedPrograms();
   for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
@@ -1056,6 +1059,12 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
     if (m_fileOps->IsRunning())
       m_fileOps->Suspend();
 
+    // Enable playback mode: Keep quiet on connection
+    if (m_pEventHandler)
+    {
+      m_pEventHandler->EnablePlayback();
+    }
+
     MythChannel chan = m_channels.at(channel.iUniqueId);
     for (std::vector<int>::iterator it = m_sources.at(chan.SourceID()).begin(); it != m_sources.at(chan.SourceID()).end(); it++)
     {
@@ -1066,8 +1075,9 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
           XBMC->Log(LOG_DEBUG,"%s: Opening new recorder %i", __FUNCTION__, m_rec.ID());
 
         if (m_pEventHandler)
+        {
           m_pEventHandler->SetRecorder(m_rec);
-
+        }
         if (m_rec.SpawnLiveTV(chan))
           return true;
       }
@@ -1076,6 +1086,12 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
       {
         m_pEventHandler->SetRecorder(m_rec); // Redundant
       }
+    }
+
+    // Disable playback mode: Allow all
+    if (m_pEventHandler)
+    {
+      m_pEventHandler->DisablePlayback();
     }
 
     // Resume fileOps
@@ -1112,36 +1128,12 @@ void PVRClientMythTV::CloseLiveStream()
   if (m_pEventHandler)
   {
     m_pEventHandler->SetRecorder(m_rec);
+    m_pEventHandler->DisablePlayback();
     m_pEventHandler->AllowLiveChainUpdate();
   }
 
   // Resume fileOps
   m_fileOps->Resume();
-
-  if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
-
-  return;
-}
-
-void PVRClientMythTV::CloseLiveStreamForReopening()
-{
-  if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
-
-  CLockObject lock(m_lock);
-
-  if (m_pEventHandler)
-    m_pEventHandler->PreventLiveChainUpdate();
-
-  m_rec.Stop();
-  m_rec = MythRecorder();
-
-  if (m_pEventHandler)
-  {
-    m_pEventHandler->SetRecorder(m_rec);
-    m_pEventHandler->AllowLiveChainUpdate();
-  }
 
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
@@ -1188,7 +1180,20 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
 
   bool retval = false;
 
-  CloseLiveStreamForReopening();
+  //Close current live stream for reopening
+  //Keep playback mode enabled
+  if (m_pEventHandler)
+    m_pEventHandler->PreventLiveChainUpdate();
+
+  m_rec.Stop();
+  m_rec = MythRecorder();
+
+  if (m_pEventHandler)
+  {
+    m_pEventHandler->SetRecorder(m_rec);
+    m_pEventHandler->AllowLiveChainUpdate();
+  }
+  //Try to reopen live stream
   retval = OpenLiveStream(channelinfo);
 
   if (!retval)
@@ -1290,13 +1295,23 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)
     // Suspend fileOps to avoid connection hang
     m_fileOps->Suspend();
 
+    // Enable playback mode: Keep quiet on connection
+    if (m_pEventHandler)
+      m_pEventHandler->EnablePlayback();
+
     m_file = m_con.ConnectFile(it->second);
     if (m_pEventHandler)
       m_pEventHandler->SetRecordingListener(recording.strRecordingId, m_file);
 
     // Resume fileOps
     if (m_file.IsNull())
+    {
       m_fileOps->Resume();
+
+      // Disable playback mode: Allow all
+      if (m_pEventHandler)
+        m_pEventHandler->DisablePlayback();
+    }
 
     if (g_bExtraDebug)
       XBMC->Log(LOG_DEBUG, "%s - Done - %i", __FUNCTION__, !m_file.IsNull());
@@ -1316,6 +1331,9 @@ void PVRClientMythTV::CloseRecordedStream()
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
   m_file = MythFile();
+
+  if (m_pEventHandler)
+    m_pEventHandler->DisablePlayback();
 
   // Resume fileOps
   m_fileOps->Resume();

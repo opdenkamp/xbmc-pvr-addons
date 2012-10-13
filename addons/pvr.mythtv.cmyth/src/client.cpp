@@ -693,6 +693,21 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
   return g_client->SignalStatus(signalStatus);
 }
 
+void PauseStream(bool bPaused)
+{
+  (void)bPaused;
+}
+
+bool CanPauseStream(void)
+{
+  return true;
+}
+
+bool CanSeekStream(void)
+{
+  return true;
+}
+
 long long SeekLiveStream(long long iPosition, int iWhence) 
 {
   if (g_client == NULL)
@@ -778,8 +793,5 @@ void DemuxAbort() {}
 void DemuxReset() {}
 void DemuxFlush() {}
 const char * GetLiveStreamURL(const PVR_CHANNEL &) { return ""; }
-void PauseStream(bool bPaused) { (void)bPaused; }
-bool CanPauseStream(void) { return false; }
-bool CanSeekStream(void) { return false; }
 
 } //end extern "C"

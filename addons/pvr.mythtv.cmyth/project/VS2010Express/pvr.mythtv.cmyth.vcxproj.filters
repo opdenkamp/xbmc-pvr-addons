@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\fileOps.cpp" />
+    <ClCompile Include="..\..\src\pvrclient-mythtv.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythChannel.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythConnection.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythDatabase.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythEventHandler.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythFile.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythProgramInfo.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythRecorder.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythSignal.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythTimer.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythTimestamp.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythStorageGroupFile.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\categories.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\cppmyth.h" />
+    <ClInclude Include="..\..\src\fileOps.h" />
+    <ClInclude Include="..\..\src\pvrclient-mythtv.h" />
+    <ClInclude Include="..\..\src\tools.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythTimestamp.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythChannel.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythConnection.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythDatabase.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythEventHandler.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythFile.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythPointer.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythProgramInfo.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythRecorder.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythSignal.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythTimer.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythStorageGroupFile.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\categories.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="cppmyth">
+      <UniqueIdentifier>{4070db56-7473-4105-a341-fadd71cb2c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addon">
+      <UniqueIdentifier>{a9c2652d-c1dd-4836-a42d-bc5e6db7b5a0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml">
+      <Filter>addon</Filter>
+    </None>
+    <None Include="..\..\addon\changelog.txt">
+      <Filter>addon</Filter>
+    </None>
+  </ItemGroup>
+</Project>

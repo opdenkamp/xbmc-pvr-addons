@@ -28,8 +28,6 @@
 #include <ctime>
 #include <algorithm>
 
-#include <boost/regex.hpp>
-
 using namespace ADDON;
 
 FileOps::FileOps(MythConnection &mythConnection)
@@ -125,7 +123,7 @@ CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
 
   // Update the list of files in a storage group if the filelist is empty
   // or the validity timeout has been reached (30s)
-  if (m_StorageGroupFileList.count(fileType) == 0 ||
+  if (m_StorageGroupFileList.find(fileType) == m_StorageGroupFileList.end() ||
     std::difftime(now, m_StorageGroupFileListLastUpdated[fileType]) > 30)
   {
     if (g_bExtraDebug)
@@ -134,33 +132,31 @@ CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
     m_StorageGroupFileList[fileType] = m_con.GetStorageGroupFileList(GetFolderNameByFileType(fileType));
     m_StorageGroupFileListLastUpdated[fileType] = now;
 
-    if (g_bExtraDebug)
+    // Clean the file lists of unwanted files
+    StorageGroupFileList::iterator it = m_StorageGroupFileList[fileType].begin();
+    while (it != m_StorageGroupFileList[fileType].end())
     {
-      StorageGroupFileList::iterator it;
-      for (it = m_StorageGroupFileList[fileType].begin(); it != m_StorageGroupFileList[fileType].end(); ++it)
-      {
+      if (g_bExtraDebug)
         XBMC->Log(LOG_DEBUG, "%s %s - %s", __FUNCTION__, GetFolderNameByFileType(fileType), it->Filename().c_str());
+
+      // Check file extension, if it's not an image, remove the file from storage group
+      size_t extensionPos = it->Filename().find_last_of('.');
+      CStdString extension = it->Filename().substr(extensionPos + 1);
+      if (extension != "jpg" && extension != "png" && extension != "bmp")
+      {
+        it = m_StorageGroupFileList[fileType].erase(it);
+        continue;
       }
+
+      ++it;
     }
   }
 
-  // Determine remoteFileName from given title (escape special characters, try different image extensions)
-  CStdString strImageRegExp;
-  if (fileType != FileTypeChannelIcon)
-  {
-    CStdString strUseTitle = boost::regex_replace(title, boost::regex("[\\.\\[\\{\\}\\(\\)\\\\\\*\\+\\?\\|\\^\\$]"), "\\\\$&");
-    strImageRegExp.Format("%s.*_%s\\.(?:jpg|png|bmp)", strUseTitle, GetFolderNameByFileType(fileType));
-  }
-  else
-  {
-    strImageRegExp = title;
-  }
-
-  boost::regex re(strImageRegExp.c_str());
+  // Search in the storage group file list
   StorageGroupFileList::iterator it;
   for (it = m_StorageGroupFileList[fileType].begin(); it != m_StorageGroupFileList[fileType].end(); ++it)
   {
-    if (boost::regex_match(it->Filename(), re))
+    if (it->Filename().Left(title.GetLength()) == title)
       break;
   }
   if (it == m_StorageGroupFileList[fileType].end())

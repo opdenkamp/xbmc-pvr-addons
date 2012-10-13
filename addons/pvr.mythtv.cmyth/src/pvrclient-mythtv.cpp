@@ -24,7 +24,6 @@
 #include "tools.h"
 
 #include <time.h>
-#include <boost/regex.hpp>
 
 using namespace ADDON;
 using namespace PLATFORM;

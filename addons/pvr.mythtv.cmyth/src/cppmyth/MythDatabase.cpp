@@ -77,23 +77,23 @@ bool MythDatabase::FindProgram(time_t starttime, int channelid, const CStdString
   return retval > 0;
 }
 
-std::vector<MythProgram> MythDatabase::GetGuide(time_t starttime, time_t endtime)
+ProgramList MythDatabase::GetGuide(time_t starttime, time_t endtime)
 {
   MythProgram *programs = 0;
   int len = 0;
   CMYTH_DB_CALL(len, len < 0, cmyth_mysql_get_guide(*m_database_t, &programs, starttime, endtime));
 
   if (len < 1)
-    return std::vector<MythProgram>();
+    return ProgramList();
 
-  std::vector<MythProgram> retval(programs, programs + len);
+  ProgramList retval(programs, programs + len);
   ref_release(programs);
   return retval;
 }
 
-std::map<int, MythChannel> MythDatabase::ChannelList()
+ChannelMap MythDatabase::GetChannels()
 {
-  std::map<int, MythChannel> retval;
+  ChannelMap retval;
   cmyth_chanlist_t channels = NULL;
   CMYTH_DB_CALL(channels, channels == NULL, cmyth_mysql_get_chanlist(*m_database_t));
   int channelCount = cmyth_chanlist_get_count(channels);
@@ -109,9 +109,9 @@ std::map<int, MythChannel> MythDatabase::ChannelList()
   return retval;
 }
 
-boost::unordered_map<CStdString, std::vector<int> > MythDatabase::GetChannelGroups()
+ChannelGroupMap MythDatabase::GetChannelGroups()
 {
-  boost::unordered_map<CStdString, std::vector<int> > retval;
+  ChannelGroupMap retval;
   cmyth_channelgroups_t *channelGroups = NULL;
   int channelGroupCount = 0;
   CMYTH_DB_CALL(channelGroupCount, channelGroupCount < 0, cmyth_mysql_get_channelgroups(*m_database_t, &channelGroups));
@@ -146,9 +146,9 @@ boost::unordered_map<CStdString, std::vector<int> > MythDatabase::GetChannelGrou
   return retval;
 }
 
-std::map<int, std::vector<int> > MythDatabase::SourceList()
+SourceMap MythDatabase::GetSources()
 {
-  std::map<int, std::vector<int> > retval;
+  SourceMap retval;
   cmyth_rec_t *recorders = 0;
   int recorderCount = 0;
   CMYTH_DB_CALL(recorderCount, recorderCount < 0, cmyth_mysql_get_recorder_list(*m_database_t, &recorders));
@@ -157,7 +157,7 @@ std::map<int, std::vector<int> > MythDatabase::SourceList()
 
   for (int i = 0; i < recorderCount; i++)
   {
-    std::map<int, std::vector<int> >::iterator it = retval.find(recorders[i].sourceid);
+    SourceMap::iterator it = retval.find(recorders[i].sourceid);
     if (it != retval.end())
       it->second.push_back(recorders[i].recid);
     else
@@ -170,9 +170,9 @@ std::map<int, std::vector<int> > MythDatabase::SourceList()
   return retval;
 }
 
-std::map<int, MythTimer> MythDatabase::GetTimers()
+TimerMap MythDatabase::GetTimers()
 {
-  std::map<int, MythTimer> retval;
+  TimerMap retval;
   cmyth_timerlist_t timers = NULL;
   CMYTH_DB_CALL(timers, timers == NULL, cmyth_mysql_get_timers(*m_database_t));
   int timerCount = cmyth_timerlist_get_count(timers);
@@ -264,9 +264,9 @@ bool MythDatabase::DeleteTimer(int recordid)
   return retval == 0;
 }
 
-std::vector<MythRecordingProfile > MythDatabase::GetRecordingProfiles()
+RecordingProfileList MythDatabase::GetRecordingProfiles()
 {
-  std::vector<MythRecordingProfile> retval;
+  RecordingProfileList retval;
   cmyth_recprofile* recordingProfiles;
   int recordingProfileCount = 0;
 
@@ -275,7 +275,7 @@ std::vector<MythRecordingProfile > MythDatabase::GetRecordingProfiles()
   m_database_t->Lock();
   for (int i = 0; i < recordingProfileCount; i++)
   {
-    std::vector<MythRecordingProfile>::iterator it = std::find(retval.begin(), retval.end(), CStdString(recordingProfiles[i].cardtype));
+    RecordingProfileList::iterator it = std::find(retval.begin(), retval.end(), CStdString(recordingProfiles[i].cardtype));
     if (it == retval.end())
     {
       retval.push_back(MythRecordingProfile());

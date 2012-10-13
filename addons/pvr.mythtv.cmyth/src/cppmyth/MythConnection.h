@@ -21,8 +21,9 @@
 
 #include "platform/util/StdString.h"
 
+#include <map>
+
 #include <boost/shared_ptr.hpp>
-#include <boost/unordered_map.hpp>
 
 extern "C" {
 #include <cmyth/cmyth.h>
@@ -37,6 +38,9 @@ class MythStorageGroupFile;
 
 template <class T> class MythPointer;
 template <class T> class MythPointerThreadSafe;
+
+typedef std::map<CStdString, MythProgramInfo> ProgramInfoMap;
+typedef std::vector<MythStorageGroupFile> StorageGroupFileList;
 
 class MythConnection 
 {
@@ -67,18 +71,18 @@ public:
 
   // Recordings
   bool DeleteRecording(MythProgramInfo &recording);
-  boost::unordered_map<CStdString, MythProgramInfo> GetRecordedPrograms();
+  ProgramInfoMap GetRecordedPrograms();
 
   // Timers
-  boost::unordered_map<CStdString, MythProgramInfo> GetPendingPrograms();
-  boost::unordered_map<CStdString, MythProgramInfo> GetScheduledPrograms();
+  ProgramInfoMap GetPendingPrograms();
+  ProgramInfoMap GetScheduledPrograms();
   bool UpdateSchedules(int id);
   void DefaultTimer(MythTimer &timer);
 
   // Files
   MythFile ConnectFile(MythProgramInfo &recording);
   MythFile ConnectPath(const CStdString &filename, const CStdString &storageGroup);
-  std::vector<MythStorageGroupFile> GetStorageGroupFileList(const CStdString &storageGroup);
+  StorageGroupFileList GetStorageGroupFileList(const CStdString &storageGroup);
 
   // Bookmarks
   long long GetBookmark(MythProgramInfo &recording);

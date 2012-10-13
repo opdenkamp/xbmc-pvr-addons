@@ -15,9 +15,9 @@ LIBS            = @abs_top_srcdir@/lib/cmyth/libcmyth.la
 AM_CPPFLAGS = -I$(abs_top_srcdir)/lib/cmyth/include
 
 if HOST_IS_OSX
-AM_LDFLAGS = -lboost_system-mt -lboost_regex-mt -ldl
+AM_LDFLAGS = -lboost_regex-mt -ldl
 else
-AM_LDFLAGS = -lboost_system -lboost_regex -ldl
+AM_LDFLAGS = -lboost_regex -ldl
 endif
 
 include ../Makefile.include.am

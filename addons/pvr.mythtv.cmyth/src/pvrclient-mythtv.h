@@ -54,6 +54,8 @@ private:
   std::vector<boost::shared_ptr<CStdString> > m_stringStore;
 };
 
+typedef std::vector<RecordingRule> RecordingRuleList;
+
 class PVRClientMythTV
 {
 public:
@@ -147,20 +149,20 @@ private:
   // EPG
   time_t m_EPGstart;
   time_t m_EPGend;
-  std::vector<MythProgram> m_EPG;
+  ProgramList m_EPG;
 
   // Channels
-  std::map<int, MythChannel> m_channels;
-  std::map<int, std::vector<int> > m_sources;
-  boost::unordered_map<CStdString, std::vector<int> > m_channelGroups;
+  ChannelMap m_channels;
+  SourceMap m_sources;
+  ChannelGroupMap m_channelGroups;
 
   // Recordings
-  boost::unordered_map<CStdString, MythProgramInfo> m_recordings;
+  ProgramInfoMap m_recordings;
   static bool IsRecordingVisible(MythProgramInfo &recording);
   float GetRecordingFrameRate(MythProgramInfo &recording);
 
   // Timers
-  std::vector<RecordingRule> m_recordingRules;
+  RecordingRuleList m_recordingRules;
   void PVRtoMythTimer(const PVR_TIMER timer, MythTimer &mt);
 
   CStdString GetArtWork(FileOps::FileType storageGroup, const CStdString &shwTitle);

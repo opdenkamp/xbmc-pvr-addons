@@ -103,7 +103,7 @@ protected:
   static CStdString GetFileName(const CStdString &path, char separator = PATH_SEPARATOR_CHAR);
   static CStdString GetDirectoryName(const CStdString &path, char separator = PATH_SEPARATOR_CHAR);
 
-  std::map<FileType, std::vector<MythStorageGroupFile> > m_StorageGroupFileList;
+  std::map<FileType, StorageGroupFileList> m_StorageGroupFileList;
   std::map<FileType, std::time_t> m_StorageGroupFileListLastUpdated;
   std::map<CStdString, CStdString> m_icons;
   std::map<CStdString, CStdString> m_preview;

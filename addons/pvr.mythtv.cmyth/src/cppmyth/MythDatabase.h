@@ -24,7 +24,6 @@
 #include <vector>
 #include <map>
 
-#include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
 
 extern "C" {
@@ -35,11 +34,17 @@ class MythChannel;
 class MythTimer;
 class MythProgramInfo;
 
-typedef cmyth_program_t MythProgram;
-
 template <class T> class MythPointerThreadSafe;
+
+typedef cmyth_program_t MythProgram;
+typedef std::vector<MythProgram> ProgramList;
+
+typedef std::map<int, MythChannel> ChannelMap;
 typedef std::pair<CStdString, std::vector<int> > MythChannelGroup;
-typedef std::vector<MythChannel> MythChannelList;
+typedef std::map<CStdString, std::vector<int> > ChannelGroupMap;
+
+typedef std::map<int, std::vector<int> > SourceMap;
+typedef std::map<int, MythTimer> TimerMap;
 
 // TODO: Rework MythRecordingProfile
 class MythRecordingProfile : public CStdString
@@ -47,6 +52,8 @@ class MythRecordingProfile : public CStdString
 public:
   std::map<int, CStdString> profile;
 };
+
+typedef std::vector<MythRecordingProfile> RecordingProfileList;
 
 class MythDatabase
 {
@@ -59,18 +66,18 @@ public:
   bool TestConnection(CStdString *msg);
 
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* pprogram);
-  std::vector<MythProgram> GetGuide(time_t starttime, time_t endtime);
+  ProgramList GetGuide(time_t starttime, time_t endtime);
 
-  std::map<int , MythChannel> ChannelList();
-  boost::unordered_map<CStdString, std::vector<int> > GetChannelGroups();
-  std::map<int, std::vector<int> > SourceList();
+  ChannelMap GetChannels();
+  ChannelGroupMap GetChannelGroups();
+  SourceMap GetSources();
 
-  std::map<int, MythTimer> GetTimers();
+  TimerMap GetTimers();
   int AddTimer(const MythTimer &timer);
   bool UpdateTimer(const MythTimer &timer);
   bool DeleteTimer(int recordid);
 
-  std::vector<MythRecordingProfile > GetRecordingProfiles();
+  RecordingProfileList GetRecordingProfiles();
 
   int SetWatchedStatus(const MythProgramInfo &recording, bool watched);
   long long GetBookmarkMark(const MythProgramInfo &recording, long long bk, int mode);

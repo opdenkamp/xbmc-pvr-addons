@@ -410,12 +410,12 @@ bool PVRClientMythTV::Connect()
   m_fileOps = new FileOps(m_con);
 
   // Get channel list
-  m_channels = m_db.ChannelList();
+  m_channels = m_db.GetChannels();
   if (m_channels.empty())
     XBMC->Log(LOG_INFO,"%s: Empty channel list", __FUNCTION__);
 
   // Get sources
-  m_sources = m_db.SourceList();
+  m_sources = m_db.GetSources();
   if (m_sources.empty())
     XBMC->Log(LOG_INFO,"%s: Empty source list", __FUNCTION__);
 
@@ -474,7 +474,7 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
     m_EPGend = iEnd;
   }
 
-  for (std::vector<MythProgram>::iterator it = m_EPG.begin(); it != m_EPG.end(); it++)
+  for (ProgramList::iterator it = m_EPG.begin(); it != m_EPG.end(); it++)
   {
     if ((unsigned)it->chanid==channel.iUniqueId)
     {
@@ -533,7 +533,7 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - radio: %i", __FUNCTION__, bRadio);
 
-  for (std::map<int, MythChannel>::iterator it = m_channels.begin(); it != m_channels.end(); it++)
+  for (ChannelMap::iterator it = m_channels.begin(); it != m_channels.end(); it++)
   {
     if (it->second.IsRadio() == bRadio && !it->second.IsNull())
     {
@@ -577,7 +577,7 @@ PVR_ERROR PVRClientMythTV::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - radio: %i", __FUNCTION__, bRadio);
 
-  for (boost::unordered_map<CStdString, std::vector<int> >::iterator it = m_channelGroups.begin(); it != m_channelGroups.end(); it++)
+  for (ChannelGroupMap::iterator it = m_channelGroups.begin(); it != m_channelGroups.end(); it++)
   {
     PVR_CHANNEL_GROUP tag;
     memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP));
@@ -638,7 +638,7 @@ int PVRClientMythTV::GetRecordingsAmount(void)
 
   m_recordings = m_con.GetRecordedPrograms();
   int res = 0;
-  for (boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
+  for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
     if (!it->second.IsNull() && IsRecordingVisible(it->second))
       res++;
@@ -652,7 +652,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
   m_recordings = m_con.GetRecordedPrograms();
-  for (boost::unordered_map< CStdString, MythProgramInfo >::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
+  for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
     if (!it->second.IsNull() && IsRecordingVisible(it->second))
     {
@@ -729,7 +729,7 @@ PVR_ERROR PVRClientMythTV::DeleteRecording(const PVR_RECORDING &recording)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
   if (it != m_recordings.end())
   {
     bool ret = m_con.DeleteRecording(it->second);
@@ -760,7 +760,7 @@ PVR_ERROR PVRClientMythTV::SetRecordingPlayCount(const PVR_RECORDING &recording,
   if (count > 1) count = 1;
   if (count < 0) count = 0;
 
-  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
   if (it != m_recordings.end())
   {
     int ret = m_db.SetWatchedStatus(it->second, count > 0);
@@ -796,7 +796,7 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
     XBMC->Log(LOG_DEBUG, "%s - Setting Bookmark for: %s to %d", __FUNCTION__, recording.strTitle, lastplayedposition);
   }
 
-  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
   if (it != m_recordings.end())
   {
     // Calculate the frame offset
@@ -844,7 +844,7 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
     XBMC->Log(LOG_DEBUG, "%s - Reading Bookmark for: %s", __FUNCTION__, recording.strTitle);
   }
 
-  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
   if (it != m_recordings.end())
   {
     long long frameOffset = m_con.GetBookmark(it->second); // returns 0 if no bookmark was found
@@ -920,8 +920,8 @@ int PVRClientMythTV::GetTimersAmount(void)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  std::map<int, MythTimer> m_timers = m_db.GetTimers();
-  return m_timers.size();
+  TimerMap timers = m_db.GetTimers();
+  return timers.size();
 }
 
 PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
@@ -929,16 +929,16 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  std::map<int, MythTimer> timers = m_db.GetTimers();
+  TimerMap timers = m_db.GetTimers();
   m_recordingRules.clear();
 
-  for (std::map<int, MythTimer>::iterator it = timers.begin(); it != timers.end(); it++)
+  for (TimerMap::iterator it = timers.begin(); it != timers.end(); it++)
     m_recordingRules.push_back(it->second);
 
   //Search for modifiers and add links to them
-  for (std::vector<RecordingRule>::iterator it = m_recordingRules.begin(); it != m_recordingRules.end(); it++)
+  for (RecordingRuleList::iterator it = m_recordingRules.begin(); it != m_recordingRules.end(); it++)
     if (it->Type() == MythTimer::DontRecord || it->Type() == MythTimer::OverrideRecord)
-      for (std::vector<RecordingRule>::iterator it2 = m_recordingRules.begin(); it2 != m_recordingRules.end(); it2++)
+      for (RecordingRuleList::iterator it2 = m_recordingRules.begin(); it2 != m_recordingRules.end(); it2++)
         if (it2->Type() != MythTimer::DontRecord && it2->Type() != MythTimer::OverrideRecord)
           if (it->SameTimeslot(*it2) && !it->GetParent())
           {
@@ -946,8 +946,8 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
             it->SetParent(*it2);
           }
 
-  boost::unordered_map<CStdString, MythProgramInfo> upcomingRecordings = m_con.GetPendingPrograms();
-  for (boost::unordered_map<CStdString, MythProgramInfo>::iterator it = upcomingRecordings.begin(); it != upcomingRecordings.end(); it++)
+  ProgramInfoMap upcomingRecordings = m_con.GetPendingPrograms();
+  for (ProgramInfoMap::iterator it = upcomingRecordings.begin(); it != upcomingRecordings.end(); it++)
   {
     // When deleting a timer from mythweb, it might happen that it's removed from database
     // but it's still present over mythprotocol. Skip those timers, because timers.at would crash.
@@ -1037,7 +1037,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     PVR_STRCPY(tag.strDirectory, "");
 
     // Recording rules
-    std::vector<RecordingRule>::iterator recRule = std::find(m_recordingRules.begin(), m_recordingRules.end() , it->second.RecordID());
+    RecordingRuleList::iterator recRule = std::find(m_recordingRules.begin(), m_recordingRules.end() , it->second.RecordID());
     tag.iClientIndex = ((recRule - m_recordingRules.begin()) << 16) + recRule->size();
     //recRule->SaveTimerString(tag);
     std::pair<PVR_TIMER, MythProgramInfo> rrtmp(tag, it->second);
@@ -1475,7 +1475,7 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - title: %s, ID: %s, duration: %i", __FUNCTION__, recording.strTitle, recording.strRecordingId, recording.iDuration);
 
-  boost::unordered_map<CStdString, MythProgramInfo>::iterator it = m_recordings.find(recording.strRecordingId);
+  ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
   if (it != m_recordings.end())
   {
     // Suspend fileOps to avoid connection hang

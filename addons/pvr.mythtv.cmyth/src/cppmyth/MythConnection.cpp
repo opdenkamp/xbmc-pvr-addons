@@ -228,11 +228,11 @@ bool  MythConnection::DeleteRecording(MythProgramInfo &recording)
   return retval == 0;
 }
 
-boost::unordered_map<CStdString, MythProgramInfo> MythConnection::GetRecordedPrograms()
+ProgramInfoMap MythConnection::GetRecordedPrograms()
 {
   Lock();
 
-  boost::unordered_map<CStdString, MythProgramInfo> retval;
+  ProgramInfoMap retval;
   cmyth_proglist_t proglist = NULL;
   CMYTH_CONN_CALL_REF(proglist, proglist == NULL, cmyth_proglist_get_all_recorded(*m_conn_t));
   int len = cmyth_proglist_get_count(proglist);
@@ -251,11 +251,11 @@ boost::unordered_map<CStdString, MythProgramInfo> MythConnection::GetRecordedPro
   return retval;
 }
 
-boost::unordered_map<CStdString, MythProgramInfo> MythConnection::GetPendingPrograms()
+ProgramInfoMap MythConnection::GetPendingPrograms()
 {
   Lock();
 
-  boost::unordered_map<CStdString, MythProgramInfo> retval;
+  ProgramInfoMap retval;
   cmyth_proglist_t proglist = NULL;
   CMYTH_CONN_CALL_REF(proglist, proglist == NULL, cmyth_proglist_get_all_pending(*m_conn_t));
   int len = cmyth_proglist_get_count(proglist);
@@ -273,11 +273,11 @@ boost::unordered_map<CStdString, MythProgramInfo> MythConnection::GetPendingProg
   return retval;
 }
 
-boost::unordered_map<CStdString, MythProgramInfo> MythConnection::GetScheduledPrograms()
+ProgramInfoMap MythConnection::GetScheduledPrograms()
 {
   Lock();
 
-  boost::unordered_map<CStdString, MythProgramInfo> retval;
+  ProgramInfoMap retval;
   cmyth_proglist_t proglist = NULL;
   CMYTH_CONN_CALL_REF(proglist, proglist == NULL, cmyth_proglist_get_all_scheduled(*m_conn_t));
   int len = cmyth_proglist_get_count(proglist);
@@ -319,7 +319,7 @@ void MythConnection::DefaultTimer(MythTimer &timer)
   timer.SetStartOffset(atoi(GetSetting("NULL", "DefaultEndOffset").c_str()));
 }
 
-std::vector<MythStorageGroupFile> MythConnection::GetStorageGroupFileList(const CStdString &storageGroup)
+StorageGroupFileList MythConnection::GetStorageGroupFileList(const CStdString &storageGroup)
 {
   cmyth_storagegroup_filelist_t filelist = NULL;
   CMYTH_CONN_CALL_REF(filelist, filelist == NULL, cmyth_storagegroup_get_filelist(*m_conn_t, const_cast<char*>(storageGroup.c_str()), const_cast<char*>(GetBackendHostname().c_str())));
@@ -327,7 +327,8 @@ std::vector<MythStorageGroupFile> MythConnection::GetStorageGroupFileList(const 
   Lock();
 
   int len = cmyth_storagegroup_filelist_count(filelist);
-  std::vector<MythStorageGroupFile> retval(len);
+  StorageGroupFileList retval;
+  retval.reserve(len);
   for (int i = 0; i < len; i++)
   {
     cmyth_storagegroup_file_t file = cmyth_storagegroup_filelist_get_item(filelist, i);

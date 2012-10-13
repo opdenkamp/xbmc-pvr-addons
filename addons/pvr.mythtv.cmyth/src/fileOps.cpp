@@ -136,7 +136,7 @@ CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
 
     if (g_bExtraDebug)
     {
-      std::vector<MythStorageGroupFile>::iterator it;
+      StorageGroupFileList::iterator it;
       for (it = m_StorageGroupFileList[fileType].begin(); it != m_StorageGroupFileList[fileType].end(); ++it)
       {
         XBMC->Log(LOG_DEBUG, "%s %s - %s", __FUNCTION__, GetFolderNameByFileType(fileType), it->Filename().c_str());
@@ -157,7 +157,7 @@ CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
   }
 
   boost::regex re(strImageRegExp.c_str());
-  std::vector<MythStorageGroupFile>::iterator it;
+  StorageGroupFileList::iterator it;
   for (it = m_StorageGroupFileList[fileType].begin(); it != m_StorageGroupFileList[fileType].end(); ++it)
   {
     if (boost::regex_match(it->Filename(), re))

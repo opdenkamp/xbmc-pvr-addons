@@ -30,7 +30,6 @@
 #else
 #include <sys/time.h>
 #endif
-#include <mysql/mysql.h>
 #include <cmyth_local.h>
 #include <safe_string.h>
 

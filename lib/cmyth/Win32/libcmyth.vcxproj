@@ -87,7 +87,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..;../include;include;../librefmem;../libcmyth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;../include;include;../librefmem;../libcmyth;..\..\..\project\BuildDependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;DEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -130,12 +130,12 @@
     </CustomBuildStep>
     <Lib>
       <AdditionalDependencies>mysqlclient.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..;../include;include;../librefmem;../libcmyth;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;../include;include;../librefmem;../libcmyth;..\..\..\project\BuildDependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;inline=__inline;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
@@ -176,7 +176,7 @@
     </CustomBuildStep>
     <Lib>
       <AdditionalDependencies>mysqlclient.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

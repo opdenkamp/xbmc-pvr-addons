@@ -1168,6 +1168,12 @@ PVR_ERROR cPVRClientMediaPortal::AddTimer(const PVR_TIMER &timerinfo)
   // Although XBMC adds this timer, we still have to trigger XBMC to update its timer list to
   // see this new timer at the XBMC side
   PVR->TriggerTimerUpdate();
+  if ( timerinfo.startTime <= 0)
+  {
+    // Refresh the recordings list to see the newly created recording
+    usleep(1000);
+    PVR->TriggerRecordingUpdate();
+  }
 
   return PVR_ERROR_NO_ERROR;
 }

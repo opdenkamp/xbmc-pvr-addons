@@ -413,11 +413,11 @@ long CTsReader::Pause()
     m_lastPause = GetTickCount();
 #ifdef LIVE555
     // Are we using rtsp?
-    if (m_bIsRTSP)
-    {
-        XBMC->Log(LOG_DEBUG, "CTsReader::Pause()  ->pause rtsp"); // at position: %f", (m_seekTime.Millisecs() / 1000.0f));
-        m_rtspClient->Pause();
-    }
+    //if (m_bIsRTSP)
+    //{
+    //    XBMC->Log(LOG_DEBUG, "CTsReader::Pause()  ->pause rtsp"); // at position: %f", (m_seekTime.Millisecs() / 1000.0f));
+    //    m_rtspClient->Pause();
+    //}
 #endif //LIVE555
     m_State = State_Paused;
   }
@@ -425,12 +425,12 @@ long CTsReader::Pause()
   {
 #ifdef LIVE555
     // Are we using rtsp?
-    if (m_bIsRTSP)
-    {
-        XBMC->Log(LOG_DEBUG, "CTsReader::Pause() is paused, continue rtsp"); // at position: %f", (m_seekTime.Millisecs() / 1000.0f));
-        m_rtspClient->Continue();
-        XBMC->Log(LOG_DEBUG, "CTsReader::Pause() rtsp running"); // at position: %f", (m_seekTime.Millisecs() / 1000.0f));
-    }
+    //if (m_bIsRTSP)
+    //{
+    //    XBMC->Log(LOG_DEBUG, "CTsReader::Pause() is paused, continue rtsp"); // at position: %f", (m_seekTime.Millisecs() / 1000.0f));
+    //    m_rtspClient->Continue();
+    //    XBMC->Log(LOG_DEBUG, "CTsReader::Pause() rtsp running"); // at position: %f", (m_seekTime.Millisecs() / 1000.0f));
+    //}
     m_State = State_Running;
 #endif //LIVE555
   }

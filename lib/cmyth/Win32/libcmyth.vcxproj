@@ -130,7 +130,7 @@
     </CustomBuildStep>
     <Lib>
       <AdditionalDependencies>mysqlclient.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -176,7 +176,7 @@
     </CustomBuildStep>
     <Lib>
       <AdditionalDependencies>mysqlclient.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

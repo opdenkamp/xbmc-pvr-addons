@@ -442,6 +442,13 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid,
 	}
 
 	loc_prog = cmyth_recorder_get_cur_proginfo(rec);
+	if (!loc_prog) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: recorder is not recording\n",
+			  __FUNCTION__);
+		return -1;
+	}
+
 	pthread_mutex_lock(&mutex);
 
 	if (strncmp(rec->rec_livetv_chain->chainid, chainid, strlen(chainid)) == 0) {

@@ -137,7 +137,6 @@ Dvb::Dvb()
   m_iUpdateTimer = 0;
   m_bUpdateTimers = false;
   m_bUpdateEPG = false;
-  m_iGetRecordingsCount = 0;
 }
 
 bool Dvb::Open()
@@ -790,7 +789,8 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 
   XBMC->Log(LOG_INFO, "%s Number of elements: '%d'", __FUNCTION__, n);
  
-  int iNumRecording = 0; 
+  int iNumRecording = 0;
+  static int iGetRecordingsCount = 0;
 
   while(n>0)
   {
@@ -827,10 +827,10 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     recording.iDuration = hours*60*60 + mins*60 + secs;
 
     bool bGetThumbnails = true;
-    if (m_iGetRecordingsCount == 0 && n > MAX_RECORDING_THUMBS)
+    if (iGetRecordingsCount == 0 && n > MAX_RECORDING_THUMBS - 1)
       bGetThumbnails = false;
 
-    if (recording.strThumbnailPath.size() == 0 && bGetThumbnails)
+    if (bGetThumbnails)
     {
       url.Format("%sepg_details.html?aktion=epg_details&recID=%s", m_strURL.c_str(), recording.strRecordingId.c_str());
       CStdString strThumb;
@@ -857,13 +857,13 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 
     PVR->TransferRecordingEntry(handle, &tag);
 
-    m_iNumRecordings++; 
+    m_iNumRecordings++;
     iNumRecording++;
     m_recordings.push_back(recording);
 
     XBMC->Log(LOG_INFO, "%s loaded Recording entry '%s', start '%d', length '%d'", __FUNCTION__, tag.strTitle, recording.startTime, recording.iDuration);
   }
-  m_iGetRecordingsCount++;
+  iGetRecordingsCount++;
 
   XBMC->Log(LOG_INFO, "%s Loaded %u Recording Entries", __FUNCTION__, iNumRecording);
 

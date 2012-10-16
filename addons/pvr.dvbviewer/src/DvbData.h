@@ -213,7 +213,6 @@ private:
   unsigned int m_iUpdateTimer;
   bool m_bUpdateTimers;
   bool m_bUpdateEPG;
-  int m_iGetRecordingsCount;
   std::vector<DvbChannel> m_channels;
   std::vector<DvbTimer> m_timers;
   std::vector<DvbRecording> m_recordings;

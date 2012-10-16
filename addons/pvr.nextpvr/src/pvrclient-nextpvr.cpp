@@ -1144,10 +1144,10 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
 				}
 				else
 				{
-#if defined(TARGET_LINUX) || defined(TARGET_OSX)
-					usleep(5000);
-#else
+#if defined(TARGET_WINDOWS)
 					Sleep(5);
+#else
+					usleep(5000);
 #endif
 				}
 			}
@@ -1530,10 +1530,10 @@ int cPVRClientNextPVR::DoRequest(const char *resource, CStdString &response)
 			}
 			else
 			{
-#if defined(TARGET_LINUX) || defined(TARGET_OSX)
-				usleep(50000);
-#else
+#if defined(TARGET_WINDOWS)
 				Sleep(50);
+#else
+				usleep(50000);
 #endif
 				delayed += 50;
 			}

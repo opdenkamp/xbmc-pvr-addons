@@ -9,7 +9,6 @@
 [added] Receiving device name to the status info.
 [fixed] The preferred language is loaded from the DVBViewer config and used to get the correct EPG in case it supports multi language entries.
 [fixed] When the EPG is missing the description entry, the event entry is used instead.
-[fixed] Channel names with utf8 chars weren't displayed properly.
 
 
 0.1.0

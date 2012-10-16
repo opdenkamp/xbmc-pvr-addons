@@ -253,7 +253,7 @@ bool Dvb::LoadChannels()
     datChannel.iChannelNumber = channelsdat.size()+1;
     datChannel.strChannelName = strncpy(channel_name, channel->ChannelName, 25);
 #ifndef _DEBUG
-    XBMC->UnknownToUTF8(datChannel.strChannelName);
+    //XBMC->UnknownToUTF8(datChannel.strChannelName);
 #endif
   
     CStdString strTmp;
@@ -325,7 +325,7 @@ bool Dvb::LoadChannels()
               favChannel.iChannelNumber = channelsfav.size()+1;
               favChannel.strChannelName = strName;
 #ifndef _DEBUG
-              XBMC->UnknownToUTF8(favChannel.strChannelName);
+              //XBMC->UnknownToUTF8(favChannel.strChannelName);
 #endif
               favChannel.strStreamURL = channelsdat[i].strStreamURL;
               favChannel.strIconPath = channelsdat[i].strIconPath;

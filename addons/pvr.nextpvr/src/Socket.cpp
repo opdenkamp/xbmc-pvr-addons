@@ -440,11 +440,11 @@ int Socket::receive ( char* data, const unsigned int buffersize, const unsigned 
     if ( status == SOCKET_ERROR )
     {
       int lasterror = getLastError();
-#if defined(TARGET_LINUX) || defined(TARGET_OSX)
-      if ( lasterror != EAGAIN && lasterror != EWOULDBLOCK )
+#if defined(TARGET_WINDOWS)
+      if ( lasterror != WSAEWOULDBLOCK)
         errormessage( lasterror, "Socket::receive" );
 #else
-      if ( lasterror != WSAEWOULDBLOCK)
+      if ( lasterror != EAGAIN && lasterror != EWOULDBLOCK )
         errormessage( lasterror, "Socket::receive" );
 #endif
       return status;

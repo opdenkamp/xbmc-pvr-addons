@@ -56,6 +56,7 @@ struct ChannelsDat
 #define DAY_SECS                     (24*60*60)
 #define DELPHI_DATE                  (25569)
 #define RECORDING_THUMB_POS          (143)
+#define MAX_RECORDING_THUMBS         (20)
 
 
 typedef enum DVB_UPDATE_STATE
@@ -212,6 +213,7 @@ private:
   unsigned int m_iUpdateTimer;
   bool m_bUpdateTimers;
   bool m_bUpdateEPG;
+  int m_iGetRecordingsCount;
   std::vector<DvbChannel> m_channels;
   std::vector<DvbTimer> m_timers;
   std::vector<DvbRecording> m_recordings;

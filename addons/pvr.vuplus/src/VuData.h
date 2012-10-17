@@ -176,6 +176,8 @@ private:
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;
 
+  bool m_bUpdating;
+
   // functions
   void StoreChannelData();
   void LoadChannelData();
@@ -200,8 +202,7 @@ private:
   bool CheckForGroupUpdate();
   bool CheckForChannelUpdate();
   std::string& Escape(std::string &s, std::string from, std::string to);
-  char toHex(const char& code);
-  CStdString URLEncodeInline(const CStdString&);
+  CStdString URLEncodeInline(const CStdString& sSrc);
 
 protected:
   virtual void *Process(void);

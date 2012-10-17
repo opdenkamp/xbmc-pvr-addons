@@ -14,7 +14,7 @@ AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_LIBTOOL
 
-AC_SEARCH_LIBS([pthread_create],[pthread],, AC_MSG_ERROR("required library 'pthread' is missing"))
+AC_SEARCH_LIBS([pthread_create],[pthread],, AC_MSG_ERROR([required library 'pthread' is missing]))
 
 AC_ARG_ENABLE([release],
   [AS_HELP_STRING([--enable-release],
@@ -39,6 +39,12 @@ AC_ARG_ENABLE([mysql],
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
   BUILD_TYPE="release"
+fi
+
+AC_CHECK_PROG(HAVE_PKG_CONFIG, pkg-config, yes)
+if test "x$HAVE_PKG_CONFIG" != "xyes" ; then
+  AC_MSG_WARN([pkg-config was not found on your system. external ffmpeg will be disabled])
+  use_external_ffmpeg="no"
 fi
 
 OS="unknown"

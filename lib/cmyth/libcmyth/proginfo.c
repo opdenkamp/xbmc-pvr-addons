@@ -1535,8 +1535,6 @@ cmyth_proginfo_fill(cmyth_conn_t control, cmyth_proginfo_t prog)
 	 */
 	if (prog->proginfo_Length == 0) {
 		prog->proginfo_Length = length;
-		ret = -1;
-		goto out;
 	}
 
 	ret = 0;

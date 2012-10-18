@@ -113,6 +113,9 @@ struct cmyth_database {
 	char * db_pass;
 	char * db_name;
 	MYSQL * mysql;
+	int db_version; /* JLB: -1 = No set, 0 = unknown else DBSchemaVer */
+	int db_tz_utc; /* JLB: 0 = No conversion, 1 = Enable UTC time zone conversion */
+	time_t db_tz_diff; /* JLB: time zone diff to apply from DB version 1307 */
 };	
 
 /* Sergio: Added to clean up channel list handling */
@@ -357,7 +360,10 @@ extern int cmyth_rcv_string(cmyth_conn_t conn,
 			    int count);
 
 #define cmyth_rcv_okay __cmyth_rcv_okay
-extern int cmyth_rcv_okay(cmyth_conn_t conn, char *ok);
+extern int cmyth_rcv_okay(cmyth_conn_t conn);
+
+#define cmyth_rcv_feedback __cmyth_rcv_feedback
+extern int cmyth_rcv_feedback(cmyth_conn_t conn, char *fb);
 
 #define cmyth_rcv_version __cmyth_rcv_version
 extern int cmyth_rcv_version(cmyth_conn_t conn, unsigned long *vers);
@@ -460,6 +466,9 @@ extern int cmyth_rcv_ringbuf(cmyth_conn_t conn, int *err, cmyth_ringbuf_t buf,
 			     int count);
 #define cmyth_datetime_to_dbstring __cmyth_datetime_to_dbstring
 extern int cmyth_datetime_to_dbstring(char *str, cmyth_timestamp_t ts);
+
+#define cmyth_toupper_string __cmyth_toupper_string
+extern void cmyth_toupper_string(char *str);
 
 /*
  * From proginfo.c

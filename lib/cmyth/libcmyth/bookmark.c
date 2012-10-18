@@ -103,7 +103,7 @@ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookm
 			__FUNCTION__, ret);
 		goto out;
 	}
-	if ((ret = cmyth_rcv_okay(conn, "OK")) < 0) {
+	if ((ret = cmyth_rcv_okay(conn)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
 	}

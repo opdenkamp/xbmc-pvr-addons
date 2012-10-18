@@ -67,7 +67,7 @@ cmyth_file_destroy(cmyth_file_t file)
 			goto fail;
 		}
 
-		if ((err=cmyth_rcv_okay(file->file_control, "ok")) < 0) {
+		if ((err=cmyth_rcv_okay(file->file_control)) < 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: cmyth_rcv_okay() failed (%d)\n",
 				  __FUNCTION__, err);

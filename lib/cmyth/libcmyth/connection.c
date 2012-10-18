@@ -60,7 +60,7 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 typedef struct {
 	unsigned int version;
-	char token[9]; // 8 characters + the terminating NULL character
+	char token[14]; // up to 13 chars used in v74 + the terminating NULL character
 } myth_protomap_t;
 
 static myth_protomap_t protomap[] = {
@@ -76,6 +76,8 @@ static myth_protomap_t protomap[] = {
 	{71, "05e82186"},
 	{72, "D78EFD6F"},
 	{73, "D7FE8D6F"},
+	{74, "SingingPotato"},
+	{75, "SweetRock"},
 	{0, ""}
 };
 
@@ -602,7 +604,7 @@ cmyth_conn_connect(char *server, unsigned short port, unsigned buflen,
 			  __FUNCTION__, announcement);
 		goto shut;
 	}
-	if (cmyth_rcv_okay(conn, "OK") < 0) {
+	if (cmyth_rcv_okay(conn) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
 		goto shut;
@@ -701,7 +703,7 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 			  __FUNCTION__, announcement);
 		goto shut;
 	}
-	if (cmyth_rcv_okay(conn, "OK") < 0) {
+	if (cmyth_rcv_okay(conn) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
 		goto shut;
@@ -1200,7 +1202,7 @@ cmyth_conn_connect_ring(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf)
 		goto shut;
 	}
 	free(announcement);
-	if (cmyth_rcv_okay(conn, "OK") < 0) {
+	if (cmyth_rcv_okay(conn) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
 		goto shut;
@@ -1855,7 +1857,7 @@ static int cmyth_conn_set_setting_unlocked(cmyth_conn_t conn,
 		return -3;
 	}
 
-	if (cmyth_rcv_okay(conn, "OK") < 0) {
+	if (cmyth_rcv_okay(conn) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
 		return -4;

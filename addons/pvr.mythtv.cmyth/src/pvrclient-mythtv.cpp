@@ -899,7 +899,9 @@ PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done - %i", __FUNCTION__, id);
 
-  //PVR->TriggerTimerUpdate();
+  // Completion of the scheduling will be signaled by a SCHEDULE_CHANGE event.
+  // Thus no need to call TriggerTimerUpdate().
+
   return PVR_ERROR_NO_ERROR;
 }
 

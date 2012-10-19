@@ -76,10 +76,7 @@ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookm
 {
 	char *buf;
 	unsigned int len = CMYTH_TIMESTAMP_LEN + CMYTH_LONGLONG_LEN * 2 + 18 + 2;
-	char resultstr[3];
-	int r,err;
 	int ret;
-	int count;
 	char start_ts_dt[CMYTH_TIMESTAMP_LEN + 1];
 	cmyth_datetime_to_string(start_ts_dt, prog->proginfo_rec_start_ts);
 	buf = alloca(len);
@@ -100,22 +97,16 @@ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookm
 				start_ts_dt, (int32_t)(bookmark >> 32), (int32_t)(bookmark & 0xffffffff));
 	}
 	pthread_mutex_lock(&mutex);
-	if ((err = cmyth_send_message(conn,buf)) < 0) {
+	if ((ret = cmyth_send_message(conn,buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			"%s: cmyth_send_message() failed (%d)\n",
-			__FUNCTION__, err);
-		ret = err;
+			__FUNCTION__, ret);
 		goto out;
 	}
-	count = cmyth_rcv_length(conn);
-	if ((r=cmyth_rcv_string(conn,&err,resultstr,sizeof(resultstr),count)) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			"%s: cmyth_rcv_string() failed (%d)\n",
-			__FUNCTION__, count);
-		ret = count;
-		goto out;
+	if ((ret = cmyth_rcv_okay(conn, "OK")) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
+			  __FUNCTION__);
 	}
-	ret = (strncmp(resultstr,"OK",2) == 0);
    out:
 	pthread_mutex_unlock(&mutex);
 	return ret;

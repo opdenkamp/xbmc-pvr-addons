@@ -1,3 +1,7 @@
+0.3.4:
+- fix: several crashes on win32 due to missing locks / invalid memory access
+- fix: do not report connection problems when there is an empty TV-channel bouquet
+
 0.3.3:
 - add: support for storing the last played positions for recordings. These will be stored in the file recordings.xml
 - fix: if the webinterface cannot be loaded, deactivate the addon

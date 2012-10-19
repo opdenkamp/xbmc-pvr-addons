@@ -1,5 +1,4 @@
 #include "VuData.h"
-
 #include "client.h" 
 #include <iostream> 
 #include <fstream> 
@@ -88,7 +87,6 @@ bool Vu::LoadLocations()
   XBMC->Log(LOG_INFO, "%s Loded '%d' recording locations", __FUNCTION__, iNumLocations);
 
   return true;
-
 }
 
 void Vu::TimerUpdates()
@@ -117,8 +115,8 @@ void Vu::TimerUpdates()
         }
         else
         {
-	  newtimer[j].iUpdateState = VU_UPDATE_STATE_UPDATED;
-	  m_timers[i].iUpdateState = VU_UPDATE_STATE_UPDATED;
+          newtimer[j].iUpdateState = VU_UPDATE_STATE_UPDATED;
+          m_timers[i].iUpdateState = VU_UPDATE_STATE_UPDATED;
           m_timers[i].strTitle = newtimer[j].strTitle;
           m_timers[i].strPlot = newtimer[j].strPlot;
           m_timers[i].iChannelId = newtimer[j].iChannelId;
@@ -129,7 +127,6 @@ void Vu::TimerUpdates()
           m_timers[i].iEpgID = newtimer[j].iEpgID;
 
           iUpdated++;
-
         }
       }
     }
@@ -175,6 +172,8 @@ bool Vu::CheckForChannelUpdate()
 {
   if (!g_bCheckForChannelUpdates)
     return false;
+
+  m_bUpdating = true;
 
   std::vector<VuChannel> oldchannels = m_channels;
 
@@ -227,6 +226,8 @@ bool Vu::CheckForChannelUpdate()
 
   XBMC->Log(LOG_INFO, "%s No of channels: removed [%d], untouched [%d], updated '%d', new '%d'", __FUNCTION__, iRemovedChannels, iNotUpdatedChannels, iUpdatedChannels, iNewChannels); 
 
+  m_bUpdating = false;
+
   if ((iRemovedChannels > 0) || (iUpdatedChannels > 0) || (iNewChannels > 0))
   {
     //Channels have been changed, so return "true"
@@ -243,6 +244,8 @@ bool Vu::CheckForGroupUpdate()
 {
   if (!g_bCheckForGroupUpdates)
     return false;
+ 
+  m_bUpdating = true;
 
   std::vector<VuChannelGroup> m_oldgroups = m_groups;
 
@@ -300,6 +303,9 @@ bool Vu::CheckForGroupUpdate()
 
   XBMC->Log(LOG_INFO, "%s No of groups: removed [%d], untouched [%d], updated '%d', new '%d'", __FUNCTION__, iRemovedGroups, iNotUpdatedGroups, iUpdatedGroups, iNewGroups); 
 
+  m_bUpdating = false;
+
+
   if ((iRemovedGroups > 0) || (iUpdatedGroups > 0) || (iNewGroups > 0))
   {
     // groups have been changed, so return "true"
@@ -314,6 +320,7 @@ bool Vu::CheckForGroupUpdate()
 
 void Vu::LoadChannelData()
 {
+  m_bUpdating = true;
   XBMC->Log(LOG_DEBUG, "%s Load channel data from file: '%schanneldata.xml'", __FUNCTION__, g_strChannelDataPath.c_str());
 
   CStdString strFileName;
@@ -323,6 +330,7 @@ void Vu::LoadChannelData()
   if (!xmlDoc.LoadFile(strFileName))
   {
     XBMC->Log(LOG_DEBUG, "Unable to parse XML: %s at line %d", xmlDoc.ErrorDesc(), xmlDoc.ErrorRow());
+    m_bUpdating = false;
     return;
   }
 
@@ -337,6 +345,7 @@ void Vu::LoadChannelData()
   if (!pElem)
   {
     XBMC->Log(LOG_DEBUG, "%s Could not find root element", __FUNCTION__);
+    m_bUpdating = false;
     return;
   }
 
@@ -347,6 +356,7 @@ void Vu::LoadChannelData()
   if (!pElem)
   {
     XBMC->Log(LOG_DEBUG, "%s Could not find <version> element", __FUNCTION__);
+    m_bUpdating = false;
     return;
   }
 
@@ -355,8 +365,10 @@ void Vu::LoadChannelData()
   
   XBMC->Log(LOG_DEBUG, "%s Found channeldata version: '%d', current channeldata version: '%d'", __FUNCTION__, iVersion, CHANNELDATAVERSION);
 
-  if (iVersion != CHANNELDATAVERSION) {
+  if (iVersion != CHANNELDATAVERSION) 
+  {
     XBMC->Log(LOG_NOTICE, "%s The channeldata versions do not match, we will abort loading the data from the HDD.", __FUNCTION__);
+    m_bUpdating = false;
     return;
   }
 
@@ -366,6 +378,7 @@ void Vu::LoadChannelData()
   if (!pElem)
   {
     XBMC->Log(LOG_DEBUG, "%s Could not find <grouplist> element", __FUNCTION__);
+    m_bUpdating = false;
     return;
   }
 
@@ -374,6 +387,7 @@ void Vu::LoadChannelData()
   if (!pNode)
   {
     XBMC->Log(LOG_DEBUG, "Could not find <group> element");
+    m_bUpdating = false;
     return;
   }
 
@@ -404,6 +418,7 @@ void Vu::LoadChannelData()
   if (!pElem)
   {
     XBMC->Log(LOG_DEBUG, "%s Could not find <channellist> element", __FUNCTION__);
+    m_bUpdating = false;
     return;
   }
   
@@ -412,6 +427,7 @@ void Vu::LoadChannelData()
   if (!pNode)
   {
     XBMC->Log(LOG_DEBUG, "Could not find <channel> element");
+    m_bUpdating = false;
     return;
   }
 
@@ -423,7 +439,8 @@ void Vu::LoadChannelData()
 
     VuChannel channel; 
     
-    if (XMLUtils::GetBoolean(pNode, "radio", bTmp)) {
+    if (XMLUtils::GetBoolean(pNode, "radio", bTmp)) 
+	{
       channel.bRadio = bTmp;
     }
 
@@ -460,6 +477,7 @@ void Vu::LoadChannelData()
 
     XBMC->Log(LOG_DEBUG, "%s Loaded channel '%s' from HDD", __FUNCTION__, channel.strChannelName.c_str());
   }
+  m_bUpdating = false;
 }
 
 void Vu::StoreChannelData()
@@ -588,6 +606,7 @@ Vu::Vu()
   m_iCurrentChannel = -1;
   m_iClientIndexCounter = 1;
   m_bInitial = false;
+  m_bUpdating = false;
 
   m_iUpdateTimer = 0;
 }
@@ -639,7 +658,6 @@ void  *Vu::Process()
 
   while(!IsStopped())
   {
-
     Sleep(5 * 1000);
     m_iUpdateTimer += 5;
 
@@ -649,7 +667,7 @@ void  *Vu::Process()
  
       if (!m_bInitial)
       {
-        // Load the TV channels - close connection if no channels are found
+        // Load the TV channels
         bool bTriggerGroupsUpdate = CheckForGroupUpdate();
         bool bTriggerChannelsUpdate = CheckForChannelUpdate();
 
@@ -681,7 +699,6 @@ void  *Vu::Process()
         if(!SendSimpleCommand(strTmp, strResult))
           XBMC->Log(LOG_ERROR, "%s - AutomaticTimerlistCleanup failed!", __FUNCTION__);
       }
-
       TimerUpdates();
       PVR->TriggerRecordingUpdate();
     }
@@ -694,26 +711,25 @@ void  *Vu::Process()
   return NULL;
 }
 
-
 bool Vu::LoadChannels() 
-{
-    m_channels.clear();
-    // Load Channels
-    for (int i = 0;i<m_iNumChannelGroups;  i++) 
-    {
-      VuChannelGroup &myGroup = m_groups.at(i);
-      if (!LoadChannels(myGroup.strServiceReference, myGroup.strGroupName))
-      {
-        return false;
-      }
-    }
+{    
+  bool bOk = false;
 
-    // Load the radio channels - continue if no channels are found 
-    CStdString strTmp;
-    strTmp.Format("1:7:1:0:0:0:0:0:0:0:FROM BOUQUET \"userbouquet.favourites.radio\" ORDER BY bouquet");
-    LoadChannels(strTmp, "radio");
+  m_channels.clear();
+  // Load Channels
+  for (int i = 0;i<m_iNumChannelGroups;  i++) 
+  {
+    VuChannelGroup &myGroup = m_groups.at(i);
+    if (LoadChannels(myGroup.strServiceReference, myGroup.strGroupName))
+      bOk = true;
+  }
 
-    return true;
+  // Load the radio channels - continue if no channels are found 
+  CStdString strTmp;
+  strTmp.Format("1:7:1:0:0:0:0:0:0:0:FROM BOUQUET \"userbouquet.favourites.radio\" ORDER BY bouquet");
+  LoadChannels(strTmp, "radio");
+
+  return bOk;
 }
 
 bool Vu::LoadChannelGroups() 
@@ -950,6 +966,14 @@ unsigned int Vu::GetRecordingsAmount() {
 
 PVR_ERROR Vu::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
+
   for (unsigned int iChannelPtr = 0; iChannelPtr < m_channels.size(); iChannelPtr++)
   {
     VuChannel &channel = m_channels.at(iChannelPtr);
@@ -994,7 +1018,22 @@ Vu::~Vu()
 
 PVR_ERROR Vu::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
-  VuChannel &myChannel = m_channels.at(channel.iUniqueId-1);
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
+
+  if (channel.iUniqueId-1 > m_channels.size())
+  {
+    XBMC->Log(LOG_ERROR, "%s Could not fetch cannel object - not fetching EPG for channel with UniqueID '%d'", __FUNCTION__, channel.iUniqueId);
+    return PVR_ERROR_NO_ERROR;
+  }
+
+  VuChannel myChannel;
+  myChannel = m_channels.at(channel.iUniqueId-1);
 
   CStdString url;
   url.Format("%s%s%s",  m_strURL.c_str(), "web/epgservice?sRef=",  URLEncodeInline(myChannel.strServiceReference.c_str())); 
@@ -1070,7 +1109,7 @@ PVR_ERROR Vu::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, 
 
     entry.strTitle = strTmp;
     
-    entry.strServiceReference = myChannel.strServiceReference;
+    entry.strServiceReference = myChannel.strServiceReference.c_str();
 
     if (XMLUtils::GetString(pNode, "e2eventdescriptionextended", strTmp))
       entry.strPlot = strTmp;
@@ -1105,7 +1144,7 @@ PVR_ERROR Vu::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, 
 
     iNumEPG++; 
 
-    XBMC->Log(LOG_INFO, "%s loaded EPG entry '%d:%s' channel '%d' start '%d' end '%d'", __FUNCTION__, broadcast.iUniqueBroadcastId, broadcast.strTitle, entry.iChannelId, entry.startTime, entry.endTime);
+    XBMC->Log(LOG_DEBUG, "%s loaded EPG entry '%d:%s' channel '%d' start '%d' end '%d'", __FUNCTION__, broadcast.iUniqueBroadcastId, broadcast.strTitle, entry.iChannelId, entry.startTime, entry.endTime);
   }
 
   XBMC->Log(LOG_INFO, "%s Loaded %u EPG Entries for channel '%s'", __FUNCTION__, iNumEPG, channel.strChannelName);
@@ -1124,12 +1163,19 @@ int Vu::GetChannelNumber(CStdString strServiceReference)
 
 PVR_ERROR Vu::GetTimers(ADDON_HANDLE handle)
 {
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
 
   XBMC->Log(LOG_INFO, "%s - timers available '%d'", __FUNCTION__, m_timers.size());
   for (unsigned int i=0; i<m_timers.size(); i++)
   {
     VuTimer &timer = m_timers.at(i);
-    XBMC->Log(LOG_INFO, "%s - Transfer timer '%s', ClientIndex '%d'", __FUNCTION__, timer.strTitle.c_str(), timer.iClientIndex);
+    XBMC->Log(LOG_DEBUG, "%s - Transfer timer '%s', ClientIndex '%d'", __FUNCTION__, timer.strTitle.c_str(), timer.iClientIndex);
     PVR_TIMER tag;
     memset(&tag, 0, sizeof(PVR_TIMER));
     tag.iClientChannelUid = timer.iChannelId;
@@ -1310,7 +1356,6 @@ bool Vu::SendSimpleCommand(const CStdString& strCommandURL, CStdString& strResul
   
   if (!bIgnoreResult)
   {
-
     TiXmlDocument xmlDoc;
     if (!xmlDoc.Parse(strXML.c_str()))
     {
@@ -1396,6 +1441,14 @@ PVR_ERROR Vu::DeleteTimer(const PVR_TIMER &timer)
 
 PVR_ERROR Vu::GetRecordings(ADDON_HANDLE handle)
 {
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
+
   if (m_iNumRecordings != 0)
     StoreLastPlayedPositions();
 
@@ -1498,7 +1551,8 @@ bool Vu::GetRecordingFromLocation(ADDON_HANDLE handle, CStdString strRecordingFo
       strTmp.Format("%sfile?file=%s", m_strURL.c_str(), URLEncodeInline(strTmp.c_str()));
       recording.strStreamURL = strTmp;
     }
-    
+
+
     PVR_RECORDING tag;
     memset(&tag, 0, sizeof(PVR_RECORDING));
     strncpy(tag.strRecordingId, recording.strRecordingId.c_str(), sizeof(tag.strRecordingId));
@@ -1515,9 +1569,10 @@ bool Vu::GetRecordingFromLocation(ADDON_HANDLE handle, CStdString strRecordingFo
 
     m_iNumRecordings++; 
     iNumRecording++;
+
     m_recordings.push_back(recording);
 
-    XBMC->Log(LOG_INFO, "%s loaded Recording entry '%s', start '%d', length '%d'", __FUNCTION__, tag.strTitle, recording.startTime, recording.iDuration);
+    XBMC->Log(LOG_DEBUG, "%s loaded Recording entry '%s', start '%d', length '%d'", __FUNCTION__, tag.strTitle, recording.startTime, recording.iDuration);
   }
 
   XBMC->Log(LOG_INFO, "%s Loaded %u Recording Entries from folder '%s'", __FUNCTION__, iNumRecording, strRecordingFolder.c_str());
@@ -1651,6 +1706,14 @@ int Vu::SplitString(const CStdString& input, const CStdString& delimiter, CStdSt
 
 PVR_ERROR Vu::GetChannelGroups(ADDON_HANDLE handle)
 {
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
+
   for(unsigned int iTagPtr = 0; iTagPtr < m_groups.size(); iTagPtr++)
   {
     PVR_CHANNEL_GROUP tag;
@@ -1664,7 +1727,6 @@ PVR_ERROR Vu::GetChannelGroups(ADDON_HANDLE handle)
 
   return PVR_ERROR_NO_ERROR;
 }
-
 
 unsigned int Vu::GetNumChannelGroups() 
 {
@@ -1684,6 +1746,14 @@ CStdString Vu::GetGroupServiceReference(CStdString strGroupName)
 
 PVR_ERROR Vu::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 {
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
+
   XBMC->Log(LOG_DEBUG, "%s - group '%s'", __FUNCTION__, group.strGroupName);
   CStdString strTmp = group.strGroupName;
   for (unsigned int i = 0;i<m_channels.size();  i++) 
@@ -1838,39 +1908,56 @@ bool Vu::GetDeviceInfo()
   return true;
 }
 
-char Vu::toHex(const char& code) 
+const char SAFE[256] =
 {
-  static char hex[] = "0123456789abcdef";
-  return hex[code & 15];
-}
+    /*      0 1 2 3  4 5 6 7  8 9 A B  C D E F */
+    /* 0 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+    /* 1 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+    /* 2 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+    /* 3 */ 1,1,1,1, 1,1,1,1, 1,1,0,0, 0,0,0,0,
 
-CStdString Vu::URLEncodeInline(const CStdString& str) 
+    /* 4 */ 0,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,
+    /* 5 */ 1,1,1,1, 1,1,1,1, 1,1,1,0, 0,0,0,0,
+    /* 6 */ 0,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,
+    /* 7 */ 1,1,1,1, 1,1,1,1, 1,1,1,0, 0,0,0,0,
+
+    /* 8 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+    /* 9 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+    /* A */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+    /* B */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+
+    /* C */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+    /* D */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+    /* E */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+    /* F */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
+};
+
+
+CStdString Vu::URLEncodeInline(const CStdString& sSrc) 
 {
-  CStdString rawStr = str;
-  CStdString quotedStr;
-  unsigned int i = 0;
-  while (i != rawStr.size()) 
+  const char DEC2HEX[16 + 1] = "0123456789ABCDEF";
+  const unsigned char * pSrc = (const unsigned char *)sSrc.c_str();
+  const int SRC_LEN = sSrc.length();
+  unsigned char * const pStart = new unsigned char[SRC_LEN * 3];
+  unsigned char * pEnd = pStart;
+  const unsigned char * const SRC_END = pSrc + SRC_LEN;
+
+  for (; pSrc < SRC_END; ++pSrc)
   {
-    if (isalnum(rawStr.at(i)) ||
-      rawStr.at(i) == '-' ||
-      rawStr.at(i) == '_' ||
-      rawStr.at(i) == '.' ||
-      rawStr.at(i) == '~') {
-      quotedStr += rawStr.at(i);
-    }
-    else if (rawStr.at(i) == ' ') 
+    if (SAFE[*pSrc])
+      *pEnd++ = *pSrc;
+    else
     {
-      quotedStr += '+';
+      // escape this char
+      *pEnd++ = '%';
+      *pEnd++ = DEC2HEX[*pSrc >> 4];
+      *pEnd++ = DEC2HEX[*pSrc & 0x0F];
     }
-    else 
-    {
-      quotedStr += '%';
-      quotedStr += toHex(rawStr.at(i) >> 4);
-      quotedStr += toHex(rawStr.at(i) & 15);
-    }
-    ++i;
   }
-  return quotedStr;
+
+  std::string sResult((char *)pStart, (char *)pEnd);
+  delete [] pStart;
+  return sResult;
 }
 
 int Vu::GetRecordingIndex(CStdString strStreamURL)  
@@ -1885,6 +1972,14 @@ int Vu::GetRecordingIndex(CStdString strStreamURL)
 
 PVR_ERROR Vu::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
 {
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
+
   int iRecordId = GetRecordingIndex(recording.strStreamURL);
 
   if (iRecordId == -1)
@@ -1900,6 +1995,14 @@ PVR_ERROR Vu::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int
 
 bool Vu::SetRecordingLastPlayedPosition(CStdString strStreamURL, int lastplayedposition)
 {
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
+
   XBMC->Log(LOG_DEBUG, "%s Set lastplayedposition '%d' for recording '%s'", __FUNCTION__, lastplayedposition, strStreamURL.c_str());  
   int iRecordId = GetRecordingIndex(strStreamURL);
 
@@ -1916,6 +2019,14 @@ bool Vu::SetRecordingLastPlayedPosition(CStdString strStreamURL, int lastplayedp
 
 int Vu::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 {
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
+
   int iRecordId = GetRecordingIndex(recording.strStreamURL);
 
   if (iRecordId == -1)

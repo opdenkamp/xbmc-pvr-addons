@@ -658,7 +658,7 @@ cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **pr
 	MYSQL_ROW row;
         char query[350];
 	int rows=0;
-	int n = 50;
+	int n = 0;
 
 	if(cmyth_db_check_connection(db) != 0)
 	{
@@ -711,7 +711,7 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  t
         char query[630];
 	char *N_title;
 	int rows=0;
-	int n = 50;
+	int n = 0;
 	int ch;
 
 

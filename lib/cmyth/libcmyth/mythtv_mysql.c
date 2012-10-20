@@ -512,19 +512,18 @@ cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_program_t **prog)
 	MYSQL_ROW row;
 	int n=0;
 	int rows=0;
-        const char *query = "SELECT oldrecorded.chanid, UNIX_TIMESTAMP(starttime), UNIX_TIMESTAMP(endtime), title, subtitle, description, category, seriesid, programid, channel.channum, channel.callsign, channel.name, findid, rectype, recstatus, recordid, duplicate FROM oldrecorded LEFT JOIN channel ON oldrecorded.chanid = channel.chanid ORDER BY `starttime` ASC";
-	if(cmyth_db_check_connection(db) != 0)
+	const char *query_str = "SELECT oldrecorded.chanid, UNIX_TIMESTAMP(starttime), UNIX_TIMESTAMP(endtime), title, subtitle, description, category, seriesid, programid, channel.channum, channel.callsign, channel.name, findid, rectype, recstatus, recordid, duplicate FROM oldrecorded LEFT JOIN channel ON oldrecorded.chanid = channel.chanid ORDER BY starttime ASC";
+	cmyth_mysql_query_t *query;
+	query = cmyth_mysql_query_create(db, query_str);
+
+	res = cmyth_mysql_query_result(query);
+	ref_release(query);
+	if (res == NULL)
 	{
-               cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_db_check_connection failed\n", __FUNCTION__);
-               fprintf(stderr,"%s: cmyth_db_check_connection failed\n", __FUNCTION__);
-	       return -1;
-	}
-        if(mysql_query(db->mysql,query)) {
-                 cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_query() Failed: %s\n", 
-                           __FUNCTION__, mysql_error(db->mysql));
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
 		return -1;
-        }
-        res = mysql_store_result(db->mysql);
+	}
+
 	while((row = mysql_fetch_row(res))) {
         	if (rows >= n) {
                 	n+=10;
@@ -617,25 +616,20 @@ cmyth_mysql_get_recgroups(cmyth_database_t db, cmyth_recgroups_t **sqlrecgroups)
 {
 	MYSQL_RES *res=NULL;
 	MYSQL_ROW row;
-        const char *query="SELECT DISTINCT recgroup FROM record";
+	const char *query_str = "SELECT DISTINCT recgroup FROM record";
 	int rows=0;
 	int n=0;
+	cmyth_mysql_query_t *query;
+	query = cmyth_mysql_query_create(db, query_str);
 
-	if(cmyth_db_check_connection(db) != 0)
+	res = cmyth_mysql_query_result(query);
+	ref_release(query);
+	if (res == NULL)
 	{
-               cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_db_check_connection failed\n",
-                           __FUNCTION__);
-               fprintf(stderr,"%s: cmyth_db_check_connection failed\n", __FUNCTION__);
-	       return -1;
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
+		return -1;
 	}
 
-        cmyth_dbg(CMYTH_DBG_ERROR, "%s: query= %s\n", __FUNCTION__, query);
-        if(mysql_query(db->mysql,query)) {
-                 cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_query() Failed: %s\n", 
-                           __FUNCTION__, mysql_error(db->mysql));
-		return -1;
-        }
-        res = mysql_store_result(db->mysql);
         while((row = mysql_fetch_row(res))) {
         	if (rows == n ) {
                 	n++;
@@ -656,39 +650,51 @@ cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **pr
 {
 	MYSQL_RES *res=NULL;
 	MYSQL_ROW row;
-        char query[350];
+	char *N_title;
+	char *esctitle;
+	char *query_str;
 	int rows=0;
 	int n = 0;
+	cmyth_mysql_query_t *query;
 
-	if(cmyth_db_check_connection(db) != 0)
+	if (strncmp(program_name, "@", 1) == 0)
 	{
-               cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_db_check_connection failed\n",
-                           __FUNCTION__);
-               fprintf(stderr,"%s: cmyth_db_check_connection failed\n", __FUNCTION__);
-	       return -1;
+		query_str = "SELECT DISTINCT title FROM program WHERE ( title NOT REGEXP '^[A-Z0-9]' AND title NOT REGEXP '^The [A-Z0-9]' AND title NOT REGEXP '^A [A-Z0-9]' AND starttime >= ?) ORDER BY title";
+		query = cmyth_mysql_query_create(db, query_str);
+		if(cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0)
+		{
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+			ref_release(query);
+			return -1;
+		}
+	}
+	else
+	{
+		query_str = "SELECT DISTINCT title FROM program where starttime >= ? and title like ? ORDER BY title ASC";
+		query = cmyth_mysql_query_create(db, query_str);
+		N_title = ref_alloc(strlen(program_name) * 2 + 3);
+		sprintf(N_title,"%%%s%%", program_name);
+		esctitle = cmyth_mysql_escape_chars(db, N_title);
+		ref_release(N_title);
+		if(cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
+		    || cmyth_mysql_query_param_str(query, esctitle) < 0)
+		{
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+			ref_release(esctitle);
+			ref_release(query);
+			return -1;
+		}
+		ref_release(esctitle);
 	}
 
-        if (strncmp(program_name, "@", 1)==0)
-                snprintf(query, 350, "SELECT DISTINCT title FROM program "
-                                "WHERE ( title NOT REGEXP '^[A-Z0-9]' AND "
-				"title NOT REGEXP '^The [A-Z0-9]' AND "
-				"title NOT REGEXP '^A [A-Z0-9]' AND "
-				"starttime >= FROM_UNIXTIME(%d)) ORDER BY title",
-			(int)cmyth_timestamp_from_tz(starttime,db->db_tz_diff));
-        else
-	        snprintf(query, 350, "SELECT DISTINCT title FROM program "
-					"where starttime >= FROM_UNIXTIME(%d) and "
-					"title like '%s%%' ORDER BY `title` ASC",
-			 (int)cmyth_timestamp_from_tz(starttime,db->db_tz_diff), program_name);
-
-	fprintf(stderr, "%s\n", query);
-        cmyth_dbg(CMYTH_DBG_ERROR, "%s: query= %s\n", __FUNCTION__, query);
-        if(mysql_query(db->mysql,query)) {
-                 cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_query() Failed: %s\n", 
-                           __FUNCTION__, mysql_error(db->mysql));
+	res = cmyth_mysql_query_result(query);
+	ref_release(query);
+	if (res == NULL)
+	{
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
 		return -1;
-        }
-        res = mysql_store_result(db->mysql);
+	}
+
         while((row = mysql_fetch_row(res))) {
         	if (rows == n) {
                 	n++;
@@ -708,49 +714,37 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  t
 {
 	MYSQL_RES *res=NULL;
 	MYSQL_ROW row;
-        char query[630];
-	char *N_title;
+	char *esctitle;
+	const char *query_str = "SELECT program.chanid, UNIX_TIMESTAMP(program.starttime), UNIX_TIMESTAMP(program.endtime), program.title, program.description, program.subtitle, program.programid, program.seriesid, program.category, channel.channum, channel.callsign, channel.name, channel.sourceid FROM program LEFT JOIN channel on program.chanid=channel.chanid WHERE starttime >= ? and title = ? ORDER BY starttime ASC";
 	int rows=0;
 	int n = 0;
-	int ch;
+	cmyth_mysql_query_t *query;
+	query = cmyth_mysql_query_create(db, query_str);
 
-
-	if(cmyth_db_check_connection(db) != 0)
+	esctitle = cmyth_mysql_escape_chars(db, program_name);
+	if(cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
+	    || cmyth_mysql_query_param_str(query, esctitle) < 0)
 	{
-               cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_db_check_connection failed\n",
-                           __FUNCTION__);
-               fprintf(stderr,"%s: cmyth_db_check_connection failed\n", __FUNCTION__);
-	       return -1;
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(esctitle);
+		ref_release(query);
+		return -1;
+	}
+	res = cmyth_mysql_query_result(query);
+	ref_release(esctitle);
+	ref_release(query);
+	if (res == NULL)
+	{
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
+		return -1;
 	}
 
-	N_title = ref_alloc(strlen(program_name)*2+1);
-	mysql_real_escape_string(db->mysql,N_title,program_name,strlen(program_name)); 
-
-        //sprintf(query, "SELECT chanid,starttime,endtime,title,description,subtitle,programid,seriesid,category FROM program WHERE starttime >= '%s' and title ='%s' ORDER BY `starttime` ASC ", starttime, N_title);
-        snprintf(query, 630, "SELECT program.chanid,UNIX_TIMESTAMP(program.starttime),UNIX_TIMESTAMP(program.endtime),program.title,program.description,program.subtitle,program.programid,program.seriesid,program.category, channel.channum, channel.callsign, channel.name, channel.sourceid FROM program LEFT JOIN channel on program.chanid=channel.chanid WHERE starttime >= FROM_UNIXTIME(%d) and title ='%s' ORDER BY `starttime` ASC ", (int)cmyth_timestamp_from_tz(starttime,db->db_tz_diff), N_title);
-	ref_release(N_title);
-	fprintf(stderr, "%s\n", query);
-        cmyth_dbg(CMYTH_DBG_ERROR, "%s: query= %s\n", __FUNCTION__, query);
-        if(mysql_query(db->mysql,query)) {
-                 cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_query() Failed: %s\n", 
-                           __FUNCTION__, mysql_error(db->mysql));
-		return -1;
-       	}
-	cmyth_dbg(CMYTH_DBG_ERROR, "n =  %d\n",n);
-        res = mysql_store_result(db->mysql);
-	cmyth_dbg(CMYTH_DBG_ERROR, "n =  %d\n",n);
 	while((row = mysql_fetch_row(res))) {
-			cmyth_dbg(CMYTH_DBG_ERROR, "n =  %d\n",n);
         	if (rows == n) {
                 	n++;
-			cmyth_dbg(CMYTH_DBG_ERROR, "realloc n =  %d\n",n);
                        	*prog=realloc(*prog,sizeof(**prog)*(n));
                	}
-			cmyth_dbg(CMYTH_DBG_ERROR, "rows =  %d\nrow[0]=%d\n",rows, row[0]);
-			cmyth_dbg(CMYTH_DBG_ERROR, "row[1]=%d\n",row[1]);
-			ch = atoi(row[0]);
-			(*prog)[rows].chanid=ch;
-			cmyth_dbg(CMYTH_DBG_ERROR, "prog[%d].chanid =  %d\n",rows, (*prog)[rows].chanid);
+			(*prog)[rows].chanid = atoi(row[0]);
 			(*prog)[rows].recording=0;
 			(*prog)[rows].starttime = cmyth_timestamp_to_tz(atoi(row[1]),db->db_tz_diff);
 			(*prog)[rows].endtime = cmyth_timestamp_to_tz(atoi(row[2]),db->db_tz_diff);

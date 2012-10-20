@@ -1500,6 +1500,7 @@ int cmyth_livetv_keep_recording(cmyth_recorder_t rec, cmyth_database_t db, int k
 		return -1;
 	}
 	ref_release(query);
+	ref_release(prog);
 
 	if(rec->rec_conn->conn_version >= 26)
 	{
@@ -1783,15 +1784,18 @@ cmyth_mysql_add_timer(cmyth_database_t db, int chanid,char* callsign, char* desc
 		) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
+		ref_release(esctitle);
+		ref_release(escdescription);
+		ref_release(esccategory);
+		ref_release(esccallsign);
+		ref_release(escsubtitle);
+		ref_release(escrec_group);
+		ref_release(escstore_group);
+		ref_release(escplay_group);
 		return -1;
 	}
 
 	ret = cmyth_mysql_query(query);
-
-	if (ret!=0)
-		return -1;
-
-	id = (int)mysql_insert_id(sql);
 
 	ref_release(query);
 	ref_release(esctitle);
@@ -1803,6 +1807,11 @@ cmyth_mysql_add_timer(cmyth_database_t db, int chanid,char* callsign, char* desc
 	ref_release(escrec_group);
 	ref_release(escstore_group);
 	ref_release(escplay_group);
+
+	if (ret!=0)
+		return -1;
+
+	id = (int)mysql_insert_id(sql);
 
 	return id;
 }
@@ -1849,7 +1858,6 @@ cmyth_mysql_update_timer(cmyth_database_t db, int recordid, int chanid, char* ca
   int transcoder)
 {
 	int ret = -1;
-	int id=0;
 
 	const char *query_str = "UPDATE record SET record.type = ?, chanid = ?, starttime = TIME(?), startdate = DATE(?), endtime = TIME(?), enddate = DATE(?) ,title = ?, description = ?, category = ?, subtitle = ?, recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, station = ?, dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, autotranscode = ?, autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, autocommflag = ?, autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ? WHERE recordid = ? ;";
 
@@ -1902,17 +1910,20 @@ cmyth_mysql_update_timer(cmyth_database_t db, int recordid, int chanid, char* ca
 		) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
+		ref_release(esctitle);
+		ref_release(escdescription);
+		ref_release(esccategory);
+		ref_release(esccallsign);
+		ref_release(escsubtitle);
+		ref_release(escrec_group);
+		ref_release(escstore_group);
+		ref_release(escplay_group);
 		return -1;
 	}
 
 	ret = cmyth_mysql_query(query);
 
 	ref_release(query);
-
-	if (ret == -1) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
-		return -1;
-	}
 	ref_release(esctitle);
 	ref_release(escdescription);
 	ref_release(esccategory);
@@ -1922,6 +1933,11 @@ cmyth_mysql_update_timer(cmyth_database_t db, int recordid, int chanid, char* ca
 	ref_release(escrec_group);
 	ref_release(escstore_group);
 	ref_release(escplay_group);
+
+	if (ret == -1) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
+		return -1;
+	}
 
 	return 0;
 }
@@ -2322,11 +2338,13 @@ int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_progr
 		) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
+		ref_release(esctitle);
 		return -1;
 	}
 
 	res = cmyth_mysql_query_result(query);
 	ref_release(query);
+	ref_release(esctitle);
 
 	if(res == NULL) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, finalisation/execution of query failed!\n", __FUNCTION__);

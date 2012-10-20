@@ -2333,7 +2333,7 @@ int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_progr
 	query = cmyth_mysql_query_create(db,query_str);
 
 	if ( cmyth_mysql_query_param_long(query, chanid) < 0
-		|| cmyth_mysql_query_param_str(query, title ) < 0
+		|| cmyth_mysql_query_param_str(query, esctitle ) < 0
 		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
 		) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);

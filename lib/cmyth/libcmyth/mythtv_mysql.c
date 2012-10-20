@@ -409,7 +409,7 @@ cmyth_get_recordid_mysql(cmyth_database_t db, int chanid, char *title, char *sub
 	}
 	sprintf (query,"SELECT recordid FROM record WHERE (chanid=%d AND title='%s' AND subtitle='%s' AND description='%s' AND seriesid='%s' AND programid='%s')",chanid,title,subtitle,description,seriesid,programid);
 
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s : query=%s\n",__FUNCTION__, query);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s : query=%s\n",__FUNCTION__, query);
 	
         if(mysql_query(db->mysql,query)) {
                  cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_query() Failed: %s\n", __FUNCTION__, mysql_error(db->mysql));
@@ -439,7 +439,7 @@ cmyth_mysql_delete_scheduled_recording(cmyth_database_t db, char * query)
                fprintf(stderr,"%s: cmyth_db_check_connection failed\n", __FUNCTION__);
 	       return -1;
 	}
-	cmyth_dbg(CMYTH_DBG_ERROR, "mysql query :%s\n",query);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "mysql query :%s\n",query);
 
         if(mysql_real_query(db->mysql,query,(unsigned int) strlen(query))) {
                 cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_query() Failed: %s\n", 
@@ -487,7 +487,7 @@ cmyth_mysql_insert_into_record(cmyth_database_t db, char * query, char * query1,
 	ref_release(N_title);
 	ref_release(N_subtitle);
 	ref_release(N_callsign);
-	cmyth_dbg(CMYTH_DBG_ERROR, "mysql query :%s\n",N_query);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "mysql query :%s\n",N_query);
 
         if(mysql_real_query(db->mysql,N_query,(unsigned int) strlen(N_query))) {
                 cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_query() Failed: %s\n", 
@@ -548,7 +548,7 @@ cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_program_t **prog)
           	rows++;
         }
         mysql_free_result(res);
-        cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+        cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	return rows;
 }
 
@@ -607,7 +607,7 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, time_t startt
           	rows++;
         }
         mysql_free_result(res);
-        cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+        cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	return rows;
 }
 
@@ -636,11 +636,11 @@ cmyth_mysql_get_recgroups(cmyth_database_t db, cmyth_recgroups_t **sqlrecgroups)
                        	*sqlrecgroups=realloc(*sqlrecgroups,sizeof(**sqlrecgroups)*(n));
                	}
 		sizeof_strncpy ( (*sqlrecgroups)[rows].recgroups, row[0]);
-        	cmyth_dbg(CMYTH_DBG_ERROR, "(*sqlrecgroups)[%d].recgroups =  %s\n",rows, (*sqlrecgroups)[rows].recgroups);
+		cmyth_dbg(CMYTH_DBG_DEBUG, "(*sqlrecgroups)[%d].recgroups =  %s\n",rows, (*sqlrecgroups)[rows].recgroups);
 		rows++;
         }
         mysql_free_result(res);
-        cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+        cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	return rows;
 }
 
@@ -701,11 +701,11 @@ cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **pr
                        	*prog=realloc(*prog,sizeof(**prog)*(n));
                	}
 		sizeof_strncpy ( (*prog)[rows].title, row[0]);
-        	cmyth_dbg(CMYTH_DBG_ERROR, "prog[%d].title =  %s\n",rows, (*prog)[rows].title);
+		cmyth_dbg(CMYTH_DBG_DEBUG, "prog[%d].title =  %s\n",rows, (*prog)[rows].title);
 		rows++;
         }
         mysql_free_result(res);
-        cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+        cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	return rows;
 }
 
@@ -758,12 +758,12 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  t
 			sizeof_strncpy ((*prog)[rows].callsign,row[10]);
 			sizeof_strncpy ((*prog)[rows].name,row[11]);
 			(*prog)[rows].sourceid = atoi (row[12]);
-        		cmyth_dbg(CMYTH_DBG_ERROR, "prog[%d].chanid =  %d\n",rows, (*prog)[rows].chanid);
-        		cmyth_dbg(CMYTH_DBG_ERROR, "prog[%d].title =  %s\n",rows, (*prog)[rows].title);
+			cmyth_dbg(CMYTH_DBG_DEBUG, "prog[%d].chanid =  %d\n",rows, (*prog)[rows].chanid);
+			cmyth_dbg(CMYTH_DBG_DEBUG, "prog[%d].title =  %s\n",rows, (*prog)[rows].title);
 			rows++;
         }
         mysql_free_result(res);
-        cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+        cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	return rows;
 }
 
@@ -967,7 +967,7 @@ cmyth_mysql_get_commbreak_list(cmyth_database_t db, int chanid, time_t start_ts_
 		query_str = "SELECT m.type AS type, m.mark AS mark, s.offset AS offset FROM recordedmarkup m INNER JOIN recordedseek AS s ON (m.chanid = s.chanid AND m.starttime = s.starttime AND (FLOOR(m.mark / 15) + 1) = s.mark) WHERE m.chanid = ? AND m.starttime = ? AND m.type IN (?, ?) ORDER BY mark;";
 	}
 
-	cmyth_dbg(CMYTH_DBG_ERROR,"%s, query=%s\n", __FUNCTION__,query_str);
+	cmyth_dbg(CMYTH_DBG_DEBUG,"%s, query=%s\n", __FUNCTION__,query_str);
 
 	query = cmyth_mysql_query_create(db,query_str);
 
@@ -1081,7 +1081,7 @@ cmyth_mysql_get_commbreak_list(cmyth_database_t db, int chanid, time_t start_ts_
 		}
 	}
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: COMMBREAK rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: COMMBREAK rows= %d\n", __FUNCTION__, rows);
 	return rows;
 }
 
@@ -1429,7 +1429,7 @@ cmyth_chanlist_t cmyth_mysql_get_chanlist(cmyth_database_t db)
 	}
 
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	return chanlist;
 }
 
@@ -1704,7 +1704,7 @@ cmyth_mysql_get_timers(cmyth_database_t db)
 	}
 
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	return timerlist;
 }
 
@@ -2220,7 +2220,7 @@ extern int cmyth_mysql_get_channelgroups(cmyth_database_t db, cmyth_channelgroup
 	}
 
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 
 	*changroups = ret;
 	return rows;
@@ -2267,7 +2267,7 @@ extern int cmyth_mysql_get_channelids_in_group(cmyth_database_t db, unsigned int
 	}
 
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	*chanids = ret;
 	return rows;
 }
@@ -2308,7 +2308,7 @@ int cmyth_mysql_get_recorder_list(cmyth_database_t db, cmyth_rec_t** reclist)
 	}
 
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 
 	*reclist = ret;
 	return rows;
@@ -2368,7 +2368,7 @@ int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_progr
 	}
 
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	return rows;
 }
 
@@ -2418,7 +2418,7 @@ int cmyth_mysql_get_storagegroups(cmyth_database_t db, char** *profiles)
 	ret[rows] = NULL;
 
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	*profiles = ret;
 
 	return rows;
@@ -2459,7 +2459,7 @@ int cmyth_mysql_get_playgroups(cmyth_database_t db, char** *profiles)
 	ret[rows] = NULL;
 
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	*profiles = ret;
 
 	return rows;
@@ -2499,7 +2499,7 @@ int cmyth_mysql_get_recprofiles(cmyth_database_t db, cmyth_recprofile_t **profil
 	}
 
 	mysql_free_result(res);
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: rows= %d\n", __FUNCTION__, rows);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	*profiles = ret;
 
 	return rows;

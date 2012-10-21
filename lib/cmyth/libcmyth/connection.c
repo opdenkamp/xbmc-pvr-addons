@@ -784,8 +784,9 @@ cmyth_conn_reconnect_ctrl(cmyth_conn_t control)
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: reconnecting control connection\n",
 		  __FUNCTION__);
-	control->conn_hang = 0;
 	ret = cmyth_conn_reconnect(control, 0);
+	if (ret)
+		control->conn_hang = 0;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done reconnecting control connection ret = %d\n",
 		  __FUNCTION__, ret);
 	return ret;

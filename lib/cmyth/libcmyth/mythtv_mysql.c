@@ -275,6 +275,9 @@ cmyth_db_get_connection(cmyth_database_t db)
     return db->mysql;
 }
 
+/*
+ * DEPRECATED
+ */
 int 
 cmyth_schedule_recording(cmyth_conn_t conn, char * msg)
 {
@@ -428,6 +431,9 @@ cmyth_get_recordid_mysql(cmyth_database_t db, int chanid, char *title, char *sub
 	}
 }
 
+/*
+ * DEPRECATED
+ */
 int 
 cmyth_mysql_delete_scheduled_recording(cmyth_database_t db, char * query)
 {
@@ -456,6 +462,9 @@ cmyth_mysql_delete_scheduled_recording(cmyth_database_t db, char * query)
 	return rows;
 }
 
+/*
+ * DEPRECATED
+ */
 int
 cmyth_mysql_insert_into_record(cmyth_database_t db, char * query, char * query1, char * query2, char *title, char * subtitle, char * description, char * callsign)
 {

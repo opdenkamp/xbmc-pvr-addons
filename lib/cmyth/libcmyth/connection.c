@@ -1877,3 +1877,57 @@ int cmyth_conn_set_setting(cmyth_conn_t conn,
 
 	return result;
 }
+
+/*
+ * cmyth_conn_reschedule_recordings(cmyth_conn_t rec, int recordid)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Issues a run of the re-scheduler.
+ * Takes an optional recordid, or -1 performs a full run.
+ *
+ * Return Value:
+ *
+ * Success: 0
+ *
+ * Failure: -(ERRNO)
+ */
+int
+cmyth_conn_reschedule_recordings(cmyth_conn_t conn, int recordid)
+{
+	int err = 0;
+	int id;
+	char msg[256];
+
+	if (conn->conn_version < 15) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support RESCHEDULE_RECORDINGS\n",
+			  __FUNCTION__);
+		return -1;
+	}
+
+	id = (recordid > 0 ? recordid : -1);
+
+	snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS %i", id);
+
+	pthread_mutex_lock(&mutex);
+
+	if ((err = cmyth_send_message(conn, msg)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_send_message() failed (%d)\n",
+			  __FUNCTION__, err);
+		goto out;
+	}
+
+	if ((err=cmyth_rcv_feedback(conn, "1")) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_rcv_feedback() failed (%d)\n",
+			  __FUNCTION__, err);
+		goto out;
+	}
+
+out:
+	pthread_mutex_unlock(&mutex);
+	return err;
+}

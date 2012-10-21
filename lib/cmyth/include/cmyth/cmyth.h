@@ -421,6 +421,15 @@ extern char* cmyth_conn_get_backend_hostname(cmyth_conn_t conn);
  * \retval ref counted string with client hostname
  */
 extern char* cmyth_conn_get_client_hostname(cmyth_conn_t conn);
+
+/**
+ * Issues a run of the re-scheduler
+ * \param conn connection handle
+ * \param recordid or -1 performs a full run
+ * \retval <0 for failure
+ */
+extern int cmyth_conn_reschedule_recordings(cmyth_conn_t conn, int recordid);
+
 /*
  * -----------------------------------------------------------------
  * Event Operations
@@ -1220,7 +1229,17 @@ typedef struct cmyth_recgrougs {
 }cmyth_recgroups_t;
 
 extern int cmyth_mysql_get_recgroups(cmyth_database_t, cmyth_recgroups_t **);
+
+/**
+ * Run SQL query from param (backdoor)
+ * \deprecated alternative: cmyth_mysql_delete_timer
+ */
 extern int cmyth_mysql_delete_scheduled_recording(cmyth_database_t db, char * query);
+
+/**
+ * Run SQL query from param (backdoor)
+ * \deprecated alternative: cmyth_mysql_add_timer
+ */
 extern int cmyth_mysql_insert_into_record(cmyth_database_t db, char * query, char * query1, char * query2, char *title, char * subtitle, char * description, char * callsign);
 
 extern char* cmyth_get_recordid_mysql(cmyth_database_t, int, char *, char *, char *, char *, char *);
@@ -1230,7 +1249,13 @@ extern int cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_pro
 extern int cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  time_t starttime, char *program_name);
 extern int cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, time_t starttime, time_t endtime);
 extern int cmyth_mysql_testdb_connection(cmyth_database_t db,char **message);
+
+/**
+ * Send control message from param (backdoor)
+ * \deprecated alternative: cmyth_conn_reschedule_recordings
+ */
 extern int cmyth_schedule_recording(cmyth_conn_t conn, char * msg);
+
 extern char * cmyth_mysql_escape_chars(cmyth_database_t db, char * string);
 extern int cmyth_mysql_get_commbreak_list(cmyth_database_t db, int chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, int conn_version);
 

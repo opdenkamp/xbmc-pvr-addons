@@ -67,7 +67,6 @@ MythConnection::MythConnection()
   : m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>())
   , m_server("")
   , m_port(0)
-  , m_retryCount(0)
   , m_pEventHandler(NULL)
 {
 }
@@ -76,7 +75,6 @@ MythConnection::MythConnection(const CStdString &server, unsigned short port)
   : m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>)
   , m_server(server)
   , m_port(port)
-  , m_retryCount(0)
   , m_pEventHandler(NULL)
 {
   cmyth_conn_t connection = cmyth_conn_connect_ctrl(const_cast<char*>(server.c_str()), port, 64 * 1024, 16 * 1024);
@@ -130,25 +128,11 @@ bool MythConnection::IsConnected()
 bool MythConnection::TryReconnect()
 {
   int retval = false;
-  if (m_retryCount < 10)
-  {
-    m_retryCount++;
-
-    Lock();
-    retval = cmyth_conn_reconnect_ctrl(*m_conn_t);
-    Unlock();
-
-    if (retval == 1)
-    {
-      m_retryCount = 0;
-      if (m_pEventHandler && !m_pEventHandler->TryReconnect())
-      {
-        XBMC->Log(LOG_ERROR, "%s - Unable to reconnect event handler", __FUNCTION__);
-      }
-    }
-  }
-  if (g_bExtraDebug && retval == 0)
-    XBMC->Log(LOG_DEBUG, "%s - Unable to reconnect (retry count: %d)", __FUNCTION__, m_retryCount);
+  Lock();
+  retval = cmyth_conn_reconnect_ctrl(*m_conn_t);
+  Unlock();
+  if (retval == 0)
+    XBMC->Log(LOG_DEBUG, "%s - Unable to reconnect", __FUNCTION__);
   return retval == 1;
 }
 

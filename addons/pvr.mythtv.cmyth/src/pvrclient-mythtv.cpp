@@ -1070,7 +1070,7 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
     for (std::vector<int>::iterator it = m_sources.at(chan.SourceID()).begin(); it != m_sources.at(chan.SourceID()).end(); it++)
     {
       m_rec = m_con.GetRecorder(*it);
-      if (!m_rec.IsRecording() && m_rec.IsTunable(chan))
+      if (m_rec.ID() > 0 && !m_rec.IsRecording() && m_rec.IsTunable(chan))
       {
         if (g_bExtraDebug)
           XBMC->Log(LOG_DEBUG,"%s: Opening new recorder %i", __FUNCTION__, m_rec.ID());

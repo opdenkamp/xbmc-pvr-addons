@@ -55,13 +55,25 @@ cTimer::cTimer()
 
 cTimer::cTimer(const PVR_TIMER& timerinfo)
 {
-  if(timerinfo.iEpgUid!=-1)
+
+  m_index = timerinfo.iClientIndex;
+  m_progid = timerinfo.iEpgUid;
+
+  if(strlen(timerinfo.strDirectory) > 0)
   {
-    m_progid = timerinfo.iClientIndex;
-    m_index  = timerinfo.iEpgUid;
+    // Workaround: retrieve the schedule id from the directory name if set
+    int schedule_id = 0;
+    int program_id = 0;
+
+    if (sscanf(timerinfo.strDirectory, "%9d/%9d", &schedule_id, &program_id) == 2)
+    {
+      if (program_id == timerinfo.iClientIndex)
+      {
+        m_index  = schedule_id;
+        m_progid = program_id;
+      }
+    }
   }
-  else
-    m_index = timerinfo.iClientIndex;
 
   m_done = (timerinfo.state == PVR_TIMER_STATE_COMPLETED);
   m_active = (timerinfo.state == PVR_TIMER_STATE_SCHEDULED || timerinfo.state == PVR_TIMER_STATE_RECORDING);
@@ -131,14 +143,23 @@ void cTimer::GetPVRtimerinfo(PVR_TIMER &tag)
 
   if (m_progid != -1)
   {
+    // Use the EPG (program) id as unique id to see all scheduled programs in the EPG and timer list
+    // Next program (In Home) is always the right one. Mostly seen with programs that are shown daily.
     tag.iClientIndex    = m_progid;
     tag.iEpgUid         = m_index;
+
+    // Workaround: store the schedule and program id as directory name
+    // This is needed by the PVR addon to map an XBMC timer back to the MediaPortal schedule
+    // because we can't use the iClientIndex as schedule id anymore...
+    snprintf(tag.strDirectory, sizeof(tag.strDirectory)-1, "%d/%d", m_index, m_progid);
   }
   else
   {
-     tag.iClientIndex   = m_index; //Support older TVServer and Manual Schedule having a program name that does not have a match in MP EPG.
-     tag.iEpgUid        = 0;
+    tag.iClientIndex   = m_index; //Support older TVServer and Manual Schedule having a program name that does not have a match in MP EPG.
+    tag.iEpgUid        = 0;
+    PVR_STRCLR(tag.strDirectory);
   }
+
   if (IsRecording())
     tag.state           = PVR_TIMER_STATE_RECORDING;
   else if (m_active)
@@ -147,7 +168,6 @@ void cTimer::GetPVRtimerinfo(PVR_TIMER &tag)
     tag.state           = PVR_TIMER_STATE_CANCELLED;
   tag.iClientChannelUid = m_channel;
   PVR_STRCPY(tag.strTitle, m_title.c_str());
-  PVR_STRCPY(tag.strDirectory, m_directory.c_str());
   tag.startTime         = m_starttime ;
   tag.endTime           = m_endtime ;
   // From the VDR manual
@@ -163,8 +183,8 @@ void cTimer::GetPVRtimerinfo(PVR_TIMER &tag)
   tag.iLifetime         = GetLifetime();
   tag.bIsRepeating      = Repeat();
   tag.iWeekdays         = RepeatFlags();
-  tag.iMarginStart      = m_prerecordinterval * 60;
-  tag.iMarginEnd        = m_postrecordinterval * 60;
+  tag.iMarginStart      = m_prerecordinterval;
+  tag.iMarginEnd        = m_postrecordinterval;
   tag.iGenreType        = 0;
   tag.iGenreSubType     = 0;
 }

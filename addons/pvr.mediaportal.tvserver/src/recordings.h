@@ -58,6 +58,7 @@ private:
   int m_genre_subtype;
   bool m_isRecording;
   CGenreTable* m_genretable;
+  int m_timesWatched;
 
 public:
   cRecording();
@@ -76,6 +77,7 @@ public:
   const char *EpisodePart(void) const { return m_episodePart.c_str(); }
   int ScheduleID(void) const { return m_scheduleID; }
   int Lifetime(void) const;
+  int TimesWatched(void) const {return m_timesWatched; }
 
   /**
    * \brief Filename of this recording with full path (at server side)

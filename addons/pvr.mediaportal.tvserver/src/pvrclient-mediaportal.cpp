@@ -47,8 +47,8 @@ int g_iTVServerXBMCBuild = 0;
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.0.90"
 #define TVSERVERXBMC_MIN_VERSION_BUILD          90
-#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.116"
-#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  116
+#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.117"
+#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  117
 
 /************************************************************/
 /** Class interface */
@@ -945,6 +945,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
       tag.iLifetime      = recording.Lifetime();
       tag.iGenreType     = recording.GenreType();
       tag.iGenreSubType  = recording.GenreSubType();
+      tag.iPlayCount     = recording.TimesWatched();
 
       strDirectory = recording.Directory();
       if (strDirectory.length() > 0)
@@ -1049,6 +1050,32 @@ PVR_ERROR cPVRClientMediaPortal::RenameRecording(const PVR_RECORDING &recording)
   return PVR_ERROR_NO_ERROR;
 }
 
+PVR_ERROR cPVRClientMediaPortal::SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
+{
+  if ( g_iTVServerXBMCBuild < 117 )
+    return PVR_ERROR_NOT_IMPLEMENTED;
+
+  if (!IsUp())
+    return PVR_ERROR_SERVER_ERROR;
+
+  char           command[512];
+  string         result;
+
+  snprintf(command, 512, "SetRecordingTimesWatched:%i|%i\n", atoi(recording.strRecordingId), count);
+
+  result = SendCommand(command);
+
+  if(result.find("True") == string::npos)
+  {
+    XBMC->Log(LOG_DEBUG, "%s: id=%s to %i [failed]", __FUNCTION__, recording.strRecordingId, count);
+    return PVR_ERROR_FAILED;
+  }
+
+  XBMC->Log(LOG_DEBUG, "%s: id=%s to %i [successful]", __FUNCTION__, recording.strRecordingId, count);
+  PVR->TriggerRecordingUpdate();
+
+  return PVR_ERROR_NO_ERROR;
+}
 
 /************************************************************/
 /** Timer handling */

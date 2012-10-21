@@ -1123,7 +1123,8 @@ void PVRClientMythTV::CloseLiveStream()
   if (m_pEventHandler)
     m_pEventHandler->PreventLiveChainUpdate();
 
-  m_rec.Stop();
+  if (!m_rec.Stop())
+    XBMC->Log(LOG_NOTICE, "%s - Stop live stream failed", __FUNCTION__);
   m_rec = MythRecorder();
 
   if (m_pEventHandler)
@@ -1186,7 +1187,7 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
   if (m_pEventHandler)
     m_pEventHandler->PreventLiveChainUpdate();
 
-  m_rec.Stop();
+  retval = m_rec.Stop();
   m_rec = MythRecorder();
 
   if (m_pEventHandler)
@@ -1195,7 +1196,8 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
     m_pEventHandler->AllowLiveChainUpdate();
   }
   //Try to reopen live stream
-  retval = OpenLiveStream(channelinfo);
+  if (retval)
+    retval = OpenLiveStream(channelinfo);
 
   if (!retval)
   {

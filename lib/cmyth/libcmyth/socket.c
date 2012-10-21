@@ -79,6 +79,7 @@ cmyth_send_message(cmyth_conn_t conn, char *request)
 	if (conn->conn_fd < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: not connected\n",
 			  __FUNCTION__);
+		conn->conn_hang = 1;
 		return -EBADF;
 	}
 	if (!request) {

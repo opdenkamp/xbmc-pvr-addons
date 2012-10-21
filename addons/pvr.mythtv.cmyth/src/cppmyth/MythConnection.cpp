@@ -298,10 +298,8 @@ ProgramInfoMap MythConnection::GetScheduledPrograms()
 
 bool MythConnection::UpdateSchedules(int id)
 {
-  CStdString cmd;
-  cmd.Format("RESCHEDULE_RECORDINGS %i", id);
   int retval = 0;
-  CMYTH_CONN_CALL(retval, retval < 0, cmyth_schedule_recording(*m_conn_t, cmd.Buffer()));
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_conn_reschedule_recordings(*m_conn_t, id));
   return retval >= 0;
 }
 

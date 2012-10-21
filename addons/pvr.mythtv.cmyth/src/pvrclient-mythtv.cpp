@@ -620,12 +620,11 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
     }
 
     // Write the bookmark
-    int retval = m_con.SetBookmark(it->second, frameOffset);
-    if (retval == 1)
+    if (m_con.SetBookmark(it->second, frameOffset))
     {
       if (g_bExtraDebug)
       {
-        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark successful: %d)", __FUNCTION__);
+        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark successful", __FUNCTION__);
       }
       return PVR_ERROR_NO_ERROR;
     }
@@ -633,7 +632,7 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
     {
       if (g_bExtraDebug)
       {
-        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark failed: %d)", __FUNCTION__, retval);
+        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark failed", __FUNCTION__);
       }
       return PVR_ERROR_FAILED;
     }

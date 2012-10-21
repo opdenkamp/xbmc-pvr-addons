@@ -358,11 +358,11 @@ MythFile MythConnection::ConnectPath(const CStdString &filename, const CStdStrin
   return MythFile(file, *this);
 }
 
-int MythConnection::SetBookmark(MythProgramInfo &recording, long long bookmark)
+bool MythConnection::SetBookmark(MythProgramInfo &recording, long long bookmark)
 {
   int retval;
   CMYTH_CONN_CALL(retval, retval < 0, cmyth_set_bookmark(*m_conn_t, *recording.m_proginfo_t, bookmark));
-  return retval;
+  return retval >= 0;
 }
 
 long long MythConnection::GetBookmark(MythProgramInfo &recording)

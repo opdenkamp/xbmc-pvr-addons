@@ -179,7 +179,6 @@ cmyth_database_set_name(cmyth_database_t db, char *name)
 static int
 cmyth_db_check_connection(cmyth_database_t db)
 {
-	int new_conn = 0;
 	if(db->mysql != NULL) {
 		/* Fetch the mysql stats (uptime and stuff) to check the connection is
 		 * still good
@@ -193,7 +192,6 @@ cmyth_db_check_connection(cmyth_database_t db)
 	}
 	if (db->mysql == NULL) {
 		db->mysql = mysql_init(NULL);
-		new_conn = 1;
 		if(db->mysql == NULL) {
 			fprintf(stderr,"%s: mysql_init() failed, insufficient memory?\n", __FUNCTION__);
 			return -1;
@@ -1172,7 +1170,6 @@ cmyth_mythtv_remove_previous_recorded(cmyth_database_t db,char *query)
 int
 cmyth_mysql_testdb_connection(cmyth_database_t db,char **message) {
 	char *buf=ref_alloc(sizeof(char)*1001);
-	int new_conn = 0;
 	if (db->mysql != NULL) {
 		if (mysql_stat(db->mysql) == NULL) {
 			cmyth_database_close(db);
@@ -1181,7 +1178,6 @@ cmyth_mysql_testdb_connection(cmyth_database_t db,char **message) {
 	}
 	if (db->mysql == NULL) {
 		db->mysql = mysql_init(NULL);
-		new_conn = 1;
 		if(db->mysql == NULL) {
 			fprintf(stderr,"%s: mysql_init() failed, insufficient memory?", __FUNCTION__);
 			snprintf(buf, 1000, "mysql_init() failed, insufficient memory?");
@@ -1395,7 +1391,6 @@ cmyth_chanlist_t cmyth_mysql_get_chanlist(cmyth_database_t db)
 	MYSQL_ROW row;
 	const char *query_str = "SELECT chanid, channum, name, icon, visible, sourceid, mplexid, callsign FROM channel;";
 	int rows = 0;
-	int i;
 	cmyth_mysql_query_t * query;
 	cmyth_channel_t channel;
 	cmyth_chanlist_t chanlist;
@@ -1420,7 +1415,6 @@ cmyth_chanlist_t cmyth_mysql_get_chanlist(cmyth_database_t db)
 	}
 	memset(chanlist->chanlist_list, 0, chanlist->chanlist_count * sizeof(cmyth_chanlist_t));
 
-	i = 0;
 	while ((row = mysql_fetch_row(res))) {
 		channel = cmyth_channel_create();
 		channel->chanid = safe_atol(row[0]);
@@ -1433,7 +1427,6 @@ cmyth_chanlist_t cmyth_mysql_get_chanlist(cmyth_database_t db)
 		channel->multiplex = safe_atoi(row[6]);
 		channel->callsign = ref_strdup(row[7]);
 		chanlist->chanlist_list[rows] = channel;
-		i = 0;
 		rows++;
 	}
 
@@ -1558,7 +1551,7 @@ int cmyth_mysql_is_radio(cmyth_database_t db,  int chanid)
 		return -1;
 	}
 
-	if (row = mysql_fetch_row(res)) {
+	if ((row = mysql_fetch_row(res))) {
 		retval = safe_atoi(row[0]);
 	} else {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, Channum %i not found\n", __FUNCTION__,chanid);
@@ -1823,8 +1816,6 @@ int
 cmyth_mysql_delete_timer(cmyth_database_t db, int recordid)
 {
 	int ret = -1;
-	int id=0;
-
 	const char *query_str = "DELETE FROM record WHERE recordid = ?;";
 
 	cmyth_mysql_query_t * query;
@@ -2519,7 +2510,7 @@ char* cmyth_mysql_get_cardtype(cmyth_database_t db, int chanid)
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
 	const char *query_str = "SELECT cardtype FROM channel LEFT JOIN cardinput ON channel.sourceid=cardinput.sourceid LEFT JOIN capturecard ON cardinput.cardid=capturecard.cardid WHERE		channel.chanid = ?";
-	char* retval;
+	char* retval = "";
 
 	cmyth_mysql_query_t * query;
 	query = cmyth_mysql_query_create(db,query_str);

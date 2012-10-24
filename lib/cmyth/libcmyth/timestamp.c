@@ -59,7 +59,7 @@ cmyth_timestamp_tz_diff(void)
 	local_secs = mktime(d_info);
 	d_info = gmtime(&secs);
 	gmt_secs = mktime(d_info);
-	diff = local_secs - gmt_secs + (isdst * 3600);
+	diff = local_secs - gmt_secs + (isdst == 1 ? 3600 : 0);
 
 	return diff;
 }

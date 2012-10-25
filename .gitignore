@@ -4,6 +4,8 @@
 .libs
 .project
 
+.dummy
+.dummy.in
 aclocal.m4
 autom4te.cache
 config.log

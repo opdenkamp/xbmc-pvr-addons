@@ -29,6 +29,13 @@ AC_ARG_ENABLE([external-ffmpeg],
   [use_external_ffmpeg=$enableval],
   [use_external_ffmpeg=no])
 
+### External dependencies option
+AC_ARG_ENABLE([addons-with-dependencies],
+  [AS_HELP_STRING([--enable-addons-with-dependencies],
+  [enable build of addons that depend on external libraries (default is no)])],
+  [build_addons_with_dependencies=$enableval],
+  [build_addons_with_dependencies=no])
+
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
   BUILD_TYPE="release"
@@ -108,6 +115,14 @@ AC_SUBST(FFMPEG_INCLUDES)
 
 ### End external Libraries 
 
+### Build addons with dependencies
+if test "$build_addons_with_dependencies" = "yes"; then
+  echo "Building addons with dependencies"
+
+  ### Addons with dependencies
+  OUTPUT_FILES_ADDONS_WITH_DEPENDENCIES=""
+fi
+
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then
   # don't call AC_CHECK_FILE when (maybe) cross-compiling
@@ -156,19 +171,27 @@ else
 fi
 AC_SUBST(DATADIR)
 
+OUTPUT_FILES="Makefile \
+              lib/Makefile \
+              lib/jsoncpp/Makefile \
+              lib/libhts/Makefile \
+              lib/tinyxml/Makefile \
+              addons/Makefile \
+              addons/pvr.demo/Makefile \
+              addons/pvr.fortherecord.argus/Makefile \
+              addons/pvr.hts/Makefile \
+              addons/pvr.mediaportal.tvserver/Makefile \
+              addons/pvr.nextpvr/Makefile \
+              addons/pvr.njoy/Makefile \
+              addons/pvr.vuplus/Makefile \
+              addons/pvr.vdr.vnsi/Makefile \
+              $OUTPUT_FILES_ADDONS_WITH_DEPENDENCIES"
 
-AC_OUTPUT([Makefile
-           lib/Makefile
-           lib/jsoncpp/Makefile
-           lib/libhts/Makefile
-           lib/tinyxml/Makefile
-           addons/Makefile
-           addons/pvr.demo/Makefile
-           addons/pvr.fortherecord.argus/Makefile
-           addons/pvr.hts/Makefile
-           addons/pvr.mediaportal.tvserver/Makefile
-           addons/pvr.nextpvr/Makefile
-           addons/pvr.njoy/Makefile
-           addons/pvr.vuplus/Makefile
-           addons/pvr.vdr.vnsi/Makefile])
+# Line below is used so we can use AM_INIT_AUTOMAKE. The corresponding
+# .dummy.am does nothing.
+AC_CONFIG_FILES([.dummy])
 
+AC_CONFIG_FILES([$OUTPUT_FILES])
+OUTPUT_FILES="$OUTPUT_FILES .dummy"
+
+AC_OUTPUT

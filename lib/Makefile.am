@@ -1,4 +1,4 @@
-SUBDIRS = libhts tinyxml jsoncpp
+SUBDIRS = cmyth libhts tinyxml jsoncpp
 
 zip:
 

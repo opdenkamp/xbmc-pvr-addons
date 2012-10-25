@@ -474,6 +474,7 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid,
 					  "%s: cmyth_livetv_chain_add(%s) failed\n",
 					  __FUNCTION__, url);
 				ret = -1;
+				ref_release(ft);
 				goto out;
 			}
 			ref_release(ft);
@@ -490,9 +491,9 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid,
 		ret = -1;
 	}
 
-	ref_release(loc_prog);
 out:
 	pthread_mutex_unlock(&mutex);
+	ref_release(loc_prog);
 
 	return ret;
 }
@@ -719,6 +720,7 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, int tcp_rcvbuf,
 				  "%s: cmyth_livetv_chain_add(%s) failed\n",
 				  __FUNCTION__, url);
 		new_rec = NULL;
+		ref_release(ft);
 		goto out;
 	}
 
@@ -732,10 +734,10 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, int tcp_rcvbuf,
 
 	cmyth_livetv_chain_switch(new_rec, 0);
 
-	ref_release(loc_prog);
 
     out:
 	pthread_mutex_unlock(&mutex);
+	ref_release(loc_prog);
 
 	return new_rec;
 }

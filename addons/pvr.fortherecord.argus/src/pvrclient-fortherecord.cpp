@@ -112,10 +112,11 @@ bool cPVRClientForTheRecord::Connect()
   }
 
   // Check the accessibility status of all the shares used by ForTheRecord tuners
-  if (ShareErrorsFound())
-  {
-    XBMC->QueueNotification(QUEUE_ERROR, "Share errors: see xbmc.log");
-  }
+  // TODO: this is temporarily disabled until the caching of smb:// directories is resolved
+//  if (ShareErrorsFound())
+//  {
+//    XBMC->QueueNotification(QUEUE_ERROR, "Share errors: see xbmc.log");
+//  }
 
   m_bConnected = true;
   return true;

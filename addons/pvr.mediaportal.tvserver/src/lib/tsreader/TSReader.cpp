@@ -1,5 +1,5 @@
 /*
- *      Copyright (C) 2010-2012 Team XBMC
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -14,23 +14,18 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-// Code below is work in progress and not yet finished
-//
-// DONE:
-// 1) make the code below work outside MediaPortal
-// 2) fetch timeshift buffer filename from TVServerXBMC
-// 3) test streaming from timeshift buffer (Skip rtsp, but XBMC's ffmpeg does still the demuxing)
-// 4) Make code cross platform. Original MediaPortal code is Windows only.
-//    - Move all OS specific stuff to os-specific platform files
-//    - Use the platform library for threading, mutexes, etc...
-//    - Port XBMC's smb:// filesystem support to this addon to access the timeshift buffer and recordings on non-windows systems
-//   The addon should work now on Windows, Linux, FreeBSD, OSX and iOS/ATV2
-// TODO:
-// 5) Move the demuxing part also to this addon to speed up the stream detection; ffmpeg stream detection in mpegts containers is a bit slow. Use vdr-vnsi as example
-// 6) add Live555 rtsp library (Skip ffmpeg rtsp part, ffmpeg does still the demuxing)
-// 7) testing... bugfixing... code cleanup...
+ *
+ *************************************************************************
+ *  Parts of this file originate from Team MediaPortal's
+ *  TsReader DirectShow filter
+ *  MediaPortal is a GPL'ed HTPC-Application
+ *  Copyright (C) 2005-2012 Team MediaPortal
+ *  http://www.team-mediaportal.com
+ *
+ * Changes compared to Team MediaPortal's version:
+ * - Code cleanup for PVR addon usage
+ * - Code refactoring for cross platform usage
+ *************************************************************************/
 
 #include "TSReader.h"
 #include "client.h" //for XBMC->Log

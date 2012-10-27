@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\categories.cpp" />
+    <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythChannel.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythConnection.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythDatabase.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythEventHandler.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythFile.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythProgramInfo.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythRecorder.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythStorageGroupFile.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythSignal.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythTimer.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythTimestamp.cpp" />
+    <ClCompile Include="..\..\src\fileOps.cpp" />
+    <ClCompile Include="..\..\src\pvrclient-mythtv.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\categories.h" />
+    <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\cppmyth.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythChannel.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythConnection.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythDatabase.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythEventHandler.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythFile.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythPointer.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythProgramInfo.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythRecorder.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythStorageGroupFile.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythSignal.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythTimer.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythTimestamp.h" />
+    <ClInclude Include="..\..\src\fileOps.h" />
+    <ClInclude Include="..\..\src\pvrclient-mythtv.h" />
+    <ClInclude Include="..\..\src\tools.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\lib\cmyth\Win32\libcmyth.vcxproj">
+      <Project>{f9e6874d-60a8-49ba-9393-a2105e63abcf}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
+      <Project>{fe4573f6-a794-4ad3-b37f-49e51f1140e6}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml" />
+    <None Include="..\..\addon\changelog.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A55ACC6B-837D-4784-8E41-66947B1D9B8C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>XBMC_mythtv_cmyth</RootNamespace>
+    <ProjectName>pvr.mythtv.cmyth</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetExt>.pvr</TargetExt>
+    <TargetName>XBMC_mythtv_cmyth_win32</TargetName>
+    <OutDir>..\..\addon\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetExt>.pvr</TargetExt>
+    <TargetName>XBMC_mythtv_cmyth_win32</TargetName>
+    <OutDir>..\..\addon\</OutDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <CustomBuildBeforeTargets />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>XBMC_MythTV_cmyth_win32</TargetName>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;__STDC_CONSTANT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\project\BuildDependencies\include;..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\..\..\lib\cmyth\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmtd;libboost_system-vc100-mt-gd-1_46_1;libboost_regex-vc100-mt-gd-1_46_1;libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Inputs>
+      </Inputs>
+      <Outputs>
+      </Outputs>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\..\..\project\BuildDependencies\include;..\..\..\..\lib\cmyth\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;__STDC_CONSTANT_MACROS;__WINDOWS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmt;libboost_system-vc100-mt-1_46_1;libboost_regex-vc100-mt-1_46_1</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+      <Inputs>
+      </Inputs>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

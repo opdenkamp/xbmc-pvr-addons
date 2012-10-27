@@ -1,6 +1,6 @@
 #pragma once
 /*
- *      Copyright (C) 2005-2008 Team XBMC
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -14,26 +14,33 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
-#include "FileSMB.h"
-//#include "MediaSource.h"
+#include "MythConnection.h"
 
-namespace PLATFORM
-{
-class CSMBDirectory
+#include <boost/shared_ptr.hpp>
+
+extern "C" {
+#include <cmyth/cmyth.h>
+};
+
+template <class T> class MythPointer;
+
+class MythStorageGroupFile
 {
 public:
-  CSMBDirectory(void);
-  virtual ~CSMBDirectory(void);
+  MythStorageGroupFile();
+  MythStorageGroupFile(cmyth_storagegroup_file_t myth_storagegroup_file);
 
-  int Open(const CStdString &url);
+  bool IsNull() const;
+
+  CStdString Filename();
+  unsigned long long Size();
+  unsigned long LastModified();
 
 private:
-  int OpenDir(const CStdString &url);
+  boost::shared_ptr<MythPointer<cmyth_storagegroup_file_t> > m_storagegroup_file_t;
 };
-}

@@ -4,6 +4,8 @@
 .libs
 .project
 
+.dummy
+.dummy.in
 aclocal.m4
 autom4te.cache
 config.log
@@ -42,6 +44,8 @@ missing
 *.vcxproj.user
 
 project/VS2010Express/objs
+project/VS2010Express/ipch
+project/VS2010Express/libs
 project/VS2010Express/platform/Debug
 project/VS2010Express/platform/Release
 project/VS2010Express/tinyxml/Debug
@@ -53,3 +57,4 @@ addons/*/project/VS2010Express/Debug
 addons/*/project/VS2010Express/Release
 lib/jsoncpp/project/VS2010Express/Debug
 lib/jsoncpp/project/VS2010Express/Release
+addons/*/addon/*.so

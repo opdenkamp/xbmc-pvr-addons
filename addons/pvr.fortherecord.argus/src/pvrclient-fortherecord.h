@@ -115,7 +115,6 @@ private:
 
   int                     m_iCurrentChannel;
   bool                    m_bConnected;
-  //bool                    m_bStop;
   bool                    m_bTimeShiftStarted;
   std::string             m_PlaybackURL;
   std::string             m_BackendName;
@@ -128,10 +127,7 @@ private:
   int                     m_channel_id_offset;
   int                     m_epg_id_offset;
   int                     m_signalqualityInterval;
-//  CURL*                   m_curl;
-#ifdef TSREADER
   CTsReader*              m_tsreader;
-#endif //TSREADER
   CKeepAliveThread        m_keepalive;
 #if defined(FTR_DUMPTS)
   char ofn[25];

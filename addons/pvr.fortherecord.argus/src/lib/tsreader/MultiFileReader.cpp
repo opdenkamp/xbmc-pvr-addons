@@ -26,8 +26,6 @@
  *    http://forums.dvbowners.com/
  */
 
-#ifdef TSREADER
-
 #include "MultiFileReader.h"
 #include "client.h" //for XBMC->Log
 #include <string>
@@ -45,6 +43,7 @@
 #endif
 
 using namespace ADDON;
+using namespace PLATFORM;
 
 //Maximum time in msec to wait for the buffer file to become available - Needed for DVB radio (this sometimes takes some time)
 #define MAX_BUFFER_TIMEOUT 1500
@@ -60,7 +59,6 @@ MultiFileReader::MultiFileReader():
   m_filesAdded = 0;
   m_filesRemoved = 0;
   m_TSFileId = 0;
-  m_bReadOnly = 1;
   m_bDelay = 0;
   m_bDebugOutput = false;
 }
@@ -79,7 +77,6 @@ long MultiFileReader::GetFileName(char* *lpszFileName)
 
 long MultiFileReader::SetFileName(const char* pszFileName)
 {
-//  CheckPointer(pszFileName,E_POINTER);
   return m_TSBufferFile.SetFileName(pszFileName);
 }
 
@@ -134,7 +131,7 @@ bool MultiFileReader::IsFileInvalid()
   return m_TSBufferFile.IsFileInvalid();
 }
 
-unsigned long MultiFileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
+int64_t MultiFileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
 {
   RefreshTSBufferFile();
 
@@ -393,12 +390,6 @@ long MultiFileReader::RefreshTSBufferFile()
     }
   }
 
-  //randomly park the file pointer to help minimise HDD clogging
-  //if(currentPosition&1)
-  //  m_TSBufferFile.SetFilePointer(0, FILE_BEGIN);
-  //else
-  //  m_TSBufferFile.SetFilePointer(0, FILE_END);
-
   if ((m_filesAdded != filesAdded) || (m_filesRemoved != filesRemoved))
   {
     long filesToRemove = filesRemoved - m_filesRemoved;
@@ -482,7 +473,6 @@ long MultiFileReader::RefreshTSBufferFile()
       std::string sCurrFile = wide2normal;
       //XBMC->Log(LOG_DEBUG, "%s: filename %s (%s).", __FUNCTION__, wide2normal, sCurrFile.c_str());
       delete[] wide2normal;
-
 
       // Modify filename path here to include the real (local) path
       pos = sCurrFile.find_last_of(92);
@@ -633,14 +623,12 @@ long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
 
   length = 0;
 
-  length = 0;
-
   // Try to open the file
-  PLATFORM::CFile hFile;
-  if (hFile.Open(pFilename))
+  void* hFile;
+  if (((hFile = XBMC->OpenFile(pFilename, 0)) != NULL))
   {
-    length = hFile.GetLength();
-    hFile.Close();
+    length = XBMC->GetFileLength(hFile);
+    XBMC->CloseFile(hFile);
   }
   else
   {
@@ -667,4 +655,3 @@ void MultiFileReader::OnZap(void)
   SetFilePointer(0, FILE_END);
   m_lastZapPosition = m_currentReadPosition;
 }
-#endif //TSREADER

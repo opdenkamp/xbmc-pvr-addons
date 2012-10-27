@@ -1,0 +1,15 @@
+v0.4.0
+- OSX support
+
+v0.3.0
+- Transifex localizations (https://www.transifex.com/projects/p/pvrmythtvcmyth)
+- Support for recording images (icon, thumbnail, fanart)
+- Fixed: Preview images of new recordings were not cached
+
+v0.2.0
+- Added setting to enable / disable Live TV support (disbale to use the addon only for watching recordings)
+
+v0.1.0
+- Initial version based on Tonny Pettersen's work
+- Supports Live TV &amp; Recordings, listening to Radio channels, EPG and Timer
+- Supports setting / reading resume bookmarks and watched state on MythTV backend

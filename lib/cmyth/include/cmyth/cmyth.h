@@ -618,8 +618,7 @@ extern int cmyth_livetv_chain_switch_unlocked(cmyth_recorder_t rec, int dir);
 
 extern int cmyth_livetv_chain_switch_last(cmyth_recorder_t rec);
 
-extern int cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid,
-						int tcp_rcvbuf);
+extern int cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid);
 
 /* JLB: Manage program breaks */
 extern int cmyth_livetv_watch(cmyth_recorder_t rec, char * msg);

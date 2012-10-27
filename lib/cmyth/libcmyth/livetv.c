@@ -123,7 +123,7 @@ cmyth_livetv_chain_create(char * chainid)
 	ret->chain_files = NULL;
 	ret->progs = NULL;
 	ret->livetv_watch = 0; /* JLB: Manage program breaks. Set to 1 on chain setup */
-
+	ret->livetv_tcp_rcvbuf = 0;
 	ref_set_destroy(ret, (ref_destroy_t)cmyth_livetv_chain_destroy);
 	return ret;
 }
@@ -408,8 +408,7 @@ cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url, cmyth_file_t ft,
  * Failure: -1
  */
 int
-cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid,
-													int tcp_rcvbuf)
+cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid)
 {
 	int ret;
 	char url[1024];
@@ -461,7 +460,7 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid,
 		*/
 
 		if (cmyth_livetv_chain_has_url(rec, url) == -1) {
-			ft = cmyth_conn_connect_file(loc_prog, rec->rec_conn, 16*1024, tcp_rcvbuf);
+			ft = cmyth_conn_connect_file(loc_prog, rec->rec_conn, 4096, rec->rec_livetv_chain->livetv_tcp_rcvbuf);
 			if (!ft) {
 				cmyth_dbg(CMYTH_DBG_ERROR,
 					  "%s: cmyth_conn_connect_file(%s) failed\n",
@@ -613,7 +612,7 @@ cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg)
 				  "%s: previous recording done. Start chain update\n",
 				  __FUNCTION__);
 			if (rec->rec_livetv_chain->chainid) {
-				cmyth_livetv_chain_update(rec, rec->rec_livetv_chain->chainid, 16*1024);
+				cmyth_livetv_chain_update(rec, rec->rec_livetv_chain->chainid);
 			}
 			else {
 				cmyth_dbg(CMYTH_DBG_ERROR,
@@ -706,7 +705,8 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, int tcp_rcvbuf,
 				loc_prog->proginfo_pathname);
 
 	if(cmyth_livetv_chain_has_url(new_rec, url) == -1) {
-		ft = cmyth_conn_connect_file(loc_prog, new_rec->rec_conn, 16*1024, tcp_rcvbuf);
+		new_rec->rec_livetv_chain->livetv_tcp_rcvbuf = tcp_rcvbuf;
+		ft = cmyth_conn_connect_file(loc_prog, new_rec->rec_conn, 4096, new_rec->rec_livetv_chain->livetv_tcp_rcvbuf);
 		if (!ft) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: cmyth_conn_connect_file(%s) failed\n",

@@ -145,17 +145,10 @@ if test "$build_addons_with_dependencies" = "yes"; then
       use_mysql=no
     fi
   fi
-
-  ### Addons with dependencies
-  OUTPUT_FILES_ADDONS_WITH_DEPENDENCIES=""
-  if test "$use_mysql" = "yes"; then
-    echo "Building additional addon pvr.mythtv.cmyth"
-    OUTPUT_FILES_ADDONS_WITH_DEPENDENCIES="lib/cmyth/Makefile \
-                                           lib/cmyth/libcmyth/Makefile \
-                                           lib/cmyth/librefmem/Makefile \
-                                           addons/pvr.mythtv.cmyth/Makefile"
-  fi
 fi
+
+### Addons with dependencies
+AM_CONDITIONAL([ADDON_MYTHTV], [test "$build_addons_with_dependencies" = "yes" -a "$use_mysql" = "yes"])
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then
@@ -205,27 +198,23 @@ else
 fi
 AC_SUBST(DATADIR)
 
-OUTPUT_FILES="Makefile \
-              lib/Makefile \
-              lib/jsoncpp/Makefile \
-              lib/libhts/Makefile \
-              lib/tinyxml/Makefile \
-              addons/Makefile \
-              addons/pvr.demo/Makefile \
-              addons/pvr.fortherecord.argus/Makefile \
-              addons/pvr.hts/Makefile \
-              addons/pvr.mediaportal.tvserver/Makefile \
-              addons/pvr.nextpvr/Makefile \
-              addons/pvr.njoy/Makefile \
-              addons/pvr.vuplus/Makefile \
-              addons/pvr.vdr.vnsi/Makefile \
-              $OUTPUT_FILES_ADDONS_WITH_DEPENDENCIES"
-
-# Line below is used so we can use AM_INIT_AUTOMAKE. The corresponding
-# .dummy.am does nothing.
-AC_CONFIG_FILES([.dummy])
-
-AC_CONFIG_FILES([$OUTPUT_FILES])
-OUTPUT_FILES="$OUTPUT_FILES .dummy"
+AC_CONFIG_FILES([Makefile \
+                 lib/Makefile \
+                 lib/jsoncpp/Makefile \
+                 lib/libhts/Makefile \
+                 lib/tinyxml/Makefile \
+                 lib/cmyth/Makefile \
+                 lib/cmyth/libcmyth/Makefile \
+                 lib/cmyth/librefmem/Makefile \
+                 addons/Makefile \
+                 addons/pvr.demo/Makefile \
+                 addons/pvr.fortherecord.argus/Makefile \
+                 addons/pvr.hts/Makefile \
+                 addons/pvr.mediaportal.tvserver/Makefile \
+                 addons/pvr.nextpvr/Makefile \
+                 addons/pvr.njoy/Makefile \
+                 addons/pvr.vuplus/Makefile \
+                 addons/pvr.vdr.vnsi/Makefile \
+                 addons/pvr.mythtv.cmyth/Makefile])
 
 AC_OUTPUT

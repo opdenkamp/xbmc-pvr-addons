@@ -1,6 +1,7 @@
 0.1.6
 
 [added] Don't fetch recording thumbnails at startup if there are more than 20 recordings.
+[fixed] Channel names with utf8 chars weren't displayed properly (a reset of the PVR database may be required).
 
 
 0.1.5

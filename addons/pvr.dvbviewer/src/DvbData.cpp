@@ -202,7 +202,6 @@ void  *Dvb::Process()
   return NULL;
 }
 
-
 bool Dvb::LoadChannels() 
 {
   ChannelsDat *channel;
@@ -237,6 +236,11 @@ bool Dvb::LoadChannels()
     if ((strcmp(channel_group, channel->Category) != 0) && (channel->Flags & (1 << VIDEO_FLAG)))
       {
         datGroup.strGroupName = strncpy(channel_group, channel->Category, 25);
+#ifdef WIN32
+        AnsiToUtf8(datGroup.strGroupName);
+#else
+        XBMC->UnknownToUTF8(datGroup.strGroupName);
+#endif
         groupsdat.push_back(datGroup);
         m_iNumChannelGroups++; 
       }
@@ -252,8 +256,10 @@ bool Dvb::LoadChannels()
     datChannel.iUniqueId = channelsdat.size()+1;
     datChannel.iChannelNumber = channelsdat.size()+1;
     datChannel.strChannelName = strncpy(channel_name, channel->ChannelName, 25);
-#ifndef _DEBUG
-    //XBMC->UnknownToUTF8(datChannel.strChannelName);
+#ifdef WIN32
+    AnsiToUtf8(datChannel.strChannelName);
+#else
+    XBMC->UnknownToUTF8(datChannel.strChannelName);
 #endif
   
     CStdString strTmp;
@@ -324,9 +330,6 @@ bool Dvb::LoadChannels()
               favChannel.iUniqueId = channelsfav.size()+1;
               favChannel.iChannelNumber = channelsfav.size()+1;
               favChannel.strChannelName = strName;
-#ifndef _DEBUG
-              //XBMC->UnknownToUTF8(favChannel.strChannelName);
-#endif
               favChannel.strStreamURL = channelsdat[i].strStreamURL;
               favChannel.strIconPath = channelsdat[i].strIconPath;
               channelsfav.push_back(favChannel);
@@ -338,6 +341,11 @@ bool Dvb::LoadChannels()
         {
           groupName = strTmp;
           favGroup.strGroupName = groupName;
+#ifdef WIN32
+          AnsiToUtf8(favGroup.strGroupName);
+#else
+          XBMC->UnknownToUTF8(favGroup.strGroupName);
+#endif
           groupsfav.push_back(favGroup);
         }
       }
@@ -1009,6 +1017,25 @@ void Dvb::RemoveNullChars(CStdString &String)
     }
   }
 }
+
+#ifdef WIN32
+void Dvb::AnsiToUtf8(std::string &String)
+{
+  const int iLenW = MultiByteToWideChar(CP_ACP, 0, String.c_str(), -1, 0, 0);
+  wchar_t *wcTmp = new wchar_t[iLenW + 1];
+  memset(wcTmp, 0, sizeof(wchar_t)*(iLenW + 1));
+  if (MultiByteToWideChar(CP_ACP, 0, String.c_str(), -1, wcTmp, iLenW + 1))
+    {
+      const int iLenU = WideCharToMultiByte(CP_UTF8, 0, wcTmp, -1, NULL, 0, 0, FALSE);
+      char *cTmp = new char[iLenU + 1];
+      memset(cTmp, 0, sizeof(char)*(iLenU + 1));
+      WideCharToMultiByte(CP_UTF8, 0, wcTmp, -1, cTmp, iLenU + 1, 0, FALSE);
+      String = cTmp;
+      delete[] cTmp;
+    }
+  delete[] wcTmp;
+}
+#endif
 
 PVR_ERROR Dvb::GetChannelGroups(ADDON_HANDLE handle)
 {

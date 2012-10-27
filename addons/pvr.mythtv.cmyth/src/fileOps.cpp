@@ -316,7 +316,7 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
   unsigned long long totalRead = 0;
   unsigned long long totalWrite = 0;
 
-  const long buffersize = 4096;
+  const long buffersize = 32768;
   char* buffer = new char[buffersize];
 
   while (totalRead < totalLength)

@@ -336,7 +336,7 @@ MythFile MythConnection::ConnectFile(MythProgramInfo &recording)
 MythFile MythConnection::ConnectPath(const CStdString &filename, const CStdString &storageGroup)
 {
   cmyth_file_t file = NULL;
-  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_conn_connect_path(const_cast<char*>(filename.c_str()), *m_conn_t, 64 * 1024, 16 * 1024, const_cast<char*>(storageGroup.c_str())));
+  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_conn_connect_path(const_cast<char*>(filename.c_str()), *m_conn_t, 64 * 1024, 64 * 1024, const_cast<char*>(storageGroup.c_str())));
   return MythFile(file, *this);
 }
 

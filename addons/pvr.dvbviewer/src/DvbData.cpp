@@ -215,7 +215,7 @@ bool Dvb::LoadChannels()
   url.Format("%sapi/getchannelsdat.html", m_strURL.c_str()); 
   CStdString strBIN;
   strBIN = GetHttpXML(url);
-  if (strBIN.size() == 0)
+  if (strBIN.IsEmpty())
   {
     XBMC->Log(LOG_ERROR, "%s Unable to load channels.dat", __FUNCTION__);
     return false;
@@ -232,8 +232,8 @@ bool Dvb::LoadChannels()
   for (int i=0; i<num_channels; i++)
   {
     if (i) channel++;
-    if (channel->Flags & (1 << ADDITIONAL_AUDIO_TRACK_FLAG)) continue;
-    if ((strcmp(channel_group, channel->Category) != 0) && (channel->Flags & (1 << VIDEO_FLAG)))
+    if (channel->Flags & ADDITIONAL_AUDIO_TRACK_FLAG) continue;
+    if ((strcmp(channel_group, channel->Category) != 0) && (channel->Flags & VIDEO_FLAG))
       {
         datGroup.strGroupName = strncpy(channel_group, channel->Category, 25);
 #ifdef WIN32
@@ -248,10 +248,10 @@ bool Dvb::LoadChannels()
 
     /* EPGChannelID = (TunerType + 1)*2^48 + NID*2^32 + TID*2^16 + SID */
     datChannel.llEpgId = ((uint64_t)(channel->TunerType + 1)<<48) + ((uint64_t)channel->OriginalNetwork_ID<<32) + ((uint64_t)channel->TransportStream_ID<<16) + channel->Service_ID;
-    datChannel.Encrypted = channel->Flags & (1 << ENCRYPTED_FLAG);
+    datChannel.Encrypted = channel->Flags & ENCRYPTED_FLAG;
     /* ChannelID = (tunertype + 1) * 536870912 + APID * 65536 + SID */
-    datChannel.iChannelId = (channel->TunerType + 1)*536870912 + channel->Audio_PID*65536 + channel->Service_ID;
-    datChannel.bRadio = (channel->Flags & (1 << VIDEO_FLAG)) == 0;
+    datChannel.iChannelId = ((channel->TunerType + 1) << 29) + (channel->Audio_PID << 16) + channel->Service_ID;
+    datChannel.bRadio = (channel->Flags & VIDEO_FLAG) == 0;
     datChannel.strGroupName = datGroup.strGroupName;
     datChannel.iUniqueId = channelsdat.size()+1;
     datChannel.iChannelNumber = channelsdat.size()+1;
@@ -314,8 +314,8 @@ bool Dvb::LoadChannels()
         uint64_t llFavId;
         if (sscanf(strTmp, "%lld|", &llFavId))
         {
-          int iNamePos = strTmp.find("|");
-          CStdString strName = strTmp.substr(iNamePos + 1);
+          int iChannelNamePos = strTmp.find("|");
+          CStdString strName = strTmp.substr(iChannelNamePos + 1);
           int iChannelId = llFavId & 0xFFFFFFFF;
           if (n == 1)
             groupName = "";

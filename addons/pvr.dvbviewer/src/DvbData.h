@@ -4,6 +4,16 @@
 #include "xmlParser.h"
 #include "client.h"
 #include "platform/threads/threads.h"
+
+#define CHANNELDAT_HEADER_SIZE       (7)
+#define ENCRYPTED_FLAG               (1 << 0)
+#define VIDEO_FLAG                   (1 << 3)
+#define ADDITIONAL_AUDIO_TRACK_FLAG  (1 << 7)
+#define DAY_MINS                     (24 * 60)
+#define DAY_SECS                     (24 * 60 * 60)
+#define DELPHI_DATE                  (25569)
+#define RECORDING_THUMB_POS          (143)
+#define MAX_RECORDING_THUMBS         (20)
     
 struct ChannelsDat
 {
@@ -47,17 +57,6 @@ struct ChannelsDat
   byte Encrypted;
   byte Reserved10;
 };
-
-#define CHANNELDAT_HEADER_SIZE       (7)
-#define ENCRYPTED_FLAG               (0)
-#define VIDEO_FLAG                   (3)
-#define ADDITIONAL_AUDIO_TRACK_FLAG  (7)
-#define DAY_MINS                     (24*60)
-#define DAY_SECS                     (24*60*60)
-#define DELPHI_DATE                  (25569)
-#define RECORDING_THUMB_POS          (143)
-#define MAX_RECORDING_THUMBS         (20)
-
 
 typedef enum DVB_UPDATE_STATE
 {

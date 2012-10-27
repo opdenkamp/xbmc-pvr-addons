@@ -135,12 +135,9 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   DvbData = new Dvb;
   if (!DvbData->Open()) 
   {
-    delete DvbData;
-    delete PVR;
-    delete XBMC;
-    DvbData = NULL;
-    PVR = NULL;
-    XBMC = NULL;
+    SAFE_DELETE(DvbData);
+    SAFE_DELETE(PVR);
+    SAFE_DELETE(XBMC);
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
     return m_CurStatus;
   }
@@ -161,28 +158,9 @@ ADDON_STATUS ADDON_GetStatus()
 
 void ADDON_Destroy()
 {
-  if (m_bCreated)
-  {
-    m_bCreated = false;
-  }
-
-  if (PVR)
-  {
-    delete PVR;
-    PVR = NULL;
-  }
-
-  if (XBMC)
-  {
-    delete XBMC;
-    XBMC = NULL;
-  }
-
-  if (DvbData)
-  {
-    delete DvbData;
-    DvbData = NULL;
-  }
+  SAFE_DELETE(DvbData);
+  SAFE_DELETE(PVR);
+  SAFE_DELETE(XBMC);
 
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }

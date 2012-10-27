@@ -311,11 +311,12 @@ bool Dvb::LoadChannels()
         CStdString strTmp;
         XMLNode xTmp2 = xTmp.getChildNode("entry", j);
         strTmp = xTmp2.getText();
-        uint64_t llEpgId;
-        if (sscanf(strTmp, "%lld|", &llEpgId))
+        uint64_t llFavId;
+        if (sscanf(strTmp, "%lld|", &llFavId))
         {
-          CStdString strName = strTmp.substr(20);
-          int iChannelId = llEpgId & 0xFFFFFFFF;
+          int iNamePos = strTmp.find("|");
+          CStdString strName = strTmp.substr(iNamePos + 1);
+          int iChannelId = llFavId & 0xFFFFFFFF;
           if (n == 1)
             groupName = "";
           for (unsigned int i = 0; i<channelsdat.size(); i++)

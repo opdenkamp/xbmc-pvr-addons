@@ -2,6 +2,7 @@
 
 [added] Don't fetch recording thumbnails at startup if there are more than 20 recordings.
 [fixed] Channel names with utf8 chars weren't displayed properly (a reset of the PVR database may be required).
+[fixed] The add-on crashed if favourites.xml had entries with the old 32 bits ID.
 
 
 0.1.5

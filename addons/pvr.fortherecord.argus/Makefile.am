@@ -32,8 +32,6 @@ libfortherecord_addon_la_SOURCES = src/activerecording.cpp \
                                    src/upcomingrecording.cpp \
                                    src/uri.cpp \
                                    src/utils.cpp \
-                                   src/lib/filesystem/DirectorySMB.cpp \
-                                   src/lib/filesystem/FileSMB.cpp \
                                    src/lib/tsreader/FileReader.cpp \
                                    src/lib/tsreader/MultiFileReader.cpp \
                                    src/lib/tsreader/TSReader.cpp

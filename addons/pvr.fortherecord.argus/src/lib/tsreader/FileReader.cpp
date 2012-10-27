@@ -26,27 +26,31 @@
  *    http://forums.dvbowners.com/
  */
 
-#if defined TSREADER
-
 #include "FileReader.h"
 #include "client.h" //for XBMC->Log
 #include <algorithm> //std::min, std::max
-#include "utils.h"
 #include "platform/util/timeutils.h" // for usleep
 
 using namespace ADDON;
-using namespace PLATFORM;
+
+/* indicate that caller can handle truncated reads, where function returns before entire buffer has been filled */
+#define READ_TRUNCATED 0x01
+
+/* indicate that that caller support read in the minimum defined chunk size, this disables internal cache then */
+#define READ_CHUNKED   0x02
+
+/* use cache to access this file */
+#define READ_CACHED     0x04
+
+/* open without caching. regardless to file type. */
+#define READ_NO_CACHE  0x08
+
+/* calcuate bitrate for file while reading */
+#define READ_BITRATE   0x10
 
 FileReader::FileReader() :
-#if defined(TARGET_WINDOWS)
-  m_hFile(INVALID_HANDLE_VALUE),
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  m_hFile(),
-#else
-#error Implement initialisation of file for your OS
-#endif
+  m_hFile(NULL),
   m_pFileName(0),
-  m_bReadOnly(false),
   m_fileSize(0),
   m_fileStartPos(0),
   m_bDebugOutput(false)
@@ -116,47 +120,16 @@ long FileReader::OpenFile()
 
   do
   {
-#if defined(TARGET_WINDOWS)
-    // do not try to open a tsbuffer file without SHARE_WRITE so skip this try if we have a buffer file
-    CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(m_pFileName);
-    if (strstr(m_pFileName, ".ts.tsbuffer") == NULL) 
+    XBMC->Log(LOG_INFO, "FileReader::OpenFile() %s.", m_pFileName);
+    void* fileHandle = XBMC->OpenFile(m_pFileName, READ_CHUNKED);
+    if (fileHandle)
     {
-      // Try to open the file
-      m_hFile = ::CreateFileW(strWFile,      // The filename
-             (DWORD) GENERIC_READ,             // File access
-             (DWORD) FILE_SHARE_READ,          // Share access
-             NULL,                             // Security
-             (DWORD) OPEN_EXISTING,            // Open flags
-             (DWORD) 0,                        // More flags
-             NULL);                            // Template
-
-      m_bReadOnly = FALSE;
-      if (!IsFileInvalid()) break;
+      m_hFile = fileHandle;
+      break;
     }
 
-    //Test incase file is being recorded to
-    m_hFile = ::CreateFileW(strWFile,         // The filename
-              (DWORD) GENERIC_READ,             // File access
-              (DWORD) (FILE_SHARE_READ |
-              FILE_SHARE_WRITE),                // Share access
-              NULL,                             // Security
-              (DWORD) OPEN_EXISTING,            // Open flags
-//              (DWORD) 0,
-              (DWORD) FILE_ATTRIBUTE_NORMAL,    // More flags
-//              FILE_ATTRIBUTE_NORMAL |
-//              FILE_FLAG_RANDOM_ACCESS,        // More flags
-//              FILE_FLAG_SEQUENTIAL_SCAN,      // More flags
-              NULL);                            // Template
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-    // Try to open the file
-    XBMC->Log(LOG_INFO, "FileReader::OpenFile() %s %s.", m_pFileName, CFile::Exists(m_pFileName) ? "exists" : "not found");
-    m_hFile.Open(m_pFileName, READ_CHUNKED);        // Open in readonly mode with this filename
-#else
-#error FIXME: Add an OpenFile() implementation for your OS
-#endif
-    m_bReadOnly = true;
-    if (!IsFileInvalid()) break;
-
+    // Is this still needed on Windows?
+    //CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(m_pFileName);
     usleep(20000) ;
   }
   while(--Tmo);
@@ -168,25 +141,11 @@ long FileReader::OpenFile()
   }
   else
   {
-#ifdef TARGET_WINDOWS
-    DWORD dwErr = GetLastError();
-    XBMC->Log(LOG_ERROR, "FileReader::OpenFile(), open file %s failed. Error code %d", m_pFileName, dwErr);
-    return HRESULT_FROM_WIN32(dwErr);
-#else
-    XBMC->Log(LOG_ERROR, "FileReader::OpenFile(), open file %s failed. Error %d: %s", m_pFileName, errno, strerror(errno));
+    XBMC->Log(LOG_ERROR, "FileReader::OpenFile(), open file %s failed.", m_pFileName);
     return S_FALSE;
-#endif
   }
 
-#if defined(TARGET_WINDOWS)
-  XBMC->Log(LOG_DEBUG, "FileReader::OpenFile() %s handle %i %s", m_bReadOnly ? "read-only" : "read/write", m_hFile, m_pFileName );
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  XBMC->Log(LOG_DEBUG, "FileReader::OpenFile() %s %s", m_bReadOnly ? "read-only" : "read/write", m_pFileName );
-#else
-#error FIXME: Add an debug log implementation for your OS
-#endif
-
-  //SetFilePointer(0, FILE_BEGIN);
+  XBMC->Log(LOG_DEBUG, "%s: OpenFile(%s) succeeded.", __FUNCTION__, m_pFileName );
 
   return S_OK;
 
@@ -204,18 +163,11 @@ long FileReader::CloseFile()
     return S_OK;
   }
 
-  //XBMC->Log(LOG_DEBUG, "FileReader::CloseFile() handle %i %ws", m_hFile, m_pFileName);
-
-//  BoostThread Boost;
-
-#if defined(TARGET_WINDOWS)
-  ::CloseHandle(m_hFile);
-  m_hFile = INVALID_HANDLE_VALUE; // Invalidate the file
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  m_hFile.Close();
-#else
-#error FIXME: Add a CloseFile() implementation for your OS
-#endif
+  if (m_hFile)
+  {
+    XBMC->CloseFile(m_hFile);
+    m_hFile = NULL;
+  }
 
   return S_OK;
 } // CloseFile
@@ -223,116 +175,35 @@ long FileReader::CloseFile()
 
 inline bool FileReader::IsFileInvalid()
 {
-#if defined(TARGET_WINDOWS)
-  return (m_hFile == INVALID_HANDLE_VALUE);
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  return (m_hFile.IsInvalid());
-#else
-#error FIXME: Add an IsFileInvalid implementation for your OS
-#endif
+  return m_hFile == NULL;
 }
 
-unsigned long FileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
+int64_t FileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
 {
   //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod);
-#if defined(TARGET_WINDOWS)
-  LARGE_INTEGER li, fileposition;
-
-  li.QuadPart = llDistanceToMove;
-
-  if (::SetFilePointerEx(m_hFile, li, &fileposition, dwMoveMethod) == 0)
-  {
-    // Error
-    XBMC->Log(LOG_ERROR, "FileReader::GetFilePointer() ::SetFilePointerEx failed");
-    return -1;
-  }
-  return (unsigned long) fileposition.QuadPart;
-
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  // Stupid but simple movement transform
-  if (dwMoveMethod == FILE_BEGIN) dwMoveMethod = SEEK_SET;
-  else if (dwMoveMethod == FILE_CURRENT) dwMoveMethod = SEEK_CUR;
-  else if (dwMoveMethod == FILE_END) dwMoveMethod = SEEK_END;
-  else
-  {
-    XBMC->Log(LOG_ERROR, "%s: SetFilePointer invalid MoveMethod(%d)", __FUNCTION__, dwMoveMethod);
-    dwMoveMethod = SEEK_SET;
-  }
-  int64_t rc = m_hFile.Seek(llDistanceToMove, dwMoveMethod);
+  int64_t rc = XBMC->SeekFile(m_hFile, llDistanceToMove, dwMoveMethod);
   //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d returns %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod, rc);
   return rc;
-#else
-  //lseek (or fseek for fopen)
-#error FIXME: Add a SetFilePointer() implementation for your OS
-  return 0;
-#endif
 }
 
 
 int64_t FileReader::GetFilePointer()
 {
-#if defined(TARGET_WINDOWS)
-  LARGE_INTEGER li, seekoffset;
-  seekoffset.QuadPart = 0;
-  if (::SetFilePointerEx(m_hFile, seekoffset, &li, FILE_CURRENT) == 0)
-  {
-    // Error
-    XBMC->Log(LOG_ERROR, "FileReader::GetFilePointer() ::SetFilePointerEx failed");
-    return -1;
-  }
-
-  return li.QuadPart;
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  off64_t myOffset;
-  myOffset = m_hFile.Seek(0, SEEK_CUR);
-
-  //XBMC->Log(LOG_DEBUG, "%s: returns %d GetPosition(%d).", __FUNCTION__, myOffset, m_hFile.GetPosition());
-  return myOffset;
-#else
-#error FIXME: Add a GetFilePointer() implementation for your OS
-  return 0;
-#endif
+  return XBMC->GetFilePosition(m_hFile);
 }
+
 
 long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
 {
-  // If the file has already been closed, don't continue
-  if (IsFileInvalid())
-  {
-    XBMC->Log(LOG_ERROR, "FileReader::Read() no open file");
-    return E_FAIL;
-  }
-//  BoostThread Boost;
-
-#ifdef TARGET_WINDOWS
-  long hr = ::ReadFile(m_hFile, (void*)pbData, (DWORD)lDataLength, dwReadBytes, NULL);//Read file data into buffer
-
-  if (!hr)
-  {
-    XBMC->Log(LOG_ERROR, "FileReader::Read() read failed - error = %d",  HRESULT_FROM_WIN32(GetLastError()));
-    return E_FAIL;
-  }
-
-  if (*dwReadBytes < (unsigned long)lDataLength)
-  {
-    XBMC->Log(LOG_DEBUG, "FileReader::Read() read to less bytes");
-    return S_FALSE;
-  }
-  return S_OK;
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  *dwReadBytes = m_hFile.Read((void*)pbData, lDataLength);//Read file data into buffer
+  *dwReadBytes = XBMC->ReadFile(m_hFile, (void*)pbData, lDataLength);//Read file data into buffer
   //XBMC->Log(LOG_DEBUG, "%s: requested read length %d actually read %d.", __FUNCTION__, lDataLength, *dwReadBytes);
 
-  if (*dwReadBytes < (unsigned long)lDataLength)
+  if (*dwReadBytes < lDataLength)
   {
     XBMC->Log(LOG_DEBUG, "FileReader::Read() read too less bytes");
     return S_FALSE;
   }
   return S_OK;
-#else
-#error FIXME: Add a Read() implementation for your OS
-  return S_FALSE;
-#endif
 }
 
 void FileReader::SetDebugOutput(bool bDebugOutput)
@@ -342,29 +213,10 @@ void FileReader::SetDebugOutput(bool bDebugOutput)
 
 int64_t FileReader::GetFileSize()
 {
-#if defined(TARGET_WINDOWS)
-  //Do not get file size if static file or first time 
-  if (m_bReadOnly || !m_fileSize) {
-    LARGE_INTEGER li;
-    if (::GetFileSizeEx(m_hFile, &li) == 0)
-    {
-      // Error
-      XBMC->Log(LOG_ERROR, "FileReader::GetFileSize() ::GetFileSizeEx failed");
-      return -1;
-    }
-    m_fileSize = li.QuadPart;
-  }
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  m_fileSize = m_hFile.GetLength();
-#else
-#error FIXME: Add a GetFileSize() implementation for your OS
-#endif
-  //XBMC->Log(LOG_DEBUG, "%s: returns %d.", __FUNCTION__, m_fileSize);
-  return m_fileSize;
+  return XBMC->GetFileLength(m_hFile);
 }
 
 void FileReader::OnZap(void)
 {
   SetFilePointer(0, FILE_END);
 }
-#endif //TSREADER

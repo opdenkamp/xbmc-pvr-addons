@@ -159,7 +159,7 @@ bool MythRecorder::SpawnLiveTV(MythChannel &channel)
   // Check channel
   *m_liveChainUpdated = 0;
   cmyth_recorder_t recorder = NULL;
-  CMYTH_REC_CALL(recorder, recorder == NULL, cmyth_spawn_live_tv(*m_recorder_t, 64*1024, 16*1024, MythRecorder::prog_update_callback, &pErr, const_cast<char*>(channel.Number().c_str())));
+  CMYTH_REC_CALL(recorder, recorder == NULL, cmyth_spawn_live_tv(*m_recorder_t, 64*1024, 64*1024, MythRecorder::prog_update_callback, &pErr, const_cast<char*>(channel.Number().c_str())));
   *m_recorder_t = recorder;
 
   /* JLB
@@ -283,7 +283,7 @@ bool MythRecorder::LiveTVDoneRecording(const CStdString &msg)
 bool MythRecorder::LiveTVChainUpdate(const CStdString &chainid)
 {
   int retval = 0;
-  CMYTH_REC_CALL(retval, retval < 0, cmyth_livetv_chain_update(*m_recorder_t, const_cast<char*>(chainid.c_str()), 16 * 1024));
+  CMYTH_REC_CALL(retval, retval < 0, cmyth_livetv_chain_update(*m_recorder_t, const_cast<char*>(chainid.c_str())));
   if (retval != 0)
     XBMC->Log(LOG_ERROR,"LiveTVChainUpdate failed on chainID: %s", chainid.c_str());
   *m_liveChainUpdated = 1;

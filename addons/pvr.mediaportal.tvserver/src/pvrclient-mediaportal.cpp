@@ -1168,6 +1168,12 @@ PVR_ERROR cPVRClientMediaPortal::AddTimer(const PVR_TIMER &timerinfo)
   // Although XBMC adds this timer, we still have to trigger XBMC to update its timer list to
   // see this new timer at the XBMC side
   PVR->TriggerTimerUpdate();
+  if ( timerinfo.startTime <= 0)
+  {
+    // Refresh the recordings list to see the newly created recording
+    usleep(1000);
+    PVR->TriggerRecordingUpdate();
+  }
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -1180,17 +1186,19 @@ PVR_ERROR cPVRClientMediaPortal::DeleteTimer(const PVR_TIMER &timer, bool bForce
   if (!IsUp())
     return PVR_ERROR_SERVER_ERROR;
 
-  snprintf(command, 256, "DeleteSchedule:%i\n",timer.iClientIndex);
+  cTimer mepotimer(timer);
 
-  XBMC->Log(LOG_DEBUG, "DeleteTimer: About to delete MediaPortal schedule index=%i", timer.iClientIndex);
+  snprintf(command, 256, "DeleteSchedule:%i\n", mepotimer.Index());
+
+  XBMC->Log(LOG_DEBUG, "DeleteTimer: About to delete MediaPortal schedule index=%i", mepotimer.Index());
   result = SendCommand(command);
 
   if(result.find("True") ==  string::npos)
   {
-    XBMC->Log(LOG_DEBUG, "DeleteTimer %i [failed]", timer.iClientIndex);
+    XBMC->Log(LOG_DEBUG, "DeleteTimer %i [failed]", mepotimer.Index());
     return PVR_ERROR_FAILED;
   }
-  XBMC->Log(LOG_DEBUG, "DeleteTimer %i [done]", timer.iClientIndex);
+  XBMC->Log(LOG_DEBUG, "DeleteTimer %i [done]", mepotimer.Index());
 
   // Although XBMC deletes this timer, we still have to trigger XBMC to update its timer list to
   // remove the timer from the XBMC list

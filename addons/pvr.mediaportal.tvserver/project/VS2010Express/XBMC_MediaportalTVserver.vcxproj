@@ -144,7 +144,6 @@
     <ClInclude Include="..\..\src\FileUtils.h" />
     <ClInclude Include="..\..\src\GenreTable.h" />
     <ClInclude Include="..\..\src\lib\tsreader\FileReader.h" />
-    <ClInclude Include="..\..\src\lib\tsreader\IFile.h" />
     <ClInclude Include="..\..\src\lib\tsreader\MultiFileReader.h" />
     <ClInclude Include="..\..\src\lib\tsreader\TSReader.h" />
     <ClInclude Include="..\..\src\pvrclient-mediaportal.h" />

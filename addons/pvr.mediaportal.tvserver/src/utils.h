@@ -20,6 +20,7 @@
 #include <vector>
 #include <ctime>
 #include "uri.h"
+#include "platform/util//util.h"
 
 #ifdef TARGET_WINDOWS
 #include "platform/util/StdString.h"
@@ -27,10 +28,6 @@
 #endif
 
 using namespace std;
-
-/** Delete macros that make the pointer NULL again */
-#define SAFE_DELETE(p)       do { delete (p);     (p)=NULL; } while (0)
-#define SAFE_DELETE_ARRAY(p) do { delete[] (p);   (p)=NULL; } while (0)
 
 /**
  * String tokenize

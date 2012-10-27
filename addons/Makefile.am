@@ -5,7 +5,8 @@ SUBDIRS = pvr.demo \
           pvr.nextpvr \
           pvr.vdr.vnsi \
           pvr.njoy \
-          pvr.vuplus
+          pvr.vuplus \
+          pvr.fortherecord.argus
 
 clean:
 	-rm -f *.zip

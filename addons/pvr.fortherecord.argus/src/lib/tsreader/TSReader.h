@@ -16,7 +16,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifdef TSREADER
 
 #include "client.h"
 #include "FileReader.h"
@@ -30,7 +29,7 @@ public:
   long Open(const char* pszFileName);
   long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
   void Close();
-  unsigned long SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
+  int64_t SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
   int64_t GetFileSize();
   int64_t GetFilePointer();
   void OnZap(void);
@@ -50,4 +49,3 @@ private:
   LARGE_INTEGER   liCount; 
 #endif
 };
-#endif //TSREADER

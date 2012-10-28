@@ -209,7 +209,6 @@ bool Dvb::LoadChannels()
 {
   ChannelsDat *channel;
   int num_channels, channel_pos = 0;
-  char channel_group[26] = "", channel_name[26] = "";
 
   m_groups.clear();
   m_iNumChannelGroups = 0;
@@ -236,9 +235,10 @@ bool Dvb::LoadChannels()
   {
     if (i) channel++;
     if (channel->Flags & ADDITIONAL_AUDIO_TRACK_FLAG) continue;
+    char channel_group[26] = "";
     if ((strcmp(channel_group, channel->Category) != 0) && (channel->Flags & VIDEO_FLAG))
       {
-        datGroup.strGroupName = strncpy(channel_group, channel->Category, 25);
+        datGroup.strGroupName = strncpy(channel_group, channel->Category, channel->Category_len);
 #ifdef WIN32
         AnsiToUtf8(datGroup.strGroupName);
 #else
@@ -258,7 +258,25 @@ bool Dvb::LoadChannels()
     datChannel.strGroupName = datGroup.strGroupName;
     datChannel.iUniqueId = channelsdat.size()+1;
     datChannel.iChannelNumber = channelsdat.size()+1;
-    datChannel.strChannelName = strncpy(channel_name, channel->ChannelName, 25);
+
+    char channel_name[26] = "";
+    CStdString strChannelName = strncpy(channel_name, channel->ChannelName, channel->ChannelName_len);
+    if (channel->ChannelName_len == 25)
+    {
+      if (channel->Root[channel->Root_len] > 0)
+      {
+        char channel_root[26] = "";
+        CStdString strRoot = strncpy(channel_root, channel->Root, 25);
+        strChannelName.append(strRoot.substr(channel->Root_len + 1, channel->Root[channel->Root_len]));
+        if (channel->Category[channel->Category_len] > 0)
+        {
+          char channel_category[26] = "";
+          CStdString strCategory = strncpy(channel_category, channel->Category, 25);
+          strChannelName.append(strCategory.substr(channel->Category_len + 1, channel->Category[channel->Category_len]));
+        }
+      }
+    }
+    datChannel.strChannelName = strChannelName;
 #ifdef WIN32
     AnsiToUtf8(datChannel.strChannelName);
 #else
@@ -278,7 +296,7 @@ bool Dvb::LoadChannels()
   if (g_bUseFavourites)
   {
     CStdString urlFav = g_strFavouritesPath;
-    if (urlFav.IsEmpty())
+    if (!XBMC->FileExists(urlFav.c_str(), false))
       urlFav.Format("%sapi/getfavourites.html", m_strURL.c_str());
 
     CStdString strXML;
@@ -320,8 +338,6 @@ bool Dvb::LoadChannels()
         uint64_t llFavId;
         if (sscanf(strTmp, "%lld|", &llFavId))
         {
-          int iChannelNamePos = strTmp.find("|");
-          CStdString strName = strTmp.substr(iChannelNamePos + 1);
           int iChannelId = llFavId & 0xFFFFFFFF;
           if (n == 1)
             groupName = "";
@@ -336,7 +352,7 @@ bool Dvb::LoadChannels()
               favChannel.strGroupName = groupName;
               favChannel.iUniqueId = channelsfav.size()+1;
               favChannel.iChannelNumber = channelsfav.size()+1;
-              favChannel.strChannelName = strName;
+              favChannel.strChannelName = channelsdat[i].strChannelName;
               favChannel.strStreamURL = channelsdat[i].strStreamURL;
               favChannel.strIconPath = channelsdat[i].strIconPath;
               channelsfav.push_back(favChannel);
@@ -844,7 +860,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     recording.iDuration = hours*60*60 + mins*60 + secs;
 
     bool bGetThumbnails = true;
-    if (iGetRecordingsCount == 0 && n > MAX_RECORDING_THUMBS - 1)
+    if ((iGetRecordingsCount == 0) && (n > MAX_RECORDING_THUMBS - 1))
       bGetThumbnails = false;
 
     for (unsigned int i=0; i<recthumbs.size(); i++)

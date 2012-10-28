@@ -448,6 +448,8 @@ PVR_ERROR cPVRClientForTheRecord::GetChannels(ADDON_HANDLE handle, bool bRadio)
   Json::Value response;
   int retval = -1;
 
+  if (bRadio && !g_bRadioEnabled) return PVR_ERROR_NO_ERROR;
+
   XBMC->Log(LOG_DEBUG, "%s(%s)", __FUNCTION__, bRadio ? "radio" : "television");
   if (!bRadio)
   {
@@ -537,6 +539,9 @@ PVR_ERROR cPVRClientForTheRecord::GetChannelGroups(ADDON_HANDLE handle, bool bRa
 {
   Json::Value response;
   int retval;
+
+  if (bRadio && !g_bRadioEnabled) return PVR_ERROR_NO_ERROR;
+
   if (!bRadio)
   {
     retval = ForTheRecord::RequestTVChannelGroups(response);

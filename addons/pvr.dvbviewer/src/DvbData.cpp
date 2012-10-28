@@ -782,6 +782,8 @@ PVR_ERROR Dvb::DeleteTimer(const PVR_TIMER &timer)
 PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 {
   m_iNumRecordings = 0;
+  std::vector<DvbRecording> recthumbs;
+  recthumbs = m_recordings;
   m_recordings.clear();
 
   CStdString url;
@@ -844,6 +846,16 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     bool bGetThumbnails = true;
     if (iGetRecordingsCount == 0 && n > MAX_RECORDING_THUMBS - 1)
       bGetThumbnails = false;
+
+    for (unsigned int i=0; i<recthumbs.size(); i++)
+    {
+      if ((recthumbs[i].strRecordingId == recording.strRecordingId) && (recthumbs[i].strThumbnailPath.size() > 20) && (recthumbs[i].strThumbnailPath.size() < 100))
+      {
+        recording.strThumbnailPath = recthumbs[i].strThumbnailPath;
+        bGetThumbnails = false;
+        break;
+      }
+    } 
 
     if (bGetThumbnails)
     {

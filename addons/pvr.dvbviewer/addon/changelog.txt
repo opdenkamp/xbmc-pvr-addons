@@ -1,6 +1,6 @@
 0.1.7
 
-[added] The Recording Service version 1.21 or higher is required. Download the latest version from the DVBViewer members area and install it.
+[added] The Recording Service version 1.21 or higher is now required. Download the latest version from the DVBViewer members area and install it.
 [added] Display a notification if the add-on can't connect to the Recording Service. Please, check that the RS is enabled and the IP, webinterface port, username and pass are correct.
 [added] If the favourites.xml selector is empty, the favourites are loaded from the web interface.
 [added] Don't fetch recording thumbnails at startup if there are more than 20 recordings.

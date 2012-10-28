@@ -693,7 +693,11 @@ void cLiveStreamer::Action(void)
       cTSDemuxer *demuxer = FindStreamDemuxer(ts_pid);
       if (demuxer)
       {
-        demuxer->ProcessTSPacket(buf);
+        if (!demuxer->ProcessTSPacket(buf))
+        {
+          used += TS_SIZE;
+          break;
+        }
       }
       else
         INFOLOG("no muxer found");

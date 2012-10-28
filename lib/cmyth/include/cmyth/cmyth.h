@@ -719,12 +719,6 @@ extern char *cmyth_rec_num_string(cmyth_rec_num_t rn);
  * Timestamp Operations
  * -----------------------------------------------------------------
  */
-extern time_t cmyth_timestamp_tz_diff();
-
-extern time_t cmyth_timestamp_from_tz(time_t t, time_t tz_diff);
-
-extern time_t cmyth_timestamp_to_tz(time_t t, time_t tz_diff);
-
 extern cmyth_timestamp_t cmyth_timestamp_create(void);
 
 extern cmyth_timestamp_t cmyth_timestamp_from_string(char *str);

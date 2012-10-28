@@ -116,7 +116,7 @@ struct cmyth_database {
 	MYSQL * mysql;
 	int db_version; /* JLB: -1 = No set, 0 = unknown else DBSchemaVer */
 	int db_tz_utc; /* JLB: 0 = No conversion, 1 = Enable UTC time zone conversion */
-	time_t db_tz_diff; /* JLB: time zone diff to apply from DB version 1307 */
+	char db_tz_name[64]; /* JLB: db time zone name to convert query projection */
 };	
 
 /* Sergio: Added to clean up channel list handling */
@@ -521,7 +521,7 @@ extern int cmyth_mysql_query_param_int(cmyth_mysql_query_t * query,int param);
 
 extern int cmyth_mysql_query_param_uint(cmyth_mysql_query_t * query,int param);
 
-extern int cmyth_mysql_query_param_unixtime(cmyth_mysql_query_t * query, time_t param);
+extern int cmyth_mysql_query_param_unixtime(cmyth_mysql_query_t * query, time_t param, int tz_utc);
 
 extern int cmyth_mysql_query_param_str(cmyth_mysql_query_t * query, const char *param);
 

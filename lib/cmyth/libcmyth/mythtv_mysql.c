@@ -54,7 +54,6 @@ cmyth_database_close(cmyth_database_t db)
 		db->mysql = NULL;
 		db->db_version = -1;
 		db->db_tz_utc = 0;
-		db->db_tz_diff = 0;
     }
 }
 
@@ -80,7 +79,7 @@ cmyth_database_init(char *host, char *db_name, char *user, char *pass)
 	    rtrn->db_name = ref_strdup(db_name);
 	    rtrn->db_version = -1;
 	    rtrn->db_tz_utc = 0;
-	    rtrn->db_tz_diff = 0;
+	    rtrn->db_tz_name[0] = '\0';
 	}
 
 	return rtrn;
@@ -114,9 +113,11 @@ cmyth_database_setup(cmyth_database_t db)
 		db->db_version = dbversion;
 		if (dbversion >= 1307) {
 			db->db_tz_utc = 1;
+			strcpy(db->db_tz_name,"UTC");
 		}
 		else {
 			db->db_tz_utc = 0;
+			strcpy(db->db_tz_name,"SYSTEM");
 		}
 	}
 
@@ -256,19 +257,6 @@ cmyth_db_get_connection(cmyth_database_t db)
                     __FUNCTION__, mysql_error(db->mysql));
             return NULL;
     }
-    /*
-     * If backend store datetime in UTC zone then compute our time zone diff with UTC to apply
-     * conversion when needing. Before every database call we pass here. So we store the diff
-     * if necessary. Perhaps daylight saving change since previous call or system is now in other
-     * time zone.
-     */
-    if (db->db_tz_utc == 1) {
-            time_t tz_diff;
-            tz_diff = cmyth_timestamp_tz_diff();
-            if (db->db_tz_diff != tz_diff) {
-                    db->db_tz_diff = tz_diff;
-            }
-    }
 
     return db->mysql;
 }
@@ -379,7 +367,7 @@ cmyth_set_watched_status_mysql(cmyth_database_t db, cmyth_proginfo_t prog, int w
 
 	if (cmyth_mysql_query_param_long(query, watchedStat) < 0
 	 || cmyth_mysql_query_param_long(query, prog->proginfo_chanId) < 0
-	 || cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0 ) {
+	 || cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0 ) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
 		return -1;
@@ -519,10 +507,18 @@ cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_program_t **prog)
 	MYSQL_ROW row;
 	int n=0;
 	int rows=0;
-	const char *query_str = "SELECT oldrecorded.chanid, UNIX_TIMESTAMP(starttime), UNIX_TIMESTAMP(endtime), title, subtitle, description, category, seriesid, programid, channel.channum, channel.callsign, channel.name, findid, rectype, recstatus, recordid, duplicate FROM oldrecorded LEFT JOIN channel ON oldrecorded.chanid = channel.chanid ORDER BY starttime ASC";
+	const char *query_str = "SELECT oldrecorded.chanid, UNIX_TIMESTAMP(CONVERT_TZ(starttime, ?, 'SYSTEM')), UNIX_TIMESTAMP(CONVERT_TZ(endtime, ?, 'SYSTEM')), title, subtitle, description, category, seriesid, programid, channel.channum, channel.callsign, channel.name, findid, rectype, recstatus, recordid, duplicate FROM oldrecorded LEFT JOIN channel ON oldrecorded.chanid = channel.chanid ORDER BY starttime ASC";
 	cmyth_mysql_query_t *query;
 	query = cmyth_mysql_query_create(db, query_str);
 
+	if(cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+	 || cmyth_mysql_query_param_str(query, db->db_tz_name) < 0)
+	{
+		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(query);
+		ref_release(prog);
+		return -1;
+	}
 	res = cmyth_mysql_query_result(query);
 	ref_release(query);
 	if (res == NULL)
@@ -538,7 +534,7 @@ cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_program_t **prog)
                	}
 		(*prog)[rows].chanid = safe_atoi(row[0]);
                	(*prog)[rows].recording=0;
-		(*prog)[rows].starttime=cmyth_timestamp_to_tz((time_t)safe_atol(row[1]),db->db_tz_diff);
+		(*prog)[rows].starttime=(time_t)safe_atol(row[1]);
 		(*prog)[rows].endtime= (time_t)safe_atol(row[2]);
 		sizeof_strncpy((*prog)[rows].title, row[3]);
 		sizeof_strncpy((*prog)[rows].subtitle, row[4]);
@@ -564,7 +560,7 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, time_t startt
 {
 	MYSQL_RES *res= NULL;
 	MYSQL_ROW row;
-	const char *query_str = "SELECT program.chanid, UNIX_TIMESTAMP(program.starttime), UNIX_TIMESTAMP(program.endtime), "
+	const char *query_str = "SELECT program.chanid, UNIX_TIMESTAMP(CONVERT_TZ(program.starttime, ?, 'SYSTEM')), UNIX_TIMESTAMP(CONVERT_TZ(program.endtime, ?, 'SYSTEM')), "
 		"program.title, program.description, program.subtitle, program.programid, program.seriesid, program.category, "
 		"channel.channum, channel.callsign, channel.name, channel.sourceid "
 		"FROM program INNER JOIN channel ON program.chanid=channel.chanid "
@@ -575,12 +571,14 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, time_t startt
 	cmyth_mysql_query_t * query;
 	query = cmyth_mysql_query_create(db,query_str);
 
-	if(cmyth_mysql_query_param_unixtime(query,cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
-	    || cmyth_mysql_query_param_unixtime(query,cmyth_timestamp_from_tz(endtime,db->db_tz_diff)) < 0
-	    || cmyth_mysql_query_param_unixtime(query,cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
-	    || cmyth_mysql_query_param_unixtime(query,cmyth_timestamp_from_tz(endtime,db->db_tz_diff)) < 0
-	    || cmyth_mysql_query_param_unixtime(query,cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
-	    || cmyth_mysql_query_param_unixtime(query,cmyth_timestamp_from_tz(endtime,db->db_tz_diff)) < 0)
+	if(cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+	    || cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+	    || cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
+	    || cmyth_mysql_query_param_unixtime(query, endtime, db->db_tz_utc) < 0
+	    || cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
+	    || cmyth_mysql_query_param_unixtime(query, endtime, db->db_tz_utc) < 0
+	    || cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
+	    || cmyth_mysql_query_param_unixtime(query, endtime, db->db_tz_utc) < 0)
 	{
 	    cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 	    ref_release(query);
@@ -602,8 +600,8 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, time_t startt
                	}
 		(*prog)[rows].chanid = safe_atoi(row[0]);
                	(*prog)[rows].recording=0;
-		(*prog)[rows].starttime= cmyth_timestamp_to_tz((time_t)safe_atol(row[1]),db->db_tz_diff);
-		(*prog)[rows].endtime= cmyth_timestamp_to_tz((time_t)safe_atol(row[2]),db->db_tz_diff);
+		(*prog)[rows].starttime= (time_t)safe_atol(row[1]);
+		(*prog)[rows].endtime= (time_t)safe_atol(row[2]);
 		sizeof_strncpy((*prog)[rows].title, row[3]);
 		sizeof_strncpy((*prog)[rows].description, row[4]);
 		sizeof_strncpy((*prog)[rows].subtitle, row[5]);
@@ -673,7 +671,7 @@ cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **pr
 	{
 		query_str = "SELECT DISTINCT title FROM program WHERE ( title NOT REGEXP '^[A-Z0-9]' AND title NOT REGEXP '^The [A-Z0-9]' AND title NOT REGEXP '^A [A-Z0-9]' AND starttime >= ?) ORDER BY title";
 		query = cmyth_mysql_query_create(db, query_str);
-		if(cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0)
+		if(cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0)
 		{
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 			ref_release(query);
@@ -688,7 +686,7 @@ cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **pr
 		sprintf(N_title,"%%%s%%", program_name);
 		esctitle = cmyth_mysql_escape_chars(db, N_title);
 		ref_release(N_title);
-		if(cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
+		if(cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
 		    || cmyth_mysql_query_param_str(query, esctitle) < 0)
 		{
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
@@ -727,14 +725,16 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  t
 	MYSQL_RES *res=NULL;
 	MYSQL_ROW row;
 	char *esctitle;
-	const char *query_str = "SELECT program.chanid, UNIX_TIMESTAMP(program.starttime), UNIX_TIMESTAMP(program.endtime), program.title, program.description, program.subtitle, program.programid, program.seriesid, program.category, channel.channum, channel.callsign, channel.name, channel.sourceid FROM program LEFT JOIN channel on program.chanid=channel.chanid WHERE starttime >= ? and title = ? ORDER BY starttime ASC";
+	const char *query_str = "SELECT program.chanid, UNIX_TIMESTAMP(CONVERT_TZ(program.starttime,?,'SYSTEM')), UNIX_TIMESTAMP(CONVERT_TZ(program.endtime,?,'SYSTEM')), program.title, program.description, program.subtitle, program.programid, program.seriesid, program.category, channel.channum, channel.callsign, channel.name, channel.sourceid FROM program LEFT JOIN channel on program.chanid=channel.chanid WHERE starttime >= ? and title = ? ORDER BY starttime ASC";
 	int rows=0;
 	int n = 0;
 	cmyth_mysql_query_t *query;
 	query = cmyth_mysql_query_create(db, query_str);
 
 	esctitle = cmyth_mysql_escape_chars(db, program_name);
-	if(cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
+	if(cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+	    || cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+	    || cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
 	    || cmyth_mysql_query_param_str(query, esctitle) < 0)
 	{
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
@@ -758,8 +758,8 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  t
                	}
 			(*prog)[rows].chanid = atoi(row[0]);
 			(*prog)[rows].recording=0;
-			(*prog)[rows].starttime = cmyth_timestamp_to_tz(atoi(row[1]),db->db_tz_diff);
-			(*prog)[rows].endtime = cmyth_timestamp_to_tz(atoi(row[2]),db->db_tz_diff);
+			(*prog)[rows].starttime = atoi(row[1]);
+			(*prog)[rows].endtime = atoi(row[2]);
 			sizeof_strncpy ((*prog)[rows].title, row[3]);
 			sizeof_strncpy ((*prog)[rows].description, row[4]);
 			sizeof_strncpy ((*prog)[rows].subtitle, row[5]);
@@ -806,7 +806,7 @@ cmyth_update_bookmark_setting(cmyth_database_t db, cmyth_proginfo_t prog)
 	starttime = cmyth_timestamp_to_unixtime(prog->proginfo_rec_start_ts);
 	query = cmyth_mysql_query_create(db,query_str);
 	if (cmyth_mysql_query_param_long(query, prog->proginfo_chanId) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0 ) {
+		|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0 ) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
 		return -1;
@@ -837,8 +837,7 @@ cmyth_get_bookmark_mark(cmyth_database_t db, cmyth_proginfo_t prog, long long bk
 
 	if (cmyth_mysql_query_param_long(query, prog->proginfo_chanId) < 0
 		|| cmyth_mysql_query_param_int64(query, (int64_t)bk) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(start_ts_dt,db->db_tz_diff)) < 0
-		) {
+		|| cmyth_mysql_query_param_unixtime(query, start_ts_dt, db->db_tz_utc) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
 		return -1;
@@ -878,13 +877,13 @@ cmyth_get_bookmark_offset(cmyth_database_t db, long chanid, long long mark, time
 	int rectype = 0;
 	cmyth_mysql_query_t * query;
 	
-	const char *query_str = "SELECT * FROM recordedseek WHERE chanid = ? AND mark<= ? AND starttime = ? ORDER BY MARK DESC LIMIT 1;";
+	const char *query_str = "SELECT chanid, UNIX_TIMESTAMP(CONVERT_TZ(starttime,?,'SYSTEM')), mark, offset, type FROM recordedseek WHERE chanid = ? AND mark<= ? AND starttime = ? ORDER BY MARK DESC LIMIT 1;";
 
 	query = cmyth_mysql_query_create(db,query_str);
-	if (cmyth_mysql_query_param_long(query, chanid) < 0
+	if (cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+		|| cmyth_mysql_query_param_long(query, chanid) < 0
 		|| cmyth_mysql_query_param_int64(query, (int64_t)mark) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
-		) {
+		|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
 		return -1;
@@ -908,10 +907,10 @@ cmyth_get_bookmark_offset(cmyth_database_t db, long chanid, long long mark, time
 			mark=(mark/12)+1;
 		}
 		query = cmyth_mysql_query_create(db, query_str);
-		if (cmyth_mysql_query_param_long(query, chanid) < 0
+		if (cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+			|| cmyth_mysql_query_param_long(query, chanid) < 0
 			|| cmyth_mysql_query_param_int64(query, (int64_t)mark) < 0
-			|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
-			) {
+			|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 			ref_release(query);
 			return -1;
@@ -940,9 +939,8 @@ cmyth_mysql_query_commbreak_count(cmyth_database_t db, int chanid, time_t start_
 	query_str = "SELECT * FROM recordedmarkup WHERE chanid = ? AND starttime = ? AND TYPE IN ( 4 )";
 
 	query = cmyth_mysql_query_create(db,query_str);
-	if ((cmyth_mysql_query_param_int(query, chanid) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(start_ts_dt,db->db_tz_diff)) < 0
-		)) {
+	if (cmyth_mysql_query_param_int(query, chanid) < 0
+		|| cmyth_mysql_query_param_unixtime(query, start_ts_dt, db->db_tz_utc) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
 		return -1;
@@ -985,7 +983,7 @@ cmyth_mysql_get_commbreak_list(cmyth_database_t db, int chanid, time_t start_ts_
 
 	if ((conn_version >= 43) && ( 
 		cmyth_mysql_query_param_int(query, chanid) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(start_ts_dt,db->db_tz_diff)) < 0
+		|| cmyth_mysql_query_param_unixtime(query, start_ts_dt, db->db_tz_utc) < 0
 		|| cmyth_mysql_query_param_int(query, CMYTH_COMMBREAK_START) < 0
 		|| cmyth_mysql_query_param_int(query, CMYTH_COMMBREAK_END) < 0
 		|| cmyth_mysql_query_param_int(query, resolution) < 0
@@ -998,7 +996,7 @@ cmyth_mysql_get_commbreak_list(cmyth_database_t db, int chanid, time_t start_ts_
 
 	if ((conn_version < 43) && (
 		cmyth_mysql_query_param_int(query, chanid) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(start_ts_dt,db->db_tz_diff)) < 0
+		|| cmyth_mysql_query_param_unixtime(query, start_ts_dt, db->db_tz_utc) < 0
 		|| cmyth_mysql_query_param_int(query, CMYTH_COMMBREAK_START) < 0
 		|| cmyth_mysql_query_param_int(query, CMYTH_COMMBREAK_END) < 0
 		)) {
@@ -1485,7 +1483,7 @@ int cmyth_livetv_keep_recording(cmyth_recorder_t rec, cmyth_database_t db, int k
 	if(cmyth_mysql_query_param_long(query,autoexpire) < 0
 	 || cmyth_mysql_query_param_str(query,recgroup) < 0
 	 || cmyth_mysql_query_param_long(query,prog->proginfo_chanId) < 0
-	 || cmyth_mysql_query_param_unixtime(query,cmyth_timestamp_from_tz(timestamp,db->db_tz_diff)) < 0)
+	 || cmyth_mysql_query_param_unixtime(query, timestamp, db->db_tz_utc) < 0)
 	{
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
@@ -1650,7 +1648,7 @@ cmyth_mysql_get_timers(cmyth_database_t db)
 {
 	MYSQL_RES *res= NULL;
 	MYSQL_ROW row;
-	const char *query_str = "SELECT recordid, chanid, UNIX_TIMESTAMP(ADDTIME(startdate,starttime)), UNIX_TIMESTAMP(ADDTIME(enddate,endtime)),title,description, type, category, subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | (autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder FROM record ORDER BY recordid";
+	const char *query_str = "SELECT recordid, chanid, UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(startdate,starttime),?,'SYSTEM')), UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(enddate,endtime),?,'SYSTEM')),title,description, type, category, subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | (autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder FROM record ORDER BY recordid";
 	int rows=0;
   cmyth_timer_t timer;
 	cmyth_timerlist_t timerlist;
@@ -1681,8 +1679,8 @@ cmyth_mysql_get_timers(cmyth_database_t db)
 		timer = cmyth_timer_create();
 		timer->recordid = safe_atol(row[0]);
 		timer->chanid = safe_atoi(row[1]);
-		timer->starttime = cmyth_timestamp_to_tz((time_t)safe_atol(row[2]),db->db_tz_diff);
-		timer->endtime = cmyth_timestamp_to_tz((time_t)safe_atol(row[3]),db->db_tz_diff);
+		timer->starttime = (time_t)safe_atol(row[2]);
+		timer->endtime = (time_t)safe_atol(row[3]);
 		timer->title = ref_strdup(row[4]);
 		timer->description = ref_strdup(row[5]);
 		timer->type = safe_atoi(row[6]);
@@ -1750,15 +1748,15 @@ cmyth_mysql_add_timer(cmyth_database_t db, int chanid,char* callsign, char* desc
 	query = cmyth_mysql_query_create(db,query_str);
 	if ( cmyth_mysql_query_param_long(query, type) < 0
 		|| cmyth_mysql_query_param_long(query, chanid) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(endtime,db->db_tz_diff)) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(endtime,db->db_tz_diff)) < 0
+		|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
+		|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
+		|| cmyth_mysql_query_param_unixtime(query, endtime, db->db_tz_utc) < 0
+		|| cmyth_mysql_query_param_unixtime(query, endtime, db->db_tz_utc) < 0
 		|| cmyth_mysql_query_param_str(query, title ) < 0
 		|| cmyth_mysql_query_param_str(query, description ) < 0
 		|| cmyth_mysql_query_param_str(query, category ) < 0
-		|| cmyth_mysql_query_param_unixtime(query, starttime) < 0
-		|| cmyth_mysql_query_param_unixtime(query, starttime) < 0
+		|| cmyth_mysql_query_param_unixtime(query, starttime, 0) < 0
+		|| cmyth_mysql_query_param_unixtime(query, starttime, 0) < 0
 		|| cmyth_mysql_query_param_str(query, callsign ) < 0
 		|| cmyth_mysql_query_param_str(query, subtitle ) < 0
 		|| cmyth_mysql_query_param_long(query, priority ) < 0
@@ -1874,10 +1872,10 @@ cmyth_mysql_update_timer(cmyth_database_t db, int recordid, int chanid, char* ca
 	query = cmyth_mysql_query_create(db,query_str);
 	if ( cmyth_mysql_query_param_long(query, type) < 0
 		|| cmyth_mysql_query_param_long(query, chanid) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(endtime,db->db_tz_diff)) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(endtime,db->db_tz_diff)) < 0
+		|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
+		|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
+		|| cmyth_mysql_query_param_unixtime(query, endtime, db->db_tz_utc) < 0
+		|| cmyth_mysql_query_param_unixtime(query, endtime, db->db_tz_utc) < 0
 		|| cmyth_mysql_query_param_str(query, title ) < 0
 		|| cmyth_mysql_query_param_str(query, description ) < 0
 		|| cmyth_mysql_query_param_str(query, category ) < 0
@@ -2323,7 +2321,7 @@ int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_progr
 {
 	MYSQL_RES *res= NULL;
 	MYSQL_ROW row;
-	const char *query_str = "SELECT program.chanid,UNIX_TIMESTAMP(program.starttime),UNIX_TIMESTAMP(program.endtime),program.title,program.description,program.subtitle,program.programid,program.seriesid,program.category,channel.channum,channel.callsign,channel.name,channel.sourceid FROM program INNER JOIN channel ON program.chanid=channel.chanid WHERE program.chanid = ? AND program.title LIKE ? AND program.starttime = ? AND program.manualid = 0 ORDER BY (channel.channum + 0), program.starttime ASC ";
+	const char *query_str = "SELECT program.chanid,UNIX_TIMESTAMP(CONVERT_TZ(program.starttime,?,'SYSTEM')),UNIX_TIMESTAMP(CONVERT_TZ(program.endtime,?,'SYSTEM')),program.title,program.description,program.subtitle,program.programid,program.seriesid,program.category,channel.channum,channel.callsign,channel.name,channel.sourceid FROM program INNER JOIN channel ON program.chanid=channel.chanid WHERE program.chanid = ? AND program.title LIKE ? AND program.starttime = ? AND program.manualid = 0 ORDER BY (channel.channum + 0), program.starttime ASC ";
 	int rows=0;
 
 	char* esctitle=cmyth_mysql_escape_chars(db,title);
@@ -2331,9 +2329,11 @@ int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_progr
 	cmyth_mysql_query_t * query;
 	query = cmyth_mysql_query_create(db,query_str);
 
-	if ( cmyth_mysql_query_param_long(query, chanid) < 0
+	if (cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+		|| cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+		|| cmyth_mysql_query_param_long(query, chanid) < 0
 		|| cmyth_mysql_query_param_str(query, esctitle ) < 0
-		|| cmyth_mysql_query_param_unixtime(query, cmyth_timestamp_from_tz(starttime,db->db_tz_diff)) < 0
+		|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
 		) {
 		cmyth_dbg(CMYTH_DBG_ERROR,"%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
@@ -2355,8 +2355,8 @@ int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_progr
 		if(prog) {
 			prog->chanid = safe_atoi(row[0]);
 			prog->recording=0;
-			prog->starttime= cmyth_timestamp_to_tz((time_t)safe_atol(row[1]),db->db_tz_diff);
-			prog->endtime= cmyth_timestamp_to_tz((time_t)safe_atol(row[2]),db->db_tz_diff);
+			prog->starttime= (time_t)safe_atol(row[1]);
+			prog->endtime= (time_t)safe_atol(row[2]);
 			sizeof_strncpy(prog->title, row[3]);
 			sizeof_strncpy(prog->description, row[4]);
 			sizeof_strncpy(prog->subtitle, row[5]);

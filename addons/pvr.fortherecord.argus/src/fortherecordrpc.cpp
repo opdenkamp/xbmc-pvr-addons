@@ -866,6 +866,41 @@ namespace ForTheRecord
     return retval;
   }
 
+  int GetRecordingLastWatchedPosition(const std::string& recordingfilename, Json::Value& response)
+  {
+    XBMC->Log(LOG_DEBUG, "GetRecordingLastWatchedPosition(\"%s\",...)", recordingfilename.c_str());
+
+    std::string command = "ForTheRecord/Control/RecordingLastWatchedPosition";
+    std::string arguments = recordingfilename;
+
+    int retval = ForTheRecord::ForTheRecordJSONRPC(command, arguments, response);
+    if (retval == E_EMPTYRESPONSE) retval = 0;
+    if (retval < 0)
+    {
+      XBMC->Log(LOG_DEBUG, "GetRecordingLastWatchedPosition failed. Return value: %i\n", retval);
+    }
+    return retval;
+  }
+
+  int SetRecordingLastWatchedPosition(const std::string& recordingfilename, int lastwatchedposition)
+  {
+    std::string response;
+    char tmp[512];
+
+    XBMC->Log(LOG_DEBUG, "SetRecordingLastWatchedPosition(\"%s\", %d)", recordingfilename.c_str(), lastwatchedposition);
+
+    snprintf(tmp, 512, "{\"LastWatchedPositionSeconds\":%d, \"RecordingFileName\":%s}", lastwatchedposition, recordingfilename.c_str());
+    std::string arguments = tmp;
+    std::string command = "ForTheRecord/Control/SetRecordingLastWatchedPosition";
+
+    int retval = ForTheRecord::ForTheRecordRPC(command, arguments, response);
+    if (retval < 0)
+    {
+      XBMC->Log(LOG_DEBUG, "SetRecordingLastWatchedPosition failed. Return value: %i\n", retval);
+    }
+    return retval;
+  }
+
   int GetScheduleById(const std::string& id, Json::Value& response)
   {
     int retval = E_FAILED;
@@ -1321,6 +1356,57 @@ namespace ForTheRecord
     }
     return wcfdate;
   }
+
+  // transform [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
+  // into      [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
+  std::string ToCIFS(std::string& UNCName)
+  {
+    std::string CIFSname = UNCName;
+    std::string SMBPrefix = "smb://";
+    if (g_szUser.length() > 0)
+    {
+      SMBPrefix += g_szUser;
+      if (g_szPass.length() > 0)
+      {
+        SMBPrefix += ":" + g_szPass;
+      }
+    }
+    else
+    {
+      SMBPrefix += "Guest";
+    }
+    SMBPrefix += "@";
+    size_t found;
+    while ((found = CIFSname.find("\\")) != std::string::npos)
+    {
+      CIFSname.replace(found, 1, "/");
+    }
+    CIFSname.erase(0,2);
+    CIFSname.insert(0, SMBPrefix);
+    return CIFSname;
+  }
+
+
+  // transform [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
+  // into      [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
+  std::string ToUNC(std::string& CIFSName)
+  {
+    std::string UNCname = CIFSName;
+
+    UNCname.erase(0,6);
+    size_t found = UNCname.find("@");
+    if (found != std::string::npos) {
+      UNCname.erase(0, found+1);
+    }
+
+    while ((found = UNCname.find("/")) != std::string::npos)
+    {
+      UNCname.replace(found, 1, "\\");
+    }
+    UNCname.insert(0, "\\\\");
+    return UNCname;
+  }
+
 }
 
    

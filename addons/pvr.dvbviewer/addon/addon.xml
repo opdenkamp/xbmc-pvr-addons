@@ -12,7 +12,8 @@
     library_linux="XBMC_dvbviewer.pvr"
     library_osx="XBMC_dvbviewer.pvr"
     library_wingl="XBMC_dvbviewer_win32.pvr"
-    library_windx="XBMC_dvbviewer_win32.pvr"/>
+    library_windx="XBMC_dvbviewer_win32.pvr"
+    library_android="libXBMC_dvbviewer.so"/>
   <extension point="xbmc.addon.metadata">
     <summary>XBMC's frontend for DVBViewer</summary>
     <description>DVBViewer Recording Service frontend; supporting streaming of LiveTV, Timers, Recordings &amp; EPG. For parsing the XML output from the RS webinterface it uses the xmlParser library developed by Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Many thanks for this!

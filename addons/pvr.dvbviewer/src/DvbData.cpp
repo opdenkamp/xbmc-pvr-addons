@@ -278,6 +278,9 @@ bool Dvb::LoadChannels()
   if (g_bUseFavourites)
   {
     CStdString urlFav = g_strFavouritesPath;
+    if (urlFav.IsEmpty())
+      urlFav.Format("%sapi/getfavourites.html", m_strURL.c_str());
+
     CStdString strXML;
     strXML = GetHttpXML(urlFav);
 

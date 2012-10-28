@@ -110,25 +110,6 @@ Dvb::Dvb()
   strURLStream.Format("http://%s%s:%u/", strURLStream.c_str(), g_strHostname.c_str(), g_iPortStream);
   m_strURLStream = strURLStream.c_str();
 
-  m_strEPGLanguage = GetPreferredLanguage();
-
-  CStdString url; 
-  url.Format("%s%s", m_strURL.c_str(), "api/status.html"); 
-
-  CStdString strXML;
-  strXML = GetHttpXML(url);
-
-  XMLResults xe;
-  XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
-  
-  if(xe.error != 0)  {
-    XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
-  }
-  else {
-    XMLNode xNode = xMainNode.getChildNode("status");
-    GetInt(xNode, "timezone", m_iTimezone);
-  }
-  
   m_iNumRecordings = 0;
   m_iNumChannelGroups = 0;
   m_iCurrentChannel = -1;
@@ -150,8 +131,30 @@ bool Dvb::Open()
   
   m_bIsConnected = GetDeviceInfo();
 
+  if (!m_bIsConnected)
+    return false;
+
   if (!LoadChannels())
     return false;
+
+  m_strEPGLanguage = GetPreferredLanguage();
+
+  CStdString url; 
+  url.Format("%s%s", m_strURL.c_str(), "api/status.html"); 
+
+  CStdString strXML;
+  strXML = GetHttpXML(url);
+
+  XMLResults xe;
+  XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
+  
+  if(xe.error != 0)  {
+    XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
+  }
+  else {
+    XMLNode xNode = xMainNode.getChildNode("status");
+    GetInt(xNode, "timezone", m_iTimezone);
+  }
 
   TimerUpdates();
 
@@ -1129,8 +1132,11 @@ bool Dvb::GetDeviceInfo()
   XMLResults xe;
   XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
   
-  if(xe.error != 0)  {
-    XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
+  if(xe.error != 0)
+  {
+    XBMC->Log(LOG_ERROR, "%s Can't connect to the Recording Service", __FUNCTION__);
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30500));
+    Sleep(10000);
     return false;
   }
 
@@ -1146,6 +1152,14 @@ bool Dvb::GetDeviceInfo()
     return false;
   }
   m_strDVBViewerVersion = xNode.getText();
+  CStdString strVersion = m_strDVBViewerVersion.substr(30, 2);
+  if (atoi(strVersion) < RS_MIN_VERSION)
+  {
+    XBMC->Log(LOG_ERROR, "%s - Recording Service version 1.%d or higher required", __FUNCTION__, RS_MIN_VERSION);
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30501), RS_MIN_VERSION);
+    Sleep(10000);
+    return false;
+  }
   XBMC->Log(LOG_NOTICE, "%s - Version: %s", __FUNCTION__, m_strDVBViewerVersion.c_str());
 
   return true;

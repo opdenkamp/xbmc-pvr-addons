@@ -11,6 +11,6 @@
     <string id="30007">Select the favourites.xml file</string>
 
     <!-- notifications -->
-    <string id="30500">Disconnected from '%s'</string>
-    <string id="30501">Reconnected to '%s'</string>
+    <string id="30500">Can't connect to the Recording Service</string>
+    <string id="30501">Recording Service version 1.%d or higher required</string>
 </strings>

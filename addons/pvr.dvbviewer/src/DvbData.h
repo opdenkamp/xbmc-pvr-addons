@@ -14,6 +14,7 @@
 #define DELPHI_DATE                  (25569)
 #define RECORDING_THUMB_POS          (143)
 #define MAX_RECORDING_THUMBS         (20)
+#define RS_MIN_VERSION               (21)
     
 struct ChannelsDat
 {

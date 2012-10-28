@@ -824,6 +824,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
  
   int iNumRecording = 0;
   static int iGetRecordingsCount = 0;
+  int j = n;
 
   while(n>0)
   {
@@ -860,7 +861,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     recording.iDuration = hours*60*60 + mins*60 + secs;
 
     bool bGetThumbnails = true;
-    if ((iGetRecordingsCount == 0) && (n > MAX_RECORDING_THUMBS - 1))
+    if ((iGetRecordingsCount == 0) && (j > MAX_RECORDING_THUMBS - 1))
       bGetThumbnails = false;
 
     for (unsigned int i=0; i<recthumbs.size(); i++)

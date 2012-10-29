@@ -621,11 +621,8 @@ namespace ForTheRecord
           XBMC->Log(LOG_DEBUG, "No LiveStream received from server.");
           return E_FAILED;
         }
-#ifdef TSREADER
         stream = g_current_livestream["TimeshiftFile"].asString();
-#else
-        stream = g_current_livestream["RtspUrl"].asString();
-#endif
+        //stream = g_current_livestream["RtspUrl"].asString();
         XBMC->Log(LOG_DEBUG, "Tuned live stream: %s\n", stream.c_str());
         return E_SUCCESS;
       }

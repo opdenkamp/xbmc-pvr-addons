@@ -30,9 +30,7 @@
 
 #include "KeepAliveThread.h"
 
-#ifdef TSREADER
 class CTsReader;
-#endif
 
 #undef FTR_DUMPTS
 

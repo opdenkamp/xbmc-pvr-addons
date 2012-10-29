@@ -1624,9 +1624,7 @@ void cPVRClientForTheRecord::PauseStream(bool bPaused)
 
 bool cPVRClientForTheRecord::CanPauseAndSeek()
 {
-#ifdef TSREADER
   if (m_tsreader)
     return true;
-#endif
   return false;
 }

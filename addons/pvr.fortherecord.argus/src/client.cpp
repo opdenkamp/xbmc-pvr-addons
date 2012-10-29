@@ -83,11 +83,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
-#ifdef TSREADER
-  XBMC->Log(LOG_INFO, "Creating the ForTheRecord PVR-client (TsReader version)");
-#else
-  XBMC->Log(LOG_INFO, "Creating the ForTheRecord PVR-client (ffmpeg rtsp version)");
-#endif
+  XBMC->Log(LOG_INFO, "Creating the ForTheRecord PVR-client");
 
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
   g_client       = new cPVRClientForTheRecord();

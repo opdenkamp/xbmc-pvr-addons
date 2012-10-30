@@ -327,6 +327,7 @@ PVR_ERROR cPVRClientForTheRecord::GetDriveSpace(long long *iTotal, long long *iU
 
 PVR_ERROR cPVRClientForTheRecord::GetBackendTime(time_t *localTime, int *gmtOffset)
 {
+  NOTUSED(localTime); NOTUSED(gmtOffset);
   return PVR_ERROR_SERVER_ERROR;
 }
 
@@ -349,7 +350,7 @@ PVR_ERROR cPVRClientForTheRecord::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL 
     Json::Value response;
     int retval;
 
-    retval = ForTheRecord::GetEPGData(m_iBackendVersion, ftrchannel->GuideChannelID(), tm_start, tm_end, response);
+    retval = ForTheRecord::GetEPGData(ftrchannel->GuideChannelID(), tm_start, tm_end, response);
 
     if (retval != E_FAILED)
     {
@@ -803,6 +804,7 @@ PVR_ERROR cPVRClientForTheRecord::DeleteRecording(const PVR_RECORDING &recinfo)
 
 PVR_ERROR cPVRClientForTheRecord::RenameRecording(const PVR_RECORDING &recinfo)
 {
+  NOTUSED(recinfo);
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -971,6 +973,7 @@ PVR_ERROR cPVRClientForTheRecord::GetTimers(ADDON_HANDLE handle)
 
 PVR_ERROR cPVRClientForTheRecord::GetTimerInfo(unsigned int timernumber, PVR_TIMER &tag)
 {
+  NOTUSED(timernumber); NOTUSED(tag);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -1028,6 +1031,7 @@ PVR_ERROR cPVRClientForTheRecord::AddTimer(const PVR_TIMER &timerinfo)
 
 PVR_ERROR cPVRClientForTheRecord::DeleteTimer(const PVR_TIMER &timerinfo, bool force)
 {
+  NOTUSED(force);
   Json::Value upcomingProgramsResponse, activeRecordingsResponse;
 
   XBMC->Log(LOG_DEBUG, "DeleteTimer()");
@@ -1133,6 +1137,7 @@ PVR_ERROR cPVRClientForTheRecord::DeleteTimer(const PVR_TIMER &timerinfo, bool f
 
 PVR_ERROR cPVRClientForTheRecord::UpdateTimer(const PVR_TIMER &timerinfo)
 {
+  NOTUSED(timerinfo);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -1619,6 +1624,7 @@ const char* cPVRClientForTheRecord::GetLiveStreamURL(const PVR_CHANNEL &channeli
 
 void cPVRClientForTheRecord::PauseStream(bool bPaused)
 {
+  NOTUSED(bPaused);
   //TODO: add m_tsreader->Pause() her when adding RTSP streaming support
 }
 

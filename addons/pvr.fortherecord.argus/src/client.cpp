@@ -216,6 +216,7 @@ bool ADDON_HasSettings()
 
 unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet)
 {
+  NOTUSED(sSet);
   return 0;
 }
 
@@ -331,6 +332,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
 
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES *pProperties)
 {
+  NOTUSED(pProperties);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -378,6 +380,7 @@ PVR_ERROR DialogChannelScan()
 
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
 {
+  NOTUSED(menuhook);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -406,21 +409,25 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel)
 {
+  NOTUSED(channel);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR RenameChannel(const PVR_CHANNEL &channel)
 {
+  NOTUSED(channel);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channelinfo)
 {
+  NOTUSED(channelinfo);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channelinfo)
 {
+  NOTUSED(channelinfo);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -617,11 +624,11 @@ bool CanSeekStream(void)
 }
 
 /** UNUSED API FUNCTIONS */
-PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { NOTUSED(channel); return PVR_ERROR_NOT_IMPLEMENTED; }
 DemuxPacket* DemuxRead(void) { return NULL; }
 void DemuxAbort(void) {}
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
-PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { NOTUSED(recording); NOTUSED(count); return PVR_ERROR_NOT_IMPLEMENTED; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 } //end extern "C"

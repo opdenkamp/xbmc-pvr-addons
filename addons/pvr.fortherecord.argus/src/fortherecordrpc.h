@@ -190,7 +190,7 @@ namespace ForTheRecord
    * \param epg_start        Start from this date
    * \param epg_stop         Until this date
    */
-  int GetEPGData(const int backendversion, const std::string& guidechannel_id, struct tm epg_start, struct tm epg_end, Json::Value& response);
+  int GetEPGData(const std::string& guidechannel_id, struct tm epg_start, struct tm epg_end, Json::Value& response);
 
   /**
    * \brief Fetch the recording groups sorted by title

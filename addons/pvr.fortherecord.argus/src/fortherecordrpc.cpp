@@ -719,7 +719,7 @@ namespace ForTheRecord
     return false;
   }
 
-  int GetEPGData(const int backendversion, const std::string& guidechannel_id, struct tm epg_start, struct tm epg_end, Json::Value& response)
+  int GetEPGData(const std::string& guidechannel_id, struct tm epg_start, struct tm epg_end, Json::Value& response)
   {
     if ( guidechannel_id.length() > 0 )
     {
@@ -762,41 +762,6 @@ namespace ForTheRecord
     return retval;
   }
 
-  int GetRecordingsForTitleUsingURL(const std::string& title, Json::Value& response)
-  {
-    //int retval = E_FAILED;
-    //XBMC->Log(LOG_DEBUG, "GetRecordingsForTitleUsingURL");
-    //CURL *curl;
-
-    //curl = curl_easy_init();
-
-    //if(curl)
-    //{
-    //  std::string command = "ForTheRecord/Control/RecordingsForProgramTitle/Television/";
-    //  char* pch = curl_easy_escape(curl, title.c_str(), 0);
-    //  command += pch;
-    //  curl_free(pch);
-
-    //  retval = ForTheRecord::ForTheRecordJSONRPC(command, "?includeNonExisting=false", response);
-    //  if(retval >= 0)
-    //  {           
-    //    if (response.type() != Json::arrayValue)
-    //    {
-    //      retval = E_FAILED;
-    //      XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingURL did not return a Json::arrayValue [%d].", response.type());
-    //    }
-    //  }
-    //  else
-    //  {
-    //    XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingURL remote call failed.");
-    //  }
-
-    //  curl_easy_cleanup(curl);
-    //}
-    //return retval;
-    return E_FAILED;
-  }
-
   int GetRecordingsForTitleUsingPOSTData(const std::string& title, Json::Value& response)
   {
     XBMC->Log(LOG_DEBUG, "GetRecordingsForTitleUsingPOSTData(\"%s\")", title.c_str());
@@ -816,7 +781,7 @@ namespace ForTheRecord
     XBMC->Log(LOG_DEBUG, "GetRecordingsForTitle");
 
     // Does the FTR version support putting the title in the POST data or not?
-    if (iBackendversion < FTR_1_6_1_0) return GetRecordingsForTitleUsingURL(title, response);
+    if (iBackendversion < FTR_1_6_1_0) return E_FAILED;
     else return GetRecordingsForTitleUsingPOSTData(title, response);
   }
 

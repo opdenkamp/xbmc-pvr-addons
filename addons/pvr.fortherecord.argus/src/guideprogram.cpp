@@ -64,7 +64,6 @@ bool cGuideProgram::Parse(const Json::Value& data)
   category = data["Category"].asString();
   description = data["Description"].asString();
   //directors = data["Directors"].asString();
-  bool zz = data["Directors"].isArray();
   episodenumber = data["EpisodeNumber"].asInt();
   episodenumberdisplay = data["EpisodeNumberDisplay"].asString();
   episodenumbertotal = data["EpisodeNumberTotal"].asInt();

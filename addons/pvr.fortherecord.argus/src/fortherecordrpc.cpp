@@ -249,7 +249,7 @@ namespace ForTheRecord
     struct stat buf;
     if (stat(finalpath.c_str(), &buf) != -1)
     {
-      modificationtime = localtime(&buf.st_mtime);
+      modificationtime = localtime((const time_t *) &buf.st_mtime);
     }
     else
     {

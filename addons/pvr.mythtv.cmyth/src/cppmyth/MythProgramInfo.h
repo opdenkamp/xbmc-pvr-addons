@@ -62,6 +62,7 @@ public:
   CStdString RecordingGroup();
   unsigned long RecordID();
   time_t RecordingStartTime();
+  time_t RecordingEndTime();
   int Priority();
 
 private:

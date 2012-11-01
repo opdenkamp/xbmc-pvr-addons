@@ -187,6 +187,13 @@ time_t MythProgramInfo::RecordingStartTime()
   return retval;
 }
 
+time_t MythProgramInfo::RecordingEndTime()
+{
+  MythTimestamp time = cmyth_proginfo_rec_end(*m_proginfo_t);
+  time_t retval(time.UnixTime());
+  return retval;
+}
+
 int MythProgramInfo::Priority()
 {
   return cmyth_proginfo_priority(*m_proginfo_t); // Might want to use recpriority2 instead

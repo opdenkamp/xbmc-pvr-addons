@@ -1908,9 +1908,36 @@ cmyth_conn_reschedule_recordings(cmyth_conn_t conn, int recordid)
 		return -1;
 	}
 
-	id = (recordid > 0 ? recordid : -1);
-
-	snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS %i", id);
+	/*
+	 * RESCHEDULE_RECORDINGS changed in protocol version 73:
+	 *
+	 * MATCH reschedule requests should be used when the guide data or a
+	 * specific recording rule is changed. The syntax is as follows.
+	 *
+	 *    MATCH <recordid> <sourceid> <mplexid> <maxstarttime> <reason>
+	 *
+	 * CHECK reschedule requests should be used when the status of a
+	 * specific episode is affected such as when "never record" or "allow
+	 * re-record" are selected or a recording finishes or is deleted. The
+	 * syntax is as follows.
+	 *
+	 *    CHECK <recstatus> <recordid> <findid> <reason>
+	 *    <title>
+	 *    <subtitle>
+	 *    <description>
+	 *    <programid>
+	 */
+	if (conn->conn_version < 73) {
+		id = (recordid > 0 ? recordid : -1);
+		snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS %i", id);
+	} else {
+		if (recordid == 0) {
+			strncpy(msg, "RESCHEDULE_RECORDINGS []:[]CHECK 0 0 0 cmyth[]:[][]:[][]:[][]:[]**any**", sizeof(msg));
+		} else {
+			id = (recordid > 0 ? recordid : 0);
+			snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS []:[]MATCH %i 0 0 - cmyth", id);
+		}
+	}
 
 	pthread_mutex_lock(&mutex);
 

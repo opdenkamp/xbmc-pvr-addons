@@ -162,16 +162,18 @@ bool MythRecorder::SpawnLiveTV(MythChannel &channel)
   CMYTH_REC_CALL(recorder, recorder == NULL, cmyth_spawn_live_tv(*m_recorder_t, 64*1024, 64*1024, MythRecorder::prog_update_callback, &pErr, const_cast<char*>(channel.Number().c_str())));
   *m_recorder_t = recorder;
 
-  /* JLB
-   * wait chain update for 5000ms before continue
-   */
-  int i = 0;
-  while (*m_liveChainUpdated == 0 && i < 5000) {
-    m_conn.Unlock();
-    usleep(100000);
-    m_conn.Lock();
-    i += 100;
-    XBMC->Log(LOG_DEBUG, "%s: Delay channel switch: %d", __FUNCTION__, i);
+  if (pErr == NULL) {
+    /* Wait for chain update for 30s before break */
+    int i = 0;
+    while (*m_liveChainUpdated == 0 && i < 30000) {
+      m_conn.Unlock();
+      usleep(100000);
+      m_conn.Lock();
+      i += 100;
+      XBMC->Log(LOG_DEBUG, "%s: Delay channel switch: %d", __FUNCTION__, i);
+    }
+    if (*m_liveChainUpdated == 0)
+      pErr = const_cast<char*>("Chain update failed.");
   }
 
   // m_recorder_t->Unlock();
@@ -286,7 +288,8 @@ bool MythRecorder::LiveTVChainUpdate(const CStdString &chainid)
   CMYTH_REC_CALL(retval, retval < 0, cmyth_livetv_chain_update(*m_recorder_t, const_cast<char*>(chainid.c_str())));
   if (retval != 0)
     XBMC->Log(LOG_ERROR,"LiveTVChainUpdate failed on chainID: %s", chainid.c_str());
-  *m_liveChainUpdated = 1;
+  else
+    *m_liveChainUpdated = 1;
   return retval == 0;
 }
 

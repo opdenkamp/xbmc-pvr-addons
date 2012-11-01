@@ -1655,6 +1655,13 @@ cmyth_mysql_get_timers(cmyth_database_t db)
 
 	cmyth_mysql_query_t * query;
 	query = cmyth_mysql_query_create(db,query_str);
+	if (cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+		|| cmyth_mysql_query_param_str(query, db->db_tz_name) < 0)
+	{
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(query);
+		return -1;
+	}
 
 	res = cmyth_mysql_query_result(query);
 	ref_release(query);

@@ -52,7 +52,7 @@ CStdString MythProgramInfo::StrUID()
 
 long long MythProgramInfo::UID()
 {
-  long long retval = RecStart();
+  long long retval = RecordingStartTime();
   retval <<= 32;
   retval += ChannelID();
   if (retval > 0)
@@ -180,7 +180,7 @@ unsigned long MythProgramInfo::RecordID()
   return cmyth_proginfo_recordid(*m_proginfo_t);
 }
 
-time_t MythProgramInfo::RecStart()
+time_t MythProgramInfo::RecordingStartTime()
 {
   MythTimestamp time = cmyth_proginfo_rec_start(*m_proginfo_t);
   time_t retval(time.UnixTime());

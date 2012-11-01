@@ -771,8 +771,8 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     PVR_TIMER tag;
     memset(&tag, 0, sizeof(PVR_TIMER));
 
-    tag.startTime= it->second.StartTime();
-    tag.endTime = it->second.EndTime();
+    tag.startTime= it->second.RecordingStartTime();
+    tag.endTime = it->second.RecordingEndTime();
     tag.iClientChannelUid = it->second.ChannelID();
     tag.iClientIndex = it->second.RecordID();
     tag.iMarginEnd = timers.at(it->second.RecordID()).EndOffset();

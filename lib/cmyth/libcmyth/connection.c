@@ -784,7 +784,10 @@ cmyth_conn_reconnect_ctrl(cmyth_conn_t control)
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: reconnecting control connection\n",
 		  __FUNCTION__);
-	ret = cmyth_conn_reconnect(control, 0);
+	if (control)
+		ret = cmyth_conn_reconnect(control, 0);
+	else
+		ret = 0;
 	if (ret)
 		control->conn_hang = 0;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done reconnecting control connection ret = %d\n",
@@ -812,7 +815,10 @@ cmyth_conn_reconnect_event(cmyth_conn_t conn)
 	int ret;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: re-connecting event channel connection\n",
 		  __FUNCTION__);
-	ret = cmyth_conn_reconnect(conn, 1);
+	if (conn)
+		ret = cmyth_conn_reconnect(conn, 1);
+	else
+		ret = 0;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done re-connecting event channel connection ret = %d\n",
 		  __FUNCTION__, ret);
 	return ret;
@@ -850,7 +856,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 	int err = 0;
 	int count = 0;
 	int r;
-	int ann_size = sizeof("ANN FileTransfer  0[]:[][]:[]");
+	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
 	cmyth_file_t ret = NULL;
 
 	if (!prog) {
@@ -917,7 +923,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	if (control->conn_version >= 44) {
-		sprintf(announcement, "ANN FileTransfer %s 0[]:[]%s[]:[]", // write = false
+		sprintf(announcement, "ANN FileTransfer %s 0 0 1000[]:[]%s[]:[]", // write = false
 			  my_hostname, prog->proginfo_pathname);
 	}
 	else {
@@ -1020,7 +1026,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	int err = 0;
 	int count = 0;
 	int r, port;
-	int ann_size = sizeof("ANN FileTransfer  0[]:[][]:[]");
+	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
 	struct sockaddr_in addr;
         socklen_t addr_size = sizeof(addr);
 	cmyth_file_t ret = NULL;
@@ -1059,7 +1065,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	 */
 	conn->conn_version = control->conn_version;
 
-	ann_size += strlen(path) + strlen(my_hostname) + strlen(storage_group) + 6;
+	ann_size += strlen(path) + strlen(my_hostname) + strlen(storage_group);
 	announcement = malloc(ann_size);
 	if (!announcement) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1069,10 +1075,10 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	}
 	if (control->conn_version >= 44) { /*TSP: from version 44 according to the source code*/
 		if (strlen(storage_group) > 1) {
-			sprintf(announcement, "ANN FileTransfer %s 0 0 0[]:[]%s[]:[]%s",
+			sprintf(announcement, "ANN FileTransfer %s 0 0 100[]:[]%s[]:[]%s",
 				  my_hostname, path, storage_group);
 		} else {
-			sprintf(announcement, "ANN FileTransfer %s 0[]:[]%s[]:[]",  // write = false
+			sprintf(announcement, "ANN FileTransfer %s 0 0 100[]:[]%s[]:[]",  // write = false
 				  my_hostname, path);
 		}
 	} else {

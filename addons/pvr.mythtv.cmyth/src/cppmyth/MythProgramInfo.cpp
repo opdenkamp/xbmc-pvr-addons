@@ -45,7 +45,7 @@ CStdString MythProgramInfo::StrUID()
   // Creates unique IDs from ChannelID, RecordID and StartTime like "100_200_2011-12-10T12:00:00"
   char buf[40] = "";
   sprintf(buf, "%d_%ld_", ChannelID(), RecordID());
-  time_t starttime = StartTime();
+  time_t starttime = RecordingStartTime();
   strftime(buf + strlen(buf), 20, "%Y-%m-%dT%H:%M:%S", localtime(&starttime));
   return CStdString(buf);
 }

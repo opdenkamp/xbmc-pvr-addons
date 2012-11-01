@@ -614,8 +614,6 @@ extern long long cmyth_livetv_chain_duration(cmyth_recorder_t rec);
 
 extern int cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir);
 
-extern int cmyth_livetv_chain_switch_unlocked(cmyth_recorder_t rec, int dir);
-
 extern int cmyth_livetv_chain_switch_last(cmyth_recorder_t rec);
 
 extern int cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid);
@@ -1129,7 +1127,9 @@ extern int cmyth_file_read(cmyth_file_t file,
 			   char *buf,
 			   unsigned long len);
 
-extern int cmyth_file_data_conn_fd(cmyth_file_t file);
+extern int cmyth_file_is_open(cmyth_file_t file);
+
+extern int cmyth_file_set_timeout(cmyth_file_t file, int fast);
 
 /*
  * -----------------------------------------------------------------

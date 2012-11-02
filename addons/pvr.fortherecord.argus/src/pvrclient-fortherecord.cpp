@@ -869,7 +869,7 @@ int cPVRClientForTheRecord::GetNumTimers(void)
 
   XBMC->Log(LOG_DEBUG, "GetNumTimers()");
   // pick up the schedulelist for TV
-  int retval = ForTheRecord::GetUpcomingPrograms(response);
+  int retval = ForTheRecord::GetUpcomingRecordings(response);
   if (retval < 0) 
   {
     return 0;
@@ -1074,7 +1074,7 @@ PVR_ERROR cPVRClientForTheRecord::DeleteTimer(const PVR_TIMER &timerinfo, bool f
   }
 
   // pick up the upcoming recordings
-  retval = ForTheRecord::GetUpcomingPrograms(upcomingProgramsResponse);
+  retval = ForTheRecord::GetUpcomingRecordings(upcomingProgramsResponse);
   if (retval < 0) 
   {
     XBMC->Log(LOG_ERROR, "Unable to retrieve upcoming programs from server.");

@@ -21,22 +21,6 @@
 #include "MythFile.h"
 #include "MythPointer.h"
 
-/* Call 'call', then if 'cond' condition is true see if we're still
- * connected to the control socket and try to re-connect if not.
- * If reconnection is ok, call 'call' again. */
-#define CMYTH_FILE_CALL(var, cond, call) m_conn.Lock(); \
-                                         var = call; \
-                                         m_conn.Unlock(); \
-                                         if (cond) \
-                                         { \
-                                           if (!m_conn.IsConnected() && m_conn.TryReconnect()) \
-                                           { \
-                                             m_conn.Lock(); \
-                                             var = call; \
-                                             m_conn.Unlock(); \
-                                           } \
-                                         } \
-
 MythFile::MythFile()
   : m_file_t(new MythPointer<cmyth_file_t>())
   , m_conn(MythConnection())
@@ -60,33 +44,34 @@ bool MythFile::IsNull() const
 unsigned long long MythFile::Length()
 {
   unsigned long long retval = 0;
-  CMYTH_FILE_CALL(retval, (long long)retval < 0, cmyth_file_length(*m_file_t));
+  retval = cmyth_file_length(*m_file_t);
   return retval;
 }
 
 void MythFile::UpdateLength(unsigned long long length)
 {
   int retval = 0;
-  CMYTH_FILE_CALL(retval, retval < 0, cmyth_update_file_length(*m_file_t, length));
+  retval = cmyth_update_file_length(*m_file_t, length);
+  (void)retval;
 }
 
 int MythFile::Read(void *buffer, unsigned long length)
 {
   int bytesRead;
-  CMYTH_FILE_CALL(bytesRead, bytesRead < 0, cmyth_file_read(*m_file_t, static_cast< char * >(buffer), length));
+  bytesRead = cmyth_file_read(*m_file_t, static_cast< char * >(buffer), length);
   return bytesRead;
 }
 
 long long MythFile::Seek(long long offset, int whence)
 {
   long long retval = 0;
-  CMYTH_FILE_CALL(retval, retval < 0, cmyth_file_seek(*m_file_t, offset, whence));
+  retval = cmyth_file_seek(*m_file_t, offset, whence);
   return retval;
 }
 
 unsigned long long MythFile::Position()
 {
   unsigned long long retval = 0;
-  CMYTH_FILE_CALL( retval, (long long)retval < 0, cmyth_file_position(*m_file_t));
+  retval = cmyth_file_position(*m_file_t);
   return retval;
 }

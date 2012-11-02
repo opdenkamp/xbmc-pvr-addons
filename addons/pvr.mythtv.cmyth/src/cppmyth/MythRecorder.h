@@ -41,6 +41,9 @@ public:
   MythRecorder(cmyth_recorder_t cmyth_recorder, const MythConnection &conn);
 
   bool IsNull() const;
+  void Lock();
+  void Unlock();
+
   int ID();
   MythProgramInfo GetCurrentProgram();
 

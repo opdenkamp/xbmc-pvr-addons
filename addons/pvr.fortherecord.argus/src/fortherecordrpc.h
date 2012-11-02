@@ -260,9 +260,15 @@ namespace ForTheRecord
   int GetScheduleList(enum ChannelType channelType, Json::Value& response);
 
   /**
-   * \brief Fetch the list of upcoming programs
+   * \brief Fetch the list of upcoming programs from type 'recording'
+   * \currently not used
    */
   int GetUpcomingPrograms(Json::Value& response);
+
+  /**
+   * \brief Fetch the list of upcoming recordings
+   */
+  int GetUpcomingRecordings(Json::Value& response);
 
   /**
    * \brief Fetch the list of currently active recordings

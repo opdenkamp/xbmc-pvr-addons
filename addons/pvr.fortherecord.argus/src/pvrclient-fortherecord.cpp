@@ -880,7 +880,7 @@ int cPVRClientForTheRecord::GetNumTimers(void)
 
 PVR_ERROR cPVRClientForTheRecord::GetTimers(ADDON_HANDLE handle)
 {
-  Json::Value activeRecordingsResponse, upcomingProgramsResponse;
+  Json::Value activeRecordingsResponse, upcomingRecordingsResponse;
   int         iNumberOfTimers = 0;
   PVR_TIMER   tag;
   int         numberoftimers;
@@ -896,7 +896,7 @@ PVR_ERROR cPVRClientForTheRecord::GetTimers(ADDON_HANDLE handle)
   }
 
   // pick up the upcoming recordings
-  retval = ForTheRecord::GetUpcomingPrograms(upcomingProgramsResponse);
+  retval = ForTheRecord::GetUpcomingRecordings(upcomingRecordingsResponse);
   if (retval < 0) 
   {
     XBMC->Log(LOG_ERROR, "Unable to retrieve upcoming programs from server.");
@@ -904,12 +904,12 @@ PVR_ERROR cPVRClientForTheRecord::GetTimers(ADDON_HANDLE handle)
   }
 
   memset(&tag, 0 , sizeof(tag));
-  numberoftimers = upcomingProgramsResponse.size();
+  numberoftimers = upcomingRecordingsResponse.size();
 
   for (int i = 0; i < numberoftimers; i++)
   {
     cUpcomingRecording upcomingrecording;
-    if (upcomingrecording.Parse(upcomingProgramsResponse[i]))
+    if (upcomingrecording.Parse(upcomingRecordingsResponse[i]))
     {
       tag.iClientIndex      = iNumberOfTimers;
       cChannel* pChannel    = FetchChannel(upcomingrecording.ChannelId());
@@ -923,17 +923,34 @@ PVR_ERROR cPVRClientForTheRecord::GetTimers(ADDON_HANDLE handle)
       tag.iClientChannelUid = pChannel->ID();
       tag.startTime         = upcomingrecording.StartTime();
       tag.endTime           = upcomingrecording.StopTime();
+
       // build the XBMC PVR State
       if (upcomingrecording.IsCancelled())
       {
         tag.state             = PVR_TIMER_STATE_CANCELLED;
       }
+      else if (upcomingrecording.IsInConflict())
+      {
+        if (upcomingrecording.IsAllocated())
+          tag.state             = PVR_TIMER_STATE_CONFLICT_OK;
+        else
+          tag.state             = PVR_TIMER_STATE_CONFLICT_NOK;
+      }
+      else if (!upcomingrecording.IsAllocated())
+      {
+        //not allocated --> won't be recorded
+        tag.state             = PVR_TIMER_STATE_ERROR;
+      }
       else
       {
         tag.state             = PVR_TIMER_STATE_SCHEDULED;
+      }
+
+      if (tag.state == PVR_TIMER_STATE_SCHEDULED || tag.state == PVR_TIMER_STATE_CONFLICT_OK) //check if they are currently recording
+      {
         if (activeRecordingsResponse.size() > 0)
         {
-          // Is the this upcoming program in the list of active recordings?
+          // Is the this upcoming recording in the list of active recordings?
           for (Json::Value::UInt j = 0; j < activeRecordingsResponse.size(); j++)
           {
             cActiveRecording activerecording;

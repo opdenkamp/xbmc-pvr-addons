@@ -161,7 +161,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         {
           bool retval = m_recorder.LiveTVChainUpdate(databuf);
           if (g_bExtraDebug)
-            XBMC->Log(LOG_NOTICE, "%s - Event chain update: %i", __FUNCTION__, retval);
+            XBMC->Log(LOG_NOTICE, "%s - Event chain update: %s", __FUNCTION__, (retval ? "true" : "false"));
         }
         else
           if (g_bExtraDebug)

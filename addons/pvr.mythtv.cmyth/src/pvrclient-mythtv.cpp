@@ -460,9 +460,6 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  if (m_pEventHandler && m_pEventHandler->IsPlaybackActive())
-    return PVR_ERROR_NO_ERROR;
-
   m_recordings = m_con.GetRecordedPrograms();
   for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {

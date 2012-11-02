@@ -1464,7 +1464,15 @@ bool cPVRClientForTheRecord::SwitchChannel(const PVR_CHANNEL &channelinfo)
   XBMC->Log(LOG_DEBUG, "->SwitchChannel(%i)", channelinfo.iUniqueId);
   bool fRc = false;
 
+  if (g_iTuneDelay == 0)
+  {
+    // Close existing live stream before opening a new one.
+    // This is slower, but it helps XBMC playback when the streams change types (e.g. SD->HD).
+    // It also gives a better tuner allocation when using multiple clients with a limited count of tuners.  	
+    CloseLiveStream();
+  }
   fRc = OpenLiveStream(channelinfo);
+
   return fRc;
 }
 

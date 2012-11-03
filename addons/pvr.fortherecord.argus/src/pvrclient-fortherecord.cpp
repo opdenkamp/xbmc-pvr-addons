@@ -500,7 +500,7 @@ PVR_ERROR cPVRClientForTheRecord::GetChannels(ADDON_HANDLE handle, bool bRadio)
         strncpy(tag.strChannelName, channel.Name(), sizeof(tag.strChannelName));
         std::string logopath = ForTheRecord::GetChannelLogo(channel.Guid()).c_str();
         strncpy(tag.strIconPath, logopath.c_str(), sizeof(tag.strIconPath));
-        tag.iEncryptionSystem = -1; //How to fetch this from ForTheRecord??
+        tag.iEncryptionSystem = (unsigned int) -1; //How to fetch this from ForTheRecord??
         tag.bIsRadio = (channel.Type() == ForTheRecord::Radio ? true : false);
         tag.bIsHidden = false;
         //Use OpenLiveStream to read from the timeshift .ts file or an rtsp stream

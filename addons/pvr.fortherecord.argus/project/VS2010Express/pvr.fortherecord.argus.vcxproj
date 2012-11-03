@@ -53,6 +53,7 @@
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\jsoncpp\include;..\..\..\..\lib\platform\windows;..\..\src;..\..\..\..\project\BuildDependencies\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -69,6 +70,7 @@
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\jsoncpp\include;..\..\..\..\lib\platform\windows;..\..\src;..\..\..\..\project\BuildDependencies\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -1,8 +1,11 @@
-v1.0.150.143 (28-10-2012)
-- Bump version to 1 for Froyo :)
+v1.0.150.143 (03-11-2012)
+- Bump version to 1 for Frodo :)
 - Version number: major.minor.apiversion.buildnumber
 - Fully supports setting and retrieving lastplayed position
   on the FTR server for recordings
+- Support Timer conflict notification
+- Add episode name to epg title
+- Credit Team Mediaportal for original TsReader code
 v0.0.1.142 (06-09-2012)
 - Use the XBMC lifetime setting for a recording when possible
 - Now can delete scheduled recordings/programs on the FTR server

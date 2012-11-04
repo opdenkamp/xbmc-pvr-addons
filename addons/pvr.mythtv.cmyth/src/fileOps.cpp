@@ -226,7 +226,6 @@ void* FileOps::Process()
 
       if (g_bExtraDebug)
         XBMC->Log(LOG_DEBUG,"%s Job fetched: local: %s, remote: %s, storagegroup: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
-      m_con.Lock();
 
       MythFile file = m_con.ConnectPath(job.m_remoteFilename, job.m_storageGroup);
       if (file.Length() > 0)
@@ -252,7 +251,6 @@ void* FileOps::Process()
         jobQueueDelayed.push_back(job);
       }
 
-      m_con.Unlock();
     }
 
     // Try to recache the currently empty files

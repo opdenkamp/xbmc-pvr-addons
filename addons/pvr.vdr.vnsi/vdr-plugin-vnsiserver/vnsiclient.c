@@ -528,13 +528,6 @@ bool cVNSIClient::process_Login() /* OPCODE 1 */
                            m_req->extract_U8();
   const char *clientName = m_req->extract_String();
 
-  if (m_protocolVersion > VNSI_PROTOCOLVERSION)
-  {
-    ERRORLOG("Client '%s' have a not allowed protocol version '%u', terminating client", clientName, m_protocolVersion);
-    delete[] clientName;
-    return false;
-  }
-
   INFOLOG("Welcome client '%s' with protocol version '%u'", clientName, m_protocolVersion);
 
   // Send the login reply
@@ -548,7 +541,12 @@ bool cVNSIClient::process_Login() /* OPCODE 1 */
   m_resp->add_String("VDR-Network-Streaming-Interface (VNSI) Server");
   m_resp->add_String(VNSI_SERVER_VERSION);
   m_resp->finalise();
-  SetLoggedIn(true);
+
+  if (m_protocolVersion != VNSI_PROTOCOLVERSION)
+    ERRORLOG("Client '%s' have a not allowed protocol version '%u', terminating client", clientName, m_protocolVersion);
+  else
+    SetLoggedIn(true);
+
   m_socket.write(m_resp->getPtr(), m_resp->getLen());
 
   delete[] clientName;
@@ -653,15 +651,8 @@ bool cVNSIClient::processRecStream_Open() /* OPCODE 40 */
 {
   cRecording *recording = NULL;
 
-  if(m_protocolVersion >= 2) {
-    uint32_t uid = m_req->extract_U32();
-    recording = cRecordingsCache::GetInstance().Lookup(uid);
-  }
-  else {
-    const char *fileName = m_req->extract_String();
-    recording = Recordings.GetByName(fileName);
-    delete[] fileName;
-  }
+  uint32_t uid = m_req->extract_U32();
+  recording = cRecordingsCache::GetInstance().Lookup(uid);
 
   if (recording && m_RecPlayer == NULL)
   {
@@ -834,12 +825,7 @@ bool cVNSIClient::processCHANNELS_GetChannels() /* OPCODE 63 */
 
     m_resp->add_U32(channel->Number());
     m_resp->add_String(m_toUTF8.Convert(channel->Name()));
-    if(m_protocolVersion >= 2) {
-      m_resp->add_U32(CreateChannelUID(channel));
-    }
-    else {
-      m_resp->add_U32(channel->Sid());
-    }
+    m_resp->add_U32(CreateChannelUID(channel));
     m_resp->add_U32(0); // groupindex unused
     m_resp->add_U32(channel->Ca());
 #if APIVERSNUM >= 10701
@@ -1023,9 +1009,7 @@ bool cVNSIClient::processTIMER_Get() /* OPCODE 81 */
       m_resp->add_U32(timer->Priority());
       m_resp->add_U32(timer->Lifetime());
       m_resp->add_U32(timer->Channel()->Number());
-      if(m_protocolVersion >= 2) {
-        m_resp->add_U32(CreateChannelUID(timer->Channel()));
-      }
+      m_resp->add_U32(CreateChannelUID(timer->Channel()));
       m_resp->add_U32(timer->StartTime());
       m_resp->add_U32(timer->StopTime());
       m_resp->add_U32(timer->Day());
@@ -1065,9 +1049,7 @@ bool cVNSIClient::processTIMER_GetList() /* OPCODE 82 */
     m_resp->add_U32(timer->Priority());
     m_resp->add_U32(timer->Lifetime());
     m_resp->add_U32(timer->Channel()->Number());
-    if(m_protocolVersion >= 2) {
-      m_resp->add_U32(CreateChannelUID(timer->Channel()));
-    }
+    m_resp->add_U32(CreateChannelUID(timer->Channel()));
     m_resp->add_U32(timer->StartTime());
     m_resp->add_U32(timer->StopTime());
     m_resp->add_U32(timer->Day());
@@ -1110,15 +1092,11 @@ bool cVNSIClient::processTIMER_Add() /* OPCODE 83 */
   int stop = time->tm_hour * 100 + time->tm_min;
 
   cString buffer;
-  if(m_protocolVersion == 1) {
-    buffer = cString::sprintf("%u:%i:%s:%04d:%04d:%d:%d:%s:%s\n", flags, channelid, *cTimer::PrintDay(day, weekdays, true), start, stop, priority, lifetime, file, aux);
+  const cChannel* channel = FindChannelByUID(channelid);
+  if(channel != NULL)
+  {
+    buffer = cString::sprintf("%u:%s:%s:%04d:%04d:%d:%d:%s:%s\n", flags, (const char*)channel->GetChannelID().ToString(), *cTimer::PrintDay(day, weekdays, true), start, stop, priority, lifetime, file, aux);
   }
-  else {
-    const cChannel* channel = FindChannelByUID(channelid);
-    if(channel != NULL) {
-      buffer = cString::sprintf("%u:%s:%s:%04d:%04d:%d:%d:%s:%s\n", flags, (const char*)channel->GetChannelID().ToString(), *cTimer::PrintDay(day, weekdays, true), start, stop, priority, lifetime, file, aux);
-    }
-  } 
 
   delete[] file;
   delete[] aux;
@@ -1262,14 +1240,10 @@ bool cVNSIClient::processTIMER_Update() /* OPCODE 85 */
     int stop = time->tm_hour * 100 + time->tm_min;
 
     cString buffer;
-    if(m_protocolVersion == 1) {
-      buffer = cString::sprintf("%u:%i:%s:%04d:%04d:%d:%d:%s:%s\n", flags, channelid, *cTimer::PrintDay(day, weekdays, true), start, stop, priority, lifetime, file, aux);
-    }
-    else {
-      const cChannel* channel = FindChannelByUID(channelid);
-      if(channel != NULL) {
-        buffer = cString::sprintf("%u:%s:%s:%04d:%04d:%d:%d:%s:%s\n", flags, (const char*)channel->GetChannelID().ToString(), *cTimer::PrintDay(day, weekdays, true), start, stop, priority, lifetime, file, aux);
-      }
+    const cChannel* channel = FindChannelByUID(channelid);
+    if(channel != NULL)
+    {
+      buffer = cString::sprintf("%u:%s:%s:%04d:%04d:%d:%d:%s:%s\n", flags, (const char*)channel->GetChannelID().ToString(), *cTimer::PrintDay(day, weekdays, true), start, stop, priority, lifetime, file, aux);
     }
 
     delete[] file;
@@ -1325,10 +1299,6 @@ bool cVNSIClient::processRECORDINGS_GetCount() /* OPCODE 101 */
 bool cVNSIClient::processRECORDINGS_GetList() /* OPCODE 102 */
 {
   cMutexLock lock(&m_timerLock);
-
-  if(m_protocolVersion == 1) {
-    m_resp->add_String(VideoDirectory);
-  }
 
   for (cRecording *recording = Recordings.First(); recording; recording = Recordings.Next(recording))
   {
@@ -1416,29 +1386,21 @@ bool cVNSIClient::processRECORDINGS_GetList() /* OPCODE 102 */
       m_resp->add_String("");
 
     // directory
-    if(m_protocolVersion >= 2) {
-      if(directory != NULL) {
-        char* p = directory;
-        while(*p != 0) {
-          if(*p == FOLDERDELIMCHAR) *p = '/';
-          if(*p == '_') *p = ' ';
-          p++;
-        }
-        while(*directory == '/') directory++;
+    if(directory != NULL) {
+      char* p = directory;
+      while(*p != 0) {
+        if(*p == FOLDERDELIMCHAR) *p = '/';
+        if(*p == '_') *p = ' ';
+        p++;
       }
-
-      m_resp->add_String((isempty(directory)) ? "" : m_toUTF8.Convert(directory));
+      while(*directory == '/') directory++;
     }
+
+    m_resp->add_String((isempty(directory)) ? "" : m_toUTF8.Convert(directory));
 
     // filename / uid of recording
-    if(m_protocolVersion >= 2) {
-      uint32_t uid = cRecordingsCache::GetInstance().Register(recording);
-      m_resp->add_U32(uid);
-    }
-    else {
-      cString filename = recording->FileName();
-      m_resp->add_String(filename);
-    }
+    uint32_t uid = cRecordingsCache::GetInstance().Register(recording);
+    m_resp->add_U32(uid);
 
     free(fullname);
   }
@@ -1494,17 +1456,8 @@ bool cVNSIClient::processRECORDINGS_Delete() /* OPCODE 104 */
   cString recName;
   cRecording* recording = NULL;
 
-  if(m_protocolVersion >= 2) {
-    uint32_t uid = m_req->extract_U32();
-    recording = cRecordingsCache::GetInstance().Lookup(uid);
-  }
-  else {
-    const char* temp = m_req->extract_String();
-    recName = temp;
-    recording = Recordings.GetByName(recName);
-    delete[] temp;
-  }
-
+  uint32_t uid = m_req->extract_U32();
+  recording = cRecordingsCache::GetInstance().Lookup(uid);
 
   if (recording)
   {
@@ -1552,12 +1505,7 @@ bool cVNSIClient::processEPG_GetForChannel() /* OPCODE 120 */
   uint32_t channelNumber  = 0;
   uint32_t channelUID  = 0;
 
-  if(m_protocolVersion == 1) {
-    channelNumber = m_req->extract_U32();
-  }
-  else {
-    channelUID = m_req->extract_U32();
-  }
+  channelUID = m_req->extract_U32();
 
   uint32_t startTime      = m_req->extract_U32();
   uint32_t duration       = m_req->extract_U32();
@@ -1566,15 +1514,10 @@ bool cVNSIClient::processEPG_GetForChannel() /* OPCODE 120 */
 
   const cChannel* channel = NULL;
 
-  if(m_protocolVersion == 1) {
-    channel = Channels.GetByNumber(channelNumber);
-    DEBUGLOG("get schedule called for channel %u", channelNumber);
-  }
-  else {
-    channel = FindChannelByUID(channelUID);
-    if(channel != NULL) {
-      DEBUGLOG("get schedule called for channel '%s'", (const char*)channel->GetChannelID().ToString());
-    }
+  channel = FindChannelByUID(channelUID);
+  if(channel != NULL)
+  {
+    DEBUGLOG("get schedule called for channel '%s'", (const char*)channel->GetChannelID().ToString());
   }
 
   if (!channel)

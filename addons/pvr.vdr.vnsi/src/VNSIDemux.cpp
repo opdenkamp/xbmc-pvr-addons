@@ -56,7 +56,6 @@ bool cVNSIDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
   props->iStreamCount = m_Streams.iStreamCount;
   for (unsigned int i = 0; i < m_Streams.iStreamCount; i++)
   {
-    props->stream[i].iStreamIndex    = m_Streams.stream[i].iStreamIndex;
     props->stream[i].iPhysicalId     = m_Streams.stream[i].iPhysicalId;
     props->stream[i].iCodecType      = m_Streams.stream[i].iCodecType;
     props->stream[i].iCodecId        = m_Streams.stream[i].iCodecId;
@@ -228,7 +227,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     {
       const char *language = resp->extract_String();
 
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_AUDIO;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_AC3;
@@ -245,7 +243,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     {
       const char *language = resp->extract_String();
 
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_AUDIO;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_MP2;
@@ -262,7 +259,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     {
       const char *language = resp->extract_String();
 
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_AUDIO;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_AAC;
@@ -279,7 +275,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     {
       const char *language = resp->extract_String();
 
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_AUDIO;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_DTS;
@@ -296,7 +291,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     {
       const char *language = resp->extract_String();
 
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_AUDIO;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_EAC3;
@@ -311,7 +305,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     }
     else if(!strcmp(type, "MPEG2VIDEO"))
     {
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_MPEG2VIDEO;
@@ -329,7 +322,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     }
     else if(!strcmp(type, "H264"))
     {
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_H264;
@@ -351,7 +343,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
       uint32_t composition_id = resp->extract_U32();
       uint32_t ancillary_id   = resp->extract_U32();
 
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_SUBTITLE;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_DVB_SUBTITLE;
@@ -368,7 +359,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     {
       const char *language = resp->extract_String();
 
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_SUBTITLE;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_TEXT;
@@ -383,7 +373,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     }
     else if(!strcmp(type, "TELETEXT"))
     {
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex         = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId     = index;
       m_Streams.stream[m_Streams.iStreamCount].iCodecType = AVMEDIA_TYPE_SUBTITLE;
       m_Streams.stream[m_Streams.iStreamCount].iCodecId   = CODEC_ID_DVB_TELETEXT;

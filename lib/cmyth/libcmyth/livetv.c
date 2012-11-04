@@ -969,7 +969,7 @@ cmyth_livetv_chain_request_block(cmyth_recorder_t rec, unsigned long len)
 int cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, unsigned long len)
 {
 	int ret, retry;
-	unsigned long vlen, rlen;
+	unsigned long vlen, rlen, nlen;
 
 	if (rec == NULL) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
@@ -995,7 +995,11 @@ int cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, unsigned long len)
 
 		retry = 0;
 		ret = cmyth_file_read(rec->rec_livetv_file, buf, rlen);
-		if (ret == 0) {
+		if (ret < 0) {
+			break;
+		}
+		nlen = (unsigned long)ret;
+		if (nlen == 0) {
 			/* eof, switch to next file */
 			pthread_mutex_lock(&mutex);
 			retry = cmyth_livetv_chain_switch(rec, 1);
@@ -1018,13 +1022,13 @@ int cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, unsigned long len)
 				vlen = 4096;
 			}
 		}
-		else if (ret < rlen) {
+		else if (nlen < rlen) {
 			/* Returned size is less than requested size: decrease size to ret */
-			vlen = ret;
+			vlen = nlen;
 		}
 		else if (vlen < len) {
 			/* else increase size until no limit */
-			vlen = ret + 4096;
+			vlen = nlen + 4096;
 		}
 		else {
 			vlen = 0;

@@ -321,7 +321,7 @@ cmyth_storagegroup_get_filelist(cmyth_conn_t control,char* storagegroup, char* h
 		cmyth_storagegroup_update_fileinfo(control,ret->storagegroup_filelist_list[i]);
 	}
 
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: results= %d\n", __FUNCTION__, res);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: results= %d\n", __FUNCTION__, res);
 
     out:
 	pthread_mutex_unlock(&mutex);

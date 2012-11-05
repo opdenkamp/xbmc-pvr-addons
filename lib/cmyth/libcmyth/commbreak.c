@@ -281,10 +281,10 @@ cmyth_commbreaklist_t
 cmyth_mysql_get_commbreaklist(cmyth_database_t db, cmyth_conn_t conn, cmyth_proginfo_t prog)
 {
 	cmyth_commbreaklist_t breaklist = cmyth_commbreaklist_create();
-	char start_ts_dt[CMYTH_TIMESTAMP_LEN + 1];
+	time_t start_ts_dt;
 	int r;
 
-	cmyth_timestamp_to_display_string(start_ts_dt, prog->proginfo_rec_start_ts, 0);
+	start_ts_dt = cmyth_timestamp_to_unixtime(prog->proginfo_rec_start_ts);
 	pthread_mutex_lock(&mutex);
 	if ((r=cmyth_mysql_get_commbreak_list(db, prog->proginfo_chanId, start_ts_dt, breaklist, conn->conn_version)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,

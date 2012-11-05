@@ -460,9 +460,6 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  if (m_pEventHandler && m_pEventHandler->IsPlaybackActive())
-    return PVR_ERROR_NO_ERROR;
-
   m_recordings = m_con.GetRecordedPrograms();
   for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
@@ -471,7 +468,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       PVR_RECORDING tag;
       memset(&tag, 0, sizeof(PVR_RECORDING));
 
-      tag.recordingTime = it->second.RecStart();
+      tag.recordingTime = it->second.StartTime();
       tag.iDuration = it->second.Duration();
       tag.iPlayCount = it->second.IsWatched() ? 1 : 0;
 
@@ -541,6 +538,7 @@ PVR_ERROR PVRClientMythTV::DeleteRecording(const PVR_RECORDING &recording)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
+  m_con.Lock();
   ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
   if (it != m_recordings.end())
   {
@@ -550,19 +548,20 @@ PVR_ERROR PVRClientMythTV::DeleteRecording(const PVR_RECORDING &recording)
       m_recordings.erase(it);
       if (g_bExtraDebug)
         XBMC->Log(LOG_DEBUG, "%s - Deleted recording %s", __FUNCTION__, recording.strRecordingId);
+      m_con.Unlock();
       return PVR_ERROR_NO_ERROR;
     }
     else
     {
       XBMC->Log(LOG_DEBUG, "%s - Failed to delete recording %s", __FUNCTION__, recording.strRecordingId);
-      return PVR_ERROR_FAILED;
     }
   }
   else
   {
     XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
-    return PVR_ERROR_FAILED;
   }
+  m_con.Unlock();
+  return PVR_ERROR_FAILED;
 }
 
 PVR_ERROR PVRClientMythTV::SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
@@ -572,6 +571,7 @@ PVR_ERROR PVRClientMythTV::SetRecordingPlayCount(const PVR_RECORDING &recording,
   if (count > 1) count = 1;
   if (count < 0) count = 0;
 
+  m_con.Lock();
   ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
   if (it != m_recordings.end())
   {
@@ -581,20 +581,21 @@ PVR_ERROR PVRClientMythTV::SetRecordingPlayCount(const PVR_RECORDING &recording,
     {
       if (g_bExtraDebug)
         XBMC->Log(LOG_DEBUG, "%s - Set watched state for %s", __FUNCTION__, recording.strRecordingId);
+      m_con.Unlock();
       PVR->TriggerRecordingUpdate();
       return PVR_ERROR_NO_ERROR;
     }
     else
     {
       XBMC->Log(LOG_DEBUG, "%s - Failed setting watched state for: %s: %d)", __FUNCTION__, recording.strRecordingId, ret);
-      return PVR_ERROR_FAILED;
     }
   }
   else
   {
-    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
-    return PVR_ERROR_FAILED;
+    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);    
   }
+  m_con.Unlock();
+  return PVR_ERROR_FAILED;
 }
 
 PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
@@ -608,6 +609,7 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
     XBMC->Log(LOG_DEBUG, "%s - Setting Bookmark for: %s to %d", __FUNCTION__, recording.strTitle, lastplayedposition);
   }
 
+  m_con.Lock();
   ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
   if (it != m_recordings.end())
   {
@@ -620,29 +622,29 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
     }
 
     // Write the bookmark
-    int retval = m_con.SetBookmark(it->second, frameOffset);
-    if (retval == 1)
+    if (m_con.SetBookmark(it->second, frameOffset))
     {
       if (g_bExtraDebug)
       {
-        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark successful: %d)", __FUNCTION__);
+        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark successful", __FUNCTION__);
       }
+      m_con.Unlock();
       return PVR_ERROR_NO_ERROR;
     }
     else
     {
       if (g_bExtraDebug)
       {
-        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark failed: %d)", __FUNCTION__, retval);
+        XBMC->Log(LOG_ERROR, "%s - Setting Bookmark failed", __FUNCTION__);
       }
-      return PVR_ERROR_FAILED;
     }
   }
   else
   {
     XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
-    return PVR_ERROR_FAILED;
   }
+  m_con.Unlock();
+  return PVR_ERROR_FAILED;
 }
 
 int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
@@ -656,6 +658,7 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
     XBMC->Log(LOG_DEBUG, "%s - Reading Bookmark for: %s", __FUNCTION__, recording.strTitle);
   }
 
+  m_con.Lock();
   ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
   if (it != m_recordings.end())
   {
@@ -681,12 +684,14 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
   else
   {
     XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
+    m_con.Unlock();
     return PVR_ERROR_FAILED;
   }
 
   // Set the bookmark few seconds earlier (due to the accuracy of the above float operations)
   bookmark = bookmark - 3;
   if (bookmark < 0) bookmark = 0;
+  m_con.Unlock();
   return bookmark;
 }
 
@@ -772,8 +777,8 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     PVR_TIMER tag;
     memset(&tag, 0, sizeof(PVR_TIMER));
 
-    tag.startTime= it->second.StartTime();
-    tag.endTime = it->second.EndTime();
+    tag.startTime= it->second.RecordingStartTime();
+    tag.endTime = it->second.RecordingEndTime();
     tag.iClientChannelUid = it->second.ChannelID();
     tag.iClientIndex = it->second.RecordID();
     tag.iMarginEnd = timers.at(it->second.RecordID()).EndOffset();
@@ -899,38 +904,40 @@ PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done - %i", __FUNCTION__, id);
 
-  //PVR->TriggerTimerUpdate();
+  // Completion of the scheduling will be signaled by a SCHEDULE_CHANGE event.
+  // Thus no need to call TriggerTimerUpdate().
+
   return PVR_ERROR_NO_ERROR;
 }
 
 PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
 {
-  //if(g_bExtraDebug)
-  //  XBMC->Log(LOG_DEBUG,"%s - title: %s, start: %i, end: %i, chanID: %i, ID: %i",__FUNCTION__,timer.strTitle,timer.startTime,timer.iClientChannelUid,timer.iClientIndex);
-  //std::map< int, MythTimer > timers=m_db.GetTimers();
-  //RecordingRule r = m_recordingRules[(timer.iClientIndex)>>16]; 
-  //if(r.GetParent())
-  //  r = *r.GetParent();
-  //if(r.Type()!=MythTimer::FindOneRecord && r.Type()!=MythTimer::SingleRecord)
-  //{
-  //  CStdString line0;
-  //  line0.Format(XBMC->GetLocalizedString(30008)/*"This will delete the recording rule and \nan additional %i timer(s)."*/,r.size()-1);
-  //  if(!(GUI->Dialog_showYesNo(XBMC->GetLocalizedString(19060)/*"Delete Timer"*/,line0,"",XBMC->GetLocalizedString(30007)/*"Do you still want to delete?"*/,NULL,NULL,NULL)))
-  //    return PVR_ERROR_NO_ERROR; 
-  //}
-  ////delete related Override and Don't Record timers
-  //std::vector<RecordingRule* > modifiers = r.GetModifiers();
-  //for(std::vector <RecordingRule* >::iterator it = modifiers.begin(); it != modifiers.end(); it++)
-  //  m_db.DeleteTimer((*it)->RecordID());
-  //if(!m_db.DeleteTimer(r.RecordID()))
-  //  return PVR_ERROR_FAILED;
-  //m_con.UpdateSchedules(-1);
-  //if(g_bExtraDebug)
-  //  XBMC->Log(LOG_DEBUG,"%s - Done",__FUNCTION__);
-  //return PVR_ERROR_NO_ERROR;
-  (void) timer;
-  (void) bForceDelete;
-  return PVR_ERROR_FAILED;
+  (void)bForceDelete;
+
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG, "%s - title: %s, start: %i, end: %i, chanID: %i", __FUNCTION__, timer.strTitle, timer.startTime, timer.iClientChannelUid);
+
+  TimerMap timers = m_db.GetTimers();
+  RecordingRule recordingRule = m_recordingRules[(timer.iClientIndex)>>16];
+  if (recordingRule.GetParent())
+    recordingRule = *recordingRule.GetParent();
+
+  // Delete related Override and Don't Record timers
+  std::vector<RecordingRule*> modifiers = recordingRule.GetModifiers();
+  for (std::vector <RecordingRule*>::iterator it = modifiers.begin(); it != modifiers.end(); ++it)
+    m_db.DeleteTimer((*it)->RecordID());
+
+  if (!m_db.DeleteTimer(recordingRule.RecordID()))
+    return PVR_ERROR_FAILED;
+
+  m_con.UpdateSchedules(-1);
+
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
+
+  PVR->TriggerTimerUpdate();
+
+  return PVR_ERROR_NO_ERROR;
 }
 
 void PVRClientMythTV::PVRtoMythTimer(const PVR_TIMER timer, MythTimer &mt)
@@ -1069,7 +1076,7 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
     for (std::vector<int>::iterator it = m_sources.at(chan.SourceID()).begin(); it != m_sources.at(chan.SourceID()).end(); it++)
     {
       m_rec = m_con.GetRecorder(*it);
-      if (!m_rec.IsRecording() && m_rec.IsTunable(chan))
+      if (m_rec.ID() > 0 && !m_rec.IsRecording() && m_rec.IsTunable(chan))
       {
         if (g_bExtraDebug)
           XBMC->Log(LOG_DEBUG,"%s: Opening new recorder %i", __FUNCTION__, m_rec.ID());
@@ -1122,7 +1129,8 @@ void PVRClientMythTV::CloseLiveStream()
   if (m_pEventHandler)
     m_pEventHandler->PreventLiveChainUpdate();
 
-  m_rec.Stop();
+  if (!m_rec.Stop())
+    XBMC->Log(LOG_NOTICE, "%s - Stop live stream failed", __FUNCTION__);
   m_rec = MythRecorder();
 
   if (m_pEventHandler)
@@ -1185,7 +1193,7 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
   if (m_pEventHandler)
     m_pEventHandler->PreventLiveChainUpdate();
 
-  m_rec.Stop();
+  retval = m_rec.Stop();
   m_rec = MythRecorder();
 
   if (m_pEventHandler)
@@ -1194,7 +1202,8 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
     m_pEventHandler->AllowLiveChainUpdate();
   }
   //Try to reopen live stream
-  retval = OpenLiveStream(channelinfo);
+  if (retval)
+    retval = OpenLiveStream(channelinfo);
 
   if (!retval)
   {

@@ -67,6 +67,8 @@ public:
   void SetRecordingEventListener(const CStdString &recordid, const MythFile &file);
   void HandleUpdateFileSize(const CStdString &buffer);
 
+  void RetryConnect();
+
   // Data
   CStdString m_server;
   unsigned short m_port;
@@ -159,7 +161,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         {
           bool retval = m_recorder.LiveTVChainUpdate(databuf);
           if (g_bExtraDebug)
-            XBMC->Log(LOG_NOTICE, "%s - Event chain update: %i", __FUNCTION__, retval);
+            XBMC->Log(LOG_NOTICE, "%s - Event chain update: %s", __FUNCTION__, (retval ? "true" : "false"));
         }
         else
           if (g_bExtraDebug)
@@ -227,17 +229,27 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         PVR->TriggerRecordingUpdate();
       }
 
-      if (myth_event == CMYTH_EVENT_CLOSE ||
-          myth_event == CMYTH_EVENT_UNKNOWN)
+      if (myth_event == CMYTH_EVENT_UNKNOWN)
+      {
+        XBMC->Log(LOG_NOTICE, "%s - Event unknown, databuf: %s", __FUNCTION__, databuf);
+      }
+
+      if (myth_event == CMYTH_EVENT_CLOSE)
       {
         XBMC->Log(LOG_NOTICE, "%s - Event client connection closed", __FUNCTION__);
+        RetryConnect();
       }
 
       databuf[0] = 0;
     }
-    else if (select < 0 || cmyth_conn_hung(*m_conn_t))
+    else if (select < 0)
     {
-      XBMC->Log( LOG_NOTICE, "%s - Select returned error; reconnect event client connection", __FUNCTION__);
+        XBMC->Log(LOG_ERROR, "%s Event client connection error", __FUNCTION__);
+        RetryConnect();
+    }
+    else if (select = 0 && cmyth_conn_hung(*m_conn_t))
+    {
+      XBMC->Log(LOG_NOTICE, "%s - Connection hung - reconnect event client connection", __FUNCTION__);
 
       if (!m_conn_t)
         break;
@@ -311,6 +323,25 @@ void MythEventHandler::MythEventHandlerPrivate::HandleUpdateFileSize(const CStdS
       XBMC->Log(LOG_DEBUG,"EVENT: %s, --UPDATING CURRENT RECORDING LENGTH-- EVENT msg: %s %ll", __FUNCTION__, recordID.c_str(), length);
     m_currentFile.UpdateLength(length);
   }
+}
+
+void MythEventHandler::MythEventHandlerPrivate::RetryConnect()
+{
+    while (!IsStopped())
+    {
+      usleep(999999);
+      ref_release(*m_conn_t);
+      *m_conn_t = NULL;
+      *m_conn_t = cmyth_conn_connect_event(const_cast<char*>(m_server.c_str()), m_port, 64 * 1024, 16 * 1024);
+
+      if (*m_conn_t == NULL)
+        XBMC->Log(LOG_NOTICE, "%s - Could not connect client to event socket", __FUNCTION__);
+      else
+      {
+        XBMC->Log(LOG_NOTICE, "%s - Connected client to event socket", __FUNCTION__);
+        break;
+      }
+    }
 }
 
 MythEventHandler::MythEventHandler()

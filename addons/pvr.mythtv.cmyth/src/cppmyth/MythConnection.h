@@ -86,13 +86,12 @@ public:
 
   // Bookmarks
   long long GetBookmark(MythProgramInfo &recording);
-  int SetBookmark(MythProgramInfo &recording, long long bookmark);
+  bool SetBookmark(MythProgramInfo &recording, long long bookmark);
 
 private:
   boost::shared_ptr<MythPointerThreadSafe<cmyth_conn_t> > m_conn_t;
   CStdString m_server;
   unsigned short m_port;
-  int m_retryCount;
 
   MythEventHandler *m_pEventHandler;
 };

@@ -60,7 +60,7 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 typedef struct {
 	unsigned int version;
-	char token[9]; // 8 characters + the terminating NULL character
+	char token[14]; // up to 13 chars used in v74 + the terminating NULL character
 } myth_protomap_t;
 
 static myth_protomap_t protomap[] = {
@@ -76,6 +76,8 @@ static myth_protomap_t protomap[] = {
 	{71, "05e82186"},
 	{72, "D78EFD6F"},
 	{73, "D7FE8D6F"},
+	{74, "SingingPotato"},
+	{75, "SweetRock"},
 	{0, ""}
 };
 
@@ -602,7 +604,7 @@ cmyth_conn_connect(char *server, unsigned short port, unsigned buflen,
 			  __FUNCTION__, announcement);
 		goto shut;
 	}
-	if (cmyth_rcv_okay(conn, "OK") < 0) {
+	if (cmyth_rcv_okay(conn) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
 		goto shut;
@@ -701,7 +703,7 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 			  __FUNCTION__, announcement);
 		goto shut;
 	}
-	if (cmyth_rcv_okay(conn, "OK") < 0) {
+	if (cmyth_rcv_okay(conn) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
 		goto shut;
@@ -782,8 +784,12 @@ cmyth_conn_reconnect_ctrl(cmyth_conn_t control)
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: reconnecting control connection\n",
 		  __FUNCTION__);
-	control->conn_hang = 0;
-	ret = cmyth_conn_reconnect(control, 0);
+	if (control)
+		ret = cmyth_conn_reconnect(control, 0);
+	else
+		ret = 0;
+	if (ret)
+		control->conn_hang = 0;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done reconnecting control connection ret = %d\n",
 		  __FUNCTION__, ret);
 	return ret;
@@ -809,7 +815,10 @@ cmyth_conn_reconnect_event(cmyth_conn_t conn)
 	int ret;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: re-connecting event channel connection\n",
 		  __FUNCTION__);
-	ret = cmyth_conn_reconnect(conn, 1);
+	if (conn)
+		ret = cmyth_conn_reconnect(conn, 1);
+	else
+		ret = 0;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done re-connecting event channel connection ret = %d\n",
 		  __FUNCTION__, ret);
 	return ret;
@@ -847,7 +856,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 	int err = 0;
 	int count = 0;
 	int r;
-	int ann_size = sizeof("ANN FileTransfer  0[]:[][]:[]");
+	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
 	cmyth_file_t ret = NULL;
 
 	if (!prog) {
@@ -914,7 +923,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	if (control->conn_version >= 44) {
-		sprintf(announcement, "ANN FileTransfer %s 0[]:[]%s[]:[]", // write = false
+		sprintf(announcement, "ANN FileTransfer %s 0 0 1000[]:[]%s[]:[]", // write = false
 			  my_hostname, prog->proginfo_pathname);
 	}
 	else {
@@ -1017,7 +1026,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	int err = 0;
 	int count = 0;
 	int r, port;
-	int ann_size = sizeof("ANN FileTransfer  0[]:[][]:[]");
+	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
 	struct sockaddr_in addr;
         socklen_t addr_size = sizeof(addr);
 	cmyth_file_t ret = NULL;
@@ -1056,7 +1065,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	 */
 	conn->conn_version = control->conn_version;
 
-	ann_size += strlen(path) + strlen(my_hostname) + strlen(storage_group) + 6;
+	ann_size += strlen(path) + strlen(my_hostname) + strlen(storage_group);
 	announcement = malloc(ann_size);
 	if (!announcement) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1066,10 +1075,10 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	}
 	if (control->conn_version >= 44) { /*TSP: from version 44 according to the source code*/
 		if (strlen(storage_group) > 1) {
-			sprintf(announcement, "ANN FileTransfer %s 0 0 0[]:[]%s[]:[]%s",
+			sprintf(announcement, "ANN FileTransfer %s 0 0 100[]:[]%s[]:[]%s",
 				  my_hostname, path, storage_group);
 		} else {
-			sprintf(announcement, "ANN FileTransfer %s 0[]:[]%s[]:[]",  // write = false
+			sprintf(announcement, "ANN FileTransfer %s 0 0 100[]:[]%s[]:[]",  // write = false
 				  my_hostname, path);
 		}
 	} else {
@@ -1200,7 +1209,7 @@ cmyth_conn_connect_ring(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf)
 		goto shut;
 	}
 	free(announcement);
-	if (cmyth_rcv_okay(conn, "OK") < 0) {
+	if (cmyth_rcv_okay(conn) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
 		goto shut;
@@ -1855,7 +1864,7 @@ static int cmyth_conn_set_setting_unlocked(cmyth_conn_t conn,
 		return -3;
 	}
 
-	if (cmyth_rcv_okay(conn, "OK") < 0) {
+	if (cmyth_rcv_okay(conn) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
 		return -4;
@@ -1874,4 +1883,85 @@ int cmyth_conn_set_setting(cmyth_conn_t conn,
 	pthread_mutex_unlock(&mutex);
 
 	return result;
+}
+
+/*
+ * cmyth_conn_reschedule_recordings(cmyth_conn_t rec, int recordid)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Issues a run of the re-scheduler.
+ * Takes an optional recordid, or -1 performs a full run.
+ *
+ * Return Value:
+ *
+ * Success: 0
+ *
+ * Failure: -(ERRNO)
+ */
+int
+cmyth_conn_reschedule_recordings(cmyth_conn_t conn, int recordid)
+{
+	int err = 0;
+	int id;
+	char msg[256];
+
+	if (conn->conn_version < 15) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support RESCHEDULE_RECORDINGS\n",
+			  __FUNCTION__);
+		return -1;
+	}
+
+	/*
+	 * RESCHEDULE_RECORDINGS changed in protocol version 73:
+	 *
+	 * MATCH reschedule requests should be used when the guide data or a
+	 * specific recording rule is changed. The syntax is as follows.
+	 *
+	 *    MATCH <recordid> <sourceid> <mplexid> <maxstarttime> <reason>
+	 *
+	 * CHECK reschedule requests should be used when the status of a
+	 * specific episode is affected such as when "never record" or "allow
+	 * re-record" are selected or a recording finishes or is deleted. The
+	 * syntax is as follows.
+	 *
+	 *    CHECK <recstatus> <recordid> <findid> <reason>
+	 *    <title>
+	 *    <subtitle>
+	 *    <description>
+	 *    <programid>
+	 */
+	if (conn->conn_version < 73) {
+		id = (recordid > 0 ? recordid : -1);
+		snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS %i", id);
+	} else {
+		if (recordid == 0) {
+			strncpy(msg, "RESCHEDULE_RECORDINGS []:[]CHECK 0 0 0 cmyth[]:[][]:[][]:[][]:[]**any**", sizeof(msg));
+		} else {
+			id = (recordid > 0 ? recordid : 0);
+			snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS []:[]MATCH %i 0 0 - cmyth", id);
+		}
+	}
+
+	pthread_mutex_lock(&mutex);
+
+	if ((err = cmyth_send_message(conn, msg)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_send_message() failed (%d)\n",
+			  __FUNCTION__, err);
+		goto out;
+	}
+
+	if ((err=cmyth_rcv_feedback(conn, "1")) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_rcv_feedback() failed (%d)\n",
+			  __FUNCTION__, err);
+		goto out;
+	}
+
+out:
+	pthread_mutex_unlock(&mutex);
+	return err;
 }

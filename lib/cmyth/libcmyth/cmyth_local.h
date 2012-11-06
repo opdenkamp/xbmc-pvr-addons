@@ -29,14 +29,13 @@
 #include <stdlib.h>
 #if !defined(_MSC_VER)
 #include <sys/time.h>
+#else
+#include <winsock2.h>
 #endif
 #include <refmem/refmem.h>
 #include <cmyth/cmyth.h>
 #include <time.h>
 #include <stdint.h>
-#if defined(_MSC_VER)
-#include <winsock2.h>
-#endif
 #include <mysql/mysql.h>
 
 #if defined(_MSC_VER)

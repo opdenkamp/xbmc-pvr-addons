@@ -533,8 +533,8 @@ extern "C"
 
   /*!
    * Notify the pvr addon/demuxer that XBMC wishes to seek the stream by time
-   * @param time The amount of time to shift the stream
-   * @param backwards True if this seek is negative
+   * @param time The absolute time since stream start
+   * @param backwards True to seek to keyframe BEFORE time, else AFTER
    * @param startpts can be updated to point to where display should start
    * @return True if the seek operation was possible
    * @remarks Optional, and only used if addon has its own demuxer. Return False if this add-on won't provide this function.

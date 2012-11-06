@@ -1,5 +1,5 @@
 /*
- *      Copyright (C) 2005-2012 Team XBMC
+ *      Copyright (C) 2005-2013 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -283,6 +283,16 @@ extern "C"
   * @remarks Required if bSupportsRecordingPlayCount is set to true. Return -1 if this add-on won't provide this function.
   */
   int GetRecordingLastPlayedPosition(const PVR_RECORDING& recording);
+
+  /*!
+  * Retrieve the edit decision list (EDL) of a recording on the backend.
+  * @param recording The recording.
+  * @param edl out: The function has to write the EDL list into this array.
+  * @param size in: The maximum size of the EDL, out: the actual size of the EDL.
+  * @return PVR_ERROR_NO_ERROR if the EDL was successfully read.
+  * @remarks Required if bSupportsRecordingEdl is set to true. Return PVR_ERROR_NOT_IMPLEMENTED if this add-on won't provide this function.
+  */
+  PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY edl[], int *size);
 
   //@}
   /** @name PVR timer methods
@@ -586,6 +596,7 @@ extern "C"
     pClient->SetRecordingPlayCount          = SetRecordingPlayCount;
     pClient->SetRecordingLastPlayedPosition = SetRecordingLastPlayedPosition;
     pClient->GetRecordingLastPlayedPosition = GetRecordingLastPlayedPosition;
+    pClient->GetRecordingEdl                = GetRecordingEdl;
 
     pClient->GetTimersAmount                = GetTimersAmount;
     pClient->GetTimers                      = GetTimers;

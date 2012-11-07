@@ -35,7 +35,7 @@ private:
   cTSDemuxer *m_demuxer;
 
 public:
-  cParserDTS(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID);
+  cParserDTS(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
   virtual ~cParserDTS();
 
   virtual void Parse(unsigned char *data, int size, bool pusi);

@@ -72,6 +72,7 @@ cLiveReceiver::~cLiveReceiver()
   DEBUGLOG("Killing live receiver");
 }
 
+//void cLiveReceiver
 void cLiveReceiver::Receive(uchar *Data, int Length)
 {
   int p = m_Streamer->Put(Data, Length);
@@ -383,134 +384,20 @@ void cLivePatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Le
     m_pmtVersion = pmt.getVersionNumber();
 
     SI::PMT::Stream stream;
-    int         pids[MAXRECEIVEPIDS + 1];
-    eStreamType types[MAXRECEIVEPIDS + 1];
-    char        langs[MAXRECEIVEPIDS + 1][MAXLANGCODE2];
-    int         subtitlingType[MAXRECEIVEPIDS + 1];
-    int         compositionPageId[MAXRECEIVEPIDS + 1];
-    int         ancillaryPageId[MAXRECEIVEPIDS + 1];
-    int         streams = 0;
+    sStream newStream;
+    m_Streamer->m_DemuxerLock.Lock();
     for (SI::Loop::Iterator it; pmt.streamLoop.getNext(stream, it); )
     {
-      eStreamType type;
-      int pid = GetPid(stream, &type, langs[streams], &subtitlingType[streams], &compositionPageId[streams], &ancillaryPageId[streams]);
-      if (0 != pid && streams < MAXRECEIVEPIDS)
+      newStream.pID = GetPid(stream, &newStream.type, (char*)&newStream.language, &newStream.subtitlingType, &newStream.compositionPageId, &newStream.ancillaryPageId);
+      if (newStream.pID != 0)
       {
-        pids[streams]   = pid;
-        types[streams]  = type;
-        streams++;
+        m_Streamer->AddStream(newStream);
+        m_Streamer->CheckDemuxers();
       }
     }
-    pids[streams] = 0;
+    m_Streamer->m_DemuxerLock.Unlock();
 
-    int newstreams = 0;
-    for (int i = 0; i < streams; i++)
-    {
-      if (m_Streamer->HaveStreamDemuxer(pids[i], types[i]) == -1)
-        newstreams++;
-    }
-
-    if (newstreams > 0)
-    {
-      if (m_Streamer->m_Receiver)
-      {
-        DEBUGLOG("Detaching Live Receiver");
-        m_Streamer->m_Device->Detach(m_Streamer->m_Receiver);
-        DELETENULL(m_Streamer->m_Receiver);
-      }
-
-      for (int idx = 0; idx < MAXRECEIVEPIDS; ++idx)
-      {
-        if (m_Streamer->m_Streams[idx])
-        {
-          DELETENULL(m_Streamer->m_Streams[idx]);
-          m_Streamer->m_Pids[idx] = 0;
-        }
-      }
-      m_Streamer->m_NumStreams  = 0;
-      m_Streamer->m_streamReady = false;
-      m_Streamer->m_IFrameSeen  = false;
-
-      for (int i = 0; i < streams; i++)
-      {
-        switch (types[i])
-        {
-          case stMPEG2AUDIO:
-          {
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams] = new cTSDemuxer(m_Streamer, m_Streamer->m_NumStreams, stMPEG2AUDIO, pids[i]);
-            m_Streamer->m_Pids[m_Streamer->m_NumStreams] = pids[i];
-            m_Streamer->m_NumStreams++;
-            break;
-          }
-          case stMPEG2VIDEO:
-          {
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams] = new cTSDemuxer(m_Streamer, m_Streamer->m_NumStreams, stMPEG2VIDEO, pids[i]);
-            m_Streamer->m_Pids[m_Streamer->m_NumStreams] = pids[i];
-            m_Streamer->m_NumStreams++;
-            break;
-          }
-          case stH264:
-          {
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams] = new cTSDemuxer(m_Streamer, m_Streamer->m_NumStreams, stH264, pids[i]);
-            m_Streamer->m_Pids[m_Streamer->m_NumStreams] = pids[i];
-            m_Streamer->m_NumStreams++;
-            break;
-          }
-          case stAC3:
-          {
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams] = new cTSDemuxer(m_Streamer, m_Streamer->m_NumStreams, stAC3, pids[i]);
-            m_Streamer->m_Pids[m_Streamer->m_NumStreams] = pids[i];
-            m_Streamer->m_NumStreams++;
-            break;
-          }
-          case stEAC3:
-          {
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams] = new cTSDemuxer(m_Streamer, m_Streamer->m_NumStreams, stEAC3, pids[i]);
-            m_Streamer->m_Pids[m_Streamer->m_NumStreams] = pids[i];
-            m_Streamer->m_NumStreams++;
-            break;
-          }
-          case stDTS:
-          {
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams] = new cTSDemuxer(m_Streamer, m_Streamer->m_NumStreams, stDTS, pids[i]);
-            m_Streamer->m_Pids[m_Streamer->m_NumStreams] = pids[i];
-            m_Streamer->m_NumStreams++;
-            break;
-          }
-          case stAAC:
-          {
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams] = new cTSDemuxer(m_Streamer, m_Streamer->m_NumStreams, stAAC, pids[i]);
-            m_Streamer->m_Pids[m_Streamer->m_NumStreams] = pids[i];
-            m_Streamer->m_NumStreams++;
-            break;
-          }
-          case stDVBSUB:
-          {
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams] = new cTSDemuxer(m_Streamer, m_Streamer->m_NumStreams, stDVBSUB, pids[i]);
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams]->SetLanguage(langs[i]);
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams]->SetSubtitlingDescriptor(subtitlingType[i], compositionPageId[i], ancillaryPageId[i]);
-            m_Streamer->m_Pids[m_Streamer->m_NumStreams] = pids[i];
-            m_Streamer->m_NumStreams++;
-            break;
-          }
-          case stTELETEXT:
-          {
-            m_Streamer->m_Streams[m_Streamer->m_NumStreams] = new cTSDemuxer(m_Streamer, m_Streamer->m_NumStreams, stTELETEXT, pids[i]);
-            m_Streamer->m_Pids[m_Streamer->m_NumStreams] = pids[i];
-            m_Streamer->m_NumStreams++;
-            break;
-          }
-          default:
-            break;
-        }
-      }
-
-      m_Streamer->m_Receiver  = new cLiveReceiver(m_Streamer, m_Channel, m_Streamer->m_Priority, m_Streamer->m_Pids);
-      m_Streamer->m_Device->AttachReceiver(m_Streamer->m_Receiver);
-      INFOLOG("Currently unknown new streams found, receiver and demuxers reinited\n");
-      m_Streamer->RequestStreamChange();
-    }
-    else if (!m_Streamer->m_Receiver)
+    if (!m_Streamer->m_Receiver)
     {
       m_Streamer->m_Receiver  = new cLiveReceiver(m_Streamer, m_Channel, m_Streamer->m_Priority, m_Streamer->m_Pids);
       m_Streamer->m_Device->AttachReceiver(m_Streamer->m_Receiver);
@@ -532,7 +419,6 @@ cLiveStreamer::cLiveStreamer(uint32_t timeout)
   m_Receiver        = NULL;
   m_PatFilter       = NULL;
   m_Frontend        = -1;
-  m_NumStreams      = 0;
   m_streamReady     = false;
   m_IsAudioOnly     = false;
   m_IsMPEGPS        = false;
@@ -548,9 +434,9 @@ cLiveStreamer::cLiveStreamer(uint32_t timeout)
   memset(&m_FrontendInfo, 0, sizeof(m_FrontendInfo));
   for (int idx = 0; idx < MAXRECEIVEPIDS; ++idx)
   {
-    m_Streams[idx] = NULL;
     m_Pids[idx]    = 0;
   }
+  m_Streams.clear();
 
   if(m_scanTimeout == 0)
     m_scanTimeout = VNSIServerConfig.stream_timeout;
@@ -586,15 +472,12 @@ cLiveStreamer::~cLiveStreamer()
       DEBUGLOG("No live filter present");
     }
 
-    for (int idx = 0; idx < MAXRECEIVEPIDS; ++idx)
+    for (std::list<cTSDemuxer*>::iterator it = m_Demuxers.begin(); it != m_Demuxers.end(); ++it)
     {
-      if (m_Streams[idx])
-      {
-        DEBUGLOG("Deleting stream demuxer %i for pid=%i and type=%i", m_Streams[idx]->GetStreamID(), m_Streams[idx]->GetPID(), m_Streams[idx]->Type());
-        DELETENULL(m_Streams[idx]);
-        m_Pids[idx] = 0;
-      }
+      DEBUGLOG("Deleting stream demuxer for pid=%i and type=%i", (*it)->GetPID(), (*it)->Type());
+      delete (*it);
     }
+    m_Demuxers.clear();
 
     if (m_Receiver)
     {
@@ -617,11 +500,6 @@ cLiveStreamer::~cLiveStreamer()
   delete m_packetEmpty;
 
   DEBUGLOG("Finished to delete live streamer");
-}
-
-void cLiveStreamer::RequestStreamChange()
-{
-  m_requestStreamChange = true;
 }
 
 void cLiveStreamer::Action(void)
@@ -735,19 +613,20 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
   {
     DEBUGLOG("Successfully found following device: %p (%d) for receiving", m_Device, m_Device ? m_Device->CardIndex() + 1 : 0);
 
+    sStream newStream;
     if (m_Device->SwitchChannel(m_Channel, false))
     {
       if (m_Channel->Vpid())
       {
+        newStream.pID = m_Channel->Vpid();
 #if APIVERSNUM >= 10701
         if (m_Channel->Vtype() == 0x1B)
-          m_Streams[m_NumStreams] = new cTSDemuxer(this, m_NumStreams, stH264, m_Channel->Vpid());
+          newStream.type = stH264;
         else
 #endif
-          m_Streams[m_NumStreams] = new cTSDemuxer(this, m_NumStreams, stMPEG2VIDEO, m_Channel->Vpid());
+          newStream.type = stMPEG2VIDEO;
 
-        m_Pids[m_NumStreams] = m_Channel->Vpid();
-        m_NumStreams++;
+        AddStream(newStream);
       }
       else
       {
@@ -760,29 +639,29 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
       }
 
       const int *APids = m_Channel->Apids();
-      for ( ; *APids && m_NumStreams < MAXRECEIVEPIDS; APids++)
+      for ( ; *APids; APids++)
       {
         int index = 0;
         if (!FindStreamDemuxer(*APids))
         {
-          m_Pids[m_NumStreams]    = *APids;
-          m_Streams[m_NumStreams] = new cTSDemuxer(this, m_NumStreams, stMPEG2AUDIO, *APids);
-          m_Streams[m_NumStreams]->SetLanguage(m_Channel->Alang(index));
-          m_NumStreams++;
+          newStream.pID = *APids;
+          newStream.type = stMPEG2AUDIO;
+          newStream.SetLanguage(m_Channel->Alang(index));
+          AddStream(newStream);
         }
         index++;
       }
 
       const int *DPids = m_Channel->Dpids();
-      for ( ; *DPids && m_NumStreams < MAXRECEIVEPIDS; DPids++)
+      for ( ; *DPids; DPids++)
       {
         int index = 0;
         if (!FindStreamDemuxer(*DPids))
         {
-          m_Pids[m_NumStreams]    = *DPids;
-          m_Streams[m_NumStreams] = new cTSDemuxer(this, m_NumStreams, stAC3, *DPids);
-          m_Streams[m_NumStreams]->SetLanguage(m_Channel->Dlang(index));
-          m_NumStreams++;
+          newStream.pID = *DPids;
+          newStream.type = stAC3;
+          newStream.SetLanguage(m_Channel->Dlang(index));
+          AddStream(newStream);
         }
         index++;
       }
@@ -791,19 +670,19 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
       if (SPids)
       {
         int index = 0;
-        for ( ; *SPids && m_NumStreams < MAXRECEIVEPIDS; SPids++)
+        for ( ; *SPids; SPids++)
         {
           if (!FindStreamDemuxer(*SPids))
           {
-            m_Pids[m_NumStreams]    = *SPids;
-            m_Streams[m_NumStreams] = new cTSDemuxer(this, m_NumStreams, stDVBSUB, *SPids);
-            m_Streams[m_NumStreams]->SetLanguage(m_Channel->Slang(index));
+            newStream.pID = *SPids;
+            newStream.type = stDVBSUB;
+            newStream.SetLanguage(m_Channel->Slang(index));
 #if APIVERSNUM >= 10709
-            m_Streams[m_NumStreams]->SetSubtitlingDescriptor(m_Channel->SubtitlingType(index),
-                                                             m_Channel->CompositionPageId(index),
-                                                             m_Channel->AncillaryPageId(index));
+            newStream.subtitlingType = m_Channel->SubtitlingType(index);
+            newStream.compositionPageId = m_Channel->CompositionPageId(index);
+            newStream.ancillaryPageId = m_Channel->AncillaryPageId(index);
 #endif
-            m_NumStreams++;
+            AddStream(newStream);
           }
           index++;
         }
@@ -811,13 +690,12 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
 
       if (m_Channel->Tpid())
       {
-        m_Streams[m_NumStreams] = new cTSDemuxer(this, m_NumStreams, stTELETEXT, m_Channel->Tpid());
-        m_Pids[m_NumStreams]    = m_Channel->Tpid();
-        m_NumStreams++;
+        newStream.pID = m_Channel->Tpid();
+        newStream.type = stTELETEXT;
+        AddStream(newStream);
       }
 
-      m_Streams[m_NumStreams] = NULL;
-      m_Pids[m_NumStreams]    = 0;
+      ensureDemuxers();
 
       /* Send the OK response here, that it is before the Stream end message */
       resp->add_U32(VNSI_RET_OK);
@@ -826,7 +704,7 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
 
       if (m_Channel && ((m_Channel->Source() >> 24) == 'V')) m_IsMPEGPS = true;
 
-      if (m_NumStreams > 0 && m_Socket)
+      if (m_Demuxers.size() > 0 && m_Socket)
       {
         dsyslog("VNSI: Creating new live Receiver");
         m_PatFilter = new cLivePatFilter(this, m_Channel);
@@ -850,19 +728,25 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
 
 cTSDemuxer *cLiveStreamer::FindStreamDemuxer(int Pid)
 {
-  int idx;
-  for (idx = 0; idx < m_NumStreams; ++idx)
-    if (m_Streams[idx] && m_Streams[idx]->GetPID() == Pid)
-      return m_Streams[idx];
+  for (std::list<cTSDemuxer*>::iterator it = m_Demuxers.begin(); it != m_Demuxers.end(); ++it)
+  {
+    if (Pid == (*it)->GetPID())
+      return *it;
+  }
   return NULL;
+}
+
+void cLiveStreamer::AddStream(sStream &stream)
+{
+  m_Streams.push_back(stream);
 }
 
 int cLiveStreamer::HaveStreamDemuxer(int Pid, eStreamType streamType)
 {
-  int idx;
-  for (idx = 0; idx < m_NumStreams; ++idx)
-    if (m_Streams[idx] && (Pid == 0 || m_Streams[idx]->GetPID() == Pid) && m_Streams[idx]->Type() == streamType)
-      return idx;
+//  int idx;
+//  for (idx = 0; idx < m_NumStreams; ++idx)
+//    if (m_Streams[idx] && (Pid == 0 || m_Streams[idx]->GetPID() == Pid) && m_Streams[idx]->Type() == streamType)
+//      return idx;
   return -1;
 }
 
@@ -914,6 +798,9 @@ void cLiveStreamer::sendStreamPacket(sStreamPacket *pkt)
   if(!m_IsAudioOnly && !m_IFrameSeen && (pkt->frametype != PKT_I_FRAME))
     return;
 
+  if (m_checkDemuxers)
+    ensureDemuxers();
+
   if(m_requestStreamChange)
     sendStreamChange();
 
@@ -944,65 +831,71 @@ void cLiveStreamer::sendStreamChange()
     return;
   }
 
-  for (int idx = 0; idx < m_NumStreams; ++idx)
+  m_DemuxerLock.Lock();
+
+  for (std::list<cTSDemuxer*>::iterator it = m_Demuxers.begin(); it != m_Demuxers.end(); ++it)
   {
-    if (m_Streams[idx])
+    resp->add_U32((*it)->GetPID());
+    if ((*it)->Type() == stMPEG2AUDIO)
     {
-      resp->add_U32(m_Streams[idx]->GetStreamID());
-      if (m_Streams[idx]->Type() == stMPEG2AUDIO)
-      {
-        resp->add_String("MPEG2AUDIO");
-        resp->add_String(m_Streams[idx]->GetLanguage());
-      }
-      else if (m_Streams[idx]->Type() == stMPEG2VIDEO)
-      {
-        resp->add_String("MPEG2VIDEO");
-        resp->add_U32(m_Streams[idx]->GetFpsScale());
-        resp->add_U32(m_Streams[idx]->GetFpsRate());
-        resp->add_U32(m_Streams[idx]->GetHeight());
-        resp->add_U32(m_Streams[idx]->GetWidth());
-        resp->add_double(m_Streams[idx]->GetAspect());
-      }
-      else if (m_Streams[idx]->Type() == stAC3)
-      {
-        resp->add_String("AC3");
-        resp->add_String(m_Streams[idx]->GetLanguage());
-      }
-      else if (m_Streams[idx]->Type() == stH264)
-      {
-        resp->add_String("H264");
-        resp->add_U32(m_Streams[idx]->GetFpsScale());
-        resp->add_U32(m_Streams[idx]->GetFpsRate());
-        resp->add_U32(m_Streams[idx]->GetHeight());
-        resp->add_U32(m_Streams[idx]->GetWidth());
-        resp->add_double(m_Streams[idx]->GetAspect());
-      }
-      else if (m_Streams[idx]->Type() == stDVBSUB)
-      {
-        resp->add_String("DVBSUB");
-        resp->add_String(m_Streams[idx]->GetLanguage());
-        resp->add_U32(m_Streams[idx]->CompositionPageId());
-        resp->add_U32(m_Streams[idx]->AncillaryPageId());
-      }
-      else if (m_Streams[idx]->Type() == stTELETEXT)
-        resp->add_String("TELETEXT");
-      else if (m_Streams[idx]->Type() == stAAC)
-      {
-        resp->add_String("AAC");
-        resp->add_String(m_Streams[idx]->GetLanguage());
-      }
-      else if (m_Streams[idx]->Type() == stEAC3)
-      {
-        resp->add_String("EAC3");
-        resp->add_String(m_Streams[idx]->GetLanguage());
-      }
-      else if (m_Streams[idx]->Type() == stDTS)
-      {
-        resp->add_String("DTS");
-        resp->add_String(m_Streams[idx]->GetLanguage());
-      }
+      resp->add_String("MPEG2AUDIO");
+      resp->add_String((*it)->GetLanguage());
+    }
+    else if ((*it)->Type() == stMPEG2VIDEO)
+    {
+      resp->add_String("MPEG2VIDEO");
+      resp->add_U32((*it)->GetFpsScale());
+      resp->add_U32((*it)->GetFpsRate());
+      resp->add_U32((*it)->GetHeight());
+      resp->add_U32((*it)->GetWidth());
+      resp->add_double((*it)->GetAspect());
+    }
+    else if ((*it)->Type() == stAC3)
+    {
+      resp->add_String("AC3");
+      resp->add_String((*it)->GetLanguage());
+    }
+    else if ((*it)->Type() == stH264)
+    {
+      resp->add_String("H264");
+      resp->add_U32((*it)->GetFpsScale());
+      resp->add_U32((*it)->GetFpsRate());
+      resp->add_U32((*it)->GetHeight());
+      resp->add_U32((*it)->GetWidth());
+      resp->add_double((*it)->GetAspect());
+    }
+    else if ((*it)->Type() == stDVBSUB)
+    {
+      resp->add_String("DVBSUB");
+      resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->CompositionPageId());
+      resp->add_U32((*it)->AncillaryPageId());
+    }
+    else if ((*it)->Type() == stTELETEXT)
+    {
+      resp->add_String("TELETEXT");
+      resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->CompositionPageId());
+      resp->add_U32((*it)->AncillaryPageId());
+    }
+    else if ((*it)->Type() == stAAC)
+    {
+      resp->add_String("AAC");
+      resp->add_String((*it)->GetLanguage());
+    }
+    else if ((*it)->Type() == stEAC3)
+    {
+      resp->add_String("EAC3");
+      resp->add_String((*it)->GetLanguage());
+    }
+    else if ((*it)->Type() == stDTS)
+    {
+      resp->add_String("DTS");
+      resp->add_String((*it)->GetLanguage());
     }
   }
+
+  m_DemuxerLock.Unlock();
 
   resp->finaliseStream();
   m_Socket->write(resp->getPtr(), resp->getLen(), -1, true);
@@ -1160,7 +1053,7 @@ void cLiveStreamer::sendSignalInfo()
 
 void cLiveStreamer::sendStreamInfo()
 {
-  if(m_NumStreams == 0)
+  if(m_Demuxers.size() == 0)
   {
     return;
   }
@@ -1173,42 +1066,43 @@ void cLiveStreamer::sendStreamInfo()
     return;
   }
 
-  for (int idx = 0; idx < m_NumStreams; ++idx)
+  m_DemuxerLock.Lock();
+
+  for (std::list<cTSDemuxer*>::iterator it = m_Demuxers.begin(); it != m_Demuxers.end(); ++it)
   {
-    if (m_Streams[idx])
+    if ((*it)->Type() == stMPEG2AUDIO ||
+        (*it)->Type() == stAC3 ||
+        (*it)->Type() == stEAC3 ||
+        (*it)->Type() == stDTS ||
+        (*it)->Type() == stAAC)
     {
-      if (m_Streams[idx]->Type() == stMPEG2AUDIO ||
-          m_Streams[idx]->Type() == stAC3 ||
-          m_Streams[idx]->Type() == stEAC3 ||
-          m_Streams[idx]->Type() == stDTS ||
-          m_Streams[idx]->Type() == stAAC)
-      {
-        resp->add_U32(m_Streams[idx]->GetStreamID());
-        resp->add_String(m_Streams[idx]->GetLanguage());
-        resp->add_U32(m_Streams[idx]->GetChannels());
-        resp->add_U32(m_Streams[idx]->GetSampleRate());
-        resp->add_U32(m_Streams[idx]->GetBlockAlign());
-        resp->add_U32(m_Streams[idx]->GetBitRate());
-        resp->add_U32(m_Streams[idx]->GetBitsPerSample());
-      }
-      else if (m_Streams[idx]->Type() == stMPEG2VIDEO || m_Streams[idx]->Type() == stH264)
-      {
-        resp->add_U32(m_Streams[idx]->GetStreamID());
-        resp->add_U32(m_Streams[idx]->GetFpsScale());
-        resp->add_U32(m_Streams[idx]->GetFpsRate());
-        resp->add_U32(m_Streams[idx]->GetHeight());
-        resp->add_U32(m_Streams[idx]->GetWidth());
-        resp->add_double(m_Streams[idx]->GetAspect());
-      }
-      else if (m_Streams[idx]->Type() == stDVBSUB)
-      {
-        resp->add_U32(m_Streams[idx]->GetStreamID());
-        resp->add_String(m_Streams[idx]->GetLanguage());
-        resp->add_U32(m_Streams[idx]->CompositionPageId());
-        resp->add_U32(m_Streams[idx]->AncillaryPageId());
-      }
+      resp->add_U32((*it)->GetPID());
+      resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->GetChannels());
+      resp->add_U32((*it)->GetSampleRate());
+      resp->add_U32((*it)->GetBlockAlign());
+      resp->add_U32((*it)->GetBitRate());
+      resp->add_U32((*it)->GetBitsPerSample());
+    }
+    else if ((*it)->Type() == stMPEG2VIDEO || (*it)->Type() == stH264)
+    {
+      resp->add_U32((*it)->GetPID());
+      resp->add_U32((*it)->GetFpsScale());
+      resp->add_U32((*it)->GetFpsRate());
+      resp->add_U32((*it)->GetHeight());
+      resp->add_U32((*it)->GetWidth());
+      resp->add_double((*it)->GetAspect());
+    }
+    else if ((*it)->Type() == stDVBSUB)
+    {
+      resp->add_U32((*it)->GetPID());
+      resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->CompositionPageId());
+      resp->add_U32((*it)->AncillaryPageId());
     }
   }
+
+  m_DemuxerLock.Unlock();
 
   resp->finaliseStream();
   m_Socket->write(resp->getPtr(), resp->getLen());
@@ -1228,4 +1122,95 @@ void cLiveStreamer::sendStreamStatus()
   resp->finaliseStream();
   m_Socket->write(resp->getPtr(), resp->getLen());
   delete resp;
+}
+
+void cLiveStreamer::ensureDemuxers()
+{
+  cMutexLock Lock(&m_DemuxerLock);
+
+  std::list<cTSDemuxer*>::iterator it = m_Demuxers.begin();
+  while (it != m_Demuxers.end())
+  {
+    std::list<sStream>::iterator its;
+    for (its = m_Streams.begin(); its != m_Streams.end(); ++its)
+    {
+      if (its->pID == (*it)->GetPID())
+      {
+        break;
+      }
+    }
+    if (its == m_Streams.end())
+    {
+      INFOLOG("Deleting stream demuxer for pid=%i and type=%i", (*it)->GetPID(), (*it)->Type());
+      m_Demuxers.erase(it);
+      it = m_Demuxers.begin();
+      m_requestStreamChange = true;
+    }
+    else
+      ++it;
+  }
+
+  for (std::list<sStream>::iterator it = m_Streams.begin(); it != m_Streams.end(); ++it)
+  {
+    if (FindStreamDemuxer(it->pID))
+      continue;
+
+    cTSDemuxer *demuxer;
+    if (it->type == stH264)
+    {
+      demuxer = new cTSDemuxer(this, stH264, it->pID);
+    }
+    else if (it->type == stMPEG2VIDEO)
+    {
+      demuxer = new cTSDemuxer(this, stMPEG2VIDEO, it->pID);
+    }
+    else if (it->type == stMPEG2AUDIO)
+    {
+      demuxer = new cTSDemuxer(this, stMPEG2AUDIO, it->pID);
+      demuxer->SetLanguage(it->language);
+    }
+    else if (it->type == stAC3)
+    {
+      demuxer = new cTSDemuxer(this, stAC3, it->pID);
+      demuxer->SetLanguage(it->language);
+    }
+    else if (it->type == stDVBSUB)
+    {
+      demuxer = new cTSDemuxer(this, stDVBSUB, it->pID);
+      demuxer->SetLanguage(it->language);
+#if APIVERSNUM >= 10709
+      demuxer->SetSubtitlingDescriptor(it->subtitlingType, it->compositionPageId, it->ancillaryPageId);
+#endif
+    }
+    else if (it->type == stTELETEXT)
+    {
+      demuxer = new cTSDemuxer(this, stTELETEXT, it->pID);
+    }
+    else
+      continue;
+
+    m_Demuxers.push_back(demuxer);
+    INFOLOG("Created stream demuxer for pid=%i and type=%i", demuxer->GetPID(), demuxer->Type());
+    m_requestStreamChange = true;
+  }
+
+  if (m_requestStreamChange)
+  {
+    int index = 0;
+    for (std::list<cTSDemuxer*>::iterator it = m_Demuxers.begin(); it != m_Demuxers.end(); ++it)
+    {
+      m_Pids[index] = (*it)->GetPID();
+      index++;
+    }
+    m_Pids[index] = 0;
+
+    if (m_Receiver)
+    {
+      m_Receiver->SetPids(NULL);
+      m_Receiver->AddPids(m_Pids);
+    }
+  }
+
+  m_Streams.clear();
+  m_checkDemuxers = false;
 }

@@ -49,7 +49,7 @@ private:
   int         m_SampleRate;
 
 public:
-  cParserAAC(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID);
+  cParserAAC(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
   virtual ~cParserAAC();
 
   virtual void Parse(unsigned char *data, int size, bool pusi);

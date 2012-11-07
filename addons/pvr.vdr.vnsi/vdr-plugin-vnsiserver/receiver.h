@@ -33,6 +33,7 @@
 #include <vdr/receiver.h>
 #include <vdr/thread.h>
 #include <vdr/ringbuffer.h>
+#include <list>
 
 #include "demuxer.h"
 #include "responsepacket.h"
@@ -43,6 +44,24 @@ class cLiveReceiver;
 class cTSDemuxer;
 class cResponsePacket;
 class cLivePatFilter;
+
+struct sStream
+{
+  int pID;
+  eStreamType type;
+  eStreamContent content;
+  char language[MAXLANGCODE2];
+  int subtitlingType;
+  int compositionPageId;
+  int ancillaryPageId;
+  void SetLanguage(const char* lang)
+  {
+    language[0] = lang[0];
+    language[1] = lang[1];
+    language[2] = lang[2];
+    language[3] = 0;
+  }
+};
 
 class cLiveStreamer : public cThread
                     , public cRingBufferLinear
@@ -60,6 +79,7 @@ private:
   void sendSignalInfo();
   void sendStreamInfo();
   void sendStreamStatus();
+  void ensureDemuxers();
 
   const cChannel   *m_Channel;                      /*!> Channel to stream */
   cDevice          *m_Device;                       /*!> The receiving device the channel depents to */
@@ -67,8 +87,6 @@ private:
   cLivePatFilter   *m_PatFilter;                    /*!> Filter processor to get changed pid's */
   int               m_Priority;                     /*!> The priority over other streamers */
   int               m_Pids[MAXRECEIVEPIDS + 1];     /*!> PID for cReceiver also as extra array */
-  cTSDemuxer       *m_Streams[MAXRECEIVEPIDS + 1];  /*!> Stream information data (partly filled, rest is done by cLiveReceiver */
-  int               m_NumStreams;                   /*!> Number of streams selected */
   cxSocket         *m_Socket;                       /*!> The socket class to communicate with client */
   int               m_Frontend;                     /*!> File descriptor to access used receiving device  */
   dvb_frontend_info m_FrontendInfo;                 /*!> DVB Information about the receiving device (DVB only) */
@@ -80,15 +98,17 @@ private:
   bool              m_IsMPEGPS;                     /*!> TS Stream contains MPEG PS data like from pvrinput */
   cResponsePacket*  m_packetEmpty;                  /*!> Empty stream packet */
   bool              m_requestStreamChange;
+  bool              m_checkDemuxers;
   uint32_t          m_scanTimeout;                  /*!> Channel scanning timeout (in seconds) */
   cTimeMs           m_last_tick;
   bool              m_SignalLost;
   bool              m_IFrameSeen;
   cResponsePacket   m_streamHeader;
+  std::list<cTSDemuxer*> m_Demuxers;
+  std::list<sStream> m_Streams;
 
 protected:
   virtual void Action(void);
-  void RequestStreamChange();
 
 public:
   cLiveStreamer(uint32_t timeout = 0);
@@ -98,12 +118,15 @@ public:
 
   bool StreamChannel(const cChannel *channel, int priority, cxSocket *Socket, cResponsePacket* resp);
   void SetReady() { m_streamReady = true; }
-  bool IsReady() { return m_streamReady && (m_NumStreams > 0); }
+  bool IsReady() { return m_streamReady; }
   bool IsStarting() { return m_startup; }
   bool IsAudioOnly() { return m_IsAudioOnly; }
   bool IsMPEGPS() { return m_IsMPEGPS; }
   int HaveStreamDemuxer(int Pid, eStreamType streamType);
+  void AddStream(sStream &stream);
+  void CheckDemuxers() {m_checkDemuxers = true; };
 
+  cMutex m_DemuxerLock;
 };
 
 #endif  // VNSI_RECEIVER_H

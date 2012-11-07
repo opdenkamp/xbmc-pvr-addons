@@ -53,8 +53,8 @@ const unsigned int mpeg2video_framedurations[16] = {
   1500,
 };
 
-cParserMPEG2Video::cParserMPEG2Video(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID)
- : cParser(streamer, streamID)
+cParserMPEG2Video::cParserMPEG2Video(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
+ : cParser(streamer, pID)
 {
   m_pictureBuffer     = NULL;
   m_pictureBufferSize = 0;
@@ -189,7 +189,7 @@ bool cParserMPEG2Video::Parse_MPEG2Video(size_t len, uint32_t next_startcode, in
       }
 
       m_StreamPacket = new sStreamPacket;
-      m_StreamPacket->id        = m_streamID;
+      m_StreamPacket->id        = m_pID;
       m_StreamPacket->pts       = m_curPTS;
       m_StreamPacket->dts       = m_curDTS;
       m_StreamPacket->frametype = frametype;

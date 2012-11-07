@@ -59,7 +59,7 @@ private:
   void Parse_ComputeDuration(sStreamPacket* pkt);
 
 public:
-  cParserMPEG2Video(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID);
+  cParserMPEG2Video(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
   virtual ~cParserMPEG2Video();
 
   virtual void Parse(unsigned char *data, int size, bool pusi);

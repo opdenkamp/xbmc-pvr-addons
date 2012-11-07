@@ -88,7 +88,8 @@ ssize_t cxSocket::write(const void *buffer, size_t size, int timeout_ms, bool mo
         DEBUGLOG("cxSocket::write: EINTR during write(), retrying");
         continue;
       }
-      ERRORLOG("cxSocket::write: write() error");
+      else if (errno != EPIPE)
+        ERRORLOG("cxSocket::write: write() error");
       return p;
     }
 
@@ -120,7 +121,7 @@ ssize_t cxSocket::read(void *buffer, size_t size, int timeout_ms)
 
     ssize_t p = ::read(m_fd, ptr, missing);
 
-    if (p <= 0)
+    if (p < 0)
     {
       if (retryCounter < 10 && (errno == EINTR || errno == EAGAIN))
       {
@@ -129,7 +130,12 @@ ssize_t cxSocket::read(void *buffer, size_t size, int timeout_ms)
         continue;
       }
       ERRORLOG("cxSocket::read: read() error at %d/%d", (int)(size-missing), (int)size);
-      return size-missing;
+      return 0;
+    }
+    else if (p == 0)
+    {
+      INFOLOG("cxSocket::read: eof, connection closed");
+      return 0;
     }
 
     retryCounter = 0;

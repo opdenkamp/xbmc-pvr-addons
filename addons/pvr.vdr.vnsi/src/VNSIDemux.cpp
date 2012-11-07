@@ -130,10 +130,8 @@ DemuxPacket* cVNSIDemux::Read()
     // send stream updates only if there are changes
     if(StreamContentInfo(resp))
     {
-      DemuxPacket* pkt = PVR->AllocateDemuxPacket(sizeof(PVR_STREAM_PROPERTIES));
-      memcpy(pkt->pData, &m_Streams, sizeof(PVR_STREAM_PROPERTIES));
-      pkt->iStreamId  = DMX_SPECIALID_STREAMINFO;
-      pkt->iSize      = sizeof(PVR_STREAM_PROPERTIES);
+      DemuxPacket* pkt = PVR->AllocateDemuxPacket(0);
+      pkt->iStreamId  = DMX_SPECIALID_STREAMCHANGE;
       delete resp;
       return pkt;
     }
@@ -300,6 +298,11 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     {
       const char *language = resp->extract_String();
 
+      streams.stream[streams.iStreamCount].iChannels       = resp->extract_U32();
+      streams.stream[streams.iStreamCount].iSampleRate     = resp->extract_U32();
+      streams.stream[streams.iStreamCount].iBlockAlign     = resp->extract_U32();
+      streams.stream[streams.iStreamCount].iBitRate        = resp->extract_U32();
+      streams.stream[streams.iStreamCount].iBitsPerSample  = resp->extract_U32();
       streams.stream[streams.iStreamCount].strLanguage[0]  = language[0];
       streams.stream[streams.iStreamCount].strLanguage[1]  = language[1];
       streams.stream[streams.iStreamCount].strLanguage[2]  = language[2];
@@ -376,7 +379,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
   // place video stream at pos 0
   for (itr = streamIndex.begin(); itr != streamIndex.end(); ++itr)
   {
-    unsigned int test = itr->second;
     if (streams.stream[itr->second].iCodecType == AVMEDIA_TYPE_VIDEO)
       break;
   }
@@ -447,7 +449,6 @@ bool cVNSIDemux::StreamContentInfo(cResponsePacket *resp)
 {
   PVR_STREAM_PROPERTIES old = m_Streams;
 
-
   while (!resp->end()) 
   {
     uint32_t pid = resp->extract_U32();
@@ -464,11 +465,11 @@ bool cVNSIDemux::StreamContentInfo(cResponsePacket *resp)
           m_Streams.stream[i].iSampleRate        = resp->extract_U32();
           m_Streams.stream[i].iBlockAlign        = resp->extract_U32();
           m_Streams.stream[i].iBitRate           = resp->extract_U32();
-          m_Streams.stream[i].iBitsPerSample   = resp->extract_U32();
-          m_Streams.stream[i].strLanguage[0]       = language[0];
-          m_Streams.stream[i].strLanguage[1]       = language[1];
-          m_Streams.stream[i].strLanguage[2]       = language[2];
-          m_Streams.stream[i].strLanguage[3]       = 0;
+          m_Streams.stream[i].iBitsPerSample     = resp->extract_U32();
+          m_Streams.stream[i].strLanguage[0]     = language[0];
+          m_Streams.stream[i].strLanguage[1]     = language[1];
+          m_Streams.stream[i].strLanguage[2]     = language[2];
+          m_Streams.stream[i].strLanguage[3]     = 0;
           
           delete[] language;
         }
@@ -486,14 +487,16 @@ bool cVNSIDemux::StreamContentInfo(cResponsePacket *resp)
           uint32_t composition_id = resp->extract_U32();
           uint32_t ancillary_id   = resp->extract_U32();
           
-          m_Streams.stream[i].iIdentifier = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
-          m_Streams.stream[i].strLanguage[0]= language[0];
-          m_Streams.stream[i].strLanguage[1]= language[1];
-          m_Streams.stream[i].strLanguage[2]= language[2];
-          m_Streams.stream[i].strLanguage[3]= 0;
+          m_Streams.stream[i].iIdentifier    = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
+          m_Streams.stream[i].strLanguage[0] = language[0];
+          m_Streams.stream[i].strLanguage[1] = language[1];
+          m_Streams.stream[i].strLanguage[2] = language[2];
+          m_Streams.stream[i].strLanguage[3] = 0;
           
           delete[] language;
         }
+        else
+          i = m_Streams.iStreamCount;
         break;
       }
     }

@@ -1502,7 +1502,6 @@ bool cVNSIClient::processRECORDINGS_Delete() /* OPCODE 104 */
 
 bool cVNSIClient::processEPG_GetForChannel() /* OPCODE 120 */
 {
-  uint32_t channelNumber  = 0;
   uint32_t channelUID  = 0;
 
   channelUID = m_req->extract_U32();

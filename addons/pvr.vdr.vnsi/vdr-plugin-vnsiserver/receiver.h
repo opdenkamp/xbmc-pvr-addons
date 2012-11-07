@@ -122,7 +122,6 @@ public:
   bool IsStarting() { return m_startup; }
   bool IsAudioOnly() { return m_IsAudioOnly; }
   bool IsMPEGPS() { return m_IsMPEGPS; }
-  int HaveStreamDemuxer(int Pid, eStreamType streamType);
   void AddStream(sStream &stream);
   void CheckDemuxers() {m_checkDemuxers = true; };
 

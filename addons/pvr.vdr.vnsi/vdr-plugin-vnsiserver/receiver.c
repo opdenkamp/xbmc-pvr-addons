@@ -741,15 +741,6 @@ void cLiveStreamer::AddStream(sStream &stream)
   m_Streams.push_back(stream);
 }
 
-int cLiveStreamer::HaveStreamDemuxer(int Pid, eStreamType streamType)
-{
-//  int idx;
-//  for (idx = 0; idx < m_NumStreams; ++idx)
-//    if (m_Streams[idx] && (Pid == 0 || m_Streams[idx]->GetPID() == Pid) && m_Streams[idx]->Type() == streamType)
-//      return idx;
-  return -1;
-}
-
 inline void cLiveStreamer::Activate(bool On)
 {
   if (On)
@@ -840,6 +831,11 @@ void cLiveStreamer::sendStreamChange()
     {
       resp->add_String("MPEG2AUDIO");
       resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->GetChannels());
+      resp->add_U32((*it)->GetSampleRate());
+      resp->add_U32((*it)->GetBlockAlign());
+      resp->add_U32((*it)->GetBitRate());
+      resp->add_U32((*it)->GetBitsPerSample());
     }
     else if ((*it)->Type() == stMPEG2VIDEO)
     {
@@ -854,6 +850,11 @@ void cLiveStreamer::sendStreamChange()
     {
       resp->add_String("AC3");
       resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->GetChannels());
+      resp->add_U32((*it)->GetSampleRate());
+      resp->add_U32((*it)->GetBlockAlign());
+      resp->add_U32((*it)->GetBitRate());
+      resp->add_U32((*it)->GetBitsPerSample());
     }
     else if ((*it)->Type() == stH264)
     {
@@ -882,16 +883,31 @@ void cLiveStreamer::sendStreamChange()
     {
       resp->add_String("AAC");
       resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->GetChannels());
+      resp->add_U32((*it)->GetSampleRate());
+      resp->add_U32((*it)->GetBlockAlign());
+      resp->add_U32((*it)->GetBitRate());
+      resp->add_U32((*it)->GetBitsPerSample());
     }
     else if ((*it)->Type() == stEAC3)
     {
       resp->add_String("EAC3");
       resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->GetChannels());
+      resp->add_U32((*it)->GetSampleRate());
+      resp->add_U32((*it)->GetBlockAlign());
+      resp->add_U32((*it)->GetBitRate());
+      resp->add_U32((*it)->GetBitsPerSample());
     }
     else if ((*it)->Type() == stDTS)
     {
       resp->add_String("DTS");
       resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->GetChannels());
+      resp->add_U32((*it)->GetSampleRate());
+      resp->add_U32((*it)->GetBlockAlign());
+      resp->add_U32((*it)->GetBitRate());
+      resp->add_U32((*it)->GetBitsPerSample());
     }
   }
 
@@ -1152,10 +1168,13 @@ void cLiveStreamer::ensureDemuxers()
 
   for (std::list<sStream>::iterator it = m_Streams.begin(); it != m_Streams.end(); ++it)
   {
-    if (FindStreamDemuxer(it->pID))
+    cTSDemuxer *demuxer = FindStreamDemuxer(it->pID);
+    if (demuxer)
+    {
+      demuxer->SetLanguage(it->language);
       continue;
+    }
 
-    cTSDemuxer *demuxer;
     if (it->type == stH264)
     {
       demuxer = new cTSDemuxer(this, stH264, it->pID);

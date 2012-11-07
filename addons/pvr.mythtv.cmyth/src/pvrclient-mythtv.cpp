@@ -861,6 +861,63 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
   return bookmark;
 }
 
+PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entries[], int *size)
+{
+  if (g_bExtraDebug)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Reading edl for: %s", __FUNCTION__, recording.strTitle);
+  }
+
+  CLockObject lock(m_recordingsLock);
+  ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
+  if (it == m_recordings.end())
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
+    *size = 0;
+    return PVR_ERROR_FAILED;
+  }
+
+  float frameRate = m_db.GetRecordingFrameRate(it->second) / 1000.0f;
+  if (frameRate <= 0)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Failed to read framerate for %s", __FUNCTION__, recording.strRecordingId);
+    *size = 0;
+    return PVR_ERROR_FAILED;
+  }
+
+  Edl commbreakList = m_con.GetCommbreakList(it->second);
+  int commbreakCount = commbreakList.size();
+  XBMC->Log(LOG_DEBUG, "%s - Found %d commercial breaks for: %s", __FUNCTION__, commbreakCount, recording.strTitle);
+
+  Edl cutList = m_con.GetCutList(it->second);
+  XBMC->Log(LOG_DEBUG, "%s - Found %d cut list entries for: %s", __FUNCTION__, cutList.size(), recording.strTitle);
+
+  commbreakList.insert(commbreakList.end(), cutList.begin(), cutList.end());
+
+  int index = 0;
+  Edl::const_iterator edlIt;
+  for (edlIt = commbreakList.begin(); edlIt != commbreakList.end(); ++edlIt)
+  {
+    if (index < *size)
+    {
+      PVR_EDL_ENTRY entry;
+      entry.start = (int64_t)(edlIt->start_mark / frameRate * 1000);
+      entry.end = (int64_t)(edlIt->end_mark / frameRate * 1000);
+      entry.type = index < commbreakCount ? PVR_EDL_TYPE_COMBREAK : PVR_EDL_TYPE_CUT;
+      entries[index] = entry;
+      index++;
+    }
+    else
+    {
+      XBMC->Log(LOG_ERROR, "%s - Maximum number of edl entries reached for: %s", __FUNCTION__, recording.strTitle);
+      break;
+    }
+  }
+
+  *size = index;
+  return PVR_ERROR_NO_ERROR;
+}
+
 int PVRClientMythTV::GetTimersAmount(void)
 {
   if (g_bExtraDebug)

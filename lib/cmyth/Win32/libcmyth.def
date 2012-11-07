@@ -292,3 +292,4 @@ EXPORTS
 	cmyth_storagegroup_file_get_filename
 	cmyth_storagegroup_file_get_lastmodified
 	cmyth_storagegroup_file_get_size
+	cmyth_mysql_get_recording_markup

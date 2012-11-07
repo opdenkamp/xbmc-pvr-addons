@@ -1367,4 +1367,45 @@ extern char* cmyth_storagegroup_file_get_filename(cmyth_storagegroup_file_t file
 extern unsigned long cmyth_storagegroup_file_get_lastmodified(cmyth_storagegroup_file_t file);
 extern unsigned long long cmyth_storagegroup_file_get_size(cmyth_storagegroup_file_t file);
 
+/**
+ * \enum Recording markup types
+ */
+typedef enum {
+  MARK_UNSET = -10,
+  MARK_TMP_CUT_END = -5,
+  MARK_TMP_CUT_START = -4,
+  MARK_UPDATED_CUT = -3,
+  MARK_PLACEHOLDER = -2,
+  MARK_CUT_END = 0,
+  MARK_CUT_START = 1,
+  MARK_BOOKMARK = 2,
+  MARK_BLANK_FRAME = 3,
+  MARK_COMM_START = 4,
+  MARK_COMM_END = 5,
+  MARK_GOP_START = 6,
+  MARK_KEYFRAME = 7,
+  MARK_SCENE_CHANGE = 8,
+  MARK_GOP_BYFRAME = 9,
+  MARK_ASPECT_1_1 = 10, //< deprecated, it is only 1:1 sample aspect ratio
+  MARK_ASPECT_4_3 = 11,
+  MARK_ASPECT_16_9 = 12,
+  MARK_ASPECT_2_21_1 = 13,
+  MARK_ASPECT_CUSTOM = 14,
+  MARK_VIDEO_WIDTH = 30,
+  MARK_VIDEO_HEIGHT = 31,
+  MARK_VIDEO_RATE = 32,
+  MARK_DURATION_MS = 33,
+  MARK_TOTAL_FRAMES = 34
+} cmyth_recording_markup_t;
+
+/**
+ * Retrieve data for a specific type of recording markup
+ * \param db
+ * \param prog program info
+ * \param type of markup
+ * \retval >=0 markup data
+ * \retval <0 error
+ */
+extern long long cmyth_mysql_get_recording_markup(cmyth_database_t db, cmyth_proginfo_t prog, cmyth_recording_markup_t type);
+
 #endif /* __CMYTH_H */

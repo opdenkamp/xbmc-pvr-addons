@@ -237,16 +237,14 @@ bool Dvb::LoadChannels()
     if (channel->Flags & ADDITIONAL_AUDIO_TRACK_FLAG) continue;
     char channel_group[26] = "";
     if ((strcmp(channel_group, channel->Category) != 0) && (channel->Flags & VIDEO_FLAG))
-      {
-        datGroup.strGroupName = strncpy(channel_group, channel->Category, channel->Category_len);
-#ifdef WIN32
-        AnsiToUtf8(datGroup.strGroupName);
-#else
-        XBMC->UnknownToUTF8(datGroup.strGroupName);
-#endif
-        groupsdat.push_back(datGroup);
-        m_iNumChannelGroups++; 
-      }
+    {
+      strncpy(channel_group, channel->Category, channel->Category_len);
+      char* strGroupNameUtf8 = XBMC->UnknownToUTF8(channel_group);
+      datGroup.strGroupName = strGroupNameUtf8;
+      groupsdat.push_back(datGroup);
+      m_iNumChannelGroups++;
+      XBMC->FreeString(strGroupNameUtf8);
+    }
     channel_pos++;
 
     /* EPGChannelID = (TunerType + 1)*2^48 + NID*2^32 + TID*2^16 + SID */
@@ -276,12 +274,9 @@ bool Dvb::LoadChannels()
         }
       }
     }
-    datChannel.strChannelName = strChannelName;
-#ifdef WIN32
-    AnsiToUtf8(datChannel.strChannelName);
-#else
-    XBMC->UnknownToUTF8(datChannel.strChannelName);
-#endif
+    char* strChannelNameUtf8 = XBMC->UnknownToUTF8(strChannelName.c_str());
+    datChannel.strChannelName = strChannelNameUtf8;
+    XBMC->FreeString(strChannelNameUtf8);
   
     CStdString strTmp;
     strTmp.Format("%supnp/channelstream/%d.ts", m_strURLStream.c_str(), channel_pos-1);
@@ -362,14 +357,10 @@ bool Dvb::LoadChannels()
         }
         else
         {
-          groupName = strTmp;
-          favGroup.strGroupName = groupName;
-#ifdef WIN32
-          AnsiToUtf8(favGroup.strGroupName);
-#else
-          XBMC->UnknownToUTF8(favGroup.strGroupName);
-#endif
+          char* strGroupNameUtf8 = XBMC->UnknownToUTF8(strTmp.c_str());
+          favGroup.strGroupName = strGroupNameUtf8;
           groupsfav.push_back(favGroup);
+          XBMC->FreeString(strGroupNameUtf8);
         }
       }
     }

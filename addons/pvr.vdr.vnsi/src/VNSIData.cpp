@@ -826,19 +826,23 @@ void *cVNSIData::Process()
       {
         uint32_t type = vresp->extract_U32();
         char* msgstr  = vresp->extract_String();
-        std::string text = msgstr;
+        char* strMessageTranslated(NULL);
 
         if (g_bCharsetConv)
-          XBMC->UnknownToUTF8(text);
+          strMessageTranslated = XBMC->UnknownToUTF8(msgstr);
+        else
+          strMessageTranslated = msgstr;
 
         if (type == 2)
-          XBMC->QueueNotification(QUEUE_ERROR, text.c_str());
+          XBMC->QueueNotification(QUEUE_ERROR, strMessageTranslated);
         if (type == 1)
-          XBMC->QueueNotification(QUEUE_WARNING, text.c_str());
+          XBMC->QueueNotification(QUEUE_WARNING, strMessageTranslated);
         else
-          XBMC->QueueNotification(QUEUE_INFO, text.c_str());
+          XBMC->QueueNotification(QUEUE_INFO, strMessageTranslated);
 
         delete[] msgstr;
+        if (g_bCharsetConv)
+          XBMC->FreeString(strMessageTranslated);
       }
       else if (vresp->getRequestID() == VNSI_STATUS_RECORDING)
       {

@@ -1,8 +1,21 @@
+v0.5.0
+- Support MythTV 0.26 backends
+- Allow Timer Deletion
+- Support reconnecting to backend
+- Reworked LiveTV (no more stops at show end, fixed USB tuner support)
+- Performance improvements (adapted socket buffer sizes, removed unnecessary locks)
+- Stability improvements
+    - Fixed crash on SetRecordingPlayCount and SetRecordingLastPlayedPosition
+    - Fixed crash when addon was restarted
+    - Fixed crash when backend connection was lost
+    - Fixed memory leaks in libcmyth
+- Show correct start/end time in recordings- and timer view
+
 v0.4.0
 - OSX support
 
 v0.3.0
-- Transifex localizations (https://www.transifex.com/projects/p/pvrmythtvcmyth)
+- Transifex localizations
 - Support for recording images (icon, thumbnail, fanart)
 - Fixed: Preview images of new recordings were not cached
 

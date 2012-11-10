@@ -1,3 +1,20 @@
+v1.0.150.143 (03-11-2012)
+- Bump version to 1 for Frodo :)
+- Version number: major.minor.apiversion.buildnumber
+- Fully supports setting and retrieving lastplayed position
+  on the FTR server for recordings
+- Support Timer conflict notification
+- Add episode name to epg title
+- Credit Team Mediaportal for original TsReader code
+v0.0.1.142 (06-09-2012)
+- Use the XBMC lifetime setting for a recording when possible
+- Now can delete scheduled recordings/programs on the FTR server
+  that were created by other clients
+- At startup try to connect to FTR for 30 seconds,
+  This fixes startup problems on linux systems where the add-on is
+  started before the network interface is up (eg. OpenElec)
+- Notify user when no free tuner is found, channel is scrambled etc.
+- Shorter keep-alive delay to fix loosing Live-TV in certain cases
 v0.0.1.141 (04-09-2012)
 - Updated to Frodo PVR API
 - Add timeshift support for Frodo

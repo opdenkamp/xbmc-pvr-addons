@@ -36,7 +36,11 @@ private:
   std::string title;
   bool iscancelled;
   std::string upcomingprogramid;
+  std::string guideprogramid;
   std::string scheduleid;
+  bool isallocated;
+  bool isinconflict;
+
 public:
   cUpcomingRecording(void);
   virtual ~cUpcomingRecording(void);
@@ -52,5 +56,8 @@ public:
   const std::string& Title(void) const { return title; }
   bool IsCancelled(void) const { return iscancelled; }
   const std::string& UpcomingProgramId(void) const { return upcomingprogramid; }
+  const std::string& GuideProgramId(void) const { return guideprogramid; }
   const std::string& ScheduleId(void) const { return scheduleid; }
+  bool IsAllocated(void) const { return isallocated; }
+  bool IsInConflict(void) const { return isinconflict; }
 };

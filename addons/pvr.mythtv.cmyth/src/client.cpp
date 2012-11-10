@@ -793,5 +793,7 @@ void DemuxAbort() {}
 void DemuxReset() {}
 void DemuxFlush() {}
 const char * GetLiveStreamURL(const PVR_CHANNEL &) { return ""; }
+bool SeekTime(int,bool,double*) { return false; }
+void SetSpeed(int) {};
 
 } //end extern "C"

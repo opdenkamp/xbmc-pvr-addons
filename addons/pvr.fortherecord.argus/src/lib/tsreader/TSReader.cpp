@@ -1,5 +1,5 @@
 /*
- *      Copyright (C) 2005-2010 Team XBMC
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -14,12 +14,18 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-// Code below is work in progress and not yet finished
-//
-// DONE:
-// 1) make the code below work on Linux
+ *
+ *************************************************************************
+ *  Parts of this file originate from Team MediaPortal's
+ *  TsReader DirectShow filter
+ *  MediaPortal is a GPL'ed HTPC-Application
+ *  Copyright (C) 2005-2012 Team MediaPortal
+ *  http://www.team-mediaportal.com
+ *
+ * Changes compared to Team MediaPortal's version:
+ * - Code cleanup for PVR addon usage
+ * - Code refactoring for cross platform usage
+ *************************************************************************/
 
 #include "TSReader.h"
 #include "client.h" //for XBMC->Log

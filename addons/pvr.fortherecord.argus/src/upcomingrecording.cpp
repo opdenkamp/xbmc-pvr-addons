@@ -34,6 +34,8 @@ cUpcomingRecording::cUpcomingRecording(void)
   stoptime = 0;
   title = "";
   iscancelled = false;
+  isallocated = true;
+  isinconflict = true;
 }
 
 cUpcomingRecording::~cUpcomingRecording(void)
@@ -43,26 +45,33 @@ bool cUpcomingRecording::Parse(const Json::Value& data)
 {
   int offset;
   std::string t;
+  Json::Value channelobject,programobject;
 
+  programobject = data["Program"];
   date = 0;
-  t = data["StartTime"].asString();
+
+  t = programobject["StartTime"].asString();
   starttime = ForTheRecord::WCFDateToTimeT(t, offset);
-  t = data["StopTime"].asString();
+  t = programobject["StopTime"].asString();
   stoptime = ForTheRecord::WCFDateToTimeT(t, offset);
-  prerecordseconds = data["PreRecordSeconds"].asInt();
-  postrecordseconds = data["PostRecordSeconds"].asInt();
-  title = data["Title"].asString();
-  iscancelled = data["IsCancelled"].asBool();
-  upcomingprogramid = data["UpcomingProgramId"].asString();
-  scheduleid = data["ScheduleId"].asString();
+  prerecordseconds = programobject["PreRecordSeconds"].asInt();
+  postrecordseconds = programobject["PostRecordSeconds"].asInt();
+  title = programobject["Title"].asString();
+  iscancelled = programobject["IsCancelled"].asBool();
+  upcomingprogramid = programobject["UpcomingProgramId"].asString();
+  guideprogramid = programobject["GuideProgramId"].asString();
+  scheduleid = programobject["ScheduleId"].asString();
 
   // From the Program class pickup the C# Channel class
-  Json::Value channelobject;
-  channelobject = data["Channel"];
-
-  // And -finally- our channel id
+  channelobject = programobject["Channel"];
   channelid = channelobject["ChannelId"].asString();
   channeldisplayname = channelobject["DisplayName"].asString();
+
+  if (data["CardChannelAllocation"].empty())
+    isallocated = false; 
+
+  if (data["ConflictingPrograms"].empty())
+    isinconflict = false;
 
   return true;
 }

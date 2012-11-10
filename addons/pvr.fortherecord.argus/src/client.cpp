@@ -46,7 +46,6 @@ std::string  g_szBaseURL;
 ADDON_STATUS            m_CurStatus    = ADDON_STATUS_UNKNOWN;
 cPVRClientForTheRecord *g_client       = NULL;
 bool                    g_bCreated     = false;
-//int                     g_iClientID    = -1;
 std::string             g_szUserPath   = "";
 std::string             g_szClientPath = "";
 CHelper_libXBMC_addon  *XBMC           = NULL;
@@ -84,15 +83,10 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
-#ifdef TSREADER
-  XBMC->Log(LOG_INFO, "Creating the ForTheRecord PVR-client (TsReader version)");
-#else
-  XBMC->Log(LOG_INFO, "Creating the ForTheRecord PVR-client (ffmpeg rtsp version)");
-#endif
+  XBMC->Log(LOG_INFO, "Creating the ForTheRecord PVR-client");
 
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
   g_client       = new cPVRClientForTheRecord();
-  // g_iClientID    = pvrprops->iClientId; removed from Frodo PVR API
   g_szUserPath   = pvrprops->strUserPath;
   g_szClientPath = pvrprops->strClientPath;
 
@@ -222,6 +216,7 @@ bool ADDON_HasSettings()
 
 unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet)
 {
+  NOTUSED(sSet);
   return 0;
 }
 
@@ -324,18 +319,20 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   pCapabilities->bSupportsTimers             = true;
   pCapabilities->bSupportsTV                 = true;
   pCapabilities->bSupportsRadio              = g_bRadioEnabled;
-  //pCapabilities->bSupportsChannelSettings    = true; // removed in Frodo PVR API
   pCapabilities->bSupportsChannelGroups      = true;
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = false;
   pCapabilities->bSupportsChannelScan        = false;
-  pCapabilities->bSupportsLastPlayedPosition = false;
+  pCapabilities->bSupportsLastPlayedPosition = true;
+  pCapabilities->bSupportsRecordingFolders   = true;
+  pCapabilities->bSupportsRecordingPlayCount = false;
 
   return PVR_ERROR_NO_ERROR;
 }
 
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES *pProperties)
 {
+  NOTUSED(pProperties);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -383,6 +380,7 @@ PVR_ERROR DialogChannelScan()
 
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
 {
+  NOTUSED(menuhook);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -411,21 +409,25 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel)
 {
+  NOTUSED(channel);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR RenameChannel(const PVR_CHANNEL &channel)
 {
+  NOTUSED(channel);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channelinfo)
 {
+  NOTUSED(channelinfo);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channelinfo)
 {
+  NOTUSED(channelinfo);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -470,6 +472,16 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
 PVR_ERROR RenameRecording(const PVR_RECORDING &recording)
 {
   return g_client->RenameRecording(recording);
+}
+
+PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  return g_client->SetRecordingLastPlayedPosition(recording, lastplayedposition);
+}
+
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  return g_client->GetRecordingLastPlayedPosition(recording);
 }
 
 
@@ -612,13 +624,13 @@ bool CanSeekStream(void)
 }
 
 /** UNUSED API FUNCTIONS */
-PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { NOTUSED(channel); return PVR_ERROR_NOT_IMPLEMENTED; }
 DemuxPacket* DemuxRead(void) { return NULL; }
 void DemuxAbort(void) {}
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
-PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
+PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { NOTUSED(recording); NOTUSED(count); return PVR_ERROR_NOT_IMPLEMENTED; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
+bool SeekTime(int,bool,double*) { return false; }
+void SetSpeed(int) {};
 } //end extern "C"

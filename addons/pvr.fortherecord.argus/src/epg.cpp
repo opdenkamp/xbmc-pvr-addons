@@ -76,6 +76,11 @@ bool cEpg::Parse(const Json::Value& data)
     m_guideprogramid = data["GuideProgramId"].asString();
     m_title = data["Title"].asString();
     m_subtitle = data["SubTitle"].asString();
+    // TODO: Until the xbmc EPG gui starts using the episode names, we add them to the title
+    if (m_subtitle.size() > 0)
+    {
+      m_title = m_title + " (" + m_subtitle + ")";
+    }
     m_description = data["Description"].asString();
 
     // Dates are returned in a WCF compatible format ("/Date(9991231231+0100)/")

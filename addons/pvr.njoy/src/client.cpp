@@ -271,4 +271,6 @@ DemuxPacket* DemuxRead(void) { return NULL; }
 void PauseStream(bool bPaused) {}
 bool CanPauseStream(void) { return false; }
 bool CanSeekStream(void) { return false; }
+bool SeekTime(int,bool,double*) { return false; }
+void SetSpeed(int) {};
 } //end extern "C"

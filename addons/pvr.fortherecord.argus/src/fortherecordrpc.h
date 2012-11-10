@@ -28,9 +28,10 @@
 #define FTR_1_6_1_0 (49)
 #define FTR_REST_MINIMUM_API_VERSION FTR_1_6_0_1
 #define FTR_REST_MAXIMUM_API_VERSION FTR_1_6_1_0
+
+#define E_SUCCESS 0
 #define E_FAILED -1
 #define E_EMPTYRESPONSE -2
-#define E_NORETUNEPOSSIBLE -3
 
 namespace ForTheRecord
 {
@@ -81,8 +82,9 @@ namespace ForTheRecord
     NoFreeCardFound = 1,
     ChannelTuneFailed = 2,
     NoReTunePossible = 3,
-    UnknownError = 4,
-    NotSupported = 5
+    IsScrambled = 4,
+    UnknownError = 98,
+    NotSupported = 99
   };
 
   /**
@@ -188,7 +190,7 @@ namespace ForTheRecord
    * \param epg_start        Start from this date
    * \param epg_stop         Until this date
    */
-  int GetEPGData(const int backendversion, const std::string& guidechannel_id, struct tm epg_start, struct tm epg_end, Json::Value& response);
+  int GetEPGData(const std::string& guidechannel_id, struct tm epg_start, struct tm epg_end, Json::Value& response);
 
   /**
    * \brief Fetch the recording groups sorted by title
@@ -217,6 +219,21 @@ namespace ForTheRecord
   int SetRecordingLastWatched(const std::string& recordingfilename);
 
   /**
+   * \brief Get the last watched position for this recording
+   * \param recordingfilename full UNC path of the recording file
+   * \param response Reference to a std::string used to store the json response string
+   * \return last watched position in seconds, -1 on a failure
+   */
+  int GetRecordingLastWatchedPosition(const std::string& recordingfilename, Json::Value& response);
+
+  /**
+   * \brief Save the last watched position for this recording
+   * \param recordingfilename full UNC path of the recording file
+   * \param lastwatchedposition last watched position in seconds
+   */
+  int SetRecordingLastWatchedPosition(const std::string& recordingfilename, int lastwatchedposition);
+
+  /**
    * \brief Delete the recording on the pvr backend
    * \param recordingfilename UNC filename to delete
    */
@@ -243,9 +260,15 @@ namespace ForTheRecord
   int GetScheduleList(enum ChannelType channelType, Json::Value& response);
 
   /**
-   * \brief Fetch the list of upcoming programs
+   * \brief Fetch the list of upcoming programs from type 'recording'
+   * \currently not used
    */
   int GetUpcomingPrograms(Json::Value& response);
+
+  /**
+   * \brief Fetch the list of upcoming recordings
+   */
+  int GetUpcomingRecordings(Json::Value& response);
 
   /**
    * \brief Fetch the list of currently active recordings
@@ -318,5 +341,6 @@ namespace ForTheRecord
 
   time_t WCFDateToTimeT(const std::string& wcfdate, int& offset);
   std::string TimeTToWCFDate(const time_t thetime);
-
+  std::string ToCIFS(std::string& UNCName);
+  std::string ToUNC(std::string& CIFSName);
 } //namespace ForTheRecord

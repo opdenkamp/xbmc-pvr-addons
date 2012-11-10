@@ -29,14 +29,13 @@
 #include <stdlib.h>
 #if !defined(_MSC_VER)
 #include <sys/time.h>
+#else
+#include <winsock2.h>
 #endif
 #include <refmem/refmem.h>
 #include <cmyth/cmyth.h>
 #include <time.h>
 #include <stdint.h>
-#if defined(_MSC_VER)
-#include <winsock2.h>
-#endif
 #include <mysql/mysql.h>
 
 #if defined(_MSC_VER)
@@ -104,6 +103,8 @@ struct cmyth_livetv_chain {
 	char **chain_urls;
 	cmyth_file_t *chain_files; /* File pointers for the urls */
 	int livetv_watch; /* JLB: Manage program breaks */
+	int livetv_tcp_rcvbuf;
+	unsigned long livetv_block_len;
 };
 
 /* Sergio: Added to clean up database interaction */
@@ -113,6 +114,9 @@ struct cmyth_database {
 	char * db_pass;
 	char * db_name;
 	MYSQL * mysql;
+	int db_version; /* JLB: -1 = No set, 0 = unknown else DBSchemaVer */
+	int db_tz_utc; /* JLB: 0 = No conversion, 1 = Enable UTC time zone conversion */
+	char db_tz_name[64]; /* JLB: db time zone name to convert query projection */
 };	
 
 /* Sergio: Added to clean up channel list handling */
@@ -357,7 +361,10 @@ extern int cmyth_rcv_string(cmyth_conn_t conn,
 			    int count);
 
 #define cmyth_rcv_okay __cmyth_rcv_okay
-extern int cmyth_rcv_okay(cmyth_conn_t conn, char *ok);
+extern int cmyth_rcv_okay(cmyth_conn_t conn);
+
+#define cmyth_rcv_feedback __cmyth_rcv_feedback
+extern int cmyth_rcv_feedback(cmyth_conn_t conn, char *fb);
 
 #define cmyth_rcv_version __cmyth_rcv_version
 extern int cmyth_rcv_version(cmyth_conn_t conn, unsigned long *vers);
@@ -461,6 +468,9 @@ extern int cmyth_rcv_ringbuf(cmyth_conn_t conn, int *err, cmyth_ringbuf_t buf,
 #define cmyth_datetime_to_dbstring __cmyth_datetime_to_dbstring
 extern int cmyth_datetime_to_dbstring(char *str, cmyth_timestamp_t ts);
 
+#define cmyth_toupper_string __cmyth_toupper_string
+extern void cmyth_toupper_string(char *str);
+
 /*
  * From proginfo.c
  */
@@ -511,7 +521,7 @@ extern int cmyth_mysql_query_param_int(cmyth_mysql_query_t * query,int param);
 
 extern int cmyth_mysql_query_param_uint(cmyth_mysql_query_t * query,int param);
 
-extern int cmyth_mysql_query_param_unixtime(cmyth_mysql_query_t * query, time_t param);
+extern int cmyth_mysql_query_param_unixtime(cmyth_mysql_query_t * query, time_t param, int tz_utc);
 
 extern int cmyth_mysql_query_param_str(cmyth_mysql_query_t * query, const char *param);
 

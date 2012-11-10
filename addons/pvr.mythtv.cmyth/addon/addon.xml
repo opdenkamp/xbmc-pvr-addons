@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.mythtv.cmyth"
-  version="0.4.0"
+  version="0.5.0"
   name="MythTV cmyth PVR Client"
   provider-name="Christian Fetzer, Jean-Luc Barrière, Tonny Petersen">
   <requires>
@@ -15,7 +15,7 @@
     library_windx="XBMC_MythTV_cmyth_win32.pvr"/>
   <extension point="xbmc.addon.metadata">
     <summary>XBMC frontend for MythTV (using libcmyth)</summary>
-    <description>MythTV frontend (up to MythTV 0.25). Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers.</description>
+    <description>MythTV frontend (up to MythTV 0.26). Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers.</description>
     <disclaimer>This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects.</disclaimer>
     <platform>all</platform>
   </extension>

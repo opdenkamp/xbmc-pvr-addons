@@ -67,7 +67,7 @@ cmyth_file_destroy(cmyth_file_t file)
 			goto fail;
 		}
 
-		if ((err=cmyth_rcv_okay(file->file_control, "ok")) < 0) {
+		if ((err=cmyth_rcv_okay(file->file_control)) < 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: cmyth_rcv_okay() failed (%d)\n",
 				  __FUNCTION__, err);
@@ -487,16 +487,19 @@ cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
 	if ((offset == file->file_pos) && (whence == SEEK_SET))
 		return file->file_pos;
 
+	pthread_mutex_lock(&mutex);
+
+	ret = 0;
 	while(file->file_pos < file->file_req) {
 		c = file->file_req - file->file_pos;
 		if(c > sizeof(msg))
 			c = sizeof(msg);
 
-		if (cmyth_file_get_block(file, msg, (unsigned long)c) < 0)
-			return -1;
+		if ((ret = cmyth_file_get_block(file, msg, (unsigned long)c)) < 0)
+			break;
 	}
-
-	pthread_mutex_lock(&mutex);
+	if (ret < 0)
+		goto out;
 
 	if (file->file_control->conn_version >= 66) {
 		/*
@@ -587,14 +590,17 @@ cmyth_file_seek_unlocked(cmyth_file_t file, long long offset, int whence)
 	if ((offset == file->file_pos) && (whence == SEEK_SET))
 		return file->file_pos;
 
+	ret = 0;
 	while(file->file_pos < file->file_req) {
 		c = file->file_req - file->file_pos;
 		if(c > sizeof(msg))
 			c = sizeof(msg);
 
-		if (cmyth_file_get_block(file, msg, (unsigned long)c) < 0)
-			return -1;
+		if ((ret = cmyth_file_get_block(file, msg, (unsigned long)c)) < 0)
+			break;
 	}
+	if (ret < 0)
+		goto out;
 
 	if (file->file_control->conn_version >= 66) {
 		/*
@@ -847,7 +853,7 @@ out:
 }
 
 /*
- * cmyth_file_data_conn_fd(cmyth_file_t file)
+ * cmyth_file_is_open(cmyth_file_t file)
  *
  * Scope: PUBLIC
  *
@@ -863,14 +869,11 @@ out:
  *
  * Failure: an int containing -errno
  */
-int cmyth_file_data_conn_fd(cmyth_file_t file)
+int cmyth_file_is_open(cmyth_file_t file)
 {
-	int err, count;
-	int ret, nfds;
+	int err, count, ret;
 	long status;
 	char msg[256];
-	struct timeval tv;
-	fd_set fds;
 
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s {\n", __FUNCTION__);
 
@@ -879,8 +882,6 @@ int cmyth_file_data_conn_fd(cmyth_file_t file)
 		           __FUNCTION__);
 		return -EINVAL;
 	}
-
-	pthread_mutex_lock (&mutex);
 
 	snprintf (msg, sizeof (msg),
 	    "QUERY_FILETRANSFER %ld[]:[]IS_OPEN",
@@ -893,42 +894,76 @@ int cmyth_file_data_conn_fd(cmyth_file_t file)
 		ret = err;
 		goto out;
 	}
-
-	tv.tv_sec = 20;
-	tv.tv_usec = 0;
-	FD_ZERO (&fds);
-	FD_SET (file->file_control->conn_fd, &fds);
-	nfds = (int)file->file_control->conn_fd;
-
-	if ((ret = select (nfds+1, &fds, NULL, NULL,&tv)) < 0) {
+	if ((count=cmyth_rcv_length (file->file_control)) < 0) {
 		cmyth_dbg (CMYTH_DBG_ERROR,
-			    "%s: select(() failed (%d)\n",
+			    "%s: cmyth_rcv_length() failed (%d)\n",
+			    __FUNCTION__, count);
+		ret = count;
+		goto out;
+	}
+	if ((ret=cmyth_rcv_long (file->file_control, &err, &status, count))< 0) {
+		cmyth_dbg (CMYTH_DBG_ERROR,
+			    "%s: cmyth_rcv_long() failed (%d)\n",
 			    __FUNCTION__, ret);
+		ret = err;
 		goto out;
 	}
 
-	if (FD_ISSET(file->file_control->conn_fd, &fds)) {
-		if ((count=cmyth_rcv_length (file->file_control)) < 0) {
-			cmyth_dbg (CMYTH_DBG_ERROR,
-				    "%s: cmyth_rcv_length() failed (%d)\n",
-				    __FUNCTION__, count);
-			ret = count;
-			goto out;
-		}
-		if ((ret=cmyth_rcv_long (file->file_control, &err, &status, count))< 0) {
-			cmyth_dbg (CMYTH_DBG_ERROR,
-				    "%s: cmyth_rcv_long() failed (%d)\n",
-				    __FUNCTION__, ret);
-			ret = err;
-			goto out;
-		}
-
-		ret = (int)status;
-		if (ret==0)
-			cmyth_dbg(CMYTH_DBG_ERROR, "%s: file transfer socket is closed before read\n", __FUNCTION__);
-	}
+	ret = (int)status;
+	if (ret==0)
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: file transfer socket is closed\n", __FUNCTION__);
 out:
-	pthread_mutex_unlock (&mutex);
+	return ret;
+}
+
+/*
+ * cmyth_file_set_timeout(cmyth_file_t file, int fast)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Set whether reading from a file should have a fast or slow timeout.
+ * Slow timeouts are used for live TV ring buffers, and is three seconds.
+ * Fast timeouts are used for static files, and are 0.12 seconds.
+ *
+ * Return Value:
+ *
+ * Sucess: 0
+ *
+ * Failure: an int containing -errno
+ */
+int
+cmyth_file_set_timeout(cmyth_file_t file, int fast)
+{
+	int ret;
+	char msg[256];
+
+	if (!file) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
+			  __FUNCTION__);
+		return -EINVAL;
+	}
+
+	snprintf(msg, sizeof(msg),
+		 "QUERY_FILETRANSFER %ld[]:[]SET_TIMEOUT[]:[]%i",
+		 file->file_id, fast);
+	if ((ret = cmyth_send_message(file->file_control, msg)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_send_message() failed (%d)\n",
+			  __FUNCTION__, ret);
+		goto out;
+	}
+
+	if ((ret = cmyth_rcv_okay(file->file_control)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
+			  __FUNCTION__);
+		goto out;
+	}
+
+	ret = 0;
+
+out:
 	return ret;
 }
 

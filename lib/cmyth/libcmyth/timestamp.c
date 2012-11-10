@@ -440,18 +440,9 @@ cmyth_datetime_to_string(char *str, cmyth_timestamp_t ts)
 	tm_datetime.tm_sec = ts->timestamp_second;
 	tm_datetime.tm_isdst = ts->timestamp_isdst;
 	t_datetime = mktime(&tm_datetime);
-	sprintf(str,
-		"%4.4ld-%2.2ld-%2.2ldT%2.2ld:%2.2ld:%2.2ld",
-		ts->timestamp_year,
-		ts->timestamp_month,
-		ts->timestamp_day,
-		ts->timestamp_hour,
-		ts->timestamp_minute,
-		ts->timestamp_second);
-	//cmyth_dbg(CMYTH_DBG_ERROR, "original timestamp string: %s \n",str);
+
 	sprintf(str,"%lu",(unsigned long) t_datetime);
-	//cmyth_dbg(CMYTH_DBG_ERROR, "time in seconds: %s \n",str);
-	
+
 	return 0;
 }
 

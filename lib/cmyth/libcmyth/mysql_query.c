@@ -303,21 +303,29 @@ cmyth_mysql_query_param_uint(cmyth_mysql_query_t * query,int param)
  * Add, and convert a unixtime to mysql date/timestamp
  * \param query the query object
  * \param param the time to add
+ * \param tz_utc flag to convert local time to UTC time ( 1 = true | 0 = false )
  */
 int
-cmyth_mysql_query_param_unixtime(cmyth_mysql_query_t * query, time_t param)
+cmyth_mysql_query_param_unixtime(cmyth_mysql_query_t * query, time_t param, int tz_utc)
 {
     int ret;
     ret = query_begin_next_param(query);
     if(ret < 0)
 	return ret;
-    ret = query_buffer_add_str(query,"FROM_UNIXTIME(");
+    if (tz_utc == 1)
+        ret = query_buffer_add_str(query, "CONVERT_TZ(FROM_UNIXTIME(");
+    else
+        ret = query_buffer_add_str(query, "FROM_UNIXTIME(");
     if(ret < 0)
 	return ret;
     ret = query_buffer_add_long(query,(long)param);
     if(ret < 0)
 	return ret;
-    return query_buffer_add_str(query,")");
+    if (tz_utc == 1)
+
+        return query_buffer_add_str(query, "),'SYSTEM','UTC')");
+    else
+        return query_buffer_add_str(query, ")");
 }
 
 

@@ -1045,25 +1045,6 @@ void Dvb::RemoveNullChars(CStdString &String)
   }
 }
 
-#ifdef WIN32
-void Dvb::AnsiToUtf8(std::string &String)
-{
-  const int iLenW = MultiByteToWideChar(CP_ACP, 0, String.c_str(), -1, 0, 0);
-  wchar_t *wcTmp = new wchar_t[iLenW + 1];
-  memset(wcTmp, 0, sizeof(wchar_t)*(iLenW + 1));
-  if (MultiByteToWideChar(CP_ACP, 0, String.c_str(), -1, wcTmp, iLenW + 1))
-    {
-      const int iLenU = WideCharToMultiByte(CP_UTF8, 0, wcTmp, -1, NULL, 0, 0, FALSE);
-      char *cTmp = new char[iLenU + 1];
-      memset(cTmp, 0, sizeof(char)*(iLenU + 1));
-      WideCharToMultiByte(CP_UTF8, 0, wcTmp, -1, cTmp, iLenU + 1, 0, FALSE);
-      String = cTmp;
-      delete[] cTmp;
-    }
-  delete[] wcTmp;
-}
-#endif
-
 PVR_ERROR Dvb::GetChannelGroups(ADDON_HANDLE handle)
 {
   for(unsigned int iTagPtr = 0; iTagPtr < m_groups.size(); iTagPtr++)

@@ -30,9 +30,7 @@
 
 #include "KeepAliveThread.h"
 
-#ifdef TSREADER
 class CTsReader;
-#endif
 
 #undef FTR_DUMPTS
 
@@ -72,6 +70,8 @@ public:
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recinfo);
   PVR_ERROR RenameRecording(const PVR_RECORDING &recinfo);
+  PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recinfo, int lastplayedposition);
+  int GetRecordingLastPlayedPosition(const PVR_RECORDING &recinfo);
 
   /* Timer handling */
   int GetNumTimers(void);

@@ -38,6 +38,8 @@ int          g_iMythPort              = DEFAULT_PORT;             ///< The mytht
 CStdString   g_szMythDBuser           = DEFAULT_DB_USER;          ///< The mythtv sql username (default is mythtv)
 CStdString   g_szMythDBpassword       = DEFAULT_DB_PASSWORD;      ///< The mythtv sql password (default is mythtv)
 CStdString   g_szMythDBname           = DEFAULT_DB_NAME;          ///< The mythtv sql database name (default is mythconverg)
+CStdString   g_szDBHostname           = DEFAULT_HOST;             ///< The mythtv sql database host name or IP of the database server (default is same as mythtv backend hostname)
+int          g_iDBPort                = DEFAULT_DB_PORT;          ///< The mythtv sql database port (default is 3306)
 bool         g_bExtraDebug            = DEFAULT_EXTRA_DEBUG;      ///< Output extensive debug information to the log
 bool         g_bLiveTV                = DEFAULT_LIVETV;           ///< LiveTV support (or recordings only)
 bool         g_bLiveTVPriority        = DEFAULT_LIVETV_PRIORITY;  ///< MythTV Backend setting to allow live TV to move scheduled shows
@@ -178,6 +180,27 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     g_szMythDBname = DEFAULT_DB_NAME;
   }
   buffer[0] = 0;
+
+  /* Read hidden setting "db_host" from settings.xml */
+  if (XBMC->GetSetting("db_host", buffer))
+    if (strlen(buffer) > 0)
+      g_szDBHostname = buffer;
+    else
+      g_szDBHostname = g_szHostname;
+  else
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'db_host' setting, falling back to '%s' as default", g_szHostname.c_str());
+    g_szDBHostname = g_szHostname;
+  }
+  buffer[0] = 0;
+
+  /* Read hidden setting "db_port" from settings.xml */
+  if (!XBMC->GetSetting("db_port", &g_iDBPort) || g_iDBPort == 0)
+  {
+    /* If setting is unknown fallback to defaults */
+    g_iDBPort = DEFAULT_DB_PORT;
+  }
 
   /* Read setting "LiveTV" from settings.xml */
   if (!XBMC->GetSetting("livetv", &g_bLiveTV))

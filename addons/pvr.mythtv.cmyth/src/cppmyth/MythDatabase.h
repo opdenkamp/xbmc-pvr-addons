@@ -59,7 +59,7 @@ class MythDatabase
 {
 public:
   MythDatabase();
-  MythDatabase(const CStdString &server, const CStdString &database, const CStdString &user, const CStdString &password);
+  MythDatabase(const CStdString &server, const CStdString &database, const CStdString &user, const CStdString &password, unsigned short port);
 
   bool IsNull() const;
 

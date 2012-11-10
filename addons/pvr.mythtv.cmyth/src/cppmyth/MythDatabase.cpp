@@ -47,10 +47,10 @@ MythDatabase::MythDatabase()
 {
 }
 
-MythDatabase::MythDatabase(const CStdString &server, const CStdString &database, const CStdString &user, const CStdString &password)
+MythDatabase::MythDatabase(const CStdString &server, const CStdString &database, const CStdString &user, const CStdString &password, unsigned short port)
   : m_database_t(new MythPointerThreadSafe<cmyth_database_t>())
 {
-  *m_database_t = cmyth_database_init(const_cast<char*>(server.c_str()), const_cast<char*>(database.c_str()), const_cast<char*>(user.c_str()), const_cast<char*>(password.c_str()));
+  *m_database_t = cmyth_database_init(const_cast<char*>(server.c_str()), const_cast<char*>(database.c_str()), const_cast<char*>(user.c_str()), const_cast<char*>(password.c_str()), port);
 }
 
 bool MythDatabase::IsNull() const

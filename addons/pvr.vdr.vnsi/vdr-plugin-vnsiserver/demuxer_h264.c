@@ -50,8 +50,8 @@ static const int h264_lev2cpbsize[][2] =
   {-1, -1},
 };
 
-cParserH264::cParserH264(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID)
- : cParser(streamer, streamID)
+cParserH264::cParserH264(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
+ : cParser(streamer, pID)
 {
   m_pictureBuffer     = NULL;
   m_pictureBufferSize = 0;
@@ -191,7 +191,7 @@ bool cParserH264::Parse_H264(size_t len, uint32_t next_startcode, int sc_offset)
     if (!Parse_SLH(nal_data, nal_len, &pkttype))
       return true;
 
-    m_StreamPacket.id         = m_streamID;
+    m_StreamPacket.id         = m_pID;
     m_StreamPacket.pts        = m_curPTS;
     m_StreamPacket.dts        = m_curDTS;
     m_StreamPacket.frametype  = pkttype;

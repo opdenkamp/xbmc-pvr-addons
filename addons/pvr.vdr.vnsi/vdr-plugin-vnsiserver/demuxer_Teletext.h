@@ -41,7 +41,7 @@ private:
   int64_t     m_lastPTS;
 
 public:
-  cParserTeletext(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID);
+  cParserTeletext(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
   virtual ~cParserTeletext();
 
   virtual void Parse(unsigned char *data, int size, bool pusi);

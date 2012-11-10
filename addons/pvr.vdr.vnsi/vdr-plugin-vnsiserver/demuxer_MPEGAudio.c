@@ -28,8 +28,8 @@
 
 #include "demuxer_MPEGAudio.h"
 
-cParserMPEG2Audio::cParserMPEG2Audio(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID)
- : cParser(streamer, streamID)
+cParserMPEG2Audio::cParserMPEG2Audio(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
+ : cParser(streamer, pID)
 {
   m_FrameOffset               = 0;
   m_CurrentOffset             = 0;
@@ -115,7 +115,7 @@ void cParserMPEG2Audio::Parse(unsigned char *data, int size, bool pusi)
     if (outlen)
     {
       sStreamPacket pkt;
-      pkt.id       = m_streamID;
+      pkt.id       = m_pID;
       pkt.data     = outbuf;
       pkt.size     = outlen;
       pkt.duration = 90000 * 1152 / m_SampleRate;

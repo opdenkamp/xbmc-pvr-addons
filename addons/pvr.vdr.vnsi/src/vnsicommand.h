@@ -23,7 +23,7 @@
 #define VNSI_COMMAND_H
 
 /** Current VNSI Protocol Version number */
-#define VNSIPROTOCOLVERSION      2
+#define VNSIPROTOCOLVERSION      3
 
 
 /** Packet types */

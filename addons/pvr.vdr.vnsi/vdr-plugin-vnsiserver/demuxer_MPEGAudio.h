@@ -108,7 +108,7 @@ private:
   bool DecodeHeader(MPADecodeHeader *s, uint32_t header);
 
 public:
-  cParserMPEG2Audio(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID);
+  cParserMPEG2Audio(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
   virtual ~cParserMPEG2Audio();
 
   virtual void Parse(unsigned char *data, int size, bool pusi);

@@ -109,8 +109,8 @@ typedef enum {
   EAC3_FRAME_TYPE_RESERVED
 } EAC3FrameType;
 
-cParserAC3::cParserAC3(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID)
- : cParser(streamer, streamID)
+cParserAC3::cParserAC3(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
+ : cParser(streamer, pID)
 {
   m_CurrentFrameStartIndex    = 0;
   m_Offset                    = 0;
@@ -192,7 +192,7 @@ void cParserAC3::Parse(unsigned char *data, int size, bool pusi)
     if (outlen)
     {
       sStreamPacket pkt;
-      pkt.id       = m_streamID;
+      pkt.id       = m_pID;
       pkt.data     = outbuf;
       pkt.size     = outlen;
       pkt.duration = 90000 * 1536 / m_SampleRate;

@@ -23,6 +23,7 @@
 #include "VNSISession.h"
 #include "client.h"
 #include <string>
+#include <map>
 
 class cResponsePacket;
 
@@ -63,4 +64,5 @@ private:
   PVR_STREAM_PROPERTIES m_Streams;
   PVR_CHANNEL           m_channelinfo;
   SQuality              m_Quality;
+  std::map<int, unsigned int> m_StreamIndex;
 };

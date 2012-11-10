@@ -79,6 +79,7 @@ cmyth_send_message(cmyth_conn_t conn, char *request)
 	if (conn->conn_fd < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: not connected\n",
 			  __FUNCTION__);
+		conn->conn_hang = 1;
 		return -EBADF;
 	}
 	if (!request) {
@@ -608,16 +609,14 @@ cmyth_rcv_long(cmyth_conn_t conn, int *err, long *buf, int count)
 }
 
 /*
- * cmyth_rcv_okay(cmyth_conn_t conn, char *ok)
+ * cmyth_rcv_okay(cmyth_conn_t conn)
  * 
  * Scope: PRIVATE (mapped to __cmyth_rcv_okay)
  *
  * Description
  *
- * Receive an 'OK' (or another user specified) response on a
- * connection.  If 'ok' is non-NULL it points to a string which should
- * be matched in place of 'OK'.  If it is NULL, this routine will look
- * for "OK".  This is here to easily handle simple acknowledgement from
+ * Receive an OK response on a connection.
+ * This is here to easily handle simple acknowledgement from
  * the server.
  *
  * Return Value:
@@ -627,34 +626,91 @@ cmyth_rcv_long(cmyth_conn_t conn, int *err, long *buf, int count)
  * Failure: -(errno)
  */
 int
-cmyth_rcv_okay(cmyth_conn_t conn, char *ok)
+cmyth_rcv_okay(cmyth_conn_t conn)
 {
-	int len;
-	int consumed;
-	char buf[8];
-	int err;
+	int count, consumed;
+	char buf[3];
+	char tmp[1024];
+	int err, ret;
 
-	len = cmyth_rcv_length(conn);
-	if (len < 0) {
+	count = cmyth_rcv_length(conn);
+	if (count < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_length() failed\n",
 			  __FUNCTION__);
-		return len;
+		return count;
 	}
-	if (!ok) {
-		ok = "OK";
-	}
-	consumed = cmyth_rcv_string(conn, &err, buf, sizeof(buf), len);
+	consumed = cmyth_rcv_string(conn, &err, buf, sizeof(buf), count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed\n",
 			  __FUNCTION__);
 		return -err;
 	}
-	if (consumed < len) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: did not consume everything %d < %d\n",
-			  __FUNCTION__, consumed, len);
+	count -= consumed;
+	cmyth_toupper_string(buf);
+	ret = (strncmp(buf, "OK",2) == 0) ? 0 : -1;
+	if (count > 0) {
+		cmyth_dbg(CMYTH_DBG_INFO,
+			  "%s: did not consume everything\n",
+			  __FUNCTION__);
+		while(count > 0) {
+			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
+			count -= consumed;
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data %s\n", __FUNCTION__, tmp);
+		}
 	}
-	return (strcmp(buf, ok) == 0) ? 0 : -1;
+	return ret;
+}
+
+/*
+ * cmyth_rcv_feedback(cmyth_conn_t conn, char *fb)
+ *
+ * Scope: PRIVATE (mapped to __cmyth_rcv_feedback)
+ *
+ * Description
+ *
+ * Receive user specified response on a connection.
+ * This is here to easily handle simple acknowledgement from
+ * the server.
+ *
+ * Return Value:
+ *
+ * Success: 0
+ *
+ * Failure: -(errno)
+ */
+int
+cmyth_rcv_feedback(cmyth_conn_t conn, char *fb)
+{
+	int count, consumed;
+	char buf[8];
+	char tmp[1024];
+	int err, ret;
+
+	count = cmyth_rcv_length(conn);
+	if (count < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_length() failed\n",
+			  __FUNCTION__);
+		return count;
+	}
+	consumed = cmyth_rcv_string(conn, &err, buf, sizeof(buf), count);
+	if (err) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed\n",
+			  __FUNCTION__);
+		return -err;
+	}
+	count -= consumed;
+	ret = (strncmp(buf, fb, sizeof(fb)) == 0) ? 0 : -1;
+	if (count > 0) {
+		cmyth_dbg(CMYTH_DBG_INFO,
+			  "%s: did not consume everything\n",
+			  __FUNCTION__);
+		while(count > 0) {
+			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
+			count -= consumed;
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data %s\n", __FUNCTION__, tmp);
+		}
+	}
+	return ret;
 }
 
 /*
@@ -3058,4 +3114,14 @@ cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
 		p += r;
 	}
 	return total;
+}
+
+void cmyth_toupper_string(char *str)
+{
+	if (str) {
+		int i;
+		for ( i=0 ; i < sizeof(str) && str[i] != '\0' ; i++ ) {
+			str[i] = toupper(str[i]);
+		}
+	}
 }

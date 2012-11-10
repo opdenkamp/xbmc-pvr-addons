@@ -67,7 +67,6 @@ MythConnection::MythConnection()
   : m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>())
   , m_server("")
   , m_port(0)
-  , m_retryCount(0)
   , m_pEventHandler(NULL)
 {
 }
@@ -76,7 +75,6 @@ MythConnection::MythConnection(const CStdString &server, unsigned short port)
   : m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>)
   , m_server(server)
   , m_port(port)
-  , m_retryCount(0)
   , m_pEventHandler(NULL)
 {
   cmyth_conn_t connection = cmyth_conn_connect_ctrl(const_cast<char*>(server.c_str()), port, 64 * 1024, 16 * 1024);
@@ -130,25 +128,11 @@ bool MythConnection::IsConnected()
 bool MythConnection::TryReconnect()
 {
   int retval = false;
-  if (m_retryCount < 10)
-  {
-    m_retryCount++;
-
-    Lock();
-    retval = cmyth_conn_reconnect_ctrl(*m_conn_t);
-    Unlock();
-
-    if (retval == 1)
-    {
-      m_retryCount = 0;
-      if (m_pEventHandler && !m_pEventHandler->TryReconnect())
-      {
-        XBMC->Log(LOG_ERROR, "%s - Unable to reconnect event handler", __FUNCTION__);
-      }
-    }
-  }
-  if (g_bExtraDebug && retval == 0)
-    XBMC->Log(LOG_DEBUG, "%s - Unable to reconnect (retry count: %d)", __FUNCTION__, m_retryCount);
+  Lock();
+  retval = cmyth_conn_reconnect_ctrl(*m_conn_t);
+  Unlock();
+  if (retval == 0)
+    XBMC->Log(LOG_DEBUG, "%s - Unable to reconnect", __FUNCTION__);
   return retval == 1;
 }
 
@@ -298,10 +282,8 @@ ProgramInfoMap MythConnection::GetScheduledPrograms()
 
 bool MythConnection::UpdateSchedules(int id)
 {
-  CStdString cmd;
-  cmd.Format("RESCHEDULE_RECORDINGS %i", id);
   int retval = 0;
-  CMYTH_CONN_CALL(retval, retval < 0, cmyth_schedule_recording(*m_conn_t, cmd.Buffer()));
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_conn_reschedule_recordings(*m_conn_t, id));
   return retval >= 0;
 }
 
@@ -354,15 +336,15 @@ MythFile MythConnection::ConnectFile(MythProgramInfo &recording)
 MythFile MythConnection::ConnectPath(const CStdString &filename, const CStdString &storageGroup)
 {
   cmyth_file_t file = NULL;
-  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_conn_connect_path(const_cast<char*>(filename.c_str()), *m_conn_t, 64 * 1024, 16 * 1024, const_cast<char*>(storageGroup.c_str())));
+  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_conn_connect_path(const_cast<char*>(filename.c_str()), *m_conn_t, 64 * 1024, 64 * 1024, const_cast<char*>(storageGroup.c_str())));
   return MythFile(file, *this);
 }
 
-int MythConnection::SetBookmark(MythProgramInfo &recording, long long bookmark)
+bool MythConnection::SetBookmark(MythProgramInfo &recording, long long bookmark)
 {
   int retval;
   CMYTH_CONN_CALL(retval, retval < 0, cmyth_set_bookmark(*m_conn_t, *recording.m_proginfo_t, bookmark));
-  return retval;
+  return retval >= 0;
 }
 
 long long MythConnection::GetBookmark(MythProgramInfo &recording)

@@ -64,12 +64,16 @@ void CHTSPDemux::Close()
   m_session->Close();
 }
 
+void CHTSPDemux::SetSpeed(int speed)
+{
+  SendSpeed(m_subs, speed/10);
+}
+
 bool CHTSPDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
 {
   props->iStreamCount = m_Streams.iStreamCount;
   for (unsigned int i = 0; i < m_Streams.iStreamCount; i++)
   {
-    props->stream[i].iStreamIndex   = m_Streams.stream[i].iStreamIndex;
     props->stream[i].iPhysicalId    = m_Streams.stream[i].iPhysicalId;
     props->stream[i].iCodecType     = m_Streams.stream[i].iCodecType;
     props->stream[i].iCodecId       = m_Streams.stream[i].iCodecId;
@@ -363,7 +367,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
 
     if (bValidStream)
     {
-      m_Streams.stream[m_Streams.iStreamCount].iStreamIndex = m_Streams.iStreamCount;
       m_Streams.stream[m_Streams.iStreamCount].iPhysicalId  = index;
       if (m_Streams.stream[m_Streams.iStreamCount].iCodecType == AVMEDIA_TYPE_AUDIO)
       {
@@ -439,6 +442,15 @@ bool CHTSPDemux::SendSubscribe(int subscription, int channel)
   htsmsg_add_s32(m, "channelId"     , channel);
   htsmsg_add_s32(m, "subscriptionId", subscription);
   return m_session->ReadSuccess(m, true, "subscribe to channel");
+}
+
+bool CHTSPDemux::SendSpeed(int subscription, int speed)
+{
+  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_add_str(m, "method"        , "subscriptionSpeed");
+  htsmsg_add_s32(m, "subscriptionId", subscription);
+  htsmsg_add_s32(m, "speed"         , speed);
+  return m_session->ReadSuccess(m, true, "pause subscription");
 }
 
 bool CHTSPDemux::ParseQueueStatus(htsmsg_t* msg)

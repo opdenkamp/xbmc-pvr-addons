@@ -244,9 +244,6 @@ private:
   bool GetStringLng(XMLNode xRootNode, const char* strTag, CStdString& strStringValue);
   CStdString GetPreferredLanguage();
   void RemoveNullChars(CStdString &String);
-#ifdef WIN32
-  void AnsiToUtf8(std::string &String);
-#endif
   bool GetDeviceInfo();
 
 

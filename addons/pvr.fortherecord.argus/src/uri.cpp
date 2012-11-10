@@ -43,7 +43,7 @@ namespace uri
     }
   };
   const traits AUTHORITY_TRAITS = {
-    "//", 0, 0,
+    (char *) "//", 0, 0,
     {
       CINV,CINV,CINV,CINV,CINV,CINV,CINV,CINV, CINV,CINV,CINV,CINV,CINV,CINV,CINV,CINV,
       CINV,CINV,CINV,CINV,CINV,CINV,CINV,CINV, CINV,CINV,CINV,CINV,CINV,CINV,CINV,CINV,

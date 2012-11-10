@@ -607,16 +607,7 @@ namespace ForTheRecord
         XBMC->Log(LOG_DEBUG, "TuneLiveStream result %d.", livestreamresult);
         if (livestreamresult != ForTheRecord::Succeed)
         {
-          if (livestreamresult != ForTheRecord::NoReTunePossible)
-          {
-            XBMC->Log(LOG_ERROR, "TuneLiveStream result %d.", livestreamresult);
-            return E_FAILED;
-          }
-          else
-          {
-            XBMC->Log(LOG_INFO, "Re-tune not possible.");
-            return E_NORETUNEPOSSIBLE;
-          }
+          return livestreamresult;
         }
 
         // Ok, pick up the returned LiveStream object
@@ -630,12 +621,10 @@ namespace ForTheRecord
           XBMC->Log(LOG_DEBUG, "No LiveStream received from server.");
           return E_FAILED;
         }
-#ifdef TSREADER
         stream = g_current_livestream["TimeshiftFile"].asString();
-#else
-        stream = g_current_livestream["RtspUrl"].asString();
-#endif
+        //stream = g_current_livestream["RtspUrl"].asString();
         XBMC->Log(LOG_DEBUG, "Tuned live stream: %s\n", stream.c_str());
+        return E_SUCCESS;
       }
       else
       {
@@ -647,7 +636,7 @@ namespace ForTheRecord
     {
       XBMC->Log(LOG_ERROR, "TuneLiveStream failed");
     }
-    return retval;
+    return E_FAILED;
   }
 
 
@@ -730,7 +719,7 @@ namespace ForTheRecord
     return false;
   }
 
-  int GetEPGData(const int backendversion, const std::string& guidechannel_id, struct tm epg_start, struct tm epg_end, Json::Value& response)
+  int GetEPGData(const std::string& guidechannel_id, struct tm epg_start, struct tm epg_end, Json::Value& response)
   {
     if ( guidechannel_id.length() > 0 )
     {
@@ -773,41 +762,6 @@ namespace ForTheRecord
     return retval;
   }
 
-  int GetRecordingsForTitleUsingURL(const std::string& title, Json::Value& response)
-  {
-    //int retval = E_FAILED;
-    //XBMC->Log(LOG_DEBUG, "GetRecordingsForTitleUsingURL");
-    //CURL *curl;
-
-    //curl = curl_easy_init();
-
-    //if(curl)
-    //{
-    //  std::string command = "ForTheRecord/Control/RecordingsForProgramTitle/Television/";
-    //  char* pch = curl_easy_escape(curl, title.c_str(), 0);
-    //  command += pch;
-    //  curl_free(pch);
-
-    //  retval = ForTheRecord::ForTheRecordJSONRPC(command, "?includeNonExisting=false", response);
-    //  if(retval >= 0)
-    //  {           
-    //    if (response.type() != Json::arrayValue)
-    //    {
-    //      retval = E_FAILED;
-    //      XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingURL did not return a Json::arrayValue [%d].", response.type());
-    //    }
-    //  }
-    //  else
-    //  {
-    //    XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingURL remote call failed.");
-    //  }
-
-    //  curl_easy_cleanup(curl);
-    //}
-    //return retval;
-    return E_FAILED;
-  }
-
   int GetRecordingsForTitleUsingPOSTData(const std::string& title, Json::Value& response)
   {
     XBMC->Log(LOG_DEBUG, "GetRecordingsForTitleUsingPOSTData(\"%s\")", title.c_str());
@@ -827,7 +781,7 @@ namespace ForTheRecord
     XBMC->Log(LOG_DEBUG, "GetRecordingsForTitle");
 
     // Does the FTR version support putting the title in the POST data or not?
-    if (iBackendversion < FTR_1_6_1_0) return GetRecordingsForTitleUsingURL(title, response);
+    if (iBackendversion < FTR_1_6_1_0) return E_FAILED;
     else return GetRecordingsForTitleUsingPOSTData(title, response);
   }
 
@@ -863,6 +817,41 @@ namespace ForTheRecord
     std::string arguments = recordingfilename;
 
     int retval = ForTheRecord::ForTheRecordRPC(command, arguments, response);
+    return retval;
+  }
+
+  int GetRecordingLastWatchedPosition(const std::string& recordingfilename, Json::Value& response)
+  {
+    XBMC->Log(LOG_DEBUG, "GetRecordingLastWatchedPosition(\"%s\",...)", recordingfilename.c_str());
+
+    std::string command = "ForTheRecord/Control/RecordingLastWatchedPosition";
+    std::string arguments = recordingfilename;
+
+    int retval = ForTheRecord::ForTheRecordJSONRPC(command, arguments, response);
+    if (retval == E_EMPTYRESPONSE) retval = 0;
+    if (retval < 0)
+    {
+      XBMC->Log(LOG_DEBUG, "GetRecordingLastWatchedPosition failed. Return value: %i\n", retval);
+    }
+    return retval;
+  }
+
+  int SetRecordingLastWatchedPosition(const std::string& recordingfilename, int lastwatchedposition)
+  {
+    std::string response;
+    char tmp[512];
+
+    XBMC->Log(LOG_DEBUG, "SetRecordingLastWatchedPosition(\"%s\", %d)", recordingfilename.c_str(), lastwatchedposition);
+
+    snprintf(tmp, 512, "{\"LastWatchedPositionSeconds\":%d, \"RecordingFileName\":%s}", lastwatchedposition, recordingfilename.c_str());
+    std::string arguments = tmp;
+    std::string command = "ForTheRecord/Control/SetRecordingLastWatchedPosition";
+
+    int retval = ForTheRecord::ForTheRecordRPC(command, arguments, response);
+    if (retval < 0)
+    {
+      XBMC->Log(LOG_DEBUG, "SetRecordingLastWatchedPosition failed. Return value: %i\n", retval);
+    }
     return retval;
   }
 
@@ -961,7 +950,8 @@ namespace ForTheRecord
   }
 
   /**
-   * \brief Fetch the list of upcoming programs
+   * \brief Fetch the list of upcoming programs from type 'recording'
+   * \currently not used
    */
   int GetUpcomingPrograms(Json::Value& response)
   {
@@ -988,6 +978,39 @@ namespace ForTheRecord
     else
     {
       XBMC->Log(LOG_DEBUG, "GetUpcomingPrograms failed. Return value: %i\n", retval);
+    }
+
+    return retval;
+  }
+
+  /**
+   * \brief Fetch the list of upcoming recordings
+   */
+  int GetUpcomingRecordings(Json::Value& response)
+  {
+    int retval = -1;
+
+    XBMC->Log(LOG_DEBUG, "GetUpcomingRecordings");
+
+    // http://madcat:49943/ForTheRecord/Control/UpcomingRecordings/7?includeCancelled=true
+    retval = ForTheRecordJSONRPC("ForTheRecord/Control/UpcomingRecordings/7?includeActive=true", "", response);
+
+    if(retval >= 0)
+    {
+      if( response.type() == Json::arrayValue)
+      {
+        int size = response.size();
+        return size;
+      }
+      else
+      {
+        XBMC->Log(LOG_DEBUG, "Unknown response format. Expected Json::arrayValue\n");
+        return -1;
+      }
+    }
+    else
+    {
+      XBMC->Log(LOG_DEBUG, "GetUpcomingRecordings failed. Return value: %i\n", retval);
     }
 
     return retval;
@@ -1100,7 +1123,7 @@ namespace ForTheRecord
     std::string modifiedtime = TimeTToWCFDate(mktime(localtime(&now)));
     char arguments[1024];
     snprintf( arguments, sizeof(arguments),
-      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"XBMC - %s\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,\"Rules\":[{\"Arguments\":[\"%s\"],\"Type\":\"TitleEquals\"},{\"Arguments\":[\"%i-%02i-%02iT00:00:00\"],\"Type\":\"OnDate\"},{\"Arguments\":[\"%02i:%02i:%02i\"],\"Type\":\"AroundTime\"},{\"Arguments\":[\"%s\"],\"Type\":\"Channels\"}],\"ScheduleId\":\"00000000-0000-0000-0000-000000000000\",\"SchedulePriority\":0,\"ScheduleType\":82,\"Version\":0}",
+      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"%s\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,\"Rules\":[{\"Arguments\":[\"%s\"],\"Type\":\"TitleEquals\"},{\"Arguments\":[\"%i-%02i-%02iT00:00:00\"],\"Type\":\"OnDate\"},{\"Arguments\":[\"%02i:%02i:%02i\"],\"Type\":\"AroundTime\"},{\"Arguments\":[\"%s\"],\"Type\":\"Channels\"}],\"ScheduleId\":\"00000000-0000-0000-0000-000000000000\",\"SchedulePriority\":0,\"ScheduleType\":82,\"Version\":0}",
       lifetimeToKeepUntilMode(lifetime), lifetimeToKeepUntilValue(lifetime), modifiedtime.c_str(), title.c_str(), postrecordseconds, prerecordseconds, title.c_str(),
       tm_start.tm_year + 1900, tm_start.tm_mon + 1, tm_start.tm_mday,
       tm_start.tm_hour, tm_start.tm_min, tm_start.tm_sec,
@@ -1152,7 +1175,7 @@ namespace ForTheRecord
     std::string modifiedtime = TimeTToWCFDate(mktime(localtime(&now)));
     char arguments[1024];
     snprintf( arguments, sizeof(arguments),
-      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"XBMC (manual) - %s\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,"
+      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"%s (manual)\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,"
       "\"Rules\":[{\"Arguments\":[\"%i-%02i-%02iT%02i:%02i:%02i\", \"%02i:%02i:%02i\"],\"Type\":\"ManualSchedule\"},{\"Arguments\":[\"%s\"],\"Type\":\"Channels\"}],\"ScheduleId\":\"00000000-0000-0000-0000-000000000000\",\"SchedulePriority\":0,\"ScheduleType\":82,\"Version\":0}",
       lifetimeToKeepUntilMode(lifetime), lifetimeToKeepUntilValue(lifetime), modifiedtime.c_str(), title.c_str(), postrecordseconds, prerecordseconds,
       tm_start.tm_year + 1900, tm_start.tm_mon + 1, tm_start.tm_mday,
@@ -1321,6 +1344,57 @@ namespace ForTheRecord
     }
     return wcfdate;
   }
+
+  // transform [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
+  // into      [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
+  std::string ToCIFS(std::string& UNCName)
+  {
+    std::string CIFSname = UNCName;
+    std::string SMBPrefix = "smb://";
+    if (g_szUser.length() > 0)
+    {
+      SMBPrefix += g_szUser;
+      if (g_szPass.length() > 0)
+      {
+        SMBPrefix += ":" + g_szPass;
+      }
+    }
+    else
+    {
+      SMBPrefix += "Guest";
+    }
+    SMBPrefix += "@";
+    size_t found;
+    while ((found = CIFSname.find("\\")) != std::string::npos)
+    {
+      CIFSname.replace(found, 1, "/");
+    }
+    CIFSname.erase(0,2);
+    CIFSname.insert(0, SMBPrefix);
+    return CIFSname;
+  }
+
+
+  // transform [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
+  // into      [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
+  std::string ToUNC(std::string& CIFSName)
+  {
+    std::string UNCname = CIFSName;
+
+    UNCname.erase(0,6);
+    size_t found = UNCname.find("@");
+    if (found != std::string::npos) {
+      UNCname.erase(0, found+1);
+    }
+
+    while ((found = UNCname.find("/")) != std::string::npos)
+    {
+      UNCname.replace(found, 1, "\\");
+    }
+    UNCname.insert(0, "\\\\");
+    return UNCname;
+  }
+
 }
 
    

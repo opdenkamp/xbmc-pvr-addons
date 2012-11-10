@@ -22,6 +22,9 @@
 #include "platform/util/StdString.h"
 #include "platform/util/util.h"
 
+// don't use the UNUSED macro from StdString.h as it will generate "error: statement has no effect [-Werror=unused-value]"
+#define NOTUSED(x) ((void) x)
+
 namespace Json
 {
   /**

@@ -113,6 +113,7 @@ struct cmyth_database {
 	char * db_user;
 	char * db_pass;
 	char * db_name;
+	unsigned short db_port;
 	MYSQL * mysql;
 	int db_version; /* JLB: -1 = No set, 0 = unknown else DBSchemaVer */
 	int db_tz_utc; /* JLB: 0 = No conversion, 1 = Enable UTC time zone conversion */

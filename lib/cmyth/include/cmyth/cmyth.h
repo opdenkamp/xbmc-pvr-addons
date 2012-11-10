@@ -659,7 +659,7 @@ extern int cmyth_tuner_type_check(cmyth_database_t db, cmyth_recorder_t rec, int
  * -----------------------------------------------------------------
  */
 
-extern cmyth_database_t cmyth_database_init(char *host, char *db_name, char *user, char *pass);
+extern cmyth_database_t cmyth_database_init(char *host, char *db_name, char *user, char *pass, unsigned short port);
 extern void             cmyth_database_close(cmyth_database_t db);
 extern cmyth_chanlist_t myth_tvguide_load_channels(cmyth_database_t db,
 																									 int sort_desc);
@@ -667,6 +667,7 @@ extern int cmyth_database_set_host(cmyth_database_t db, char *host);
 extern int cmyth_database_set_user(cmyth_database_t db, char *user);
 extern int cmyth_database_set_pass(cmyth_database_t db, char *pass);
 extern int cmyth_database_set_name(cmyth_database_t db, char *name);
+extern int cmyth_database_set_port(cmyth_database_t db, unsigned short port);
 
 extern int cmyth_set_watched_status_mysql(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat);
 

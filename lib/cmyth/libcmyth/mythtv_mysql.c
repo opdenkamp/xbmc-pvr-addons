@@ -65,7 +65,7 @@ cmyth_database_destroy(cmyth_database_t db)
 }
 
 cmyth_database_t
-cmyth_database_init(char *host, char *db_name, char *user, char *pass)
+cmyth_database_init(char *host, char *db_name, char *user, char *pass, unsigned short port)
 {
 	cmyth_database_t rtrn = ref_alloc(sizeof(*rtrn));
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s\n", __FUNCTION__);
@@ -77,6 +77,7 @@ cmyth_database_init(char *host, char *db_name, char *user, char *pass)
 	    rtrn->db_user = ref_strdup(user);
 	    rtrn->db_pass = ref_strdup(pass);
 	    rtrn->db_name = ref_strdup(db_name);
+	    rtrn->db_port = port;
 	    rtrn->db_version = -1;
 	    rtrn->db_tz_utc = 0;
 	    rtrn->db_tz_name[0] = '\0';
@@ -176,6 +177,14 @@ cmyth_database_set_name(cmyth_database_t db, char *name)
 	    return 1;
 }
 
+int
+cmyth_database_set_port(cmyth_database_t db, unsigned short port)
+{
+	PRINTF("** SSDEBUG: setting the db port to %i\n", port);
+	cmyth_database_close(db);
+	db->db_port = port;
+	return 1;
+}
 
 static int
 cmyth_db_check_connection(cmyth_database_t db)
@@ -197,7 +206,7 @@ cmyth_db_check_connection(cmyth_database_t db)
 			fprintf(stderr,"%s: mysql_init() failed, insufficient memory?\n", __FUNCTION__);
 			return -1;
 		}
-		if(NULL == mysql_real_connect(db->mysql,db->db_host,db->db_user,db->db_pass,db->db_name,0,NULL,0))
+		if(NULL == mysql_real_connect(db->mysql,db->db_host,db->db_user,db->db_pass,db->db_name,db->db_port,NULL,0))
 		{
 			fprintf(stderr,"%s: mysql_connect() failed: %s\n", __FUNCTION__, mysql_error(db->mysql));
 			cmyth_database_close(db);
@@ -1187,7 +1196,7 @@ cmyth_mysql_testdb_connection(cmyth_database_t db,char **message) {
 			*message=buf;
 			return -1;
 		}
-		if (NULL == mysql_real_connect(db->mysql, db->db_host,db->db_user,db->db_pass,db->db_name,0,NULL,0)) {
+		if (NULL == mysql_real_connect(db->mysql, db->db_host,db->db_user,db->db_pass,db->db_name,db->db_port,NULL,0)) {
 			fprintf(stderr,"%s: mysql_connect() failed: %s\n", __FUNCTION__,
 			mysql_error(db->mysql));
 			snprintf(buf, 1000, "%s",mysql_error(db->mysql));

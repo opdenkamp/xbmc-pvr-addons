@@ -357,7 +357,8 @@ bool Dvb::LoadChannels()
         }
         else
         {
-          char* strGroupNameUtf8 = XBMC->UnknownToUTF8(strTmp.c_str());
+          groupName = strTmp;
+          char* strGroupNameUtf8 = XBMC->UnknownToUTF8(groupName.c_str());
           favGroup.strGroupName = strGroupNameUtf8;
           groupsfav.push_back(favGroup);
           XBMC->FreeString(strGroupNameUtf8);

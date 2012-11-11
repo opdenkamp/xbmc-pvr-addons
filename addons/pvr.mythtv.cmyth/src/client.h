@@ -62,11 +62,11 @@ extern CStdString   g_szUserPath;         ///< The Path to the user directory in
 extern CStdString   g_szClientPath;       ///< The Path where this driver is located
 
 /* Client Settings */
-extern CStdString   g_szHostname;         ///< The Host name or IP of the mythtv server
+extern CStdString   g_szMythHostname;     ///< The Host name or IP of the mythtv server
 extern int          g_iMythPort;          ///< The mythtv Port (default is 6543)
-extern CStdString   g_szMythDBuser;       ///< The mythtv sql username (default is mythtv)
-extern CStdString   g_szMythDBpassword;   ///< The mythtv sql password (default is mythtv)
-extern CStdString   g_szMythDBname;       ///< The mythtv sql database name (default is mythconverg)
+extern CStdString   g_szDBUser;           ///< The mythtv sql username (default is mythtv)
+extern CStdString   g_szDBPassword;       ///< The mythtv sql password (default is mythtv)
+extern CStdString   g_szDBName;           ///< The mythtv sql database name (default is mythconverg)
 extern CStdString   g_szDBHostname;       ///< The mythtv sql database host name or IP of the database server
 extern int          g_iDBPort;            ///< The mythtv sql database port (default is 3306)
 extern bool         g_bExtraDebug;        ///< Debug logging

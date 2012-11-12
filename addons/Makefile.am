@@ -11,6 +11,7 @@ SUBDIRS = pvr.demo \
           pvr.njoy \
           pvr.vuplus \
           pvr.fortherecord.argus \
+          pvr.argustv \
           $(ADDITIONAL_SUBDIRS)
 
 clean:

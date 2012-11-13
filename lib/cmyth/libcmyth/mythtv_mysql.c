@@ -186,6 +186,12 @@ cmyth_database_set_port(cmyth_database_t db, unsigned short port)
 	return 1;
 }
 
+int
+cmyth_database_get_version(cmyth_database_t db)
+{
+	return db->db_version;
+}
+
 static int
 cmyth_db_check_connection(cmyth_database_t db)
 {

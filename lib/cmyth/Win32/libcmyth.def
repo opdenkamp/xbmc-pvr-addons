@@ -82,6 +82,7 @@ EXPORTS
 	cmyth_database_set_user
 	cmyth_database_set_pass
 	cmyth_database_set_name
+	cmyth_database_get_version
 	cmyth_db_get_connection
 	cmyth_schedule_recording
 	cmyth_mysql_escape_chars

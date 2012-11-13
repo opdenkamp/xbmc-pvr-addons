@@ -65,6 +65,8 @@ public:
 
   bool TestConnection(CStdString *msg);
 
+  int GetSchemaVersion();
+
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* pprogram);
   ProgramList GetGuide(time_t starttime, time_t endtime);
 

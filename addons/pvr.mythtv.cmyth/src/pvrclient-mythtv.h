@@ -62,8 +62,8 @@ public:
   // Server
   bool Connect();
   const char *GetBackendName();
-  const char *GetBackendVersion() const;
-  const char *GetConnectionString() const;
+  const char *GetBackendVersion();
+  const char *GetConnectionString();
   bool GetDriveSpace(long long *iTotal, long long *iUsed);
 
   // EPG
@@ -127,7 +127,8 @@ private:
   PLATFORM::CMutex m_lock;
   MythFile m_file;
 
-  CStdString m_protocolVersion;
+  CStdString m_backendName;
+  CStdString m_backendVersion;
   CStdString m_connectionString;
 
   // Categories

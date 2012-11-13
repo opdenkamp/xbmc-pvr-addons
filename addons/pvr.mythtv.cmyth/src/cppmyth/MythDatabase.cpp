@@ -70,6 +70,13 @@ bool MythDatabase::TestConnection(CStdString *msg)
   return retval == 1;
 }
 
+int MythDatabase::GetSchemaVersion()
+{
+  int retval = 0;
+  CMYTH_DB_CALL(retval, retval < 0, cmyth_database_get_version(*m_database_t));
+  return retval;
+}
+
 bool MythDatabase::FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* program)
 {
   int retval = 0;

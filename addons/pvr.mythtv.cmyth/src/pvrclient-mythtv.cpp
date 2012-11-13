@@ -120,7 +120,7 @@ PVRClientMythTV::PVRClientMythTV()
  , m_pEventHandler(NULL)
  , m_db()
  , m_fileOps(NULL)
- , m_protocolVersion("")
+ , m_backendVersion("")
  , m_connectionString("")
  , m_categories()
  , m_EPGstart(0)
@@ -197,9 +197,6 @@ bool PVRClientMythTV::Connect()
     return false;
   }
 
-  m_protocolVersion.Format("%i", m_con.GetProtocolVersion());
-  m_connectionString.Format("%s:%i - %s@%s:%i", g_szMythHostname, g_iMythPort, g_szDBName, g_szDBHostname, g_iDBPort);
-
   // Create database connection
   m_db = MythDatabase(g_szDBHostname, g_szDBName, g_szDBUser, g_szDBPassword, g_iDBPort);
   if (m_db.IsNull())
@@ -244,22 +241,22 @@ bool PVRClientMythTV::Connect()
 
 const char *PVRClientMythTV::GetBackendName()
 {
-  if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
-  return m_con.GetBackendName();
+  m_backendName.Format("MythTV (%s)", m_con.GetBackendName());
+  XBMC->Log(LOG_DEBUG, "GetBackendName: %s", m_backendName.c_str());
+  return m_backendName;
 }
 
-const char *PVRClientMythTV::GetBackendVersion() const
+const char *PVRClientMythTV::GetBackendVersion()
 {
-  if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
-  return m_protocolVersion;
+  m_backendVersion.Format(XBMC->GetLocalizedString(30100), m_con.GetProtocolVersion(), m_db.GetSchemaVersion());
+  XBMC->Log(LOG_DEBUG, "GetBackendVersion: %s", m_backendVersion.c_str());
+  return m_backendVersion;
 }
 
-const char *PVRClientMythTV::GetConnectionString() const
+const char *PVRClientMythTV::GetConnectionString()
 {
-  if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
+  m_connectionString.Format("%s:%i - %s@%s:%i", g_szMythHostname, g_iMythPort, g_szDBName, g_szDBHostname, g_iDBPort);
+  XBMC->Log(LOG_DEBUG, "GetConnectionString: %s", m_connectionString.c_str());
   return m_connectionString;
 }
 

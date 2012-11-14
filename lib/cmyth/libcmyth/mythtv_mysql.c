@@ -2612,3 +2612,102 @@ cmyth_mysql_get_recording_markup(cmyth_database_t db, cmyth_proginfo_t prog, cmy
 
 	return data;
 }
+
+/*
+ * cmyth_mysql_estimate_rec_framerate(...)
+ *
+ * Scope: PRIVATE
+ *
+ * Description
+ *
+ * Estimate framerate using seek mark for MPEG recordings.
+ *
+ * Success: returns 0 for invalid value else framerate (fps x 1000)
+ *
+ * Failure: -1
+ */
+long long
+cmyth_mysql_estimate_rec_framerate(cmyth_database_t db, cmyth_proginfo_t prog)
+{
+	MYSQL_RES *res = NULL;
+	MYSQL_ROW row;
+	/*
+	 *  Force usage of primary key index to retrieve last mark value:
+	 *  const DESC, const DESC, const DESC
+	 */
+	const char *query_str = "SELECT mark FROM recordedseek WHERE chanid = ? AND starttime = ? AND type = 9 ORDER BY chanid DESC, starttime DESC, type DESC, mark DESC LIMIT 1;";
+	int rows = 0;
+	long long mark = 0;
+	long long dsecs = 0;
+	long long fpms;
+	time_t start_ts_dt;
+	time_t end_ts_dt;
+	cmyth_mysql_query_t * query;
+
+	start_ts_dt = cmyth_timestamp_to_unixtime(prog->proginfo_rec_start_ts);
+	end_ts_dt = cmyth_timestamp_to_unixtime(prog->proginfo_rec_end_ts);
+	dsecs = (long long)(end_ts_dt - start_ts_dt);
+	if (dsecs <= 0) {
+		return 0;
+	}
+
+	query = cmyth_mysql_query_create(db,query_str);
+
+	if (cmyth_mysql_query_param_long(query, prog->proginfo_chanId) < 0
+		|| cmyth_mysql_query_param_unixtime(query, start_ts_dt, db->db_tz_utc) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(query);
+		return -1;
+	}
+	res = cmyth_mysql_query_result(query);
+	ref_release(query);
+	if (res == NULL) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
+		return -1;
+	}
+	while ((row = mysql_fetch_row(res))) {
+		mark = safe_atoi(row[0]);
+		rows++;
+	}
+	mysql_free_result(res);
+
+	if (mark > 0) {
+		fpms = (mark * 1000) / dsecs;
+	}
+	else {
+		return 0;
+	}
+	return fpms;
+}
+
+/*
+ * cmyth_mysql_get_framerate(...)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Returns framerate for a recording.
+ *
+ * Success: returns 0 for invalid value else framerate (fps x 1000)
+ */
+long long
+cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_proginfo_t prog)
+{
+	long long ret;
+	ret = cmyth_mysql_get_recording_markup(db, prog, MARK_VIDEO_RATE);
+	if (ret > 10000 && ret < 80000) {
+		return ret;
+	} else {
+		cmyth_dbg(CMYTH_DBG_WARN, "%s, implausible frame rate: %lld\n", __FUNCTION__, ret);
+	}
+
+	ret = cmyth_mysql_estimate_rec_framerate(db, prog);
+	if (ret > 10000 && ret < 80000) {
+		return ret;
+	} else {
+		cmyth_dbg(CMYTH_DBG_WARN, "%s, failed to estimate frame rate: %lld\n", __FUNCTION__, ret);
+	}
+
+	return 0;
+}

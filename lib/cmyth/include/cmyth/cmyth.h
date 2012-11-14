@@ -1408,4 +1408,14 @@ typedef enum {
  */
 extern long long cmyth_mysql_get_recording_markup(cmyth_database_t db, cmyth_proginfo_t prog, cmyth_recording_markup_t type);
 
+/**
+ * Retrieve recording framerate (fps x 1000)
+ * \param db
+ * \param prog program info
+ * \ratval >0 recording framerate
+ * \retval =0 invalid framerate
+ * \retval <0 error
+ */
+extern long long cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_proginfo_t prog);
+
 #endif /* __CMYTH_H */

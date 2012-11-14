@@ -446,7 +446,9 @@ int PVRClientMythTV::GetRecordingsAmount(void)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
+  m_con.Lock();
   m_recordings = m_con.GetRecordedPrograms();
+  m_con.Unlock();
   int res = 0;
   for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
@@ -461,7 +463,9 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
+  m_con.Lock();
   m_recordings = m_con.GetRecordedPrograms();
+  m_con.Unlock();
   for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
     if (!it->second.IsNull() && IsRecordingVisible(it->second))

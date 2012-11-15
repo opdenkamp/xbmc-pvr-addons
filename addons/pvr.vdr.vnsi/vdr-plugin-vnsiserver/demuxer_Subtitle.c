@@ -28,8 +28,8 @@
 
 #include "demuxer_Subtitle.h"
 
-cParserSubtitle::cParserSubtitle(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID)
- : cParser(streamer, streamID)
+cParserSubtitle::cParserSubtitle(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
+ : cParser(streamer, pID)
 {
   m_firstPUSIseen       = false;
   m_PESStart            = false;
@@ -123,7 +123,7 @@ void cParserSubtitle::Parse(unsigned char *data, int size, bool pusi)
     if (buf[psize - 1] == 0xff)
     {
       sStreamPacket pkt;
-      pkt.id       = m_streamID;
+      pkt.id       = m_pID;
       pkt.data     = buf;
       pkt.size     = psize - 1;
       pkt.duration = m_curDTS-m_lastDTS;

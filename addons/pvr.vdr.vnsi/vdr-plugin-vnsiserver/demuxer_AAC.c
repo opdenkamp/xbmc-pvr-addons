@@ -35,8 +35,8 @@ static int aac_sample_rates[16] =
 };
 
 
-cParserAAC::cParserAAC(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID)
- : cParser(streamer, streamID)
+cParserAAC::cParserAAC(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
+ : cParser(streamer, pID)
 {
   m_demuxer                   = demuxer;
   m_streamBuffer              = NULL;
@@ -147,7 +147,7 @@ void cParserAAC::ParseLATMAudioMuxElement(uint8_t *data, int len)
     return;
 
   sStreamPacket pkt;
-  pkt.id       = m_streamID;
+  pkt.id       = m_pID;
   pkt.size     = slotLen + 7;
   pkt.data     = (uint8_t*)malloc(pkt.size);
   pkt.dts      = m_curDTS;

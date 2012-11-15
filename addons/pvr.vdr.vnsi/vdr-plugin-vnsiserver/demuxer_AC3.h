@@ -69,7 +69,7 @@ private:
   void FetchTimestamp(int off, bool remove);
 
 public:
-  cParserAC3(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID);
+  cParserAC3(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
   virtual ~cParserAC3();
 
   virtual void Parse(unsigned char *data, int size, bool pusi);

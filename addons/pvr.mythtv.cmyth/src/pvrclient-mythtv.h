@@ -147,7 +147,6 @@ private:
   // Recordings
   ProgramInfoMap m_recordings;
   static bool IsRecordingVisible(MythProgramInfo &recording);
-  float GetRecordingFrameRate(MythProgramInfo &recording);
 
   // Timers
   RecordingRuleList m_recordingRules;

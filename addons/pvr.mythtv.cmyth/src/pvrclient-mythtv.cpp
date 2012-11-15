@@ -620,7 +620,7 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
   if (it != m_recordings.end())
   {
     // Calculate the frame offset
-    frameOffset = (long long)((float)lastplayedposition * GetRecordingFrameRate(it->second));
+    frameOffset = (long long)(lastplayedposition * m_db.GetRecordingFrameRate(it->second) / 1000.0f);
     if (frameOffset < 0) frameOffset = 0;
     if (g_bExtraDebug)
     {
@@ -676,7 +676,7 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
         XBMC->Log(LOG_DEBUG, "%s - FrameOffset: %lld)", __FUNCTION__, frameOffset);
       }
 
-      float frameRate = GetRecordingFrameRate(it->second);
+      float frameRate = (float)m_db.GetRecordingFrameRate(it->second) / 1000.0f;
       if (frameRate > 0)
       {
         bookmark = (int)((float)frameOffset / frameRate);
@@ -694,48 +694,9 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
     return PVR_ERROR_FAILED;
   }
 
-  // Set the bookmark few seconds earlier (due to the accuracy of the above float operations)
-  bookmark = bookmark - 3;
   if (bookmark < 0) bookmark = 0;
   m_con.Unlock();
   return bookmark;
-}
-
-float PVRClientMythTV::GetRecordingFrameRate(MythProgramInfo &recording)
-{
-  // MythTV uses frame offsets whereas XBMC expects a time offset.
-  // This function can be used to convert the frame offsets to time offsets and back.
-  // The average frameRate is calculated by: frameRate = frameCount / duration.
-  float frameRate = 0.0f;
-
-  if (g_bExtraDebug)
-  {
-    XBMC->Log(LOG_DEBUG, "%s - Getting Framerate for: %s)", __FUNCTION__, recording.Title(false).c_str());
-  }
-
-  // cmyth_get_bookmark_mark returns the appropriate frame offset for the given byte offset (recordedseek table)
-  // This can be used to determine the frame count (by querying the max byte offset)
-  long long frameCount = m_db.GetBookmarkMark(recording, LLONG_MAX, 0);
-  if (frameCount > 0)
-  {
-    if (g_bExtraDebug)
-    {
-      XBMC->Log(LOG_DEBUG, "%s - FrameCount: %lld)", __FUNCTION__, frameCount);
-      XBMC->Log(LOG_DEBUG, "%s - Duration: %d)", __FUNCTION__, recording.Duration());
-    }
-
-    if (recording.Duration() > 0)
-    {
-      // Calculate frameRate
-      frameRate = (float)frameCount / (float)recording.Duration();
-
-      if (g_bExtraDebug)
-      {
-        XBMC->Log(LOG_DEBUG, "%s - FrameRate: %f)", __FUNCTION__, frameRate);
-      }
-    }
-  }
-  return frameRate;
 }
 
 int PVRClientMythTV::GetTimersAmount(void)

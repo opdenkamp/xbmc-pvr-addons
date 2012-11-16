@@ -47,6 +47,7 @@ cRecording::cRecording(void)
   keepuntilmode = ArgusTV::UntilSpaceIsNeeded;
   keepuntilvalue = 0;
   lastwatchedposition = 0;
+  fullywatchedcount = 0;
   lastwatchedtime = 0;
   programstarttime = 0;
   programstoptime = 0;
@@ -97,6 +98,7 @@ bool cRecording::Parse(const Json::Value& data)
   keepuntilmode = (ArgusTV::KeepUntilMode) data["KeepUntilMode"].asInt();
   keepuntilvalue = data["KeepUntilValue"].asInt();
   lastwatchedposition = data["LastWatchedPosition"].asInt();
+  fullywatchedcount = data ["FullyWatchedCount"].asInt();
   t = data["LastWatchedTime"].asString();
   lastwatchedtime = ArgusTV::WCFDateToTimeT(t, offset);
   t = data["ProgramStartTime"].asString();

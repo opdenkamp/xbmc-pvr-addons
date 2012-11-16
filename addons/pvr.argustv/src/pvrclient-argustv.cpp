@@ -106,16 +106,19 @@ bool cPVRClientArgusTV::Connect()
         XBMC->Log(LOG_INFO, "Ping Ok. The client and server are compatible, API version %d.\n", m_iBackendVersion);
         break;
       case -1:
-        XBMC->Log(LOG_NOTICE, "Ping Ok. The client is too old for the server.\n");
+        XBMC->Log(LOG_NOTICE, "Ping Ok. The ARGUS TV server is too new for this version of the add-on.\n");
+        XBMC->QueueNotification(QUEUE_ERROR, "The ARGUS TV server is too new for this version of the add-on");
         return false;
       case 1:
-        XBMC->Log(LOG_NOTICE, "Ping Ok. The client is too new for the server.\n");
+        XBMC->Log(LOG_NOTICE, "Ping Ok. The ARGUS TV server is too old for this version of the add-on.\n");
+        XBMC->QueueNotification(QUEUE_ERROR, "The ARGUS TV server is too old for this version of the add-on");
         return false;
       default:
-         XBMC->Log(LOG_ERROR, "Ping failed... No connection to ArgusTV.\n");
+         XBMC->Log(LOG_ERROR, "Ping failed... No connection to Argus TV.\n");
          usleep(1000000);
          if (attemps > 30)
          {
+           XBMC->QueueNotification(QUEUE_ERROR, "No connection to Argus TV");
            return false;
          }
     }
@@ -733,6 +736,8 @@ PVR_ERROR cPVRClientArgusTV::GetRecordings(ADDON_HANDLE handle)
               tag.recordingTime  = recording.RecordingStartTime();
               tag.iDuration      = recording.RecordingStopTime() - recording.RecordingStartTime();
               strncpy(tag.strPlot, recording.Description(), sizeof(tag.strPlot));
+              tag.iPlayCount     = recording.FullyWatchedCount();
+              XBMC->Log(LOG_DEBUG, "recording %s, watch count == %d\n", recording.Title(), recording.FullyWatchedCount());
               if (nrOfRecordings > 1)
               {
                 recording.Transform(true);
@@ -810,7 +815,7 @@ PVR_ERROR cPVRClientArgusTV::RenameRecording(const PVR_RECORDING &recinfo)
 
 PVR_ERROR cPVRClientArgusTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &recinfo, int lastplayedposition)
 {
-  XBMC->Log(LOG_DEBUG, "->SetRecordingLastPlayedPosition(index=%s [%s])", recinfo.strRecordingId, recinfo.strStreamURL);
+  XBMC->Log(LOG_DEBUG, "->SetRecordingLastPlayedPosition(index=%s [%s], %d)", recinfo.strRecordingId, recinfo.strStreamURL, lastplayedposition);
 
   std::string recordingfilename = recinfo.strStreamURL;
 #if !defined(TARGET_WINDOWS)

@@ -21,9 +21,9 @@
 #include <json/json.h>
 #include <cstdlib>
 
-#define ATV_2_0_0_0 (49)
-#define ATV_REST_MINIMUM_API_VERSION ATV_2_0_0_0
-#define ATV_REST_MAXIMUM_API_VERSION ATV_2_0_0_0
+#define ATV_2_0_1 (52)
+#define ATV_REST_MINIMUM_API_VERSION ATV_2_0_1
+#define ATV_REST_MAXIMUM_API_VERSION ATV_2_0_1
 
 #define E_SUCCESS 0
 #define E_FAILED -1

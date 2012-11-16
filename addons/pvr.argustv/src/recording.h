@@ -47,6 +47,7 @@ private:
   ArgusTV::KeepUntilMode keepuntilmode;
   int keepuntilvalue;
   int lastwatchedposition;
+  int fullywatchedcount;
   time_t lastwatchedtime;
   time_t programstarttime;
   time_t programstoptime;
@@ -96,6 +97,7 @@ public:
   ArgusTV::KeepUntilMode KeepUntilMode(void) const { return keepuntilmode; }
   int KeepUntilValue(void) const { return keepuntilvalue; }
   int LastWatchedPosition(void) const { return lastwatchedposition; }
+  int FullyWatchedCount(void) const { return fullywatchedcount; }
   time_t LastWatchedTime(void) const { return lastwatchedtime; }
   time_t ProgramStartTime(void) const { return programstarttime; }
   time_t ProgramStopTime(void) const { return programstoptime; }

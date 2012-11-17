@@ -185,7 +185,8 @@ bool PVRClientMythTV::Connect()
   m_con = MythConnection(g_szMythHostname, g_iMythPort);
   if (!m_con.IsConnected())
   {
-    XBMC->QueueNotification(QUEUE_ERROR, "%s: Failed to connect to MythTV backend %s: %i", __FUNCTION__, g_szMythHostname.c_str(), g_iMythPort);
+    XBMC->Log(LOG_ERROR,"Failed to connect to MythTV backend on %s:%i", g_szMythHostname.c_str(), g_iMythPort);
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300));
     return false;
   }
 
@@ -193,7 +194,8 @@ bool PVRClientMythTV::Connect()
   m_pEventHandler = m_con.CreateEventHandler();
   if (!m_pEventHandler)
   {
-    XBMC->QueueNotification(QUEUE_ERROR, "Failed to create MythTV Event Handler");
+    XBMC->Log(LOG_ERROR, "Failed to create MythEventHandler");
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300));
     return false;
   }
 
@@ -201,7 +203,8 @@ bool PVRClientMythTV::Connect()
   m_db = MythDatabase(g_szDBHostname, g_szDBName, g_szDBUser, g_szDBPassword, g_iDBPort);
   if (m_db.IsNull())
   {
-    XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s:%i %s/%s", g_szDBName.c_str(), g_szDBHostname.c_str(), g_iDBPort, g_szDBUser.c_str(), g_szDBPassword.c_str());
+    XBMC->Log(LOG_ERROR,"Failed to connect to MythTV database %s@%s:%i with user %s", g_szDBName.c_str(), g_szDBHostname.c_str(), g_iDBPort, g_szDBUser.c_str());
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30301));
     return false;
   }
 
@@ -209,7 +212,8 @@ bool PVRClientMythTV::Connect()
   CStdString db_test;
   if (!m_db.TestConnection(&db_test))
   {
-    XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s:%i %s/%s\n%s", g_szDBName.c_str(), g_szDBHostname.c_str(), g_iDBPort, g_szDBUser.c_str(), g_szDBPassword.c_str(), db_test.c_str());
+    XBMC->Log(LOG_ERROR,"Failed to connect to MythTV database %s@%s:%i with user %s: %s", g_szDBName.c_str(), g_szDBHostname.c_str(), g_iDBPort, g_szDBUser.c_str(), db_test.c_str());
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30301));
     return false;
   }
 

@@ -71,3 +71,12 @@ msgstr "Allow Live TV to move scheduled shows"
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Protocol version: %i - Database version: %i"
+
+# Notifications
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Failed to connect to MythTV backend"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Failed to connect to MythTV database"

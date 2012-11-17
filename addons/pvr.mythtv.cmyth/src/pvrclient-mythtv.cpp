@@ -1110,8 +1110,7 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
     // Resume fileOps
     m_fileOps->Resume();
 
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG,"%s - Done", __FUNCTION__);
+    XBMC->Log(LOG_ERROR,"%s - Failed to open live stream", __FUNCTION__);
 
     return false;
   }

@@ -206,3 +206,19 @@ msgstr ""
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr ""
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Timeshift"
+msgstr ""
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr ""
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr ""

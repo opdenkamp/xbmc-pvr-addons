@@ -25,6 +25,7 @@
 #include "VNSIRecording.h"
 #include "VNSIData.h"
 #include "VNSIChannelScan.h"
+#include "VNSIAdmin.h"
 #include "platform/util/util.h"
 
 #include <sstream>
@@ -178,6 +179,12 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
     return m_CurStatus;
   }
+
+  PVR_MENUHOOK hook;
+  hook.iHookId = 1;
+  hook.category = PVR_MENUHOOK_SETTING;
+  hook.iLocalizedStringId = 30100;
+  PVR->AddMenuHook(&hook);
 
   m_CurStatus = ADDON_STATUS_OK;
   return m_CurStatus;
@@ -646,8 +653,21 @@ long long LengthRecordedStream(void)
   return 0;
 }
 
+/*******************************************/
+/** PVR Menu Hook Functions               **/
+
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
+{
+  if (menuhook.iHookId == 1)
+  {
+    cVNSIAdmin osd;
+    osd.Open(g_szHostname, g_iPort);
+  }
+  return PVR_ERROR_NO_ERROR;
+}
+
 /** UNUSED API FUNCTIONS */
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook) { return PVR_ERROR_NOT_IMPLEMENTED; }
+
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }

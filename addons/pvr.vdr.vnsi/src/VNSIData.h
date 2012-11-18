@@ -71,8 +71,8 @@ protected:
   virtual void *Process(void);
   virtual bool OnResponsePacket(cResponsePacket *pkt);
 
-  void OnDisconnect();
-  void OnReconnect();
+  virtual void OnDisconnect();
+  virtual void OnReconnect();
 
 private:
 

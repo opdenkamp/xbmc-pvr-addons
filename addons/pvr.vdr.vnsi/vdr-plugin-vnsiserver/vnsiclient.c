@@ -41,6 +41,7 @@
 #include "receiver.h"
 #include "vnsiserver.h"
 #include "recplayer.h"
+#include "vnsiosd.h"
 #include "requestpacket.h"
 #include "responsepacket.h"
 #include "hash.h"
@@ -76,7 +77,7 @@ cVNSIClient::cVNSIClient(int fd, unsigned int id, const char *ClientAdr)
   m_resp                    = NULL;
   m_processSCAN_Response    = NULL;
   m_processSCAN_Socket      = NULL;
-
+  m_Osd                     = NULL;
 
   m_socket.set_handle(fd);
 
@@ -183,6 +184,13 @@ void cVNSIClient::Action(void)
   /* If thread is ended due to closed connection delete a
      possible running stream here */
   StopChannelStreaming();
+
+  // Shutdown OSD
+  if (m_Osd)
+  {
+    delete m_Osd;
+    m_Osd = NULL;
+  }
 }
 
 bool cVNSIClient::StartChannelStreaming(const cChannel *channel, uint32_t timeout)
@@ -505,6 +513,19 @@ bool cVNSIClient::processRequest(cRequestPacket* req)
 
     case VNSI_SCAN_STOP:
       result = processSCAN_Stop();
+      break;
+
+    /** OPCODE 160 - 179: VNSI network functions for OSD */
+    case VNSI_OSD_CONNECT:
+      result = processOSD_Connect();
+      break;
+
+    case VNSI_OSD_DISCONNECT:
+      result = processOSD_Disconnect();
+      break;
+
+    case VNSI_OSD_HITKEY:
+      result = processOSD_Hitkey();
       break;
   }
 
@@ -1880,4 +1901,39 @@ void cVNSIClient::processSCAN_SetStatus(int status)
   resp->finalise();
   m_processSCAN_Socket->write(resp->getPtr(), resp->getLen());
   delete resp;
+}
+
+bool cVNSIClient::processOSD_Connect() /* OPCODE 160 */
+{
+  m_Osd = new cVnsiOsdProvider(&m_socket);
+  int osdWidth, osdHeight;
+  double aspect;
+  cDevice::PrimaryDevice()->GetOsdSize(osdWidth, osdHeight, aspect);
+  m_resp->add_U32(osdWidth);
+  m_resp->add_U32(osdHeight);
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+
+  m_Osd = new cVnsiOsdProvider(&m_socket);
+  return true;
+}
+
+bool cVNSIClient::processOSD_Disconnect() /* OPCODE 161 */
+{
+  if (m_Osd)
+  {
+    delete m_Osd;
+    m_Osd = NULL;
+  }
+  return true;
+}
+
+bool cVNSIClient::processOSD_Hitkey() /* OPCODE 162 */
+{
+  if (m_Osd)
+  {
+    unsigned int key = m_req->extract_U32();
+    cVnsiOsdProvider::SendKey(key);
+  }
+  return true;
 }

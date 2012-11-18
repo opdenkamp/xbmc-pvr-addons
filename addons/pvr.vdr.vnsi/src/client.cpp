@@ -34,7 +34,6 @@
 using namespace std;
 using namespace ADDON;
 
-bool m_bCreated               = false;
 ADDON_STATUS m_CurStatus      = ADDON_STATUS_UNKNOWN;
 
 /* User adjustable settings are saved here.
@@ -161,30 +160,26 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   VNSIData = new cVNSIData;
   if (!VNSIData->Open(g_szHostname, g_iPort))
   {
-    delete VNSIData;
-    delete PVR;
-    delete XBMC;
-    VNSIData = NULL;
-    PVR = NULL;
-    XBMC = NULL;
+    ADDON_Destroy();
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
     return m_CurStatus;
   }
 
   if (!VNSIData->Login())
   {
+    ADDON_Destroy();
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
     return m_CurStatus;
   }
 
   if (!VNSIData->EnableStatusInterface(g_bHandleMessages))
   {
+    ADDON_Destroy();
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
     return m_CurStatus;
   }
 
   m_CurStatus = ADDON_STATUS_OK;
-  m_bCreated = true;
   return m_CurStatus;
 }
 
@@ -195,23 +190,23 @@ ADDON_STATUS ADDON_GetStatus()
 
 void ADDON_Destroy()
 {
-  if (m_bCreated)
-  {
-    delete VNSIData;
-    VNSIData = NULL;
-  }
+  if (VNSIDemuxer)
+    SAFE_DELETE(VNSIDemuxer);
+
+  if (VNSIRecording)
+    SAFE_DELETE(VNSIRecording);
+
+  if (VNSIData)
+    SAFE_DELETE(VNSIData);
 
   if (PVR)
-  {
-    delete PVR;
-    PVR = NULL;
-  }
+    SAFE_DELETE(PVR);
+
+  if (GUI)
+    SAFE_DELETE(GUI);
 
   if (XBMC)
-  {
-    delete XBMC;
-    XBMC = NULL;
-  }
+    SAFE_DELETE(XBMC);
 
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }

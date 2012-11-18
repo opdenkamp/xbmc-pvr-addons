@@ -89,7 +89,7 @@ private:
   int nalUnescape(uint8_t *dst, const uint8_t *src, int len);
 
 public:
-  cParserH264(cTSDemuxer *demuxer, cLiveStreamer *streamer, int streamID);
+  cParserH264(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
   virtual ~cParserH264();
 
   virtual void Parse(unsigned char *data, int size, bool pusi);

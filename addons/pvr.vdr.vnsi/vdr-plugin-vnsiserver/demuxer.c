@@ -92,9 +92,9 @@ int64_t PesGetDTS(const uint8_t *buf, int len)
 
 // --- cParser -------------------------------------------------
 
-cParser::cParser(cLiveStreamer *streamer, int streamID)
+cParser::cParser(cLiveStreamer *streamer, int pID)
  : m_Streamer(streamer)
- , m_streamID(streamID)
+ , m_pID(pID)
  , m_FoundFrame(false)
 {
   m_curPTS    = DVD_NOPTS_VALUE;
@@ -224,9 +224,8 @@ void cParser::SendPacket(sStreamPacket *pkt)
 
 // --- cTSDemuxer ----------------------------------------------------
 
-cTSDemuxer::cTSDemuxer(cLiveStreamer *streamer, int id, eStreamType type, int pid)
+cTSDemuxer::cTSDemuxer(cLiveStreamer *streamer, eStreamType type, int pid)
   : m_Streamer(streamer)
-  , m_streamID(id)
   , m_pID(pid)
   , m_streamType(type)
 {
@@ -245,26 +244,26 @@ cTSDemuxer::cTSDemuxer(cLiveStreamer *streamer, int id, eStreamType type, int pi
   m_BlockAlign      = 0;
 
   if (m_streamType == stMPEG2VIDEO)
-    m_pesParser = new cParserMPEG2Video(this, m_Streamer, m_streamID);
+    m_pesParser = new cParserMPEG2Video(this, m_Streamer, m_pID);
   else if (m_streamType == stH264)
-    m_pesParser = new cParserH264(this, m_Streamer, m_streamID);
+    m_pesParser = new cParserH264(this, m_Streamer, m_pID);
   else if (m_streamType == stMPEG2AUDIO)
-    m_pesParser = new cParserMPEG2Audio(this, m_Streamer, m_streamID);
+    m_pesParser = new cParserMPEG2Audio(this, m_Streamer, m_pID);
   else if (m_streamType == stAAC)
-    m_pesParser = new cParserAAC(this, m_Streamer, m_streamID);
+    m_pesParser = new cParserAAC(this, m_Streamer, m_pID);
   else if (m_streamType == stAC3)
-    m_pesParser = new cParserAC3(this, m_Streamer, m_streamID);
+    m_pesParser = new cParserAC3(this, m_Streamer, m_pID);
   else if (m_streamType == stDTS)
-    m_pesParser = new cParserDTS(this, m_Streamer, m_streamID);
+    m_pesParser = new cParserDTS(this, m_Streamer, m_pID);
   else if (m_streamType == stEAC3)
-    m_pesParser = new cParserAC3(this, m_Streamer, m_streamID);
+    m_pesParser = new cParserAC3(this, m_Streamer, m_pID);
   else if (m_streamType == stTELETEXT)
-    m_pesParser = new cParserTeletext(this, m_Streamer, m_streamID);
+    m_pesParser = new cParserTeletext(this, m_Streamer, m_pID);
   else if (m_streamType == stDVBSUB)
-    m_pesParser = new cParserSubtitle(this, m_Streamer, m_streamID);
+    m_pesParser = new cParserSubtitle(this, m_Streamer, m_pID);
   else
   {
-    ERRORLOG("Unrecognised type %i inside stream %i", m_streamType, m_streamID);
+    ERRORLOG("Unrecognised type %i inside stream %i", m_streamType, m_pID);
     return;
   }
 }

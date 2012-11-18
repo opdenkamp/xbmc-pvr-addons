@@ -1,5 +1,6 @@
-v1.0.150.144 (14-11-2012)
+v1.0.150.144 (18-11-2012)
 - First ARGUS TV implementation
+- Support XBMC play count
 
 v1.0.150.143 (03-11-2012)
 - Bump version to 1 for Frodo :)

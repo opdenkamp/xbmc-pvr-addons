@@ -853,6 +853,25 @@ namespace ArgusTV
     return retval;
   }
 
+  int SetRecordingFullyWatchedCount(const std::string& recordingfilename, int playcount)
+  {
+    std::string response;
+    char tmp[512];
+
+    XBMC->Log(LOG_DEBUG, "SetRecordingFullyWatchedCount(\"%s\", %d)", recordingfilename.c_str(), playcount);
+
+    snprintf(tmp, 512, "{\"RecordingFileName\":%s,\"FullyWatchedCount\":%d}", recordingfilename.c_str(), playcount);
+    std::string arguments = tmp;
+    std::string command = "ArgusTV/Control/SetRecordingFullyWatchedCount";
+
+    int retval = ArgusTV::ArgusTVRPC(command, arguments, response);
+    if (retval < 0)
+    {
+      XBMC->Log(LOG_DEBUG, "SetRecordingFullyWatchedCount failed. Return value: %i\n", retval);
+    }
+    return retval;
+  }
+
   int GetScheduleById(const std::string& id, Json::Value& response)
   {
     int retval = E_FAILED;

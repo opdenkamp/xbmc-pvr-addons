@@ -325,7 +325,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   pCapabilities->bSupportsChannelScan        = false;
   pCapabilities->bSupportsLastPlayedPosition = true;
   pCapabilities->bSupportsRecordingFolders   = true;
-  pCapabilities->bSupportsRecordingPlayCount = false;
+  pCapabilities->bSupportsRecordingPlayCount = true;
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -484,6 +484,10 @@ int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
   return g_client->GetRecordingLastPlayedPosition(recording);
 }
 
+PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) 
+{ 
+  return g_client->SetRecordingPlayCount(recording, count);
+}
 
 /*******************************************/
 /** PVR Timer Functions                   **/
@@ -629,7 +633,6 @@ DemuxPacket* DemuxRead(void) { return NULL; }
 void DemuxAbort(void) {}
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
-PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { NOTUSED(recording); NOTUSED(count); return PVR_ERROR_NOT_IMPLEMENTED; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 bool SeekTime(int,bool,double*) { return false; }
 void SetSpeed(int) {};

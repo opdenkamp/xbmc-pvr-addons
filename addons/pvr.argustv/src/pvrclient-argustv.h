@@ -72,6 +72,7 @@ public:
   PVR_ERROR RenameRecording(const PVR_RECORDING &recinfo);
   PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recinfo, int lastplayedposition);
   int GetRecordingLastPlayedPosition(const PVR_RECORDING &recinfo);
+  PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recinfo, int playcount);
 
   /* Timer handling */
   int GetNumTimers(void);

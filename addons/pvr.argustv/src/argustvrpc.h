@@ -230,6 +230,13 @@ namespace ArgusTV
   int SetRecordingLastWatchedPosition(const std::string& recordingfilename, int lastwatchedposition);
 
   /**
+   * \brief Set the play count for this recording
+   * \param recordingfilename full UNC path of the recording file
+   * \param playcount the number of times this recording was played
+   */
+  int SetRecordingFullyWatchedCount(const std::string& recordingfilename, int playcount);
+
+  /**
    * \brief Delete the recording on the pvr backend
    * \param recordingfilename UNC filename to delete
    */

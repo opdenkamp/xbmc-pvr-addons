@@ -737,7 +737,6 @@ PVR_ERROR cPVRClientArgusTV::GetRecordings(ADDON_HANDLE handle)
               tag.iDuration      = recording.RecordingStopTime() - recording.RecordingStartTime();
               strncpy(tag.strPlot, recording.Description(), sizeof(tag.strPlot));
               tag.iPlayCount     = recording.FullyWatchedCount();
-              XBMC->Log(LOG_DEBUG, "recording %s, watch count == %d\n", recording.Title(), recording.FullyWatchedCount());
               if (nrOfRecordings > 1)
               {
                 recording.Transform(true);
@@ -861,6 +860,29 @@ int cPVRClientArgusTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recin
   XBMC->Log(LOG_DEBUG, "GetRecordingLastPlayedPosition(index=%s [%s]) returns %d.\n", recinfo.strRecordingId, recinfo.strStreamURL, retval);
 
   return retval;
+}
+
+PVR_ERROR cPVRClientArgusTV::SetRecordingPlayCount(const PVR_RECORDING &recinfo, int playcount)
+{
+  XBMC->Log(LOG_DEBUG, "->SetRecordingPlayCount(index=%s [%s], %d)", recinfo.strRecordingId, recinfo.strStreamURL, playcount);
+
+  std::string recordingfilename = recinfo.strStreamURL;
+#if !defined(TARGET_WINDOWS)
+  recordingfilename = ArgusTV::ToUNC(recordingfilename);
+#endif
+
+  // JSONify the stream_url
+  Json::Value recordingname (recordingfilename);
+  Json::FastWriter writer;
+  std::string jsonval = writer.write(recordingname);
+  int retval = ArgusTV::SetRecordingFullyWatchedCount(jsonval, playcount);
+  if (retval < 0)
+  {
+    XBMC->Log(LOG_INFO, "Failed to set recording play count (%d)", retval);
+    return PVR_ERROR_SERVER_ERROR;
+  }
+
+  return PVR_ERROR_NO_ERROR;
 }
 
 

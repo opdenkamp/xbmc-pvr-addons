@@ -206,6 +206,74 @@ bool PVRDemoData::LoadDemoData(void)
     }
   }
 
+  /* load recordings */
+  iUniqueGroupId = 0; // reset unique ids
+  pElement = pRootElement->FirstChildElement("recordings");
+  if (pElement)
+  {
+    TiXmlNode *pRecordingNode = NULL;
+    while ((pRecordingNode = pElement->IterateChildren(pRecordingNode)) != NULL)
+    {
+      CStdString strTmp;
+      PVRDemoRecording recording;
+
+      /* recording title */
+      if (!XMLUtils::GetString(pRecordingNode, "title", strTmp))
+        continue;
+      recording.strTitle = strTmp;
+
+      /* recording url */
+      if (!XMLUtils::GetString(pRecordingNode, "url", strTmp))
+        recording.strStreamURL = m_strDefaultMovie;
+      else
+        recording.strStreamURL = strTmp;
+
+      iUniqueGroupId++;
+      strTmp.Format("%d", iUniqueGroupId);
+      recording.strRecordingId = strTmp;
+
+      /* channel name */
+      if (XMLUtils::GetString(pRecordingNode, "channelname", strTmp))
+        recording.strChannelName = strTmp;
+
+      /* plot */
+      if (XMLUtils::GetString(pRecordingNode, "plot", strTmp))
+        recording.strPlot = strTmp;
+
+      /* plot outline */
+      if (XMLUtils::GetString(pRecordingNode, "plotoutline", strTmp))
+        recording.strPlotOutline = strTmp;
+
+      /* genre type */
+      XMLUtils::GetInt(pRecordingNode, "genretype", recording.iGenreType);
+
+      /* genre subtype */
+      XMLUtils::GetInt(pRecordingNode, "genresubtype", recording.iGenreSubType);
+
+      /* duration */
+      XMLUtils::GetInt(pRecordingNode, "duration", recording.iDuration);
+
+      /* recording time */
+      if (XMLUtils::GetString(pRecordingNode, "time", strTmp))
+      {
+        time_t timeNow = time(NULL);
+        struct tm* now = localtime(&timeNow);
+
+        int delim = strTmp.Find(':');
+        if (delim != CStdString::npos)
+        {
+          now->tm_hour = (int)strtol(strTmp.Left(delim), NULL, 0);
+          now->tm_min  = (int)strtol(strTmp.Mid(delim + 1), NULL, 0);
+          now->tm_mday--; // yesterday
+
+          recording.recordingTime = mktime(now);
+        }
+      }
+
+      m_recordings.push_back(recording);
+    }
+  }
+
   return true;
 }
 
@@ -358,6 +426,37 @@ PVR_ERROR PVRDemoData::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &
       iLastEndTime = iLastEndTimeTmp;
       iAddBroadcastId += myChannel.epg.size();
     }
+  }
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+int PVRDemoData::GetRecordingsAmount(void)
+{
+  return m_recordings.size();
+}
+
+PVR_ERROR PVRDemoData::GetRecordings(ADDON_HANDLE handle)
+{
+  for (std::vector<PVRDemoRecording>::iterator it = m_recordings.begin() ; it != m_recordings.end() ; it++)
+  {
+    PVRDemoRecording &recording = *it;
+
+    PVR_RECORDING xbmcRecording;
+
+    xbmcRecording.iDuration     = recording.iDuration;
+    xbmcRecording.iGenreType    = recording.iGenreType;
+    xbmcRecording.iGenreSubType = recording.iGenreSubType;
+    xbmcRecording.recordingTime = recording.recordingTime;
+
+    strncpy(xbmcRecording.strChannelName, recording.strChannelName.c_str(), sizeof(xbmcRecording.strChannelName) - 1);
+    strncpy(xbmcRecording.strPlotOutline, recording.strPlotOutline.c_str(), sizeof(xbmcRecording.strPlotOutline) - 1);
+    strncpy(xbmcRecording.strPlot,        recording.strPlot.c_str(),        sizeof(xbmcRecording.strPlot) - 1);
+    strncpy(xbmcRecording.strRecordingId, recording.strRecordingId.c_str(), sizeof(xbmcRecording.strRecordingId) - 1);
+    strncpy(xbmcRecording.strTitle,       recording.strTitle.c_str(),       sizeof(xbmcRecording.strTitle) - 1);
+    strncpy(xbmcRecording.strStreamURL,   recording.strStreamURL.c_str(),   sizeof(xbmcRecording.strStreamURL) - 1);
+
+    PVR->TransferRecordingEntry(handle, &xbmcRecording);
   }
 
   return PVR_ERROR_NO_ERROR;

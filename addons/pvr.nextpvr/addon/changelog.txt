@@ -1,2 +1,9 @@
+v1.0.1.0
+- added: new experimental timeshift support. This requires updated backend components, otherwise falls back to previous non-timeshift live tv.
+- added: new 'advanced' settings page where timeshift can be enabled/disabled.
+- added: radio support, mainly to workaround an XBMC channel group bug.
+- changed: now using XBMC curl abstraction for HTTP requests
+- added: detection of live tv having to exit if tuner was required for a recording. Shows user a notification message when this was required. 
+
 v1.0.0.0
 - Created

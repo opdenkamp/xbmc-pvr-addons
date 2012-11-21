@@ -27,6 +27,7 @@
 #include "Socket.h"
 #include "platform/threads/mutex.h"
 #include "RingBuffer.h"
+#include "liveshift.h"
 
 #define SAFE_DELETE(p)       do { delete (p);     (p)=NULL; } while (0)
 
@@ -89,6 +90,8 @@ public:
   long long SeekLiveStream(long long iPosition, int iWhence = SEEK_SET);
   long long LengthLiveStream(void);
   long long PositionLiveStream(void);
+  bool CanPauseStream(void);
+  bool CanSeekStream(void);
 
   /* Record stream handling */
   bool OpenRecordedStream(const PVR_RECORDING &recording);
@@ -115,17 +118,21 @@ private:
   std::string             m_BackendName;
   PLATFORM::CMutex        m_mutex;
 
-  CRingBuffer			  m_incomingStreamBuffer;
+  CRingBuffer             m_incomingStreamBuffer;
 
-  char					  m_currentRecordingID[1024];
-  long long				  m_currentRecordingLength;
-  long long				  m_currentRecordingPosition;
+  char                    m_currentRecordingID[1024];
+  long long               m_currentRecordingLength;
+  long long               m_currentRecordingPosition;
 
-  CStdString			  m_channelIconDirectory;
-  CStdString			  m_PlaybackURL;
+  bool                    m_supportsLiveTimeshift;
+  long long               m_currentLiveLength;
+  long long               m_currentLivePosition;
 
-  char					  m_sid[64];
+  CStdString              m_PlaybackURL;
+  LiveShiftSource        *m_pLiveShiftSource;
 
-  int					  m_iChannelCount;  
+  char                    m_sid[64];
+
+  int                     m_iChannelCount;  
   
 };

@@ -37,12 +37,12 @@ int              g_iPort                = DEFAULT_PORT;                  ///< Th
 
 /* Client member variables */
 ADDON_STATUS           m_CurStatus    = ADDON_STATUS_UNKNOWN;
-cPVRClientNextPVR *g_client       = NULL;
+cPVRClientNextPVR     *g_client       = NULL;
 std::string            g_szUserPath   = "";
 std::string            g_szClientPath = "";
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
-
+bool                   g_bUseTimeshift = false;
 extern "C" {
 
 void ADDON_ReadSettings(void);
@@ -179,6 +179,15 @@ void ADDON_ReadSettings(void)
     g_szPin = DEFAULT_PIN;
   }
 
+
+    /* Read setting "usetimeshift" from settings.xml */
+  if (!XBMC->GetSetting("usetimeshift", &g_bUseTimeshift))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'usetimeshift' setting, falling back to 'true' as default");
+    g_bUseTimeshift = DEFAULT_USE_TIMESHIFT;
+  }
+
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "settings: host='%s', port=%i", g_szHostname.c_str(), g_iPort);
 }
@@ -224,6 +233,12 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     if (tmp_sPin != g_szPin)
       return ADDON_STATUS_NEED_RESTART;
   }
+  else if (str == "usetimeshift")
+  {
+    XBMC->Log(LOG_INFO, "Changed setting 'usetimeshift' from %u to %u", g_bUseTimeshift, *(bool*) settingValue);
+    g_bUseTimeshift = *(bool*) settingValue;
+  }
+
   return ADDON_STATUS_OK;
 }
 
@@ -265,7 +280,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   pCapabilities->bSupportsRecordings         = true;
   pCapabilities->bSupportsTimers             = true;
   pCapabilities->bSupportsTV                 = true;
-  pCapabilities->bSupportsRadio              = false;
+  pCapabilities->bSupportsRadio              = true;
   pCapabilities->bSupportsChannelGroups      = true;
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = false;
@@ -633,6 +648,27 @@ const char * GetLiveStreamURL(const PVR_CHANNEL &channel)
     return g_client->GetLiveStreamURL(channel);
 }
 
+bool CanPauseStream(void)
+{
+  if (g_client)
+    return g_client->CanPauseStream();
+  return false;
+}
+
+void PauseStream(bool bPaused)
+{
+//  if (g_client)
+//    g_client->PauseStream(bPaused);
+}
+
+bool CanSeekStream(void)
+{
+  if (g_client)
+    return g_client->CanPauseStream();
+  return false;
+}
+
+
 /** UNUSED API FUNCTIONS */
 PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 DemuxPacket* DemuxRead(void) { return NULL; }
@@ -644,9 +680,7 @@ PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { ret
 PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
-void PauseStream(bool bPaused) {}
-bool CanPauseStream(void) { return false; }
-bool CanSeekStream(void) { return false; }
+
 bool SeekTime(int,bool,double*) { return false; }
 void SetSpeed(int) {};
 } //end extern "C"

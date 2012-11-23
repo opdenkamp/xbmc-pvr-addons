@@ -179,7 +179,6 @@ void ADDON_ReadSettings(void)
     g_szPin = DEFAULT_PIN;
   }
 
-
     /* Read setting "usetimeshift" from settings.xml */
   if (!XBMC->GetSetting("usetimeshift", &g_bUseTimeshift))
   {
@@ -657,8 +656,6 @@ bool CanPauseStream(void)
 
 void PauseStream(bool bPaused)
 {
-//  if (g_client)
-//    g_client->PauseStream(bPaused);
 }
 
 bool CanSeekStream(void)

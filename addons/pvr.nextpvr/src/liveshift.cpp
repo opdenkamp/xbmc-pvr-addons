@@ -1,4 +1,3 @@
-#pragma once
 /*
  *      Copyright (C) 2005-2011 Team XBMC
  *      http://www.xbmc.org
@@ -38,12 +37,20 @@ LiveShiftSource::LiveShiftSource(NextPVR::Socket *pSocket)
   m_startupCache = new unsigned char[STARTUP_CACHE_SIZE];
 
   m_log = NULL;
-#ifdef _DEBUG
-  //if (m_log == NULL)
-  //{
-  //	m_log = fopen("d:\\temp\\liveshift.log", "wt");
-  //}
+
+  // protocol logging code I need to enable sometimes for debugging
+  if (m_log == NULL)
+  {
+#if defined(TARGET_WINDOWS)
+    bool doProtocolLogging = false;
+    if (doProtocolLogging)
+    {
+      m_log = fopen("liveshift.log", "wt");
+    }
+#else
+    m_log = NULL;
 #endif
+  }
 
   // pre-request some blocks to satisfy ffmpeg avformat_find_stream_info stage
   int length = 32768;
@@ -81,12 +88,12 @@ LiveShiftSource::~LiveShiftSource(void)
 }
 
 void LiveShiftSource::LOG(char const *fmt, ... )
-{ 	
+{
   if (m_log != NULL)
   {
 #if defined(TARGET_WINDOWS)
     // determine the current local time
-    SYSTEMTIME utcSystemTime;	
+    SYSTEMTIME utcSystemTime;
     GetSystemTime(&utcSystemTime);
     SYSTEMTIME systemTime;
     SystemTimeToTzSpecificLocalTime(NULL, &utcSystemTime, &systemTime);
@@ -96,7 +103,15 @@ void LiveShiftSource::LOG(char const *fmt, ... )
 
     // log passed-in string
     va_list ap; 
-    va_start (ap, fmt); 		
+    va_start (ap, fmt); 
+    vfprintf(m_log, fmt, ap); 
+    va_end(ap); 
+
+    fflush(m_log);
+#else
+    // log passed-in string
+    va_list ap; 
+    va_start (ap, fmt); 
     vfprintf(m_log, fmt, ap); 
     va_end(ap); 
 
@@ -117,7 +132,7 @@ unsigned int LiveShiftSource::Read(unsigned char *buffer, unsigned int length)
   {
     LOG("LiveShiftSource::Read()@exit, returning %d bytes from cache\n", m_startCacheBytes);
     memcpy(buffer, &m_startupCache[m_position], length);
-    m_position += length;	
+    m_position += length;
 
     // we'll need to later request more data
     m_currentWindowSize = 0;
@@ -182,7 +197,7 @@ unsigned int LiveShiftSource::Read(unsigned char *buffer, unsigned int length)
       long long fileSize;
       int dummy;
       sscanf(response, "%llu:%d %llu %d", &payloadOffset, &payloadSize, &fileSize, &dummy);
-      m_lastKnownLength = fileSize;																	
+      m_lastKnownLength = fileSize;
 
       // read response payload
       bytesRead = m_pSocket->receive((char *)buffer, length, payloadSize); 
@@ -201,7 +216,7 @@ unsigned int LiveShiftSource::Read(unsigned char *buffer, unsigned int length)
       if (payloadOffset == m_position)
       {
         // yep, hit - update info
-        m_position += payloadSize;	
+        m_position += payloadSize;
         LOG("read block:  %llu:%d %llu\n", payloadOffset, payloadSize, fileSize);
 
         // read one response

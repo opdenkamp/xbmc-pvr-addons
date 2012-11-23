@@ -752,9 +752,6 @@ void Socket::errormessage( int errnum, const char* functionname) const
     case ENOTCONN:
       errmsg = "ENOTCONN: The socket is associated with a connection-oriented protocol and has not been connected";
       break;
-    //case E:
-    //	errmsg = "";
-    //	break;
     default:
       break;
   }
@@ -778,4 +775,4 @@ void Socket::osCleanup()
 }
 #endif //TARGET_WINDOWS || TARGET_LINUX || TARGET_DARWIN
 
-} //namespace MPTV
+} //namespace NextPVR

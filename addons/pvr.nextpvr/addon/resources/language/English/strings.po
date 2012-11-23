@@ -56,7 +56,7 @@ msgid "NextPVR server is too old."
 msgstr ""
 
 msgctxt "#30051"
-msgid "Upgrade to '2.5.9' or higher!"
+msgid "Upgrade to '%s' or higher!"
 msgstr ""
 
 msgctxt "#30052"

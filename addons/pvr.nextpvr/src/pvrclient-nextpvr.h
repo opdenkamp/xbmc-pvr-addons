@@ -38,9 +38,6 @@ public:
   cPVRClientNextPVR();
   ~cPVRClientNextPVR();
 
-  /* VTP Listening Thread */
-  static void* Process(void*);
-
   /* Server handling */
   bool Connect();
   void Disconnect();

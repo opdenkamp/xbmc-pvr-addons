@@ -44,7 +44,7 @@ int g_iNextPVRXBMCBuild = 0;
 
 /* PVR client version (don't forget to update also the addon.xml and the Changelog.txt files) */
 #define PVRCLIENT_NEXTPVR_VERSION_STRING    "1.0.0.0"
-
+#define NEXTPVRC_MIN_VERSION_STRING         "2.5.9"
 
 #define HTTP_OK 200
 #define HTTP_NOTFOUND 404
@@ -206,9 +206,9 @@ bool cPVRClientNextPVR::Connect()
                   // is the server new enough
                   if (version < 20508)
                   {
-                    XBMC->Log(LOG_ERROR, "Your NextPVR version '%d' is too old. Please upgrade to '2.5.8' or higher!", version);
+                    XBMC->Log(LOG_ERROR, "Your NextPVR version '%d' is too old. Please upgrade to '%s' or higher!", version, NEXTPVRC_MIN_VERSION_STRING);
                     XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30050));
-                    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30051));
+                    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30051), NEXTPVRC_MIN_VERSION_STRING);
                     return false;
                   }
                 }
@@ -253,12 +253,6 @@ bool cPVRClientNextPVR::IsUp()
 {
   return m_bConnected;
 }
-
-void* cPVRClientNextPVR::Process(void*)
-{
-  return NULL;
-}
-
 
 
 
@@ -313,21 +307,6 @@ PVR_ERROR cPVRClientNextPVR::GetDriveSpace(long long *iTotal, long long *iUsed)
   if (!IsUp())
     return PVR_ERROR_SERVER_ERROR;
 
-  /*
-  if ( g_iNextPVRXBMCBuild >= 100)
-  {
-    result = SendCommand("GetDriveSpace:\n");
-
-    Tokenize(result, fields, "|");
-
-    if(fields.size() >= 2)
-    {
-      *iTotal = (long long) atoi(fields[0].c_str());
-      *iUsed = (long long) atoi(fields[1].c_str());
-    }
-  }
-  */
-
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -335,70 +314,7 @@ PVR_ERROR cPVRClientNextPVR::GetBackendTime(time_t *localTime, int *gmtOffset)
 {
   if (!IsUp())
     return PVR_ERROR_SERVER_ERROR;
-/*
-  string result;
-  vector<string> fields;
-  int year = 0, month = 0, day = 0;
-  int hour = 0, minute = 0, second = 0;
-  struct tm timeinfo;
 
-  result = SendCommand("GetTime:\n");
-
-  if (result.length() == 0)
-    return PVR_ERROR_SERVER_ERROR;
-
-  Tokenize(result, fields, "|");
-
-  if(fields.size() >= 3)
-  {
-    int count = 0;
-
-    //[0] date + time TV Server
-    //[1] UTC offset hours
-    //[2] UTC offset minutes
-    //From CPVREpg::CPVREpg(): Expected PVREpg GMT offset is in seconds
-    m_BackendUTCoffset = ((atoi(fields[1].c_str()) * 60) + atoi(fields[2].c_str())) * 60;
-
-    count = sscanf(fields[0].c_str(), "%4d-%2d-%2d %2d:%2d:%2d", &year, &month, &day, &hour, &minute, &second);
-
-    if(count == 6)
-    {
-      //timeinfo = *localtime ( &rawtime );
-      XBMC->Log(LOG_DEBUG, "GetMPTVTime: time from MP TV Server: %d-%d-%d %d:%d:%d, offset %d seconds", year, month, day, hour, minute, second, m_BackendUTCoffset );
-      timeinfo.tm_hour = hour;
-      timeinfo.tm_min = minute;
-      timeinfo.tm_sec = second;
-      timeinfo.tm_year = year - 1900;
-      timeinfo.tm_mon = month - 1;
-      timeinfo.tm_mday = day;
-      timeinfo.tm_isdst = -1; //Actively determines whether DST is in effect from the specified time and the local time zone.
-      // Make the other fields empty:
-      timeinfo.tm_wday = 0;
-      timeinfo.tm_yday = 0;
-
-      m_BackendTime = mktime(&timeinfo);
-
-      if(m_BackendTime < 0)
-      {
-        XBMC->Log(LOG_DEBUG, "GetMPTVTime: Unable to convert string '%s' into date+time", fields[0].c_str());
-        return PVR_ERROR_SERVER_ERROR;
-      }
-
-      XBMC->Log(LOG_DEBUG, "GetMPTVTime: localtime %s", asctime(localtime(&m_BackendTime)));
-      XBMC->Log(LOG_DEBUG, "GetMPTVTime: gmtime    %s", asctime(gmtime(&m_BackendTime)));
-
-      *localTime = m_BackendTime;
-      *gmtOffset = m_BackendUTCoffset;
-      return PVR_ERROR_NO_ERROR;
-    }
-    else
-    {
-      return PVR_ERROR_SERVER_ERROR;
-    }
-  }
-  else
-    return PVR_ERROR_SERVER_ERROR;
-  */
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -440,17 +356,14 @@ PVR_ERROR cPVRClientNextPVR::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
         strncpy(end, pListingNode->FirstChildElement("end")->FirstChild()->Value(), sizeof end);
         end[10] = '\0';
 
-
         broadcast.iUniqueBroadcastId  = atoi(pListingNode->FirstChildElement("id")->FirstChild()->Value());
         broadcast.strTitle            = title;
         broadcast.iChannelNumber      = channel.iChannelNumber;
         broadcast.startTime           = atol(start);
-        broadcast.endTime             = atol(end);
-        //broadcast.strPlotOutline      = epg.ShortText(); // subtitle
+        broadcast.endTime             = atol(end);        
         broadcast.strPlot             = description;
         broadcast.strIconPath         = "";
 
-        //broadcast.iGenreSubType       = "";
         char genre[128];
         genre[0] = '\0';
         if (pListingNode->FirstChildElement("genre") != NULL && pListingNode->FirstChildElement("genre")->FirstChild() != NULL)
@@ -461,15 +374,6 @@ PVR_ERROR cPVRClientNextPVR::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
         }
 
         broadcast.bNotify             = false;
-          
-        //broadcast.firstAired          = epg.OriginalAirDate();
-        //broadcast.iParentalRating     = epg.ParentalRating();
-        //broadcast.iStarRating         = epg.StarRating();
-        //broadcast.iSeriesNumber       = epg.SeriesNumber();
-        //broadcast.iEpisodeNumber      = epg.EpisodeNumber();
-        //broadcast.iEpisodePartNumber  = atoi(epg.EpisodePart());
-        //broadcast.strEpisodeName      = epg.EpisodeName();
-
 
         PVR->TransferEpgEntry(handle, &broadcast);
       }
@@ -495,8 +399,7 @@ int cPVRClientNextPVR::GetNumChannels(void)
   if (DoRequest("/service?method=channel.list", response) == HTTP_OK)
   {
     TiXmlDocument doc;
-    doc.Parse(response);
-    //if (doc.Parse(response) == true)
+    if (doc.Parse(response) != NULL)
     {
       TiXmlElement* channelsNode = doc.RootElement()->FirstChildElement("channels");
       TiXmlElement* pChannelNode = channelsNode->FirstChildElement("channel");
@@ -559,9 +462,6 @@ CStdString cPVRClientNextPVR::GetChannelIcon(int channelID)
           bool connected = true;
           while (connected)
           {
-            // check if we're still connected
-            //m_tcpclient->is_connected();
-
             char buf[1024];
             int read = m_tcpclient->receive(buf, sizeof buf, 0);
 
@@ -603,7 +503,6 @@ PVR_ERROR cPVRClientNextPVR::GetChannels(ADDON_HANDLE handle, bool bRadio)
   if (DoRequest("/service?method=channel.list", response) == HTTP_OK)
   {
     TiXmlDocument doc;
-    doc.Parse(response);
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* channelsNode = doc.RootElement()->FirstChildElement("channels");
@@ -626,9 +525,6 @@ PVR_ERROR cPVRClientNextPVR::GetChannels(ADDON_HANDLE handle, bool bRadio)
           }
         }
 
-        //CStdString strStream;
-        //strStream.Format("pvr://stream/tv/%i.ts", tag.iUniqueId);
-        //strncpy(tag.strStreamURL, strStream.c_str(), sizeof(tag.strStreamURL)); 
         PVR_STRCPY(tag.strInputFormat, "video/x-mpegts");
 
         // check if it's a radio channel
@@ -664,15 +560,14 @@ int cPVRClientNextPVR::GetChannelGroupsAmount(void)
   if (DoRequest("/service?method=channel.groups", response) == HTTP_OK)
   {
     TiXmlDocument doc;
-    doc.Parse(response);
-    //if (doc.Parse(response) == true)
+    if (doc.Parse(response) != NULL)
     {
-    TiXmlElement* groupsNode = doc.RootElement()->FirstChildElement("groups");
-    TiXmlElement* pGroupNode = groupsNode->FirstChildElement("group");
-    for( pGroupNode; pGroupNode; pGroupNode=pGroupNode->NextSiblingElement())
-    {
-      groups++;
-    }
+      TiXmlElement* groupsNode = doc.RootElement()->FirstChildElement("groups");
+      TiXmlElement* pGroupNode = groupsNode->FirstChildElement("group");
+      for( pGroupNode; pGroupNode; pGroupNode=pGroupNode->NextSiblingElement())
+      {
+        groups++;
+      }
     }
   }
 
@@ -728,7 +623,6 @@ PVR_ERROR cPVRClientNextPVR::GetChannelGroupMembers(ADDON_HANDLE handle, const P
     PVR_CHANNEL_GROUP_MEMBER tag;
 
     TiXmlDocument doc;
-    doc.Parse(response);
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* channelsNode = doc.RootElement()->FirstChildElement("channels");
@@ -760,7 +654,6 @@ int cPVRClientNextPVR::GetNumRecordings(void)
   if (DoRequest("/service?method=recording.list&filter=ready", response) == HTTP_OK)
   {
     TiXmlDocument doc;
-    doc.Parse(response);
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recordings");
@@ -909,7 +802,6 @@ int cPVRClientNextPVR::GetNumTimers(void)
   if (DoRequest("/service?method=recording.list&filter=pending", response) == HTTP_OK)
   {
     TiXmlDocument doc;
-    doc.Parse(response);
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recordings");
@@ -947,13 +839,6 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
         tag.iClientIndex = atoi(pRecordingNode->FirstChildElement("id")->FirstChild()->Value());
         tag.iClientChannelUid = atoi(pRecordingNode->FirstChildElement("channel_id")->FirstChild()->Value());
 
-        //if (IsRecording())
-        //  tag.state           = PVR_TIMER_STATE_RECORDING;
-        //else if (m_active)
-        //  tag.state           = PVR_TIMER_STATE_SCHEDULED;
-        //else
-        //  tag.state           = PVR_TIMER_STATE_CANCELLED;
-
         // name
         PVR_STRCPY(tag.strTitle, pRecordingNode->FirstChildElement("name")->FirstChild()->Value());
 
@@ -962,8 +847,6 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
         {
           PVR_STRCPY(tag.strSummary, pRecordingNode->FirstChildElement("desc")->FirstChild()->Value());
         }
-        
-        //PVR_STRCPY(tag.strDirectory, m_directory.c_str());
 
         tag.state = PVR_TIMER_STATE_SCHEDULED;
         if (pRecordingNode->FirstChildElement("status") != NULL && pRecordingNode->FirstChildElement("status")->FirstChild() != NULL)
@@ -990,8 +873,6 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
           if (strcmp(pRecordingNode->FirstChildElement("recurring")->FirstChild()->Value(), "true") == 0)
           {
             tag.bIsRepeating = true;
-            //tag.iWeekdays = RepeatFlags();
-            //tag.firstDay = m_starttime;
           }
         }
 
@@ -1386,8 +1267,6 @@ bool cPVRClientNextPVR::OpenRecordingInternal(long long seekOffset)
   
   char buf[1024];
   int read = m_streamingclient->receive(buf, sizeof buf, 0);
-
-  //CStdString header;
 
   for (int i=0; i<read; i++)
   {

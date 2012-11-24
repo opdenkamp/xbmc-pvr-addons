@@ -289,7 +289,7 @@ struct cmyth_proginfo {
 	unsigned short proginfo_season;    /* new in V67 */
 	unsigned short proginfo_episode;    /* new in V67 */
 	char *proginfo_category;
-	long proginfo_chanId;
+	unsigned long proginfo_chanId;
 	char *proginfo_chanstr;
 	char *proginfo_chansign;
 	char *proginfo_channame;  /* Deprecated in V8, simulated for compat. */
@@ -303,15 +303,15 @@ struct cmyth_proginfo {
 	unsigned long proginfo_recording;
 	unsigned long proginfo_override;
 	char *proginfo_hostname;
-	long proginfo_source_id; /* ??? in V8 */
-	long proginfo_card_id;   /* ??? in V8 */
-	long proginfo_input_id;  /* ??? in V8 */
-	char *proginfo_rec_priority;  /* ??? in V8 */
+	unsigned long proginfo_source_id; /* ??? in V8 */
+	unsigned long proginfo_card_id;   /* ??? in V8 */
+	unsigned long proginfo_input_id;  /* ??? in V8 */
+	long proginfo_rec_priority;  /* ??? in V8 */
 	long proginfo_rec_status; /* ??? in V8 */
 	unsigned long proginfo_record_id;  /* ??? in V8 */
-	unsigned long proginfo_rec_type;   /* ??? in V8 */
-	unsigned long proginfo_rec_dups;   /* ??? in V8 */
-	unsigned long proginfo_unknown_1;  /* new in V8 */
+	long proginfo_rec_type;   /* ??? in V8 */
+	long proginfo_rec_dupin;   /* ??? in V8 */
+	long proginfo_rec_dupmethod;  /* new in V8 */
 	cmyth_timestamp_t proginfo_rec_start_ts;
 	cmyth_timestamp_t proginfo_rec_end_ts;
 	unsigned long proginfo_repeat;   /* ??? in V8 */
@@ -332,7 +332,7 @@ struct cmyth_proginfo {
 	char *proginfo_host;
 	unsigned long proginfo_version;
 	char *proginfo_playgroup; /* new in v18 */
-	char *proginfo_recpriority_2;  /* new in V25 */
+	long proginfo_recpriority_2;  /* new in V25 */
 	long proginfo_parentid; /* new in V31 */
 	char *proginfo_storagegroup; /* new in v32 */
 	unsigned long proginfo_audioproperties; /* new in v35 */
@@ -476,7 +476,7 @@ extern void cmyth_toupper_string(char *str);
  * From proginfo.c
  */
 #define cmyth_proginfo_string __cmyth_proginfo_string
-extern char *cmyth_proginfo_string(cmyth_proginfo_t prog);
+extern char *cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog);
 
 #define cmyth_chaninfo_string __cmyth_chaninfo_string
 extern char *cmyth_chaninfo_string(cmyth_proginfo_t prog);

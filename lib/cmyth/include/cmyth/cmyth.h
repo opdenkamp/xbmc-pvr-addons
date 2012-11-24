@@ -1047,7 +1047,7 @@ extern cmyth_timestamp_t cmyth_proginfo_end(cmyth_proginfo_t prog);
  * \param prog proginfo handle
  * \return card ID
  */
-extern long cmyth_proginfo_card_id(cmyth_proginfo_t prog);
+extern unsigned long cmyth_proginfo_card_id(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the recording group of a program.
@@ -1171,7 +1171,7 @@ extern cmyth_freespace_t cmyth_freespace_create(void);
  * -------
  */
 extern long long cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog);
-extern int cmyth_get_bookmark_offset(cmyth_database_t db, long chanid, long long mark, time_t starttime, int mode);
+extern long long cmyth_get_bookmark_offset(cmyth_database_t db, unsigned long chanid, long long mark, time_t starttime, int mode);
 extern int cmyth_update_bookmark_setting(cmyth_database_t, cmyth_proginfo_t);
 extern long long cmyth_get_bookmark_mark(cmyth_database_t, cmyth_proginfo_t, long long, int);
 extern int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog,
@@ -1200,10 +1200,10 @@ extern int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err, cmyth_inputlist
 
 
 typedef struct cmyth_program {
-	int chanid;
+	unsigned long chanid;
 	char callsign[30];
 	char name[84];
-	int sourceid;
+	unsigned long sourceid;
 	char title[150];
 	char subtitle[150];
 	char description[280];
@@ -1212,13 +1212,13 @@ typedef struct cmyth_program {
 	char programid[30];
 	char seriesid[24];
 	char category[84];
-	int recording;
-	int rec_status;
-	int channum;
-	int event_flags;
-	int startoffset;
-	int endoffset;
-}cmyth_program_t;
+	unsigned long recording;
+	long rec_status;
+	unsigned long channum;
+	unsigned long event_flags;
+	long startoffset;
+	long endoffset;
+} cmyth_program_t;
 
 typedef struct cmyth_recgrougs {
 	char recgroups[33];
@@ -1253,7 +1253,7 @@ extern int cmyth_mysql_testdb_connection(cmyth_database_t db,char **message);
 extern int cmyth_schedule_recording(cmyth_conn_t conn, char * msg);
 
 extern char * cmyth_mysql_escape_chars(cmyth_database_t db, char * string);
-extern int cmyth_mysql_get_commbreak_list(cmyth_database_t db, int chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, int conn_version);
+extern int cmyth_mysql_get_commbreak_list(cmyth_database_t db, unsigned long chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, int conn_version);
 
 extern int cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_program_t **prog);
 

@@ -19,7 +19,7 @@
 
 /*
  * socket.c - functions to handle low level socket interactions with a
- *            MythTV frontend.  
+ *            MythTV frontend.
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,14 +36,14 @@
 
 /*
  * cmyth_send_message(cmyth_conn_t conn, char *request)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_send_message)
  *
  * Description
  *
  * Send a myth protocol on the socket indicated by 'conn'.  The
  * message sent has the form:
- * 
+ *
  *   <length><request>
  *
  * Where <length> is the 8 character, space padded, left justified
@@ -126,7 +126,7 @@ cmyth_send_message(cmyth_conn_t conn, char *request)
 
 /*
  * cmyth_rcv_length(cmyth_conn_t conn)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_length)
  *
  * Description
@@ -199,7 +199,7 @@ cmyth_rcv_length(cmyth_conn_t conn)
 
 /*
  * cmyth_conn_refill(cmyth_conn_t conn, int len)
- * 
+ *
  * Scope: PRIVATE (static)
  *
  * Description
@@ -276,7 +276,7 @@ cmyth_conn_refill(cmyth_conn_t conn, int len)
 
 /*
  * cmyth_rcv_string(cmyth_conn_t conn, char *buf, int buflen, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_length)
  *
  * Description
@@ -425,7 +425,7 @@ cmyth_rcv_string(cmyth_conn_t conn, int *err, char *buf, int buflen, int count)
 /*
  * cmyth_rcv_ulong(cmyth_conn_t conn, int *err, unsigned long *buf,
  *                      int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_ulong_long)
  *
  * Description
@@ -516,7 +516,7 @@ cmyth_rcv_ulong(cmyth_conn_t conn, int *err, unsigned long *buf,
 
 /*
  * cmyth_rcv_long(cmyth_conn_t conn, int *err, long *buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_long_long)
  *
  * Description
@@ -610,7 +610,7 @@ cmyth_rcv_long(cmyth_conn_t conn, int *err, long *buf, int count)
 
 /*
  * cmyth_rcv_okay(cmyth_conn_t conn)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_okay)
  *
  * Description
@@ -715,7 +715,7 @@ cmyth_rcv_feedback(cmyth_conn_t conn, char *fb)
 
 /*
  * cmyth_rcv_version(cmyth_conn_t conn, unsigned long *vers)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_version)
  *
  * Description
@@ -772,7 +772,7 @@ cmyth_rcv_version(cmyth_conn_t conn, unsigned long *vers)
 
 /*
  * cmyth_rcv_byte(cmyth_conn_t conn, int *err, char *buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_byte)
  *
  * Description
@@ -836,7 +836,7 @@ cmyth_rcv_byte(cmyth_conn_t conn, int *err, char *buf, int count)
 
 /*
  * cmyth_rcv_short(cmyth_conn_t conn, int *err, short *buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_short)
  *
  * Description
@@ -899,7 +899,7 @@ cmyth_rcv_short(cmyth_conn_t conn, int *err, short *buf, int count)
 
 /*
  * cmyth_rcv_old_int64(cmyth_conn_t conn, int *err, long long *buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_long)
  *
  * Description
@@ -1185,7 +1185,7 @@ cmyth_rcv_new_uint64(cmyth_conn_t conn, int *err, uint64_t *buf, int count,
 
 /*
  * cmyth_rcv_ubyte(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_ubyte)
  *
  * Description
@@ -1251,7 +1251,7 @@ cmyth_rcv_ubyte(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
 /*
  * cmyth_rcv_ushort(cmyth_conn_t conn, int *err, unsigned short *buf,
  *                  int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_ushort)
  *
  * Description
@@ -1316,7 +1316,7 @@ cmyth_rcv_ushort(cmyth_conn_t conn, int *err, unsigned short *buf, int count)
 
 /*
  * cmyth_rcv_ulong(cmyth_conn_t conn, int *err, unsigned long *buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_ulong)
  *
  * Description
@@ -1365,7 +1365,7 @@ cmyth_rcv_old_uint64(cmyth_conn_t conn, int *err, uint64_t *buf, int count)
 		*err = EINVAL;
 		return 0;
 	}
-	
+
 	consumed = cmyth_rcv_u_long(conn, err, &hi, count);
 	if (*err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1391,7 +1391,7 @@ cmyth_rcv_old_uint64(cmyth_conn_t conn, int *err, uint64_t *buf, int count)
 /*
  * cmyth_rcv_timestamp(cmyth_conn_t conn, int *err, cmyth_timestamp_t buf,
  *                     int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_timestamp)
  *
  * Description
@@ -1476,7 +1476,7 @@ cmyth_rcv_timestamp(cmyth_conn_t conn, int *err, cmyth_timestamp_t *ts,
 /*
  * cmyth_rcv_datetime(cmyth_conn_t conn, int *err, cmyth_timestamp_t buf,
  *                     int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_datetime)
  *
  * Description
@@ -1651,7 +1651,7 @@ cmyth_proginfo_parse_url(cmyth_proginfo_t p)
 
 /*
  * cmyth_rcv_proginfo(cmyth_conn_t conn, cmyth_proginfo_t buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_proginfo)
  *
  * Description
@@ -1785,17 +1785,16 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	buf->proginfo_category = ref_strdup(tmp_str);
 
 	/*
-	 * Get proginfo_chanId (long)
+	 * Get proginfo_chanId (ulong)
 	 */
-	consumed = cmyth_rcv_string(conn, err,
-				    tmp_str, sizeof(tmp_str) - 1, count);
+	consumed = cmyth_rcv_ulong(conn, err,
+				    &buf->proginfo_chanId, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_string";
+		failed = "cmyth_rcv_ulong";
 		goto fail;
 	}
-	buf->proginfo_chanId = atoi(tmp_str);
 
 	/*
 	 * Get proginfo_chanstr (string)
@@ -1910,7 +1909,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		consumed = cmyth_rcv_timestamp(conn, err,
 					       &(buf->proginfo_start_ts),
 					       count);
-	}	
+	}
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -1929,7 +1928,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	else {
 		consumed = cmyth_rcv_timestamp(conn, err,
 					       &(buf->proginfo_end_ts), count);
-	}	
+	}
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2004,9 +2003,9 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	buf->proginfo_hostname = ref_strdup(tmp_str);
 
 	/*
-	 * Get proginfo_source_id (long)
+	 * Get proginfo_source_id (ulong)
 	 */
-	consumed = cmyth_rcv_long(conn, err, &buf->proginfo_source_id, count);
+	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_source_id, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2015,9 +2014,9 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 
 	/*
-	 * Get proginfo_card_id (long)
+	 * Get proginfo_card_id (ulong)
 	 */
-	consumed = cmyth_rcv_long(conn, err, &buf->proginfo_card_id, count);
+	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_card_id, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2026,9 +2025,9 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 
 	/*
-	 * Get proginfo_input_id (long)
+	 * Get proginfo_input_id (ulong)
 	 */
-	consumed = cmyth_rcv_long(conn, err, &buf->proginfo_input_id, count);
+	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_input_id, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2039,26 +2038,23 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	/*
 	 * Get proginfo_rec_priority (long)
 	 */
-	consumed = cmyth_rcv_string(conn, err,
-				    tmp_str, sizeof(tmp_str) - 1, count);
+	consumed = cmyth_rcv_long(conn, err,
+				    &buf->proginfo_rec_priority, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_string";
+		failed = "cmyth_rcv_long";
 		goto fail;
 	}
-	if (buf->proginfo_rec_priority)
-		ref_release(buf->proginfo_rec_priority);
-	buf->proginfo_rec_priority = ref_strdup(tmp_str);
 
 	/*
-	 * Get proginfo_rec_status (ulong)
+	 * Get proginfo_rec_status (long)
 	 */
 	consumed = cmyth_rcv_long(conn, err, &buf->proginfo_rec_status, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_ulong";
+		failed = "cmyth_rcv_long";
 		goto fail;
 	}
 
@@ -2074,37 +2070,37 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 
 	/*
-	 * Get proginfo_rec_type (ulong)
+	 * Get proginfo_rec_type (long)
 	 */
-	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_rec_type, count);
+	consumed = cmyth_rcv_long(conn, err, &buf->proginfo_rec_type, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_ulong";
+		failed = "cmyth_rcv_long";
 		goto fail;
 	}
 
 	/*
-	 * Get proginfo_rec_dups (ulong)
+	 * Get proginfo_rec_dupin (long)
 	 */
-	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_rec_dups, count);
+	consumed = cmyth_rcv_long(conn, err, &buf->proginfo_rec_dupin, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_ulong";
+		failed = "cmyth_rcv_long";
 		goto fail;
 	}
 
 	if (buf->proginfo_version >= 8) {
 		/*
-		 * Get proginfo_unknown_1 (long)
+		 * Get proginfo_rec_dupmethod (long)
 		 */
-		consumed = cmyth_rcv_ulong(conn, err,
-					   &buf->proginfo_unknown_1, count);
+		consumed = cmyth_rcv_long(conn, err,
+					   &buf->proginfo_rec_dupmethod, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_ulong";
+			failed = "cmyth_rcv_long";
 			goto fail;
 		}
 	}
@@ -2121,7 +2117,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		consumed = cmyth_rcv_timestamp(conn, err,
 					       &(buf->proginfo_rec_start_ts),
 					       count);
-	}	
+	}
 
 	count -= consumed;
 	total += consumed;
@@ -2142,8 +2138,8 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		consumed = cmyth_rcv_timestamp(conn, err,
 					       &(buf->proginfo_rec_end_ts),
 					       count);
-	}	
-	
+	}
+
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2297,7 +2293,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 				cmyth_rcv_timestamp(conn, err,
 						    &(buf->proginfo_lastmodified),
 						    count);
-		}	
+		}
 		count -= consumed;
 		total += consumed;
 		if (*err) {
@@ -2341,7 +2337,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 				cmyth_rcv_timestamp(conn, err,
 						    &(buf->proginfo_originalairdate),
 						    count);
-		}	
+		}
 		count -= consumed;
 		total += consumed;
 		if (*err) {
@@ -2360,7 +2356,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 			goto fail;
 		}
 	}
-	
+
 	if (buf->proginfo_version >= 18) {
 		/*
 		 * Get playgroup (string)
@@ -2379,20 +2375,17 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 	if (buf->proginfo_version >= 25) {
 		/*
-		 * Get proginfo_recpriority_2 (string)
+		 * Get proginfo_recpriority_2 (long)
 		 */
-		consumed = cmyth_rcv_string(conn, err,
-					    tmp_str, sizeof(tmp_str) - 1,
+		consumed = cmyth_rcv_long(conn, err,
+					    &buf->proginfo_recpriority_2,
 					    count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_string";
+			failed = "cmyth_rcv_long";
 			goto fail;
 		}
-		if (buf->proginfo_recpriority_2)
-			ref_release(buf->proginfo_recpriority_2);
-		buf->proginfo_recpriority_2 = ref_strdup(tmp_str);
 	}
 	if (buf->proginfo_version >= 31) {
 		/*
@@ -2451,7 +2444,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 			failed = "cmyth_rcv_ulong subtitletype";
 			goto fail;
 		}
-	}	
+	}
 
 	/*
 	 * Get Year
@@ -2480,7 +2473,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 
 /*
  * cmyth_rcv_chaninfo(cmyth_conn_t conn, cmyth_proginfo_t buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_chaninfo)
  *
  * Description
@@ -2749,7 +2742,7 @@ cmyth_rcv_chaninfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 /*
  * cmyth_rcv_proglist(cmyth_conn_t conn, int *err, cmyth_proglist_t buf,
  *                    int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_proglist)
  *
  * Description
@@ -2846,7 +2839,7 @@ cmyth_rcv_proglist(cmyth_conn_t conn, int *err, cmyth_proglist_t buf,
 /*
  * cmyth_rcv_keyframe(cmyth_conn_t conn, int *err, cmyth_keyframe_t buf,
  *                    int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_keyframe)
  *
  * Description
@@ -2893,7 +2886,7 @@ cmyth_rcv_keyframe(cmyth_conn_t conn, int *err, cmyth_keyframe_t buf,
 
 /*
  * cmyth_rcv_freespace(cmyth_conn_t conn, cmyth_freespace_t buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_freespace)
  *
  * Description
@@ -2942,7 +2935,7 @@ cmyth_rcv_freespace(cmyth_conn_t conn, int *err, cmyth_freespace_t buf,
 /*
  * cmyth_rcv_recorder(cmyth_conn_t conn, cmyth_recorder_t buf,
  *                    int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_recorder)
  *
  * Description
@@ -2991,7 +2984,7 @@ cmyth_rcv_recorder(cmyth_conn_t conn, int *err, cmyth_recorder_t buf,
 /*
  * cmyth_rcv_ringbuf(cmyth_conn_t conn, int *err, cmyth_ringbuf_t buf,
  *                   int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_ringbuf)
  *
  * Description
@@ -3038,7 +3031,7 @@ cmyth_rcv_ringbuf(cmyth_conn_t conn, int *err, cmyth_ringbuf_t buf, int count)
 
 /*
  * cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_rcv_data)
  *
  * Description

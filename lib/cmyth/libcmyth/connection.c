@@ -1022,23 +1022,11 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	cmyth_conn_t conn = NULL;
 	char *announcement = NULL;
 	char reply[16];
-	char host[256];
 	int err = 0;
 	int count = 0;
-	int r, port;
+	int r;
 	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
-	struct sockaddr_in addr;
-        socklen_t addr_size = sizeof(addr);
 	cmyth_file_t ret = NULL;
-
-	if (getpeername(control->conn_fd, (struct sockaddr*)&addr, &addr_size)<0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: getpeername() failed\n",
-			  __FUNCTION__);
-		goto shut;
-	}
-
-	inet_ntop(addr.sin_family, &addr.sin_addr, host, sizeof(host));
-	port = ntohs(addr.sin_port);
 
 	ret = cmyth_file_create(control);
 	if (!ret) {
@@ -1049,14 +1037,14 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting data connection\n",
 		  __FUNCTION__);
-	conn = cmyth_connect(host, port, buflen, tcp_rcvbuf);
+	conn = cmyth_connect(control->server, control->port, buflen, tcp_rcvbuf);
 	cmyth_dbg(CMYTH_DBG_PROTO,
 		  "%s: done connecting data connection, conn = %p\n",
 		  __FUNCTION__, conn);
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_connect(%s, %d, %d) failed\n",
-			  __FUNCTION__, host, port, buflen);
+			  __FUNCTION__, control->server, control->port, buflen);
 		goto shut;
 	}
 	/*

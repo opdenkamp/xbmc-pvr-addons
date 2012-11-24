@@ -15,6 +15,24 @@ To build all PVR add-ons as .zip archives:
 ./configure
 make zip
 
+Building addons with dependencies:
+----------------------------------
+The build method described above excludes addons that depend on runtime libraries.
+This is because the installed versions of the dependend libraries on the build-machine
+and the target machine have to match exactly. Therefore this addons cannot be
+distributed easily.
+
+Distribution package maintainers and users who build the addons on their target machine
+can enable the build of addons with dependencies:
+
+./configure --enable-addons-with-dependencies
+
+List of addons with dependencies:
+---------------------------------
+- MythTV addon:
+    Build dependencies:   libmysqlclient, boost (headers)
+    Runtime dependencies: libmysqlclient
+
 =============================
            Windows
 =============================

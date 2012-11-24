@@ -195,7 +195,7 @@ int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err,
 	char *failed = NULL;
 	cmyth_commbreak_t commbreak;
 	unsigned short type;
-	unsigned short start_type;
+	unsigned short start_type = -1;
 	int i;
 
 	if (count <= 0) {

@@ -675,7 +675,6 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, int tcp_rcvbuf,
 
 	cmyth_recorder_t new_rec = NULL;
 	char url[1024];
-	cmyth_conn_t control;
 	cmyth_proginfo_t loc_prog;
 	cmyth_file_t ft = NULL;
 
@@ -685,7 +684,6 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, int tcp_rcvbuf,
 		return NULL;
 	}
 
-	control = rec->rec_conn;
 	/* Get the current recording information */
 	loc_prog = cmyth_recorder_get_cur_proginfo(rec);
 

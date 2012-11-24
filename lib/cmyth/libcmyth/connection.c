@@ -20,7 +20,7 @@
 /**
  * \file connection.c
  * Functions to handle creating connections to a MythTV backend and
- * interacting with those connections.  
+ * interacting with those connections.
  */
 
 #include <stdlib.h>
@@ -83,7 +83,7 @@ static myth_protomap_t protomap[] = {
 
 /*
  * cmyth_conn_destroy(cmyth_conn_t conn)
- * 
+ *
  * Scope: PRIVATE (static)
  *
  * Description
@@ -123,7 +123,7 @@ cmyth_conn_destroy(cmyth_conn_t conn)
 
 /*
  * cmyth_conn_create(void)
- * 
+ *
  * Scope: PRIVATE (static)
  *
  * Description
@@ -163,7 +163,7 @@ cmyth_conn_create(void)
 
 /*
  * cmyth_connect(char *server, unsigned short port, unsigned buflen)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -946,7 +946,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	reply[sizeof(reply) - 1] = '\0';
-	r = cmyth_rcv_string(conn, &err, reply, sizeof(reply) - 1, count); 
+	r = cmyth_rcv_string(conn, &err, reply, sizeof(reply) - 1, count);
 	if (err != 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_string() failed (%d)\n",
@@ -1100,7 +1100,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	reply[sizeof(reply) - 1] = '\0';
-	r = cmyth_rcv_string(conn, &err, reply, sizeof(reply) - 1, count); 
+	r = cmyth_rcv_string(conn, &err, reply, sizeof(reply) - 1, count);
 	if (err != 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_string() failed (%d)\n",
@@ -1261,7 +1261,7 @@ cmyth_conn_connect_recorder(cmyth_recorder_t rec, unsigned buflen,
 
 /*
  * cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1331,7 +1331,7 @@ cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
  * cmyth_conn_get_recorder_from_num(cmyth_conn_t control,
  *                                  cmyth_recorder_num_t num,
  *                                  cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1428,8 +1428,8 @@ cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int id)
 
 /*
  * cmyth_conn_get_free_recorder(cmyth_conn_t control, cmyth_recorder_t rec)
- *                             
- * 
+ *
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1546,7 +1546,7 @@ cmyth_conn_get_freespace(cmyth_conn_t control,
 
 	if (control->conn_version >= 32)
 		{ snprintf(msg, sizeof(msg), "QUERY_FREE_SPACE_SUMMARY"); }
-	else if (control->conn_version >= 17)	
+	else if (control->conn_version >= 17)
 		{ snprintf(msg, sizeof(msg), "QUERY_FREE_SPACE"); }
 	else
 		{ snprintf(msg, sizeof(msg), "QUERY_FREESPACE"); }
@@ -1566,7 +1566,7 @@ cmyth_conn_get_freespace(cmyth_conn_t control,
 		ret = count;
 		goto out;
 	}
-	
+
 	if (control->conn_version >= 17) {
 		if ((r=cmyth_rcv_int64(control, &err, &lreply, count)) < 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR,

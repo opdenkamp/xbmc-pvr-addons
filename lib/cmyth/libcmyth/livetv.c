@@ -43,7 +43,7 @@ static int cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url,
 
 /*
  * cmyth_livetv_chain_destroy(cmyth_livetv_chain_t ltc)
- * 
+ *
  * Scope: PRIVATE (static)
  *
  * Description
@@ -92,7 +92,7 @@ cmyth_livetv_chain_destroy(cmyth_livetv_chain_t ltc)
 
 /*
  * cmyth_livetv_chain_create(void)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -135,7 +135,7 @@ cmyth_livetv_chain_create(char * chainid)
 */
 /*
  * cmyth_livetv_chain_has_url(void)
- * 
+ *
  * Scope: PRIVATE
  *
  * Description
@@ -186,7 +186,7 @@ cmyth_livetv_get_cur_file(cmyth_recorder_t rec)
 /*
  * cmyth_livetv_chain_add_file(cmyth_recorder_t rec, char * url,
  *                             cmyth_file_t fp)
- * 
+ *
  * Scope: PRIVATE
  *
  * Description
@@ -238,7 +238,7 @@ cmyth_livetv_chain_add_file(cmyth_recorder_t rec, char * url, cmyth_file_t ft)
 /*
  * cmyth_livetv_chain_add_prog(cmyth_recorder_t rec, char * url,
  *                             cmyth_proginfo_t prog)
- * 
+ *
  * Scope: PRIVATE
  *
  * Description
@@ -290,7 +290,7 @@ cmyth_livetv_chain_add_prog(cmyth_recorder_t rec, char * url,
 
 /*
  * cmyth_livetv_chain_add_url(cmyth_recorder_t rec, char * url)
- * 
+ *
  * Scope: PRIVATE
  *
  * Description
@@ -359,7 +359,7 @@ cmyth_livetv_chain_add_url(cmyth_recorder_t rec, char * url)
 
 /*
  * cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url, cmyth_file_t ft)
- * 
+ *
  * Scope: PRIVATE
  *
  * Description
@@ -392,7 +392,7 @@ cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url, cmyth_file_t ft,
 
 /*
  * cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid, int buff)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -650,7 +650,7 @@ cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg)
 
 /*
  * cmyth_livetv_chain_setup(cmyth_recorder_t old_rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -806,7 +806,7 @@ cmyth_livetv_chain_select(cmyth_recorder_t rec, struct timeval *timeout)
 
 /*
  * cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -918,7 +918,7 @@ cmyth_livetv_chain_switch_last(cmyth_recorder_t rec)
 
 /*
  * cmyth_livetv_chain_request_block(cmyth_recorder_t file, unsigned long len)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1072,7 +1072,7 @@ cmyth_livetv_chain_duration(cmyth_recorder_t rec)
 
 /*
  * cmyth_livetv_chain_seek(cmyth_recorder_t file, long long offset, int whence)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1129,51 +1129,47 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, long long offset, int whence)
 
 	if (whence == SEEK_CUR) {
 
-	if (offset == 0) {
-		cur     = rec->rec_livetv_chain->chain_current;
-		offset += rec->rec_livetv_chain->chain_files[cur]->file_req;
-		for (; cur > 0; cur--) {
-			offset += rec->rec_livetv_chain->chain_files[cur-1]->file_length;
+		if (offset == 0) {
+			cur     = rec->rec_livetv_chain->chain_current;
+			offset += rec->rec_livetv_chain->chain_files[cur]->file_req;
+			for (; cur > 0; cur--) {
+				offset += rec->rec_livetv_chain->chain_files[cur-1]->file_length;
+			}
+			return offset;
+		} else {
+			cur = rec->rec_livetv_chain->chain_current;
+			fp  = rec->rec_livetv_chain->chain_files[cur];
 		}
-		return offset;
-	} else {
-		cur = rec->rec_livetv_chain->chain_current;
-		fp  = rec->rec_livetv_chain->chain_files[cur];
+
+		offset += fp->file_req;
+
+		while (offset > (long long)fp->file_length) {
+			cur++;
+			offset -= fp->file_length;
+			if(cur == ct)
+				return -1;
+			fp = rec->rec_livetv_chain->chain_files[cur];
+		}
+
+		while (offset < 0) {
+			cur--;
+			if(cur < 0)
+				return -1;
+			fp = rec->rec_livetv_chain->chain_files[cur];
+			offset += fp->file_length;
+		}
+
+		offset -= fp->file_req;
 	}
-
-	offset += fp->file_req;
-
-	while (offset > (long long)fp->file_length) {
-		cur++;
-		offset -= fp->file_length;
-		if(cur == ct)
-			return -1;
-		fp = rec->rec_livetv_chain->chain_files[cur];
-	}
-
-	while (offset < 0) {
-		cur--;
-		if(cur < 0)
-			return -1;
-		fp = rec->rec_livetv_chain->chain_files[cur];
-		offset += fp->file_length;
-	}
-
-	offset -= fp->file_req;
-  }
 
 	if (fp && cur >=0)
 	{
-		pthread_mutex_lock(&mutex);
-		
-		ret = cmyth_file_seek_unlocked(fp, offset, whence);
-
-		if (ret >= 0 ) {
+		if ((ret = cmyth_file_seek(fp, offset, whence)) >= 0) {
+			pthread_mutex_lock(&mutex);
 			cur -= rec->rec_livetv_chain->chain_current;
-			cmyth_livetv_chain_switch(rec, cur);	
+			cmyth_livetv_chain_switch(rec, cur);
+			pthread_mutex_unlock(&mutex);
 		}
-		
-		pthread_mutex_unlock(&mutex);
 	}
 	else
 		return -1;
@@ -1183,7 +1179,7 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, long long offset, int whence)
 
 /*
  * cmyth_livetv_read(cmyth_recorder_t rec, char *buf, unsigned long len)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1202,12 +1198,12 @@ int cmyth_livetv_read(cmyth_recorder_t rec, char *buf, unsigned long len)
 		return cmyth_livetv_chain_read(rec, buf, len);
 	else
 		return cmyth_ringbuf_read(rec, buf, len);
-	
+
 }
 
 /*
  * cmyth_livetv_seek(cmyth_recorder_t file, long long offset, int whence)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1242,7 +1238,7 @@ cmyth_livetv_seek(cmyth_recorder_t rec, long long offset, int whence)
 
 /*
  * cmyth_livetv_request_block(cmyth_recorder_t file, unsigned long len)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1274,7 +1270,7 @@ int
 cmyth_livetv_select(cmyth_recorder_t rec, struct timeval *timeout)
 {
 	int rtrn;
-	
+
 	if(rec->rec_conn->conn_version >= 26)
 		rtrn = cmyth_livetv_chain_select(rec, timeout);
 	else

@@ -26,7 +26,7 @@
 
 /*
  * cmyth_file_destroy(cmyth_file_t file)
- * 
+ *
  * Scope: PRIVATE (static)
  *
  * Description
@@ -107,7 +107,7 @@ void cmyth_file_set_closed_callback(cmyth_file_t file, void (*callback)(cmyth_fi
 
 /*
  * cmyth_file_create(cmyth_conn_t control)
- * 
+ *
  * Scope: PRIVATE (mapped to __cmyth_file_create)
  *
  * Description
@@ -148,7 +148,7 @@ cmyth_file_create(cmyth_conn_t control)
 
 /*
  * cmyth_file_data(cmyth_file_t p)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -177,7 +177,7 @@ cmyth_file_data(cmyth_file_t file)
 
 /*
  * cmyth_file_control(cmyth_file_t p)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -206,7 +206,7 @@ cmyth_file_control(cmyth_file_t file)
 
 /*
  * cmyth_file_start(cmyth_file_t p)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -230,7 +230,7 @@ cmyth_file_start(cmyth_file_t file)
 
 /*
  * cmyth_file_length(cmyth_file_t p)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -253,7 +253,7 @@ cmyth_file_length(cmyth_file_t file)
 }
 
 /*
- * cmyth_update_file_length(cmyth_file_t file, unsigned long long newLength)
+ * cmyth_file_update_length(cmyth_file_t file, unsigned long long newlen)
  *
  * Scope: PUBLIC
  *
@@ -268,12 +268,12 @@ cmyth_file_length(cmyth_file_t file)
  * Failure: a int containing -errno
  */
 int
-cmyth_update_file_length(cmyth_file_t file, unsigned long long newLength)
+cmyth_file_update_length(cmyth_file_t file, unsigned long long newlen)
 {
 	if (!file) {
 		return -EINVAL;
 	}
-	file->file_length = newLength;
+	file->file_length = newlen;
 	return 0;
 }
 
@@ -304,7 +304,7 @@ cmyth_file_position(cmyth_file_t file)
 
 /*
  * cmyth_file_get_block(cmyth_file_t file, char *buf, unsigned long len)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -378,7 +378,7 @@ cmyth_file_select(cmyth_file_t file, struct timeval *timeout)
 
 /*
  * cmyth_file_request_block(cmyth_file_t file, unsigned long len)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -449,7 +449,7 @@ cmyth_file_request_block(cmyth_file_t file, unsigned long len)
 
 /*
  * cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -567,112 +567,13 @@ cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
 
     out:
 	pthread_mutex_unlock(&mutex);
-	
-	return ret;
-}
 
-long long
-cmyth_file_seek_unlocked(cmyth_file_t file, long long offset, int whence)
-{
-	char msg[128];
-	int err;
-	int count;
-	int64_t c;
-	long r;
-	long long ret;
-
-	if (file == NULL)
-		return -EINVAL;
-
-	if ((offset == 0) && (whence == SEEK_CUR))
-		return file->file_pos;
-
-	if ((offset == file->file_pos) && (whence == SEEK_SET))
-		return file->file_pos;
-
-	ret = 0;
-	while(file->file_pos < file->file_req) {
-		c = file->file_req - file->file_pos;
-		if(c > sizeof(msg))
-			c = sizeof(msg);
-
-		if ((ret = cmyth_file_get_block(file, msg, (unsigned long)c)) < 0)
-			break;
-	}
-	if (ret < 0)
-		goto out;
-
-	if (file->file_control->conn_version >= 66) {
-		/*
-		 * Since protocol 66 mythbackend expects to receive a single 64 bit integer rather than
-		 * two 32 bit hi and lo integers.
-		 */
-		snprintf(msg, sizeof(msg),
-			 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%"PRIu64"[]:[]%d[]:[]%"PRIu64,
-			 file->file_id,
-			 (int64_t)offset,
-			 whence,
-			 (int64_t)file->file_pos);
-	}
-	else {
-		snprintf(msg, sizeof(msg),
-			 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%d[]:[]%d[]:[]%d[]:[]%d[]:[]%d",
-			 file->file_id,
-			 (int32_t)(offset >> 32),
-			 (int32_t)(offset & 0xffffffff),
-			 whence,
-			 (int32_t)(file->file_pos >> 32),
-			 (int32_t)(file->file_pos & 0xffffffff));
-	}
-
-	if ((err = cmyth_send_message(file->file_control, msg)) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
-		goto out;
-	}
-
-	if ((count=cmyth_rcv_length(file->file_control)) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_rcv_length() failed (%d)\n",
-			  __FUNCTION__, count);
-		ret = count;
-		goto out;
-	}
-	if ((r=cmyth_rcv_int64(file->file_control, &err, &c, count)) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_rcv_int64() failed (%d)\n",
-			  __FUNCTION__, r);
-		ret = err;
-		goto out;
-	}
-
-	switch (whence) {
-	case SEEK_SET:
-		file->file_pos = offset;
-		break;
-	case SEEK_CUR:
-		file->file_pos += offset;
-		break;
-	case SEEK_END:
-		file->file_pos = file->file_length - offset;
-		break;
-	}
-
-	file->file_req = file->file_pos;
-	if(file->file_pos > file->file_length)
-		file->file_length = file->file_pos;
-
-	ret = file->file_pos;
-
-    out:
 	return ret;
 }
 
 /*
  * cmyth_file_read(cmyth_file_t file, char *buf, unsigned long len)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1060,9 +961,9 @@ void __cdecl _dosmaperr (
   )
 {
   int i;
-  
+
   _doserrno = oserrno;        /* set _doserrno */
-  
+
   /* check the table for the OS error code */
   for (i = 0; i < ERRTABLESIZE; ++i) {
     if (oserrno == errtable[i].oscode) {
@@ -1070,11 +971,11 @@ void __cdecl _dosmaperr (
       return;
     }
   }
-  
+
   /* The error code wasn't in the table.  We check for a range of */
   /* EACCES errors or exec failure errors (ENOEXEC).  Otherwise   */
   /* EINVAL is returned.                                          */
-  
+
   if (oserrno >= MIN_EACCES_RANGE && oserrno <= MAX_EACCES_RANGE)
     errno = EACCES;
   else if (oserrno >= MIN_EXEC_ERROR && oserrno <= MAX_EXEC_ERROR)

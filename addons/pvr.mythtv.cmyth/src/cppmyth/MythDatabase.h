@@ -31,7 +31,7 @@ extern "C" {
 };
 
 class MythChannel;
-class MythTimer;
+class MythRecordingRule;
 class MythProgramInfo;
 
 template <class T> class MythPointerThreadSafe;
@@ -44,7 +44,7 @@ typedef std::pair<CStdString, std::vector<int> > MythChannelGroup;
 typedef std::map<CStdString, std::vector<int> > ChannelGroupMap;
 
 typedef std::map<int, std::vector<int> > SourceMap;
-typedef std::map<int, MythTimer> TimerMap;
+typedef std::map<int, MythRecordingRule> RecordingRuleMap;
 
 // TODO: Rework MythRecordingProfile
 class MythRecordingProfile : public CStdString
@@ -74,10 +74,10 @@ public:
   ChannelGroupMap GetChannelGroups();
   SourceMap GetSources();
 
-  TimerMap GetTimers();
-  int AddTimer(const MythTimer &timer);
-  bool UpdateTimer(const MythTimer &timer);
-  bool DeleteTimer(int recordid);
+  RecordingRuleMap GetRecordingRules();
+  int AddRecordingRule(const MythRecordingRule &timer);
+  bool UpdateRecordingRule(const MythRecordingRule &timer);
+  bool DeleteRecordingRule(int recordid);
 
   RecordingProfileList GetRecordingProfiles();
 

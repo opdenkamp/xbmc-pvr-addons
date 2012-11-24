@@ -25,12 +25,12 @@
 #include <xbmc_pvr_types.h>
 #include <platform/threads/mutex.h>
 
-class RecordingRule : public MythTimer, public std::vector<std::pair<PVR_TIMER, MythProgramInfo> >
+class RecordingRule : public MythRecordingRule, public std::vector<std::pair<PVR_TIMER, MythProgramInfo> >
 {
 public:
-  RecordingRule(const MythTimer &timer);
-  RecordingRule& operator=(const MythTimer &timer);
-  bool operator==(const int &id);
+  RecordingRule(const MythRecordingRule &timer);
+  RecordingRule& operator=(const MythRecordingRule &timer);
+  bool operator==(const unsigned long &id);
 
   RecordingRule* GetParent() const;
   void SetParent(RecordingRule &parent);
@@ -150,7 +150,7 @@ private:
 
   // Timers
   RecordingRuleList m_recordingRules;
-  void PVRtoMythTimer(const PVR_TIMER timer, MythTimer &mt);
+  void PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &mt);
 
   CStdString GetArtWork(FileOps::FileType storageGroup, const CStdString &shwTitle);
 };

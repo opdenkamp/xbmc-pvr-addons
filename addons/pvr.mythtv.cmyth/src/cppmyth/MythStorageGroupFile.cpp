@@ -41,7 +41,7 @@ bool MythStorageGroupFile::IsNull() const
 
 CStdString MythStorageGroupFile::Filename()
 {
-  char* name = cmyth_storagegroup_file_get_filename(*m_storagegroup_file_t);
+  char* name = cmyth_storagegroup_file_filename(*m_storagegroup_file_t);
   CStdString retval(name);
   ref_release(name);
   return retval;
@@ -49,12 +49,12 @@ CStdString MythStorageGroupFile::Filename()
 
 unsigned long long MythStorageGroupFile::Size()
 {
-  unsigned long long retval = cmyth_storagegroup_file_get_size(*m_storagegroup_file_t);
+  unsigned long long retval = cmyth_storagegroup_file_size(*m_storagegroup_file_t);
   return retval;
 }
 
 unsigned long MythStorageGroupFile::LastModified()
 {
-  unsigned long retval = cmyth_storagegroup_file_get_lastmodified(*m_storagegroup_file_t);
+  unsigned long retval = cmyth_storagegroup_file_lastmodified(*m_storagegroup_file_t);
   return retval;
 }

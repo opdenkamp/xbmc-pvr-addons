@@ -24,7 +24,7 @@
 #include "MythStorageGroupFile.h"
 #include "MythProgramInfo.h"
 #include "MythEventHandler.h"
-#include "MythTimer.h"
+#include "MythRecordingRule.h"
 #include "MythPointer.h"
 #include "../client.h"
 
@@ -287,7 +287,7 @@ bool MythConnection::UpdateSchedules(int id)
   return retval >= 0;
 }
 
-void MythConnection::DefaultTimer(MythTimer &timer)
+void MythConnection::DefaultTimer(MythRecordingRule &timer)
 {
   timer.SetAutoTranscode(atoi(GetSetting("NULL", "AutoTranscode").c_str()) > 0);
   timer.SetUserJob(1, atoi(GetSetting("NULL", "AutoRunUserJob1").c_str()) > 0);

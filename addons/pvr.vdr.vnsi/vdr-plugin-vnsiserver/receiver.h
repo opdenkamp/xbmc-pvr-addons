@@ -70,8 +70,6 @@ private:
   friend class cParser;
   friend class cLivePatFilter;
 
-  void Detach(void);
-  void Attach(void);
   cTSDemuxer *FindStreamDemuxer(int Pid);
 
   void sendStreamPacket(sStreamPacket *pkt);

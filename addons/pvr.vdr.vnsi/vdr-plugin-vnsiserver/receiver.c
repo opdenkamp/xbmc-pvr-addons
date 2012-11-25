@@ -755,29 +755,6 @@ inline void cLiveStreamer::Activate(bool On)
   }
 }
 
-void cLiveStreamer::Attach(void)
-{
-  DEBUGLOG("%s", __FUNCTION__);
-  if (m_Device)
-  {
-    if (m_Receiver)
-    {
-      m_Device->Detach(m_Receiver);
-      m_Device->AttachReceiver(m_Receiver);
-    }
-  }
-}
-
-void cLiveStreamer::Detach(void)
-{
-  DEBUGLOG("%s", __FUNCTION__);
-  if (m_Device)
-  {
-    if (m_Receiver)
-      m_Device->Detach(m_Receiver);
-  }
-}
-
 void cLiveStreamer::sendStreamPacket(sStreamPacket *pkt)
 {
   if(pkt == NULL)

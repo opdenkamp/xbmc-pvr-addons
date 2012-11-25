@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+# Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platform", "platform\platform.vcxproj", "{FE4573F6-A794-4AD3-B37F-49E51F1140E6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.vcxproj", "{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}"
@@ -28,7 +28,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.mythtv.cmyth", "..\..\a
 		{F9E6874D-60A8-49BA-9393-A2105E63ABCF} = {F9E6874D-60A8-49BA-9393-A2105E63ABCF}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcmyth_dll", "..\..\lib\cmyth\Win32\libcmyth.vcxproj", "{F9E6874D-60A8-49BA-9393-A2105E63ABCF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcmyth", "..\..\lib\cmyth\Win32\libcmyth.vcxproj", "{F9E6874D-60A8-49BA-9393-A2105E63ABCF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vuplus", "..\..\addons\pvr.vuplus\project\VS2010Express\pvr.vuplus.vcxproj", "{848DCDD6-7142-4507-A75A-6872A9256F3F}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -37,9 +37,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vuplus", "..\..\addons\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.nextpvr", "..\..\addons\pvr.nextpvr\project\VS2010Express\XBMC_NextPVR.vcxproj", "{AAE3A937-C7CA-4A43-BCFC-C39C253820CC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.fortherecord.argus", "..\..\addons\pvr.fortherecord.argus\project\VS2010Express\pvr.fortherecord.argus.vcxproj", "{8A82D2E1-F76F-427C-9479-FE70DA02825D}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.dvbviewer", "..\..\addons\pvr.dvbviewer\project\VS2010Express\pvr.dvbviewer.vcxproj", "{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.argustv", "..\..\addons\pvr.argustv\project\VS2010Express\pvr.argustv.vcxproj", "{8D24D95E-3C4E-4DC5-ABEF-C35C938C2EBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,14 +99,14 @@ Global
 		{AAE3A937-C7CA-4A43-BCFC-C39C253820CC}.Debug|Win32.Build.0 = Debug|Win32
 		{AAE3A937-C7CA-4A43-BCFC-C39C253820CC}.Release|Win32.ActiveCfg = Release|Win32
 		{AAE3A937-C7CA-4A43-BCFC-C39C253820CC}.Release|Win32.Build.0 = Release|Win32
-		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Debug|Win32.Build.0 = Debug|Win32
-		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Release|Win32.ActiveCfg = Release|Win32
-		{8A82D2E1-F76F-427C-9479-FE70DA02825D}.Release|Win32.Build.0 = Release|Win32
 		{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}.Debug|Win32.Build.0 = Debug|Win32
 		{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}.Release|Win32.ActiveCfg = Release|Win32
 		{D31D6BEB-0285-47CF-9817-F8AD2CFDF0E8}.Release|Win32.Build.0 = Release|Win32
+		{8D24D95E-3C4E-4DC5-ABEF-C35C938C2EBB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8D24D95E-3C4E-4DC5-ABEF-C35C938C2EBB}.Debug|Win32.Build.0 = Debug|Win32
+		{8D24D95E-3C4E-4DC5-ABEF-C35C938C2EBB}.Release|Win32.ActiveCfg = Release|Win32
+		{8D24D95E-3C4E-4DC5-ABEF-C35C938C2EBB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

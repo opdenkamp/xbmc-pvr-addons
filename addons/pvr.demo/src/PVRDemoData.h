@@ -58,6 +58,20 @@ struct PVRDemoChannel
   std::vector<PVRDemoEpgEntry> epg;
 };
 
+struct PVRDemoRecording
+{
+  int         iDuration;
+  int         iGenreType;
+  int         iGenreSubType;
+  std::string strChannelName;
+  std::string strPlotOutline;
+  std::string strPlot;
+  std::string strRecordingId;
+  std::string strStreamURL;
+  std::string strTitle;
+  time_t      recordingTime;
+};
+
 struct PVRDemoChannelGroup
 {
   bool             bRadio;
@@ -82,12 +96,16 @@ public:
 
   virtual PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
 
+  virtual int GetRecordingsAmount(void);
+  virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle);
+
   virtual std::string GetSettingsFile() const;
 protected:
   virtual bool LoadDemoData(void);
 private:
   std::vector<PVRDemoChannelGroup> m_groups;
   std::vector<PVRDemoChannel>      m_channels;
+  std::vector<PVRDemoRecording>    m_recordings;
   time_t                           m_iEpgStart;
   CStdString                       m_strDefaultIcon;
   CStdString                       m_strDefaultMovie;

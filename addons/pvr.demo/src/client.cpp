@@ -147,6 +147,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsTV              = true;
   pCapabilities->bSupportsRadio           = true;
   pCapabilities->bSupportsChannelGroups   = true;
+  pCapabilities->bSupportsRecordings      = true;
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -270,6 +271,22 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
   return PVR_ERROR_NO_ERROR;
 }
 
+int GetRecordingsAmount(void)
+{
+  if (m_data)
+    return m_data->GetRecordingsAmount();
+
+  return -1;
+}
+
+PVR_ERROR GetRecordings(ADDON_HANDLE handle)
+{
+  if (m_data)
+    return m_data->GetRecordings(handle);
+
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
 /** UNUSED API FUNCTIONS */
 PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook) { return PVR_ERROR_NOT_IMPLEMENTED; }
@@ -291,8 +308,6 @@ long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */) { re
 long long PositionLiveStream(void) { return -1; }
 long long LengthLiveStream(void) { return -1; }
 const char * GetLiveStreamURL(const PVR_CHANNEL &channel) { return ""; }
-int GetRecordingsAmount(void) { return -1; }
-PVR_ERROR GetRecordings(ADDON_HANDLE handle) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteRecording(const PVR_RECORDING &recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameRecording(const PVR_RECORDING &recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }

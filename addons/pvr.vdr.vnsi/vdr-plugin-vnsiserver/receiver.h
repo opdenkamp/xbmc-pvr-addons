@@ -78,6 +78,7 @@ private:
   void sendStreamInfo();
   void sendStreamStatus();
   void ensureDemuxers();
+  void confChannelDemuxers();
 
   const cChannel   *m_Channel;                      /*!> Channel to stream */
   cDevice          *m_Device;                       /*!> The receiving device the channel depents to */
@@ -104,6 +105,7 @@ private:
   cResponsePacket   m_streamHeader;
   std::list<cTSDemuxer*> m_Demuxers;
   std::list<sStream> m_Streams;
+  bool              m_PidChange;
 
 protected:
   virtual void Action(void);

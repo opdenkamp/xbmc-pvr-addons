@@ -396,12 +396,6 @@ void cLivePatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Le
       }
     }
     m_Streamer->m_DemuxerLock.Unlock();
-
-    if (!m_Streamer->m_Receiver)
-    {
-      m_Streamer->m_Receiver  = new cLiveReceiver(m_Streamer, m_Channel, m_Streamer->m_Priority, m_Streamer->m_Pids);
-      m_Streamer->m_Device->AttachReceiver(m_Streamer->m_Receiver);
-    }
   }
 }
 
@@ -425,6 +419,7 @@ cLiveStreamer::cLiveStreamer(uint32_t timeout)
   m_startup         = true;
   m_SignalLost      = false;
   m_IFrameSeen      = false;
+  m_PidChange       = false;
 
   m_requestStreamChange = false;
 
@@ -526,6 +521,16 @@ void cLiveStreamer::Action(void)
       break;
     }
 
+    // if we got no pmt, create demuxers with info in channels.conf
+    if (m_Demuxers.size() == 0 && starttime.Elapsed() > 2000)
+    {
+      INFOLOG("Got no PMT, using channel conf for creating demuxers");
+      confChannelDemuxers();
+    }
+
+    if (m_checkDemuxers)
+      ensureDemuxers();
+
     // no data
     if (buf == NULL || size <= TS_SIZE)
     {
@@ -613,22 +618,9 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
   {
     DEBUGLOG("Successfully found following device: %p (%d) for receiving", m_Device, m_Device ? m_Device->CardIndex() + 1 : 0);
 
-    sStream newStream;
     if (m_Device->SwitchChannel(m_Channel, false))
     {
-      if (m_Channel->Vpid())
-      {
-        newStream.pID = m_Channel->Vpid();
-#if APIVERSNUM >= 10701
-        if (m_Channel->Vtype() == 0x1B)
-          newStream.type = stH264;
-        else
-#endif
-          newStream.type = stMPEG2VIDEO;
-
-        AddStream(newStream);
-      }
-      else
+      if (!m_Channel->Vpid())
       {
         /* m_streamReady is set by the Video demuxers, to have always valid stream informations
          * like height and width. But if no Video PID is present like for radio channels
@@ -638,65 +630,6 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
         m_IsAudioOnly = true;
       }
 
-      const int *APids = m_Channel->Apids();
-      for ( ; *APids; APids++)
-      {
-        int index = 0;
-        if (!FindStreamDemuxer(*APids))
-        {
-          newStream.pID = *APids;
-          newStream.type = stMPEG2AUDIO;
-          newStream.SetLanguage(m_Channel->Alang(index));
-          AddStream(newStream);
-        }
-        index++;
-      }
-
-      const int *DPids = m_Channel->Dpids();
-      for ( ; *DPids; DPids++)
-      {
-        int index = 0;
-        if (!FindStreamDemuxer(*DPids))
-        {
-          newStream.pID = *DPids;
-          newStream.type = stAC3;
-          newStream.SetLanguage(m_Channel->Dlang(index));
-          AddStream(newStream);
-        }
-        index++;
-      }
-
-      const int *SPids = m_Channel->Spids();
-      if (SPids)
-      {
-        int index = 0;
-        for ( ; *SPids; SPids++)
-        {
-          if (!FindStreamDemuxer(*SPids))
-          {
-            newStream.pID = *SPids;
-            newStream.type = stDVBSUB;
-            newStream.SetLanguage(m_Channel->Slang(index));
-#if APIVERSNUM >= 10709
-            newStream.subtitlingType = m_Channel->SubtitlingType(index);
-            newStream.compositionPageId = m_Channel->CompositionPageId(index);
-            newStream.ancillaryPageId = m_Channel->AncillaryPageId(index);
-#endif
-            AddStream(newStream);
-          }
-          index++;
-        }
-      }
-
-      if (m_Channel->Tpid())
-      {
-        newStream.pID = m_Channel->Tpid();
-        newStream.type = stTELETEXT;
-        AddStream(newStream);
-      }
-
-      ensureDemuxers();
-
       /* Send the OK response here, that it is before the Stream end message */
       resp->add_U32(VNSI_RET_OK);
       resp->finalise();
@@ -704,11 +637,13 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
 
       if (m_Channel && ((m_Channel->Source() >> 24) == 'V')) m_IsMPEGPS = true;
 
-      if (m_Demuxers.size() > 0 && m_Socket)
+      if (m_Socket)
       {
         dsyslog("VNSI: Creating new live Receiver");
         m_PatFilter = new cLivePatFilter(this, m_Channel);
         m_Device->AttachFilter(m_PatFilter);
+        m_Receiver = new cLiveReceiver(this, m_Channel, m_Priority, m_Pids);
+        m_Device->AttachReceiver(m_Receiver);
       }
 
       INFOLOG("Successfully switched to channel %i - %s", m_Channel->Number(), m_Channel->Name());
@@ -743,6 +678,9 @@ void cLiveStreamer::AddStream(sStream &stream)
 
 inline void cLiveStreamer::Activate(bool On)
 {
+  if (m_PidChange)
+    return;
+
   if (On)
   {
     DEBUGLOG("VDR active, sending stream start message");
@@ -765,9 +703,6 @@ void cLiveStreamer::sendStreamPacket(sStreamPacket *pkt)
 
   if(!m_IsAudioOnly && !m_IFrameSeen && (pkt->frametype != PKT_I_FRAME))
     return;
-
-  if (m_checkDemuxers)
-    ensureDemuxers();
 
   if(m_requestStreamChange)
     sendStreamChange();
@@ -1202,11 +1137,91 @@ void cLiveStreamer::ensureDemuxers()
 
     if (m_Receiver)
     {
+      m_PidChange = true;
+      m_Device->Detach(m_Receiver);
       m_Receiver->SetPids(NULL);
       m_Receiver->AddPids(m_Pids);
+      m_Device->AttachReceiver(m_Receiver);
+      m_PidChange = false;
     }
   }
 
   m_Streams.clear();
   m_checkDemuxers = false;
+}
+
+void cLiveStreamer::confChannelDemuxers()
+{
+  sStream newStream;
+  if (m_Channel->Vpid())
+  {
+    newStream.pID = m_Channel->Vpid();
+#if APIVERSNUM >= 10701
+    if (m_Channel->Vtype() == 0x1B)
+      newStream.type = stH264;
+    else
+#endif
+      newStream.type = stMPEG2VIDEO;
+
+    AddStream(newStream);
+  }
+
+  const int *APids = m_Channel->Apids();
+  for ( ; *APids; APids++)
+  {
+    int index = 0;
+    if (!FindStreamDemuxer(*APids))
+    {
+      newStream.pID = *APids;
+      newStream.type = stMPEG2AUDIO;
+      newStream.SetLanguage(m_Channel->Alang(index));
+      AddStream(newStream);
+    }
+    index++;
+  }
+
+  const int *DPids = m_Channel->Dpids();
+  for ( ; *DPids; DPids++)
+  {
+    int index = 0;
+    if (!FindStreamDemuxer(*DPids))
+    {
+      newStream.pID = *DPids;
+      newStream.type = stAC3;
+      newStream.SetLanguage(m_Channel->Dlang(index));
+      AddStream(newStream);
+    }
+    index++;
+  }
+
+  const int *SPids = m_Channel->Spids();
+  if (SPids)
+  {
+    int index = 0;
+    for ( ; *SPids; SPids++)
+    {
+      if (!FindStreamDemuxer(*SPids))
+      {
+        newStream.pID = *SPids;
+        newStream.type = stDVBSUB;
+        newStream.SetLanguage(m_Channel->Slang(index));
+#if APIVERSNUM >= 10709
+        newStream.subtitlingType = m_Channel->SubtitlingType(index);
+        newStream.compositionPageId = m_Channel->CompositionPageId(index);
+        newStream.ancillaryPageId = m_Channel->AncillaryPageId(index);
+#endif
+        AddStream(newStream);
+      }
+      index++;
+    }
+  }
+
+  if (m_Channel->Tpid())
+  {
+    newStream.pID = m_Channel->Tpid();
+    newStream.type = stTELETEXT;
+    AddStream(newStream);
+  }
+
+  CheckDemuxers();
 }

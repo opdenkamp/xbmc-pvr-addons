@@ -409,14 +409,14 @@ long MultiFileReader::RefreshTSBufferFile()
     // Removed files that aren't present anymore.
     while ((filesToRemove > 0) && (!m_tsFiles.empty()))
     {
-      MultiFileReaderFile *file = m_tsFiles.at(0);
+      file = m_tsFiles.at(0);
 
       if (m_bDebugOutput)
       {
         XBMC->Log(LOG_DEBUG, "MultiFileReader: Removing file %s\n", file->filename.c_str());
       }
       
-      delete file;
+      SAFE_DELETE(file);
       m_tsFiles.erase(m_tsFiles.begin());
 
       filesToRemove--;

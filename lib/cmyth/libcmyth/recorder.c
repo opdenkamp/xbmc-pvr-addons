@@ -1571,9 +1571,14 @@ cmyth_recorder_get_filename(cmyth_recorder_t rec)
 		return NULL;
 	}
 
-	if(rec->rec_conn->conn_version >= 26) 
-		snprintf(buf, sizeof(buf), "%s",
-			rec->rec_livetv_chain->chain_urls[rec->rec_livetv_chain->chain_current]);
+	if (rec->rec_conn->conn_version >= 26) {
+		if (rec->rec_livetv_chain && rec->rec_livetv_chain->chain_current >= 0) {
+			snprintf(buf, sizeof(buf), "%s",
+				rec->rec_livetv_chain->chain_urls[rec->rec_livetv_chain->chain_current]);
+		}
+		else
+			buf[0] = '\0';
+	}
 	else
 		snprintf(buf, sizeof(buf), "ringbuf%d.nuv", rec->rec_id);
 

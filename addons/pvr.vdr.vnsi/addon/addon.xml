@@ -3,7 +3,7 @@
   id="pvr.vdr.vnsi"
   version="1.0.0"
   name="VDR VNSI Client"
-  provider-name="Alwin Esch, Team XBMC">
+  provider-name="FernetMenta, Team XBMC">
   <requires>
     <c-pluff version="0.1"/>
   </requires>

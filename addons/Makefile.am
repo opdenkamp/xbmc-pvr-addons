@@ -10,7 +10,7 @@ SUBDIRS = pvr.demo \
           pvr.vdr.vnsi \
           pvr.njoy \
           pvr.vuplus \
-          pvr.fortherecord.argus \
+          pvr.argustv \
           $(ADDITIONAL_SUBDIRS)
 
 clean:

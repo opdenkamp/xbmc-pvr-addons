@@ -28,16 +28,16 @@
 class RecordingRule : public MythRecordingRule, public std::vector<std::pair<PVR_TIMER, MythProgramInfo> >
 {
 public:
-  RecordingRule(const MythRecordingRule &timer);
-  RecordingRule& operator=(const MythRecordingRule &timer);
+  RecordingRule(const MythRecordingRule &rule);
+  RecordingRule& operator=(const MythRecordingRule &rule);
   bool operator==(const unsigned long &id);
 
   RecordingRule* GetParent() const;
   void SetParent(RecordingRule &parent);
 
-  bool HasModifiers() const;
-  std::vector<RecordingRule*> GetModifiers() const;
-  void AddModifier(RecordingRule &modifier);
+  bool HasOverrideRules() const;
+  std::vector<RecordingRule*> GetOverrideRules() const;
+  void AddOverrideRule(RecordingRule &overrideRule);
 
   bool SameTimeslot(RecordingRule &rule) const;
 
@@ -47,7 +47,7 @@ private:
   void SaveTimerString(PVR_TIMER &timer);
 
   RecordingRule* m_parent;
-  std::vector<RecordingRule*> m_modifiers;
+  std::vector<RecordingRule*> m_overrideRules;
   std::vector<boost::shared_ptr<CStdString> > m_stringStore;
 };
 
@@ -150,7 +150,7 @@ private:
 
   // Timers
   RecordingRuleList m_recordingRules;
-  void PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &mt);
+  void PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule);
 
   CStdString GetArtWork(FileOps::FileType storageGroup, const CStdString &shwTitle);
 };

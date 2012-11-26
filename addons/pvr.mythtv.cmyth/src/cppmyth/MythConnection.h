@@ -77,7 +77,8 @@ public:
   ProgramInfoMap GetPendingPrograms();
   ProgramInfoMap GetScheduledPrograms();
   bool UpdateSchedules(int id);
-  void DefaultTimer(MythRecordingRule &timer);
+  void DefaultRecordingRule(MythRecordingRule &rule);
+  bool StopRecording(const MythProgramInfo &recording);
 
   // Files
   MythFile ConnectFile(MythProgramInfo &recording);

@@ -188,14 +188,14 @@ RecordingRuleMap MythDatabase::GetRecordingRules()
 int MythDatabase::AddRecordingRule(const MythRecordingRule &rule)
 {
   int retval = 0;
-  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_add_recordingrule(*m_database_t, *(rule.m_recordingrule_t)));
+  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_add_recordingrule(*m_database_t, *rule.m_recordingrule_t));
   return retval;
 }
 
 bool MythDatabase::UpdateRecordingRule(const MythRecordingRule &rule)
 {
   int retval = 0;
-  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_update_recordingrule(*m_database_t, *(rule.m_recordingrule_t)));
+  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_update_recordingrule(*m_database_t, *rule.m_recordingrule_t));
   return retval == 0;
 }
 

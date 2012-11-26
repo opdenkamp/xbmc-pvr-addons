@@ -287,18 +287,25 @@ bool MythConnection::UpdateSchedules(int id)
   return retval >= 0;
 }
 
-void MythConnection::DefaultTimer(MythRecordingRule &timer)
+void MythConnection::DefaultRecordingRule(MythRecordingRule &rule)
 {
-  timer.SetAutoTranscode(atoi(GetSetting("NULL", "AutoTranscode").c_str()) > 0);
-  timer.SetUserJob(1, atoi(GetSetting("NULL", "AutoRunUserJob1").c_str()) > 0);
-  timer.SetUserJob(2, atoi(GetSetting("NULL", "AutoRunUserJob2").c_str()) > 0);
-  timer.SetUserJob(3, atoi(GetSetting("NULL", "AutoRunUserJob3").c_str()) > 0);
-  timer.SetUserJob(4, atoi(GetSetting("NULL", "AutoRunUserJob4").c_str()) > 0);
-  timer.SetAutoCommFlag(atoi(GetSetting("NULL", "AutoCommercialFlag").c_str()) > 0);
-  timer.SetAutoExpire(atoi(GetSetting("NULL", "AutoExpireDefault").c_str()) > 0);
-  timer.SetTranscoder(atoi(GetSetting("NULL", "DefaultTranscoder").c_str()));
-  timer.SetStartOffset(atoi(GetSetting("NULL", "DefaultStartOffset").c_str()));
-  timer.SetStartOffset(atoi(GetSetting("NULL", "DefaultEndOffset").c_str()));
+  rule.SetAutoTranscode(atoi(GetSetting("NULL", "AutoTranscode").c_str()) > 0);
+  rule.SetUserJob(1, atoi(GetSetting("NULL", "AutoRunUserJob1").c_str()) > 0);
+  rule.SetUserJob(2, atoi(GetSetting("NULL", "AutoRunUserJob2").c_str()) > 0);
+  rule.SetUserJob(3, atoi(GetSetting("NULL", "AutoRunUserJob3").c_str()) > 0);
+  rule.SetUserJob(4, atoi(GetSetting("NULL", "AutoRunUserJob4").c_str()) > 0);
+  rule.SetAutoCommFlag(atoi(GetSetting("NULL", "AutoCommercialFlag").c_str()) > 0);
+  rule.SetAutoExpire(atoi(GetSetting("NULL", "AutoExpireDefault").c_str()) > 0);
+  rule.SetTranscoder(atoi(GetSetting("NULL", "DefaultTranscoder").c_str()));
+  rule.SetStartOffset(atoi(GetSetting("NULL", "DefaultStartOffset").c_str()));
+  rule.SetStartOffset(atoi(GetSetting("NULL", "DefaultEndOffset").c_str()));
+}
+
+bool MythConnection::StopRecording(const MythProgramInfo &recording)
+{
+  int retval;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_stop_recording(*m_conn_t, *recording.m_proginfo_t));
+  return (retval == 0);
 }
 
 StorageGroupFileList MythConnection::GetStorageGroupFileList(const CStdString &storageGroup)

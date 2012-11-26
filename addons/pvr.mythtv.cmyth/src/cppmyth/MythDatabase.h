@@ -31,7 +31,7 @@ extern "C" {
 };
 
 class MythChannel;
-class MythTimer;
+class MythRecordingRule;
 class MythProgramInfo;
 
 template <class T> class MythPointerThreadSafe;
@@ -44,7 +44,7 @@ typedef std::pair<CStdString, std::vector<int> > MythChannelGroup;
 typedef std::map<CStdString, std::vector<int> > ChannelGroupMap;
 
 typedef std::map<int, std::vector<int> > SourceMap;
-typedef std::map<int, MythTimer> TimerMap;
+typedef std::map<int, MythRecordingRule> RecordingRuleMap;
 
 // TODO: Rework MythRecordingProfile
 class MythRecordingProfile : public CStdString
@@ -59,11 +59,13 @@ class MythDatabase
 {
 public:
   MythDatabase();
-  MythDatabase(const CStdString &server, const CStdString &database, const CStdString &user, const CStdString &password);
+  MythDatabase(const CStdString &server, const CStdString &database, const CStdString &user, const CStdString &password, unsigned short port);
 
   bool IsNull() const;
 
   bool TestConnection(CStdString *msg);
+
+  int GetSchemaVersion();
 
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* pprogram);
   ProgramList GetGuide(time_t starttime, time_t endtime);
@@ -72,15 +74,18 @@ public:
   ChannelGroupMap GetChannelGroups();
   SourceMap GetSources();
 
-  TimerMap GetTimers();
-  int AddTimer(const MythTimer &timer);
-  bool UpdateTimer(const MythTimer &timer);
-  bool DeleteTimer(int recordid);
+  RecordingRuleMap GetRecordingRules();
+  int AddRecordingRule(const MythRecordingRule &timer);
+  bool UpdateRecordingRule(const MythRecordingRule &timer);
+  bool DeleteRecordingRule(int recordid);
 
   RecordingProfileList GetRecordingProfiles();
 
   int SetWatchedStatus(const MythProgramInfo &recording, bool watched);
   long long GetBookmarkMark(const MythProgramInfo &recording, long long bk, int mode);
+
+  long long GetRecordingMarkup(const MythProgramInfo &recording, int type);
+  long long GetRecordingFrameRate(const MythProgramInfo &recording);
 
 private:
   boost::shared_ptr<MythPointerThreadSafe<cmyth_database_t> > m_database_t;

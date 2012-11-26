@@ -166,7 +166,7 @@ CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
 
   // Determine local filename
   CStdString localFilename;
-  localFilename.Format("%u_%s", it->LastModified(), it->Filename());
+  localFilename.Format("%lu_%s", it->LastModified(), it->Filename());
   localFilename = m_localBasePath + GetFolderNameByFileType(fileType) + PATH_SEPARATOR_CHAR + localFilename.c_str();
 
   if (!XBMC->FileExists(localFilename, true))

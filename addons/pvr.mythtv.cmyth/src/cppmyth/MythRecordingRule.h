@@ -21,16 +21,20 @@
 
 #include "platform/util/StdString.h"
 
+#include <boost/shared_ptr.hpp>
+
 extern "C" {
 #include <cmyth/cmyth.h>
 };
 
-class MythTimer
+template <class T> class MythPointer;
+
+class MythRecordingRule
 {
   friend class MythDatabase;
 
 public:
-  enum TimerType
+  enum RuleType
   {
     NotRecording = 0,
     SingleRecord = 1,
@@ -45,7 +49,7 @@ public:
     FindWeeklyRecord
   };
 
-  enum TimerSearchType
+  enum RuleSearchType
   {
     NoSearch = 0,
     PowerSearch,
@@ -55,7 +59,7 @@ public:
     ManualSearch
   };
 
-  enum TimerDuplicateControlMethod
+  enum RuleDuplicateControlMethod
   {
     CheckNone                    = 0x01,
     CheckSubtitle                = 0x02,
@@ -64,7 +68,7 @@ public:
     CheckSubtitleThenDescription = 0x08
   };
 
-  enum TimerCheckDuplicatesInType
+  enum RuleCheckDuplicatesInType
   {
     InRecorded    = 0x01,
     InOldRecorded = 0x02,
@@ -72,14 +76,16 @@ public:
     NewEpi        = 0x10
   };
 
-  MythTimer();
-  MythTimer(cmyth_timer_t cmyth_timer, bool release = true);
+  MythRecordingRule();
+  MythRecordingRule(cmyth_recordingrule_t cmyth_recordingrule);
 
-  int RecordID() const;
-  void SetRecordID(int recordid);
+  bool IsNull() const;
 
-  int ChannelID() const;
-  void SetChannelID(int channelid);
+  unsigned long RecordID() const;
+  void SetRecordID(unsigned long recordid);
+
+  unsigned long ChannelID() const;
+  void SetChannelID(unsigned long channelid);
 
   CStdString Callsign() const;
   void SetCallsign(const CStdString &callsign);
@@ -99,8 +105,8 @@ public:
   CStdString Description() const;
   void SetDescription(const CStdString &description);
 
-  TimerType Type() const;
-  void SetType(TimerType type);
+  RuleType Type() const;
+  void SetType(RuleType type);
 
   CStdString Category() const;
   void SetCategory(const CStdString &category);
@@ -111,20 +117,20 @@ public:
   int EndOffset() const;
   void SetEndOffset(int endoffset);
 
-  int Priority() const;
-  void SetPriority(int priority);
+  long Priority() const;
+  void SetPriority(long priority);
 
   bool Inactive() const;
   void SetInactive(bool inactive);
 
-  TimerSearchType SearchType() const;
-  void SetSearchType(TimerSearchType searchtype);
+  RuleSearchType SearchType() const;
+  void SetSearchType(RuleSearchType searchtype);
 
-  TimerDuplicateControlMethod DuplicateControlMethod() const;
-  void SetDuplicateControlMethod(TimerDuplicateControlMethod method);
+  RuleDuplicateControlMethod DuplicateControlMethod() const;
+  void SetDuplicateControlMethod(RuleDuplicateControlMethod method);
 
-  TimerCheckDuplicatesInType CheckDuplicatesInType() const;
-  void SetCheckDuplicatesInType(TimerCheckDuplicatesInType in);
+  RuleCheckDuplicatesInType CheckDuplicatesInType() const;
+  void SetCheckDuplicatesInType(RuleCheckDuplicatesInType in);
 
   CStdString RecordingGroup() const;
   void SetRecordingGroup(const CStdString &group);
@@ -141,8 +147,8 @@ public:
   bool UserJob(int jobnumber) const;
   void SetUserJob(int jobnumber, bool enable);
 
-  int UserJobs() const;
-  void SetUserJobs(int jobs);
+  unsigned short UserJobs() const;
+  void SetUserJobs(unsigned short jobs);
 
   bool AutoCommFlag() const;
   void SetAutoCommFlag(bool enable);
@@ -150,41 +156,15 @@ public:
   bool AutoExpire() const;
   void SetAutoExpire(bool enable);
 
-  int MaxEpisodes() const;
-  void SetMaxEpisodes(int max);
+  long MaxEpisodes() const;
+  void SetMaxEpisodes(long max);
 
   bool NewExpiresOldRecord() const;
   void SetNewExpiresOldRecord(bool enable);
 
-  int Transcoder() const;
-  void SetTranscoder(int transcoder);
+  unsigned long Transcoder() const;
+  void SetTranscoder(unsigned long transcoder);
 
 private:
-  int m_recordid;
-  int m_channelid;
-  CStdString m_callsign;
-  time_t m_starttime;
-  time_t m_endtime;
-  CStdString m_title;
-  CStdString m_description;
-  TimerType m_type;
-  CStdString m_category;
-  CStdString m_subtitle;
-  int m_priority;
-  int m_startoffset;
-  int m_endoffset;
-  TimerSearchType m_searchtype;
-  bool m_inactive;
-  TimerDuplicateControlMethod m_dupmethod;
-  TimerCheckDuplicatesInType m_dupin;
-  CStdString m_recgroup;
-  CStdString m_storegroup;
-  CStdString m_playgroup;
-  bool m_autotranscode;
-  int m_userjobs;
-  bool m_autocommflag;
-  bool m_autoexpire;
-  int m_maxepisodes;
-  bool m_maxnewest;
-  int m_transcoder;
+  boost::shared_ptr<MythPointer<cmyth_recordingrule_t> > m_recordingrule_t;
 };

@@ -20,9 +20,9 @@
     <ClCompile Include="..\..\src\cppmyth\MythFile.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythProgramInfo.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythRecorder.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythRecordingRule.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythStorageGroupFile.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythSignal.cpp" />
-    <ClCompile Include="..\..\src\cppmyth\MythTimer.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythTimestamp.cpp" />
     <ClCompile Include="..\..\src\fileOps.cpp" />
     <ClCompile Include="..\..\src\pvrclient-mythtv.cpp" />
@@ -39,9 +39,9 @@
     <ClInclude Include="..\..\src\cppmyth\MythPointer.h" />
     <ClInclude Include="..\..\src\cppmyth\MythProgramInfo.h" />
     <ClInclude Include="..\..\src\cppmyth\MythRecorder.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythRecordingRule.h" />
     <ClInclude Include="..\..\src\cppmyth\MythStorageGroupFile.h" />
     <ClInclude Include="..\..\src\cppmyth\MythSignal.h" />
-    <ClInclude Include="..\..\src\cppmyth\MythTimer.h" />
     <ClInclude Include="..\..\src\cppmyth\MythTimestamp.h" />
     <ClInclude Include="..\..\src\fileOps.h" />
     <ClInclude Include="..\..\src\pvrclient-mythtv.h" />

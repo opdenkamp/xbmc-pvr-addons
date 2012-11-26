@@ -33,7 +33,7 @@ class MythRecorder;
 class MythFile;
 class MythProgramInfo;
 class MythEventHandler;
-class MythTimer;
+class MythRecordingRule;
 class MythStorageGroupFile;
 
 template <class T> class MythPointer;
@@ -42,7 +42,7 @@ template <class T> class MythPointerThreadSafe;
 typedef std::map<CStdString, MythProgramInfo> ProgramInfoMap;
 typedef std::vector<MythStorageGroupFile> StorageGroupFileList;
 
-class MythConnection 
+class MythConnection
 {
 public:
   MythConnection();
@@ -77,7 +77,7 @@ public:
   ProgramInfoMap GetPendingPrograms();
   ProgramInfoMap GetScheduledPrograms();
   bool UpdateSchedules(int id);
-  void DefaultTimer(MythTimer &timer);
+  void DefaultTimer(MythRecordingRule &timer);
 
   // Files
   MythFile ConnectFile(MythProgramInfo &recording);

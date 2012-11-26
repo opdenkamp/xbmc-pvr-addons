@@ -51,7 +51,7 @@ unsigned long long MythFile::Length()
 void MythFile::UpdateLength(unsigned long long length)
 {
   int retval = 0;
-  retval = cmyth_update_file_length(*m_file_t, length);
+  retval = cmyth_file_update_length(*m_file_t, length);
   (void)retval;
 }
 

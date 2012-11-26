@@ -247,7 +247,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         XBMC->Log(LOG_ERROR, "%s Event client connection error", __FUNCTION__);
         RetryConnect();
     }
-    else if (select = 0 && cmyth_conn_hung(*m_conn_t))
+    else if (select == 0 && cmyth_conn_hung(*m_conn_t))
     {
       XBMC->Log(LOG_NOTICE, "%s - Connection hung - reconnect event client connection", __FUNCTION__);
 

@@ -80,7 +80,7 @@ __mvp_atomic_increment(mvp_atomic_t *valp)
 #elif defined _MSC_VER
 	__val = InterlockedIncrement(valp);
 #elif defined ANDROID
-	__val = __atomic_inc(valp) + 1;
+	__val = __sync_add_and_fetch(valp, 1);
 #elif defined __arm__ && !defined __thumb__
 	int tmp1, tmp2;
 	int inc = 1;
@@ -146,7 +146,7 @@ __mvp_atomic_decrement(mvp_atomic_t *valp)
 		      : "r" (valp)
 		      : "cc", "memory");
 #elif defined ANDROID
-	__val = __atomic_dec(valp) - 1;
+	__val = __sync_sub_and_fetch(valp, 1);
 #elif defined __arm__ && !defined __thumb__
 	int tmp1, tmp2;
 	int inc = -1;

@@ -23,25 +23,13 @@
 #include <windows.h>
 #endif
 
-// the only safe way to be absolutly sure that
-// gcc intrinsics are present when using an unknown GCC
-#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4))
-  #define HAS_GCC_INTRINSICS
-#elif defined(TARGET_DARWIN)
-  // safe under darwin gcc-4.2, llvm-gcc-4.2 and clang
-  #define HAS_GCC_INTRINSICS
-#elif defined(TARGET_FREEBSD)
-  // safe under freebsd gcc-4.2 and clang
-  #define HAS_GCC_INTRINSICS
-#endif
-
 ///////////////////////////////////////////////////////////////////////////
 // 32-bit atomic increment
 // Returns new value of *pAddr
 ///////////////////////////////////////////////////////////////////////////
 static inline long atomic_inc(volatile long* pAddr)
 {
-#if defined(HAS_GCC_INTRINSICS)
+#if defined(HAS_BUILTIN_SYNC_ADD_AND_FETCH)
   return __sync_add_and_fetch(pAddr, 1);
 
 #elif defined(__ppc__) || defined(__powerpc__) // PowerPC

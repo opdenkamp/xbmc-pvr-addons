@@ -12,7 +12,8 @@
     library_linux="XBMC_vuplus.pvr"
     library_osx="XBMC_vuplus.pvr"
     library_wingl="XBMC_vuplus_win32.pvr"
-    library_windx="XBMC_vuplus_win32.pvr"/>
+    library_windx="XBMC_vuplus_win32.pvr"
+    library_android="libXBMC_vuplus.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="be">XBMC's frontend for VU+ / Enigma2 based settop boxes</summary>
     <summary lang="cs">Rozhraní XBMC pro VU+ / přijímače založené na Enigma2</summary>

@@ -12,7 +12,8 @@
     library_linux="XBMC_MythTV_cmyth.pvr"
     library_osx="XBMC_MythTV_cmyth.pvr"
     library_wingl="XBMC_MythTV_cmyth_win32.pvr"
-    library_windx="XBMC_MythTV_cmyth_win32.pvr"/>
+    library_windx="XBMC_MythTV_cmyth_win32.pvr"
+    library_android="libXBMC_MythTV_cmyth.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="be">XBMC frontend for MythTV (using libcmyth)</summary>
     <summary lang="cs">Rozhraní XBMC pro MythTV (používající libcmyth)</summary>

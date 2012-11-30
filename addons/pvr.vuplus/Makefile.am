@@ -16,4 +16,5 @@ include ../Makefile.include.am
 
 libvuplus_addon_la_SOURCES = src/client.cpp \
                              src/VuData.cpp 
+libvuplus_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

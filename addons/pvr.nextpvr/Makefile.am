@@ -23,3 +23,4 @@ libnextpvr_addon_la_SOURCES = src/client.cpp \
                                   src/md5.cpp \
                                   src/liveshift.cpp \
                                   src/RingBuffer.cpp
+libnextpvr_addon_la_LDFLAGS = @TARGET_LDFLAGS@

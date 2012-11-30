@@ -15,6 +15,7 @@ LIBS            = @abs_top_srcdir@/lib/cmyth/libcmyth.la
 AM_CPPFLAGS = -I$(abs_top_srcdir)/lib/cmyth/include
 
 include ../Makefile.include.am
+libmythtvcmyth_addon_la_LDFLAGS = $(MYSQL_LIBS) @TARGET_LDFLAGS@
 
 libmythtvcmyth_addon_la_SOURCES = src/client.cpp \
                                   src/fileOps.cpp \

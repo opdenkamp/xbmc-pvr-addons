@@ -27,8 +27,6 @@ libcmyth_la_SOURCES = bookmark.c \
 
 INCLUDES=-I../include/ $(MYSQL_INCLUDES)
 
-AM_LDFLAGS = $(MYSQL_LIBS)
-
 $(LIB): libcmyth.la
 	cp -f .libs/libcmyth.a .
 	cp -f .libs/libcmyth.la $(LIB)

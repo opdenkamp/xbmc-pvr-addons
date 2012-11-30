@@ -21,4 +21,5 @@ libnextpvr_addon_la_SOURCES = src/client.cpp \
                                   src/Socket.cpp \
                                   src/uri.cpp \
                                   src/md5.cpp \
+                                  src/liveshift.cpp \
                                   src/RingBuffer.cpp

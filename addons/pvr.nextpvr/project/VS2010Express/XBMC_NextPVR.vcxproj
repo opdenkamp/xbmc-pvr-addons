@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\liveshift.cpp" />
     <ClCompile Include="..\..\src\md5.cpp" />
     <ClCompile Include="..\..\src\pvrclient-nextpvr.cpp" />
     <ClCompile Include="..\..\src\RingBuffer.cpp" />
@@ -128,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\liveshift.h" />
     <ClInclude Include="..\..\src\md5.h" />
     <ClInclude Include="..\..\src\pvrclient-nextpvr.h" />
     <ClInclude Include="..\..\src\RingBuffer.h" />

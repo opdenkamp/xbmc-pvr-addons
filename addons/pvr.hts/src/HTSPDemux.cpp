@@ -47,16 +47,34 @@ bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
 {
   m_channel = channelinfo.iUniqueId;
   m_bIsRadio = channelinfo.bIsRadio;
+  return Connect();
+}
 
+bool CHTSPDemux::Connect(void)
+{
   if(!m_session->Connect())
     return false;
 
-  if(!SendSubscribe(m_subs, m_channel))
+  if(!SendSubscribe(m_subs, m_channel)) {
+    Close();
     return false;
+  }
 
   m_Streams.iStreamCount  = 0;
   m_StatusCount = 0;
   return true;
+}
+
+// Note: no attempt to warn user about this (the HTSPData link will do
+//       that most of the time anyway)
+bool CHTSPDemux::CheckConnection()
+{
+  bool bReturn = m_session->IsConnected();
+
+  if (!bReturn)
+    bReturn = Connect();
+
+  return bReturn;
 }
 
 void CHTSPDemux::Close()
@@ -103,6 +121,9 @@ void CHTSPDemux::Abort()
 
 DemuxPacket* CHTSPDemux::Read()
 {
+  if (!CheckConnection())
+    return NULL;
+
   htsmsg_t *msg = m_session->ReadMessage(1000, 1000);
   if (!msg)
     return PVR->AllocateDemuxPacket(0);
@@ -438,9 +459,10 @@ bool CHTSPDemux::SendUnsubscribe(int subscription)
 bool CHTSPDemux::SendSubscribe(int subscription, int channel)
 {
   htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_str(m, "method"        , "subscribe");
-  htsmsg_add_s32(m, "channelId"     , channel);
-  htsmsg_add_s32(m, "subscriptionId", subscription);
+  htsmsg_add_str(m, "method"         , "subscribe");
+  htsmsg_add_s32(m, "channelId"      , channel);
+  htsmsg_add_s32(m, "subscriptionId" , subscription);
+  htsmsg_add_u32(m, "timeshiftPeriod", (uint32_t)~0);
   return m_session->ReadSuccess(m, true, "subscribe to channel");
 }
 

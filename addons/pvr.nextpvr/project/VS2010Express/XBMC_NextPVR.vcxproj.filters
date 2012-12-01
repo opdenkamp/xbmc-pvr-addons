@@ -29,6 +29,9 @@
     <ClCompile Include="..\..\src\RingBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\liveshift.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h">
@@ -47,6 +50,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\md5.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\liveshift.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

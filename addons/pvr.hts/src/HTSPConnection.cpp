@@ -159,6 +159,7 @@ htsmsg_t* CHTSPConnection::ReadMessage(int iInitialTimeout /* = 10000 */, int iD
         return htsmsg_create_map();
 
       XBMC->Log(LOG_ERROR, "%s - Failed to read packet size (%s)", __FUNCTION__, m_socket->GetError().c_str());
+      Close();
       return NULL;
     }
 
@@ -289,7 +290,7 @@ bool CHTSPConnection::SendGreeting(void)
   m = htsmsg_create_map();
   htsmsg_add_str(m, "method", "hello");
   htsmsg_add_str(m, "clientname", "XBMC Media Center");
-  htsmsg_add_u32(m, "htspversion", 6);
+  htsmsg_add_u32(m, "htspversion", 7);
 
   /* read welcome */
   if((m = ReadResult(m)) == NULL)

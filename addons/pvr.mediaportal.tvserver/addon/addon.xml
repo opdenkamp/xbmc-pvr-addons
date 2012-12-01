@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.mediaportal.tvserver"
-  version="1.2.3.117"
+  version="1.6.3.117"
   name="MediaPortal PVR Client"
   provider-name="Marcel Groothuis">
   <requires>
@@ -11,8 +11,8 @@
     point="xbmc.pvrclient"
     library_linux="XBMC_Mediaportal.pvr"
     library_osx="XBMC_Mediaportal.pvr"
-    library_wingl="XBMC_Mediaportal_win32.pvr"
-    library_windx="XBMC_Mediaportal_win32.pvr"
+    library_wingl="XBMC_Mediaportal_win32.dll"
+    library_windx="XBMC_Mediaportal_win32.dll"
     library_android="libXBMC_Mediaportal.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="be">XBMC frontend for the MediaPortal TV Server (ffmpeg + tsreader version)</summary>

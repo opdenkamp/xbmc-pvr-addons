@@ -48,9 +48,7 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\addon\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">XBMC_NextPVR_win32</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.pvr</TargetExt>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">XBMC_NextPVR_win32</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.pvr</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -120,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\liveshift.cpp" />
     <ClCompile Include="..\..\src\md5.cpp" />
     <ClCompile Include="..\..\src\pvrclient-nextpvr.cpp" />
     <ClCompile Include="..\..\src\RingBuffer.cpp" />
@@ -128,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\liveshift.h" />
     <ClInclude Include="..\..\src\md5.h" />
     <ClInclude Include="..\..\src\pvrclient-nextpvr.h" />
     <ClInclude Include="..\..\src\RingBuffer.h" />

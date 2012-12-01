@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.hts"
-  version="1.1.0"
+  version="1.6.0"
   name="Tvheadend HTSP Client"
   provider-name="Lars Op den Kamp, Team XBMC">
   <requires>
@@ -11,8 +11,8 @@
     point="xbmc.pvrclient"
     library_linux="XBMC_Tvheadend.pvr"
     library_osx="XBMC_Tvheadend.pvr"
-    library_wingl="XBMC_Tvheadend_win32.pvr"
-    library_windx="XBMC_Tvheadend_win32.pvr"
+    library_wingl="XBMC_Tvheadend_win32.dll"
+    library_windx="XBMC_Tvheadend_win32.dll"
     library_android="libXBMC_Tvheadend.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="be">XBMC's frontend for Tvheadend</summary>

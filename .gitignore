@@ -58,3 +58,4 @@ addons/*/project/VS2010Express/Release
 lib/jsoncpp/project/VS2010Express/Debug
 lib/jsoncpp/project/VS2010Express/Release
 addons/*/addon/*.so
+addons/*/addon/*.dll

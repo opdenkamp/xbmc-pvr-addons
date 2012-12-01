@@ -94,8 +94,22 @@ case "${host}" in
     OS="linux"
     ARCHITECTURE="i486"
     ;;
+  arm-apple-darwin*)
+    OS="ios"
+    HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
+    host_os_osx="yes"
+    ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN -D_LINUX"
+    DYN_LIB_EXT="dylib"
+    ;;
+  x86_64-apple-darwin*)
+    OS="osx64"
+    HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
+    host_os_osx="yes"
+    ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN -D_LINUX"
+    DYN_LIB_EXT="dylib"
+    ;;
   *-apple-darwin*)
-    OS="darwin"
+    OS="osx32"
     HOST_CXXFLAGS="-dynamiclib -single_module -undefined dynamic_lookup"
     host_os_osx="yes"
     ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN -D_LINUX"
@@ -258,6 +272,16 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.njoy/Makefile \
                  addons/pvr.vuplus/Makefile \
                  addons/pvr.vdr.vnsi/Makefile \
-                 addons/pvr.mythtv.cmyth/Makefile])
+                 addons/pvr.mythtv.cmyth/Makefile \
+                 addons/pvr.argustv/addon/addon.xml
+                 addons/pvr.demo/addon/addon.xml
+                 addons/pvr.dvbviewer/addon/addon.xml
+                 addons/pvr.hts/addon/addon.xml
+                 addons/pvr.mediaportal.tvserver/addon/addon.xml
+                 addons/pvr.mythtv.cmyth/addon/addon.xml
+                 addons/pvr.nextpvr/addon/addon.xml
+                 addons/pvr.njoy/addon/addon.xml
+                 addons/pvr.vdr.vnsi/addon/addon.xml
+                 addons/pvr.vuplus/addon/addon.xml])
 
 AC_OUTPUT

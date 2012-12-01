@@ -24,12 +24,13 @@
     <summary lang="es">XBMC frontend para decodificadores equipados con VU+/Enigma2</summary>
     <summary lang="es_AR">XBMC frontend para decodificadores equipados con VU+/Enigma2</summary>
     <summary lang="fr">Applicatif XBMC pour les enregistreurs VU+/Enigma2</summary>
-    <summary lang="hu">XBMC frontend VU+ es Enigma2 alapú settop boxokhoz </summary>
+    <summary lang="hu">XBMC VU+ és Enigma2 előtér-kiszolgáló settop boxokhoz </summary>
     <summary lang="ko">VU+ / Enigma2 베이스 셋탑박스를 위한 XBMC 프론트엔드</summary>
     <summary lang="lt">XBMC sąsaja(-os) VU + / Enigma2 rinkinių priedų pagrindu</summary>
+    <summary lang="mk">XBMC's интерфејс за VU+ / Enigma2 базирани звучници</summary>
     <summary lang="no">XBMC's frontend for VU+ / Enigma2 baserte settop bokser</summary>
     <summary lang="pl">Interfejs XBMC dla urządzeń typu VU+ / Enigma2 </summary>
-    <summary lang="pt">XBMC frontend para settop boxes baseadas em VU+ / Enigma2</summary>
+    <summary lang="pt">Frontend XBMC para caixas settop baseadas em VU+ / Enigma2</summary>
     <summary lang="pt_BR">XBMC frontend para VU+/Enigma2 settop boxes</summary>
     <summary lang="ru">Фронтэнд XBMC для тюнеров, основанных на VU+ /Enigma2</summary>
     <summary lang="sk">Rozhranie XBMC pre spoluprácu s prijímačmi VU+ / Enigma2</summary>
@@ -45,12 +46,13 @@
     <description lang="es">VU+ frontend; soporta TV en vivo, grabaciones, guía de programación (EPG) y temporizadores.</description>
     <description lang="es_AR">VU+ frontend; soporta TV en vivo, grabaciones, guía de programación (EPG) y temporizadores.</description>
     <description lang="fr">Applicatif VU+. Supporte la lecture en continu de direct télévision et son enregistrement, guide de programme, minuteurs.</description>
-    <description lang="hu">VU+ frontned. Élő adások és felvételek sugárzásának támogatása EPG-vel és időzítéssel</description>
+    <description lang="hu">VU+ előtér-kiszolgáló. Élő adások és felvételek sugárzásának támogatása EPG-vel és időzítéssel.</description>
     <description lang="ko">VU+ 프론트엔드; TV 시청 &amp; 녹화, EPG, 타이머 지원</description>
     <description lang="lt">TPB + sąsaja, remti transliacijos Live TV &amp; įrašai, EPG, Laikmačiai.</description>
+    <description lang="mk">VU+ интерфејс;подржува стриминг на Live TV &amp; Recordings, EPG, Timers.</description>
     <description lang="no">VU+ frontend; støtte for Live TV  &amp; Opptak, EPG, Timere.</description>
     <description lang="pl">Interfejs VU+; wspiera strumieniowanie TV na żywo i nagrywania, EPG oraz wyłączniki czasowe.</description>
-    <description lang="pt">VU+ frontend; suporta streaming de TV em directo &amp; Gravações, EPG, Temporizador.</description>
+    <description lang="pt">Frontend VU+ ; suporta transmissão de TV em Directo e Gravações, EPG, Temporizadores.</description>
     <description lang="pt_BR">VU+ frontend; suporta streaming de TV ao Vivo e Gravalçoes, EPG, agendamentos.</description>
     <description lang="ru">VU+ фронтэнд; поддерживает потоковое TV, запись, ЕПГ, таймеры.</description>
     <description lang="sk">VU+ rozhranie; je podporované streamovanie živého televízneho vysielania a nahrávok, EPG, časovačov.</description>
@@ -73,7 +75,7 @@
     <disclaimer lang="mk">Ова е нестабилен софтвер! Авторите на ниту еден начин не одговараат за неуспешни снимки, неточни тајмери, потрошени часови, или било кои други несакани ефекти.</disclaimer>
     <disclaimer lang="no">Dette er ustabil programvare! Skaperen har ikke på noen måte ansvar for feilede opptak, feile timere, bortkastede timer, eller andre uønskede effekter..</disclaimer>
     <disclaimer lang="pl">To oprogramowanie jest niestabilne! Autorzy w żaden sposób nie odpowiadają za nieudane nagrania, źle działające wyłączniki czasowe, stracone godziny czy też jakiekolwiek inne niepożądane efekty.</disclaimer>
-    <disclaimer lang="pt">Este é um software instável! Os autores não se responsabilizam por falhas nas gravações, temporizadores incorrectos, horas perdidas ou outro qualquer efeito não desejado...</disclaimer>
+    <disclaimer lang="pt">Este software é instável! Os autores não se responsabilizam por falhas nas gravações, temporizadores incorrectos, horas perdidas ou outro qualquer efeito não desejado...</disclaimer>
     <disclaimer lang="pt_BR">Este é um software instável! Os autores não são responsáveis por falhas nas gravações, agendamentos incorretos, horas dispendidas, ou quaisquer outros efeitos indesejáveis</disclaimer>
     <disclaimer lang="ru">Это тестовая программа! Авторы не несут ответственности за неудачные записи, неверные таймеры, потраченное время и прочие нежелательные эффекты..</disclaimer>
     <disclaimer lang="sk">Tento softvér nie je stabilný! Autori nenesú žiadnu zodpovednosť za chybné nahrávky vysielania, nesprávne časovače alebo iné neželané udalosti spôsobené týmto softvérom..</disclaimer>
@@ -83,4 +85,3 @@
     <platform>all</platform>
   </extension>
 </addon>
-

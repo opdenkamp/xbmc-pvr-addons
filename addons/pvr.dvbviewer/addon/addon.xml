@@ -15,9 +15,44 @@
     library_windx="XBMC_dvbviewer_win32.dll"
     library_android="libXBMC_dvbviewer.so"/>
   <extension point="xbmc.addon.metadata">
+    <summary lang="cs">Rozhraní XBMC pro DVBViewer</summary>
+    <summary lang="da">XBMC's frontend til DVBViewer</summary>
+    <summary lang="de">XBMC's Frontend für DVBViewer</summary>
     <summary lang="el">Frontend του XBMC για το DVBViewer</summary>
     <summary lang="en">XBMC's frontend for DVBViewer</summary>
+    <summary lang="es">Frontend de XBMC para DVBViewer</summary>
+    <summary lang="es_AR">Frontend de XBMC para DVBViewer</summary>
+    <summary lang="fr">Client XBMC pour DVBViewer</summary>
+    <summary lang="he">ממשק קדמי של XBMC עבור DVBViewer</summary>
+    <summary lang="hu">XBMC DVBViwer előtér-kiszolgáló</summary>
+    <summary lang="ko">DVBViewer XBMC 프론트엔드</summary>
+    <summary lang="mk">XBMC's интерфејс за DVBViewer</summary>
+    <summary lang="pl">Intarfejs XBMC dla DVBViewer</summary>
+    <summary lang="pt">Frontend XBMC para DVBViewer</summary>
+    <summary lang="pt_BR">XBMC's frontend para DVBViewer</summary>
+    <summary lang="ru">Фронтэнд XBMC для DVBViewer</summary>
+    <summary lang="sk">XBMC rozhranie pre DVBViewer</summary>
+    <summary lang="sv">XBMC's frontend för DVBViewer</summary>
+    <summary lang="zh">XBMC 的 DVBViewer 前端</summary>
+    <description lang="cs">Rozhraní služby nahrávek DVBViewer. Podporuje proudové vysílání živého vysílání, nahrávky a EPG. Pro zpracování výstupu XML z webového rozhraní RS používá knihovnu xmlParser, kterou vyvinul Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Za to mnohokrát děkujeme.&#10;</description>
+    <description lang="da">DVBViewer Recording Service frontend; Understøtter streaming af LiveTV, Timere, Optagelser og EPG. For parsing af XML output fra RS webinterface bruges der xmlParser biblioteket der er udviklet af Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Mange tak for dette!\n</description>
+    <description lang="de">DVBViewer Aufnahme Service Frontend; Unterstützt Streamen von LiveTV, Timer, Aufnahmen &amp; EPG. Für das Parsen der XML Ausgabe vom RS Web Interface nutzt es die xmlParser Bibliothek, entwickelt von Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Vielen Dank dafür!&#10;</description>
+    <description lang="el">Frontend για την Υπηρεσία Εγγραφών του DVBViewer. Υποστηρίζει ροές Live TV, Χρονοδιακόπτες, Εγγραφές &amp; EPG. Για την ανάλυση του XML αρχείου εξόδου από την RS διεπαφή ιστού χρησιμοποιείται η βιβλιοθήκη xmlParser που αναπτύχθηκε από τον Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Θερμές ευχαριστίες για αυτό!&#10;</description>
     <description lang="en">DVBViewer Recording Service frontend; supporting streaming of LiveTV, Timers, Recordings &amp; EPG. For parsing the XML output from the RS webinterface it uses the xmlParser library developed by Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Many thanks for this!&#10;</description>
+    <description lang="es">Frontend del Servicio de Grabaciones de DVBViewer; soportando transmisión de TV en Vivo, Temporizadores, Grabaciones y Guía de Programas. Para analizar la salida XML de la interfaz Web RS usa la librería xmlParser desarrollada por Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html).⏎&#10;</description>
+    <description lang="es_AR">Frontend del Servicio de Grabaciones de DVBViewer; soportando transmisión de TV en Vivo, Temporizadores, Grabaciones y Guía de Programas. Para analizar la salida XML de la interfaz Web RS usa la librería xmlParser desarrollada por Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). ¡Mucas gracias por esto!⏎&#10;</description>
+    <description lang="fr">Client pour le Service d'Enregistrement DVBViewer; supporte la diffusion de la TV en direct, les programmations, les enregistrements et l'EPG. Utilise la librairie xmlParser développée par Frank Vanden Berghen pour l'interprétation de la sortie XML de l'interface web du SE (http://www.applied-mathematics.net/tools/xmlParser.html).&#10;</description>
+    <description lang="he">נגן DVB ממשק קידמי של שרת הקלטה;תומך בהזרמת שידורים חיים של טלויזיה,מתזמני הקלטות ולוחות שידורים.לניתוח פלט של XML ממשק אינטרנט RS משתמש בסיפרית xmlPreser שפותחה ע"י פראנק ודן ברגן (http://www.applied-mathematics.net/tools/xmlParser.html).הרבה תודה על כך!⏎&#10;</description>
+    <description lang="hu">DVBViwer felvétel szolgáltatás előtér-kiszolgáló, ami támogatja az élő TV adások sugárzását, időzítések hozzáadását, felvételek készítését és EPG adatok kezelését.&#10;</description>
+    <description lang="ko">DVBViewer 녹화 서비스 프론트엔드; 라이브 TV 스트리밍, 녹화, EPG 지원. RS 웹인터페이스에서 XML을 추출하기 위해 Frank Vanden Berghen이 개발한 xmlParser를 이용합니다 (http://www.applied-mathematics.net/tools/xmlParser.html). Many thanks for this!&#10;</description>
+    <description lang="mk">DVBViewer Recording Service frontend; supporting streaming of LiveTV, Timers, Recordings &amp; EPG. For parsing the XML output from the RS webinterface it uses the xmlParser library developed by Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Many thanks for this!&#10;</description>
+    <description lang="pl">Interfejs usługi nagrań DVBViwer; wspiera strumieniowe oglądanie TV na żywo, wyłączniki czasowe, nagrywanie oraz EPG.  Do parsowania XML wyjście z interfejsu WWW RS wykorzystuje bibliotekę XMLParser opracowaną przez Franka Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Wielkie dzięki za to!&#10;</description>
+    <description lang="pt">Frontend para o serviço de gravação DVBViewer; permite transmissão ao vivo de LiveTV, temporizadores, gravações e EPG. Para análise do XML emitido da webinterface RS, é utilizada a biblioteca xmlParser de Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Mil obrigados por isso!&#10;</description>
+    <description lang="pt_BR">DVBViewer frontend Serviço de gravações, suporta streaming de  TV ao Vivo, Agendamentos, Gravações e EPG. Para analisar a saída XML do RS webinterface ele usa a biblioteca XmlParser desenvolvido por Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Muito obrigado por isso!&#10;</description>
+    <description lang="ru">Фронтэнд сервиса записи DVBViewer; поддерживает потоковое вещание ТВ, таймеры, запись и ЕПГ. Для разбора XML-вывода RS-интерфейса использует библиотеку xmlParser, написанную Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). За что благодарим его!⏎&#10;</description>
+    <description lang="sk">Rozhranie pre spoluprácu s nahrávacou službou aplikácie DVBViewer; podporuje streamovanie živej televízie, časovače, nahrávky a EPG. Na získavanie dát zo XML výstupu z RS webového rozhrania používa knižnicu xmlParser, ktorú vyvinul Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Za to mu veľmi ďakujeme!&#10;</description>
+    <description lang="sv">DVBViewer inspelningsservice-frontend; stödjer strömmning av direktsänd TV, timers, inspelningar &amp; EPG. För analysering av XML-utdata från RS-webbgränssnitt använder det xmlParser-biblioteket utvecklat av Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Många tack för detta!&#10;</description>
+    <description lang="zh">DVBViewer Recording Service 前端; 支持直播电视的流媒体转发，定时器，录像及电子节目表。RS web 接口的 XML 结果解析采用 xmlParser 库，由 Frank Vanden Berghen 开发(http://www.applied-mathematics.net/tools/xmlParser.html)。感谢作者！&#10;</description>
     <disclaimer lang="be">This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
     <disclaimer lang="ca">Això és programari inestable! Els autors no són en absolut responsables d'enregistraments fallist, temporitzadors incorrectes, hores tudades, o qualsevol altra efecte indesitjable...</disclaimer>
     <disclaimer lang="cs">Tento software není stabilní. Autoři nejsou žádným způsobem zodpovědní za selhání při nahrávání, neplatné časovače, ztracený čas, či jakékoliv jiné nežádoucí události...</disclaimer>
@@ -50,4 +85,3 @@
     <platform>all</platform>
   </extension>
 </addon>
-

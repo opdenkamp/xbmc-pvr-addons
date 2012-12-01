@@ -26,12 +26,13 @@
     <summary lang="es_AR">Front-end de XBMC para NextPVR</summary>
     <summary lang="fr">Applicatif XBMC pour l'enregistreur NextPVR</summary>
     <summary lang="he">ממשק קדמי XBMC עבור NextPVR</summary>
-    <summary lang="hu">XBMC frontend NextPVR-hez</summary>
+    <summary lang="hu">XBMC NextPVR előtér-kiszolgáló</summary>
     <summary lang="ko">NextPVR을 위한 XBMC 프론트엔드</summary>
     <summary lang="lt">XBMC sąsaja dėl/su NextPVR</summary>
     <summary lang="mk">XBMC интерфејс за NextPVR</summary>
+    <summary lang="nl">XBMC frontend voor de NextPVR</summary>
     <summary lang="pl">Interfejs XBMC dla NextPVR</summary>
-    <summary lang="pt">XBMC frontend para NextPVR</summary>
+    <summary lang="pt">Frontend XBMC para NextPVR</summary>
     <summary lang="pt_BR">XBMC Frontend para o NextPVR</summary>
     <summary lang="ru">Интерфейс XBMC для NextPVR</summary>
     <summary lang="sk">XBMC rozhranie pre NextPVR</summary>
@@ -49,12 +50,13 @@
     <description lang="es_AR">Front-end de NextPVR. Soporta transmisiones de TV en Vivo y Grabaciones, escuchar canales de Radio y Guía Electrónica de Programas (EPG).</description>
     <description lang="fr">Applicatif XBMC pour NextPVR. Supporte la lecture en continu de direct TV et l'enregistrement, l'écoute de radios et les guides de programmes.</description>
     <description lang="he"> ממשק קדמי NextPVR.תומך בשידורים חיים והקלטות של טלוויזיה ורדיו ולוחות שידורים</description>
-    <description lang="hu">NextPVR frontend. Élő adások, felvételek és rádió csatornák sugárzásának támogatása EPG-vel</description>
+    <description lang="hu">NextPVR előtér-kiszolgáló. Élő adások, felvételek és rádió csatornák sugárzásának támogatása EPG-vel</description>
     <description lang="ko">NextPVR 프론트엔드. 라이브 TV 스트리밍과 녹화, 라디오 청취, EPG를 지원합니다.</description>
     <description lang="lt">NextPVR sąsaja remia transliacijos Live TV &amp; Įrašus, klausytis radijo kanalus per EPG</description>
     <description lang="mk">NextPVR интерфејс. Подржува стриминг на Live TV и снимања, слушање радио канали и ЕПГ</description>
+    <description lang="nl">NextPVR frontend. Ondersteunt streaming van Live TV &amp; Recordings, het luisteren naar Radio kanalen en EPG.</description>
     <description lang="pl">Warstwa prezentacji NextPVR. Wspiera strumieniowanie TV na żywo i nagrywanie, słuchanie radia oraz EPG.</description>
-    <description lang="pt">NextPVR frontend. Suporta streaming de Live TV &amp; Gravação, sintonização de estações de Rádio e EPG.</description>
+    <description lang="pt">Frontend NextPVR. Suporta transmissão de Live TV e Gravações, ouvir estações de Rádio e EPG.</description>
     <description lang="pt_BR">NextPVR Frontend. Suporta streaming de TV ao Vivo e Gravações, ouvir canais de rádio e EPG.</description>
     <description lang="ru">Интерфейс для NextPVR. Поддерживает просмотр и запись ТВ, прослушивание радио и EPG.</description>
     <description lang="sk">NextPVR rozhranie. Podporuje streamovanie živého televízneho vysielania a nahrávok, počúvanie rozhlasových kanálov a EPG.</description>
@@ -77,8 +79,9 @@
     <disclaimer lang="ko">아직 개발 진행중입니다. 부족한 부분이 있을 수 있습니다.</disclaimer>
     <disclaimer lang="lt">Tai yra nestabili programinė įranga! Autorius jokiu būdu neatsakingas už nepavykusius įrašus, neteisingus laikmačius, iššvaistytas valandas, ar nutikus kitiems nepageidaujamiems poveikiams ...[COLOR=red](xbmc.lt siūlo/rekomenduoja testuojant šį priedą persijungti į Anglų [orinali] kalbą)[/COLOR]</disclaimer>
     <disclaimer lang="mk">Ова е работа која се извршува. Користи на сопствен ризик.</disclaimer>
+    <disclaimer lang="nl">Hier wordt aan gewerkt, Gebruik op eigen risico.</disclaimer>
     <disclaimer lang="pl">Ten projekt jest w trakcie realizacji. Używasz na własne ryzyko.</disclaimer>
-    <disclaimer lang="pt">Isto é um "work in progress". Use-o por sua conta e risco.</disclaimer>
+    <disclaimer lang="pt">Isto é um projecto em curso. Use-o por sua conta e risco.</disclaimer>
     <disclaimer lang="pt_BR">Este é um trabalho em progresso. Use a seu próprio risco</disclaimer>
     <disclaimer lang="ru">Разработка программы не окончена. Используйте на свой страх и риск.</disclaimer>
     <disclaimer lang="sk">Práca na tomto rozhraní stále prebieha. Používajte ho preto na vlastné riziko.</disclaimer>
@@ -88,4 +91,3 @@
     <platform>all</platform>
   </extension>
 </addon>
-

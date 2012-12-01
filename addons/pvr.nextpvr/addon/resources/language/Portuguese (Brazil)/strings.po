@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.0.0.0
+# Addon version: 1.6.1.0
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -36,10 +36,6 @@ msgstr "Conexão"
 msgctxt "#30050"
 msgid "NextPVR server is too old."
 msgstr "NextPVR server é muito antigo."
-
-msgctxt "#30051"
-msgid "Upgrade to '2.5.8' or higher!"
-msgstr "Atualize para '2.5.8' ou maior!"
 
 msgctxt "#30052"
 msgid "Connection failed. Incorrect PIN?"

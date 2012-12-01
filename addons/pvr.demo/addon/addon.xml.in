@@ -18,6 +18,6 @@
     <summary>Demo PVR Client</summary>
     <description>Demo PVR Client</description>
     <disclaimer>Just contains stubs</disclaimer>
-    <platform>linux wingl windx</platform>
+    <platform>@OS@</platform>
   </extension>
 </addon>

@@ -60,7 +60,7 @@
     <disclaimer lang="sk">Toto nie je stabilný software! Autori nie sú zodpovední za zlýhané nahrávky, nesprávne časovače, premrhané hodiny a iné nežiadúce efekty.</disclaimer>
     <disclaimer lang="sv">Denna mjukvara är instabil! Utvecklarna är inte ansvariga för misslyckade inspelingar, felaktiga timers, bortkastade timmar eller några andra olyckliga effekter.</disclaimer>
     <disclaimer lang="zh">这是不稳定版的软件！作者不对录制失败、错误定时造成时间浪费或其它不良影响负责。</disclaimer>
-    <platform>all</platform>
+    <platform>@OS@</platform>
   </extension>
 </addon>
 

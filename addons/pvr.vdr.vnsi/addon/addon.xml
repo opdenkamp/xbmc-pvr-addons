@@ -11,8 +11,8 @@
     point="xbmc.pvrclient"
     library_linux="XBMC_VDR_vnsi.pvr"
     library_osx="XBMC_VDR_vnsi.pvr"
-    library_wingl="XBMC_VDR_vnsi_WIN32.pvr"
-    library_windx="XBMC_VDR_vnsi_WIN32.pvr"
+    library_wingl="XBMC_VDR_vnsi_WIN32.dll"
+    library_windx="XBMC_VDR_vnsi_WIN32.dll"
     library_android="libXBMC_VDR_vnsi.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="be">PVR client to connect VDR to XBMC over the VNSI interface</summary>

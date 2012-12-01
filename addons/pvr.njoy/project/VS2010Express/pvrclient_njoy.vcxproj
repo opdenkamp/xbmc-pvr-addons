@@ -40,12 +40,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\..\addon\</OutDir>
     <TargetName>XBMC_njoy_win32</TargetName>
-    <TargetExt>.pvr</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\..\addon\</OutDir>
     <TargetName>XBMC_njoy_win32</TargetName>
-    <TargetExt>.pvr</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

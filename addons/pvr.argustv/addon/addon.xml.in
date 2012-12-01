@@ -19,6 +19,6 @@
     <description>ARGUS TV PVR frontend. Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and schedules.</description>
     <description lang="nl">ARGUS TV PVR frontend. Ondersteunt het bekijken van Live TV en opnames, het beluisteren van radio zenders, het tonen van de EPG en het inplannen/beheren van nieuwe opnames (Timers).</description>
     <disclaimer>This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
-    <platform>all</platform>
+    <platform>@OS@</platform>
   </extension>
 </addon>

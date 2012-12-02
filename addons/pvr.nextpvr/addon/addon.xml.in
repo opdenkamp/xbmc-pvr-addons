@@ -88,6 +88,6 @@
     <disclaimer lang="sl">Dodatek je še v izdelavi. Uporaba na lastno odgovornost.</disclaimer>
     <disclaimer lang="sv">Detta är ett pågående arbete. Använd på egen risk.</disclaimer>
     <disclaimer lang="zh">此插件仍在开发中，请自行把握试用风险。</disclaimer>
-    <platform>all</platform>
+    <platform>@OS@</platform>
   </extension>
 </addon>

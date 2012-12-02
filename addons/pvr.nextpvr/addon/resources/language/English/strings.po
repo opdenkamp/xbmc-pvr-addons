@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.0.1.0
+# Addon version: 1.6.1.0
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -36,7 +36,6 @@ msgid "Enable TimeShift with Live TV"
 msgstr ""
 
 #empty strings from id 30004 to 30039
-
 #Category labels
 
 msgctxt "#30040"
@@ -48,7 +47,6 @@ msgid "Advanced"
 msgstr ""
 
 #empty strings from id 30042 to 30049
-
 #On-screen error messages
 
 msgctxt "#30050"

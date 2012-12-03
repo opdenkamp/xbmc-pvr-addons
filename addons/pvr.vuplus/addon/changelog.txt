@@ -1,3 +1,6 @@
+0.3.5:
+- fix: URL encoding in timer-add operations
+
 0.3.4:
 - fix: several crashes on win32 due to missing locks / invalid memory access
 - fix: do not report connection problems when there is an empty TV-channel bouquet

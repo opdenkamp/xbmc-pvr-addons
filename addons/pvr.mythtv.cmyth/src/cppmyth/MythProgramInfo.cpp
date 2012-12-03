@@ -149,6 +149,21 @@ bool MythProgramInfo::IsDeletePending()
   return (recording_flags & 0x00000080) != 0; // FL_DELETEPENDING
 }
 
+bool MythProgramInfo::IsVisible()
+{
+  // Filter out recording of special storage groups (like LiveTV or Deleted)
+
+  // When  deleting a recording, it might not be deleted immediately but marked as 'pending delete'.
+  // Depending on the protocol version the recording is moved to the group Deleted or
+  // the 'delete pending' flag is set
+  if (RecordingGroup() == "LiveTV" || RecordingGroup() == "Deleted" || IsDeletePending())
+  {
+    return false;
+  }
+
+  return true;
+}
+
 int MythProgramInfo::ChannelID()
 {
   return cmyth_proginfo_chan_id(*m_proginfo_t);

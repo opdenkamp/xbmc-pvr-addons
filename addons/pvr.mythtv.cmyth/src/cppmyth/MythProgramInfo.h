@@ -54,6 +54,7 @@ public:
   time_t EndTime();
   bool IsWatched();
   bool IsDeletePending();
+  bool IsVisible();
 
   int ChannelID();
   CStdString ChannelName();

@@ -146,7 +146,6 @@ private:
 
   // Recordings
   ProgramInfoMap m_recordings;
-  static bool IsRecordingVisible(MythProgramInfo &recording);
 
   // Timers
   RecordingRuleList m_recordingRules;

@@ -689,7 +689,7 @@ extern char *cmyth_rec_num_string(cmyth_rec_num_t rn);
  */
 extern cmyth_timestamp_t cmyth_timestamp_create(void);
 
-extern cmyth_timestamp_t cmyth_timestamp_from_string(char *str);
+extern cmyth_timestamp_t cmyth_timestamp_from_string(const char *str);
 
 extern cmyth_timestamp_t cmyth_timestamp_from_unixtime(time_t l);
 

@@ -1848,3 +1848,116 @@ cmyth_proginfo_get_from_basename(cmyth_conn_t control, const char* basename)
 	}
 
 }
+
+cmyth_proginfo_t
+cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, const unsigned long chanid, const char* recstartts)
+{
+	int err = 0;
+	int count, i;
+	char msg[4096];
+	cmyth_proginfo_t prog = NULL;
+	cmyth_proglist_t list = NULL;
+	cmyth_timestamp_t ts;
+	char time[15];
+
+	if (!control) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+
+	ts = cmyth_timestamp_from_string(recstartts);
+	if (!ts) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: timestamp NULL\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+
+	sprintf(time,
+		"%4.4ld%2.2ld%2.2ld%2.2ld%2.2ld%2.2ld",
+		ts->timestamp_year,
+		ts->timestamp_month,
+		ts->timestamp_day,
+		ts->timestamp_hour,
+		ts->timestamp_minute,
+		ts->timestamp_second);
+
+	if(control->conn_version >= 32) {
+		pthread_mutex_lock(&mutex);
+
+		snprintf(msg, sizeof(msg), "QUERY_RECORDING TIMESLOT %ld %s",
+			chanid, time);
+
+		if ((err=cmyth_send_message(control, msg)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_send_message() failed (%d)\n",
+				  __FUNCTION__, err);
+			goto out;
+		}
+
+		count = cmyth_rcv_length(control);
+		if (count < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_rcv_length() failed (%d)\n",
+				  __FUNCTION__, count);
+			goto out;
+		}
+
+		i = cmyth_rcv_string(control, &err, msg, sizeof(msg), count);
+		if (err) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed\n",
+				  __FUNCTION__);
+			goto out;
+		}
+		count -= i;
+
+		if (strcmp(msg, "OK") != 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s: didn't recieve OK as response\n",
+				  __FUNCTION__);
+			goto out;
+		}
+
+		prog = cmyth_proginfo_create();
+		if (cmyth_rcv_proginfo(control, &err, prog, count) != count) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_rcv_proginfo() < count\n", __FUNCTION__);
+			goto out;
+		}
+
+		pthread_mutex_unlock(&mutex);
+		return prog;
+		out:
+		pthread_mutex_unlock(&mutex);
+		if(prog)
+			ref_release(prog);
+		return NULL;
+
+	} else {
+
+		list = cmyth_proglist_get_all_recorded(control);
+		if (!list) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s: no program list\n",
+				  __FUNCTION__);
+		}
+
+		count = cmyth_proglist_get_count(list);
+		for (i = 0;i < count; i++) {
+			prog = cmyth_proglist_get_item(list, i);
+			if (!prog) {
+				cmyth_dbg(CMYTH_DBG_DEBUG, "%s: no program info\n",
+					  __FUNCTION__);
+				continue;
+			}
+			if (cmyth_timestamp_compare(prog->proginfo_rec_start_ts, ts) != 0 ||
+					prog->proginfo_chanId != chanid) {
+				ref_release(prog);
+				prog = NULL;
+				continue;
+			}
+			break;
+		}
+		ref_release(list);
+		return prog;
+	}
+
+}

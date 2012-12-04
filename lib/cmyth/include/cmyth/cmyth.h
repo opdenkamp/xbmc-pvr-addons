@@ -425,6 +425,15 @@ extern cmyth_event_t cmyth_event_get(cmyth_conn_t conn, char * data, int len);
  */
 extern int cmyth_event_select(cmyth_conn_t conn, struct timeval *timeout);
 
+/**
+ * Retrieve an event from a backend.
+ * \param conn connection handle
+ * \param[out] data data, if the event returns any
+ * \param len size of data buffer
+ * \return event message handle
+ */
+extern cmyth_event_t cmyth_event_get_message(cmyth_conn_t conn, char * data, int len, cmyth_proginfo_t * proginfo);
+
 /*
  * -----------------------------------------------------------------
  * Recorder Operations
@@ -803,6 +812,10 @@ extern int cmyth_proginfo_get_recorder_num(cmyth_conn_t control,
 
 extern cmyth_proginfo_t cmyth_proginfo_get_from_basename(cmyth_conn_t control,
 					   const char* basename);
+
+extern cmyth_proginfo_t cmyth_proginfo_get_from_timeslot(cmyth_conn_t control,
+					   const unsigned long chanid,
+					   const char* recstartts);
 
 /**
  * Retrieve the title of a program.

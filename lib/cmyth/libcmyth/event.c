@@ -26,6 +26,15 @@
 cmyth_event_t
 cmyth_event_get(cmyth_conn_t conn, char * data, int len)
 {
+	cmyth_proginfo_t proginfo = NULL;
+	cmyth_event_t event = cmyth_event_get_message(conn, data, len, &proginfo);
+	ref_release(proginfo);
+	return event;
+}
+
+cmyth_event_t
+cmyth_event_get_message(cmyth_conn_t conn, char * data, int len, cmyth_proginfo_t * prog)
+{
 	int count, err, consumed, i;
 	char tmp[1024];
 	cmyth_event_t event;
@@ -68,9 +77,8 @@ cmyth_event_get(cmyth_conn_t conn, char * data, int len)
 			goto fail;
 		}
 		consumed = cmyth_rcv_proginfo(conn, &err, proginfo, count);
-		ref_release(proginfo);
-		proginfo = NULL;
 		count -= consumed;
+		*prog = proginfo;
 	} else if (strncmp(tmp, "RECORDING_LIST_CHANGE DELETE", 28) == 0) {
 		event = CMYTH_EVENT_RECORDING_LIST_CHANGE_DELETE;
 		strncpy(data, tmp + 29, len);

@@ -219,6 +219,7 @@ bool PVRClientMythTV::Connect()
 
   // Create file operation helper (image caching)
   m_fileOps = new FileOps(m_con);
+  m_fileOps->UpdateStorageGroupFileList();
 
   // Get channel list
   m_channels = m_db.GetChannels();
@@ -466,6 +467,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
 
   m_con.Lock();
   m_recordings = m_con.GetRecordedPrograms();
+  m_fileOps->UpdateStorageGroupFileList();
   m_con.Unlock();
   for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {

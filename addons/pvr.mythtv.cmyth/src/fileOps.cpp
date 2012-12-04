@@ -73,7 +73,7 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   // Determine filename
   CStdString localFilename = m_localBasePath + "channels" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
+    XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
 
   if (!XBMC->FileExists(localFilename, true))
   {
@@ -101,7 +101,7 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
   // Determine local filename
   CStdString localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
+    XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
 
   if (!XBMC->FileExists(localFilename, true))
   {
@@ -118,38 +118,15 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
 
 CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
 {
-  // Update storage group filelist only once every 30s
-  std::time_t now = 0;
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG, "%s: title: %s, fileType: %s", __FUNCTION__, title.c_str(), GetFolderNameByFileType(fileType));
 
-  // Update the list of files in a storage group if the filelist is empty
-  // or the validity timeout has been reached (30s)
-  if (m_StorageGroupFileList.find(fileType) == m_StorageGroupFileList.end() ||
-    std::difftime(now, m_StorageGroupFileListLastUpdated[fileType]) > 30)
+  // Check local cache
+  std::pair<FileType, CStdString> key = std::make_pair(fileType, title);
   {
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG, "%s Getting storage group file list for type: %s (%s - %s)", __FUNCTION__, GetFolderNameByFileType(fileType), std::asctime(std::localtime(&now)), std::asctime(std::localtime(&m_StorageGroupFileListLastUpdated[fileType])));
-
-    m_StorageGroupFileList[fileType] = m_con.GetStorageGroupFileList(GetFolderNameByFileType(fileType));
-    m_StorageGroupFileListLastUpdated[fileType] = now;
-
-    // Clean the file lists of unwanted files
-    StorageGroupFileList::iterator it = m_StorageGroupFileList[fileType].begin();
-    while (it != m_StorageGroupFileList[fileType].end())
-    {
-      if (g_bExtraDebug)
-        XBMC->Log(LOG_DEBUG, "%s %s - %s", __FUNCTION__, GetFolderNameByFileType(fileType), it->Filename().c_str());
-
-      // Check file extension, if it's not an image, remove the file from storage group
-      size_t extensionPos = it->Filename().find_last_of('.');
-      CStdString extension = it->Filename().substr(extensionPos + 1);
-      if (extension != "jpg" && extension != "png" && extension != "bmp")
-      {
-        it = m_StorageGroupFileList[fileType].erase(it);
-        continue;
-      }
-
-      ++it;
-    }
+    std::map<std::pair<FileType, CStdString>, CStdString>::iterator iter = m_artworks.find(key);
+    if (iter != m_artworks.end())
+      return iter->second;
   }
 
   // Search in the storage group file list
@@ -178,7 +155,49 @@ CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
     Unlock();
   }
 
+  m_artworks[key] = localFilename;
   return localFilename;
+}
+
+void FileOps::UpdateStorageGroupFileList()
+{
+  std::time_t now = 0;
+
+  std::vector<FileType> fileTypes = GetFileTypes();
+  std::vector<FileType>::const_iterator fileTypeIt;
+  for (fileTypeIt = fileTypes.begin(); fileTypeIt != fileTypes.end(); ++fileTypeIt)
+  {
+    // Update the list of files in a storage group if the filelist is empty
+    // or the validity timeout has been reached
+    if (m_StorageGroupFileList.find(*fileTypeIt) == m_StorageGroupFileList.end() ||
+        std::difftime(now, m_StorageGroupFileListLastUpdated[*fileTypeIt]) > c_timeoutStorageGroupFileList)
+    {
+      if (g_bExtraDebug)
+        XBMC->Log(LOG_DEBUG, "%s Getting storage group file list for type: %s (%s - %s)", __FUNCTION__, GetFolderNameByFileType(*fileTypeIt), std::asctime(std::localtime(&now)), std::asctime(std::localtime(&m_StorageGroupFileListLastUpdated[*fileTypeIt])));
+
+      m_StorageGroupFileList[*fileTypeIt] = m_con.GetStorageGroupFileList(GetFolderNameByFileType(*fileTypeIt));
+      m_StorageGroupFileListLastUpdated[*fileTypeIt] = now;
+
+      // Clean the file lists of unwanted files
+      StorageGroupFileList::iterator it = m_StorageGroupFileList[*fileTypeIt].begin();
+      while (it != m_StorageGroupFileList[*fileTypeIt].end())
+      {
+        if (g_bExtraDebug)
+          XBMC->Log(LOG_DEBUG, "%s %s - %s", __FUNCTION__, GetFolderNameByFileType(*fileTypeIt), it->Filename().c_str());
+
+        // Check file extension, if it's not an image, remove the file from storage group
+        size_t extensionPos = it->Filename().find_last_of('.');
+        CStdString extension = it->Filename().substr(extensionPos + 1);
+        if (extension != "jpg" && extension != "png" && extension != "bmp")
+        {
+          it = m_StorageGroupFileList[*fileTypeIt].erase(it);
+          continue;
+        }
+
+        ++it;
+      }
+    }
+  }
 }
 
 void FileOps::Suspend()

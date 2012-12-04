@@ -32,7 +32,7 @@
 
 /*
  * cmyth_timestamp_create(void)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -66,7 +66,7 @@ cmyth_timestamp_create(void)
 
 /*
  * cmyth_timestamp_from_string(char *str)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -212,7 +212,7 @@ cmyth_timestamp_from_tm(struct tm * tm_datetime)
 
 /*
  * cmyth_timestamp_from_unixtime(time_t l)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -236,14 +236,14 @@ cmyth_timestamp_from_unixtime(time_t l)
 
 /*
  * cmyth_timestamp_to_longlong( cmyth_timestamp_t ts)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
  *
  * Create a time_t value from the timestamp structure 'ts' and
  * return the result.
- * 
+ *
  *
  * Return Value:
  *
@@ -267,7 +267,7 @@ cmyth_timestamp_to_unixtime(cmyth_timestamp_t ts)
 
 /*
  * cmyth_timestamp_to_string(char *str, cmyth_timestamp_t ts)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -275,7 +275,7 @@ cmyth_timestamp_to_unixtime(cmyth_timestamp_t ts)
  * Create a string from the timestamp structure 'ts' and put it in the
  * user supplied buffer 'str'.  The size of 'str' must be
  * CMYTH_TIMESTAMP_LEN + 1 or this will overwrite beyond 'str'.
- * 
+ *
  *
  * Return Value:
  *
@@ -309,7 +309,7 @@ cmyth_timestamp_to_string(char *str, cmyth_timestamp_t ts)
 
 /*
  * cmyth_timestamp_to_isostring(char *str, cmyth_timestamp_t ts)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -317,7 +317,7 @@ cmyth_timestamp_to_string(char *str, cmyth_timestamp_t ts)
  * Create a string from the timestamp structure 'ts' and put it in the
  * user supplied buffer 'str'.  The size of 'str' must be
  * CMYTH_TIMESTAMP_LEN + 1 or this will overwrite beyond 'str'.
- * 
+ *
  *
  * Return Value:
  *
@@ -398,7 +398,7 @@ cmyth_timestamp_to_display_string(char *str, cmyth_timestamp_t ts,
 
 /*
  * cmyth_datetime_to_string(char *str, cmyth_timestamp_t ts)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -406,7 +406,7 @@ cmyth_timestamp_to_display_string(char *str, cmyth_timestamp_t ts,
  * Create a string from the timestamp structure 'ts' and put it in the
  * user supplied buffer 'str'.  The size of 'str' must be
  * CMYTH_DATETIME_LEN + 1 or this will overwrite beyond 'str'.
- * 
+ *
  *
  * Return Value:
  *
@@ -450,14 +450,14 @@ cmyth_datetime_to_string(char *str, cmyth_timestamp_t ts)
 
 /*
  * cmyth_timestamp_compare(cmyth_timestamp_t ts1, cmyth_timestamp_t ts2)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
  *
  * Compare ts1 to ts2 and indicate whether ts1 is less than, equal to
  * or greater than ts1.
- * 
+ *
  *
  * Return Value:
  *
@@ -495,7 +495,7 @@ cmyth_timestamp_compare(cmyth_timestamp_t ts1, cmyth_timestamp_t ts2)
 		return (ts1->timestamp_hour > ts2->timestamp_hour) ? 1 : -1;
 	}
 	if (ts1->timestamp_minute != ts2->timestamp_minute) {
-		return (ts1->timestamp_minute > ts2->timestamp_minute) 
+		return (ts1->timestamp_minute > ts2->timestamp_minute)
 			? 1
 			: -1;
 	}

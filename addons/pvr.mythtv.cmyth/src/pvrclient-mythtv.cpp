@@ -677,7 +677,7 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
   {
     XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
     m_con.Unlock();
-    return PVR_ERROR_FAILED;
+    return bookmark;
   }
 
   if (bookmark < 0) bookmark = 0;

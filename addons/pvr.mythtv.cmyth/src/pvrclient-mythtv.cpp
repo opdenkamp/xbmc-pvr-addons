@@ -652,7 +652,7 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
 
   m_con.Lock();
   ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
-  if (it != m_recordings.end())
+  if (it != m_recordings.end() && it->second.HasBookmark())
   {
     long long frameOffset = m_con.GetBookmark(it->second); // returns 0 if no bookmark was found
     if (frameOffset > 0)
@@ -675,7 +675,15 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
   }
   else
   {
-    XBMC->Log(LOG_DEBUG, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
+    if (it == m_recordings.end())
+    {
+      XBMC->Log(LOG_ERROR, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
+    }
+    if (!it->second.HasBookmark() && g_bExtraDebug)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Recording %s has no bookmark", __FUNCTION__, recording.strRecordingId);
+    }
+
     m_con.Unlock();
     return bookmark;
   }

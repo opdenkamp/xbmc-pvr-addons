@@ -126,6 +126,7 @@ void cLivePatFilter::GetLanguage(SI::PMT::Stream& stream, char *langs)
     {
       case SI::ISO639LanguageDescriptorTag:
       {
+        langs[MAXLANGCODE1] = 0;
         SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
         strn0cpy(langs, I18nNormalizeLanguageCode(ld->languageCode), MAXLANGCODE1);
         break;
@@ -155,7 +156,6 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
   {
     case 0x01: // ISO/IEC 11172 Video
     case 0x02: // ISO/IEC 13818-2 Video
-    case 0x80: // ATSC Video MPEG2 (ATSC DigiCipher QAM)
       DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d)\n", stream.getPid(), stream.getStreamType());
       *type = stMPEG2VIDEO;
       return stream.getPid();
@@ -165,7 +165,7 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
       GetLanguage(stream, langs);
       DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d) (%s)\n", stream.getPid(), stream.getStreamType(), langs);
       return stream.getPid();
-    case 0x0f: // ISO/IEC 13818-7 Audio with ADTS transport syntax
+    case 0x0F: // ISO/IEC 13818-7 Audio with ADTS transport syntax
     case 0x11: // ISO/IEC 14496-3 Audio with LATM transport syntax
        *type = stAAC;
        GetLanguage(stream, langs);
@@ -232,6 +232,7 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
             SI::SubtitlingDescriptor *sd = (SI::SubtitlingDescriptor *)d;
             SI::SubtitlingDescriptor::Subtitling sub;
             char *s = langs;
+            s[MAXLANGCODE1] = 0;
             int n = 0;
             for (SI::Loop::Iterator it; sd->subtitlingLoop.getNext(sub, it); )
             {
@@ -259,47 +260,65 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
         delete d;
       }
       break;
-    default:
-      /* This following section handles all the cases where the audio track
-       * info is stored in PMT user info with stream id >= 0x81
-       * we check the registration format identifier to see if it
-       * holds "AC-3"
-       */
-      if (stream.getStreamType() >= 0x81)
+    case 0x80:
+      if (Setup.StandardCompliance == STANDARD_ANSISCTE)
+      { // DigiCipher II VIDEO (ANSI/SCTE 57)
+        DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d)\n", stream.getPid(), stream.getStreamType());
+        *type = stMPEG2VIDEO;
+        return stream.getPid();
+      }
+      // fall through
+    case 0x81: // STREAMTYPE_USER_PRIVATE
+      if (Setup.StandardCompliance == STANDARD_ANSISCTE)
+      { // ATSC A/53 AUDIO (ANSI/SCTE 57)
+        DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AC3", langs);
+        *type = stAC3;
+        GetLanguage(stream, langs);
+        return stream.getPid();
+      }
+      // fall through
+    case 0x83 ... 0xFF: // STREAMTYPE_USER_PRIVATE
       {
-        bool found = false;
-        for (SI::Loop::Iterator it; (d = stream.streamDescriptors.getNext(it)); )
+      bool IsAc3 = false;
+      langs[MAXLANGCODE1] = 0;
+      SI::Descriptor *d;
+      for (SI::Loop::Iterator it; (d = stream.streamDescriptors.getNext(it)); )
+      {
+        switch (d->getDescriptorTag())
         {
-          switch (d->getDescriptorTag())
-          {
-            case SI::RegistrationDescriptorTag:
-            /* unfortunately libsi does not implement RegistrationDescriptor */
-            if (d->getLength() >= 4)
+          case SI::RegistrationDescriptorTag:
             {
-              found = true;
-              SI::CharArray rawdata = d->getData();
-              if (/*rawdata[0] == 5 && rawdata[1] >= 4 && */
-                  rawdata[2] == 'A' && rawdata[3] == 'C' &&
-                  rawdata[4] == '-' && rawdata[5] == '3')
-              {
-                DEBUGLOG("cStreamdevPatFilter PMT scanner: Adding pid %d (type 0x%x) RegDesc len %d (%c%c%c%c)\n",
-                            stream.getPid(), stream.getStreamType(), d->getLength(), rawdata[2], rawdata[3], rawdata[4], rawdata[5]);
-                *type = stAC3;
-                delete d;
-                return stream.getPid();
-              }
+            SI::RegistrationDescriptor *rd = (SI::RegistrationDescriptor *)d;
+            // http://www.smpte-ra.org/mpegreg/mpegreg.html
+            switch (rd->getFormatIdentifier())
+            {
+              case 0x41432D33: // 'AC-3'
+                IsAc3 = true;
+                break;
+              default:
+                break;
+            }
             }
             break;
-            default:
+          case SI::ISO639LanguageDescriptorTag:
+            {
+            SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
+            strn0cpy(langs, I18nNormalizeLanguageCode(ld->languageCode), MAXLANGCODE1);
+            }
             break;
-          }
-          delete d;
+          default: ;
         }
-        if (!found)
-        {
-          DEBUGLOG("NOT adding PID %d (type 0x%x) RegDesc not found -> UNKNOWN\n", stream.getPid(), stream.getStreamType());
-        }
+        delete d;
       }
+      if (IsAc3)
+      {
+        DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AC3", langs);
+        *type = stAC3;
+        return stream.getPid();
+      }
+      }
+      break;
+    default:
       DEBUGLOG("cStreamdevPatFilter PMT scanner: NOT adding PID %d (%d) %s\n", stream.getPid(), stream.getStreamType(), "UNKNOWN");
       break;
   }
@@ -327,11 +346,12 @@ void cLivePatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Le
             int prevPmtPid = m_pmtPid;
             if (0 != (m_pmtPid = assoc.getPid()))
             {
-              m_pmtSid = assoc.getServiceId();
               if (m_pmtPid != prevPmtPid)
               {
+                m_pmtSid = assoc.getServiceId();
                 Add(m_pmtPid, 0x02);
                 m_pmtVersion = -1;
+                break;
               }
               return;
             }
@@ -351,7 +371,6 @@ void cLivePatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Le
     {
       if (m_pmtVersion != pmt.getVersionNumber())
       {
-//        printf("cStreamdevPatFilter: PMT version changed, detaching all pids\n");
         cFilter::Del(m_pmtPid, 0x02);
         m_pmtPid = 0; // this triggers PAT scan
       }

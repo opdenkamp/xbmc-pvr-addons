@@ -257,18 +257,33 @@ void cParserAAC::ReadStreamMuxConfig(cBitstream *bs)
 
 void cParserAAC::ReadAudioSpecificConfig(cBitstream *bs)
 {
+  int sr;
   int aot = bs->readBits(5);
-  if (aot != 2)
-    return;
+  static const int sample_rates[16] = {
+      96000, 88200, 64000, 48000, 44100, 32000,
+      24000, 22050, 16000, 12000, 11025, 8000, 7350
+  };
 
   m_SampleRateIndex = bs->readBits(4);
 
   if (m_SampleRateIndex == 0xf)
-    return;
+    sr = bs->readBits(24);
+  else
+    sr = sample_rates[m_SampleRateIndex & 0xf];
 
   m_SampleRate    = aac_sample_rates[m_SampleRateIndex];
   m_FrameDuration = 1024 * 90000 / m_SampleRate;
   m_ChannelConfig = bs->readBits(4);
+
+  if (aot == 5) { // AOT_SBR
+    if (bs->readBits(4) == 0xf) { // extensionSamplingFrequencyIndex
+      bs->skipBits(24);
+    }
+    aot = bs->readBits(5); // this is the main object type (i.e. non-extended)
+  }
+
+  if(aot != 2)
+    return;
 
   bs->skipBits(1);      //framelen_flag
   if (bs->readBits1())  // depends_on_coder

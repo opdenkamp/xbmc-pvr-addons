@@ -1081,6 +1081,11 @@ void cLiveStreamer::ensureDemuxers()
       demuxer = new cTSDemuxer(this, stAC3, it->pID);
       demuxer->SetLanguage(it->language);
     }
+    else if (it->type == stEAC3)
+    {
+      demuxer = new cTSDemuxer(this, stEAC3, it->pID);
+      demuxer->SetLanguage(it->language);
+    }
     else if (it->type == stDVBSUB)
     {
       demuxer = new cTSDemuxer(this, stDVBSUB, it->pID);
@@ -1150,6 +1155,10 @@ void cLiveStreamer::confChannelDemuxers()
     {
       newStream.pID = *APids;
       newStream.type = stMPEG2AUDIO;
+#if APIVERSNUM >= 10715
+      if (m_Channel->Atype(index) == 0x0F || m_Channel->Atype(index) == 0x11)
+        newStream.type = stAAC;
+#endif
       newStream.SetLanguage(m_Channel->Alang(index));
       AddStream(newStream);
     }
@@ -1164,6 +1173,10 @@ void cLiveStreamer::confChannelDemuxers()
     {
       newStream.pID = *DPids;
       newStream.type = stAC3;
+#if APIVERSNUM >= 10715
+      if (m_Channel->Dtype(index) == SI::EnhancedAC3DescriptorTag)
+        newStream.type = stEAC3;
+#endif
       newStream.SetLanguage(m_Channel->Dlang(index));
       AddStream(newStream);
     }

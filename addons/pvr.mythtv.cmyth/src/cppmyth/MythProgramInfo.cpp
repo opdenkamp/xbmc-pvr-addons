@@ -149,6 +149,12 @@ bool MythProgramInfo::IsDeletePending()
   return (recording_flags & 0x00000080) != 0; // FL_DELETEPENDING
 }
 
+bool MythProgramInfo::HasBookmark()
+{
+  unsigned long recording_flags = cmyth_proginfo_flags(*m_proginfo_t);
+  return (recording_flags & 0x00000010) != 0; // FL_BOOKMARK
+}
+
 bool MythProgramInfo::IsVisible()
 {
   // Filter out recording of special storage groups (like LiveTV or Deleted)

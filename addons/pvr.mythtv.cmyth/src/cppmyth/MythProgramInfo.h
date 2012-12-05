@@ -54,6 +54,7 @@ public:
   time_t EndTime();
   bool IsWatched();
   bool IsDeletePending();
+  bool HasBookmark();
   bool IsVisible();
 
   int ChannelID();

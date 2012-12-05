@@ -117,30 +117,6 @@ cLivePatFilter::cLivePatFilter(cLiveStreamer *Streamer, const cChannel *Channel)
 
 }
 
-static const char * const psStreamTypes[] = {
-        "UNKNOWN",
-        "ISO/IEC 11172 Video",
-        "ISO/IEC 13818-2 Video",
-        "ISO/IEC 11172 Audio",
-        "ISO/IEC 13818-3 Audio",
-        "ISO/IEC 13818-1 Privete sections",
-        "ISO/IEC 13818-1 Private PES data",
-        "ISO/IEC 13512 MHEG",
-        "ISO/IEC 13818-1 Annex A DSM CC",
-        "0x09",
-        "ISO/IEC 13818-6 Multiprotocol encapsulation",
-        "ISO/IEC 13818-6 DSM-CC U-N Messages",
-        "ISO/IEC 13818-6 Stream Descriptors",
-        "ISO/IEC 13818-6 Sections (any type, including private data)",
-        "ISO/IEC 13818-1 auxiliary",
-        "ISO/IEC 13818-7 Audio with ADTS transport sytax",
-        "ISO/IEC 14496-2 Visual (MPEG-4)",
-        "ISO/IEC 14496-3 Audio with LATM transport syntax",
-        "0x12", "0x13", "0x14", "0x15", "0x16", "0x17", "0x18", "0x19", "0x1a",
-        "ISO/IEC 14496-10 Video (MPEG-4 part 10/AVC, aka H.264)",
-        "",
-};
-
 void cLivePatFilter::GetLanguage(SI::PMT::Stream& stream, char *langs)
 {
   SI::Descriptor *d;
@@ -180,20 +156,20 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
     case 0x01: // ISO/IEC 11172 Video
     case 0x02: // ISO/IEC 13818-2 Video
     case 0x80: // ATSC Video MPEG2 (ATSC DigiCipher QAM)
-      DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%s)\n", stream.getPid(), psStreamTypes[stream.getStreamType()]);
+      DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d)\n", stream.getPid(), stream.getStreamType());
       *type = stMPEG2VIDEO;
       return stream.getPid();
     case 0x03: // ISO/IEC 11172 Audio
     case 0x04: // ISO/IEC 13818-3 Audio
       *type   = stMPEG2AUDIO;
       GetLanguage(stream, langs);
-      DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%s) (%s)\n", stream.getPid(), psStreamTypes[stream.getStreamType()], langs);
+      DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d) (%s)\n", stream.getPid(), stream.getStreamType(), langs);
       return stream.getPid();
     case 0x0f: // ISO/IEC 13818-7 Audio with ADTS transport syntax
     case 0x11: // ISO/IEC 14496-3 Audio with LATM transport syntax
        *type = stAAC;
        GetLanguage(stream, langs);
-       DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%s) %s (%s)\n", stream.getPid(), psStreamTypes[stream.getStreamType()], "AAC", langs);
+       DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AAC", langs);
       return stream.getPid();
 #if 1
     case 0x07: // ISO/IEC 13512 MHEG
@@ -205,10 +181,10 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
     case 0x0e: // ISO/IEC 13818-1 auxiliary
 #endif
     case 0x10: // ISO/IEC 14496-2 Visual (MPEG-4)
-      DEBUGLOG("cStreamdevPatFilter PMT scanner: Not adding PID %d (%s) (skipped)\n", stream.getPid(), psStreamTypes[stream.getStreamType()]);
+      DEBUGLOG("cStreamdevPatFilter PMT scanner: Not adding PID %d (%d) (skipped)\n", stream.getPid(), stream.getStreamType());
       break;
     case 0x1b: // ISO/IEC 14496-10 Video (MPEG-4 part 10/AVC, aka H.264)
-      DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%s)\n", stream.getPid(), psStreamTypes[stream.getStreamType()]);
+      DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d)\n", stream.getPid(), stream.getStreamType());
       *type = stH264;
       return stream.getPid();
     case 0x05: // ISO/IEC 13818-1 private sections
@@ -218,31 +194,31 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
         switch (d->getDescriptorTag())
         {
           case SI::AC3DescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%s) %s (%s)\n", stream.getPid(), psStreamTypes[stream.getStreamType()], "AC3", langs);
+            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AC3", langs);
             *type = stAC3;
             GetLanguage(stream, langs);
             delete d;
             return stream.getPid();
           case SI::EnhancedAC3DescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%s) %s (%s)\n", stream.getPid(), psStreamTypes[stream.getStreamType()], "EAC3", langs);
+            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "EAC3", langs);
             *type = stEAC3;
             GetLanguage(stream, langs);
             delete d;
             return stream.getPid();
           case SI::DTSDescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%s) %s (%s)\n", stream.getPid(), psStreamTypes[stream.getStreamType()], "DTS", langs);
+            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "DTS", langs);
             *type = stDTS;
             GetLanguage(stream, langs);
             delete d;
             return stream.getPid();
           case SI::AACDescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%s) %s (%s)\n", stream.getPid(), psStreamTypes[stream.getStreamType()], "AAC", langs);
+            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AAC", langs);
             *type = stAAC;
             GetLanguage(stream, langs);
             delete d;
             return stream.getPid();
           case SI::TeletextDescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%s) %s\n", stream.getPid(), psStreamTypes[stream.getStreamType()], "Teletext");
+            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s\n", stream.getPid(), stream.getStreamType(), "Teletext");
             *type = stTELETEXT;
             delete d;
             return stream.getPid();
@@ -273,11 +249,11 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
               }
             }
             delete d;
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%s) %s\n", stream.getPid(), psStreamTypes[stream.getStreamType()], "DVBSUB");
+            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s\n", stream.getPid(), stream.getStreamType(), "DVBSUB");
             return stream.getPid();
           }
           default:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: NOT adding PID %d (%s) %s (%i)\n", stream.getPid(), psStreamTypes[stream.getStreamType()], "UNKNOWN", d->getDescriptorTag());
+            DEBUGLOG("cStreamdevPatFilter PMT scanner: NOT adding PID %d (%d) %s (%i)\n", stream.getPid(), stream.getStreamType(), "UNKNOWN", d->getDescriptorTag());
             break;
         }
         delete d;
@@ -324,7 +300,7 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
           DEBUGLOG("NOT adding PID %d (type 0x%x) RegDesc not found -> UNKNOWN\n", stream.getPid(), stream.getStreamType());
         }
       }
-      DEBUGLOG("cStreamdevPatFilter PMT scanner: NOT adding PID %d (%s) %s\n", stream.getPid(), psStreamTypes[stream.getStreamType()<0x1c?stream.getStreamType():0], "UNKNOWN");
+      DEBUGLOG("cStreamdevPatFilter PMT scanner: NOT adding PID %d (%d) %s\n", stream.getPid(), stream.getStreamType(), "UNKNOWN");
       break;
   }
   *type = stNone;

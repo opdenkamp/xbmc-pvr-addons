@@ -47,6 +47,10 @@ INCLUDES += -I$(VDRDIR)/include -I$(VDRDIR)
 
 DEFINES += -D_GNU_SOURCE -DPLUGIN_NAME_I18N='"$(PLUGIN)"' -DVNSI_SERVER_VERSION='"$(VERSION)"'
 
+ifeq ($(DEBUG),1)
+DEFINES += -DDEBUG
+endif
+
 ### The object files (add further files here):
 
 OBJS = vnsi.o bitstream.o vnsiclient.o config.o cxsocket.o demuxer.o demuxer_AAC.o \

@@ -94,12 +94,14 @@
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\DVBLinkClient.cpp" />
     <ClCompile Include="..\..\src\HttpPostClient.cpp" />
+    <ClCompile Include="..\..\src\TimeShiftBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\base64.h" />
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\DVBLinkClient.h" />
     <ClInclude Include="..\..\src\HttpPostClient.h" />
+    <ClInclude Include="..\..\src\TimeShiftBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\lib\libdvblinkremote\project\VS2010Express\libdvblinkremote.vcxproj">

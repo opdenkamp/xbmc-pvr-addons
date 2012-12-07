@@ -14,10 +14,11 @@ LIBS            = @abs_top_srcdir@/lib/libdvblinkremote/libdvblinkremote.la
 
 include ../Makefile.include.am
 
-INCLUDES+=-Isrc -I/usr/local/include/
+INCLUDES+=-Isrc
 
 libdvblink_addon_la_SOURCES = src/client.cpp \
-			      src/HttpPostClient.cpp \
+                              src/HttpPostClient.cpp \
+                              src/TimeShiftBuffer.cpp \						  
                               src/DVBLinkClient.cpp
 libdvblink_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

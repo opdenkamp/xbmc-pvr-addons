@@ -1,6 +1,22 @@
+[B]Version 1.6.1[/B]
+Added: Timeshift support (Http only)
+Added: Information about backend diskspace (System->System Info->PVR Service) 
+Added: Option for enabling information notifications (Default:disabled)
+Updated language files
+General code style clean up to be more compliant with XBMC coding style
+
+[B]Version 1.6.0.11[/B]
+Removed wrong danish language from addon description
+
+[B]Version 1.6.0.10[/B]
+Fixed: Timer related crash when addon could not find program information for EPG based timers
+
+[B]Version 1.6.0.9[/B]
+Added: Better notification and logging of status / error information 
+
 [B]Version 1.6.0.8[/B]
 Fixed: Not all schedules shown
-Fixed: Not able to use username/password
+Fixed: Not able to use username/password (Windows only)
 
 [B]Version 1.6.0.7[/B]
 Builds for all major os: windows,linux and osx

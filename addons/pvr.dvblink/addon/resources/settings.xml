@@ -11,16 +11,19 @@
 
   </category>
   <!-- Stream -->  
-  <category label="40000">  
-		<setting id="streamtype" type="enum" label="40002" lvalues="40007|40008|40009|40010" default="0" />
-		<setting id="height"  enable="gt(-1,0)" type="number" label="40003" default="720" />
-		<setting id="width"  enable="gt(-2,0)" type="number" label="40004" default="576" />
-		<setting id="bitrate"  enable="gt(-3,0)" type="number" label="40005" default="512" />
-		<setting id="audiotrack"  enable="gt(-4,0)" type="text" label="40006" default="eng" /> 
+  <category label="30100">  
+		<setting id="streamtype" type="enum" label="30102" lvalues="30107|30108|30109|30110" default="0" />
+		<setting id="timeshift"  visible="eq(-1,0)" type="bool" label="30111" default="false" />
+		<setting id="timeshiftpath"  visible="eq(-2,0)" enabled="eq(-1,0)" type="text" label="30112" default="special://userdata/addon_data/pvr.dvblink/tsbuffer" />
+		<setting id="height"  visible="gt(-3,0)" type="number" label="30103" default="720" />
+		<setting id="width"  visible="gt(-4,0)" type="number" label="30104" default="576" />
+		<setting id="bitrate"  visible="gt(-5,0)" type="number" label="30105" default="512" />
+		<setting id="audiotrack"  visible="gt(-6,0)" type="text" label="30106" default="eng" /> 
   </category>
    <!-- Advanced -->
-  <category label="50000">   
+  <category label="30200">   
   
-  <setting id="ch_handle" type="bool" label="50001" default="true" />
+  <setting id="ch_handle" type="bool" label="30201" default="true" />
+  <setting id="showinfomsg" type="bool" label="30202" default="false" />
 </category>
 </settings>

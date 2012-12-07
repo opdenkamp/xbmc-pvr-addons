@@ -103,9 +103,10 @@ void cParserAAC::Parse(unsigned char *data, int size, bool pusi)
   {
     while ((l = m_streamBufferDataSize - p) > 3)
     {
-      if(m_streamBuffer[p] == 0x56 && (m_streamBuffer[p + 1] & 0xe0) == 0xe0)
+      cBitstream bs(&m_streamBuffer[p], l * 8);
+      if(bs.readBits(11) == 0x2B7)
       {
-        int muxlen = (m_streamBuffer[p + 1] & 0x1f) << 8 | m_streamBuffer[p + 2];
+        int muxlen = bs.readBits(13);
 
         if(l < muxlen + 3)
           break;
@@ -203,37 +204,11 @@ void cParserAAC::ParseLATMAudioMuxElement(uint8_t *data, int len)
 
   sStreamPacket pkt;
   pkt.id       = m_pID;
-  pkt.size     = slotLen + 7;
-  pkt.data     = (uint8_t*)malloc(pkt.size);
+  pkt.size     = len + 3;
+  pkt.data     = data-3;
   pkt.dts      = m_curDTS;
   pkt.pts      = m_curDTS;
   pkt.duration = m_FrameDuration;
-
-  /* 7 bytes of ADTS header */
-  cBitstream out(pkt.data, 56);
-
-  out.putBits(0xfff, 12); // Sync marker
-  out.putBits(0, 1);      // ID 0 = MPEG 4
-  out.putBits(0, 2);      // Layer
-  out.putBits(1, 1);      // Protection absent
-  out.putBits(2, 2);      // AOT
-  out.putBits(m_SampleRateIndex, 4);
-  out.putBits(1, 1);      // Private bit
-  out.putBits(m_ChannelConfig, 3);
-  out.putBits(1, 1);      // Original
-  out.putBits(1, 1);      // Copy
-  out.putBits(1, 1);      // Copyright identification bit
-  out.putBits(1, 1);      // Copyright identification start
-  out.putBits(slotLen, 13);
-  out.putBits(0, 11);     // Buffer fullness
-  out.putBits(0, 2);      // RDB in frame
-
-  assert(out.remainingBits() == 0);
-
-  /* AAC RDB */
-  uint8_t *buf = pkt.data + 7;
-  for (unsigned int i = 0; i < slotLen; i++)
-    *buf++ = bs.readBits(8);
 
   m_curDTS += m_FrameDuration;
 
@@ -252,7 +227,7 @@ void cParserAAC::ReadStreamMuxConfig(cBitstream *bs)
     return;
 
   if (AudioMuxVersion)
-    LATMGetValue(bs);                  // taraFullness
+    LATMGetValue(bs);                      // taraFullness
 
   bs->skipBits(1);                         // allStreamSameTimeFraming = 1
   bs->skipBits(6);                         // numSubFrames = 0
@@ -290,7 +265,7 @@ void cParserAAC::ReadStreamMuxConfig(cBitstream *bs)
 
   if (bs->readBits(1))
   {                   // other data?
-    if (AudioMuxVersion)
+    if (AudioMuxVersion == 1)
     {
       LATMGetValue(bs);              // other_data_bits
     }
@@ -312,18 +287,19 @@ void cParserAAC::ReadStreamMuxConfig(cBitstream *bs)
 
 void cParserAAC::ReadAudioSpecificConfig(cBitstream *bs)
 {
-  int sr;
   int aot = bs->readBits(5);
+  if (aot == 31)
+    aot = 32 + bs->readBits(6);
 
   m_SampleRateIndex = bs->readBits(4);
 
   if (m_SampleRateIndex == 0xf)
-    sr = bs->readBits(24);
+    m_SampleRate = bs->readBits(24);
   else
-    sr = aac_sample_rates[m_SampleRateIndex & 0xf];
+    m_SampleRate = aac_sample_rates[m_SampleRateIndex & 0xf];
 
-  m_SampleRate    = aac_sample_rates[m_SampleRateIndex];
-  m_FrameDuration = 1024 * 90000 / m_SampleRate;
+  if (m_SampleRate)
+    m_FrameDuration = 1024 * 90000 / m_SampleRate;
   m_ChannelConfig = bs->readBits(4);
 
   if (aot == 5) { // AOT_SBR
@@ -331,6 +307,8 @@ void cParserAAC::ReadAudioSpecificConfig(cBitstream *bs)
       bs->skipBits(24);
     }
     aot = bs->readBits(5); // this is the main object type (i.e. non-extended)
+    if (aot == 31)
+      aot = 32 + bs->readBits(6);
   }
 
   if(aot != 2)

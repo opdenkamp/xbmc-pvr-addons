@@ -802,7 +802,7 @@ void cLiveStreamer::sendStreamChange()
     }
     else if ((*it)->Type() == stAACLATM)
     {
-      resp->add_String("AAC");
+      resp->add_String("AACLATM");
       resp->add_String((*it)->GetLanguage());
       resp->add_U32((*it)->GetChannels());
       resp->add_U32((*it)->GetSampleRate());

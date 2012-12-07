@@ -41,7 +41,7 @@ cParserAAC::cParserAAC(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
   m_demuxer                   = demuxer;
   m_streamBuffer              = NULL;
   m_streamBufferSize          = 0;
-  m_streamBufferPtr           = 0;
+  m_streamBufferDataSize      = 0;
   m_streamParserPtr           = 0;
   m_firstPUSIseen             = false;
 
@@ -62,7 +62,7 @@ void cParserAAC::Parse(unsigned char *data, int size, bool pusi)
   {
     /* Payload unit start */
     m_firstPUSIseen   = true;
-    m_streamBufferPtr = 0;
+    m_streamBufferDataSize = 0;
     m_streamParserPtr = 0;
   }
 
@@ -75,18 +75,18 @@ void cParserAAC::Parse(unsigned char *data, int size, bool pusi)
     m_streamBuffer = (uint8_t*)malloc(m_streamBufferSize);
   }
 
-  if(m_streamBufferPtr + size >= m_streamBufferSize)
+  if(m_streamBufferDataSize + size >= m_streamBufferSize)
   {
     m_streamBufferSize += size * 4;
     m_streamBuffer = (uint8_t*)realloc(m_streamBuffer, m_streamBufferSize);
   }
 
-  memcpy(m_streamBuffer + m_streamBufferPtr, data, size);
-  m_streamBufferPtr += size;
+  memcpy(m_streamBuffer + m_streamBufferDataSize, data, size);
+  m_streamBufferDataSize += size;
 
   if (m_streamParserPtr == 0)
   {
-    if (m_streamBufferPtr < 9)
+    if (m_streamBufferDataSize < 9)
       return;
 
     int hlen = ParsePESHeader(data, size);
@@ -99,21 +99,76 @@ void cParserAAC::Parse(unsigned char *data, int size, bool pusi)
   int p = m_streamParserPtr;
 
   int l;
-  while ((l = m_streamBufferPtr - p) > 3)
+  if (m_demuxer->Type() == stAACLATM)
   {
-    if(m_streamBuffer[p] == 0x56 && (m_streamBuffer[p + 1] & 0xe0) == 0xe0)
+    while ((l = m_streamBufferDataSize - p) > 3)
     {
-      int muxlen = (m_streamBuffer[p + 1] & 0x1f) << 8 | m_streamBuffer[p + 2];
+      if(m_streamBuffer[p] == 0x56 && (m_streamBuffer[p + 1] & 0xe0) == 0xe0)
+      {
+        int muxlen = (m_streamBuffer[p + 1] & 0x1f) << 8 | m_streamBuffer[p + 2];
 
-      if(l < muxlen + 3)
-        break;
+        if(l < muxlen + 3)
+          break;
 
-      ParseLATMAudioMuxElement(m_streamBuffer + p + 3, muxlen);
-      p += muxlen + 3;
+        ParseLATMAudioMuxElement(m_streamBuffer + p + 3, muxlen);
+        p += muxlen + 3;
+      }
+      else
+      {
+        p++;
+      }
     }
-    else
+  }
+  else if (m_demuxer->Type() == stAACADST)
+  {
+    while ((l = m_streamBufferDataSize - p) > 3)
     {
-      p++;
+      if(m_streamBuffer[p] == 0xFF && (m_streamBuffer[p + 1] & 0xF0) == 0xF0)
+      {
+        // need at least 7 bytes for header
+        if (l < 7)
+          break;
+
+        cBitstream bs(&m_streamBuffer[p], l * 8);
+        bs.skipBits(15);
+
+        // check if CRC is present, means header is 9 byte long
+        int noCrc = bs.readBits(1);
+        if (!noCrc && (l < 9))
+          break;
+
+        bs.skipBits(2); // profile
+        m_SampleRateIndex = bs.readBits(4);
+        bs.skipBits(1); // private
+        m_ChannelConfig = bs.readBits(3);
+        bs.skipBits(4);
+
+        int frameLen = bs.readBits(13);
+
+        if (l < frameLen)
+          break;
+
+        m_SampleRate    = aac_sample_rates[m_SampleRateIndex & 0x0E];
+        if (m_SampleRate)
+          m_FrameDuration = 1024 * 90000 / m_SampleRate;
+
+        sStreamPacket pkt;
+        pkt.id       = m_pID;
+        pkt.size     = frameLen;
+        pkt.data     = &m_streamBuffer[p];
+        pkt.dts      = m_curDTS;
+        pkt.pts      = m_curDTS;
+        pkt.duration = m_FrameDuration;
+
+        m_curDTS += m_FrameDuration;
+        SendPacket(&pkt);
+
+        p += frameLen;
+      }
+      else
+      {
+        p++;
+      }
     }
   }
   m_streamParserPtr = p;
@@ -259,17 +314,13 @@ void cParserAAC::ReadAudioSpecificConfig(cBitstream *bs)
 {
   int sr;
   int aot = bs->readBits(5);
-  static const int sample_rates[16] = {
-      96000, 88200, 64000, 48000, 44100, 32000,
-      24000, 22050, 16000, 12000, 11025, 8000, 7350
-  };
 
   m_SampleRateIndex = bs->readBits(4);
 
   if (m_SampleRateIndex == 0xf)
     sr = bs->readBits(24);
   else
-    sr = sample_rates[m_SampleRateIndex & 0xf];
+    sr = aac_sample_rates[m_SampleRateIndex & 0xf];
 
   m_SampleRate    = aac_sample_rates[m_SampleRateIndex];
   m_FrameDuration = 1024 * 90000 / m_SampleRate;

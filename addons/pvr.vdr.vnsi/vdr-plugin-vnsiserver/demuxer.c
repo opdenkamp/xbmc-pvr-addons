@@ -226,8 +226,8 @@ void cParser::SendPacket(sStreamPacket *pkt)
 
 cTSDemuxer::cTSDemuxer(cLiveStreamer *streamer, eStreamType type, int pid)
   : m_Streamer(streamer)
-  , m_pID(pid)
   , m_streamType(type)
+  , m_pID(pid)
 {
   m_pesError        = false;
   m_pesParser       = NULL;
@@ -249,7 +249,9 @@ cTSDemuxer::cTSDemuxer(cLiveStreamer *streamer, eStreamType type, int pid)
     m_pesParser = new cParserH264(this, m_Streamer, m_pID);
   else if (m_streamType == stMPEG2AUDIO)
     m_pesParser = new cParserMPEG2Audio(this, m_Streamer, m_pID);
-  else if (m_streamType == stAAC)
+  else if (m_streamType == stAACADST)
+    m_pesParser = new cParserAAC(this, m_Streamer, m_pID);
+  else if (m_streamType == stAACLATM)
     m_pesParser = new cParserAAC(this, m_Streamer, m_pID);
   else if (m_streamType == stAC3)
     m_pesParser = new cParserAC3(this, m_Streamer, m_pID);

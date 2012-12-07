@@ -81,18 +81,15 @@ public:
     }
   }
 
-  static const int c_timeoutStorageGroupFileList = 30;       // Wake the thread every 10s
   static const int c_timeoutProcess              = 10;       // Wake the thread every 10s
   static const int c_timeoutCacheCleaning        = 60*60*24; // Clean the cache every 24h
 
   FileOps(MythConnection &mythConnection);
   virtual ~FileOps();
 
-  CStdString GetArtworkPath(const CStdString &title, FileType fileType);
-  CStdString GetChannelIconPath(const CStdString &remotePath);
-  CStdString GetPreviewIconPath(const CStdString &remotePath);
-
-  void UpdateStorageGroupFileList();
+  CStdString GetArtworkPath(const CStdString &remoteFilename, FileType fileType);
+  CStdString GetChannelIconPath(const CStdString &remoteFilename);
+  CStdString GetPreviewIconPath(const CStdString &remoteFilename);
 
   void Suspend();
   void Resume();
@@ -105,9 +102,6 @@ protected:
 
   static CStdString GetFileName(const CStdString &path, char separator = PATH_SEPARATOR_CHAR);
   static CStdString GetDirectoryName(const CStdString &path, char separator = PATH_SEPARATOR_CHAR);
-
-  std::map<FileType, StorageGroupFileList> m_StorageGroupFileList;
-  std::map<FileType, std::time_t> m_StorageGroupFileListLastUpdated;
 
   std::map<CStdString, CStdString> m_icons;
   std::map<CStdString, CStdString> m_preview;

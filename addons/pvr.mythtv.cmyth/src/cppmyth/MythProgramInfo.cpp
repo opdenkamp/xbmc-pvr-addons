@@ -25,12 +25,16 @@
 MythProgramInfo::MythProgramInfo()
   : m_proginfo_t()
   , m_framerate(-1)
+  , m_coverart("")
+  , m_fanart("")
 {
 }
 
 MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
   : m_proginfo_t(new MythPointer<cmyth_proginfo_t>())
   , m_framerate(-1)
+  , m_coverart("")
+  , m_fanart("")
 {
   *m_proginfo_t = cmyth_proginfo;
 }
@@ -227,3 +231,17 @@ long long MythProgramInfo::Framterate() const
   return m_framerate;
 }
 
+CStdString MythProgramInfo::IconPath()
+{
+  return (BaseName() + ".png");
+}
+
+CStdString MythProgramInfo::Coverart() const
+{
+  return m_coverart;
+}
+
+CStdString MythProgramInfo::Fanart() const
+{
+  return m_fanart;
+}

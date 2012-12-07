@@ -256,3 +256,22 @@ long long MythDatabase::GetRecordingFrameRate(const MythProgramInfo &recording)
   CMYTH_DB_CALL(value, value < 0, cmyth_mysql_get_recording_framerate(*m_database_t, *recording.m_proginfo_t));
   return value;
 }
+
+bool MythDatabase::FillRecordingArtwork(MythProgramInfo &recording)
+{
+  int retval = 0;
+  char* coverart;
+  char* fanart;
+  char* banner;
+  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_get_recording_artwork(*m_database_t, *recording.m_proginfo_t, &coverart, &fanart, &banner));
+  if (retval > 0)
+  {
+    recording.m_coverart = coverart;
+    recording.m_fanart = fanart;
+    ref_release(coverart);
+    ref_release(fanart);
+    ref_release(banner);
+    return true;
+  }
+  return false;
+}

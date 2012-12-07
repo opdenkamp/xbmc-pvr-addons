@@ -116,88 +116,38 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
   return localFilename;
 }
 
-CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
+CStdString FileOps::GetArtworkPath(const CStdString &remoteFilename, FileType fileType)
 {
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s: title: %s, fileType: %s", __FUNCTION__, title.c_str(), GetFolderNameByFileType(fileType));
+    XBMC->Log(LOG_DEBUG, "%s: filename: %s, fileType: %s", __FUNCTION__, remoteFilename.c_str(), GetFolderNameByFileType(fileType));
 
-  // Check local cache
-  std::pair<FileType, CStdString> key = std::make_pair(fileType, title);
-  {
-    std::map<std::pair<FileType, CStdString>, CStdString>::iterator iter = m_artworks.find(key);
-    if (iter != m_artworks.end())
-      return iter->second;
-  }
+  // Check local directory
+  std::pair<FileType, CStdString> key = std::make_pair(fileType, remoteFilename);
+  std::map<std::pair<FileType, CStdString>, CStdString>::iterator iter = m_artworks.find(key);
+  if (iter != m_artworks.end())
+    return iter->second;
 
-  // Search in the storage group file list
-  StorageGroupFileList::iterator it;
-  for (it = m_StorageGroupFileList[fileType].begin(); it != m_StorageGroupFileList[fileType].end(); ++it)
-  {
-    if (it->Filename().Left(title.GetLength()) == title)
-      break;
-  }
-  if (it == m_StorageGroupFileList[fileType].end())
-  {
-    return ""; // Not found
-  }
+  // Check file exists in storage group
+  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(GetFolderNameByFileType(fileType), remoteFilename);
 
   // Determine local filename
   CStdString localFilename;
-  localFilename.Format("%lu_%s", it->LastModified(), it->Filename());
-  localFilename = m_localBasePath + GetFolderNameByFileType(fileType) + PATH_SEPARATOR_CHAR + localFilename.c_str();
-
-  if (!XBMC->FileExists(localFilename, true))
+  if (!sgfile.IsNull())
   {
-    Lock();
-    FileOps::JobItem job(localFilename, it->Filename(), GetFolderNameByFileType(fileType));
-    m_jobQueue.push_back(job);
-    m_queueContent.Signal();
-    Unlock();
-  }
+    localFilename = m_localBasePath + GetFolderNameByFileType(fileType) + PATH_SEPARATOR_CHAR + remoteFilename.c_str();
 
-  m_artworks[key] = localFilename;
-  return localFilename;
-}
-
-void FileOps::UpdateStorageGroupFileList()
-{
-  std::time_t now = 0;
-
-  std::vector<FileType> fileTypes = GetFileTypes();
-  std::vector<FileType>::const_iterator fileTypeIt;
-  for (fileTypeIt = fileTypes.begin(); fileTypeIt != fileTypes.end(); ++fileTypeIt)
-  {
-    // Update the list of files in a storage group if the filelist is empty
-    // or the validity timeout has been reached
-    if (m_StorageGroupFileList.find(*fileTypeIt) == m_StorageGroupFileList.end() ||
-        std::difftime(now, m_StorageGroupFileListLastUpdated[*fileTypeIt]) > c_timeoutStorageGroupFileList)
+    if (!XBMC->FileExists(localFilename, true))
     {
-      if (g_bExtraDebug)
-        XBMC->Log(LOG_DEBUG, "%s Getting storage group file list for type: %s (%s - %s)", __FUNCTION__, GetFolderNameByFileType(*fileTypeIt), std::asctime(std::localtime(&now)), std::asctime(std::localtime(&m_StorageGroupFileListLastUpdated[*fileTypeIt])));
-
-      m_StorageGroupFileList[*fileTypeIt] = m_con.GetStorageGroupFileList(GetFolderNameByFileType(*fileTypeIt));
-      m_StorageGroupFileListLastUpdated[*fileTypeIt] = now;
-
-      // Clean the file lists of unwanted files
-      StorageGroupFileList::iterator it = m_StorageGroupFileList[*fileTypeIt].begin();
-      while (it != m_StorageGroupFileList[*fileTypeIt].end())
-      {
-        if (g_bExtraDebug)
-          XBMC->Log(LOG_DEBUG, "%s %s - %s", __FUNCTION__, GetFolderNameByFileType(*fileTypeIt), it->Filename().c_str());
-
-        // Check file extension, if it's not an image, remove the file from storage group
-        size_t extensionPos = it->Filename().find_last_of('.');
-        CStdString extension = it->Filename().substr(extensionPos + 1);
-        if (extension != "jpg" && extension != "png" && extension != "bmp")
-        {
-          it = m_StorageGroupFileList[*fileTypeIt].erase(it);
-          continue;
-        }
-
-        ++it;
-      }
+      Lock();
+        FileOps::JobItem job(localFilename, remoteFilename, GetFolderNameByFileType(fileType));
+        m_jobQueue.push_back(job);
+        m_queueContent.Signal();
+      Unlock();
     }
+    m_artworks[key] = localFilename;
   }
+
+  return localFilename;
 }
 
 void FileOps::Suspend()

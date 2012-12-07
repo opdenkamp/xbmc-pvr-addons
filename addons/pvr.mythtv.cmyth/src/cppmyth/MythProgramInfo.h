@@ -81,9 +81,17 @@ public:
   void SetFramerate(const long long framerate);
   long long Framterate() const;
 
+  CStdString IconPath();
+  CStdString Coverart() const;
+  CStdString Fanart() const;
+
 private:
   boost::shared_ptr<MythPointer<cmyth_proginfo_t> > m_proginfo_t;
 
   // Cached PVR attributes
   long long m_framerate;
+
+  // Artworks
+  CStdString m_coverart;
+  CStdString m_fanart;
 };

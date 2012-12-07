@@ -40,7 +40,6 @@ template <class T> class MythPointer;
 template <class T> class MythPointerThreadSafe;
 
 typedef std::map<CStdString, MythProgramInfo> ProgramInfoMap;
-typedef std::vector<MythStorageGroupFile> StorageGroupFileList;
 
 class MythConnection
 {
@@ -85,7 +84,7 @@ public:
   // Files
   MythFile ConnectFile(MythProgramInfo &recording);
   MythFile ConnectPath(const CStdString &filename, const CStdString &storageGroup);
-  StorageGroupFileList GetStorageGroupFileList(const CStdString &storageGroup);
+  MythStorageGroupFile GetStorageGroupFile(const CStdString &storageGroup, const CStdString &filename);
 
   // Bookmarks
   long long GetBookmark(MythProgramInfo &recording);

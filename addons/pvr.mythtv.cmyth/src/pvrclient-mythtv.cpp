@@ -219,7 +219,6 @@ bool PVRClientMythTV::Connect()
 
   // Create file operation helper (image caching)
   m_fileOps = new FileOps(m_con);
-  m_fileOps->UpdateStorageGroupFileList();
 
   // Get channel list
   m_channels = m_db.GetChannels();
@@ -487,7 +486,6 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       tag.iPlayCount = it->second.IsWatched() ? 1 : 0;
 
       CStdString id = it->second.StrUID();
-      CStdString path = it->second.BaseName();
       CStdString title = it->second.Title(true);
 
       PVR_STRCPY(tag.strRecordingId, id);
@@ -505,11 +503,15 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       PVR_STRCPY(tag.strDirectory, strDirectory);
 
       // Images
-      CStdString strIconPath = GetArtWork(FileOps::FileTypeCoverart, title);
-      if (strIconPath.IsEmpty())
-        strIconPath = m_fileOps->GetPreviewIconPath(path + ".png");
+      CStdString strIconPath;
+      if (!it->second.Coverart().IsEmpty())
+        strIconPath = GetArtWork(FileOps::FileTypeCoverart, it->second.Coverart());
+      else
+        strIconPath = m_fileOps->GetPreviewIconPath(it->second.IconPath());
 
-      CStdString strFanartPath = GetArtWork(FileOps::FileTypeFanart, title);
+      CStdString strFanartPath;
+      if (!it->second.Fanart().IsEmpty())
+        strFanartPath = GetArtWork(FileOps::FileTypeFanart, it->second.Fanart());
 
       PVR_STRCPY(tag.strIconPath, strIconPath.c_str());
       PVR_STRCPY(tag.strThumbnailPath, strIconPath.c_str());
@@ -564,6 +566,9 @@ void PVRClientMythTV::EventUpdateRecordings()
             if (g_bExtraDebug)
               XBMC->Log(LOG_DEBUG, "%s - Add recording: %s", __FUNCTION__, prog.StrUID().c_str());
 
+            // Fill artwork
+            m_db.FillRecordingArtwork(prog);
+
             // Add recording
             m_recordings.insert(std::pair<CStdString, MythProgramInfo>(prog.StrUID().c_str(), prog));
           }
@@ -583,6 +588,9 @@ void PVRClientMythTV::EventUpdateRecordings()
 
           // Copy cached framerate
           prog.SetFramerate(it->second.Framterate());
+
+          // Fill artwork
+          m_db.FillRecordingArtwork(prog);
 
           // Update recording
           it->second = prog;
@@ -625,6 +633,9 @@ void PVRClientMythTV::ForceUpdateRecording(ProgramInfoMap::iterator it)
       // Copy cached framerate
       prog.SetFramerate(it->second.Framterate());
 
+      // Fill artwork
+      m_db.FillRecordingArtwork(prog);
+
       // Update recording
       it->second = prog;
       PVR->TriggerRecordingUpdate();
@@ -652,6 +663,7 @@ int PVRClientMythTV::FillRecordings()
   for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
     if (!it->second.IsNull() && it->second.IsVisible())
+      m_db.FillRecordingArtwork(it->second);
       res++;
   }
   return res;

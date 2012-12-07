@@ -87,6 +87,8 @@ public:
   long long GetRecordingMarkup(const MythProgramInfo &recording, int type);
   long long GetRecordingFrameRate(const MythProgramInfo &recording);
 
+  bool FillRecordingArtwork(MythProgramInfo &recording);
+
 private:
   boost::shared_ptr<MythPointerThreadSafe<cmyth_database_t> > m_database_t;
 };

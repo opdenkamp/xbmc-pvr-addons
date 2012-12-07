@@ -72,6 +72,8 @@ public:
   // Recordings
   bool DeleteRecording(MythProgramInfo &recording);
   ProgramInfoMap GetRecordedPrograms();
+  MythProgramInfo GetRecordedProgram(const CStdString &basename);
+  MythProgramInfo GetRecordedProgram(int chanid, time_t recstartts);
 
   // Timers
   ProgramInfoMap GetPendingPrograms();

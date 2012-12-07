@@ -23,7 +23,11 @@
 #include "MythSignal.h"
 #include "MythPointer.h"
 #include "MythFile.h"
+#include "MythProgramInfo.h"
+#include "MythTimestamp.h"
 #include "../client.h"
+
+#include <list>
 
 using namespace ADDON;
 
@@ -68,6 +72,7 @@ public:
   void HandleUpdateFileSize(const CStdString &buffer);
 
   void RetryConnect();
+  void RecordingListChange();
 
   // Data
   CStdString m_server;
@@ -81,6 +86,8 @@ public:
   bool m_playback;
   CStdString m_currentRecordID;
   MythFile m_currentFile;
+
+  std::list<MythEventHandler::RecordingChangeEvent> m_recordingChangeEventList;
 };
 
 MythEventHandler::MythEventHandlerPrivate::MythEventHandlerPrivate(const CStdString &server, unsigned short port)
@@ -92,6 +99,7 @@ MythEventHandler::MythEventHandlerPrivate::MythEventHandlerPrivate(const CStdStr
   , m_recorder(MythRecorder())
   , m_signal()
   , m_playback(false)
+  , m_recordingChangeEventList()
 {
   *m_conn_t = cmyth_conn_connect_event(const_cast<char*>(m_server.c_str()), port, 64 * 1024, 16 * 1024);
 }
@@ -127,12 +135,15 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
   cmyth_event_t myth_event;
   char databuf[2049];
   databuf[0] = 0;
+  bool triggerRecordingUpdate = false;
+  unsigned int recordingChangeCount = 0;
   timeval timeout;
   timeout.tv_sec = 0;
   timeout.tv_usec = 100000;
 
   while (!IsStopped())
   {
+    bool recordingChange = false;
     int select = 0;
     m_conn_t->Lock();
     select = cmyth_event_select(*m_conn_t, &timeout);
@@ -140,8 +151,9 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
 
     if (select > 0)
     {
+      cmyth_proginfo_t proginfo = NULL;
       m_conn_t->Lock();
-      myth_event = cmyth_event_get(*m_conn_t, databuf, 2048);
+      myth_event = cmyth_event_get_message(*m_conn_t, databuf, 2048, &proginfo);
       m_conn_t->Unlock();
 
       if (g_bExtraDebug)
@@ -215,18 +227,58 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         if (g_bExtraDebug)
           XBMC->Log(LOG_NOTICE, "%s - Event schedule change", __FUNCTION__);
         PVR->TriggerTimerUpdate();
-        PVR->TriggerRecordingUpdate();
       }
 
-      if (!m_playback && (
-          myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_ADD ||
-          myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_DELETE ||
-          myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_UPDATE ||
-          myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE))
+      if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_ADD)
+      {
+        //Event data: "4121 2010-03-06T01:06:43[]:[]empty"
+        int chanid;
+        char recstartts[20];
+        if (strlen(databuf)>=24 && sscanf(databuf, "%d %19s", &chanid, recstartts) == 2) {
+          Lock();
+          m_recordingChangeEventList.push_back(RecordingChangeEvent(CHANGE_ADD, chanid, recstartts));
+          Unlock();
+          if (g_bExtraDebug)
+            XBMC->Log(LOG_DEBUG,"%s - Event recording list add: CHANID=%d TS=%s", __FUNCTION__, chanid, recstartts);
+          recordingChange = true;
+        }
+      }
+
+      if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_UPDATE)
+      {
+        //Event data: Updated 'proginfo' is returned
+        MythProgramInfo prog = MythProgramInfo(proginfo);
+        if (!prog.IsNull())
+        {
+          Lock();
+          m_recordingChangeEventList.push_back(RecordingChangeEvent(CHANGE_UPDATE, prog));
+          Unlock();
+          if (g_bExtraDebug)
+            XBMC->Log(LOG_DEBUG,"%s - Event recording list update: UID=%s", __FUNCTION__, prog.StrUID().c_str());
+          recordingChange = true;
+        }
+      }
+
+      if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_DELETE)
+      {
+        //Event data: "4121 2010-03-06T01:06:43[]:[]empty"
+        int chanid;
+        char recstartts[20];
+        if (strlen(databuf)>=24 && sscanf(databuf, "%d %19s", &chanid, recstartts) == 2) {
+          Lock();
+          m_recordingChangeEventList.push_back(RecordingChangeEvent(CHANGE_DELETE, chanid, recstartts));
+          Unlock();
+          if (g_bExtraDebug)
+            XBMC->Log(LOG_DEBUG,"%s - Event recording list delete: CHANID=%d TS=%s", __FUNCTION__, chanid, recstartts);
+          recordingChange = true;
+        }
+      }
+
+      if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE)
       {
         if (g_bExtraDebug)
           XBMC->Log(LOG_NOTICE, "%s - Event recording list change", __FUNCTION__);
-        PVR->TriggerRecordingUpdate();
+        RecordingListChange();
       }
 
       if (myth_event == CMYTH_EVENT_UNKNOWN)
@@ -263,10 +315,41 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         XBMC->Log(LOG_NOTICE, "%s - Could not connect client to event socket", __FUNCTION__);
     }
 
-    //Restore timeout
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 100000;
+    //Accumulate recording change events before triggering PVR event
+    //First timeout is 0.5 sec and next 2 secs
+    if (recordingChange)
+    {
+      if (recordingChangeCount == 0)
+      {
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 500000;
+      }
+      else
+      {
+        timeout.tv_sec = 2;
+        timeout.tv_usec = 0;
+      }
+      recordingChangeCount++;
+      triggerRecordingUpdate = true;
+    }
+    else
+    {
+      //Restore timeout
+      timeout.tv_sec = 0;
+      timeout.tv_usec = 100000;
+      //Need PVR update ?
+      if (triggerRecordingUpdate)
+      {
+        XBMC->Log(LOG_DEBUG, "%s - Trigger PVR recording update: %lu recording(s)", __FUNCTION__, recordingChangeCount);
+        PVR->TriggerRecordingUpdate();
+        triggerRecordingUpdate = false;
+      }
+      //Reset counter
+      recordingChangeCount = 0;
+    }
   }
+  // Free recording change event
+  m_recordingChangeEventList.clear();
   return NULL;
 }
 
@@ -339,9 +422,18 @@ void MythEventHandler::MythEventHandlerPrivate::RetryConnect()
       else
       {
         XBMC->Log(LOG_NOTICE, "%s - Connected client to event socket", __FUNCTION__);
+        RecordingListChange();
         break;
       }
     }
+}
+
+void MythEventHandler::MythEventHandlerPrivate::RecordingListChange()
+{
+  Lock();
+  m_recordingChangeEventList.push_back(RecordingChangeEvent(CHANGE_ALL));
+  Unlock();
+  PVR->TriggerRecordingUpdate();
 }
 
 MythEventHandler::MythEventHandler()
@@ -424,5 +516,26 @@ void MythEventHandler::SetRecordingListener(const CStdString &recordid, const My
 {
   m_imp->Lock();
   m_imp->SetRecordingEventListener(recordid, file);
+  m_imp->Unlock();
+}
+
+bool MythEventHandler::HasRecordingChangeEvent() const
+{
+  return !m_imp->m_recordingChangeEventList.empty();
+}
+
+MythEventHandler::RecordingChangeEvent MythEventHandler::NextRecordingChangeEvent()
+{
+  m_imp->Lock();
+  RecordingChangeEvent event = m_imp->m_recordingChangeEventList.front();
+  m_imp->m_recordingChangeEventList.pop_front();
+  m_imp->Unlock();
+  return event;
+}
+
+void MythEventHandler::ClearRecordingChangeEvents()
+{
+  m_imp->Lock();
+  m_imp->m_recordingChangeEventList.clear();
   m_imp->Unlock();
 }

@@ -24,11 +24,13 @@
 
 MythProgramInfo::MythProgramInfo()
   : m_proginfo_t()
+  , m_framerate(-1)
 {
 }
 
 MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
   : m_proginfo_t(new MythPointer<cmyth_proginfo_t>())
+  , m_framerate(-1)
 {
   *m_proginfo_t = cmyth_proginfo;
 }
@@ -42,12 +44,7 @@ bool MythProgramInfo::IsNull() const
 
 CStdString MythProgramInfo::StrUID()
 {
-  // Creates unique IDs from ChannelID, RecordID and StartTime like "100_200_2011-12-10T12:00:00"
-  char buf[40] = "";
-  sprintf(buf, "%d_%ld_", ChannelID(), RecordID());
-  time_t starttime = RecordingStartTime();
-  strftime(buf + strlen(buf), 20, "%Y-%m-%dT%H:%M:%S", localtime(&starttime));
-  return CStdString(buf);
+  return MakeUID(ChannelID(), RecordingStartTime());
 }
 
 long long MythProgramInfo::UID()
@@ -91,7 +88,7 @@ CStdString MythProgramInfo::Subtitle()
   return retval;
 }
 
-CStdString MythProgramInfo::Path()
+CStdString MythProgramInfo::BaseName()
 {
   char* path = cmyth_proginfo_pathname(*m_proginfo_t);
   CStdString retval(path);
@@ -219,3 +216,14 @@ int MythProgramInfo::Priority()
 {
   return cmyth_proginfo_priority(*m_proginfo_t); // Might want to use recpriority2 instead
 }
+
+void MythProgramInfo::SetFramerate(const long long framerate)
+{
+  m_framerate = framerate;
+}
+
+long long MythProgramInfo::Framterate() const
+{
+  return m_framerate;
+}
+

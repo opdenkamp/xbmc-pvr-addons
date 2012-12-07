@@ -235,6 +235,36 @@ ProgramInfoMap MythConnection::GetRecordedPrograms()
   return retval;
 }
 
+MythProgramInfo MythConnection::GetRecordedProgram(const CStdString &basename)
+{
+  MythProgramInfo retval;
+  cmyth_proginfo_t prog = NULL;
+  if (!basename.IsEmpty())
+  {
+    CMYTH_CONN_CALL_REF(prog, prog == NULL, cmyth_proginfo_get_from_basename(*m_conn_t, const_cast<char*>(basename.c_str())));
+    if (prog) {
+      retval = MythProgramInfo(prog);
+    }
+  }
+
+  return retval;
+}
+
+MythProgramInfo MythConnection::GetRecordedProgram(int chanid, time_t recstartts)
+{
+  MythProgramInfo retval;
+  cmyth_proginfo_t prog = NULL;
+  if (chanid > 0 && recstartts > 0)
+  {
+    CMYTH_CONN_CALL_REF(prog, prog == NULL, cmyth_proginfo_get_from_timeslot(*m_conn_t, chanid, recstartts));
+    if (prog) {
+      retval = MythProgramInfo(prog);
+    }
+  }
+
+  return retval;
+}
+
 ProgramInfoMap MythConnection::GetPendingPrograms()
 {
   Lock();

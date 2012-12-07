@@ -147,6 +147,11 @@ private:
   // Recordings
   ProgramInfoMap m_recordings;
 
+  PLATFORM::CMutex m_recordingsLock;
+  void EventUpdateRecordings();
+  void ForceUpdateRecording(ProgramInfoMap::iterator it);
+  int FillRecordings();
+
   // Timers
   RecordingRuleList m_recordingRules;
   void PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule);

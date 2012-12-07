@@ -11,6 +11,7 @@ SUBDIRS = pvr.demo \
           pvr.njoy \
           pvr.vuplus \
           pvr.argustv \
+          pvr.dvblink \
           $(ADDITIONAL_SUBDIRS)
 
 clean:

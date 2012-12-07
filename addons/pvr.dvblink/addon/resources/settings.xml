@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+  <!-- Connection -->
+  <category label="30000">
+    <setting id="host" type="text" label="30001" option="urlencoded" default="127.0.0.1" />
+    <setting id="port" type="number" option="int" label="30002" default="8080" />
+    <setting id="timeout" visible="false" type="enum" label="30004" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20" default="10"/>
+    <setting id="client" type="text" label="30003" default="xbmc" />
+	<setting id="username" type="text" label="30005" default="" />
+	<setting id="password" type="text" label="30006" default="" option="hidden"  enable="!eq(-1,)" />
+
+  </category>
+  <!-- Stream -->  
+  <category label="40000">  
+		<setting id="streamtype" type="enum" label="40002" lvalues="40007|40008|40009|40010" default="0" />
+		<setting id="height"  enable="gt(-1,0)" type="number" label="40003" default="720" />
+		<setting id="width"  enable="gt(-2,0)" type="number" label="40004" default="576" />
+		<setting id="bitrate"  enable="gt(-3,0)" type="number" label="40005" default="512" />
+		<setting id="audiotrack"  enable="gt(-4,0)" type="text" label="40006" default="eng" /> 
+  </category>
+   <!-- Advanced -->
+  <category label="50000">   
+  
+  <setting id="ch_handle" type="bool" label="50001" default="true" />
+</category>
+</settings>

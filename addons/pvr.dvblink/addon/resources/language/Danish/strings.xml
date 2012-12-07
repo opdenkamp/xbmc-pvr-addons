@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+    <!-- settings labels -->
+    <string id="30001">Server adresse</string>
+    <string id="30002">Server Port</string>
+	<string id="30003">Klient navn</string>
+    <string id="30004">Forbindelse timeout</string>
+	<string id="30005">Brugernavn</string>
+	<string id="30006">Kodeord</string>	
+
+
+	
+	<string id="40002">Stream format</string>	
+	<string id="40003">Højde</string>
+	<string id="40004">Brede</string>
+	<string id="40005">Bitrate</string>
+	<string id="40006">Lyd spor</string>	
+	<string id="40007">HTTP</string>
+	<string id="40008">RTP</string>
+	<string id="40009">HLS</string>	
+	<string id="40010">ASF</string>
+	
+	<string id="50001">Brug kanal handle istedet for klient id</string>	
+	
+
+    <!-- category labels -->
+    <string id="30000">Generelt</string>	
+    <string id="40000">Stream</string>
+    <string id="50000">Advanceret</string>	
+	
+	
+</strings>

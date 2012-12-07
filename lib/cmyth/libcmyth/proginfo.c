@@ -1850,7 +1850,7 @@ cmyth_proginfo_get_from_basename(cmyth_conn_t control, const char* basename)
 }
 
 cmyth_proginfo_t
-cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, const unsigned long chanid, const char* recstartts)
+cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, unsigned long chanid, time_t recstartts)
 {
 	int err = 0;
 	int count, i;
@@ -1866,7 +1866,7 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, const unsigned long chani
 		return NULL;
 	}
 
-	ts = cmyth_timestamp_from_string(recstartts);
+	ts = cmyth_timestamp_from_unixtime(recstartts);
 	if (!ts) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: timestamp NULL\n",
 			  __FUNCTION__);

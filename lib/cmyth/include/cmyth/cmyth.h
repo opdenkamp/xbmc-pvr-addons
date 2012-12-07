@@ -813,9 +813,18 @@ extern int cmyth_proginfo_get_recorder_num(cmyth_conn_t control,
 extern cmyth_proginfo_t cmyth_proginfo_get_from_basename(cmyth_conn_t control,
 					   const char* basename);
 
+/**
+ * Retrieve the program with its timeslot.
+ * 'recstartts' is the timeslot start time received from the message of backend
+ *  event 'RECORDING LIST CHANGE'.  Uses UTC time since protocol 75.
+ * \param control backend control handle
+ * \param chanid channel id
+ * \param recstartts recstartts
+ * \return NULL or proginfo handle
+ */
 extern cmyth_proginfo_t cmyth_proginfo_get_from_timeslot(cmyth_conn_t control,
-					   const unsigned long chanid,
-					   const char* recstartts);
+					   unsigned long chanid,
+					   time_t recstartts);
 
 /**
  * Retrieve the title of a program.

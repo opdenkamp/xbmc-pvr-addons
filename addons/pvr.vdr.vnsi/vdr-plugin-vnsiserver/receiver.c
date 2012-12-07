@@ -166,8 +166,12 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
       DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d) (%s)\n", stream.getPid(), stream.getStreamType(), langs);
       return stream.getPid();
     case 0x0F: // ISO/IEC 13818-7 Audio with ADTS transport syntax
+      *type = stAACADST;
+      GetLanguage(stream, langs);
+      DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AAC", langs);
+     return stream.getPid();
     case 0x11: // ISO/IEC 14496-3 Audio with LATM transport syntax
-       *type = stAAC;
+       *type = stAACLATM;
        GetLanguage(stream, langs);
        DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AAC", langs);
       return stream.getPid();
@@ -213,7 +217,7 @@ int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *lan
             return stream.getPid();
           case SI::AACDescriptorTag:
             DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AAC", langs);
-            *type = stAAC;
+            *type = stAACADST;
             GetLanguage(stream, langs);
             delete d;
             return stream.getPid();
@@ -786,7 +790,17 @@ void cLiveStreamer::sendStreamChange()
       resp->add_U32((*it)->CompositionPageId());
       resp->add_U32((*it)->AncillaryPageId());
     }
-    else if ((*it)->Type() == stAAC)
+    else if ((*it)->Type() == stAACADST)
+    {
+      resp->add_String("AAC");
+      resp->add_String((*it)->GetLanguage());
+      resp->add_U32((*it)->GetChannels());
+      resp->add_U32((*it)->GetSampleRate());
+      resp->add_U32((*it)->GetBlockAlign());
+      resp->add_U32((*it)->GetBitRate());
+      resp->add_U32((*it)->GetBitsPerSample());
+    }
+    else if ((*it)->Type() == stAACLATM)
     {
       resp->add_String("AAC");
       resp->add_String((*it)->GetLanguage());
@@ -997,7 +1011,8 @@ void cLiveStreamer::sendStreamInfo()
         (*it)->Type() == stAC3 ||
         (*it)->Type() == stEAC3 ||
         (*it)->Type() == stDTS ||
-        (*it)->Type() == stAAC)
+        (*it)->Type() == stAACADST ||
+        (*it)->Type() == stAACLATM)
     {
       resp->add_U32((*it)->GetPID());
       resp->add_String((*it)->GetLanguage());
@@ -1057,7 +1072,7 @@ void cLiveStreamer::ensureDemuxers()
     std::list<sStream>::iterator its;
     for (its = m_Streams.begin(); its != m_Streams.end(); ++its)
     {
-      if (its->pID == (*it)->GetPID())
+      if ((its->pID == (*it)->GetPID()) && (its->type == (*it)->Type()))
       {
         break;
       }
@@ -1093,6 +1108,16 @@ void cLiveStreamer::ensureDemuxers()
     else if (it->type == stMPEG2AUDIO)
     {
       demuxer = new cTSDemuxer(this, stMPEG2AUDIO, it->pID);
+      demuxer->SetLanguage(it->language);
+    }
+    else if (it->type == stAACADST)
+    {
+      demuxer = new cTSDemuxer(this, stAACADST, it->pID);
+      demuxer->SetLanguage(it->language);
+    }
+    else if (it->type == stAACLATM)
+    {
+      demuxer = new cTSDemuxer(this, stAACLATM, it->pID);
       demuxer->SetLanguage(it->language);
     }
     else if (it->type == stAC3)
@@ -1175,8 +1200,10 @@ void cLiveStreamer::confChannelDemuxers()
       newStream.pID = *APids;
       newStream.type = stMPEG2AUDIO;
 #if APIVERSNUM >= 10715
-      if (m_Channel->Atype(index) == 0x0F || m_Channel->Atype(index) == 0x11)
-        newStream.type = stAAC;
+      if (m_Channel->Atype(index) == 0x0F)
+        newStream.type = stAACADST;
+      else if (m_Channel->Atype(index) == 0x11)
+        newStream.type = stAACLATM;
 #endif
       newStream.SetLanguage(m_Channel->Alang(index));
       AddStream(newStream);

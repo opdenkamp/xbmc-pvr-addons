@@ -174,7 +174,8 @@ enum eStreamType
   stAC3,
   stMPEG2AUDIO,
   stEAC3,
-  stAAC,
+  stAACADST,
+  stAACLATM,
   stDTS,
   stMPEG2VIDEO,
   stH264,
@@ -242,9 +243,9 @@ class cTSDemuxer
 {
 private:
   cLiveStreamer        *m_Streamer;
+  eStreamType           m_streamType;
   const int             m_pID;
   eStreamContent        m_streamContent;
-  eStreamType           m_streamType;
 
   bool                  m_pesError;
   cParser              *m_pesParser;

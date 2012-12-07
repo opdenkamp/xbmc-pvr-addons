@@ -268,6 +268,83 @@ cmyth_storagegroup_filelist_get_item(cmyth_storagegroup_filelist_t fl, int index
 	return fl->storagegroup_filelist_list[index];
  }
 
+cmyth_storagegroup_file_t
+cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *storagegroup, char *hostname, char *filename)
+{
+	char msg[256];
+	int count = 0;
+	int err = 0;
+	cmyth_storagegroup_file_t ret = NULL;
+	int consumed = 0;
+	char tmp_str[2048];
+
+	if (!control) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n", __FUNCTION__);
+		return 0;
+	}
+
+	pthread_mutex_lock(&mutex);
+
+	snprintf(msg, sizeof(msg), "QUERY_SG_FILEQUERY[]:[]%s[]:[]%s[]:[]%s", hostname, storagegroup, filename);
+
+	err = cmyth_send_message(control, msg);
+	if (err < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message() failed (%d)\n", __FUNCTION__, err);
+		goto out;
+	}
+
+	count = cmyth_rcv_length(control);
+	if (count < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_length() failed (%d)\n", __FUNCTION__, count);
+		goto out;
+	}
+
+	consumed = cmyth_rcv_string(control, &err, tmp_str, sizeof(tmp_str) - 1, count);
+	count -= consumed;
+	if (err) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed (%d)\n", __FUNCTION__, count);
+		ret = NULL;
+		goto out;
+	} else if (count == 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: QUERY_SG_FILEQUERY failed(%s)\n", __FUNCTION__, tmp_str);
+		ret = NULL;
+		goto out;
+	}
+
+	ret = cmyth_storagegroup_file_create();
+	if (!ret) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: alloc() failed for file\n", __FUNCTION__);
+		ref_release(ret);
+		ret = NULL;
+		goto out;
+	}
+	ret->filename = ref_strdup(tmp_str);
+
+	consumed = cmyth_rcv_ulong(control, &err, &(ret->lastmodified), count);
+	count -= consumed;
+	if (err) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_ulong() failed (%d)\n", __FUNCTION__, count);
+		ref_release(ret);
+		ret = NULL;
+		goto out;
+	}
+
+	consumed = cmyth_rcv_ulong(control, &err, &(ret->size), count);
+	count -= consumed;
+	if (err) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_ulong_long() failed (%d)\n", __FUNCTION__, count);
+		ref_release(ret);
+		ret = NULL;
+		goto out;
+	}
+
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: filename: %s\n", __FUNCTION__, ret->filename);
+
+out:
+	pthread_mutex_unlock(&mutex);
+	return ret;
+}
+
 char *
 cmyth_storagegroup_file_filename(cmyth_storagegroup_file_t file)
 {

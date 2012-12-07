@@ -1923,6 +1923,19 @@ typedef struct cmyth_storagegroup_filelist *cmyth_storagegroup_filelist_t;
 extern cmyth_storagegroup_filelist_t cmyth_storagegroup_get_filelist(cmyth_conn_t control, char *storagegroup, char *hostname);
 
 /**
+ * Returns the storagegroup file structure of storagegroup file.
+ * Before forgetting the reference to this storagegroup file structure
+ * the caller must call ref_release().
+ * \param control
+ * \param storagegroup
+ * \param hostname
+ * \param filename
+ * \return success: storage file handle
+ * \return failure: NULL
+ */
+extern cmyth_storagegroup_file_t cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *storagegroup, char *hostname, char *filename);
+
+/**
  * Retrieves the number of elements in the storagegroup files list structure.
  * \param fl
  * \return success: A number indicating the number of items in fl
@@ -2097,5 +2110,25 @@ extern long long cmyth_mysql_get_recording_markup(cmyth_database_t db, cmyth_pro
  * \retval <0 error
  */
 extern long long cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_proginfo_t prog);
+
+/*
+ * -----------------------------------------------------------------
+ * Recording artworks
+ * -----------------------------------------------------------------
+ */
+
+/**
+ * Retrieve recording artworks
+ * Before forgetting the reference to artworks
+ * the caller must call ref_release() for each.
+ * \param db
+ * \param prog program info
+ * \param coverart corverart filename handle
+ * \param fanart fanart filename handle
+ * \param banner banner filename handle
+ * \return success: 0 not available, 1 available
+ * \return failure: -1
+ */
+extern int cmyth_mysql_get_recording_artwork(cmyth_database_t db, cmyth_proginfo_t prog, char **coverart, char **fanart, char **banner);
 
 #endif /* __CMYTH_H */

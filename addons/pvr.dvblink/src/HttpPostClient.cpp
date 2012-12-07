@@ -78,13 +78,13 @@ int HttpPostClient::SendPostRequest(HttpWebRequest& request)
 	char content_header[100];
 
 	buffer.append("POST /cs/ HTTP/1.0\r\n");
-	sprintf(content_header,"Host: %s:%d\r\n",server,serverport);
+	sprintf(content_header,"Host: %s:%d\r\n",server.c_str(),(int)serverport);
 	buffer.append(content_header);
 	buffer.append("Content-Type: application/x-www-form-urlencoded\r\n");
 	if (username.compare("") != 0)
 	{
-		sprintf(content_header,"%s:%s",username,password);
-		sprintf(content_header, "Authorization: Basic %s \r\n",base64_encode((const char*)content_header,100));
+		sprintf(content_header,"%s:%s",username.c_str(),password.c_str());
+		sprintf(content_header, "Authorization: Basic %s \r\n",base64_encode((const char*)content_header,100).c_str());
 		buffer.append(content_header);
 	}
 	sprintf(content_header,"Content-Length: %d\r\n",request.ContentLength);

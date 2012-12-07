@@ -2105,7 +2105,7 @@ extern long long cmyth_mysql_get_recording_markup(cmyth_database_t db, cmyth_pro
  * Retrieve recording framerate (fps x 1000)
  * \param db
  * \param prog program info
- * \ratval >0 recording framerate
+ * \retval >0 recording framerate
  * \retval =0 invalid framerate
  * \retval <0 error
  */

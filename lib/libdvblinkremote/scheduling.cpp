@@ -256,7 +256,7 @@ bool GetSchedulesRequestSerializer::WriteObject(std::string& serializedData, Get
 }
 
 StoredManualSchedule::StoredManualSchedule(const std::string& id, const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title)
-  : ManualSchedule(id, channelId, startTime, duration, dayMask, title), Schedule(Schedule::SCHEDULE_TYPE_MANUAL, channelId)
+  : ManualSchedule(id, channelId, startTime, duration, dayMask, title), Schedule(Schedule::SCHEDULE_TYPE_MANUAL,id, channelId)
 {
 
 }
@@ -273,7 +273,7 @@ StoredManualScheduleList::~StoredManualScheduleList()
 }
 
 StoredEpgSchedule::StoredEpgSchedule(const std::string& id, const std::string& channelId, const std::string& programId, const bool repeat, const bool newOnly, const bool recordSeriesAnytime)
-  : EpgSchedule(id, channelId, programId, repeat, newOnly, recordSeriesAnytime), Schedule(Schedule::SCHEDULE_TYPE_BY_EPG, channelId)
+  : EpgSchedule(id, channelId, programId, repeat, newOnly, recordSeriesAnytime), Schedule(Schedule::SCHEDULE_TYPE_BY_EPG,id, channelId)
 {
 
 }

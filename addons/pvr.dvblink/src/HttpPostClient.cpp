@@ -84,7 +84,7 @@ int HttpPostClient::SendPostRequest(HttpWebRequest& request)
 	if (username.compare("") != 0)
 	{
 		sprintf(content_header,"%s:%s",username.c_str(),password.c_str());
-		sprintf(content_header, "Authorization: Basic %s \r\n",base64_encode((const char*)content_header,100).c_str());
+		sprintf(content_header, "Authorization: Basic %s \r\n",base64_encode((const char*)content_header,strlen(content_header)).c_str());
 		buffer.append(content_header);
 	}
 	sprintf(content_header,"Content-Length: %d\r\n",request.ContentLength);

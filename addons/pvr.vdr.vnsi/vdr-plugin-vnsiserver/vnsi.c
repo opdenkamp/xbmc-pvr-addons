@@ -26,6 +26,7 @@
 #include <getopt.h>
 #include <vdr/plugin.h>
 #include "vnsi.h"
+#include "setup.h"
 
 cPluginVNSIServer::cPluginVNSIServer(void)
 {
@@ -108,13 +109,17 @@ time_t cPluginVNSIServer::WakeupTime(void)
 cMenuSetupPage *cPluginVNSIServer::SetupMenu(void)
 {
   // Return a setup menu in case the plugin supports one.
-  return NULL;
+  return new cMenuSetupVNSI;
 }
 
 bool cPluginVNSIServer::SetupParse(const char *Name, const char *Value)
 {
   // Parse your own setup parameters and store their values.
-  return false;
+  if (!strcasecmp(Name, CONFNAME_PMTTIMEOUT))
+    PmtTimeout = atoi(Value);
+  else
+    return false;
+  return true;
 }
 
 bool cPluginVNSIServer::Service(const char *Id, void *Data)

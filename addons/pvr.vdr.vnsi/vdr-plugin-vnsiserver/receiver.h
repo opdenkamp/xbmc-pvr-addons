@@ -69,6 +69,7 @@ class cLiveStreamer : public cThread
 private:
   friend class cParser;
   friend class cLivePatFilter;
+  friend class cLiveReceiver;
 
   cTSDemuxer *FindStreamDemuxer(int Pid);
 
@@ -78,7 +79,9 @@ private:
   void sendStreamInfo();
   void sendStreamStatus();
   void ensureDemuxers();
-  void confChannelDemuxers();
+  void confChannelDemuxers(const cChannel *channel);
+  void setChannelPids(cChannel *channel, cPatPmtParser *patPmtParser);
+  void Receive(uchar *Data, int Length);
 
   const cChannel   *m_Channel;                      /*!> Channel to stream */
   cDevice          *m_Device;                       /*!> The receiving device the channel depents to */
@@ -97,7 +100,6 @@ private:
   bool              m_IsMPEGPS;                     /*!> TS Stream contains MPEG PS data like from pvrinput */
   cResponsePacket*  m_packetEmpty;                  /*!> Empty stream packet */
   bool              m_requestStreamChange;
-  bool              m_checkDemuxers;
   uint32_t          m_scanTimeout;                  /*!> Channel scanning timeout (in seconds) */
   cTimeMs           m_last_tick;
   bool              m_SignalLost;
@@ -106,6 +108,8 @@ private:
   std::list<cTSDemuxer*> m_Demuxers;
   std::list<sStream> m_Streams;
   bool              m_PidChange;
+  int               m_Tpid;
+  cMutex            m_bufferLock;
 
 protected:
   virtual void Action(void);
@@ -123,9 +127,7 @@ public:
   bool IsAudioOnly() { return m_IsAudioOnly; }
   bool IsMPEGPS() { return m_IsMPEGPS; }
   void AddStream(sStream &stream);
-  void CheckDemuxers() {m_checkDemuxers = true; };
-
-  cMutex m_DemuxerLock;
+  void SetTpid(int tPid) { m_Tpid = tPid; }
 };
 
 #endif  // VNSI_RECEIVER_H

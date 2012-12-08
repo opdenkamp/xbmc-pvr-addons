@@ -75,10 +75,7 @@ cLiveReceiver::~cLiveReceiver()
 //void cLiveReceiver
 void cLiveReceiver::Receive(uchar *Data, int Length)
 {
-  int p = m_Streamer->Put(Data, Length);
-
-  if (p != Length)
-    m_Streamer->ReportOverflow(Length - p);
+  m_Streamer->Receive(Data, Length);
 }
 
 inline void cLiveReceiver::Activate(bool On)
@@ -97,8 +94,6 @@ private:
   const cChannel *m_Channel;
   cLiveStreamer  *m_Streamer;
 
-  int GetPid(SI::PMT::Stream& stream, eStreamType *type, char *langs, int *subtitlingType, int *compositionPageId, int *ancillaryPageId);
-  void GetLanguage(SI::PMT::Stream& stream, char *langs);
   virtual void Process(u_short Pid, u_char Tid, const u_char *Data, int Length);
 
 public:
@@ -115,219 +110,6 @@ cLivePatFilter::cLivePatFilter(cLiveStreamer *Streamer, const cChannel *Channel)
   m_pmtVersion  = -1;
   Set(0x00, 0x00);  // PAT
 
-}
-
-void cLivePatFilter::GetLanguage(SI::PMT::Stream& stream, char *langs)
-{
-  SI::Descriptor *d;
-  for (SI::Loop::Iterator it; (d = stream.streamDescriptors.getNext(it)); )
-  {
-    switch (d->getDescriptorTag())
-    {
-      case SI::ISO639LanguageDescriptorTag:
-      {
-        langs[MAXLANGCODE1] = 0;
-        SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
-        strn0cpy(langs, I18nNormalizeLanguageCode(ld->languageCode), MAXLANGCODE1);
-        break;
-      }
-      default: ;
-    }
-    delete d;
-  }
-}
-
-int cLivePatFilter::GetPid(SI::PMT::Stream& stream, eStreamType *type, char *langs, int *subtitlingType, int *compositionPageId, int *ancillaryPageId)
-{
-  SI::Descriptor *d;
-  *langs = 0;
-
-  if (!stream.getPid())
-    return 0;
-
-  if(m_Channel->Tpid() == stream.getPid())
-  {
-    DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d %s\n", stream.getPid(), "Teletext");
-    *type = stTELETEXT;
-    return stream.getPid();
-  }
-
-  switch (stream.getStreamType())
-  {
-    case 0x01: // ISO/IEC 11172 Video
-    case 0x02: // ISO/IEC 13818-2 Video
-      DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d)\n", stream.getPid(), stream.getStreamType());
-      *type = stMPEG2VIDEO;
-      return stream.getPid();
-    case 0x03: // ISO/IEC 11172 Audio
-    case 0x04: // ISO/IEC 13818-3 Audio
-      *type   = stMPEG2AUDIO;
-      GetLanguage(stream, langs);
-      DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d) (%s)\n", stream.getPid(), stream.getStreamType(), langs);
-      return stream.getPid();
-    case 0x0F: // ISO/IEC 13818-7 Audio with ADTS transport syntax
-      *type = stAACADST;
-      GetLanguage(stream, langs);
-      DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AAC", langs);
-     return stream.getPid();
-    case 0x11: // ISO/IEC 14496-3 Audio with LATM transport syntax
-       *type = stAACLATM;
-       GetLanguage(stream, langs);
-       DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AAC", langs);
-      return stream.getPid();
-#if 1
-    case 0x07: // ISO/IEC 13512 MHEG
-    case 0x08: // ISO/IEC 13818-1 Annex A  DSM CC
-    case 0x0a: // ISO/IEC 13818-6 Multiprotocol encapsulation
-    case 0x0b: // ISO/IEC 13818-6 DSM-CC U-N Messages
-    case 0x0c: // ISO/IEC 13818-6 Stream Descriptors
-    case 0x0d: // ISO/IEC 13818-6 Sections (any type, including private data)
-    case 0x0e: // ISO/IEC 13818-1 auxiliary
-#endif
-    case 0x10: // ISO/IEC 14496-2 Visual (MPEG-4)
-      DEBUGLOG("cStreamdevPatFilter PMT scanner: Not adding PID %d (%d) (skipped)\n", stream.getPid(), stream.getStreamType());
-      break;
-    case 0x1b: // ISO/IEC 14496-10 Video (MPEG-4 part 10/AVC, aka H.264)
-      DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d)\n", stream.getPid(), stream.getStreamType());
-      *type = stH264;
-      return stream.getPid();
-    case 0x05: // ISO/IEC 13818-1 private sections
-    case 0x06: // ISO/IEC 13818-1 PES packets containing private data
-      for (SI::Loop::Iterator it; (d = stream.streamDescriptors.getNext(it)); )
-      {
-        switch (d->getDescriptorTag())
-        {
-          case SI::AC3DescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AC3", langs);
-            *type = stAC3;
-            GetLanguage(stream, langs);
-            delete d;
-            return stream.getPid();
-          case SI::EnhancedAC3DescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "EAC3", langs);
-            *type = stEAC3;
-            GetLanguage(stream, langs);
-            delete d;
-            return stream.getPid();
-          case SI::DTSDescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "DTS", langs);
-            *type = stDTS;
-            GetLanguage(stream, langs);
-            delete d;
-            return stream.getPid();
-          case SI::AACDescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AAC", langs);
-            *type = stAACADST;
-            GetLanguage(stream, langs);
-            delete d;
-            return stream.getPid();
-          case SI::TeletextDescriptorTag:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s\n", stream.getPid(), stream.getStreamType(), "Teletext");
-            *type = stTELETEXT;
-            delete d;
-            return stream.getPid();
-          case SI::SubtitlingDescriptorTag:
-          {
-            *type               = stDVBSUB;
-            *langs              = 0;
-            *subtitlingType     = 0;
-            *compositionPageId  = 0;
-            *ancillaryPageId    = 0;
-            SI::SubtitlingDescriptor *sd = (SI::SubtitlingDescriptor *)d;
-            SI::SubtitlingDescriptor::Subtitling sub;
-            char *s = langs;
-            s[MAXLANGCODE1] = 0;
-            int n = 0;
-            for (SI::Loop::Iterator it; sd->subtitlingLoop.getNext(sub, it); )
-            {
-              if (sub.languageCode[0])
-              {
-                *subtitlingType     = sub.getSubtitlingType();
-                *compositionPageId  = sub.getCompositionPageId();
-                *ancillaryPageId    = sub.getAncillaryPageId();
-                if (n > 0)
-                  *s++ = '+';
-                strn0cpy(s, I18nNormalizeLanguageCode(sub.languageCode), MAXLANGCODE1);
-                s += strlen(s);
-                if (n++ > 1)
-                  break;
-              }
-            }
-            delete d;
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s\n", stream.getPid(), stream.getStreamType(), "DVBSUB");
-            return stream.getPid();
-          }
-          default:
-            DEBUGLOG("cStreamdevPatFilter PMT scanner: NOT adding PID %d (%d) %s (%i)\n", stream.getPid(), stream.getStreamType(), "UNKNOWN", d->getDescriptorTag());
-            break;
-        }
-        delete d;
-      }
-      break;
-    case 0x80:
-      if (Setup.StandardCompliance == STANDARD_ANSISCTE)
-      { // DigiCipher II VIDEO (ANSI/SCTE 57)
-        DEBUGLOG("cStreamdevPatFilter PMT scanner adding PID %d (%d)\n", stream.getPid(), stream.getStreamType());
-        *type = stMPEG2VIDEO;
-        return stream.getPid();
-      }
-      // fall through
-    case 0x81: // STREAMTYPE_USER_PRIVATE
-      if (Setup.StandardCompliance == STANDARD_ANSISCTE)
-      { // ATSC A/53 AUDIO (ANSI/SCTE 57)
-        DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AC3", langs);
-        *type = stAC3;
-        GetLanguage(stream, langs);
-        return stream.getPid();
-      }
-      // fall through
-    case 0x83 ... 0xFF: // STREAMTYPE_USER_PRIVATE
-      {
-      bool IsAc3 = false;
-      langs[MAXLANGCODE1] = 0;
-      SI::Descriptor *d;
-      for (SI::Loop::Iterator it; (d = stream.streamDescriptors.getNext(it)); )
-      {
-        switch (d->getDescriptorTag())
-        {
-          case SI::RegistrationDescriptorTag:
-            {
-            SI::RegistrationDescriptor *rd = (SI::RegistrationDescriptor *)d;
-            // http://www.smpte-ra.org/mpegreg/mpegreg.html
-            switch (rd->getFormatIdentifier())
-            {
-              case 0x41432D33: // 'AC-3'
-                IsAc3 = true;
-                break;
-              default:
-                break;
-            }
-            }
-            break;
-          case SI::ISO639LanguageDescriptorTag:
-            {
-            SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
-            strn0cpy(langs, I18nNormalizeLanguageCode(ld->languageCode), MAXLANGCODE1);
-            }
-            break;
-          default: ;
-        }
-        delete d;
-      }
-      if (IsAc3)
-      {
-        DEBUGLOG("cStreamdevPatFilter PMT scanner: adding PID %d (%d) %s (%s)\n", stream.getPid(), stream.getStreamType(), "AC3", langs);
-        *type = stAC3;
-        return stream.getPid();
-      }
-      }
-      break;
-    default:
-      DEBUGLOG("cStreamdevPatFilter PMT scanner: NOT adding PID %d (%d) %s\n", stream.getPid(), stream.getStreamType(), "UNKNOWN");
-      break;
-  }
-  *type = stNone;
-  return 0;
 }
 
 void cLivePatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Length)
@@ -382,19 +164,233 @@ void cLivePatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Le
     }
     m_pmtVersion = pmt.getVersionNumber();
 
-    SI::PMT::Stream stream;
-    sStream newStream;
-    m_Streamer->m_DemuxerLock.Lock();
-    for (SI::Loop::Iterator it; pmt.streamLoop.getNext(stream, it); )
-    {
-      newStream.pID = GetPid(stream, &newStream.type, (char*)&newStream.language, &newStream.subtitlingType, &newStream.compositionPageId, &newStream.ancillaryPageId);
-      if (newStream.pID != 0)
-      {
-        m_Streamer->AddStream(newStream);
-        m_Streamer->CheckDemuxers();
-      }
-    }
-    m_Streamer->m_DemuxerLock.Unlock();
+    cChannel *Channel = Channels.GetByServiceID(Source(), Transponder(), pmt.getServiceId());
+    if (Channel) {
+       // Scan the stream-specific loop:
+       SI::PMT::Stream stream;
+       int Vpid = 0;
+       int Ppid = 0;
+       int Vtype = 0;
+       int Apids[MAXAPIDS + 1] = { 0 }; // these lists are zero-terminated
+       int Atypes[MAXAPIDS + 1] = { 0 };
+       int Dpids[MAXDPIDS + 1] = { 0 };
+       int Dtypes[MAXDPIDS + 1] = { 0 };
+       int Spids[MAXSPIDS + 1] = { 0 };
+       uchar SubtitlingTypes[MAXSPIDS + 1] = { 0 };
+       uint16_t CompositionPageIds[MAXSPIDS + 1] = { 0 };
+       uint16_t AncillaryPageIds[MAXSPIDS + 1] = { 0 };
+       char ALangs[MAXAPIDS][MAXLANGCODE2] = { "" };
+       char DLangs[MAXDPIDS][MAXLANGCODE2] = { "" };
+       char SLangs[MAXSPIDS][MAXLANGCODE2] = { "" };
+       int Tpid = 0;
+       int NumApids = 0;
+       int NumDpids = 0;
+       int NumSpids = 0;
+       for (SI::Loop::Iterator it; pmt.streamLoop.getNext(stream, it); ) {
+           bool ProcessCaDescriptors = false;
+           int esPid = stream.getPid();
+           switch (stream.getStreamType()) {
+             case 1: // STREAMTYPE_11172_VIDEO
+             case 2: // STREAMTYPE_13818_VIDEO
+             case 0x1B: // MPEG4
+                     Vpid = esPid;
+                     Ppid = pmt.getPCRPid();
+                     Vtype = stream.getStreamType();
+                     ProcessCaDescriptors = true;
+                     break;
+             case 3: // STREAMTYPE_11172_AUDIO
+             case 4: // STREAMTYPE_13818_AUDIO
+             case 0x0F: // ISO/IEC 13818-7 Audio with ADTS transport syntax
+             case 0x11: // ISO/IEC 14496-3 Audio with LATM transport syntax
+                     {
+                     if (NumApids < MAXAPIDS) {
+                        Apids[NumApids] = esPid;
+                        Atypes[NumApids] = stream.getStreamType();
+                        SI::Descriptor *d;
+                        for (SI::Loop::Iterator it; (d = stream.streamDescriptors.getNext(it)); ) {
+                            switch (d->getDescriptorTag()) {
+                              case SI::ISO639LanguageDescriptorTag: {
+                                   SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
+                                   SI::ISO639LanguageDescriptor::Language l;
+                                   char *s = ALangs[NumApids];
+                                   int n = 0;
+                                   for (SI::Loop::Iterator it; ld->languageLoop.getNext(l, it); ) {
+                                       if (*ld->languageCode != '-') { // some use "---" to indicate "none"
+                                          if (n > 0)
+                                             *s++ = '+';
+                                          strn0cpy(s, I18nNormalizeLanguageCode(l.languageCode), MAXLANGCODE1);
+                                          s += strlen(s);
+                                          if (n++ > 1)
+                                             break;
+                                          }
+                                       }
+                                   }
+                                   break;
+                              default: ;
+                              }
+                            delete d;
+                            }
+                        NumApids++;
+                        }
+                     ProcessCaDescriptors = true;
+                     }
+                     break;
+             case 5: // STREAMTYPE_13818_PRIVATE
+             case 6: // STREAMTYPE_13818_PES_PRIVATE
+             //XXX case 8: // STREAMTYPE_13818_DSMCC
+                     {
+                     int dpid = 0;
+                     int dtype = 0;
+                     char lang[MAXLANGCODE1] = { 0 };
+                     SI::Descriptor *d;
+                     for (SI::Loop::Iterator it; (d = stream.streamDescriptors.getNext(it)); ) {
+                         switch (d->getDescriptorTag()) {
+                           case SI::AC3DescriptorTag:
+                           case SI::EnhancedAC3DescriptorTag:
+                                dpid = esPid;
+                                dtype = d->getDescriptorTag();
+                                ProcessCaDescriptors = true;
+                                break;
+                           case SI::SubtitlingDescriptorTag:
+                                if (NumSpids < MAXSPIDS) {
+                                   Spids[NumSpids] = esPid;
+                                   SI::SubtitlingDescriptor *sd = (SI::SubtitlingDescriptor *)d;
+                                   SI::SubtitlingDescriptor::Subtitling sub;
+                                   char *s = SLangs[NumSpids];
+                                   int n = 0;
+                                   for (SI::Loop::Iterator it; sd->subtitlingLoop.getNext(sub, it); ) {
+                                       if (sub.languageCode[0]) {
+                                          SubtitlingTypes[NumSpids] = sub.getSubtitlingType();
+                                          CompositionPageIds[NumSpids] = sub.getCompositionPageId();
+                                          AncillaryPageIds[NumSpids] = sub.getAncillaryPageId();
+                                          if (n > 0)
+                                             *s++ = '+';
+                                          strn0cpy(s, I18nNormalizeLanguageCode(sub.languageCode), MAXLANGCODE1);
+                                          s += strlen(s);
+                                          if (n++ > 1)
+                                             break;
+                                          }
+                                       }
+                                   NumSpids++;
+                                   }
+                                break;
+                           case SI::TeletextDescriptorTag:
+                                Tpid = esPid;
+                                break;
+                           case SI::ISO639LanguageDescriptorTag: {
+                                SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
+                                strn0cpy(lang, I18nNormalizeLanguageCode(ld->languageCode), MAXLANGCODE1);
+                                }
+                                break;
+                           default: ;
+                           }
+                         delete d;
+                         }
+                     if (dpid) {
+                        if (NumDpids < MAXDPIDS) {
+                           Dpids[NumDpids] = dpid;
+                           Dtypes[NumDpids] = dtype;
+                           strn0cpy(DLangs[NumDpids], lang, MAXLANGCODE1);
+                           NumDpids++;
+                           }
+                        }
+                     }
+                     break;
+             case 0x80: // STREAMTYPE_USER_PRIVATE
+                     if (Setup.StandardCompliance == STANDARD_ANSISCTE) { // DigiCipher II VIDEO (ANSI/SCTE 57)
+                        Vpid = esPid;
+                        Ppid = pmt.getPCRPid();
+                        Vtype = 0x02; // compression based upon MPEG-2
+                        ProcessCaDescriptors = true;
+                        break;
+                        }
+                     // fall through
+             case 0x81: // STREAMTYPE_USER_PRIVATE
+                     if (Setup.StandardCompliance == STANDARD_ANSISCTE) { // ATSC A/53 AUDIO (ANSI/SCTE 57)
+                        char lang[MAXLANGCODE1] = { 0 };
+                        SI::Descriptor *d;
+                        for (SI::Loop::Iterator it; (d = stream.streamDescriptors.getNext(it)); ) {
+                            switch (d->getDescriptorTag()) {
+                              case SI::ISO639LanguageDescriptorTag: {
+                                   SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
+                                   strn0cpy(lang, I18nNormalizeLanguageCode(ld->languageCode), MAXLANGCODE1);
+                                   }
+                                   break;
+                              default: ;
+                              }
+                           delete d;
+                           }
+                        if (NumDpids < MAXDPIDS) {
+                           Dpids[NumDpids] = esPid;
+                           Dtypes[NumDpids] = SI::AC3DescriptorTag;
+                           strn0cpy(DLangs[NumDpids], lang, MAXLANGCODE1);
+                           NumDpids++;
+                           }
+                        ProcessCaDescriptors = true;
+                        break;
+                        }
+                     // fall through
+             case 0x82: // STREAMTYPE_USER_PRIVATE
+                     if (Setup.StandardCompliance == STANDARD_ANSISCTE) { // STANDARD SUBTITLE (ANSI/SCTE 27)
+                        //TODO
+                        break;
+                        }
+                     // fall through
+             case 0x83 ... 0xFF: // STREAMTYPE_USER_PRIVATE
+                     {
+                     char lang[MAXLANGCODE1] = { 0 };
+                     bool IsAc3 = false;
+                     SI::Descriptor *d;
+                     for (SI::Loop::Iterator it; (d = stream.streamDescriptors.getNext(it)); ) {
+                         switch (d->getDescriptorTag()) {
+                           case SI::RegistrationDescriptorTag: {
+                                SI::RegistrationDescriptor *rd = (SI::RegistrationDescriptor *)d;
+                                // http://www.smpte-ra.org/mpegreg/mpegreg.html
+                                switch (rd->getFormatIdentifier()) {
+                                  case 0x41432D33: // 'AC-3'
+                                       IsAc3 = true;
+                                       break;
+                                  default:
+                                       //printf("Format identifier: 0x%08X (pid: %d)\n", rd->getFormatIdentifier(), esPid);
+                                       break;
+                                  }
+                                }
+                                break;
+                           case SI::ISO639LanguageDescriptorTag: {
+                                SI::ISO639LanguageDescriptor *ld = (SI::ISO639LanguageDescriptor *)d;
+                                strn0cpy(lang, I18nNormalizeLanguageCode(ld->languageCode), MAXLANGCODE1);
+                                }
+                                break;
+                           default: ;
+                           }
+                        delete d;
+                        }
+                     if (IsAc3) {
+                        if (NumDpids < MAXDPIDS) {
+                           Dpids[NumDpids] = esPid;
+                           Dtypes[NumDpids] = SI::AC3DescriptorTag;
+                           strn0cpy(DLangs[NumDpids], lang, MAXLANGCODE1);
+                           NumDpids++;
+                           }
+                        ProcessCaDescriptors = true;
+                        }
+                     }
+                     break;
+             default: ;//printf("PID: %5d %5d %2d %3d %3d\n", pmt.getServiceId(), stream.getPid(), stream.getStreamType(), pmt.getVersionNumber(), Channel->Number());
+             }
+           }
+       cChannel pmtChannel(*Channel);
+       pmtChannel.SetPids(Vpid, Ppid, Vtype, Apids, Atypes, ALangs, Dpids, Dtypes, DLangs, Spids, SLangs, Tpid);
+       pmtChannel.SetSubtitlingDescriptors(SubtitlingTypes, CompositionPageIds, AncillaryPageIds);
+       m_Streamer->SetTpid(Tpid);
+       cPatPmtGenerator patPmtGenerator(&pmtChannel);
+       m_Streamer->m_bufferLock.Lock();
+       m_Streamer->Put(patPmtGenerator.GetPat(), TS_SIZE);
+       int Index = 0;
+       while (uchar *pmt = patPmtGenerator.GetPmt(Index))
+         m_Streamer->Put(pmt, TS_SIZE);
+       m_Streamer->m_bufferLock.Unlock();
+       }
   }
 }
 
@@ -419,6 +415,7 @@ cLiveStreamer::cLiveStreamer(uint32_t timeout)
   m_SignalLost      = false;
   m_IFrameSeen      = false;
   m_PidChange       = false;
+  m_Tpid            = 0;
 
   m_requestStreamChange = false;
 
@@ -496,17 +493,28 @@ cLiveStreamer::~cLiveStreamer()
   DEBUGLOG("Finished to delete live streamer");
 }
 
+void cLiveStreamer::Receive(uchar *Data, int Length)
+{
+  m_bufferLock.Lock();
+  int p = Put(Data, Length);
+
+  if (p != Length)
+    ReportOverflow(Length - p);
+  m_bufferLock.Unlock();
+}
+
 void cLiveStreamer::Action(void)
 {
   int size              = 0;
   int used              = 0;
   unsigned char *buf    = NULL;
   m_startup             = true;
-
   cTimeMs last_info;
   cTimeMs starttime;
-
   m_last_tick.Set(0);
+  cPatPmtParser patPmtParser;
+  cTSDemuxer *demuxer;
+  int oldPmtVersion = -1;
 
   while (Running())
   {
@@ -524,11 +532,8 @@ void cLiveStreamer::Action(void)
     if (m_Demuxers.size() == 0 && starttime.Elapsed() > 2000)
     {
       INFOLOG("Got no PMT, using channel conf for creating demuxers");
-      confChannelDemuxers();
+      confChannelDemuxers(m_Channel);
     }
-
-    if (m_checkDemuxers)
-      ensureDemuxers();
 
     // no data
     if (buf == NULL || size <= TS_SIZE)
@@ -571,9 +576,29 @@ void cLiveStreamer::Action(void)
         break;
       }
 
-      unsigned int ts_pid = TsPid(buf);
-      cTSDemuxer *demuxer = FindStreamDemuxer(ts_pid);
-      if (demuxer)
+      int ts_pid = TsPid(buf);
+
+      if (ts_pid == PATPID)
+      {
+        patPmtParser.ParsePat(buf, TS_SIZE);
+      }
+      else if (ts_pid == patPmtParser.PmtPid())
+      {
+        int patVersion, pmtVersion;
+        patPmtParser.ParsePmt(buf, TS_SIZE);
+        if (patPmtParser.GetVersions(patVersion, pmtVersion))
+        {
+          if (pmtVersion != oldPmtVersion)
+          {
+            cChannel pmtChannel(*m_Channel);
+            setChannelPids(&pmtChannel, &patPmtParser);
+            confChannelDemuxers(&pmtChannel);
+            patPmtParser.Reset();
+            oldPmtVersion = pmtVersion;
+          }
+        }
+      }
+      else if (demuxer = FindStreamDemuxer(ts_pid))
       {
         if (!demuxer->ProcessTSPacket(buf))
         {
@@ -733,8 +758,6 @@ void cLiveStreamer::sendStreamChange()
     return;
   }
 
-  m_DemuxerLock.Lock();
-
   for (std::list<cTSDemuxer*>::iterator it = m_Demuxers.begin(); it != m_Demuxers.end(); ++it)
   {
     resp->add_U32((*it)->GetPID());
@@ -831,8 +854,6 @@ void cLiveStreamer::sendStreamChange()
       resp->add_U32((*it)->GetBitsPerSample());
     }
   }
-
-  m_DemuxerLock.Unlock();
 
   resp->finaliseStream();
   m_Socket->write(resp->getPtr(), resp->getLen(), -1, true);
@@ -1003,8 +1024,6 @@ void cLiveStreamer::sendStreamInfo()
     return;
   }
 
-  m_DemuxerLock.Lock();
-
   for (std::list<cTSDemuxer*>::iterator it = m_Demuxers.begin(); it != m_Demuxers.end(); ++it)
   {
     if ((*it)->Type() == stMPEG2AUDIO ||
@@ -1040,8 +1059,6 @@ void cLiveStreamer::sendStreamInfo()
     }
   }
 
-  m_DemuxerLock.Unlock();
-
   resp->finaliseStream();
   m_Socket->write(resp->getPtr(), resp->getLen());
   delete resp;
@@ -1064,8 +1081,6 @@ void cLiveStreamer::sendStreamStatus()
 
 void cLiveStreamer::ensureDemuxers()
 {
-  cMutexLock Lock(&m_DemuxerLock);
-
   std::list<cTSDemuxer*>::iterator it = m_Demuxers.begin();
   while (it != m_Demuxers.end())
   {
@@ -1172,17 +1187,16 @@ void cLiveStreamer::ensureDemuxers()
   }
 
   m_Streams.clear();
-  m_checkDemuxers = false;
 }
 
-void cLiveStreamer::confChannelDemuxers()
+void cLiveStreamer::confChannelDemuxers(const cChannel *channel)
 {
   sStream newStream;
-  if (m_Channel->Vpid())
+  if (channel->Vpid())
   {
-    newStream.pID = m_Channel->Vpid();
+    newStream.pID = channel->Vpid();
 #if APIVERSNUM >= 10701
-    if (m_Channel->Vtype() == 0x1B)
+    if (channel->Vtype() == 0x1B)
       newStream.type = stH264;
     else
 #endif
@@ -1191,7 +1205,7 @@ void cLiveStreamer::confChannelDemuxers()
     AddStream(newStream);
   }
 
-  const int *APids = m_Channel->Apids();
+  const int *APids = channel->Apids();
   for ( ; *APids; APids++)
   {
     int index = 0;
@@ -1200,18 +1214,18 @@ void cLiveStreamer::confChannelDemuxers()
       newStream.pID = *APids;
       newStream.type = stMPEG2AUDIO;
 #if APIVERSNUM >= 10715
-      if (m_Channel->Atype(index) == 0x0F)
+      if (channel->Atype(index) == 0x0F)
         newStream.type = stAACADST;
-      else if (m_Channel->Atype(index) == 0x11)
+      else if (channel->Atype(index) == 0x11)
         newStream.type = stAACLATM;
 #endif
-      newStream.SetLanguage(m_Channel->Alang(index));
+      newStream.SetLanguage(channel->Alang(index));
       AddStream(newStream);
     }
     index++;
   }
 
-  const int *DPids = m_Channel->Dpids();
+  const int *DPids = channel->Dpids();
   for ( ; *DPids; DPids++)
   {
     int index = 0;
@@ -1220,16 +1234,16 @@ void cLiveStreamer::confChannelDemuxers()
       newStream.pID = *DPids;
       newStream.type = stAC3;
 #if APIVERSNUM >= 10715
-      if (m_Channel->Dtype(index) == SI::EnhancedAC3DescriptorTag)
+      if (channel->Dtype(index) == SI::EnhancedAC3DescriptorTag)
         newStream.type = stEAC3;
 #endif
-      newStream.SetLanguage(m_Channel->Dlang(index));
+      newStream.SetLanguage(channel->Dlang(index));
       AddStream(newStream);
     }
     index++;
   }
 
-  const int *SPids = m_Channel->Spids();
+  const int *SPids = channel->Spids();
   if (SPids)
   {
     int index = 0;
@@ -1239,11 +1253,11 @@ void cLiveStreamer::confChannelDemuxers()
       {
         newStream.pID = *SPids;
         newStream.type = stDVBSUB;
-        newStream.SetLanguage(m_Channel->Slang(index));
+        newStream.SetLanguage(channel->Slang(index));
 #if APIVERSNUM >= 10709
-        newStream.subtitlingType = m_Channel->SubtitlingType(index);
-        newStream.compositionPageId = m_Channel->CompositionPageId(index);
-        newStream.ancillaryPageId = m_Channel->AncillaryPageId(index);
+        newStream.subtitlingType = channel->SubtitlingType(index);
+        newStream.compositionPageId = channel->CompositionPageId(index);
+        newStream.ancillaryPageId = channel->AncillaryPageId(index);
 #endif
         AddStream(newStream);
       }
@@ -1251,12 +1265,64 @@ void cLiveStreamer::confChannelDemuxers()
     }
   }
 
-  if (m_Channel->Tpid())
+  if (m_Tpid)
   {
-    newStream.pID = m_Channel->Tpid();
+    newStream.pID = m_Tpid;
     newStream.type = stTELETEXT;
     AddStream(newStream);
   }
 
-  CheckDemuxers();
+  ensureDemuxers();
+}
+
+void cLiveStreamer::setChannelPids(cChannel *channel, cPatPmtParser *patPmtParser)
+{
+  int Apids[MAXAPIDS + 1] = { 0 };
+  int Atypes[MAXAPIDS + 1] = { 0 };
+  int Dpids[MAXDPIDS + 1] = { 0 };
+  int Dtypes[MAXDPIDS + 1] = { 0 };
+  int Spids[MAXSPIDS + 1] = { 0 };
+  char ALangs[MAXAPIDS][MAXLANGCODE2] = { "" };
+  char DLangs[MAXDPIDS][MAXLANGCODE2] = { "" };
+  char SLangs[MAXSPIDS][MAXLANGCODE2] = { "" };
+  int index = 0;
+
+  const int *aPids = patPmtParser->Apids();
+  index = 0;
+  for ( ; *aPids; aPids++)
+  {
+    Apids[index] = patPmtParser->Apid(index);
+    Atypes[index] = patPmtParser->Atype(index);
+    strn0cpy(ALangs[index], patPmtParser->Alang(index), MAXLANGCODE2);
+    index++;
+  }
+
+  const int *dPids = patPmtParser->Dpids();
+  index = 0;
+  for ( ; *dPids; dPids++)
+  {
+    Dpids[index] = patPmtParser->Dpid(index);
+    Dtypes[index] = patPmtParser->Dtype(index);
+    strn0cpy(DLangs[index], patPmtParser->Dlang(index), MAXLANGCODE2);
+    index++;
+  }
+
+  const int *sPids = patPmtParser->Spids();
+  index = 0;
+  for ( ; *sPids; sPids++)
+  {
+    Spids[index] = patPmtParser->Spid(index);
+    strn0cpy(SLangs[index], patPmtParser->Slang(index), MAXLANGCODE2);
+    index++;
+  }
+
+  int Vpid = patPmtParser->Vpid();
+  int Ppid = patPmtParser->Ppid();
+  int VType = patPmtParser->Vtype();
+  int Tpid = m_Channel->Tpid();
+  channel->SetPids(Vpid, Ppid, VType,
+                   Apids, Atypes, ALangs,
+                   Dpids, Dtypes, DLangs,
+                   Spids, SLangs,
+                   Tpid);
 }

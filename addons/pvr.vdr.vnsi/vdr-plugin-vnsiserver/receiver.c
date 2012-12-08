@@ -39,6 +39,7 @@
 #include "cxsocket.h"
 #include "vnsicommand.h"
 #include "responsepacket.h"
+#include "vnsi.h"
 
 // --- cLiveReceiver -------------------------------------------------
 
@@ -529,7 +530,7 @@ void cLiveStreamer::Action(void)
     }
 
     // if we got no pmt, create demuxers with info in channels.conf
-    if (m_Demuxers.size() == 0 && starttime.Elapsed() > 2000)
+    if (m_Demuxers.size() == 0 && starttime.Elapsed() > (unsigned int)PmtTimeout*1000)
     {
       INFOLOG("Got no PMT, using channel conf for creating demuxers");
       confChannelDemuxers(m_Channel);

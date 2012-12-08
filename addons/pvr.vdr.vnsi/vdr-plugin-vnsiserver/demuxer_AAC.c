@@ -321,5 +321,6 @@ void cParserAAC::ReadAudioSpecificConfig(cBitstream *bs)
   if (bs->readBits(1))  // ext_flag
     bs->skipBits(1);    // ext3_flag
 
-  m_demuxer->SetAudioInformation(m_ChannelConfig, m_SampleRate, 0, 0, 0);
+  // ffmpeg won't get started if this info is set
+//  m_demuxer->SetAudioInformation(m_ChannelConfig, m_SampleRate, 0, 0, 0);
 }

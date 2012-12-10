@@ -67,6 +67,8 @@ public:
 
   int GetSchemaVersion();
 
+  CStdString GetSetting(const CStdString &setting);
+
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* pprogram);
   ProgramList GetGuide(time_t starttime, time_t endtime);
 

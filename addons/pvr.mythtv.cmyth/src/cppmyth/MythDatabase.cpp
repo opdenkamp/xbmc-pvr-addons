@@ -77,6 +77,16 @@ int MythDatabase::GetSchemaVersion()
   return retval;
 }
 
+CStdString MythDatabase::GetSetting(const CStdString &setting)
+{
+  int retval;
+  char* buf = NULL;
+  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_get_setting(*m_database_t, const_cast<char*>(setting.c_str()), &buf));
+  CStdString data(buf);
+  ref_release(buf);
+  return data;
+}
+
 bool MythDatabase::FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* program)
 {
   int retval = 0;

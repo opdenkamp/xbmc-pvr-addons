@@ -858,6 +858,8 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 	int r;
 	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
 	cmyth_file_t ret = NULL;
+	long file_id;
+	uint64_t file_length;
 
 	if (!prog) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: prog is NULL\n", __FUNCTION__);
@@ -870,12 +872,6 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 	}
 	if (!prog->proginfo_pathname) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: prog has no pathname in it\n",
-			  __FUNCTION__);
-		goto shut;
-	}
-	ret = cmyth_file_create(control);
-	if (!ret) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_file_create() failed\n",
 			  __FUNCTION__);
 		goto shut;
 	}
@@ -935,9 +931,10 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message('%s') failed\n",
 			  __FUNCTION__, announcement);
+		free(announcement);
 		goto shut;
 	}
-	ret->file_data = ref_hold(conn);
+	free(announcement);
 	count = cmyth_rcv_length(conn);
 	if (count < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -959,7 +956,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_long(conn, &err, &ret->file_id, count);
+	r = cmyth_rcv_long(conn, &err, &file_id, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (id) cmyth_rcv_long() failed (%d)\n",
@@ -967,7 +964,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_uint64(conn, &err, &ret->file_length, count);
+	r = cmyth_rcv_uint64(conn, &err, &file_length, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (length) cmyth_rcv_uint64() failed (%d)\n",
@@ -979,16 +976,20 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: %d leftover bytes\n",
 			  __FUNCTION__, count);
 	}
-	free(announcement);
-	ref_release(conn);
+
+	ret = cmyth_file_create(control);
+	if (!ret) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_file_create() failed\n",
+			  __FUNCTION__);
+		goto shut;
+	}
+	ret->file_data = conn;
+	ret->file_id = file_id;
+	ret->file_length = file_length;
 	ref_release(myth_host);
 	return ret;
 
     shut:
-	if (announcement) {
-		free(announcement);
-	}
-	ref_release(ret);
 	ref_release(conn);
 	ref_release(myth_host);
 	return NULL;
@@ -1027,6 +1028,8 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	int r;
 	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
 	cmyth_file_t ret = NULL;
+	long file_id;
+	uint64_t file_length;
 
 	ret = cmyth_file_create(control);
 	if (!ret) {
@@ -1077,9 +1080,10 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message('%s') failed\n",
 			  __FUNCTION__, announcement);
+		free(announcement);
 		goto shut;
 	}
-	ret->file_data = ref_hold(conn);
+	free(announcement);
 	count = cmyth_rcv_length(conn);
 	if (count < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1101,7 +1105,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_long(conn, &err, &ret->file_id, count);
+	r = cmyth_rcv_long(conn, &err, &file_id, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (id) cmyth_rcv_long() failed (%d)\n",
@@ -1109,7 +1113,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_uint64(conn, &err, &ret->file_length, count);
+	r = cmyth_rcv_uint64(conn, &err, &file_length, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (length) cmyth_rcv_uint64() failed (%d)\n",
@@ -1117,15 +1121,23 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	free(announcement);
-	ref_release(conn);
+	if (count != 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: %d leftover bytes\n",
+			  __FUNCTION__, count);
+	}
+
+	ret = cmyth_file_create(control);
+	if (!ret) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_file_create() failed\n",
+			  __FUNCTION__);
+		goto shut;
+	}
+	ret->file_data = conn;
+	ret->file_id = file_id;
+	ret->file_length = file_length;
 	return ret;
 
     shut:
-	if (announcement) {
-		free(announcement);
-	}
-	ref_release(ret);
 	ref_release(conn);
 	return NULL;
 }

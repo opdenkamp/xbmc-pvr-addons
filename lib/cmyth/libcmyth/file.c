@@ -784,6 +784,8 @@ int cmyth_file_is_open(cmyth_file_t file)
 		return -EINVAL;
 	}
 
+	pthread_mutex_lock (&mutex);
+
 	snprintf (msg, sizeof (msg),
 	    "QUERY_FILETRANSFER %ld[]:[]IS_OPEN",
 	    file->file_id);
@@ -814,6 +816,7 @@ int cmyth_file_is_open(cmyth_file_t file)
 	if (ret==0)
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: file transfer socket is closed\n", __FUNCTION__);
 out:
+	pthread_mutex_unlock (&mutex);
 	return ret;
 }
 
@@ -846,6 +849,8 @@ cmyth_file_set_timeout(cmyth_file_t file, int fast)
 		return -EINVAL;
 	}
 
+	pthread_mutex_lock (&mutex);
+
 	snprintf(msg, sizeof(msg),
 		 "QUERY_FILETRANSFER %ld[]:[]SET_TIMEOUT[]:[]%i",
 		 file->file_id, fast);
@@ -865,6 +870,7 @@ cmyth_file_set_timeout(cmyth_file_t file, int fast)
 	ret = 0;
 
 out:
+	pthread_mutex_unlock (&mutex);
 	return ret;
 }
 

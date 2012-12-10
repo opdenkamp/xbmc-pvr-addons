@@ -1956,3 +1956,48 @@ cmyth_mysql_get_recording_artwork(cmyth_database_t db, cmyth_proginfo_t prog, ch
 	mysql_free_result(res);
 	return rows;
 }
+
+/*
+ * cmyth_mysql_get_setting(...)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Returns data for global (non host specific) setting.
+ *
+ * Success: returns 0 for unavailable else 1
+ *
+ * Failure: -1
+ */
+int
+cmyth_mysql_get_setting(cmyth_database_t db, char *setting, char **data)
+{
+	MYSQL_RES *res = NULL;
+	MYSQL_ROW row;
+	const char *query_str = "SELECT data FROM settings WHERE value = ? AND hostname IS NULL;";
+	int rows = 0;
+	cmyth_mysql_query_t * query;
+
+	query = cmyth_mysql_query_create(db, query_str);
+
+	if (cmyth_mysql_query_param_str(query, setting) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(query);
+		return -1;
+	}
+	res = cmyth_mysql_query_result(query);
+	ref_release(query);
+	if (res == NULL) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
+		return -1;
+	}
+
+	if ((row = mysql_fetch_row(res))) {
+		*data = ref_strdup(row[0]);
+		rows++;
+	}
+
+	mysql_free_result(res);
+	return rows;
+}

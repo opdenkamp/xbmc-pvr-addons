@@ -127,6 +127,9 @@ cParserAC3::cParserAC3(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
   m_NextDTS                   = 0;
   m_AC3BufferPtr              = 0;
   m_HeaderFound               = false;
+  m_FrameOffset               = 0;
+  m_CurrentOffset             = 0;
+  m_NextFrameOffset           = 0;
 
   for (int i = 0; i < AV_PARSER_PTS_NB; i++)
   {
@@ -238,7 +241,8 @@ int cParserAC3::FindHeaders(uint8_t **poutbuf, int *poutbuf_size,
   uint8_t *buf_ptr = buf;
   while (buf_size > 0)
   {
-    if (buf_ptr[0] == 0x0b && buf_ptr[1] == 0x77 && !m_HeaderFound)
+    if (!m_HeaderFound && (buf_size >= 9) &&
+        (buf_ptr[0] == 0x0b && buf_ptr[1] == 0x77))
     {
       cBitstream bs(buf_ptr + 2, AC3_HEADER_SIZE * 8);
 
@@ -288,8 +292,8 @@ int cParserAC3::FindHeaders(uint8_t **poutbuf, int *poutbuf_size,
 
         /*int substreamid =*/ bs.readBits(3);
 
-        int framesize = (bs.readBits(11) + 1) << 1;
-        if (framesize < AC3_HEADER_SIZE)
+        m_FrameSize = (bs.readBits(11) + 1) << 1;
+        if (m_FrameSize < AC3_HEADER_SIZE)
           return -1;
 
         int numBlocks = 6;
@@ -310,14 +314,23 @@ int cParserAC3::FindHeaders(uint8_t **poutbuf, int *poutbuf_size,
         int channelMode = bs.readBits(3);
         int lfeon = bs.readBits(1);
 
-        m_BitRate  = (uint32_t)(8.0 * framesize * m_SampleRate / (numBlocks * 256.0));
+        m_BitRate  = (uint32_t)(8.0 * m_FrameSize * m_SampleRate / (numBlocks * 256.0));
         m_Channels = AC3ChannelsTable[channelMode] + lfeon;
       }
       m_HeaderFound = true;
     }
 
     if (m_HeaderFound)
-      m_AC3Buffer[m_AC3BufferPtr++] = buf_ptr[0];
+    {
+      if (m_AC3BufferPtr > AC3_MAX_CODED_FRAME_SIZE - 1)
+      {
+        ERRORLOG("error in AC3 frame size");
+        m_AC3BufferPtr = 0;
+        m_HeaderFound = false;
+      }
+      else
+        m_AC3Buffer[m_AC3BufferPtr++] = buf_ptr[0];
+    }
 
     if (m_FrameSize && m_AC3BufferPtr >= m_FrameSize)
     {

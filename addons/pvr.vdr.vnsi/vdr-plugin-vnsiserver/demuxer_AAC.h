@@ -36,7 +36,7 @@ private:
   cTSDemuxer *m_demuxer;
   uint8_t    *m_streamBuffer;
   int         m_streamBufferSize;
-  int         m_streamBufferPtr;
+  int         m_streamBufferDataSize;
   int         m_streamParserPtr;
   bool        m_firstPUSIseen;
 

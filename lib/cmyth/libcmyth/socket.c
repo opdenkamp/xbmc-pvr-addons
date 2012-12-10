@@ -170,20 +170,13 @@ cmyth_rcv_length(cmyth_conn_t conn)
 		FD_SET(conn->conn_fd, &fds);
 		if ((r=select((int)conn->conn_fd+1, &fds, NULL, NULL, &tv)) == 0) {
 			conn->conn_hang = 1;
-			hangcount++;
-			if (++hangcount > 6 && r > 0)
+			if (++hangcount > 6)
 				return -ETIMEDOUT;
 		} else if (r > 0) {
 			conn->conn_hang = 0;
 			r = recv(conn->conn_fd, &buf[rtot], 8 - rtot, 0);
 		}
 		if (r < 0) {
-			cmyth_dbg(CMYTH_DBG_ERROR, "%s: read() failed (%d)\n",
-				  __FUNCTION__, errno);
-			conn->conn_hang = 1;
-			return -errno;
-		}
-		if (r == 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s: read() failed (%d)\n",
 				  __FUNCTION__, errno);
 			conn->conn_hang = 1;

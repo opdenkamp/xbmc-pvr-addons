@@ -251,6 +251,12 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
       streams.stream[streams.iStreamCount].iCodecType      = AVMEDIA_TYPE_AUDIO;
       streams.stream[streams.iStreamCount].iCodecId        = CODEC_ID_AAC;
     }
+    else if(!strcmp(type, "AACLATM"))
+    {
+      streams.stream[streams.iStreamCount].iPhysicalId     = pid;
+      streams.stream[streams.iStreamCount].iCodecType      = AVMEDIA_TYPE_AUDIO;
+      streams.stream[streams.iStreamCount].iCodecId        = CODEC_ID_AAC_LATM;
+    }
     else if(!strcmp(type, "DTS"))
     {
       streams.stream[streams.iStreamCount].iPhysicalId     = pid;

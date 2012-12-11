@@ -1512,7 +1512,7 @@ bool PVRClientMythTV::GetLiveTVPriority()
 {
   if (!m_con.IsNull())
   {
-    CStdString value = m_con.GetSetting(m_con.GetHostname(), "LiveTVPriority");
+    CStdString value = m_con.GetSettingOnHost("LiveTVPriority", m_con.GetHostname());
     if (value.compare("1") == 0)
       return true;
     else

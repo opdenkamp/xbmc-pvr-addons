@@ -61,7 +61,7 @@ public:
   CStdString GetBackendHostname();
   int GetProtocolVersion();
   bool GetDriveSpace(long long &total, long long &used);
-  CStdString GetSetting(const CStdString &hostname, const CStdString &setting);
+  CStdString GetSettingOnHost(const CStdString &setting, const CStdString &hostname);
   bool SetSetting(const CStdString &hostname, const CStdString &setting, const CStdString &value);
 
   // Recorders

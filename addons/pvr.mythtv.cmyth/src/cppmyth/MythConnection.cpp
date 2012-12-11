@@ -173,7 +173,7 @@ bool MythConnection::GetDriveSpace(long long &total, long long &used)
   return retval == 0;
 }
 
-CStdString MythConnection::GetSetting(const CStdString &hostname, const CStdString &setting)
+CStdString MythConnection::GetSettingOnHost(const CStdString &setting, const CStdString &hostname)
 {
   char *value = NULL;
   CMYTH_CONN_CALL_REF(value, value == NULL, cmyth_conn_get_setting(*m_conn_t, const_cast<char*>(hostname.c_str()), const_cast<char*>(setting.c_str())));

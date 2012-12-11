@@ -299,6 +299,11 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
       streams.stream[streams.iStreamCount].iCodecType      = AVMEDIA_TYPE_SUBTITLE;
       streams.stream[streams.iStreamCount].iCodecId        = CODEC_ID_DVB_TELETEXT;
     }
+    else
+    {
+      m_Streams.iStreamCount = 0;
+      return;
+    }
 
     if (streams.stream[streams.iStreamCount].iCodecType == AVMEDIA_TYPE_AUDIO)
     {
@@ -346,6 +351,11 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
       streams.iStreamCount++;
 
       delete[] language;
+    }
+    else
+    {
+      m_Streams.iStreamCount = 0;
+      return;
     }
 
     delete[] type;

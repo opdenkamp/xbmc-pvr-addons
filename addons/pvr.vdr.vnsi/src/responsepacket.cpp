@@ -87,6 +87,8 @@ void cResponsePacket::extractHeader()
 
   requestID = extract_U32();
   userDataLength = extract_U32();
+
+  userData = NULL;
 }
 
 void cResponsePacket::extractStreamHeader()
@@ -104,6 +106,8 @@ void cResponsePacket::extractStreamHeader()
   pts      = extract_U64();
   dts      = extract_U64();
   userDataLength = extract_U32();
+
+  userData = NULL;
 }
 
 bool cResponsePacket::end()

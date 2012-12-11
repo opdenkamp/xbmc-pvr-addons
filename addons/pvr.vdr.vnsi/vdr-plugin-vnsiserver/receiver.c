@@ -592,7 +592,11 @@ void cLiveStreamer::Action(void)
       {
         patPmtParser.ParsePat(buf, TS_SIZE);
       }
+#if APIVERSNUM >= 10733
+      else if (patPmtParser.IsPmtPid(ts_pid))
+#else
       else if (ts_pid == patPmtParser.PmtPid())
+#endif
       {
         int patVersion, pmtVersion;
         patPmtParser.ParsePmt(buf, TS_SIZE);

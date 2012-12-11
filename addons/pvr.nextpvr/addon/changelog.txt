@@ -1,3 +1,6 @@
+v1.6.0
+- New version number by Team XBMC
+
 v1.0.1.0
 - added: new experimental timeshift support. This requires updated backend components, otherwise falls back to previous non-timeshift live tv.
 - added: new 'advanced' settings page where timeshift can be enabled/disabled.

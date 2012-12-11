@@ -374,7 +374,7 @@ PVR_ERROR cPVRClientArgusTV::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
             m_epg_id_offset++;
             broadcast.iUniqueBroadcastId  = m_epg_id_offset;
             broadcast.strTitle            = epg.Title();
-            broadcast.iChannelNumber      = channel.iChannelNumber;
+            broadcast.iChannelNumber      = channel.iUniqueId;
             broadcast.startTime           = epg.StartTime();
             broadcast.endTime             = epg.EndTime();
             broadcast.strPlotOutline      = epg.Subtitle();
@@ -492,14 +492,13 @@ PVR_ERROR cPVRClientArgusTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
         //      But only if it isn't cached yet!
         if (FetchChannel(channel.Guid(), false) == NULL)
         {
-          tag.iChannelNumber =  m_channel_id_offset + 1;
+          tag.iUniqueId =  m_channel_id_offset + 1;
           m_channel_id_offset++;
         }
         else
         {
-          tag.iChannelNumber = FetchChannel(channel.Guid())->ID();
+          tag.iUniqueId = FetchChannel(channel.Guid())->ID();
         }
-        tag.iUniqueId = tag.iChannelNumber;
         strncpy(tag.strChannelName, channel.Name(), sizeof(tag.strChannelName));
         std::string logopath = ArgusTV::GetChannelLogo(channel.Guid()).c_str();
         strncpy(tag.strIconPath, logopath.c_str(), sizeof(tag.strIconPath));
@@ -509,14 +508,15 @@ PVR_ERROR cPVRClientArgusTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
         //Use OpenLiveStream to read from the timeshift .ts file or an rtsp stream
         memset(tag.strStreamURL, 0, sizeof(tag.strStreamURL));
         strncpy(tag.strInputFormat, "video/x-mpegts", sizeof(tag.strInputFormat));
+        tag.iChannelNumber = channel.LCN();
 
         if (!tag.bIsRadio)
         {
-          XBMC->Log(LOG_DEBUG, "Found TV channel: %s\n", channel.Name());
+          XBMC->Log(LOG_DEBUG, "Found TV channel: %s, Unique id: %d, Backend channel: %d\n", channel.Name(), tag.iUniqueId, tag.iChannelNumber);
         }
         else
         {
-          XBMC->Log(LOG_DEBUG, "Found Radio channel: %s\n", channel.Name());
+          XBMC->Log(LOG_DEBUG, "Found Radio channel: %s, Unique id: %d, Backend channel: %d\n", channel.Name(), tag.iUniqueId, tag.iChannelNumber);
         }
         channel.SetID(tag.iUniqueId);
         if (FetchChannel(channel.Guid(), false) == NULL)
@@ -658,7 +658,7 @@ PVR_ERROR cPVRClientArgusTV::GetChannelGroupMembers(ADDON_HANDLE handle, const P
 
     strncpy(tag.strGroupName, group.strGroupName, sizeof(tag.strGroupName));
     tag.iChannelUniqueId = pChannel->ID();
-    tag.iChannelNumber   = index+1;
+    tag.iChannelNumber   = pChannel->LCN();
 
     XBMC->Log(LOG_DEBUG, "%s - add channel %s (%d) to group '%s' channel number %d",
       __FUNCTION__, pChannel->Name(), tag.iChannelUniqueId, tag.strGroupName, tag.iChannelNumber);

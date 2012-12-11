@@ -74,7 +74,7 @@ public:
   PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
 
   // Channel groups
-  int GetChannelGroupsAmount() const;
+  int GetChannelGroupsAmount();
   PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio);
   PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group);
 

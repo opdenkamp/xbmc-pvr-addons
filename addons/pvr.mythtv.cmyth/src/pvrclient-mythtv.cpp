@@ -220,21 +220,6 @@ bool PVRClientMythTV::Connect()
   // Create file operation helper (image caching)
   m_fileOps = new FileOps(m_con);
 
-  // Get channel list
-  m_channels = m_db.GetChannels();
-  if (m_channels.empty())
-    XBMC->Log(LOG_INFO,"%s: Empty channel list", __FUNCTION__);
-
-  // Get sources
-  m_sources = m_db.GetSources();
-  if (m_sources.empty())
-    XBMC->Log(LOG_INFO,"%s: Empty source list", __FUNCTION__);
-
-  // Get channel groups
-  m_channelGroups = m_db.GetChannelGroups();
-  if (m_channelGroups.empty())
-    XBMC->Log(LOG_INFO,"%s: No channel groups", __FUNCTION__);
-
   return true;
 }
 
@@ -331,6 +316,11 @@ int PVRClientMythTV::GetNumChannels()
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
+
+  // Load channels if necessary
+  if (m_channels.empty())
+    m_channels = m_db.GetChannels();
+
   return m_channels.size();
 }
 
@@ -339,7 +329,12 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - radio: %i", __FUNCTION__, bRadio);
 
-  for (ChannelMap::iterator it = m_channels.begin(); it != m_channels.end(); it++)
+  // Load channels if necessary
+  if (m_channels.empty())
+    m_channels = m_db.GetChannels();
+
+  // Transfer channels of the requested type (radio / tv)
+  for (ChannelMap::iterator it = m_channels.begin(); it != m_channels.end(); ++it)
   {
     if (it->second.IsRadio() == bRadio && !it->second.IsNull())
     {
@@ -347,7 +342,7 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
       memset(&tag, 0, sizeof(PVR_CHANNEL));
 
       tag.iUniqueId = it->first;
-      tag.iChannelNumber = it->second.NumberInt(); // Use ID instead as MythTV channel number is a string?
+      tag.iChannelNumber = it->second.NumberInt();
       PVR_STRCPY(tag.strChannelName, it->second.Name());
       tag.bIsHidden = !it->second.Visible();
       tag.bIsRadio = it->second.IsRadio();
@@ -358,7 +353,7 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
       // Unimplemented
       PVR_STRCPY(tag.strStreamURL, "");
       PVR_STRCPY(tag.strInputFormat, "");
-      tag.iEncryptionSystem=0;
+      tag.iEncryptionSystem = 0;
 
       PVR->TransferChannelEntry(handle, &tag);
     }
@@ -370,10 +365,14 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
   return PVR_ERROR_NO_ERROR;
 }
 
-int PVRClientMythTV::GetChannelGroupsAmount() const
+int PVRClientMythTV::GetChannelGroupsAmount()
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
+
+  // Load channel groups if necessary
+  if (m_channelGroups.empty())
+    m_channelGroups = m_db.GetChannelGroups();
 
   return m_channelGroups.size();
 }
@@ -383,17 +382,28 @@ PVR_ERROR PVRClientMythTV::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - radio: %i", __FUNCTION__, bRadio);
 
-  for (ChannelGroupMap::iterator it = m_channelGroups.begin(); it != m_channelGroups.end(); it++)
+  // Load channel groups if necessary
+  if (m_channelGroups.empty())
+    m_channelGroups = m_db.GetChannelGroups();
+
+  // Load channels if necessary
+  if (m_channels.empty())
+    m_channels = m_db.GetChannels();
+
+  // Transfer channel groups of the given type (radio / tv)
+  for (ChannelGroupMap::iterator channelGroupsIt = m_channelGroups.begin(); channelGroupsIt != m_channelGroups.end(); ++channelGroupsIt)
   {
     PVR_CHANNEL_GROUP tag;
     memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP));
 
-    PVR_STRCPY(tag.strGroupName, it->first);
+    PVR_STRCPY(tag.strGroupName, channelGroupsIt->first);
     tag.bIsRadio = bRadio;
 
-    for (std::vector<int>::iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
+    // Only add the group if we have at least one channel of the correct type
+    for (std::vector<int>::iterator channelGroupIt = channelGroupsIt->second.begin(); channelGroupIt != channelGroupsIt->second.end(); ++channelGroupIt)
     {
-      if (m_channels.find(*it2) != m_channels.end() && m_channels.at(*it2).IsRadio() == bRadio)
+      ChannelMap::iterator channelIt = m_channels.find(*channelGroupIt);
+      if (channelIt != m_channels.end() && channelIt->second.IsRadio() == bRadio)
       {
         PVR->TransferChannelGroup(handle, &tag);
         break;
@@ -412,22 +422,34 @@ PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - group: %s", __FUNCTION__, group.strGroupName);
 
-  int i=0;
-  for (std::vector<int>::iterator it = m_channelGroups.at(group.strGroupName).begin(); it != m_channelGroups.at(group.strGroupName).end(); it++)
+  // Make sure the channel group exists
+  if (m_channelGroups.empty())
+    m_channelGroups = m_db.GetChannelGroups();
+  ChannelGroupMap::iterator channelGroupsIt = m_channelGroups.find(group.strGroupName);
+  if (channelGroupsIt == m_channelGroups.end())
   {
-    PVR_CHANNEL_GROUP_MEMBER tag;
-    memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+    XBMC->Log(LOG_ERROR,"%s - Channel group not found", __FUNCTION__);
+    return PVR_ERROR_INVALID_PARAMETERS;
+  }
 
-    if (m_channels.find(*it) != m_channels.end())
+  // Load channels if necessary
+  if (m_channels.empty())
+    m_channels = m_db.GetChannels();
+
+  // Transfer the channel group members for the requested group
+  int channelNumber = 0;
+  for (std::vector<int>::iterator channelGroupIt = channelGroupsIt->second.begin(); channelGroupIt != channelGroupsIt->second.end(); ++channelGroupIt)
+  {
+    ChannelMap::iterator channelIt = m_channels.find(*channelGroupIt);
+    if (channelIt != m_channels.end() && channelIt->second.IsRadio() == group.bIsRadio)
     {
-      MythChannel chan = m_channels.at(*it);
-      if (group.bIsRadio == chan.IsRadio())
-      {
-        tag.iChannelNumber = i++;
-        tag.iChannelUniqueId = chan.ID();
-        PVR_STRCPY(tag.strGroupName, group.strGroupName);
-        PVR->TransferChannelGroupMember(handle, &tag);
-      }
+      PVR_CHANNEL_GROUP_MEMBER tag;
+      memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+
+      tag.iChannelNumber = channelNumber++;
+      tag.iChannelUniqueId = channelIt->second.ID();
+      PVR_STRCPY(tag.strGroupName, group.strGroupName);
+      PVR->TransferChannelGroupMember(handle, &tag);
     }
   }
 
@@ -1182,21 +1204,38 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
   CLockObject lock(m_lock);
   if (m_rec.IsNull())
   {
+    // Make sure the channel exists
+    if (m_channels.empty())
+      m_channels = m_db.GetChannels();
+    ChannelMap::iterator channelIt = m_channels.find(channel.iUniqueId);
+    if (channelIt == m_channels.end())
+    {
+      XBMC->Log(LOG_ERROR,"%s - Channel not found", __FUNCTION__);
+      return false;
+    }
+
+    // Make sure the channel sources exists
+    if (m_sources.empty())
+      m_sources = m_db.GetSources();
+    SourceMap::iterator sourcesIt = m_sources.find(channelIt->second.SourceID());
+    if (sourcesIt == m_sources.end())
+    {
+      XBMC->Log(LOG_ERROR,"%s - Channel sources not found", __FUNCTION__);
+      return false;
+    }
+
     // Suspend fileOps to avoid connection hang
     if (m_fileOps->IsRunning())
       m_fileOps->Suspend();
 
     // Enable playback mode: Keep quiet on connection
     if (m_pEventHandler)
-    {
       m_pEventHandler->EnablePlayback();
-    }
 
-    MythChannel chan = m_channels.at(channel.iUniqueId);
-    for (std::vector<int>::iterator it = m_sources.at(chan.SourceID()).begin(); it != m_sources.at(chan.SourceID()).end(); it++)
+    for (std::vector<int>::iterator it = sourcesIt->second.begin(); it != sourcesIt->second.end(); ++it)
     {
       m_rec = m_con.GetRecorder(*it);
-      if (m_rec.ID() > 0 && !m_rec.IsRecording() && m_rec.IsTunable(chan))
+      if (m_rec.ID() > 0 && !m_rec.IsRecording() && m_rec.IsTunable(channelIt->second))
       {
         if (g_bExtraDebug)
           XBMC->Log(LOG_DEBUG,"%s: Opening new recorder %i", __FUNCTION__, m_rec.ID());
@@ -1205,7 +1244,7 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
         {
           m_pEventHandler->SetRecorder(m_rec);
         }
-        if (m_rec.SpawnLiveTV(chan))
+        if (m_rec.SpawnLiveTV(channelIt->second))
           return true;
       }
       m_rec = MythRecorder();

@@ -47,12 +47,16 @@ INCLUDES += -I$(VDRDIR)/include -I$(VDRDIR)
 
 DEFINES += -D_GNU_SOURCE -DPLUGIN_NAME_I18N='"$(PLUGIN)"' -DVNSI_SERVER_VERSION='"$(VERSION)"'
 
+ifeq ($(DEBUG),1)
+DEFINES += -DDEBUG
+endif
+
 ### The object files (add further files here):
 
 OBJS = vnsi.o bitstream.o vnsiclient.o config.o cxsocket.o demuxer.o demuxer_AAC.o \
        demuxer_AC3.o demuxer_DTS.o demuxer_h264.o demuxer_MPEGAudio.o demuxer_MPEGVideo.o \
        demuxer_Subtitle.o demuxer_Teletext.o receiver.o recplayer.o requestpacket.o responsepacket.o \
-       vnsiserver.o hash.o recordingscache.o
+       vnsiserver.o hash.o recordingscache.o setup.o
 
 ### Implicit rules:
 

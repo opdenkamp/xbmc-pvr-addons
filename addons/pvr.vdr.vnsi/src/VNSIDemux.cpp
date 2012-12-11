@@ -251,6 +251,12 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
       streams.stream[streams.iStreamCount].iCodecType      = AVMEDIA_TYPE_AUDIO;
       streams.stream[streams.iStreamCount].iCodecId        = CODEC_ID_AAC;
     }
+    else if(!strcmp(type, "AACLATM"))
+    {
+      streams.stream[streams.iStreamCount].iPhysicalId     = pid;
+      streams.stream[streams.iStreamCount].iCodecType      = AVMEDIA_TYPE_AUDIO;
+      streams.stream[streams.iStreamCount].iCodecId        = CODEC_ID_AAC_LATM;
+    }
     else if(!strcmp(type, "DTS"))
     {
       streams.stream[streams.iStreamCount].iPhysicalId     = pid;
@@ -292,6 +298,11 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
       streams.stream[streams.iStreamCount].iPhysicalId     = pid;
       streams.stream[streams.iStreamCount].iCodecType      = AVMEDIA_TYPE_SUBTITLE;
       streams.stream[streams.iStreamCount].iCodecId        = CODEC_ID_DVB_TELETEXT;
+    }
+    else
+    {
+      m_Streams.iStreamCount = 0;
+      return;
     }
 
     if (streams.stream[streams.iStreamCount].iCodecType == AVMEDIA_TYPE_AUDIO)
@@ -340,6 +351,11 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
       streams.iStreamCount++;
 
       delete[] language;
+    }
+    else
+    {
+      m_Streams.iStreamCount = 0;
+      return;
     }
 
     delete[] type;

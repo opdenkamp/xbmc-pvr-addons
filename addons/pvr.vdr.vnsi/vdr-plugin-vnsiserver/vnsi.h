@@ -30,6 +30,8 @@
 static const char *VERSION        = "0.9.0";
 static const char *DESCRIPTION    = "VDR-Network-Streaming-Interface (VNSI) Server";
 
+extern int PmtTimeout;
+
 class cPluginVNSIServer : public cPlugin {
 private:
   cVNSIServer *Server;

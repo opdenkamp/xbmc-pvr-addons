@@ -1,3 +1,10 @@
+0.1.8
+
+[fixed] Changed the way timers are calculated. This should fix problems with scheduled and instant recordings on some machines.
+[fixed] Favourites didn't show channels if the audio track wasn't the first one.
+[fixed] Channel settings weren't saved/restored after a channel switch with the channels OSD.
+[fixed] XBMC could hang after a channel switch with the channels OSD.
+
 0.1.7
 
 [added] The Recording Service version 1.21 or higher is now required. Download the latest version from the DVBViewer members area and install it.

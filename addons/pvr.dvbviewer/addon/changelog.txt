@@ -1,3 +1,7 @@
+1.6.2
+
+New version number by Team XBMC
+
 0.1.8
 
 [fixed] Changed the way timers are calculated. This should fix problems with scheduled and instant recordings on some machines.

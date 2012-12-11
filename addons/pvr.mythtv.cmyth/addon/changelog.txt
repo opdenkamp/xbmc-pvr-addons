@@ -1,3 +1,7 @@
+v1.6.5
+
+New version number by Team XBMC
+
 v0.5.0
 - Support MythTV 0.26 backends
 - Allow Timer Deletion

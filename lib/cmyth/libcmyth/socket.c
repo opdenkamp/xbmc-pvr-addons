@@ -170,7 +170,7 @@ cmyth_rcv_length(cmyth_conn_t conn)
 		FD_SET(conn->conn_fd, &fds);
 		if ((r=select((int)conn->conn_fd+1, &fds, NULL, NULL, &tv)) == 0) {
 			conn->conn_hang = 1;
-			if (++hangcount > 6)
+			if (++hangcount > 3)
 				return -ETIMEDOUT;
 		} else if (r > 0) {
 			conn->conn_hang = 0;

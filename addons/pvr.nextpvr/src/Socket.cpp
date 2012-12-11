@@ -249,12 +249,6 @@ int Socket::send ( const char* data, const unsigned int len )
     _sd = INVALID_SOCKET;
     return 0;
   }
-  if (FD_ISSET(_sd, &set_w))
-  {
-    XBMC->Log(LOG_ERROR, "Socket::send  - failed to send data");
-    _sd = INVALID_SOCKET;
-    return 0;
-  }
 
   int status = ::send(_sd, data, len, 0 );
 

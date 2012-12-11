@@ -979,10 +979,21 @@ PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
   XBMC->Log(LOG_DEBUG, "%s - title: %s, start: %ld, end: %ld, chanID: %ld", __FUNCTION__, timer.strTitle, timer.startTime, timer.endTime, timer.iClientChannelUid);
 
   MythRecordingRule rule;
+
   // Fill rule with timer data
   PVRtoMythRecordingRule(timer, rule);
+
   // Apply default rule setting from backend
-  m_con.DefaultRecordingRule(rule);
+  rule.SetAutoTranscode(atoi(m_db.GetSetting("AutoTranscode").c_str()) > 0);
+  rule.SetUserJob(1, atoi(m_db.GetSetting("AutoRunUserJob1").c_str()) > 0);
+  rule.SetUserJob(2, atoi(m_db.GetSetting("AutoRunUserJob2").c_str()) > 0);
+  rule.SetUserJob(3, atoi(m_db.GetSetting("AutoRunUserJob3").c_str()) > 0);
+  rule.SetUserJob(4, atoi(m_db.GetSetting("AutoRunUserJob4").c_str()) > 0);
+  rule.SetAutoCommFlag(atoi(m_db.GetSetting("AutoCommercialFlag").c_str()) > 0);
+  rule.SetAutoExpire(atoi(m_db.GetSetting("AutoExpireDefault").c_str()) > 0);
+  rule.SetTranscoder(atoi(m_db.GetSetting("DefaultTranscoder").c_str()));
+  if (rule.Category() == m_db.GetSetting("OverTimeCategory"))
+    rule.SetEndOffset(rule.EndOffset() + atoi(m_db.GetSetting("CategoryOverTime")));
 
   int id = m_db.AddRecordingRule(rule);
   if (id < 0)

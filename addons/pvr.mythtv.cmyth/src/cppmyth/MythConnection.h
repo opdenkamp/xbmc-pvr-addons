@@ -78,7 +78,6 @@ public:
   ProgramInfoMap GetPendingPrograms();
   ProgramInfoMap GetScheduledPrograms();
   bool UpdateSchedules(int id);
-  void DefaultRecordingRule(MythRecordingRule &rule);
   bool StopRecording(const MythProgramInfo &recording);
 
   // Files

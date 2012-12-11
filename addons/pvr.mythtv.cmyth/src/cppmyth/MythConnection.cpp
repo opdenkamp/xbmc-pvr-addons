@@ -317,20 +317,6 @@ bool MythConnection::UpdateSchedules(int id)
   return retval >= 0;
 }
 
-void MythConnection::DefaultRecordingRule(MythRecordingRule &rule)
-{
-  rule.SetAutoTranscode(atoi(GetSetting("NULL", "AutoTranscode").c_str()) > 0);
-  rule.SetUserJob(1, atoi(GetSetting("NULL", "AutoRunUserJob1").c_str()) > 0);
-  rule.SetUserJob(2, atoi(GetSetting("NULL", "AutoRunUserJob2").c_str()) > 0);
-  rule.SetUserJob(3, atoi(GetSetting("NULL", "AutoRunUserJob3").c_str()) > 0);
-  rule.SetUserJob(4, atoi(GetSetting("NULL", "AutoRunUserJob4").c_str()) > 0);
-  rule.SetAutoCommFlag(atoi(GetSetting("NULL", "AutoCommercialFlag").c_str()) > 0);
-  rule.SetAutoExpire(atoi(GetSetting("NULL", "AutoExpireDefault").c_str()) > 0);
-  rule.SetTranscoder(atoi(GetSetting("NULL", "DefaultTranscoder").c_str()));
-  rule.SetStartOffset(atoi(GetSetting("NULL", "DefaultStartOffset").c_str()));
-  rule.SetStartOffset(atoi(GetSetting("NULL", "DefaultEndOffset").c_str()));
-}
-
 bool MythConnection::StopRecording(const MythProgramInfo &recording)
 {
   int retval;

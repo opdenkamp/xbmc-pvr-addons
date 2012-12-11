@@ -109,7 +109,6 @@ namespace PLATFORM
 
     virtual ~CProtectedSocket(void)
     {
-      Close();
       delete m_socket;
     }
 

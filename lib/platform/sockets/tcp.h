@@ -44,7 +44,7 @@ namespace PLATFORM
         CCommonSocket<tcp_socket_t>(INVALID_SOCKET_VALUE, strHostname),
         m_iPort(iPort) {}
 
-      virtual ~CTcpSocket(void) {}
+      virtual ~CTcpSocket(void) { Close(); }
 
       virtual bool Open(uint64_t iTimeoutMs = 0)
       {

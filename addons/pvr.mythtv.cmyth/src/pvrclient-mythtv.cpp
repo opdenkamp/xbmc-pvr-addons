@@ -256,6 +256,7 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG,"%s - start: %i, end: %i, ChannelID: %i", __FUNCTION__, iStart, iEnd, channel.iUniqueId);
 
+  // Cache EPG for all channels by start/end time
   if (iStart != m_EPGstart && iEnd != m_EPGend)
   {
     m_EPG = m_db.GetGuide(iStart, iEnd);
@@ -265,45 +266,42 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
     m_EPGend = iEnd;
   }
 
-  for (ProgramList::iterator it = m_EPG.begin(); it != m_EPG.end(); it++)
+  // Transfer EPG for the given channel
+  for (ProgramList::iterator it = m_EPG.begin(); it != m_EPG.end() && (unsigned)it->chanid == channel.iUniqueId; ++it)
   {
-    if ((unsigned)it->chanid==channel.iUniqueId)
-    {
-      EPG_TAG tag;
-      memset(&tag, 0, sizeof(EPG_TAG));
+    EPG_TAG tag;
+    memset(&tag, 0, sizeof(EPG_TAG));
 
-      tag.iChannelNumber = it->channum;
-      tag.startTime = it->starttime;
-      tag.endTime = it->endtime;
+    tag.iUniqueBroadcastId = (tag.startTime << 16) + (tag.iChannelNumber & 0xFFFF);
+    tag.iChannelNumber = it->channum;
+    tag.startTime = it->starttime;
+    tag.endTime = it->endtime;
 
-      CStdString title = it->title;
-      CStdString subtitle = it->subtitle;
-      if (!subtitle.IsEmpty())
-        title += ": " + subtitle;
-      tag.strTitle = title;
+    CStdString title = it->title;
+    CStdString subtitle = it->subtitle;
+    if (!subtitle.IsEmpty())
+      title += ": " + subtitle;
+    tag.strTitle = title;
+    tag.strPlot = it->description;
 
-      tag.strPlot = it->description;
-      tag.iUniqueBroadcastId = (tag.startTime << 16) + (tag.iChannelNumber & 0xffff);
+    int genre = m_categories.Category(it->category);
+    tag.iGenreSubType = genre & 0x0F;
+    tag.iGenreType = genre & 0xF0;
+    tag.strGenreDescription = it->category;
 
-      int genre = m_categories.Category(it->category);
-      tag.iGenreSubType = genre & 0x0F;
-      tag.iGenreType = genre & 0xF0;
+    // Unimplemented
+    tag.strEpisodeName = "";
+    tag.strIconPath = "";
+    tag.strPlotOutline = "";
+    tag.bNotify = false;
+    tag.firstAired = 0;
+    tag.iEpisodeNumber = 0;
+    tag.iEpisodePartNumber = 0;
+    tag.iParentalRating = 0;
+    tag.iSeriesNumber = 0;
+    tag.iStarRating = 0;
 
-      // Unimplemented
-      tag.strEpisodeName="";
-      tag.strGenreDescription="";
-      tag.strIconPath="";
-      tag.strPlotOutline="";
-      tag.bNotify=false;
-      tag.firstAired=0;
-      tag.iEpisodeNumber=0;
-      tag.iEpisodePartNumber=0;
-      tag.iParentalRating=0;
-      tag.iSeriesNumber=0;
-      tag.iStarRating=0;
-
-      PVR->TransferEpgEntry(handle, &tag);
-    }
+    PVR->TransferEpgEntry(handle, &tag);
   }
 
   if (g_bExtraDebug)

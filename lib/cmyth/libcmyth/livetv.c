@@ -380,12 +380,16 @@ cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url, cmyth_file_t ft,
 {
 	int ret = 0;
 
+	pthread_mutex_lock(&mutex);
+
 	if(cmyth_livetv_chain_has_url(rec, url) == -1)
 		ret = cmyth_livetv_chain_add_url(rec, url);
 	if(ret != -1)
 		ret = cmyth_livetv_chain_add_file(rec, url, ft);
 	if(ret != -1)
 		ret = cmyth_livetv_chain_add_prog(rec, url, pi);
+
+	pthread_mutex_unlock(&mutex);
 
 	return ret;
 }
@@ -433,7 +437,7 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid)
 		return -1;
 	}
 	else {
-		if (rec->rec_livetv_chain->livetv_watch != 1) {
+		if (rec->rec_livetv_chain->livetv_watch == 0) {
 			cmyth_dbg(CMYTH_DBG_DEBUG,
 				  "%s: the next program is awaited: skip chain update\n",
 				  __FUNCTION__);
@@ -547,9 +551,7 @@ cmyth_livetv_watch(cmyth_recorder_t rec, char * msg)
 	 */
 	if (strlen(msg)>=3 && sscanf(msg,"%d %d", &rec_id, &watch) == 2) {
 		if (rec_id == rec->rec_id) {
-			pthread_mutex_lock(&mutex);
 			rec->rec_livetv_chain->livetv_watch = watch;
-			pthread_mutex_unlock(&mutex);
 			cmyth_dbg(CMYTH_DBG_DEBUG,
 				  "%s: recorder watch: %d\n",
 				  __FUNCTION__, watch);
@@ -618,6 +620,7 @@ cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg)
 				  "%s: previous recording done. Start chain update\n",
 				  __FUNCTION__);
 			if (rec->rec_livetv_chain->chainid) {
+				rec->rec_livetv_chain->livetv_watch = -1;
 				cmyth_livetv_chain_update(rec, rec->rec_livetv_chain->chainid);
 			}
 			else {
@@ -626,9 +629,7 @@ cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg)
 					  __FUNCTION__, rec_id);
 				ret = -1;
 			}
-			pthread_mutex_lock(&mutex);
 			rec->rec_livetv_chain->livetv_watch = 1;
-			pthread_mutex_unlock(&mutex);
 		}
 		else {
 			cmyth_dbg(CMYTH_DBG_DEBUG,
@@ -818,6 +819,8 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 {
 	int ret, i;
 
+	pthread_mutex_lock(&mutex);
+
 	ret = 0;
 
 	if(dir == LAST) {
@@ -843,7 +846,9 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 				  "%s: wait until livetv_watch is up\n",
 				  __FUNCTION__);
 			for (i = 0; i < 4; i++) {
+				pthread_mutex_unlock(&mutex);
 				usleep(500000);
+				pthread_mutex_lock(&mutex);
 				if (rec->rec_livetv_chain->livetv_watch == 1)
 					break;
 			}
@@ -872,6 +877,9 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 	}
 
 	out:
+
+	pthread_mutex_unlock(&mutex);
+
 	return ret;
 }
 

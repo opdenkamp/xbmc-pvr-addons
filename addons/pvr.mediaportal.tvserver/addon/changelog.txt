@@ -1,3 +1,7 @@
+v1.6.4
+
+-New version number by Team XBMC
+
 v1.2.3.117
 - Added: timeshift support for XBMC Frodo
 

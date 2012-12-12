@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.dvbviewer"
-  version="1.6.1.8"
+  version="1.6.2"
   name="DVBViewer Client"
   provider-name="jdembski, A600">
   <requires>

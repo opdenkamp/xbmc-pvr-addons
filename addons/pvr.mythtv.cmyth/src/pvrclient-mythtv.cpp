@@ -86,15 +86,15 @@ bool RecordingRule::SameTimeslot(RecordingRule &rule) const
   case MythRecordingRule::FindDailyRecord:
   case MythRecordingRule::FindWeeklyRecord:
   case MythRecordingRule::FindOneRecord:
-    return rule.Title(false) == Title(false);
+    return rule.Title() == Title();
   case MythRecordingRule::TimeslotRecord:
-    return rule.Title(false) == Title(false) && daytime(&starttime) == daytime(&rStarttime) &&  rule.ChannelID() == ChannelID();
+    return rule.Title() == Title() && daytime(&starttime) == daytime(&rStarttime) &&  rule.ChannelID() == ChannelID();
   case MythRecordingRule::ChannelRecord:
-    return rule.Title(false) == Title(false) && rule.ChannelID() == ChannelID(); //TODO: dup
+    return rule.Title() == Title() && rule.ChannelID() == ChannelID(); //TODO: dup
   case MythRecordingRule::AllRecord:
-    return rule.Title(false) == Title(false); //TODO: dup
+    return rule.Title() == Title(); //TODO: dup
   case MythRecordingRule::WeekslotRecord:
-    return rule.Title(false) == Title(false) && daytime(&starttime) == daytime(&rStarttime) && weekday(&starttime) == weekday(&rStarttime) && rule.ChannelID() == ChannelID();
+    return rule.Title() == Title() && daytime(&starttime) == daytime(&rStarttime) && weekday(&starttime) == weekday(&rStarttime) && rule.ChannelID() == ChannelID();
   }
   return false;
 }
@@ -283,7 +283,7 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
     CStdString title = it->title;
     CStdString subtitle = it->subtitle;
     if (!subtitle.IsEmpty())
-      title += ": " + subtitle;
+      title += SUBTITLE_SEPARATOR + subtitle;
     tag.strTitle = title;
     tag.strPlot = it->description;
 
@@ -509,7 +509,10 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       tag.iPlayCount = it->second.IsWatched() ? 1 : 0;
 
       CStdString id = it->second.StrUID();
-      CStdString title = it->second.Title(true);
+      CStdString title = it->second.Title();
+      CStdString subtitle = it->second.Subtitle();
+      if (!subtitle.IsEmpty())
+        title += SUBTITLE_SEPARATOR + subtitle;
 
       PVR_STRCPY(tag.strRecordingId, id);
       PVR_STRCPY(tag.strTitle, title);
@@ -522,7 +525,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
 
       // Add recording title to directory to group everything according to its name just like MythTV does
       CStdString strDirectory;
-      strDirectory.Format("%s/%s", it->second.RecordingGroup(), it->second.Title(false));
+      strDirectory.Format("%s/%s", it->second.RecordingGroup(), it->second.Title());
       PVR_STRCPY(tag.strDirectory, strDirectory);
 
       // Images
@@ -913,7 +916,11 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     tag.iGenreType = genre & 0xF0;
 
     // Title
-    CStdString title = it->second.Title(true);
+    CStdString title = it->second.Title();
+    CStdString subtitle = it->second.Subtitle();
+    if (!subtitle.IsEmpty())
+      title += SUBTITLE_SEPARATOR + subtitle;
+
     if (title.IsEmpty())
     {
       MythProgram epgProgram;
@@ -1099,8 +1106,8 @@ void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordin
   rule.SetPriority(timer.iPriority);
   rule.SetStartOffset(timer.iMarginStart);
   rule.SetStartTime((timer.startTime == 0 ? time(NULL) : timer.startTime));
-  rule.SetTitle(timer.strTitle, true);
-  CStdString title = rule.Title(false);
+  rule.SetTitle(timer.strTitle);
+  CStdString title = rule.Title();
   // kManualSearch = http://www.gossamer-threads.com/lists/mythtv/dev/155150?search_string=kManualSearch;#155150
   rule.SetSearchType(m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, NULL) ? MythRecordingRule::NoSearch : MythRecordingRule::ManualSearch);
   rule.SetType(timer.bIsRepeating ? (timer.iWeekdays == 127 ? MythRecordingRule::TimeslotRecord : MythRecordingRule::WeekslotRecord) : MythRecordingRule::SingleRecord);

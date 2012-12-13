@@ -93,36 +93,16 @@ void MythRecordingRule::SetEndTime(time_t endtime)
   cmyth_recordingrule_set_endtime(*m_recordingrule_t, endtime);
 }
 
-CStdString MythRecordingRule::Title(bool subtitleEncoded) const
+CStdString MythRecordingRule::Title() const
 {
-  CStdString retval;
-  char *buf1 = cmyth_recordingrule_title(*m_recordingrule_t);
-  char *buf2 = cmyth_recordingrule_subtitle(*m_recordingrule_t);
-  if (subtitleEncoded && strlen(buf2) > 0 )
-  {
-    retval.Format("%s::%s", buf1, buf2);
-  }
-  else
-  {
-    retval.assign(buf1);
-  }
-  ref_release(buf1);
-  ref_release(buf2);
+  char *buf = cmyth_recordingrule_title(*m_recordingrule_t);
+  CStdString retval(buf);
+  ref_release(buf);
   return retval;
 }
 
-void MythRecordingRule::SetTitle(const CStdString &title, bool subtitleEncoded)
+void MythRecordingRule::SetTitle(const CStdString &title)
 {
-  if (subtitleEncoded)
-  {
-    size_t seppos = title.find("::");
-    if (seppos != CStdString::npos)
-    {
-      cmyth_recordingrule_set_title(*m_recordingrule_t, const_cast<char*>((title.substr(0, seppos)).c_str()));
-      cmyth_recordingrule_set_subtitle(*m_recordingrule_t, const_cast<char*>((title.substr(seppos + 2)).c_str()));
-      return;
-    }
-  }
   cmyth_recordingrule_set_title(*m_recordingrule_t, const_cast<char*>(title.c_str()));
 }
 

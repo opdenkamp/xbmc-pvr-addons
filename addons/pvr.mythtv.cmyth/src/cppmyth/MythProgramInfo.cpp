@@ -69,18 +69,11 @@ CStdString MythProgramInfo::ProgramID()
   return retval;
 }
 
-CStdString MythProgramInfo::Title(bool subtitleEncoded)
+CStdString MythProgramInfo::Title()
 {
   char* title = cmyth_proginfo_title(*m_proginfo_t);
   CStdString retval(title);
   ref_release(title);
-
-  if (subtitleEncoded)
-  {
-    CStdString subtitle = Subtitle();
-    if (!subtitle.empty())
-      retval.Format("%s - %s", retval, subtitle);
-  }
   return retval;
 }
 

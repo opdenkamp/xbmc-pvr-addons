@@ -96,8 +96,8 @@ public:
   time_t EndTime() const;
   void SetEndTime(time_t endtime);
 
-  CStdString Title(bool subtitleEncoded) const;
-  void SetTitle(const CStdString &title, bool subtitleEncoded);
+  CStdString Title() const;
+  void SetTitle(const CStdString &title);
 
   CStdString Subtitle() const;
   void SetSubtitle(const CStdString &subtitle);

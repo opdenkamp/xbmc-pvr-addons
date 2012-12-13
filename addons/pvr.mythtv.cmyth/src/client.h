@@ -46,6 +46,8 @@ extern "C" {
 #define DEFAULT_DB_NAME         "mythconverg"
 #define DEFAULT_DB_PORT         3306
 
+#define SUBTITLE_SEPARATOR " - "
+
 /*!
  * @brief PVR macros for string exchange
  */

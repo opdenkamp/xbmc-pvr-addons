@@ -55,7 +55,7 @@ public:
   CStdString StrUID();
   long long UID();
   CStdString ProgramID();
-  CStdString Title(bool subtitleEncoded);
+  CStdString Title();
   CStdString Subtitle();
   CStdString BaseName();
   CStdString Description();

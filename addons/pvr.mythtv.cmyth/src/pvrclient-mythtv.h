@@ -25,19 +25,19 @@
 #include <xbmc_pvr_types.h>
 #include <platform/threads/mutex.h>
 
-class RecordingRule : public MythTimer, public std::vector<std::pair<PVR_TIMER, MythProgramInfo> >
+class RecordingRule : public MythRecordingRule, public std::vector<std::pair<PVR_TIMER, MythProgramInfo> >
 {
 public:
-  RecordingRule(const MythTimer &timer);
-  RecordingRule& operator=(const MythTimer &timer);
-  bool operator==(const int &id);
+  RecordingRule(const MythRecordingRule &rule);
+  RecordingRule& operator=(const MythRecordingRule &rule);
+  bool operator==(const unsigned long &id);
 
   RecordingRule* GetParent() const;
   void SetParent(RecordingRule &parent);
 
-  bool HasModifiers() const;
-  std::vector<RecordingRule*> GetModifiers() const;
-  void AddModifier(RecordingRule &modifier);
+  bool HasOverrideRules() const;
+  std::vector<RecordingRule*> GetOverrideRules() const;
+  void AddOverrideRule(RecordingRule &overrideRule);
 
   bool SameTimeslot(RecordingRule &rule) const;
 
@@ -47,7 +47,7 @@ private:
   void SaveTimerString(PVR_TIMER &timer);
 
   RecordingRule* m_parent;
-  std::vector<RecordingRule*> m_modifiers;
+  std::vector<RecordingRule*> m_overrideRules;
   std::vector<boost::shared_ptr<CStdString> > m_stringStore;
 };
 
@@ -62,8 +62,8 @@ public:
   // Server
   bool Connect();
   const char *GetBackendName();
-  const char *GetBackendVersion() const;
-  const char *GetConnectionString() const;
+  const char *GetBackendVersion();
+  const char *GetConnectionString();
   bool GetDriveSpace(long long *iTotal, long long *iUsed);
 
   // EPG
@@ -127,7 +127,8 @@ private:
   PLATFORM::CMutex m_lock;
   MythFile m_file;
 
-  CStdString m_protocolVersion;
+  CStdString m_backendName;
+  CStdString m_backendVersion;
   CStdString m_connectionString;
 
   // Categories
@@ -145,12 +146,15 @@ private:
 
   // Recordings
   ProgramInfoMap m_recordings;
-  static bool IsRecordingVisible(MythProgramInfo &recording);
-  float GetRecordingFrameRate(MythProgramInfo &recording);
+
+  PLATFORM::CMutex m_recordingsLock;
+  void EventUpdateRecordings();
+  void ForceUpdateRecording(ProgramInfoMap::iterator it);
+  int FillRecordings();
 
   // Timers
   RecordingRuleList m_recordingRules;
-  void PVRtoMythTimer(const PVR_TIMER timer, MythTimer &mt);
+  void PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule);
 
   CStdString GetArtWork(FileOps::FileType storageGroup, const CStdString &shwTitle);
 };

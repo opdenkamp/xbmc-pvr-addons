@@ -73,7 +73,7 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   // Determine filename
   CStdString localFilename = m_localBasePath + "channels" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
+    XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
 
   if (!XBMC->FileExists(localFilename, true))
   {
@@ -101,7 +101,7 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
   // Determine local filename
   CStdString localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
+    XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
 
   if (!XBMC->FileExists(localFilename, true))
   {
@@ -116,66 +116,35 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
   return localFilename;
 }
 
-CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
+CStdString FileOps::GetArtworkPath(const CStdString &remoteFilename, FileType fileType)
 {
-  // Update storage group filelist only once every 30s
-  std::time_t now = 0;
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG, "%s: filename: %s, fileType: %s", __FUNCTION__, remoteFilename.c_str(), GetFolderNameByFileType(fileType));
 
-  // Update the list of files in a storage group if the filelist is empty
-  // or the validity timeout has been reached (30s)
-  if (m_StorageGroupFileList.find(fileType) == m_StorageGroupFileList.end() ||
-    std::difftime(now, m_StorageGroupFileListLastUpdated[fileType]) > 30)
-  {
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG, "%s Getting storage group file list for type: %s (%s - %s)", __FUNCTION__, GetFolderNameByFileType(fileType), std::asctime(std::localtime(&now)), std::asctime(std::localtime(&m_StorageGroupFileListLastUpdated[fileType])));
+  // Check local directory
+  std::pair<FileType, CStdString> key = std::make_pair(fileType, remoteFilename);
+  std::map<std::pair<FileType, CStdString>, CStdString>::iterator iter = m_artworks.find(key);
+  if (iter != m_artworks.end())
+    return iter->second;
 
-    m_StorageGroupFileList[fileType] = m_con.GetStorageGroupFileList(GetFolderNameByFileType(fileType));
-    m_StorageGroupFileListLastUpdated[fileType] = now;
-
-    // Clean the file lists of unwanted files
-    StorageGroupFileList::iterator it = m_StorageGroupFileList[fileType].begin();
-    while (it != m_StorageGroupFileList[fileType].end())
-    {
-      if (g_bExtraDebug)
-        XBMC->Log(LOG_DEBUG, "%s %s - %s", __FUNCTION__, GetFolderNameByFileType(fileType), it->Filename().c_str());
-
-      // Check file extension, if it's not an image, remove the file from storage group
-      size_t extensionPos = it->Filename().find_last_of('.');
-      CStdString extension = it->Filename().substr(extensionPos + 1);
-      if (extension != "jpg" && extension != "png" && extension != "bmp")
-      {
-        it = m_StorageGroupFileList[fileType].erase(it);
-        continue;
-      }
-
-      ++it;
-    }
-  }
-
-  // Search in the storage group file list
-  StorageGroupFileList::iterator it;
-  for (it = m_StorageGroupFileList[fileType].begin(); it != m_StorageGroupFileList[fileType].end(); ++it)
-  {
-    if (it->Filename().Left(title.GetLength()) == title)
-      break;
-  }
-  if (it == m_StorageGroupFileList[fileType].end())
-  {
-    return ""; // Not found
-  }
+  // Check file exists in storage group
+  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(GetFolderNameByFileType(fileType), remoteFilename);
 
   // Determine local filename
   CStdString localFilename;
-  localFilename.Format("%u_%s", it->LastModified(), it->Filename());
-  localFilename = m_localBasePath + GetFolderNameByFileType(fileType) + PATH_SEPARATOR_CHAR + localFilename.c_str();
-
-  if (!XBMC->FileExists(localFilename, true))
+  if (!sgfile.IsNull())
   {
-    Lock();
-    FileOps::JobItem job(localFilename, it->Filename(), GetFolderNameByFileType(fileType));
-    m_jobQueue.push_back(job);
-    m_queueContent.Signal();
-    Unlock();
+    localFilename = m_localBasePath + GetFolderNameByFileType(fileType) + PATH_SEPARATOR_CHAR + remoteFilename.c_str();
+
+    if (!XBMC->FileExists(localFilename, true))
+    {
+      Lock();
+        FileOps::JobItem job(localFilename, remoteFilename, GetFolderNameByFileType(fileType));
+        m_jobQueue.push_back(job);
+        m_queueContent.Signal();
+      Unlock();
+    }
+    m_artworks[key] = localFilename;
   }
 
   return localFilename;

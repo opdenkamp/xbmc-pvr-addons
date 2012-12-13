@@ -35,7 +35,7 @@
 
 /*
  * cmyth_recorder_destroy(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PRIVATE (static)
  *
  * Description
@@ -77,7 +77,7 @@ cmyth_recorder_destroy(cmyth_recorder_t rec)
 
 /*
  * cmyth_recorder_create(void)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -115,7 +115,7 @@ cmyth_recorder_create(void)
 
 /*
  * cmyth_recorder_dup(cmyth_recorder_t old)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -151,7 +151,7 @@ cmyth_recorder_dup(cmyth_recorder_t old)
 
 /*
  * cmyth_recorder_is_recording(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -213,7 +213,7 @@ cmyth_recorder_is_recording(cmyth_recorder_t rec)
  * cmyth_recorder_get_framerate(
  *                              cmyth_recorder_t rec,
  *                              double *rate)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -278,7 +278,7 @@ cmyth_recorder_get_framerate(cmyth_recorder_t rec,
 /*
  * cmyth_recorder_get_frames_written(cmyth_recorder_t rec,
  *                                   double *rate)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -299,7 +299,7 @@ cmyth_recorder_get_frames_written(cmyth_recorder_t rec)
 
 /*
  * cmyth_recorder_get_free_space(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -321,7 +321,7 @@ cmyth_recorder_get_free_space(cmyth_recorder_t rec)
 
 /*
  * cmyth_recorder_get_key_frame(cmyth_recorder_t rec, long keynum)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -346,7 +346,7 @@ cmyth_recorder_get_keyframe_pos(cmyth_recorder_t rec, unsigned long keynum)
  *                                 cmyth_posmap_t map,
  *                                 long start,
  *                                 long end)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -371,7 +371,7 @@ cmyth_recorder_get_position_map(cmyth_recorder_t rec,
 
 /*
  * cmyth_recorder_get_recording(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -393,7 +393,7 @@ cmyth_recorder_get_recording(cmyth_recorder_t rec)
 
 /*
  * cmyth_recorder_stop_playing(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -415,7 +415,7 @@ cmyth_recorder_stop_playing(cmyth_recorder_t rec)
 
 /*
  * cmyth_recorder_frontend_ready(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -436,7 +436,7 @@ cmyth_recorder_frontend_ready(cmyth_recorder_t rec)
 
 /*
  * cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -458,7 +458,7 @@ cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec)
 
 /*
  * cmyth_recorder_pause(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -513,7 +513,7 @@ cmyth_recorder_pause(cmyth_recorder_t rec)
 
 /*
  * cmyth_recorder_finish_recording(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -535,7 +535,7 @@ cmyth_recorder_finish_recording(cmyth_recorder_t rec)
 
 /*
  * cmyth_recorder_toggle_channel_favorite(cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -560,7 +560,7 @@ cmyth_recorder_toggle_channel_favorite(cmyth_recorder_t rec)
 /*
  * cmyth_recorder_change_channel(cmyth_recorder_t rec,
  *                               cmyth_channeldir_t direction)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -569,11 +569,11 @@ cmyth_recorder_toggle_channel_favorite(cmyth_recorder_t rec)
  * followin
  *
  * CHANNEL_DIRECTION_UP       - Go up one channel in the listing
- * 
+ *
  * CHANNEL_DIRECTION_DOWN     - Go down one channel in the listing
- * 
+ *
  * CHANNEL_DIRECTION_FAVORITE - Go to the next favorite channel
- * 
+ *
  * CHANNEL_DIRECTION_SAME     - Stay on the same (current) channel
  *
  * Note that the recorder must not be actively recording when this
@@ -643,7 +643,7 @@ cmyth_recorder_change_channel(cmyth_recorder_t rec,
 /*
  * cmyth_recorder_set_channel(cmyth_recorder_t rec,
  *                            char *channame)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -717,7 +717,7 @@ cmyth_recorder_set_channel(cmyth_recorder_t rec, char *channame)
 /*
  * cmyth_recorder_change_color(cmyth_recorder_t rec,
  *                             cmyth_adjdir_t direction)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -748,7 +748,7 @@ cmyth_recorder_change_color(cmyth_recorder_t rec, cmyth_adjdir_t direction)
 /*
  * cmyth_recorder_change_brightness(cmyth_recorder_t rec,
  *                                  cmyth_adjdir_t direction)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -780,7 +780,7 @@ cmyth_recorder_change_brightness(cmyth_recorder_t rec,
 /*
  * cmyth_recorder_change_contrast(cmyth_recorder_t rec,
  *                                cmyth_adjdir_t direction)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -811,7 +811,7 @@ cmyth_recorder_change_contrast(cmyth_recorder_t rec, cmyth_adjdir_t direction)
 /*
  * cmyth_recorder_change_hue(cmyth_recorder_t rec,
  *                           cmyth_adjdir_t direction)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -841,7 +841,7 @@ cmyth_recorder_change_hue(cmyth_recorder_t rec, cmyth_adjdir_t direction)
 
 /*
  * cmyth_recorder_check_channel(cmyth_recorder_t rec, char *channame)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -902,7 +902,7 @@ cmyth_recorder_check_channel(cmyth_recorder_t rec,
 /*
  * cmyth_recorder_check_channel_prefix(cmyth_recorder_t rec,
  *                                     char *channame)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -985,7 +985,7 @@ cmyth_recorder_get_program_info(cmyth_recorder_t rec)
 		ct = cmyth_rcv_proginfo(rec->rec_conn, &err, proginfo, count);
 	else
 		ct = cmyth_rcv_chaninfo(rec->rec_conn, &err, proginfo, count);
-		
+
 	if (ct != count) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_proginfo() < count\n", __FUNCTION__);
@@ -1170,14 +1170,14 @@ cmyth_recorder_get_next_program_info(cmyth_recorder_t rec,
 		next_prog->proginfo_chansign = cmyth_utf8tolatin1(callsign);
 	}
 	next_prog->proginfo_chanicon = ref_strdup(iconpath);
-	
+
 	next_prog->proginfo_chanId = atoi(chanid);
 
 	ref_hold(next_prog->proginfo_start_ts);
 	ref_hold(next_prog->proginfo_end_ts);
 
 	ret = 0;
- 
+
     out:
         pthread_mutex_unlock(&mutex);
 
@@ -1396,7 +1396,7 @@ cmyth_recorder_spawn_chain_livetv(cmyth_recorder_t rec, char* channame)
 	/* Get the current date and time to create a unique id */
 	t = time(NULL);
 	strftime(datestr, 32, "%Y-%m-%dT%H:%M:%S", localtime(&t));
-	
+
 	/* Now build the SPAWN_LIVETV message */
 	if(rec->rec_conn->conn_version >= 34 && channame)
 		snprintf(msg, sizeof(msg),
@@ -1571,9 +1571,14 @@ cmyth_recorder_get_filename(cmyth_recorder_t rec)
 		return NULL;
 	}
 
-	if(rec->rec_conn->conn_version >= 26) 
-		snprintf(buf, sizeof(buf), "%s",
-			rec->rec_livetv_chain->chain_urls[rec->rec_livetv_chain->chain_current]);
+	if (rec->rec_conn->conn_version >= 26) {
+		if (rec->rec_livetv_chain && rec->rec_livetv_chain->chain_current >= 0) {
+			snprintf(buf, sizeof(buf), "%s",
+				rec->rec_livetv_chain->chain_urls[rec->rec_livetv_chain->chain_current]);
+		}
+		else
+			buf[0] = '\0';
+	}
 	else
 		snprintf(buf, sizeof(buf), "ringbuf%d.nuv", rec->rec_id);
 

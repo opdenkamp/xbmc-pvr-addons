@@ -113,80 +113,11 @@ struct cmyth_database {
 	char * db_user;
 	char * db_pass;
 	char * db_name;
+	unsigned short db_port;
 	MYSQL * mysql;
 	int db_version; /* JLB: -1 = No set, 0 = unknown else DBSchemaVer */
 	int db_tz_utc; /* JLB: 0 = No conversion, 1 = Enable UTC time zone conversion */
 	char db_tz_name[64]; /* JLB: db time zone name to convert query projection */
-};	
-
-/* Sergio: Added to clean up channel list handling */
-struct cmyth_channel {
-	long chanid;
-	int channum;
-	char chanstr[10];
-	long cardids;/* A bit array of recorders/tuners supporting the channel */
-	char *callsign;
-	char *name;
-	char *icon;
-	int visible;
-	/* tsp - added sourceID and multiplex */
-	int sourceid;
-	int multiplex;
-};
-
-struct cmyth_chanlist {
-	cmyth_channel_t *chanlist_list;
-	int chanlist_count;
-};
-
-
-/* tsp: Added timer */
-
-struct cmyth_timer {
-	int recordid;
-	int chanid;
-	time_t starttime;
-	time_t endtime;
-	char* title;
-	char* description;
-	int type;
-	char* category;
-	char* subtitle;
-	int priority;
-	int startoffset;
-	int endoffset;
-	int searchtype;
-	int inactive;
-	char* callsign;
-
-	int dup_method;
-	int dup_in;
-	char* rec_group;
-	char* store_group;
-	char* play_group;
-	int autotranscode;
-	int userjobs;
-	int autocommflag;
-	int autoexpire;
-	int maxepisodes;
-	int maxnewest;
-	int transcoder;
-	/*
-	char* profile;
-	int prefinput;
-	*/
-	};
-
-struct cmyth_timerlist {
-	cmyth_timer_t *timerlist_list;
-	int timerlist_count;
-};
-
-/* Sergio: Added to support the tvguide functionality */
-struct cmyth_tvguide_progs {
-	cmyth_program_t * progs;
-	int count;
-	int alloc;
 };
 
 struct cmyth_recorder {
@@ -203,25 +134,6 @@ struct cmyth_recorder {
 };
 
 /**
- * MythTV proglist
- */
-
-struct cmyth_storagegroup_filelist {
-	cmyth_storagegroup_file_t *storagegroup_filelist_list;
-	int storagegroup_filelist_count;
-};
-
-
-struct cmyth_storagegroup_file {
-	char* filename;
-	char* storagegroup;
-	char* hostname;
-	unsigned long modified;
-	unsigned long size;
-};
-
-
-/**
  * MythTV file connection
  */
 struct cmyth_file {
@@ -235,8 +147,6 @@ struct cmyth_file {
 	uint64_t file_req;	/**< current file position requested */
 	cmyth_conn_t file_control;	/**< master backend connection */
 };
-
-long long cmyth_file_seek_unlocked(cmyth_file_t file, long long offset, int whence);
 
 struct cmyth_ringbuf {
 	cmyth_conn_t conn_data;
@@ -253,7 +163,7 @@ struct cmyth_ringbuf {
 struct cmyth_rec_num {
 	char *recnum_host;
 	unsigned short recnum_port;
-	unsigned recnum_id;
+	unsigned int recnum_id;
 };
 
 struct cmyth_keyframe {
@@ -262,7 +172,7 @@ struct cmyth_keyframe {
 };
 
 struct cmyth_posmap {
-	unsigned posmap_count;
+	unsigned int posmap_count;
 	struct cmyth_keyframe **posmap_list;
 };
 
@@ -288,7 +198,7 @@ struct cmyth_proginfo {
 	unsigned short proginfo_season;    /* new in V67 */
 	unsigned short proginfo_episode;    /* new in V67 */
 	char *proginfo_category;
-	long proginfo_chanId;
+	unsigned long proginfo_chanId;
 	char *proginfo_chanstr;
 	char *proginfo_chansign;
 	char *proginfo_channame;  /* Deprecated in V8, simulated for compat. */
@@ -302,15 +212,15 @@ struct cmyth_proginfo {
 	unsigned long proginfo_recording;
 	unsigned long proginfo_override;
 	char *proginfo_hostname;
-	long proginfo_source_id; /* ??? in V8 */
-	long proginfo_card_id;   /* ??? in V8 */
-	long proginfo_input_id;  /* ??? in V8 */
-	char *proginfo_rec_priority;  /* ??? in V8 */
+	unsigned long proginfo_source_id; /* ??? in V8 */
+	unsigned long proginfo_card_id;   /* ??? in V8 */
+	unsigned long proginfo_input_id;  /* ??? in V8 */
+	long proginfo_rec_priority;  /* ??? in V8 */
 	long proginfo_rec_status; /* ??? in V8 */
 	unsigned long proginfo_record_id;  /* ??? in V8 */
-	unsigned long proginfo_rec_type;   /* ??? in V8 */
-	unsigned long proginfo_rec_dups;   /* ??? in V8 */
-	unsigned long proginfo_unknown_1;  /* new in V8 */
+	long proginfo_rec_type;   /* ??? in V8 */
+	long proginfo_rec_dupin;   /* ??? in V8 */
+	long proginfo_rec_dupmethod;  /* new in V8 */
 	cmyth_timestamp_t proginfo_rec_start_ts;
 	cmyth_timestamp_t proginfo_rec_end_ts;
 	unsigned long proginfo_repeat;   /* ??? in V8 */
@@ -331,7 +241,7 @@ struct cmyth_proginfo {
 	char *proginfo_host;
 	unsigned long proginfo_version;
 	char *proginfo_playgroup; /* new in v18 */
-	char *proginfo_recpriority_2;  /* new in V25 */
+	long proginfo_recpriority_2;  /* new in V25 */
 	long proginfo_parentid; /* new in V31 */
 	char *proginfo_storagegroup; /* new in v32 */
 	unsigned long proginfo_audioproperties; /* new in v35 */
@@ -465,8 +375,6 @@ extern int cmyth_rcv_recorder(cmyth_conn_t conn, int *err,
 #define cmyth_rcv_ringbuf __cmyth_rcv_ringbuf
 extern int cmyth_rcv_ringbuf(cmyth_conn_t conn, int *err, cmyth_ringbuf_t buf,
 			     int count);
-#define cmyth_datetime_to_dbstring __cmyth_datetime_to_dbstring
-extern int cmyth_datetime_to_dbstring(char *str, cmyth_timestamp_t ts);
 
 #define cmyth_toupper_string __cmyth_toupper_string
 extern void cmyth_toupper_string(char *str);
@@ -475,10 +383,7 @@ extern void cmyth_toupper_string(char *str);
  * From proginfo.c
  */
 #define cmyth_proginfo_string __cmyth_proginfo_string
-extern char *cmyth_proginfo_string(cmyth_proginfo_t prog);
-
-#define cmyth_chaninfo_string __cmyth_chaninfo_string
-extern char *cmyth_chaninfo_string(cmyth_proginfo_t prog);
+extern char *cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog);
 
 /*
  * From file.c
@@ -532,5 +437,99 @@ extern MYSQL_RES * cmyth_mysql_query_result(cmyth_mysql_query_t * query);
 extern int cmyth_mysql_query(cmyth_mysql_query_t * query);
 
 extern char* cmyth_utf8tolatin1(char* s);
+
+/*
+ * From channel.c
+ */
+struct cmyth_channel {
+	unsigned long chanid;
+	unsigned long channum;
+	char *chanstr;
+	char *callsign;
+	char *name;
+	char *icon;
+	unsigned short visible;
+	unsigned long sourceid;
+	unsigned long multiplex;
+};
+
+struct cmyth_chanlist {
+	cmyth_channel_t *chanlist_list;
+	int chanlist_count;
+};
+
+#define cmyth_channel_create __cmyth_channel_create
+extern cmyth_channel_t cmyth_channel_create(void);
+
+#define cmyth_chanlist_create __cmyth_chanlist_create
+extern cmyth_chanlist_t cmyth_chanlist_create(void);
+
+/*
+ * From recordingrule.c
+ */
+struct cmyth_recordingrule {
+	unsigned long recordid;
+	unsigned long chanid;
+	cmyth_timestamp_t starttime;
+	cmyth_timestamp_t endtime;
+	char* title;
+	char* description;
+	long type;                     //enum
+	char* category;
+	char* subtitle;
+	long recpriority;              //range -99,+99
+	long startoffset;              //nb minutes
+	long endoffset;                //nb minutes
+	long searchtype;               //enum
+	unsigned short inactive;       //bool
+	char* callsign;
+	long dupmethod;                //enum
+	long dupin;                    //enum
+	char* recgroup;
+	char* storagegroup;
+	char* playgroup;
+	unsigned short autotranscode;  //bool
+	int userjobs;                  //#1111
+	unsigned short autocommflag;   //bool
+	long autoexpire;               //bool
+	long maxepisodes;              //range 0,100
+	long maxnewest;                //bool
+	unsigned long transcoder;      //recordingprofiles id
+	//char* profile;
+	//unsigned long prefinput;
+	};
+
+struct cmyth_recordingrulelist {
+	cmyth_recordingrule_t *recordingrulelist_list;
+	int recordingrulelist_count;
+};
+
+#define cmyth_recordingrule_create __cmyth_recordingrule_create
+extern cmyth_recordingrule_t cmyth_recordingrule_create(void);
+
+#define cmyth_recordingrulelist_create __cmyth_recordingrulelist_create
+extern cmyth_recordingrulelist_t cmyth_recordingrulelist_create(void);
+
+/*
+ * From storagegroup.c
+ */
+struct cmyth_storagegroup_file {
+	char* filename;
+	char* storagegroup;
+	char* hostname;
+	unsigned long lastmodified;
+	unsigned long size;
+};
+
+struct cmyth_storagegroup_filelist {
+	cmyth_storagegroup_file_t *storagegroup_filelist_list;
+	int storagegroup_filelist_count;
+};
+
+#define cmyth_storagegroup_file_create __cmyth_storagegroup_file_create
+extern cmyth_storagegroup_file_t cmyth_storagegroup_file_create(void);
+
+#define cmyth_storagegroup_filelist_create __cmyth_storagegroup_filelist_create
+extern cmyth_storagegroup_filelist_t cmyth_storagegroup_filelist_create(void);
 
 #endif /* __CMYTH_LOCAL_H */

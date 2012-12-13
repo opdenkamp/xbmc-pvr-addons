@@ -37,16 +37,16 @@ public:
 
   bool IsNull() const;
 
-  int ID();
+  unsigned long ID();
   CStdString Name();
-  int NumberInt();
+  unsigned long NumberInt();
   CStdString Number();
   CStdString Callsign();
   CStdString Icon();
   bool Visible();
   bool IsRadio() const;
-  int SourceID();
-  int MultiplexID();
+  unsigned long SourceID();
+  unsigned long MultiplexID();
 
 private:
   boost::shared_ptr<MythPointer<cmyth_channel_t> > m_channel_t;

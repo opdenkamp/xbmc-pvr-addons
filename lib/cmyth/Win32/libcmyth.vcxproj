@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\libcmyth\bookmark.c" />
+    <ClCompile Include="..\libcmyth\channel.c" />
     <ClCompile Include="..\libcmyth\commbreak.c" />
     <ClCompile Include="..\libcmyth\connection.c" />
     <ClCompile Include="..\libcmyth\debug.c" />
@@ -26,10 +27,12 @@
     <ClCompile Include="..\libcmyth\posmap.c" />
     <ClCompile Include="..\libcmyth\proginfo.c" />
     <ClCompile Include="..\libcmyth\proglist.c" />
+    <ClCompile Include="..\libcmyth\recordingrule.c" />
     <ClCompile Include="..\libcmyth\rec_num.c" />
     <ClCompile Include="..\libcmyth\recorder.c" />
     <ClCompile Include="..\libcmyth\ringbuf.c" />
     <ClCompile Include="..\libcmyth\socket.c" />
+    <ClCompile Include="..\libcmyth\storagegroup.c" />
     <ClCompile Include="..\libcmyth\timestamp.c" />
     <ClCompile Include="..\libcmyth\utf8tolatin1.c" />
     <ClCompile Include="..\librefmem\alloc.c" />
@@ -40,9 +43,6 @@
     <ClInclude Include="..\libcmyth\cmyth_local.h" />
     <ClInclude Include="..\libcmyth\safe_string.h" />
     <ClInclude Include="..\librefmem\refmem_local.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="libcmyth.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>libcmyth</ProjectName>

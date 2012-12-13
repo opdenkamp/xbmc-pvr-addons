@@ -20,7 +20,7 @@
 /**
  * \file connection.c
  * Functions to handle creating connections to a MythTV backend and
- * interacting with those connections.  
+ * interacting with those connections.
  */
 
 #include <stdlib.h>
@@ -83,7 +83,7 @@ static myth_protomap_t protomap[] = {
 
 /*
  * cmyth_conn_destroy(cmyth_conn_t conn)
- * 
+ *
  * Scope: PRIVATE (static)
  *
  * Description
@@ -123,7 +123,7 @@ cmyth_conn_destroy(cmyth_conn_t conn)
 
 /*
  * cmyth_conn_create(void)
- * 
+ *
  * Scope: PRIVATE (static)
  *
  * Description
@@ -163,7 +163,7 @@ cmyth_conn_create(void)
 
 /*
  * cmyth_connect(char *server, unsigned short port, unsigned buflen)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -858,6 +858,8 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 	int r;
 	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
 	cmyth_file_t ret = NULL;
+	long file_id;
+	uint64_t file_length;
 
 	if (!prog) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: prog is NULL\n", __FUNCTION__);
@@ -873,16 +875,10 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 			  __FUNCTION__);
 		goto shut;
 	}
-	ret = cmyth_file_create(control);
-	if (!ret) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_file_create() failed\n",
-			  __FUNCTION__);
-		goto shut;
-	}
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting data connection\n",
 		  __FUNCTION__);
 	if (control->conn_version >= 17) {
-		myth_host = cmyth_conn_get_setting_unlocked(control, prog->proginfo_host,
+		myth_host = cmyth_conn_get_setting(control, prog->proginfo_host,
 		                                   "BackendServerIP");
 		if (myth_host && (strcmp(myth_host, "-1") == 0)) {
 			ref_release(myth_host);
@@ -935,9 +931,10 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message('%s') failed\n",
 			  __FUNCTION__, announcement);
+		free(announcement);
 		goto shut;
 	}
-	ret->file_data = ref_hold(conn);
+	free(announcement);
 	count = cmyth_rcv_length(conn);
 	if (count < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -946,7 +943,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	reply[sizeof(reply) - 1] = '\0';
-	r = cmyth_rcv_string(conn, &err, reply, sizeof(reply) - 1, count); 
+	r = cmyth_rcv_string(conn, &err, reply, sizeof(reply) - 1, count);
 	if (err != 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_string() failed (%d)\n",
@@ -959,7 +956,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_long(conn, &err, &ret->file_id, count);
+	r = cmyth_rcv_long(conn, &err, &file_id, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (id) cmyth_rcv_long() failed (%d)\n",
@@ -967,7 +964,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_uint64(conn, &err, &ret->file_length, count);
+	r = cmyth_rcv_uint64(conn, &err, &file_length, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (length) cmyth_rcv_uint64() failed (%d)\n",
@@ -979,16 +976,20 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: %d leftover bytes\n",
 			  __FUNCTION__, count);
 	}
-	free(announcement);
-	ref_release(conn);
+
+	ret = cmyth_file_create(control);
+	if (!ret) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_file_create() failed\n",
+			  __FUNCTION__);
+		goto shut;
+	}
+	ret->file_data = conn;
+	ret->file_id = file_id;
+	ret->file_length = file_length;
 	ref_release(myth_host);
 	return ret;
 
     shut:
-	if (announcement) {
-		free(announcement);
-	}
-	ref_release(ret);
 	ref_release(conn);
 	ref_release(myth_host);
 	return NULL;
@@ -1022,23 +1023,13 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	cmyth_conn_t conn = NULL;
 	char *announcement = NULL;
 	char reply[16];
-	char host[256];
 	int err = 0;
 	int count = 0;
-	int r, port;
+	int r;
 	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
-	struct sockaddr_in addr;
-        socklen_t addr_size = sizeof(addr);
 	cmyth_file_t ret = NULL;
-
-	if (getpeername(control->conn_fd, (struct sockaddr*)&addr, &addr_size)<0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: getpeername() failed\n",
-			  __FUNCTION__);
-		goto shut;
-	}
-
-	inet_ntop(addr.sin_family, &addr.sin_addr, host, sizeof(host));
-	port = ntohs(addr.sin_port);
+	long file_id;
+	uint64_t file_length;
 
 	ret = cmyth_file_create(control);
 	if (!ret) {
@@ -1049,14 +1040,14 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting data connection\n",
 		  __FUNCTION__);
-	conn = cmyth_connect(host, port, buflen, tcp_rcvbuf);
+	conn = cmyth_connect(control->server, control->port, buflen, tcp_rcvbuf);
 	cmyth_dbg(CMYTH_DBG_PROTO,
 		  "%s: done connecting data connection, conn = %p\n",
 		  __FUNCTION__, conn);
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_connect(%s, %d, %d) failed\n",
-			  __FUNCTION__, host, port, buflen);
+			  __FUNCTION__, control->server, control->port, buflen);
 		goto shut;
 	}
 	/*
@@ -1089,9 +1080,10 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message('%s') failed\n",
 			  __FUNCTION__, announcement);
+		free(announcement);
 		goto shut;
 	}
-	ret->file_data = ref_hold(conn);
+	free(announcement);
 	count = cmyth_rcv_length(conn);
 	if (count < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1100,7 +1092,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	reply[sizeof(reply) - 1] = '\0';
-	r = cmyth_rcv_string(conn, &err, reply, sizeof(reply) - 1, count); 
+	r = cmyth_rcv_string(conn, &err, reply, sizeof(reply) - 1, count);
 	if (err != 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_string() failed (%d)\n",
@@ -1113,7 +1105,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_long(conn, &err, &ret->file_id, count);
+	r = cmyth_rcv_long(conn, &err, &file_id, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (id) cmyth_rcv_long() failed (%d)\n",
@@ -1121,7 +1113,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_uint64(conn, &err, &ret->file_length, count);
+	r = cmyth_rcv_uint64(conn, &err, &file_length, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (length) cmyth_rcv_uint64() failed (%d)\n",
@@ -1129,15 +1121,23 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	free(announcement);
-	ref_release(conn);
+	if (count != 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: %d leftover bytes\n",
+			  __FUNCTION__, count);
+	}
+
+	ret = cmyth_file_create(control);
+	if (!ret) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_file_create() failed\n",
+			  __FUNCTION__);
+		goto shut;
+	}
+	ret->file_data = conn;
+	ret->file_id = file_id;
+	ret->file_length = file_length;
 	return ret;
 
     shut:
-	if (announcement) {
-		free(announcement);
-	}
-	ref_release(ret);
 	ref_release(conn);
 	return NULL;
 }
@@ -1261,7 +1261,7 @@ cmyth_conn_connect_recorder(cmyth_recorder_t rec, unsigned buflen,
 
 /*
  * cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1331,7 +1331,7 @@ cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
  * cmyth_conn_get_recorder_from_num(cmyth_conn_t control,
  *                                  cmyth_recorder_num_t num,
  *                                  cmyth_recorder_t rec)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1428,8 +1428,8 @@ cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int id)
 
 /*
  * cmyth_conn_get_free_recorder(cmyth_conn_t control, cmyth_recorder_t rec)
- *                             
- * 
+ *
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -1546,7 +1546,7 @@ cmyth_conn_get_freespace(cmyth_conn_t control,
 
 	if (control->conn_version >= 32)
 		{ snprintf(msg, sizeof(msg), "QUERY_FREE_SPACE_SUMMARY"); }
-	else if (control->conn_version >= 17)	
+	else if (control->conn_version >= 17)
 		{ snprintf(msg, sizeof(msg), "QUERY_FREE_SPACE"); }
 	else
 		{ snprintf(msg, sizeof(msg), "QUERY_FREESPACE"); }
@@ -1566,7 +1566,7 @@ cmyth_conn_get_freespace(cmyth_conn_t control,
 		ret = count;
 		goto out;
 	}
-	
+
 	if (control->conn_version >= 17) {
 		if ((r=cmyth_rcv_int64(control, &err, &lreply, count)) < 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR,

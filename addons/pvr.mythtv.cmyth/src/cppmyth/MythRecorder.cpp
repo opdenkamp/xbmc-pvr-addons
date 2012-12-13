@@ -103,13 +103,13 @@ bool MythRecorder::IsTunable(MythChannel &channel)
   for (int i = 0; i < inputlist->input_count; ++i)
   {
     cmyth_input_t input = inputlist->input_list[i];
-    if ((int)input->sourceid != channel.SourceID())
+    if (input->sourceid != channel.SourceID())
     {
       XBMC->Log(LOG_DEBUG, "%s: skip input, source id differs (channel: %i, input: %i)", __FUNCTION__, channel.SourceID(), input->sourceid);
       continue;
     }
 
-    if (input->multiplexid && (int)input->multiplexid != channel.MultiplexID())
+    if (input->multiplexid && input->multiplexid != channel.MultiplexID())
     {
       XBMC->Log(LOG_DEBUG, "%s: skip input, multiplex id id differs (channel: %i, input: %i)", __FUNCTION__, channel.MultiplexID(), input->multiplexid);
       continue;

@@ -267,8 +267,11 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
   }
 
   // Transfer EPG for the given channel
-  for (ProgramList::iterator it = m_EPG.begin(); it != m_EPG.end() && (unsigned)it->chanid == channel.iUniqueId; ++it)
+  for (ProgramList::iterator it = m_EPG.begin(); it != m_EPG.end(); ++it)
   {
+    if ((unsigned)it->chanid != channel.iUniqueId)
+      continue;
+
     EPG_TAG tag;
     memset(&tag, 0, sizeof(EPG_TAG));
 

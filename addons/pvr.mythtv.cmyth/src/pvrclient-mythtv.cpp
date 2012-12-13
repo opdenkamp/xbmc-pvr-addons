@@ -924,9 +924,9 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     if (title.IsEmpty())
     {
       MythProgram epgProgram;
-      title= "%";
-      m_db.FindProgram(tag.startTime, tag.iClientChannelUid, title, &epgProgram);
-      title = epgProgram.title;
+      bool hasEpgProgram = m_db.FindProgram(tag.startTime, tag.iClientChannelUid, "%", &epgProgram);
+      if (hasEpgProgram)
+        title = epgProgram.title;
     }
     PVR_STRCPY(tag.strTitle, title);
 
@@ -1095,22 +1095,48 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
 
 void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule)
 {
-  CStdString category = m_categories.Category(timer.iGenreType);
-  rule.SetCategory(category);
-  rule.SetChannelID(timer.iClientChannelUid);
-  rule.SetCallsign(m_channels.at(timer.iClientChannelUid).Callsign());
+  // If we have an entry in the EPG for the timer, we use it to set title and subtitle from it
+  // PVR_TIMER has no subtitle thus might send it encoded within the title.
+  MythProgram program;
+  bool programFound = m_db.FindProgram(timer.startTime, timer.iClientChannelUid, "%", &program);
+  if (programFound)
+  {
+    rule.SetSearchType(MythRecordingRule::NoSearch);
+    rule.SetTitle(program.title);
+    rule.SetSubtitle(program.subtitle);
+  }
+  else
+  {
+    // kManualSearch = http://www.gossamer-threads.com/lists/mythtv/dev/155150?search_string=kManualSearch;#155150
+    rule.SetSearchType(MythRecordingRule::ManualSearch);
+    rule.SetTitle(timer.strTitle);
+  }
+
   rule.SetDescription(timer.strSummary);
-  rule.SetEndOffset(timer.iMarginEnd);
-  rule.SetEndTime(timer.endTime);
-  rule.SetInactive(timer.state == PVR_TIMER_STATE_ABORTED ||timer.state ==  PVR_TIMER_STATE_CANCELLED);
-  rule.SetPriority(timer.iPriority);
-  rule.SetStartOffset(timer.iMarginStart);
+  rule.SetChannelID(timer.iClientChannelUid);
   rule.SetStartTime((timer.startTime == 0 ? time(NULL) : timer.startTime));
-  rule.SetTitle(timer.strTitle);
-  CStdString title = rule.Title();
-  // kManualSearch = http://www.gossamer-threads.com/lists/mythtv/dev/155150?search_string=kManualSearch;#155150
-  rule.SetSearchType(m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, NULL) ? MythRecordingRule::NoSearch : MythRecordingRule::ManualSearch);
-  rule.SetType(timer.bIsRepeating ? (timer.iWeekdays == 127 ? MythRecordingRule::TimeslotRecord : MythRecordingRule::WeekslotRecord) : MythRecordingRule::SingleRecord);
+  rule.SetEndTime(timer.endTime);
+  rule.SetStartOffset(timer.iMarginStart);
+  rule.SetEndOffset(timer.iMarginEnd);
+  rule.SetCategory(m_categories.Category(timer.iGenreType));
+  rule.SetInactive(timer.state == PVR_TIMER_STATE_ABORTED || timer.state ==  PVR_TIMER_STATE_CANCELLED);
+  rule.SetPriority(timer.iPriority);
+
+  ChannelMap::iterator channelIt = m_channels.find(timer.iClientChannelUid);
+  if (channelIt != m_channels.end())
+    rule.SetCallsign(channelIt->second.Callsign());
+
+  if (timer.bIsRepeating)
+  {
+    if (timer.iWeekdays == 0x7F)
+      rule.SetType(MythRecordingRule::TimeslotRecord);
+    else
+      rule.SetType(MythRecordingRule::WeekslotRecord);
+  }
+  else
+  {
+    rule.SetType(MythRecordingRule::SingleRecord);
+  }
 }
 
 PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)

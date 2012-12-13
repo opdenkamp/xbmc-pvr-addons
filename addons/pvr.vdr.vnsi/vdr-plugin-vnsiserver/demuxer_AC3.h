@@ -39,18 +39,6 @@ private:
   int         m_Channels;
   int         m_BitRate;
 
-  bool        m_FetchTimestamp;
-  int64_t     m_FrameOffset;        /* offset of the current frame */
-  int64_t     m_CurrentOffset;      /* current offset (incremented by each av_parser_parse()) */
-  int64_t     m_NextFrameOffset;    /* offset of the next frame */
-
-#define AV_PARSER_PTS_NB 4
-  int         m_CurrentFrameStartIndex;
-  int64_t     m_CurrentFrameOffset[AV_PARSER_PTS_NB];
-  int64_t     m_CurrentFramePTS[AV_PARSER_PTS_NB];
-  int64_t     m_CurrentFrameDTS[AV_PARSER_PTS_NB];
-  int64_t     m_CurrentFrameEnd[AV_PARSER_PTS_NB];
-  int64_t     m_Offset;             /* byte offset from starting packet start */
   int64_t     m_PTS;                /* pts of the current frame */
   int64_t     m_DTS;                /* dts of the current frame */
   int64_t     m_NextDTS;
@@ -64,9 +52,7 @@ private:
   int         m_AC3BufferPtr;
 
   int FindHeaders(uint8_t **poutbuf, int *poutbuf_size,
-                  uint8_t *buf, int buf_size,
-                  int64_t pts, int64_t dts);
-  void FetchTimestamp(int off, bool remove);
+                  uint8_t *buf, int buf_size);
 
 public:
   cParserAC3(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);

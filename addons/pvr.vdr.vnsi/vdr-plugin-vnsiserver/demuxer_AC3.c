@@ -112,8 +112,6 @@ typedef enum {
 cParserAC3::cParserAC3(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
  : cParser(streamer, pID)
 {
-  m_CurrentFrameStartIndex    = 0;
-  m_Offset                    = 0;
   m_PTS                       = 0;
   m_DTS                       = 0;
   m_FrameSize                 = 0;
@@ -123,21 +121,9 @@ cParserAC3::cParserAC3(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
   m_demuxer                   = demuxer;
   m_firstPUSIseen             = false;
   m_PESStart                  = false;
-  m_FetchTimestamp            = true;
   m_NextDTS                   = 0;
   m_AC3BufferPtr              = 0;
   m_HeaderFound               = false;
-  m_FrameOffset               = 0;
-  m_CurrentOffset             = 0;
-  m_NextFrameOffset           = 0;
-
-  for (int i = 0; i < AV_PARSER_PTS_NB; i++)
-  {
-    m_CurrentFrameDTS[i] = DVD_NOPTS_VALUE;
-    m_CurrentFramePTS[i] = DVD_NOPTS_VALUE;
-    m_CurrentFrameEnd[i] = 0;
-    m_CurrentFrameOffset[i] = 0;
-  }
 }
 
 cParserAC3::~cParserAC3()
@@ -185,12 +171,9 @@ void cParserAC3::Parse(unsigned char *data, int size, bool pusi)
     uint8_t *outbuf;
     int      outlen;
 
-    int rlen = FindHeaders(&outbuf, &outlen, data, size, m_curPTS, m_curDTS);
+    int rlen = FindHeaders(&outbuf, &outlen, data, size);
     if (rlen < 0)
       break;
-
-    m_curPTS = DVD_NOPTS_VALUE;
-    m_curDTS = DVD_NOPTS_VALUE;
 
     if (outlen)
     {
@@ -200,8 +183,6 @@ void cParserAC3::Parse(unsigned char *data, int size, bool pusi)
       pkt.size     = outlen;
       pkt.duration = 90000 * 1536 / m_SampleRate;
       pkt.dts      = m_DTS;
-      if (pkt.dts == DVD_NOPTS_VALUE)
-        pkt.dts = m_NextDTS;
       pkt.pts      = pkt.dts;
       m_NextDTS    = pkt.dts + pkt.duration;
 
@@ -215,28 +196,10 @@ void cParserAC3::Parse(unsigned char *data, int size, bool pusi)
 }
 
 int cParserAC3::FindHeaders(uint8_t **poutbuf, int *poutbuf_size,
-                                   uint8_t *buf, int buf_size,
-                                   int64_t pts, int64_t dts)
+                                   uint8_t *buf, int buf_size)
 {
   *poutbuf      = NULL;
   *poutbuf_size = 0;
-
-  /* add a new packet descriptor */
-  if (pts != DVD_NOPTS_VALUE || dts != DVD_NOPTS_VALUE)
-  {
-    int i = (m_CurrentFrameStartIndex + 1) & (AV_PARSER_PTS_NB - 1);
-    m_CurrentFrameStartIndex  = i;
-    m_CurrentFrameOffset[i]   = m_CurrentOffset;
-    m_CurrentFrameEnd[i]      = m_CurrentOffset + buf_size;
-    m_CurrentFramePTS[i]      = pts;
-    m_CurrentFrameDTS[i]      = dts;
-  }
-
-  if (m_FetchTimestamp)
-  {
-    m_FetchTimestamp  = false;
-    FetchTimestamp(0, false);
-  }
 
   uint8_t *buf_ptr = buf;
   while (buf_size > 0)
@@ -318,6 +281,10 @@ int cParserAC3::FindHeaders(uint8_t **poutbuf, int *poutbuf_size,
         m_Channels = AC3ChannelsTable[channelMode] + lfeon;
       }
       m_HeaderFound = true;
+      m_DTS = m_curDTS;
+      if (m_DTS == DVD_NOPTS_VALUE)
+        m_DTS = m_NextDTS;
+      m_curDTS = DVD_NOPTS_VALUE;
     }
 
     if (m_HeaderFound)
@@ -345,40 +312,5 @@ int cParserAC3::FindHeaders(uint8_t **poutbuf, int *poutbuf_size,
     buf_ptr++;
     buf_size--;
   }
-  int index = buf_ptr - buf;
-
-  /* update the file pointer */
-  if (*poutbuf_size)
-  {
-    /* fill the data for the current frame */
-    m_FrameOffset     = m_NextFrameOffset;
-
-    /* offset of the next frame */
-    m_NextFrameOffset = m_CurrentOffset + index;
-    m_FetchTimestamp  = true;
-  }
-  if (index < 0)
-    index = 0;
-  m_CurrentOffset += index;
-  return index;
-}
-
-void cParserAC3::FetchTimestamp(int off, bool remove)
-{
-  m_DTS = DVD_NOPTS_VALUE;
-  m_PTS = DVD_NOPTS_VALUE;
-  m_Offset = 0;
-  for (int i = 0; i < AV_PARSER_PTS_NB; i++)
-  {
-    if (   m_NextFrameOffset + off >= m_CurrentFrameOffset[i]
-        &&(m_FrameOffset           <  m_CurrentFrameOffset[i] || !m_FrameOffset)
-        && m_CurrentFrameEnd[i])
-    {
-      m_DTS    = m_CurrentFrameDTS[i];
-      m_PTS    = m_CurrentFramePTS[i];
-      m_Offset = m_NextFrameOffset - m_CurrentFrameOffset[i];
-      if (remove)
-        m_CurrentFrameOffset[i] = -1;
-    }
-  }
+  return (buf_ptr - buf);
 }

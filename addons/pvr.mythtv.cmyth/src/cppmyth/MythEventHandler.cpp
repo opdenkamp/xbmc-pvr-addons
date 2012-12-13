@@ -72,6 +72,7 @@ public:
   void HandleUpdateFileSize(const CStdString &buffer);
 
   void RetryConnect();
+  bool TryReconnect();
   void RecordingListChange();
 
   // Data
@@ -166,7 +167,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         HandleUpdateFileSize(databuf);
       }
 
-      if (myth_event == CMYTH_EVENT_LIVETV_CHAIN_UPDATE)
+      else if (myth_event == CMYTH_EVENT_LIVETV_CHAIN_UPDATE)
       {
         Lock();
         if (!m_recorder.IsNull())
@@ -181,7 +182,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         Unlock();
       }
 
-      if (myth_event == CMYTH_EVENT_LIVETV_WATCH)
+      else if (myth_event == CMYTH_EVENT_LIVETV_WATCH)
       {
         if (g_bExtraDebug)
           XBMC->Log(LOG_NOTICE,"%s: Event LIVETV_WATCH: recoder %s", __FUNCTION__, databuf);
@@ -199,7 +200,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         Unlock();
       }
 
-      if(myth_event == CMYTH_EVENT_DONE_RECORDING)
+      else if(myth_event == CMYTH_EVENT_DONE_RECORDING)
       {
         if (g_bExtraDebug)
           XBMC->Log(LOG_NOTICE, "%s: Event DONE_RECORDING: recorder %s", __FUNCTION__, databuf);
@@ -217,7 +218,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         Unlock();
       }
 
-      if (myth_event == CMYTH_EVENT_SIGNAL)
+      else if (myth_event == CMYTH_EVENT_SIGNAL)
       {
         HandleUpdateSignal(databuf);
       }
@@ -229,7 +230,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         PVR->TriggerTimerUpdate();
       }
 
-      if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_ADD)
+      else if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_ADD)
       {
         //Event data: "4121 2010-03-06T01:06:43[]:[]empty"
         int chanid;
@@ -244,7 +245,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         }
       }
 
-      if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_UPDATE)
+      else if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_UPDATE)
       {
         //Event data: Updated 'proginfo' is returned
         MythProgramInfo prog = MythProgramInfo(proginfo);
@@ -259,7 +260,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         }
       }
 
-      if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_DELETE)
+      else if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_DELETE)
       {
         //Event data: "4121 2010-03-06T01:06:43[]:[]empty"
         int chanid;
@@ -274,19 +275,19 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         }
       }
 
-      if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE)
+      else if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE)
       {
         if (g_bExtraDebug)
           XBMC->Log(LOG_NOTICE, "%s - Event recording list change", __FUNCTION__);
         RecordingListChange();
       }
 
-      if (myth_event == CMYTH_EVENT_UNKNOWN)
+      else if (myth_event == CMYTH_EVENT_UNKNOWN)
       {
         XBMC->Log(LOG_NOTICE, "%s - Event unknown, databuf: %s", __FUNCTION__, databuf);
       }
 
-      if (myth_event == CMYTH_EVENT_CLOSE)
+      else if (myth_event == CMYTH_EVENT_CLOSE)
       {
         XBMC->Log(LOG_NOTICE, "%s - Event client connection closed", __FUNCTION__);
         RetryConnect();
@@ -299,20 +300,11 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
         XBMC->Log(LOG_ERROR, "%s Event client connection error", __FUNCTION__);
         RetryConnect();
     }
-    else if (select == 0 && cmyth_conn_hung(*m_conn_t))
+    else if (cmyth_conn_hung(*m_conn_t))
     {
       XBMC->Log(LOG_NOTICE, "%s - Connection hung - reconnect event client connection", __FUNCTION__);
-
-      if (!m_conn_t)
-        break;
-
-      m_conn_t->Lock();
-      int retval = cmyth_conn_reconnect_event(*m_conn_t);
-      m_conn_t->Unlock();
-      if (retval == 1)
-        XBMC->Log(LOG_NOTICE, "%s - Connected client to event socket", __FUNCTION__);
-      else
-        XBMC->Log(LOG_NOTICE, "%s - Could not connect client to event socket", __FUNCTION__);
+      if (!m_conn_t || !TryReconnect())
+        RetryConnect();
     }
 
     //Accumulate recording change events before triggering PVR event
@@ -428,6 +420,20 @@ void MythEventHandler::MythEventHandlerPrivate::RetryConnect()
     }
 }
 
+bool MythEventHandler::MythEventHandlerPrivate::TryReconnect()
+{
+  int retval = 0;
+  XBMC->Log(LOG_DEBUG, "%s - Trying to reconnect", __FUNCTION__);
+  m_conn_t->Lock();
+  retval = cmyth_conn_reconnect_event(*m_conn_t);
+  m_conn_t->Unlock();
+  if (retval == 1)
+    XBMC->Log(LOG_NOTICE, "%s - Connected client to event socket", __FUNCTION__);
+  else
+    XBMC->Log(LOG_NOTICE, "%s - Could not connect client to event socket", __FUNCTION__);
+  return retval == 1;
+}
+
 void MythEventHandler::MythEventHandlerPrivate::RecordingListChange()
 {
   Lock();
@@ -445,28 +451,6 @@ MythEventHandler::MythEventHandler(const CStdString &server, unsigned short port
   : m_imp(new MythEventHandlerPrivate(server, port))
 {
   m_imp->CreateThread();
-}
-
-
-bool MythEventHandler::TryReconnect()
-{
-  int retval = 0;
-  if (m_retryCount < 10)
-  {
-    XBMC->Log(LOG_DEBUG, "%s - Trying to reconnect (retry count: %d)", __FUNCTION__, m_retryCount);
-    m_retryCount++;
-
-    m_imp->m_conn_t->Lock();
-    retval = cmyth_conn_reconnect_event(*(m_imp->m_conn_t));
-    m_imp->m_conn_t->Unlock();
-
-    if (retval == 1)
-      m_retryCount = 0;
-  }
-  if (g_bExtraDebug && retval == 0)
-    XBMC->Log(LOG_DEBUG, "%s - Unable to reconnect (retry count: %d)", __FUNCTION__, m_retryCount);
-
-  return retval == 1;
 }
 
 void MythEventHandler::PreventLiveChainUpdate()

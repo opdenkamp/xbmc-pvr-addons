@@ -44,8 +44,6 @@ public:
   MythEventHandler();
   MythEventHandler(const CStdString &server, unsigned short port);
 
-  bool TryReconnect();
-
   void PreventLiveChainUpdate();
   void AllowLiveChainUpdate();
 
@@ -114,5 +112,4 @@ public:
 private:
   class MythEventHandlerPrivate; // Needs to be within MythEventHandler to inherit friend permissions
   boost::shared_ptr<MythEventHandlerPrivate> m_imp; // Private Implementation
-  int m_retryCount;
 };

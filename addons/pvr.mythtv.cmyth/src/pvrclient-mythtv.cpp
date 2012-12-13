@@ -272,7 +272,7 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
     EPG_TAG tag;
     memset(&tag, 0, sizeof(EPG_TAG));
 
-    tag.iUniqueBroadcastId = (tag.startTime << 16) + (tag.iChannelNumber & 0xFFFF);
+    tag.iUniqueBroadcastId = (it->starttime << 16) + (it->channum & 0xFFFF);
     tag.iChannelNumber = it->channum;
     tag.startTime = it->starttime;
     tag.endTime = it->endtime;

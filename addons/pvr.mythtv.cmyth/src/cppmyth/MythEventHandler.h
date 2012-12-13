@@ -44,8 +44,6 @@ public:
   MythEventHandler();
   MythEventHandler(const CStdString &server, unsigned short port);
 
-  bool TryReconnect();
-
   void PreventLiveChainUpdate();
   void AllowLiveChainUpdate();
 

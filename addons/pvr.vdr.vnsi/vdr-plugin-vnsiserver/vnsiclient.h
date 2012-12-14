@@ -66,6 +66,7 @@ private:
   cMutex           m_msgLock;
   static cMutex    m_timerLock;
   cVnsiOsdProvider *m_Osd;
+  std::map<int, time_t> m_epgUpdate;
 
 protected:
 
@@ -85,6 +86,7 @@ public:
   void ChannelChange();
   void RecordingsChange();
   void TimerChange();
+  void EpgChange();
 
   unsigned int GetID() { return m_Id; }
 

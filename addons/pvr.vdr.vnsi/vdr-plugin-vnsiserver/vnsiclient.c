@@ -25,6 +25,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <map>
 
 #include <vdr/recording.h>
 #include <vdr/channels.h>
@@ -270,6 +271,52 @@ void cVNSIClient::RecordingsChange()
   resp->finalise();
   m_socket.write(resp->getPtr(), resp->getLen());
   delete resp;
+}
+
+void cVNSIClient::EpgChange()
+{
+  cMutexLock lock(&m_msgLock);
+
+  if (!m_StatusInterfaceEnabled)
+    return;
+
+  cSchedulesLock MutexLock;
+  const cSchedules *schedules = cSchedules::Schedules(MutexLock);
+  if (!schedules)
+    return;
+
+  std::map<int, time_t>::iterator it;
+  for (const cSchedule *schedule = schedules->First(); schedule; schedule = schedules->Next(schedule))
+  {
+    cEvent *lastEvent =  schedule->Events()->Last();
+    if (!lastEvent)
+      continue;
+
+    uint32_t channelId = CreateStringHash(schedule->ChannelID().ToString());
+    it = m_epgUpdate.find(channelId);
+    if (it == m_epgUpdate.end())
+    {
+      continue;
+    }
+
+    if (it->second >= lastEvent->StartTime())
+      continue;
+
+    cResponsePacket *resp = new cResponsePacket();
+    if (!resp->initStatus(VNSI_STATUS_EPGCHANGE))
+    {
+      delete resp;
+      return;
+    }
+    resp->add_U32(channelId);
+    resp->finalise();
+    m_socket.write(resp->getPtr(), resp->getLen());
+    delete resp;
+
+    const cChannel *channel = FindChannelByUID(channelId);
+    if (channel)
+      INFOLOG("Trigger EPG update for channel %s", channel->Name());
+  }
 }
 
 void cVNSIClient::Recording(const cDevice *Device, const char *Name, const char *FileName, bool On)
@@ -1553,6 +1600,7 @@ bool cVNSIClient::processEPG_GetForChannel() /* OPCODE 120 */
 
   cSchedulesLock MutexLock;
   const cSchedules *Schedules = cSchedules::Schedules(MutexLock);
+  m_epgUpdate[channelUID] = 0;
   if (!Schedules)
   {
     m_resp->add_U32(0);
@@ -1644,6 +1692,11 @@ bool cVNSIClient::processEPG_GetForChannel() /* OPCODE 120 */
   m_resp->finalise();
   m_socket.write(m_resp->getPtr(), m_resp->getLen());
 
+  cEvent *lastEvent =  Schedule->Events()->Last();
+  if (lastEvent)
+  {
+    m_epgUpdate[channelUID] = lastEvent->StartTime();
+  }
   DEBUGLOG("written schedules packet");
 
   return true;

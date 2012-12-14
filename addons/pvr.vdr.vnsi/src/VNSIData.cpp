@@ -872,6 +872,12 @@ void *cVNSIData::Process()
         XBMC->Log(LOG_DEBUG, "Server requested recordings update");
         PVR->TriggerRecordingUpdate();
       }
+      else if (vresp->getRequestID() == VNSI_STATUS_EPGCHANGE)
+      {
+        uint32_t channel     = vresp->extract_U32();
+        XBMC->Log(LOG_DEBUG, "Server requested Epg update for channel: %d", channel);
+        PVR->TriggerEpgUpdate(channel);
+      }
 
       delete vresp;
     }

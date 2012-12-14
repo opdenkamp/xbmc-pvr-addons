@@ -122,6 +122,7 @@
 #define VNSI_STATUS_MESSAGE          3
 #define VNSI_STATUS_CHANNELCHANGE    4
 #define VNSI_STATUS_RECORDINGSCHANGE 5
+#define VNSI_STATUS_EPGCHANGE        6
 
 /** Packet return codes */
 #define VNSI_RET_OK              0

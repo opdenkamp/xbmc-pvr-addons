@@ -1,6 +1,6 @@
 /*
  *  Functions for manipulating HTS messages
- *  Copyright (C) 2007 Andreas Öman
+ *  Copyright (C) 2007 Andreas ï¿½man
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -575,4 +575,31 @@ htsmsg_copy(htsmsg_t *src)
   htsmsg_t *dst = src->hm_islist ? htsmsg_create_list() : htsmsg_create_map();
   htsmsg_copy_i(src, dst);
   return dst;
+}
+
+int
+htsmsg_get_float(htsmsg_t *msg, const char *name, double *floatp)
+{
+  htsmsg_field_t *f;
+
+  if((f = htsmsg_field_find(msg, name)) == NULL)
+    return HTSMSG_ERR_FIELD_NOT_FOUND;
+
+  switch(f->hmf_type) {
+  default:
+    return HTSMSG_ERR_CONVERSION_IMPOSSIBLE;
+  case HMF_STR:
+    *floatp = atof(f->hmf_str);
+    break;
+  case HMF_FLOAT:
+    *floatp = f->hmf_float;
+    break;
+  }
+  return 0;
+}
+
+void htsmsg_add_float(htsmsg_t *msg, const char *name, double val)
+{
+  htsmsg_field_t *f = htsmsg_field_add(msg, name, HMF_FLOAT, HMF_NAME_ALLOCED);
+  f->hmf_float = val;
 }

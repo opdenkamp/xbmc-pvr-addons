@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.0
+# Addon version: 1.6.3
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -100,6 +100,22 @@ msgstr "סוג:"
 msgctxt "#30027"
 msgid "Device:"
 msgstr "התקן:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "סרוק: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "אות: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "ערוצים חדשים:%i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "כל הערוצים: %i"
 
 msgctxt "#30032"
 msgid "Analog TV"

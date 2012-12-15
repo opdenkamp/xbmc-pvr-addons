@@ -1,6 +1,6 @@
 /*
  *  Functions for manipulating HTS messages
- *  Copyright (C) 2007 Andreas ï¿½man
+ *  Copyright (C) 2007 Andreas Öman
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License

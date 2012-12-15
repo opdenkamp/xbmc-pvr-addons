@@ -82,6 +82,8 @@ bool CHTSPDemux::CheckConnection()
 
 void CHTSPDemux::Close()
 {
+  if (m_session->IsConnected())
+    SendUnsubscribe(m_subs);
   m_session->Close();
 }
 
@@ -285,8 +287,8 @@ inline void HTSPSetDemuxStreamInfoVideo(PVR_STREAM_PROPERTIES::PVR_STREAM &strea
   int iDuration = htsmsg_get_u32_or_default(msg, "duration" , 0);
   if (iDuration > 0)
   {
-    stream.iFPSScale = DVD_TIME_BASE;
-    stream.iFPSRate  = iDuration;
+    stream.iFPSScale = iDuration;
+    stream.iFPSRate  = DVD_TIME_BASE;
   }
 }
 

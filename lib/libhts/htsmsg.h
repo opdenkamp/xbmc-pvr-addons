@@ -51,6 +51,7 @@ typedef struct htsmsg {
 #define HMF_STR 3
 #define HMF_BIN 4
 #define HMF_LIST 5
+#define HMF_FLOAT 6
 
 typedef struct htsmsg_field {
   TAILQ_ENTRY(htsmsg_field) hmf_link;
@@ -68,6 +69,7 @@ typedef struct htsmsg_field {
       const char *data;
       size_t len;
     } bin;
+    double   sf;
     htsmsg_t msg;
   } u;
 } htsmsg_field_t;
@@ -77,6 +79,7 @@ typedef struct htsmsg_field {
 #define hmf_str     u.str
 #define hmf_bin     u.bin.data
 #define hmf_binsize u.bin.len
+#define hmf_float   u.sf
 
 #define htsmsg_get_map_by_field(f) \
  ((f)->hmf_type == HMF_MAP ? &(f)->hmf_msg : NULL)
@@ -185,6 +188,19 @@ int htsmsg_get_s64(htsmsg_t *msg, const char *name,  int64_t *s64p);
  */
 int htsmsg_get_bin(htsmsg_t *msg, const char *name, const void **binp,
 		   size_t *lenp);
+
+/**
+ * Get a float.
+ *
+ * @return HTSMSG_ERR_FIELD_NOT_FOUND - Field does not exist
+ *         HTSMSG_ERR_CONVERSION_IMPOSSIBLE - Field is not an float.
+ */
+int htsmsg_get_float(htsmsg_t *msg, const char *name, double *floatp);
+
+/**
+ * Add a float field.
+ */
+void htsmsg_add_float(htsmsg_t *msg, const char *name, double val);
 
 /**
  * Get a field of type 'list'. No copying is done.

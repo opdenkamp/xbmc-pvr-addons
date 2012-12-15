@@ -82,12 +82,19 @@ bool CHTSPDemux::CheckConnection()
 
 void CHTSPDemux::Close()
 {
+  if (m_session->IsConnected())
+    SendUnsubscribe(m_subs);
   m_session->Close();
 }
 
 void CHTSPDemux::SetSpeed(int speed)
 {
   SendSpeed(m_subs, speed/10);
+}
+
+bool CHTSPDemux::SeekTime(int time, bool backward, double *startpts)
+{
+  return SendSeek(m_subs, time, backward, startpts);
 }
 
 bool CHTSPDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
@@ -285,8 +292,8 @@ inline void HTSPSetDemuxStreamInfoVideo(PVR_STREAM_PROPERTIES::PVR_STREAM &strea
   int iDuration = htsmsg_get_u32_or_default(msg, "duration" , 0);
   if (iDuration > 0)
   {
-    stream.iFPSScale = DVD_TIME_BASE;
-    stream.iFPSRate  = iDuration;
+    stream.iFPSScale = iDuration;
+    stream.iFPSRate  = DVD_TIME_BASE;
   }
 }
 
@@ -568,6 +575,18 @@ bool CHTSPDemux::SendSpeed(int subscription, int speed)
   htsmsg_add_s32(m, "subscriptionId", subscription);
   htsmsg_add_s32(m, "speed"         , speed);
   return m_session->ReadSuccess(m, true, "pause subscription");
+}
+
+bool CHTSPDemux::SendSeek(int subscription, int time, bool backward, double *startpts)
+{
+  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_add_str(m, "method"        , "subscriptionSeek");
+  htsmsg_add_s32(m, "subscriptionId", subscription);
+  htsmsg_add_s32(m, "time"          , time);
+  htsmsg_add_u32(m, "backward"      , backward);
+  htsmsg_add_float(m, "startpts"      , *startpts);
+
+  return m_session->ReadSuccess(m, true, "seek subscription");
 }
 
 bool CHTSPDemux::ParseQueueStatus(htsmsg_t* msg)

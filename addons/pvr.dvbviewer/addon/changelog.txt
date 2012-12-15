@@ -1,3 +1,12 @@
+1.6.4
+
+[fixed] Use utf-8 encoding to get and set the timers.
+[fixed] Channel names with more than 25 chars could crash the add-on.
+
+1.6.3
+
+[updated] Language files from Transifex
+
 1.6.2
 
 New version number by Team XBMC
@@ -19,7 +28,6 @@ New version number by Team XBMC
 [fixed] Channel names with ansi chars are converted to utf8 so they can be displayed properly (a reset of the PVR database may be required).
 [fixed] Channel names with more than 25 chars.
 
-
 0.1.5
 
 [added] Timers support.
@@ -31,7 +39,6 @@ New version number by Team XBMC
 [added] Receiving device name to the status info.
 [fixed] The preferred language is loaded from the DVBViewer config and used to get the correct EPG in case it supports multi language entries.
 [fixed] When the EPG is missing the description entry, the event entry is used instead.
-
 
 0.1.0
 

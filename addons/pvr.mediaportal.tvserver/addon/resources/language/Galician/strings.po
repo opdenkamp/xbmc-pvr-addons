@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.3.117
+# Addon version: 1.6.5
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
@@ -17,6 +17,86 @@ msgstr ""
 "Language: gl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "Nome de host do Mediaportal"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "Extensión para o porto de XBMC de Mediaportal"
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "Incluír Radio"
+
+msgctxt "#30006"
+msgid "Import only TV Channels from group"
+msgstr "Importar só os canles de TV dende o grupo"
+
+msgctxt "#30007"
+msgid "Import only Radio Channels from group"
+msgstr "Importar só os canles de Radio dende o grupo"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "Convertir o nome de host ó enderezo IP"
+
+msgctxt "#30016"
+msgid "Windows user account (SMB)"
+msgstr "Conta do usuario de Windows (SMB)"
+
+msgctxt "#30017"
+msgid "Windows password (SMB)"
+msgstr "Contrasinal de Windows (SMB)"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Conexión"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
+
 msgctxt "#30042"
 msgid "Playback"
 msgstr "Reprodución"
+
+msgctxt "#30050"
+msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "A versión '%s' de TVServerXBMC é demasiado vella, por favor actualiza á '%s' ou superior!"
+
+msgctxt "#30051"
+msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgstr "A versión de TVServerXBMC é demasiado vella, por favor actualiza á '%s' ou superior!"
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "Todas as tarxetas están ocupadas"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "Non se detectou ningún sinal"
+
+msgctxt "#30064"
+msgid "Unknown error"
+msgstr "Erro descoñecido"
+
+msgctxt "#30066"
+msgid "Unknown channel"
+msgstr "Canle descoñecida"
+
+msgctxt "#30068"
+msgid "Channel is not mapped to any card"
+msgstr "A canle non está asignada a ningunha tarxeta"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "A tarxeta está deshabilitada"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "Sen espazo libre"
+
+msgctxt "#30075"
+msgid "No PMT found"
+msgstr "Non se atopou o PMT"

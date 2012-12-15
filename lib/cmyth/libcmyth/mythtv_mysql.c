@@ -172,6 +172,9 @@ cmyth_database_set_port(cmyth_database_t db, unsigned short port)
 int
 cmyth_database_get_version(cmyth_database_t db)
 {
+	int err;
+	if (db->db_version < 0 && (err = cmyth_database_setup(db)) < 0)
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: database setup failed (%d)\n", __FUNCTION__, err);
 	return db->db_version;
 }
 

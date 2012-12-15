@@ -83,6 +83,7 @@ public:
 
   static const int c_timeoutProcess              = 10;       // Wake the thread every 10s
   static const int c_timeoutCacheCleaning        = 60*60*24; // Clean the cache every 24h
+  static const int c_maximumAttemptsOnReadError  = 3;        // Retry when reading file failed
 
   FileOps(MythConnection &mythConnection);
   virtual ~FileOps();
@@ -116,12 +117,14 @@ protected:
       : m_localFilename(localFilename)
       , m_remoteFilename(remoteFilename)
       , m_storageGroup(storageGroup)
+      , m_errorCount(0)
     {
     }
 
     CStdString m_localFilename;
     CStdString m_remoteFilename;
     CStdString m_storageGroup;
+    int        m_errorCount;
   };
 
   PLATFORM::CEvent m_queueContent;

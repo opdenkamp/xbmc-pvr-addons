@@ -196,8 +196,9 @@ void* FileOps::Process()
       if (g_bExtraDebug)
         XBMC->Log(LOG_DEBUG,"%s Job fetched: local: %s, remote: %s, storagegroup: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
 
+      // Connect to the file and cache it to the local addon cache
       MythFile file = m_con.ConnectPath(job.m_remoteFilename, job.m_storageGroup);
-      if (file.Length() > 0)
+      if (!file.IsNull() && file.Length() > 0)
       {
         if (CacheFile(job.m_localFilename.c_str(), file))
         {
@@ -215,11 +216,28 @@ void* FileOps::Process()
       }
       else
       {
-        // File was empty (this happens usually for new recordings where the preview image hasn't been generated)
-        XBMC->Log(LOG_DEBUG, "%s File is empty, delayed recache: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
-        jobQueueDelayed.push_back(job);
-      }
+        // Failed to open file for reading. Unfortunately it cannot be determined if this is a permanent or a temporary problem (new recording's preview hasn't been generated yet).
+        // Increase the error count and retry to cache the file a few times
+        if (file.IsNull())
+        {
+          XBMC->Log(LOG_ERROR, "%s Failed to read file: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
+          job.m_errorCount += 1;
+        }
 
+        // File was empty (this happens usually for new recordings where the preview image hasn't been generated yet)
+        // This is not an error, always try to recache the file
+        else if (file.Length() == 0)
+        {
+          XBMC->Log(LOG_DEBUG, "%s File is empty: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
+        }
+
+        // Recache the file if it hasn't exceeded the maximum number of allowed attempts
+        if (job.m_errorCount <= c_maximumAttemptsOnReadError)
+        {
+          XBMC->Log(LOG_DEBUG, "%s Delayed recache file: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
+          jobQueueDelayed.push_back(job);
+        }
+      }
     }
 
     // Try to recache the currently empty files

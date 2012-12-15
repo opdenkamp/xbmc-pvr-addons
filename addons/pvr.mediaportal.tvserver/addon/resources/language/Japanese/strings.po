@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.3.117
+# Addon version: 1.6.5
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
@@ -16,6 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "接続"
 
 msgctxt "#30042"
 msgid "Playback"

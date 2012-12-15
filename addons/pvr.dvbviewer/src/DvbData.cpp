@@ -229,10 +229,12 @@ bool Dvb::LoadChannels()
     else
       channel_pos++;
 
-    if (strcmp(channel_group, channel->Category))
+    char channel_group_dat[26] = "";
+    strncpy(channel_group_dat, channel->Category, channel->Category_len);
+    if (strcmp(channel_group, channel_group_dat))
     {
       memset(channel_group, 0, sizeof(channel_group));
-      strncpy(channel_group, channel->Category, channel->Category_len);
+      strncpy(channel_group, channel_group_dat, channel->Category_len);
       char* strGroupNameUtf8 = XBMC->UnknownToUTF8(channel_group);
       datGroup.strGroupName = strGroupNameUtf8;
       groupsdat.push_back(datGroup);
@@ -258,12 +260,14 @@ bool Dvb::LoadChannels()
       {
         char channel_root[26] = "";
         CStdString strRoot = strncpy(channel_root, channel->Root, 25);
-        strChannelName.append(strRoot.substr(channel->Root_len + 1, channel->Root[channel->Root_len]));
+        if (channel->Root_len < 25)
+          strChannelName.append(strRoot.substr(channel->Root_len + 1, channel->Root[channel->Root_len]));
         if (channel->Category[channel->Category_len] > 0)
         {
           char channel_category[26] = "";
           CStdString strCategory = strncpy(channel_category, channel->Category, 25);
-          strChannelName.append(strCategory.substr(channel->Category_len + 1, channel->Category[channel->Category_len]));
+          if (channel->Category_len < 25)
+            strChannelName.append(strCategory.substr(channel->Category_len + 1, channel->Category[channel->Category_len]));
         }
       }
     }

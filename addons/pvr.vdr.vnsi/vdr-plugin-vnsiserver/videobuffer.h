@@ -18,24 +18,17 @@
  *
  */
 
-#include <vdr/osd.h>
-#include "responsepacket.h"
+#pragma once
 
-class cxSocket;
+#include <stdint.h>
 
-class cVnsiOsdProvider : public cOsdProvider
+class cVideoBuffer
 {
 public:
-  cVnsiOsdProvider(cxSocket *socket);
-  virtual ~cVnsiOsdProvider();
-  virtual cOsd *CreateOsd(int Left, int Top, uint Level);
-  static void SendOsdPacket(int cmd, int wnd, int color = 0, int x0 = 0, int y0 = 0, int x1 = 0, int y1 = 0, const void *data = NULL, int size = 0);
-  static bool IsRequestFull();
-  static void SendKey(unsigned int key);
-private:
-  static cResponsePacket m_OsdPacket;
-  static cxSocket *m_Socket;
-  static cMutex m_Mutex;
-  static bool m_RequestFull;
+  virtual ~cVideoBuffer();
+  static cVideoBuffer* Create();
+  virtual void Put(uint8_t *buf, int size) = 0;
+  virtual int Read(uint8_t **buf, int size) = 0;
+protected:
+  cVideoBuffer();
 };
-

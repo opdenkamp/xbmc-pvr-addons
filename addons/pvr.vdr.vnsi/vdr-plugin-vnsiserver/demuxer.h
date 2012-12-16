@@ -26,6 +26,7 @@
 #define VNSI_DEMUXER_H
 
 #include <vdr/device.h>
+#include <queue>
 
 #define DVD_TIME_BASE 1000000
 #define DVD_NOPTS_VALUE    (-1LL<<52) // should be possible to represent in both double and __int64
@@ -233,6 +234,8 @@ public:
 
 protected:
   bool        m_FoundFrame;
+
+  std::queue<sStreamPacket*> m_queue;
 };
 
 

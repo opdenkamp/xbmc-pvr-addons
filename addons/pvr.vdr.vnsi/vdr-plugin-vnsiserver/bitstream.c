@@ -31,6 +31,7 @@ cBitstream::cBitstream(uint8_t *data, int bits)
   m_data   = data;
   m_offset = 0;
   m_len    = bits;
+  m_error  = false;
 }
 
 void cBitstream::setBitstream(uint8_t *data, int bits)
@@ -38,6 +39,7 @@ void cBitstream::setBitstream(uint8_t *data, int bits)
   m_data   = data;
   m_offset = 0;
   m_len    = bits;
+  m_error  = false;
 }
 
 void cBitstream::skipBits(int num)
@@ -52,7 +54,10 @@ unsigned int cBitstream::readBits(int num)
   while(num > 0)
   {
     if(m_offset >= m_len)
+    {
+      m_error = true;
       return 0;
+    }
 
     num--;
 
@@ -72,7 +77,10 @@ unsigned int cBitstream::showBits(int num)
   while(num > 0)
   {
     if(offs >= m_len)
+    {
+      m_error = true;
       return 0;
+    }
 
     num--;
 
@@ -122,7 +130,10 @@ void cBitstream::putBits(int val, int num)
 {
   while(num > 0) {
     if(m_offset >= m_len)
+    {
+      m_error = true;
       return;
+    }
 
     num--;
 

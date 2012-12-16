@@ -39,7 +39,7 @@
 #include "vnsicommand.h"
 #include "recordingscache.h"
 #include "vnsiclient.h"
-#include "receiver.h"
+#include "streamer.h"
 #include "vnsiserver.h"
 #include "recplayer.h"
 #include "vnsiosd.h"

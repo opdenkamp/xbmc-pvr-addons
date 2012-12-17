@@ -63,3 +63,23 @@ msgstr ""
 msgctxt "#30301"
 msgid "Failed to connect to MythTV database"
 msgstr ""
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr ""
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr ""
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr ""
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr ""
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr ""

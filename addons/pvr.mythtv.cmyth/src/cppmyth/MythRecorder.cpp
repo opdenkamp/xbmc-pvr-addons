@@ -168,6 +168,7 @@ bool MythRecorder::SpawnLiveTV(MythChannel &channel)
     if (*m_liveChainUpdated == 0)
     {
       XBMC->Log(LOG_ERROR,"%s - Chain update failed", __FUNCTION__);
+      XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30304)); // No response from MythTV backend
     }
     else
       ret = true;
@@ -180,6 +181,7 @@ bool MythRecorder::SpawnLiveTV(MythChannel &channel)
     ref_release(recorder);
     if (pErr)
       XBMC->Log(LOG_ERROR,"%s - %s", __FUNCTION__, pErr);
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30306)); // Recorder unavailable
   }
 
   Unlock();

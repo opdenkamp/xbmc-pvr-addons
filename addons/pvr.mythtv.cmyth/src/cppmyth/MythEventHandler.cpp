@@ -402,6 +402,8 @@ void MythEventHandler::MythEventHandlerPrivate::HandleUpdateFileSize(const CStdS
 
 void MythEventHandler::MythEventHandlerPrivate::RetryConnect()
 {
+  XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30302)); // MythTV backend unavailable
+
   while (!IsStopped())
   {
     usleep(999999);
@@ -414,6 +416,8 @@ void MythEventHandler::MythEventHandlerPrivate::RetryConnect()
     else
     {
       XBMC->Log(LOG_NOTICE, "%s - Connected client to event socket", __FUNCTION__);
+      XBMC->QueueNotification(QUEUE_INFO, XBMC->GetLocalizedString(30303)); // MythTV backend available
+
       RecordingListChange();
       break;
     }

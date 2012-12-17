@@ -142,6 +142,7 @@ bool MythRecorder::CheckChannel(MythChannel &channel)
 
 bool MythRecorder::SpawnLiveTV(MythChannel &channel)
 {
+  bool ret = false;
   char* pErr = NULL;
 
   Lock();
@@ -150,30 +151,40 @@ bool MythRecorder::SpawnLiveTV(MythChannel &channel)
   *m_liveChainUpdated = 0;
   cmyth_recorder_t recorder = NULL;
   recorder = cmyth_spawn_live_tv(*m_recorder_t, 64*1024, 64*1024, MythRecorder::prog_update_callback, &pErr, const_cast<char*>(channel.Number().c_str()));
-  *m_recorder_t = recorder;
 
-  if (pErr == NULL) {
-    /* Wait for chain update for 30s before break */
+  if (recorder && pErr == NULL) {
+    *m_recorder_t = recorder;
+    // Wait for chain update for 30s before break
     int i = 0;
     while (*m_liveChainUpdated == 0 && i < 30000) {
-      /* Release the latch to allow chain update */
+      // Release the latch to allow chain update
       Unlock();
       usleep(100000);
-      /* Gets the latch before read chain status */
+      // Gets the latch before read chain status
       Lock();
       i += 100;
       XBMC->Log(LOG_DEBUG, "%s: Delay channel switch: %d", __FUNCTION__, i);
     }
     if (*m_liveChainUpdated == 0)
-      pErr = const_cast<char*>("Chain update failed.");
+    {
+      XBMC->Log(LOG_ERROR,"%s - Chain update failed", __FUNCTION__);
+    }
+    else
+      ret = true;
+  }
+  else
+  {
+    // Dereference recorder to cancel callback
+    *m_recorder_t = NULL;
+    // Chain setup fails. Stop existing recorder
+    ref_release(recorder);
+    if (pErr)
+      XBMC->Log(LOG_ERROR,"%s - %s", __FUNCTION__, pErr);
   }
 
   Unlock();
-  ASSERT(*m_recorder_t);
 
-  if (pErr)
-    XBMC->Log(LOG_ERROR,"%s - %s", __FUNCTION__, pErr);
-  return pErr == NULL;
+  return ret;
 }
 
 bool MythRecorder::SetChannel(MythChannel &channel)

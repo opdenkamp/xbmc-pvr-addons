@@ -229,10 +229,12 @@ bool Dvb::LoadChannels()
     else
       channel_pos++;
 
-    if (strcmp(channel_group, channel->Category))
+    char channel_group_dat[26] = "";
+    strncpy(channel_group_dat, channel->Category, channel->Category_len);
+    if (strcmp(channel_group, channel_group_dat))
     {
       memset(channel_group, 0, sizeof(channel_group));
-      strncpy(channel_group, channel->Category, channel->Category_len);
+      strncpy(channel_group, channel_group_dat, channel->Category_len);
       char* strGroupNameUtf8 = XBMC->UnknownToUTF8(channel_group);
       datGroup.strGroupName = strGroupNameUtf8;
       groupsdat.push_back(datGroup);
@@ -258,12 +260,14 @@ bool Dvb::LoadChannels()
       {
         char channel_root[26] = "";
         CStdString strRoot = strncpy(channel_root, channel->Root, 25);
-        strChannelName.append(strRoot.substr(channel->Root_len + 1, channel->Root[channel->Root_len]));
+        if (channel->Root_len < 25)
+          strChannelName.append(strRoot.substr(channel->Root_len + 1, channel->Root[channel->Root_len]));
         if (channel->Category[channel->Category_len] > 0)
         {
           char channel_category[26] = "";
           CStdString strCategory = strncpy(channel_category, channel->Category, 25);
-          strChannelName.append(strCategory.substr(channel->Category_len + 1, channel->Category[channel->Category_len]));
+          if (channel->Category_len < 25)
+            strChannelName.append(strCategory.substr(channel->Category_len + 1, channel->Category[channel->Category_len]));
         }
       }
     }
@@ -609,7 +613,7 @@ PVR_ERROR Dvb::GetTimers(ADDON_HANDLE handle)
 std::vector<DvbTimer> Dvb::LoadTimers()
 {
   CStdString url; 
-  url.Format("%s%s", m_strURL.c_str(), "api/timerlist.html"); 
+  url.Format("%s%s", m_strURL.c_str(), "api/timerlist.html?utf8");
 
   CStdString strXML;
   strXML = GetHttpXML(url);
@@ -740,13 +744,13 @@ void Dvb::GenerateTimer(const PVR_TIMER &timer, bool bNewTimer)
   int iChannelId = m_channels.at(timer.iClientChannelUid-1).iChannelId;
   CStdString strTmp;
   if (bNewTimer)
-    strTmp.Format("api/timeradd.html?ch=%d&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s", iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
+    strTmp.Format("api/timeradd.html?ch=%d&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255", iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
   else
   {
     int enabled = 1;
     if (timer.state == PVR_TIMER_STATE_CANCELLED)
       enabled = 0;
-    strTmp.Format("api/timeredit.html?id=%d&ch=%d&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s", GetTimerID(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
+    strTmp.Format("api/timeredit.html?id=%d&ch=%d&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255", GetTimerID(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
   }
   
   SendSimpleCommand(strTmp);
@@ -789,7 +793,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
   m_recordings.clear();
 
   CStdString url;
-  url.Format("%s%s", m_strURL.c_str(), "api/recordings.html?utf8=");
+  url.Format("%s%s", m_strURL.c_str(), "api/recordings.html?utf8");
  
   CStdString strXML;
   strXML = GetHttpXML(url);

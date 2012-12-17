@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.0
+# Addon version: 1.6.3
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: gl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "Canles de TV"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Canles de Radio"
 
 msgctxt "#30017"
 msgid "Country"

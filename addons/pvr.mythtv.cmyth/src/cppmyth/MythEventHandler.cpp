@@ -255,7 +255,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
           m_recordingChangeEventList.push_back(RecordingChangeEvent(CHANGE_UPDATE, prog));
           Unlock();
           if (g_bExtraDebug)
-            XBMC->Log(LOG_DEBUG,"%s - Event recording list update: UID=%s", __FUNCTION__, prog.StrUID().c_str());
+            XBMC->Log(LOG_DEBUG,"%s - Event recording list update: UID=%s", __FUNCTION__, prog.UID().c_str());
           recordingChange = true;
         }
       }

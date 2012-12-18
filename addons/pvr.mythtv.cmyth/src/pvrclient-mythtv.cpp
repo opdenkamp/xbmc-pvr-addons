@@ -508,7 +508,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       tag.iDuration = it->second.Duration();
       tag.iPlayCount = it->second.IsWatched() ? 1 : 0;
 
-      CStdString id = it->second.StrUID();
+      CStdString id = it->second.UID();
       CStdString title = it->second.Title();
       CStdString subtitle = it->second.Subtitle();
       if (!subtitle.IsEmpty())
@@ -586,17 +586,17 @@ void PVRClientMythTV::EventUpdateRecordings()
         MythProgramInfo prog = m_con.GetRecordedProgram(event.ChannelID(), event.RecordingStartTimeslot());
         if (!prog.IsNull())
         {
-          ProgramInfoMap::iterator it = m_recordings.find(prog.StrUID());
+          ProgramInfoMap::iterator it = m_recordings.find(prog.UID());
           if (it == m_recordings.end())
           {
             if (g_bExtraDebug)
-              XBMC->Log(LOG_DEBUG, "%s - Add recording: %s", __FUNCTION__, prog.StrUID().c_str());
+              XBMC->Log(LOG_DEBUG, "%s - Add recording: %s", __FUNCTION__, prog.UID().c_str());
 
             // Fill artwork
             m_db.FillRecordingArtwork(prog);
 
             // Add recording
-            m_recordings.insert(std::pair<CStdString, MythProgramInfo>(prog.StrUID().c_str(), prog));
+            m_recordings.insert(std::pair<CStdString, MythProgramInfo>(prog.UID().c_str(), prog));
           }
         }
         else
@@ -606,11 +606,11 @@ void PVRClientMythTV::EventUpdateRecordings()
       case MythEventHandler::CHANGE_UPDATE:
       {
         MythProgramInfo prog = event.Program();
-        ProgramInfoMap::iterator it = m_recordings.find(prog.StrUID());
+        ProgramInfoMap::iterator it = m_recordings.find(prog.UID());
         if (it != m_recordings.end())
         {
           if (g_bExtraDebug)
-            XBMC->Log(LOG_DEBUG, "%s - Update recording: %s", __FUNCTION__, prog.StrUID().c_str());
+            XBMC->Log(LOG_DEBUG, "%s - Update recording: %s", __FUNCTION__, prog.UID().c_str());
 
           // Copy cached framerate
           prog.SetFramerate(it->second.Framterate());
@@ -630,11 +630,11 @@ void PVRClientMythTV::EventUpdateRecordings()
         MythProgramInfo prog = m_con.GetRecordedProgram(event.ChannelID(), event.RecordingStartTimeslot());
         if (!prog.IsNull())
         {
-          ProgramInfoMap::iterator it = m_recordings.find(prog.StrUID());
+          ProgramInfoMap::iterator it = m_recordings.find(prog.UID());
           if (it != m_recordings.end())
           {
             if (g_bExtraDebug)
-              XBMC->Log(LOG_DEBUG, "%s - Delete recording: %s", __FUNCTION__, prog.StrUID().c_str());
+              XBMC->Log(LOG_DEBUG, "%s - Delete recording: %s", __FUNCTION__, prog.UID().c_str());
 
             // Remove recording
             m_recordings.erase(it);
@@ -1057,10 +1057,10 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
     // Stop recording scheduled by the override rule before delete
     for (std::vector<std::pair<PVR_TIMER, MythProgramInfo> >::iterator ip = (*it)->begin(); ip != (*it)->end(); ++ip)
     {
-      XBMC->Log(LOG_DEBUG, "%s - recording %s, status = %i", __FUNCTION__, (ip->second).StrUID().c_str(), (ip->second).Status());
+      XBMC->Log(LOG_DEBUG, "%s - recording %s, status = %i", __FUNCTION__, (ip->second).UID().c_str(), (ip->second).Status());
       if ((ip->second).Status() == RS_RECORDING || (ip->second).Status() == RS_TUNING)
       {
-        XBMC->Log(LOG_DEBUG, "%s - Stop recording %s", __FUNCTION__, (ip->second).StrUID().c_str());
+        XBMC->Log(LOG_DEBUG, "%s - Stop recording %s", __FUNCTION__, (ip->second).UID().c_str());
         m_con.StopRecording(ip->second);
       }
     }
@@ -1073,10 +1073,10 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
   for (std::vector<std::pair<PVR_TIMER, MythProgramInfo> >::iterator ip = rule.begin(); ip != rule.end(); ++ip)
   {
     // Stop recording scheduled by the parent rule
-    XBMC->Log(LOG_DEBUG, "%s - recording %s, status = %i", __FUNCTION__, (ip->second).StrUID().c_str(), (ip->second).Status());
+    XBMC->Log(LOG_DEBUG, "%s - recording %s, status = %i", __FUNCTION__, (ip->second).UID().c_str(), (ip->second).Status());
     if ((ip->second).Status() == RS_RECORDING || (ip->second).Status() == RS_TUNING)
     {
-      XBMC->Log(LOG_DEBUG, "%s - Stop recording %s", __FUNCTION__, (ip->second).StrUID().c_str());
+      XBMC->Log(LOG_DEBUG, "%s - Stop recording %s", __FUNCTION__, (ip->second).UID().c_str());
       m_con.StopRecording(ip->second);
     }
   }

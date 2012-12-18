@@ -43,17 +43,7 @@ public:
 
   bool IsNull() const;
 
-  static CStdString MakeUID(int chanid, time_t recstart)
-  {
-    // Creates unique IDs from ChannelID and StartTime like "100_2011-12-10T12:00:00"
-    char buf[37] = "";
-    MythTimestamp time(recstart);
-    sprintf(buf, "%d_%s", chanid, time.String().c_str());
-    return CStdString(buf);
-  }
-
-  CStdString StrUID();
-  long long UID();
+  CStdString UID();
   CStdString ProgramID();
   CStdString Title();
   CStdString Subtitle();

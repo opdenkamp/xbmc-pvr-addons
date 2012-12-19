@@ -27,7 +27,7 @@ $(LIB): @BUILD_TYPE@
 zip: $(LIB)
 	mkdir -p @abs_top_srcdir@/addons/.build
 	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon @abs_top_srcdir@/addons/.build/$(ADDONNAME)
-	cd @abs_top_srcdir@/addons/.build ; zip -9 -x $(ADDONNAME)/addon.xml.in -r @abs_top_srcdir@/addons/$(ADDONNAME)-@OS@-@ARCHITECTURE@.zip $(ADDONNAME)
+	cd @abs_top_srcdir@/addons/.build ; zip -0 -x $(ADDONNAME)/addon.xml.in -r @abs_top_srcdir@/addons/$(ADDONNAME)-@OS@-@ARCHITECTURE@.zip $(ADDONNAME)
 
 install: @BUILD_TYPE@
 if IS_INTREE_BUILD

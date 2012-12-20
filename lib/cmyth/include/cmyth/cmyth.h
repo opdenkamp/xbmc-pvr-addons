@@ -2010,6 +2010,16 @@ typedef struct cmyth_recorder_source {
  */
 extern int cmyth_mysql_get_recorder_source_list(cmyth_database_t db, cmyth_recorder_source_t **rsrc);
 
+/**
+ * Retrieves recorder source list from database and available for 'channum'.
+ * \param db
+ * \param channum desired channel number
+ * \param rsrc recorder source list handle
+ * \return success: A number indicating the number of recorder source in rsrc
+ * \return failure: -1
+ */
+extern int cmyth_mysql_get_recorder_source_channum(cmyth_database_t db, char *channum, cmyth_recorder_source_t **rsrc);
+
 typedef struct cmyth_channelgroup {
 	char name[65];
 	unsigned long grpid;

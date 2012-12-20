@@ -1499,6 +1499,64 @@ cmyth_mysql_get_recorder_source_list(cmyth_database_t db, cmyth_recorder_source_
 }
 
 int
+cmyth_mysql_get_recorder_source_channum(cmyth_database_t db, char *channum, cmyth_recorder_source_t **rsrc)
+{
+	MYSQL_RES *res = NULL;
+	MYSQL_ROW row;
+	const char *query_str1 = "SELECT cardinput.cardid, cardinput.sourceid FROM channel INNER JOIN cardinput ON channel.sourceid = cardinput.sourceid WHERE channel.channum = ? ORDER BY cardinput.cardinputid";
+	const char *query_str2 = "SELECT cardinput.cardid, cardinput.sourceid FROM channel INNER JOIN cardinput ON channel.sourceid = cardinput.sourceid WHERE channel.channum = ? AND cardinput.livetvorder > 0 ORDER BY cardinput.livetvorder, cardinput.cardinputid";
+	int rows = 0;
+	cmyth_recorder_source_t *ret;
+
+	char* escchan = cmyth_mysql_escape_chars(db, channum);
+	cmyth_mysql_query_t * query;
+
+	if (cmyth_database_check_version(db) < 0)
+		return -1;
+
+	//DB version change at mythtv/libs/libmythtv/dbcheck.cpp:1789
+	if (db->db_version < 1293)
+		query = cmyth_mysql_query_create(db, query_str1);
+	else
+		query = cmyth_mysql_query_create(db, query_str2);
+
+	if (cmyth_mysql_query_param_str(query, escchan) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(query);
+		ref_release(escchan);
+		return -1;
+	}
+
+	res = cmyth_mysql_query_result(query);
+	ref_release(query);
+	ref_release(escchan);
+	if (res == NULL) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
+		return 0;
+	}
+
+	ret = ref_alloc(sizeof(cmyth_recorder_source_t) * (int)mysql_num_rows(res));
+
+	if (!ret) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: alloc() failed for list\n", __FUNCTION__);
+		mysql_free_result(res);
+		return -1;
+	}
+
+	while ((row = mysql_fetch_row(res))) {
+		ret[rows].recid = safe_atol(row[0]);
+		ret[rows].sourceid = safe_atol(row[1]);
+		rows++;
+	}
+
+	mysql_free_result(res);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
+
+	*rsrc = ret;
+	return rows;
+}
+
+int
 cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_program_t *prog, time_t starttime, char *program_name, unsigned long chanid)
 {
 	MYSQL_RES *res = NULL;

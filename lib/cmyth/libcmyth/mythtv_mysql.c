@@ -106,9 +106,10 @@ cmyth_database_setup(cmyth_database_t db)
 			db->db_tz_utc = 0;
 			strcpy(db->db_tz_name, "SYSTEM");
 		}
+		return 1;
 	}
 
-	return 1;
+	return 0;
 }
 
 int
@@ -167,12 +168,28 @@ cmyth_database_set_port(cmyth_database_t db, unsigned short port)
 	return 1;
 }
 
+static int
+cmyth_database_check_version(cmyth_database_t db)
+{
+	int err = 0;
+	/*
+	 * Since version 0.26, mythbackend stores in the database an exhaustive list of datetime fields
+	 * using UTC zone, not all. Others fields keep local system time zone. Also the field types don't
+	 * have extension 'with time zone'. To manage this situation we check the DB schema version to
+	 * know if we must manually convert these date, time or datetime fields during exchanges with the
+	 * database (read or store). If true then the attribute db_tz_utc is set to 1 else 0.
+	 * This check is done when the first connection is created and the attribute db_version is
+	 * not yet known (-1).
+	 */
+	if (db->db_version < 0 && (err = cmyth_database_setup(db)) < 0)
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: database setup failed (%d)\n", __FUNCTION__, err);
+	return err;
+}
+
 int
 cmyth_database_get_version(cmyth_database_t db)
 {
-	int err;
-	if (db->db_version < 0 && (err = cmyth_database_setup(db)) < 0)
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: database setup failed (%d)\n", __FUNCTION__, err);
+	cmyth_database_check_version(db);
 	return db->db_version;
 }
 
@@ -232,22 +249,14 @@ cmyth_db_get_connection(cmyth_database_t db)
 	}
 
 	/*
-	 * Since version 0.26, mythbackend store in the database an exhaustive list of datetime fields
-	 * using UTC zone, not all. Others fields keep local system time zone. Also the field types don't
-	 * have extension 'with time zone'. To manage this situation we check the DB schema version to
-	 * know if we must manually convert these date, time or datetime fields during exchanges with the
-	 * database (read or store). If true then the attribute db_tz_utc is set to 1 else 0.
-	 * This check is done one time at the first getting connection when the attribute db_version is
-	 * not yet known (-1).
+	 * TODO: DB version should be checked in caller
 	 */
-	if (db->db_version < 0 && (err = cmyth_database_setup(db)) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: database setup failed (%d)\n", __FUNCTION__, err);
+	if ((err = cmyth_database_check_version(db)) < 0)
 		return NULL;
-	}
 
 	/*
 	 * Setting the TIME_ZONE is not really required since all datetime fields don't have extension
-	 * 'with time zone'. But we do even.
+	 * 'with time zone'. But we do nevertheless.
 	 */
 	if (mysql_query(db->mysql, "SET TIME_ZONE='SYSTEM';")) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: SET TIME_ZONE failed: %s\n", __FUNCTION__, mysql_error(db->mysql));

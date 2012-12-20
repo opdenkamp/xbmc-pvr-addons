@@ -140,13 +140,13 @@ private:
   ProgramList m_EPG;
 
   // Channels
-  ChannelMap m_channels;
-  SourceMap m_sources;
+  ChannelIdMap m_channelsById;
+  ChannelNumberMap m_channelsByNumber;
   ChannelGroupMap m_channelGroups;
+  void LoadChannelsAndChannelGroups();
 
   // Recordings
   ProgramInfoMap m_recordings;
-
   PLATFORM::CMutex m_recordingsLock;
   void EventUpdateRecordings();
   void ForceUpdateRecording(ProgramInfoMap::iterator it);

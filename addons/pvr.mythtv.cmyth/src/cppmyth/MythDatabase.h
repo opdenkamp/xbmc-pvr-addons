@@ -39,11 +39,12 @@ template <class T> class MythPointerThreadSafe;
 typedef cmyth_program_t MythProgram;
 typedef std::vector<MythProgram> ProgramList;
 
-typedef std::map<int, MythChannel> ChannelMap;
-typedef std::pair<CStdString, std::vector<int> > MythChannelGroup;
+typedef std::map<int, MythChannel> ChannelIdMap;
+typedef std::multimap<CStdString, MythChannel> ChannelNumberMap;
 typedef std::map<CStdString, std::vector<int> > ChannelGroupMap;
 
-typedef std::map<int, std::vector<int> > SourceMap;
+typedef std::vector<std::pair<int, int> > RecorderSourceList;
+
 typedef std::map<int, MythRecordingRule> RecordingRuleMap;
 
 // TODO: Rework MythRecordingProfile
@@ -72,9 +73,10 @@ public:
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* pprogram);
   ProgramList GetGuide(time_t starttime, time_t endtime);
 
-  ChannelMap GetChannels();
+  ChannelIdMap GetChannels();
   ChannelGroupMap GetChannelGroups();
-  SourceMap GetSources();
+
+  RecorderSourceList GetLiveTVRecorderSourceList(const CStdString &channum);
 
   RecordingRuleMap GetRecordingRules();
   int AddRecordingRule(const MythRecordingRule &timer);

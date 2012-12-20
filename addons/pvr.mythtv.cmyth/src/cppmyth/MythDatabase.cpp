@@ -108,9 +108,9 @@ ProgramList MythDatabase::GetGuide(time_t starttime, time_t endtime)
   return retval;
 }
 
-ChannelMap MythDatabase::GetChannels()
+ChannelIdMap MythDatabase::GetChannels()
 {
-  ChannelMap retval;
+  ChannelIdMap retval;
   cmyth_chanlist_t channels = NULL;
   CMYTH_DB_CALL(channels, channels == NULL, cmyth_mysql_get_chanlist(*m_database_t));
   int channelCount = cmyth_chanlist_get_count(channels);
@@ -138,40 +138,33 @@ ChannelGroupMap MythDatabase::GetChannelGroups()
 
   for (int i = 0; i < channelGroupCount; i++)
   {
-    MythChannelGroup channelGroup;
-    channelGroup.first = channelGroups[i].name;
-
     // cmyth_mysql_get_channelids_in_group writes the list of all channel IDs to its third parameter (int**)
     unsigned long *channelIDs = 0;
     int channelCount = cmyth_mysql_get_channelids_in_group(*m_database_t, channelGroups[i].grpid, &channelIDs);
     if (channelCount > 0)
     {
-      channelGroup.second = std::vector<int>(channelIDs, channelIDs + channelCount);
+      retval.insert(std::make_pair(channelGroups[i].name, std::vector<int>(channelIDs, channelIDs + channelCount)));
       ref_release(channelIDs);
     }
     else
-      channelGroup.second = std::vector<int>();
-
-    retval.insert(channelGroup);
+    {
+      retval.insert(std::make_pair(channelGroups[i].name, std::vector<int>()));
+    }
   }
   ref_release(channelGroups);
   return retval;
 }
 
-SourceMap MythDatabase::GetSources()
+RecorderSourceList MythDatabase::GetLiveTVRecorderSourceList(const CStdString &channum)
 {
-  SourceMap retval;
+  RecorderSourceList retval;
   cmyth_recorder_source_t *recorders = 0;
   int recorderCount = 0;
-  CMYTH_DB_CALL(recorderCount, recorderCount < 0, cmyth_mysql_get_recorder_source_list(*m_database_t, &recorders));
+  CMYTH_DB_CALL(recorderCount, recorderCount < 0, cmyth_mysql_get_recorder_source_channum(*m_database_t, const_cast<char*>(channum.c_str()), &recorders));
 
-  for (int i = 0; i < recorderCount; i++)
+  for (int i = 0; i < recorderCount; ++i)
   {
-    SourceMap::iterator it = retval.find(recorders[i].sourceid);
-    if (it != retval.end())
-      it->second.push_back(recorders[i].recid);
-    else
-      retval[recorders[i].sourceid] = std::vector<int>(1, recorders[i].recid);
+    retval.push_back(std::make_pair(recorders[i].recid, recorders[i].sourceid));
   }
   ref_release(recorders);
   return retval;

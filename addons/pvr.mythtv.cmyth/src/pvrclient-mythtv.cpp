@@ -24,6 +24,7 @@
 #include "tools.h"
 
 #include <time.h>
+#include <set>
 
 using namespace ADDON;
 using namespace PLATFORM;
@@ -318,11 +319,9 @@ int PVRClientMythTV::GetNumChannels()
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  // Load channels if necessary
-  if (m_channels.empty())
-    m_channels = m_db.GetChannels();
+  LoadChannelsAndChannelGroups();
 
-  return m_channels.size();
+  return m_channelsById.size();
 }
 
 PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
@@ -330,15 +329,25 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - radio: %i", __FUNCTION__, bRadio);
 
-  // Load channels if necessary
-  if (m_channels.empty())
-    m_channels = m_db.GetChannels();
+  LoadChannelsAndChannelGroups();
+
+  // Create a set<channum, callsign> to merge channels with same channum and callsign
+  std::set<std::pair<CStdString, CStdString> > channelIdentifiers;
 
   // Transfer channels of the requested type (radio / tv)
-  for (ChannelMap::iterator it = m_channels.begin(); it != m_channels.end(); ++it)
+  for (ChannelIdMap::iterator it = m_channelsById.begin(); it != m_channelsById.end(); ++it)
   {
     if (it->second.IsRadio() == bRadio && !it->second.IsNull())
     {
+      // Skip channels with same channum and callsign
+      std::pair<CStdString, CStdString> channelIdentifier = make_pair(it->second.Number(), it->second.Callsign());
+      if (channelIdentifiers.find(channelIdentifier) != channelIdentifiers.end())
+      {
+        XBMC->Log(LOG_DEBUG, "%s - skipping channel: %d", __FUNCTION__, it->second.ID());
+        continue;
+      }
+      channelIdentifiers.insert(channelIdentifier);
+
       PVR_CHANNEL tag;
       memset(&tag, 0, sizeof(PVR_CHANNEL));
 
@@ -371,9 +380,7 @@ int PVRClientMythTV::GetChannelGroupsAmount()
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
-  // Load channel groups if necessary
-  if (m_channelGroups.empty())
-    m_channelGroups = m_db.GetChannelGroups();
+  LoadChannelsAndChannelGroups();
 
   return m_channelGroups.size();
 }
@@ -383,13 +390,7 @@ PVR_ERROR PVRClientMythTV::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - radio: %i", __FUNCTION__, bRadio);
 
-  // Load channel groups if necessary
-  if (m_channelGroups.empty())
-    m_channelGroups = m_db.GetChannelGroups();
-
-  // Load channels if necessary
-  if (m_channels.empty())
-    m_channels = m_db.GetChannels();
+  LoadChannelsAndChannelGroups();
 
   // Transfer channel groups of the given type (radio / tv)
   for (ChannelGroupMap::iterator channelGroupsIt = m_channelGroups.begin(); channelGroupsIt != m_channelGroups.end(); ++channelGroupsIt)
@@ -403,8 +404,8 @@ PVR_ERROR PVRClientMythTV::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
     // Only add the group if we have at least one channel of the correct type
     for (std::vector<int>::iterator channelGroupIt = channelGroupsIt->second.begin(); channelGroupIt != channelGroupsIt->second.end(); ++channelGroupIt)
     {
-      ChannelMap::iterator channelIt = m_channels.find(*channelGroupIt);
-      if (channelIt != m_channels.end() && channelIt->second.IsRadio() == bRadio)
+      ChannelIdMap::iterator channelIt = m_channelsById.find(*channelGroupIt);
+      if (channelIt != m_channelsById.end() && channelIt->second.IsRadio() == bRadio)
       {
         PVR->TransferChannelGroup(handle, &tag);
         break;
@@ -423,9 +424,8 @@ PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - group: %s", __FUNCTION__, group.strGroupName);
 
-  // Make sure the channel group exists
-  if (m_channelGroups.empty())
-    m_channelGroups = m_db.GetChannelGroups();
+  LoadChannelsAndChannelGroups();
+
   ChannelGroupMap::iterator channelGroupsIt = m_channelGroups.find(group.strGroupName);
   if (channelGroupsIt == m_channelGroups.end())
   {
@@ -433,16 +433,12 @@ PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR
     return PVR_ERROR_INVALID_PARAMETERS;
   }
 
-  // Load channels if necessary
-  if (m_channels.empty())
-    m_channels = m_db.GetChannels();
-
   // Transfer the channel group members for the requested group
   int channelNumber = 0;
   for (std::vector<int>::iterator channelGroupIt = channelGroupsIt->second.begin(); channelGroupIt != channelGroupsIt->second.end(); ++channelGroupIt)
   {
-    ChannelMap::iterator channelIt = m_channels.find(*channelGroupIt);
-    if (channelIt != m_channels.end() && channelIt->second.IsRadio() == group.bIsRadio)
+    ChannelIdMap::iterator channelIt = m_channelsById.find(*channelGroupIt);
+    if (channelIt != m_channelsById.end() && channelIt->second.IsRadio() == group.bIsRadio)
     {
       PVR_CHANNEL_GROUP_MEMBER tag;
       memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
@@ -458,6 +454,19 @@ PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR
     XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
 
   return PVR_ERROR_NO_ERROR;
+}
+
+void PVRClientMythTV::LoadChannelsAndChannelGroups()
+{
+  if (!m_channelsById.empty())
+    return;
+
+  m_channelsById = m_db.GetChannels();
+
+  for (ChannelIdMap::iterator channelIt = m_channelsById.begin(); channelIt != m_channelsById.end(); ++channelIt)
+    m_channelsByNumber.insert(std::make_pair(channelIt->second.Number(), channelIt->second));
+
+  m_channelGroups = m_db.GetChannelGroups();
 }
 
 int PVRClientMythTV::GetRecordingsAmount(void)
@@ -1122,8 +1131,8 @@ void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordin
   rule.SetInactive(timer.state == PVR_TIMER_STATE_ABORTED || timer.state ==  PVR_TIMER_STATE_CANCELLED);
   rule.SetPriority(timer.iPriority);
 
-  ChannelMap::iterator channelIt = m_channels.find(timer.iClientChannelUid);
-  if (channelIt != m_channels.end())
+  ChannelIdMap::iterator channelIt = m_channelsById.find(timer.iClientChannelUid);
+  if (channelIt != m_channelsById.end())
     rule.SetCallsign(channelIt->second.Callsign());
 
   if (timer.bIsRepeating)
@@ -1238,25 +1247,7 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
   CLockObject lock(m_lock);
   if (m_rec.IsNull())
   {
-    // Make sure the channel exists
-    if (m_channels.empty())
-      m_channels = m_db.GetChannels();
-    ChannelMap::iterator channelIt = m_channels.find(channel.iUniqueId);
-    if (channelIt == m_channels.end())
-    {
-      XBMC->Log(LOG_ERROR,"%s - Channel not found", __FUNCTION__);
-      return false;
-    }
-
-    // Make sure the channel sources exists
-    if (m_sources.empty())
-      m_sources = m_db.GetSources();
-    SourceMap::iterator sourcesIt = m_sources.find(channelIt->second.SourceID());
-    if (sourcesIt == m_sources.end())
-    {
-      XBMC->Log(LOG_ERROR,"%s - Channel sources not found", __FUNCTION__);
-      return false;
-    }
+    LoadChannelsAndChannelGroups();
 
     // Suspend fileOps to avoid connection hang
     if (m_fileOps->IsRunning())
@@ -1266,26 +1257,55 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
     if (m_pEventHandler)
       m_pEventHandler->EnablePlayback();
 
-    for (std::vector<int>::iterator it = sourcesIt->second.begin(); it != sourcesIt->second.end(); ++it)
+    // First we have to get the channum of the selected channel
+    // Due to the merged view (same channum+callsign) this might not yet be the preferred channel on the preferred source to switch to
+    ChannelIdMap::iterator channelByIdIt = m_channelsById.find(channel.iUniqueId);
+    if (channelByIdIt == m_channelsById.end())
     {
-      m_rec = m_con.GetRecorder(*it);
-      if (m_rec.ID() > 0 && !m_rec.IsRecording() && m_rec.IsTunable(channelIt->second))
-      {
-        if (g_bExtraDebug)
-          XBMC->Log(LOG_DEBUG,"%s: Opening new recorder %i", __FUNCTION__, m_rec.ID());
+      XBMC->Log(LOG_ERROR,"%s - Channel not found", __FUNCTION__);
+      return false;
+    }
 
-        if (m_pEventHandler)
-        {
-          m_pEventHandler->SetRecorder(m_rec);
-        }
-        if (m_rec.SpawnLiveTV(channelIt->second))
-          return true;
+    // Retreive a list of recorders and sources for the given channum (ordered by LiveTV priority)
+    RecorderSourceList recorderSourceList = m_db.GetLiveTVRecorderSourceList(channelByIdIt->second.Number());
+    for (RecorderSourceList::iterator recorderSourceIt = recorderSourceList.begin(); recorderSourceIt != recorderSourceList.end(); ++recorderSourceIt)
+    {
+      // Get the recorder from the recorder source list and check if it's available
+      m_rec = m_con.GetRecorder(recorderSourceIt->first);
+      if (m_rec.ID() <= 0)
+      {
+        XBMC->Log(LOG_ERROR,"%s - Recorder not found: %d", __FUNCTION__, recorderSourceIt->first);
+        continue;
       }
+      if (m_rec.IsRecording())
+      {
+        XBMC->Log(LOG_ERROR,"%s - Recorder is busy: %d", __FUNCTION__, recorderSourceIt->first);
+        continue;
+      }
+
+      // Get the channel that matches the channum and the source id
+      std::pair<ChannelNumberMap::iterator, ChannelNumberMap::iterator> channelsByNumber = m_channelsByNumber.equal_range(channelByIdIt->second.Number());
+      for (ChannelNumberMap::iterator channelByNumberIt = channelsByNumber.first; channelByNumberIt != channelsByNumber.second; ++channelByNumberIt)
+      {
+        if ((*channelByNumberIt).second.SourceID() == recorderSourceIt->second)
+        {
+          // Check if the recorder is able to tune to that channel (virtual recorders might be locked to a multiplex ID)
+          if (m_rec.IsTunable((*channelByNumberIt).second))
+          {
+            XBMC->Log(LOG_DEBUG,"%s: Opening new recorder %i", __FUNCTION__, m_rec.ID());
+
+            if (m_pEventHandler)
+              m_pEventHandler->SetRecorder(m_rec);
+
+            if (m_rec.SpawnLiveTV((*channelByNumberIt).second))
+              return true;
+          }
+        }
+      }
+
       m_rec = MythRecorder();
       if (m_pEventHandler)
-      {
         m_pEventHandler->SetRecorder(m_rec); // Redundant
-      }
     }
 
     // Disable playback mode: Allow all

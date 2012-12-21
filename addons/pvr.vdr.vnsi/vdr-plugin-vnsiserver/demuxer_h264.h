@@ -86,7 +86,6 @@ private:
   bool Parse_PPS(uint8_t *buf, int len);
   bool Parse_SLH(uint8_t *buf, int len, int *pkttype);
   bool Parse_SPS(uint8_t *buf, int len);
-  int nalUnescape(uint8_t *dst, const uint8_t *src, int len);
 
 public:
   cParserH264(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);

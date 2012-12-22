@@ -1272,7 +1272,7 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
     {
       // Get the recorder from the recorder source list and check if it's available
       m_rec = m_con.GetRecorder(recorderSourceIt->first);
-      if (m_rec.ID() <= 0)
+      if (m_rec.IsNull() || m_rec.ID() <= 0)
       {
         XBMC->Log(LOG_ERROR,"%s - Recorder not found: %d", __FUNCTION__, recorderSourceIt->first);
         continue;

@@ -43,7 +43,7 @@ typedef std::map<int, MythChannel> ChannelIdMap;
 typedef std::multimap<CStdString, MythChannel> ChannelNumberMap;
 typedef std::map<CStdString, std::vector<int> > ChannelGroupMap;
 
-typedef std::vector<std::pair<int, int> > RecorderSourceList;
+typedef std::vector<std::pair<unsigned int, unsigned int> > RecorderSourceList;
 
 typedef std::map<int, MythRecordingRule> RecordingRuleMap;
 

@@ -196,7 +196,7 @@ bool cOSDTexture::IsDirty(int &x0, int &y0, int &x1, int &y1)
   return ret;
 }
 //-----------------------------------------------------------------------------
-#define MAX_TEXTURES 10
+#define MAX_TEXTURES 16
 
 class cOSDRender
 {
@@ -704,6 +704,11 @@ bool cVNSIAdmin::OnResponsePacket(cResponsePacket* resp)
     uint32_t wnd, color, x0, y0, x1, y1, len;
     uint8_t *data;
     resp->getOSDData(wnd, color, x0, y0, x1, y1);
+    if (wnd >= MAX_TEXTURES)
+    {
+      XBMC->Log(LOG_ERROR, "cVNSIAdmin::OnResponsePacket - invalid wndId: %s", wnd);
+      return true;
+    }
     if (resp->getOpCodeID() == VNSI_OSD_OPEN)
     {
       data = resp->getUserData();

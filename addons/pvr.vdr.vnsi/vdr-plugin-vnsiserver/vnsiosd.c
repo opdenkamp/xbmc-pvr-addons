@@ -57,8 +57,8 @@
 
 // --- cVnsiOsd -----------------------------------------------------------
 
-#define MAXNUMWINDOWS 7 // OSD windows are counted 0...6
-#define MAXOSDMEMORY  92000 // number of bytes available to the OSD (for unmodified DVB cards)
+#define MAXNUMWINDOWS 16 // OSD windows are counted 0...15
+#define MAXOSDMEMORY  1024000 // number of bytes available to the OSD
 
 class cVnsiOsd : public cOsd
 {

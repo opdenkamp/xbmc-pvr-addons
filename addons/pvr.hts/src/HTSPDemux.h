@@ -24,7 +24,7 @@
 #include "client.h"
 #include "HTSPConnection.h"
 
-class CHTSPDemux
+class CHTSPDemux : CHTSPConnectionCallback
 {
 public:
   CHTSPDemux();
@@ -40,6 +40,7 @@ public:
   bool GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo);
   bool SeekTime(int time, bool backward, double *startpts);
   void SetSpeed(int speed);
+  void OnConnectionRestored(void);
 
 protected:
   void ParseSubscriptionStart (htsmsg_t *m);
@@ -52,7 +53,6 @@ protected:
   DemuxPacket *ParseMuxPacket(htsmsg_t *m);
 
   bool Connect(void);
-  bool CheckConnection(void);
 
 private:
   bool ParseQueueStatus(htsmsg_t* msg);
@@ -65,7 +65,6 @@ private:
   unsigned              m_subs;
   int                   m_channel;
   int                   m_tag;
-  int                   m_StatusCount;
   std::string           m_Status;
   PVR_STREAM_PROPERTIES m_Streams;
   SChannels             m_channels;
@@ -73,4 +72,5 @@ private:
   SQuality              m_Quality;
   SSourceInfo           m_SourceInfo;
   std::map<int, unsigned int> m_StreamIndex;
+  bool                  m_bHasIFrame;
 };

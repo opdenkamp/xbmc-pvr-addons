@@ -125,7 +125,6 @@ void cParserH264::Parse(unsigned char *data, int size, bool pusi)
 
 bool cParserH264::Parse_H264(size_t len, uint32_t next_startcode, int sc_offset)
 {
-  uint8_t nal_data[len];
   int pkttype;
   uint8_t *buf = m_pictureBuffer + sc_offset;
   uint32_t startcode = m_StartCode;
@@ -159,8 +158,7 @@ bool cParserH264::Parse_H264(size_t len, uint32_t next_startcode, int sc_offset)
   {
   case NAL_SPS:
   {
-    int nal_len = nalUnescape(nal_data, buf + 4, len - 4);
-    if (!Parse_SPS(nal_data, nal_len))
+    if (!Parse_SPS(buf+4, len-4))
       return true;
 
     double PAR = (double)m_PixelAspect.num/(double)m_PixelAspect.den;
@@ -174,8 +172,7 @@ bool cParserH264::Parse_H264(size_t len, uint32_t next_startcode, int sc_offset)
 
   case NAL_PPS:
   {
-    int nal_len = nalUnescape(nal_data, buf + 4, len - 4);
-    if (!Parse_PPS(nal_data, nal_len))
+    if (!Parse_PPS(buf-4, len-4))
       return true;
 
     break;
@@ -187,8 +184,7 @@ bool cParserH264::Parse_H264(size_t len, uint32_t next_startcode, int sc_offset)
     if (m_FoundFrame || m_FrameDuration == 0 || m_curDTS == DVD_NOPTS_VALUE)
       break;
 
-    int nal_len = nalUnescape(nal_data, buf + 4, len - 4 > 64 ? 64 : len - 3);
-    if (!Parse_SLH(nal_data, nal_len, &pkttype))
+    if (!Parse_SLH(buf+4, len-4, &pkttype))
       return true;
 
     m_StreamPacket.id         = m_pID;
@@ -231,31 +227,6 @@ bool cParserH264::Parse_H264(size_t len, uint32_t next_startcode, int sc_offset)
   }
 
   return false;
-}
-
-int cParserH264::nalUnescape(uint8_t *dst, const uint8_t *src, int len)
-{
-  int s = 0, d = 0;
-
-  while (s < len)
-  {
-    if (!src[s] && !src[s + 1])
-    {
-      // hit 00 00 xx
-      dst[d] = dst[d + 1] = 0;
-      s += 2;
-      d += 2;
-      if (src[s] == 3)
-      {
-        s++; // 00 00 03 xx --> 00 00 xx
-        if (s >= len)
-          return d;
-      }
-    }
-    dst[d++] = src[s++];
-  }
-
-  return d;
 }
 
 bool cParserH264::Parse_PPS(uint8_t *buf, int len)
@@ -317,7 +288,7 @@ bool cParserH264::Parse_SPS(uint8_t *buf, int len)
   /* reserved             = bs.readBits(4);    */
   bs.skipBits(8);
   int level_idc = bs.readBits(8);
-  unsigned int seq_parameter_set_id = bs.readGolombUE();
+  unsigned int seq_parameter_set_id = bs.readGolombUE(9);
 
   unsigned int i = 0;
   while (h264_lev2cpbsize[i][0] != -1)
@@ -336,14 +307,15 @@ bool cParserH264::Parse_SPS(uint8_t *buf, int len)
 
   if (profile_idc >= 100)       /* high profile                   */
   {
-    if(bs.readGolombUE() == 3)  /* chroma_format_idc              */
+    int chroma_format_idc = bs.readGolombUE(9); /* chroma_format_idc              */
+    if(chroma_format_idc == 3)
       bs.skipBits(1);           /* residual_colour_transform_flag */
     bs.readGolombUE();          /* bit_depth_luma - 8             */
     bs.readGolombUE();          /* bit_depth_chroma - 8           */
     bs.skipBits(1);             /* transform_bypass               */
     if (bs.readBits1())         /* seq_scaling_matrix_present     */
     {
-      for (int i = 0; i < 8; i++)
+      for (int i = 0; i < ((chroma_format_idc != 3) ? 8 : 12); i++)
       {
         if (bs.readBits1())     /* seq_scaling_list_present       */
         {
@@ -352,7 +324,7 @@ bool cParserH264::Parse_SPS(uint8_t *buf, int len)
           {
             if (next)
               next = (last + bs.readGolombSE()) & 0xff;
-            last = next ?: last;
+            last = !next ? last: next;
           }
         }
       }
@@ -360,7 +332,7 @@ bool cParserH264::Parse_SPS(uint8_t *buf, int len)
   }
 
   bs.readGolombUE();           /* log2_max_frame_num - 4 */
-  int pic_order_cnt_type = bs.readGolombUE();
+  int pic_order_cnt_type = bs.readGolombUE(9);
   if (pic_order_cnt_type == 0)
     bs.readGolombUE();         /* log2_max_poc_lsb - 4 */
   else if (pic_order_cnt_type == 1)
@@ -378,7 +350,7 @@ bool cParserH264::Parse_SPS(uint8_t *buf, int len)
     return false;
   }
 
-  bs.readGolombUE();          /* ref_frames                      */
+  bs.readGolombUE(9);          /* ref_frames                      */
   bs.skipBits(1);             /* gaps_in_frame_num_allowed       */
   m_Width  /* mbs */ = bs.readGolombUE() + 1;
   m_Height /* mbs */ = bs.readGolombUE() + 1;

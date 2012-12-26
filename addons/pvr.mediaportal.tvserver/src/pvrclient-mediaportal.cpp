@@ -164,7 +164,7 @@ bool cPVRClientMediaPortal::Connect()
     return false;
   }
 
-  if (!m_tcpclient->connect(g_szHostname, g_iPort))
+  if (!m_tcpclient->connect(g_szHostname, (unsigned short) g_iPort))
   {
     XBMC->Log(LOG_ERROR, "Could not connect to MPTV backend");
     return false;

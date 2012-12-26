@@ -218,7 +218,7 @@ long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned
 
   if (*dwReadBytes < lDataLength)
   {
-    XBMC->Log(LOG_DEBUG, "FileReader::Read() read too less bytes");
+    XBMC->Log(LOG_NOTICE, "%s: requested %d bytes, read only %d bytes.", __FUNCTION__, lDataLength, *dwReadBytes);
     return S_FALSE;
   }
   return S_OK;

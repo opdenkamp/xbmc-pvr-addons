@@ -32,9 +32,9 @@ namespace uri
   /// Traits used for parsing and encoding components.
   struct traits
   {
-    const char* begin_cstring; ///< begin cstring (or 0 if none)
-    const char begin_char;     ///< begin char (or 0 if none)
-    const char end_char;       ///< end char (or 0 if none)
+    char* begin_cstring;       ///< begin cstring (or 0 if none)
+    char begin_char;           ///< begin char (or 0 if none)
+    char end_char;             ///< end char (or 0 if none)
     char char_class[256];      ///< map of char to class
   };
 

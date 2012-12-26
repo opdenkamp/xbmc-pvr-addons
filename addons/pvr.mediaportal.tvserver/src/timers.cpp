@@ -63,9 +63,9 @@ cTimer::cTimer(const PVR_TIMER& timerinfo)
   {
     // Workaround: retrieve the schedule id from the directory name if set
     int schedule_id = 0;
-    int program_id = 0;
+    unsigned int program_id = 0;
 
-    if (sscanf(timerinfo.strDirectory, "%9d/%9d", &schedule_id, &program_id) == 2)
+    if (sscanf(timerinfo.strDirectory, "%9d/%9u", &schedule_id, &program_id) == 2)
     {
       if (program_id == timerinfo.iClientIndex)
       {
@@ -392,7 +392,7 @@ ScheduleRecordingType cTimer::RepeatFlags2SchedRecType(int repeatflags)
       return Daily;
       break;
     default:
-      return Once;
+      break;
   }
 
   return Once;

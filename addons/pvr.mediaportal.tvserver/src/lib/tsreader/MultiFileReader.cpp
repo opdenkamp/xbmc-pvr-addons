@@ -115,7 +115,7 @@ long MultiFileReader::CloseFile()
   long hr;
   std::vector<MultiFileReaderFile *>::iterator it;
 
-  hr = m_TSBufferFile.CloseFile();
+  m_TSBufferFile.CloseFile();
   hr = m_TSFile.CloseFile();
 
   for (it = m_tsFiles.begin(); it < m_tsFiles.end(); ++it)
@@ -442,11 +442,10 @@ long MultiFileReader::RefreshTSBufferFile()
     char* filename;
     std::string sFilename;
     std::string path;
-    size_t pos = std::string::npos;
 
     m_TSBufferFile.GetFileName(&filename);
     sFilename = filename;
-    pos = sFilename.find_last_of(PATH_SEPARATOR_CHAR);
+    size_t pos = sFilename.find_last_of(PATH_SEPARATOR_CHAR);
     path = sFilename.substr(0, pos+1);
 
     // Create a list of files in the .tsbuffer file.

@@ -57,7 +57,6 @@ void cRecording::SetCardSettings(CCards* cardSettings)
 bool cRecording::ParseLine(const std::string& data)
 {
   time_t endtime;
-  string filePath;
 
   vector<string> fields;
 

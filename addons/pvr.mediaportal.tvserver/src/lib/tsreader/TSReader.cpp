@@ -299,7 +299,6 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
 {
 #ifdef TARGET_WINDOWS
   string newFileName;
-  long result = S_FALSE;
 
   XBMC->Log(LOG_NOTICE, "CTsReader::OnZap(%s)", pszFileName);
 
@@ -309,8 +308,7 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
   if (newFileName != m_fileName)
   {
     Close();
-    result = Open(pszFileName);
-    return (result == S_OK);
+    return (S_OK == Open(pszFileName));
   }
   else
   {

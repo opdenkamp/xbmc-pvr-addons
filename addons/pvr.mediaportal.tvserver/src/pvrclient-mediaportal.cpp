@@ -63,7 +63,6 @@ cPVRClientMediaPortal::cPVRClientMediaPortal()
   m_bTimeShiftStarted      = false;
   m_BackendUTCoffset       = 0;
   m_BackendTime            = 0;
-  m_bStop                  = true;
   m_noSignalStreamSize     = 0;
   m_noSignalStreamData[0]  = '\0';
   m_noSignalStreamReadPos  = 0;
@@ -105,13 +104,12 @@ string cPVRClientMediaPortal::SendCommand(string command)
     }
   }
 
-  string response;
   if ( !m_tcpclient->ReadResponse(code, lines) )
   {
     XBMC->Log(LOG_ERROR, "SendCommand - Failed with code: %d (%s)", code, lines[lines.size()-1].c_str());
   }
 
-  return lines[lines.size()-1].c_str();
+  return lines[lines.size()-1];
 }
 
 bool cPVRClientMediaPortal::SendCommand2(string command, int& code, vector<string>& lines)
@@ -192,10 +190,8 @@ bool cPVRClientMediaPortal::Connect()
     Tokenize(result, fields, "|");
     if(fields.size() == 2)
     {
-      int count = 0;
-
       // Ok, this TVServerXBMC version answers with a version string
-      count = sscanf(fields[1].c_str(), "%5d.%5d.%5d.%5d", &major, &minor, &revision, &g_iTVServerXBMCBuild);
+      int count = sscanf(fields[1].c_str(), "%5d.%5d.%5d.%5d", &major, &minor, &revision, &g_iTVServerXBMCBuild);
       if( count < 4 )
       {
         XBMC->Log(LOG_ERROR, "Could not parse the TVServerXBMC version string '%s'", fields[1].c_str());
@@ -274,7 +270,7 @@ void cPVRClientMediaPortal::Disconnect()
         m_tsreader->Close();
         SAFE_DELETE(m_tsreader);
       }
-      result = SendCommand("StopTimeshift:\n");
+      SendCommand("StopTimeshift:\n");
     }
   }
 
@@ -400,15 +396,13 @@ PVR_ERROR cPVRClientMediaPortal::GetBackendTime(time_t *localTime, int *gmtOffse
 
   if(fields.size() >= 3)
   {
-    int count = 0;
-
     //[0] date + time TV Server
     //[1] UTC offset hours
     //[2] UTC offset minutes
     //From CPVREpg::CPVREpg(): Expected PVREpg GMT offset is in seconds
     m_BackendUTCoffset = ((atoi(fields[1].c_str()) * 60) + atoi(fields[2].c_str())) * 60;
 
-    count = sscanf(fields[0].c_str(), "%4d-%2d-%2d %2d:%2d:%2d", &year, &month, &day, &hour, &minute, &second);
+    int count = sscanf(fields[0].c_str(), "%4d-%2d-%2d %2d:%2d:%2d", &year, &month, &day, &hour, &minute, &second);
 
     if(count == 6)
     {
@@ -1118,12 +1112,12 @@ PVR_ERROR cPVRClientMediaPortal::GetTimerInfo(unsigned int timernumber, PVR_TIME
   string         result;
   char           command[256];
 
-  XBMC->Log(LOG_DEBUG, "->GetTimerInfo(%i)", timernumber);
+  XBMC->Log(LOG_DEBUG, "->GetTimerInfo(%u)", timernumber);
 
   if (!IsUp())
     return PVR_ERROR_SERVER_ERROR;
 
-  snprintf(command, 256, "GetScheduleInfo:%i\n", timernumber);
+  snprintf(command, 256, "GetScheduleInfo:%u\n", timernumber);
 
   result = SendCommand(command);
 
@@ -1574,7 +1568,6 @@ PVR_ERROR cPVRClientMediaPortal::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
     return PVR_ERROR_NO_ERROR;
   }
 
-  vector<string>  lines;
   string          result;
 
   result = SendCommand("GetSignalQuality\n");
@@ -1661,8 +1654,6 @@ bool cPVRClientMediaPortal::OpenRecordedStream(const PVR_RECORDING &recording)
 
 void cPVRClientMediaPortal::CloseRecordedStream(void)
 {
-  string result;
-
   if (!IsUp() || g_eStreamingMethod == ffmpeg)
      return;
 
@@ -1749,8 +1740,6 @@ long long  cPVRClientMediaPortal::LengthRecordedStream(void)
  */
 const char* cPVRClientMediaPortal::GetLiveStreamURL(const PVR_CHANNEL &channelinfo)
 {
-  string result;
-
   XBMC->Log(LOG_DEBUG, "->GetLiveStreamURL(uid=%i)", channelinfo.iUniqueId);
 
   if (!OpenLiveStream(channelinfo))

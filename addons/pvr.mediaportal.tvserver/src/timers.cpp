@@ -49,7 +49,6 @@ cTimer::cTimer()
   m_ismanual           = false;
   m_isrecording        = false;
   m_progid             = -1;
-  m_series             = false;
 }
 
 

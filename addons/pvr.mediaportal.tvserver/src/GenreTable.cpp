@@ -38,7 +38,6 @@ bool CGenreTable::LoadGenreXML(const std::string &filename)
   TiXmlHandle hDoc(&xmlDoc);
   TiXmlElement* pElem;
   TiXmlHandle hRoot(0);
-  string sGenre;
   const char* sGenreType = NULL;
   const char* sGenreSubType = NULL;
   genre_t genre;

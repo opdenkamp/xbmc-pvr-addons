@@ -1390,6 +1390,8 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
     {
       if (g_eStreamingMethod == TSReader && m_tsreader != NULL)
       {
+        bool bReturn = false;
+
         // Continue with the existing TsReader.
         XBMC->Log(LOG_INFO, "Re-using existing TsReader...");
         //if(g_bDirectTSFileRead)
@@ -1398,15 +1400,28 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
           m_tsreader->SetCardId(atoi(timeshiftfields[3].c_str()));
 
           if (g_iTVServerXBMCBuild >=110 )
-            return m_tsreader->OnZap(timeshiftfields[2].c_str(), atoll(timeshiftfields[4].c_str()), atol(timeshiftfields[5].c_str()));
+            bReturn = m_tsreader->OnZap(timeshiftfields[2].c_str(), atoll(timeshiftfields[4].c_str()), atol(timeshiftfields[5].c_str()));
           else
-            return m_tsreader->OnZap(timeshiftfields[2].c_str(), -1, -1);
+            bReturn = m_tsreader->OnZap(timeshiftfields[2].c_str(), -1, -1);
         }
         else
         {
           // RTSP url
-          return true; //Fast forward seek (OnZap) does not work for RTSP
+          bReturn = true; //Fast forward seek (OnZap) does not work for RTSP
         }
+
+        if (bReturn)
+        {
+          m_iCurrentChannel = (int) channelinfo.iUniqueId;
+          m_iCurrentCard = (g_iTVServerXBMCBuild >= 106) ? atoi(timeshiftfields[3].c_str()) : -1;
+        }
+        else
+        {
+          m_iCurrentChannel = -1;
+          m_iCurrentCard = -1;
+        }
+
+        return bReturn;
       }
       else
       {
@@ -1414,7 +1429,6 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         m_tsreader = new CTsReader();
       }
 
-      //if (g_bDirectTSFileRead)
       if (!g_bUseRTSP)
       {
         // Reading directly from the Timeshift buffer
@@ -1444,10 +1458,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
     // at this point everything is ready for playback
     m_iCurrentChannel = (int) channelinfo.iUniqueId;
-    if (g_iTVServerXBMCBuild>=106)
-    {
-      m_iCurrentCard = atoi(timeshiftfields[3].c_str());
-    }
+    m_iCurrentCard = (g_iTVServerXBMCBuild >= 106) ? atoi(timeshiftfields[3].c_str()) : -1;
   }
   return true;
 }

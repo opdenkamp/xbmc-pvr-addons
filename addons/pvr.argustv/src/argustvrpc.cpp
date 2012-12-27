@@ -234,7 +234,7 @@ namespace ArgusTV
 #if defined(TARGET_WINDOWS)
     char tmppath[MAX_PATH];
     GetTempPath(MAX_PATH, tmppath);
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
+#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN) || defined(TARGET_FREEBSD)
     std::string tmppath = "/tmp/";
 #else
 #error implement for your OS!

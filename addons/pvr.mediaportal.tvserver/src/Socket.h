@@ -42,7 +42,7 @@ namespace MPTV //Prevent name clash with Live555 Socket
   #ifndef port_t
     typedef unsigned short port_t;
   #endif
-#elif defined TARGET_LINUX || defined TARGET_DARWIN
+#elif defined TARGET_LINUX || defined TARGET_DARWIN || defined TARGET_FREEBSD
 #ifdef SOCKADDR_IN
 #undef SOCKADDR_IN
 #endif

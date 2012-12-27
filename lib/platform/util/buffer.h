@@ -41,7 +41,8 @@ namespace PLATFORM
     {
     public:
       SyncedBuffer(size_t iMaxSize = 100) :
-          m_maxSize(iMaxSize) {}
+          m_maxSize(iMaxSize),
+          m_bHasData(false) {}
 
       virtual ~SyncedBuffer(void)
       {
@@ -53,6 +54,8 @@ namespace PLATFORM
         CLockObject lock(m_mutex);
         while (!m_buffer.empty())
           m_buffer.pop();
+        m_bHasData = false;
+        m_condition.Broadcast();
       }
 
       size_t Size(void)
@@ -64,7 +67,7 @@ namespace PLATFORM
       bool IsEmpty(void)
       {
         CLockObject lock(m_mutex);
-        return m_buffer.empty();
+        return !m_bHasData;
       }
 
       bool Push(_BType entry)
@@ -74,25 +77,33 @@ namespace PLATFORM
           return false;
 
         m_buffer.push(entry);
+        m_bHasData = true;
+        m_condition.Signal();
         return true;
       }
 
-      bool Pop(_BType &entry)
+      bool Pop(_BType &entry, int32_t iTimeoutMs = 0)
       {
-        bool bReturn(false);
         CLockObject lock(m_mutex);
-        if (!m_buffer.empty())
+        if (m_buffer.empty())
         {
-          entry = m_buffer.front();
-          m_buffer.pop();
-          bReturn = true;
+          if (iTimeoutMs == 0)
+            return false;
+          if (!m_condition.Wait(m_mutex, m_bHasData, iTimeoutMs))
+            return false;
         }
-        return bReturn;
+
+        entry = m_buffer.front();
+        m_buffer.pop();
+        m_bHasData = !m_buffer.empty();
+        return true;
       }
 
     private:
       size_t             m_maxSize;
       std::queue<_BType> m_buffer;
       CMutex             m_mutex;
+      bool               m_bHasData;
+      CCondition<bool>   m_condition;
     };
 };

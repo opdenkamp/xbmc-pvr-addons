@@ -213,7 +213,7 @@ bool cPVRClientArgusTV::ShareErrorsFound(void)
         accessMsg = (char*) lpMsgBuf;
         LocalFree(lpMsgBuf);
       }
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
+#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN) || defined(TARGET_FREEBSD)
       std::string CIFSname = sharename;
       std::string SMBPrefix = "smb://";
       if (g_szUser.length() > 0)

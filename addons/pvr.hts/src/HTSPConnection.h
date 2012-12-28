@@ -66,6 +66,8 @@ public:
   bool        CanTimeshift(void);
   bool        CanSeekLiveStream(void);
 
+  bool        CanTranscode(void) const  { return m_bTranscodingSupport; }
+
 private:
   bool OpenSocket(void);
   void* Process(void);
@@ -87,6 +89,7 @@ private:
   bool                      m_bIsConnected;
   bool                      m_bTimeshiftSupport;
   bool                      m_bTimeshiftSeekSupport;
+  bool                      m_bTranscodingSupport;
 
   std::deque<htsmsg_t*>     m_queue;
   const unsigned int        m_iQueueSize;

@@ -48,6 +48,7 @@ CHTSPConnection::CHTSPConnection(CHTSPConnectionCallback* callback) :
     m_bIsConnected(false),
     m_bTimeshiftSupport(false),
     m_bTimeshiftSeekSupport(false),
+    m_bTranscodingSupport(false),
     m_iQueueSize(1000),
     m_callback(callback)
 {
@@ -331,6 +332,8 @@ bool CHTSPConnection::SendGreeting(void)
           m_bTimeshiftSupport = true;
         else if (!strcmp("timeshiftseek", f->hmf_str))
           m_bTimeshiftSeekSupport = true;
+        else if (!strcmp("transcoding", f->hmf_str))
+          m_bTranscodingSupport = true;
       }
     }
   }

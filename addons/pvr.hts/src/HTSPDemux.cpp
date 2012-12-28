@@ -381,6 +381,11 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
       newStreams.stream[newStreams.iStreamCount].iCodecType  = AVMEDIA_TYPE_AUDIO;
       newStreams.stream[newStreams.iStreamCount].iCodecId    = CODEC_ID_AAC_LATM;
     }
+    else if(!strcmp(type, "VORBIS"))
+    {
+      newStreams.stream[newStreams.iStreamCount].iCodecType  = AVMEDIA_TYPE_AUDIO;
+      newStreams.stream[newStreams.iStreamCount].iCodecId    = CODEC_ID_VORBIS;
+    }
     else if(!strcmp(type, "MPEG2VIDEO"))
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
@@ -390,6 +395,16 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_H264;
+    }
+    else if(!strcmp(type, "VP8"))
+    {
+      newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
+      newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_VP8;
+    }
+    else if(!strcmp(type, "MPEG4VIDEO"))
+    {
+      newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
+      newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_MPEG4;
     }
     else if(!strcmp(type, "DVBSUB"))
     {
@@ -560,11 +575,60 @@ bool CHTSPDemux::SendUnsubscribe(int subscription)
 
 bool CHTSPDemux::SendSubscribe(int subscription, int channel)
 {
+  const char *audioCodec;
+  const char *videoCodec;
+
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_str(m, "method"         , "subscribe");
   htsmsg_add_s32(m, "channelId"      , channel);
   htsmsg_add_s32(m, "subscriptionId" , subscription);
   htsmsg_add_u32(m, "timeshiftPeriod", (uint32_t)~0);
+
+  if(g_bTranscode)
+  {
+    switch(g_iAudioCodec)
+    {
+      case CODEC_ID_MP2:
+        audioCodec = "MPEG2AUDIO";
+        break;
+      case CODEC_ID_AAC:
+        audioCodec = "AAC";
+        break;
+      case CODEC_ID_AC3:
+        audioCodec = "AC3";
+        break;
+      case CODEC_ID_VORBIS:
+        audioCodec = "VORBIS";
+        break;
+      default:
+        audioCodec = "UNKNOWN";
+        break;
+    }
+
+    switch(g_iVideoCodec)
+    {
+      case CODEC_ID_MPEG2VIDEO:
+        videoCodec = "MPEG2VIDEO";
+        break;
+      case CODEC_ID_H264:
+        videoCodec = "H264";
+        break;
+      case CODEC_ID_VP8:
+        videoCodec = "VP8";
+        break;
+      case CODEC_ID_MPEG4:
+        videoCodec = "MPEG4VIDEO";
+        break;
+      default:
+        videoCodec = "UNKNOWN";
+        break;
+    }
+
+    htsmsg_add_u32(m, "maxResolution" , g_iResolution);
+    htsmsg_add_str(m, "audioCodec"    , audioCodec);
+    htsmsg_add_str(m, "videoCodec"    , videoCodec);
+  }
+
   return m_session->ReadSuccess(m, true, "subscribe to channel");
 }
 

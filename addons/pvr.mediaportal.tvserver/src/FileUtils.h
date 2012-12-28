@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 namespace OS
@@ -5,6 +7,6 @@ namespace OS
   class CFile
   {
   public:
-    static bool Exists(const std::string& strFileName);
+    static bool Exists(const std::string& strFileName, long* errCode = NULL);
   };
 };

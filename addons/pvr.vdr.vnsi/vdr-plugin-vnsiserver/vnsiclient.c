@@ -80,7 +80,7 @@ cVNSIClient::cVNSIClient(int fd, unsigned int id, const char *ClientAdr)
   m_processSCAN_Socket      = NULL;
   m_Osd                     = NULL;
 
-  m_socket.set_handle(fd);
+  m_socket.SetHandle(fd);
 
   Start();
 }
@@ -96,7 +96,6 @@ cVNSIClient::~cVNSIClient()
 
 void cVNSIClient::Action(void)
 {
-  uint32_t kaTimeStamp;
   uint32_t channelID;
   uint32_t requestID;
   uint32_t opcode;
@@ -157,23 +156,6 @@ void cVNSIClient::Action(void)
       cRequestPacket* req = new cRequestPacket(requestID, opcode, data, dataLength);
 
       processRequest(req);
-    }
-    else if (channelID == 3)
-    {
-      if (!m_socket.read((uint8_t*)&kaTimeStamp, sizeof(uint32_t), 1000)) break;
-      kaTimeStamp = ntohl(kaTimeStamp);
-
-      uint8_t buffer[8];
-      uint32_t ul;
-      ul = htonl(3); // KA CHANNEL
-      memcpy(&buffer[0], &ul, sizeof(uint32_t));
-      ul = htonl(kaTimeStamp);
-      memcpy(&buffer[4], &ul, sizeof(uint32_t));
-      if (!m_socket.write(buffer, 8))
-      {
-        ERRORLOG("Could not send back KA reply");
-        break;
-      }
     }
     else
     {

@@ -244,9 +244,11 @@ void cVnsiOsdProvider::SendOsdPacket(int cmd, int wnd, int color, int x0, int y0
   m_OsdPacket.setLen(m_OsdPacket.getOSDHeaderLength() + size);
   m_OsdPacket.finaliseOSD();
 
-  m_Socket->write(m_OsdPacket.getPtr(), m_OsdPacket.getOSDHeaderLength(), -1, true);
+  m_Socket->LockWrite();
+  m_Socket->write(m_OsdPacket.getPtr(), m_OsdPacket.getOSDHeaderLength(), -1, (size > 0) ? true: false);
   if (size)
     m_Socket->write(data, size);
+  m_Socket->UnlockWrite();
 }
 
 bool cVnsiOsdProvider::IsRequestFull()

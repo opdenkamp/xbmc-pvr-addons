@@ -41,6 +41,7 @@
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <netinet/tcp.h>
+#include <net/if.h>
 
 #include <vdr/config.h>
 #include <vdr/tools.h>
@@ -62,11 +63,22 @@ void cxSocket::close() {
   }
 }
 
+void cxSocket::LockWrite()
+{
+  m_MutexWrite.Lock();
+}
+
+void cxSocket::UnlockWrite()
+{
+  m_MutexWrite.Unlock();
+}
+
 ssize_t cxSocket::write(const void *buffer, size_t size, int timeout_ms, bool more_data)
 {
-  cMutexLock CmdLock((cMutex*)&m_MutexWrite);
+  cMutexLock CmdLock(&m_MutexWrite);
 
-  if(m_fd == -1) return -1;
+  if(m_fd == -1)
+    return -1;
 
   ssize_t written = (ssize_t)size;
   const unsigned char *ptr = (const unsigned char *)buffer;
@@ -79,7 +91,7 @@ ssize_t cxSocket::write(const void *buffer, size_t size, int timeout_ms, bool mo
       return written-size;
     }
 
-    ssize_t p = ::send(m_fd, ptr, size, MSG_NOSIGNAL | (more_data ? MSG_MORE : 0));
+    ssize_t p = ::send(m_fd, ptr, size, (more_data ? MSG_MORE : 0));
 
     if (p <= 0)
     {
@@ -102,11 +114,10 @@ ssize_t cxSocket::write(const void *buffer, size_t size, int timeout_ms, bool mo
 
 ssize_t cxSocket::read(void *buffer, size_t size, int timeout_ms)
 {
-  cMutexLock CmdLock((cMutex*)&m_MutexRead);
-
   int retryCounter = 0;
 
-  if(m_fd == -1) return -1;
+  if(m_fd == -1)
+    return -1;
 
   ssize_t missing = (ssize_t)size;
   unsigned char *ptr = (unsigned char *)buffer;
@@ -146,7 +157,7 @@ ssize_t cxSocket::read(void *buffer, size_t size, int timeout_ms)
   return size;
 }
 
-void cxSocket::set_handle(int h) {
+void cxSocket::SetHandle(int h) {
   if(h != m_fd) {
     close();
     m_fd = h;
@@ -156,9 +167,6 @@ void cxSocket::set_handle(int h) {
     m_pollerWrite = new cPoller(m_fd, true);
   }
 }
-
-#include <sys/ioctl.h>
-#include <net/if.h>
 
 char *cxSocket::ip2txt(uint32_t ip, unsigned int port, char *str)
 {

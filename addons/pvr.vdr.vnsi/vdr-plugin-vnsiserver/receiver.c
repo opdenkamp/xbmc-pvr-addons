@@ -755,8 +755,10 @@ void cLiveStreamer::sendStreamPacket(sStreamPacket *pkt)
   m_streamHeader.setLen(m_streamHeader.getStreamHeaderLength() + pkt->size);
   m_streamHeader.finaliseStream();
 
+  m_Socket->LockWrite();
   m_Socket->write(m_streamHeader.getPtr(), m_streamHeader.getStreamHeaderLength(), -1, true);
   m_Socket->write(pkt->data, pkt->size);
+  m_Socket->UnlockWrite();
 
   m_last_tick.Set(0);
   m_SignalLost = false;
@@ -870,7 +872,7 @@ void cLiveStreamer::sendStreamChange()
   }
 
   resp->finaliseStream();
-  m_Socket->write(resp->getPtr(), resp->getLen(), -1, true);
+  m_Socket->write(resp->getPtr(), resp->getLen());
   delete resp;
 
   m_requestStreamChange = false;
@@ -900,7 +902,7 @@ void cLiveStreamer::sendSignalInfo()
     resp->add_U32(0);
 
     resp->finaliseStream();
-    m_Socket->write(resp->getPtr(), resp->getLen(), -1, true);
+    m_Socket->write(resp->getPtr(), resp->getLen());
     delete resp;
     return;
   }
@@ -947,7 +949,7 @@ void cLiveStreamer::sendSignalInfo()
       resp->add_U32(0);
 
       resp->finaliseStream();
-      m_Socket->write(resp->getPtr(), resp->getLen(), -1, true);
+      m_Socket->write(resp->getPtr(), resp->getLen());
       delete resp;
     }
   }
@@ -1017,7 +1019,7 @@ void cLiveStreamer::sendSignalInfo()
       resp->add_U32(fe_unc);
 
       resp->finaliseStream();
-      m_Socket->write(resp->getPtr(), resp->getLen(), -1, true);
+      m_Socket->write(resp->getPtr(), resp->getLen());
       delete resp;
     }
   }

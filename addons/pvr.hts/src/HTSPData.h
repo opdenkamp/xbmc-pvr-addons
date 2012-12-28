@@ -63,6 +63,10 @@ public:
   const char * GetVersion(void) const    { return m_session->GetVersion(); }
   bool         CanTimeshift(void) const  { return m_session->CanTimeshift(); }
   bool         CanSeekLiveStream(void) const  { return m_session->CanSeekLiveStream(); }
+
+  bool         CanTranscode(void) const  { return m_session->CanTranscode(); }
+  CodecVector  GetTranscodingCodecs(void);
+
   bool         GetDriveSpace(long long *total, long long *used);
   bool         GetBackendTime(time_t *utcTime, int *gmtOffset);
   unsigned int GetNumChannels(void);

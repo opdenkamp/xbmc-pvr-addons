@@ -33,32 +33,23 @@
 #include <vdr/thread.h>
 #include <vdr/tools.h>
 
-class cxSocket {
+class cxSocket
+{
  private:
   int m_fd;
   cMutex m_MutexWrite;
-  cMutex m_MutexRead;
-
   cPoller *m_pollerRead;
   cPoller *m_pollerWrite;
 
-  cxSocket(const cxSocket& s);
-  cxSocket &operator=(const cxSocket &S);
-
  public:
-
   cxSocket() : m_fd(-1), m_pollerRead(NULL), m_pollerWrite(NULL) {}
-
   ~cxSocket();
-
-  void set_handle(int h);
-
+  void SetHandle(int h);
   void close(void);
-
+  void LockWrite();
+  void UnlockWrite();
   ssize_t read(void *buffer, size_t size, int timeout_ms = -1);
-
   ssize_t write(const void *buffer, size_t size, int timeout_ms = -1, bool more_data = false);
-
   static char *ip2txt(uint32_t ip, unsigned int port, char *str);
 };
 

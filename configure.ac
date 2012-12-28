@@ -118,7 +118,6 @@ case "${host}" in
   *-freebsd*)
     OS="freebsd"
     ARCH_DEFINES="-DTARGET_POSIX -DTARGET_FREEBSD -D_LINUX"
-    use_external_ffmpeg="yes"  # same as on xbmc
     ;;
 esac
 

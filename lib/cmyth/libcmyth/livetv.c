@@ -122,7 +122,7 @@ cmyth_livetv_chain_create(char * chainid)
 	ret->chain_urls = NULL;
 	ret->chain_files = NULL;
 	ret->progs = NULL;
-	ret->livetv_watch = 0; /* JLB: Manage program breaks. Set to 1 on chain setup */
+	ret->livetv_watch = 0; /* JLB: Manage program breaks */
 	ret->livetv_tcp_rcvbuf = 0;
 	ret->livetv_block_len = 0;
 	ref_set_destroy(ret, (ref_destroy_t)cmyth_livetv_chain_destroy);
@@ -380,16 +380,12 @@ cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url, cmyth_file_t ft,
 {
 	int ret = 0;
 
-	pthread_mutex_lock(&mutex);
-
 	if(cmyth_livetv_chain_has_url(rec, url) == -1)
 		ret = cmyth_livetv_chain_add_url(rec, url);
 	if(ret != -1)
 		ret = cmyth_livetv_chain_add_file(rec, url, ft);
 	if(ret != -1)
 		ret = cmyth_livetv_chain_add_prog(rec, url, pi);
-
-	pthread_mutex_unlock(&mutex);
 
 	return ret;
 }
@@ -427,22 +423,11 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid)
 		return -1;
 	}
 
-	/* JLB: Manage program break
-	 * Skip chain update, it will doing later
-	 */
 	if (!rec->rec_livetv_chain) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: rec_livetv_chain is NULL\n",
 			  __FUNCTION__, url);
 		return -1;
-	}
-	else {
-		if (rec->rec_livetv_chain->livetv_watch == 0) {
-			cmyth_dbg(CMYTH_DBG_DEBUG,
-				  "%s: the next program is awaited: skip chain update\n",
-				  __FUNCTION__);
-			return 0;
-		}
 	}
 
 	loc_prog = cmyth_recorder_get_cur_proginfo(rec);
@@ -485,6 +470,11 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid)
 					ret = -1;
 					goto out;
 				}
+				/*
+				 * New program is inserted. Switch OFF watch signal and
+				 * switch to the new file when required.
+				 */
+				rec->rec_livetv_chain->livetv_watch = 0;
 				if (rec->rec_livetv_chain->chain_switch_on_create) {
 					cmyth_livetv_chain_switch(rec, LAST);
 					rec->rec_livetv_chain->chain_switch_on_create = 0;
@@ -537,7 +527,7 @@ int
 cmyth_livetv_watch(cmyth_recorder_t rec, char * msg)
 {
 	int rec_id;
-	int watch;
+	int flag;
 	int ret;
 
 	ret = 0;
@@ -549,12 +539,12 @@ cmyth_livetv_watch(cmyth_recorder_t rec, char * msg)
 	/*
 	 * Parse msg. Should be %d %d
 	 */
-	if (strlen(msg)>=3 && sscanf(msg,"%d %d", &rec_id, &watch) == 2) {
+	if (strlen(msg) >= 3 && sscanf(msg, "%d %d", &rec_id, &flag) == 2) {
 		if (rec_id == rec->rec_id) {
-			rec->rec_livetv_chain->livetv_watch = watch;
+			rec->rec_livetv_chain->livetv_watch = 1;
 			cmyth_dbg(CMYTH_DBG_DEBUG,
-				  "%s: recorder watch: %d\n",
-				  __FUNCTION__, watch);
+				  "%s: wait event for recorder: %d\n",
+				  __FUNCTION__, rec_id);
 		}
 		else {
 			cmyth_dbg(CMYTH_DBG_DEBUG,
@@ -581,9 +571,9 @@ cmyth_livetv_watch(cmyth_recorder_t rec, char * msg)
  *
  * Indicates that an active recording has completed on the specified
  * recorder. used to manage program breaks while watching live tv.
- * When receive event for recorder, we switch on watch signal and
- * force an update of livetv chain to get current program info.
- * Watch signal is used when down, to mark the break period and
+ * When receive event for recorder, we force an update of livetv chain
+ * to get current program info when chain is not yet updated.
+ * Watch signal is used when up, to mark the break period and
  * queuing the frontend for reading file buffer.
  *
  * Return Value:
@@ -608,19 +598,18 @@ cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg)
 	 */
 	if (strlen(msg) >= 1 && sscanf(msg,"%d", &rec_id) == 1) {
 		if (rec_id == rec->rec_id
-			&& rec->rec_livetv_chain->livetv_watch != 1
+			&& rec->rec_livetv_chain->livetv_watch == 1
 			&& cmyth_recorder_is_recording(rec) == 1)
 		{
 			/*
 			 * Last recording is now completed.
 			 * Then force live tv chain update for the new current
-			 * program and switch ON watch status.
+			 * program.
 			 */
 			cmyth_dbg(CMYTH_DBG_DEBUG,
 				  "%s: previous recording done. Start chain update\n",
 				  __FUNCTION__);
 			if (rec->rec_livetv_chain->chainid) {
-				rec->rec_livetv_chain->livetv_watch = -1;
 				cmyth_livetv_chain_update(rec, rec->rec_livetv_chain->chainid);
 			}
 			else {
@@ -629,7 +618,6 @@ cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg)
 					  __FUNCTION__, rec_id);
 				ret = -1;
 			}
-			rec->rec_livetv_chain->livetv_watch = 1;
 		}
 		else {
 			cmyth_dbg(CMYTH_DBG_DEBUG,
@@ -709,8 +697,8 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, int tcp_rcvbuf,
 
 	/* JLB: Set tcp receive buffer for the chain files */
 	new_rec->rec_livetv_chain->livetv_tcp_rcvbuf = tcp_rcvbuf;
-	/* JLB: Manage program breaks. Switch ON watch signal */
-	new_rec->rec_livetv_chain->livetv_watch = 1;
+	/* JLB: Manage program breaks. Switch OFF watch signal */
+	new_rec->rec_livetv_chain->livetv_watch = 0;
 
 	new_rec->rec_livetv_chain->prog_update_callback = prog_update_callback;
 
@@ -838,21 +826,21 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 			  "%s: no more file\n",
 			  __FUNCTION__);
 		/* JLB: Manage program breaks
-		 * If livetv_watch is down then we are waiting next chain update and adding a new file.
+		 * If livetv_watch is ON then we are waiting next chain update and adding a new file.
 		 * Timeout is 2 secondes before release.
 		 */
-		if (rec->rec_livetv_chain->livetv_watch != 1) {
+		if (rec->rec_livetv_chain->livetv_watch != 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
-				  "%s: wait until livetv_watch is up\n",
+				  "%s: wait until livetv_watch is OFF\n",
 				  __FUNCTION__);
 			for (i = 0; i < 4; i++) {
 				pthread_mutex_unlock(&mutex);
 				usleep(500000);
 				pthread_mutex_lock(&mutex);
-				if (rec->rec_livetv_chain->livetv_watch == 1)
+				if (rec->rec_livetv_chain->livetv_watch == 0)
 					break;
 			}
-			if (rec->rec_livetv_chain->livetv_watch != 1) {
+			if (rec->rec_livetv_chain->livetv_watch != 0) {
 				/* The chain is not updated yet
 				 * Return to retry later
 				 */
@@ -909,7 +897,7 @@ cmyth_livetv_chain_switch_last(cmyth_recorder_t rec)
 		cmyth_livetv_chain_switch(rec, dir);
 	}
 	else {
-		rec->rec_livetv_chain->chain_switch_on_create=1;
+		rec->rec_livetv_chain->chain_switch_on_create = 1;
 	}
 	return 1;
 }
@@ -1000,7 +988,7 @@ int cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, unsigned long len)
 				/* Chain switch done. Retry without limit */
 				vlen = 0;
 			}
-			else if (rec->rec_livetv_chain->livetv_watch == 1) {
+			else if (rec->rec_livetv_chain->livetv_watch == 0) {
 				/*
 				 * Current buffer is empty on the last file.
 				 * We are waiting some time refilling buffer

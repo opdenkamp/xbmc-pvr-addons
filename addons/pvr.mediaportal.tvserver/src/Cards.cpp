@@ -21,6 +21,9 @@
 #include "Cards.h"
 #include "uri.h"
 #include "utils.h"
+#include "client.h"
+
+using namespace ADDON;
 
 bool CCards::ParseLines(vector<string>& lines)
 {
@@ -80,6 +83,14 @@ bool CCards::ParseLines(vector<string>& lines)
       {
         card.RecordingFolderUNC = fields[17];
         card.TimeshiftFolderUNC = fields[18];
+        if (card.RecordingFolderUNC.empty())
+        {
+          XBMC->Log(LOG_NOTICE, "Warning: no recording share defined in the TVServerXBMC settings for card '%s'", card.Name.c_str());
+        }
+        if (card.TimeshiftFolderUNC.empty())
+        {
+          XBMC->Log(LOG_NOTICE, "Warning: no timeshift share defined in the TVServerXBMC settings for card '%s'", card.Name.c_str());
+        }
       }
       else
       {

@@ -37,6 +37,7 @@
 #include "platform/threads/threads.h"
 #include <algorithm> //std::min, std::max
 #include "platform/util/timeutils.h" // for usleep
+#include "platform/util/util.h"
 
 using namespace ADDON;
 
@@ -67,8 +68,7 @@ FileReader::FileReader() :
 FileReader::~FileReader()
 {
   CloseFile();
-  if (m_pFileName)
-    delete m_pFileName;
+  SAFE_DELETE_ARRAY(m_pFileName);
 }
 
 
@@ -87,8 +87,7 @@ long FileReader::SetFileName(const char *pszFileName)
   // Take a copy of the filename
   if (m_pFileName)
   {
-    delete[] m_pFileName;
-    m_pFileName = NULL;
+    SAFE_DELETE_ARRAY(m_pFileName);
   }
 
   m_pFileName = new char[1 + strlen(pszFileName)];

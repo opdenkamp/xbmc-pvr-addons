@@ -153,6 +153,8 @@ void cParserAAC::Parse(unsigned char *data, int size, bool pusi)
         if (m_SampleRate)
           m_FrameDuration = 1024 * 90000 / m_SampleRate;
 
+        m_demuxer->SetAudioInformation(m_ChannelConfig, m_SampleRate, 0, 0, 0);
+
         sStreamPacket pkt;
         pkt.id       = m_pID;
         pkt.size     = frameLen;
@@ -321,6 +323,5 @@ void cParserAAC::ReadAudioSpecificConfig(cBitstream *bs)
   if (bs->readBits(1))  // ext_flag
     bs->skipBits(1);    // ext3_flag
 
-  // ffmpeg won't get started if this info is set
-//  m_demuxer->SetAudioInformation(m_ChannelConfig, m_SampleRate, 0, 0, 0);
+  m_demuxer->SetAudioInformation(m_ChannelConfig, m_SampleRate, 0, 0, 0);
 }

@@ -175,7 +175,7 @@ void cOSDTexture::SetPalette(int numColors, uint32_t *colors)
   for (int i=0; i<m_numColors; i++)
   {
     // convert from ARGB to RGBA
-    m_palette[i] = (colors[i] & 0x00FF0000) | (colors[i] & 0x0000FF00) | (colors[i] & 0x000000FF) | (colors[i] & 0xFF000000);
+    m_palette[i] = ((colors[i] & 0xFF000000)) | ((colors[i] & 0x00FF0000) >> 16) | ((colors[i] & 0x0000FF00)) | ((colors[i] & 0x000000FF) << 16);
   }
 }
 

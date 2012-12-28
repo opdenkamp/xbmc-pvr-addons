@@ -76,8 +76,6 @@ protected:
 
 private:
 
-  bool SendPing();
-
   struct SMessage
   {
     PLATFORM::CEvent *event;

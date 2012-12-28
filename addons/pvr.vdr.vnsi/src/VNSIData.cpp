@@ -749,27 +749,8 @@ bool cVNSIData::OnResponsePacket(cResponsePacket* pkt)
   return false;
 }
 
-bool cVNSIData::SendPing()
-{
-  XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
-
-  cRequestPacket vrp;
-  if (!vrp.init(VNSI_PING))
-  {
-    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
-    return false;
-  }
-
-  cResponsePacket* vresp = cVNSISession::ReadResult(&vrp);
-  delete vresp;
-
-  return (vresp != NULL);
-}
-
 void *cVNSIData::Process()
 {
-  uint32_t lastPing = 0;
-
   cResponsePacket* vresp;
 
   while (!IsStopped())
@@ -788,21 +769,7 @@ void *cVNSIData::Process()
       continue;
     }
 
-    // check if the connection is still up
-    if (vresp == NULL)
-    {
-      if(time(NULL) - lastPing > 5)
-      {
-        lastPing = time(NULL);
-
-//        if(!SendPing())
-//          SignalConnectionLost();
-      }
-      continue;
-    }
-
     // CHANNEL_REQUEST_RESPONSE
-
     if (vresp->getChannelID() == VNSI_CHANNEL_REQUEST_RESPONSE)
     {
       CLockObject lock(m_mutex);

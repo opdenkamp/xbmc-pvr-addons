@@ -1024,7 +1024,7 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         m_PlaybackURL = line;
 
 
-        if (m_supportsLiveTimeshift && g_bUseTimeshift)
+        if (channelinfo.bIsRadio == false && m_supportsLiveTimeshift && g_bUseTimeshift)
         {
           m_streamingclient->set_non_blocking(0); 
           m_pLiveShiftSource = new LiveShiftSource(m_streamingclient);

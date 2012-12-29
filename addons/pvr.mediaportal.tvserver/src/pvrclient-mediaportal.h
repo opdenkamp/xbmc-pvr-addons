@@ -128,11 +128,6 @@ private:
   int64_t                 m_iLastRecordingUpdate;
   CTsReader*              m_tsreader;
 
-  char                    m_noSignalStreamData[ 6 + 0xffff ];
-  long                    m_noSignalStreamSize;
-  long                    m_noSignalStreamReadPos;
-  bool                    m_bPlayingNoSignal;
-
   void Close();
 
   //Used for TV Server communication:

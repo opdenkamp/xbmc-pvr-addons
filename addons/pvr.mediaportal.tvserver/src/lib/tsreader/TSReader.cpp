@@ -79,11 +79,16 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
   // Can we access the given file already?
   if ( OS::CFile::Exists(pszFileName) )
   {
+    XBMC->Log(LOG_DEBUG, "Found the timeshift buffer at: %s\n", pszFileName);
     return pszFileName;
   }
+  XBMC->Log(LOG_DEBUG, "Cannot access '%s' directly. Assuming multiseat mode. Need to translate to UNC filename.", pszFileName);
+#else
+  XBMC->Log(LOG_DEBUG, "Multiseat mode; need to translate '%s' to UNC filename.", pszFileName);
 #endif
 
   CStdString sFileName = pszFileName;
+  bool bFound = false;
 
   // Card Id given? (only for Live TV / Radio). Check for an UNC path (e.g. \\tvserver\timeshift)
   if (m_cardId >= 0)
@@ -92,7 +97,15 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
 
     if ((m_cardSettings) && (m_cardSettings->GetCard(m_cardId, tscard)))
     {
-      sFileName.Replace(tscard.TimeshiftFolder.c_str(), tscard.TimeshiftFolderUNC.c_str());
+      if (!tscard.TimeshiftFolderUNC.empty())
+      {
+        sFileName.Replace(tscard.TimeshiftFolder.c_str(), tscard.TimeshiftFolderUNC.c_str());
+        bFound = true;
+      }
+      else
+      {
+        XBMC->Log(LOG_ERROR, "No timeshift share known for card %i '%s'. Check your TVServerXBMC settings!", tscard.IdCard, tscard.Name.c_str());
+      }
     }
   }
   else
@@ -108,9 +121,13 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
         found = sFileName.find(it->RecordingFolder);
         if (found != string::npos)
         {
-          // Remove the original base path and replace it with the given path
-          sFileName.Replace(it->RecordingFolder.c_str(), it->RecordingFolderUNC.c_str());
-          break;
+          if (!it->RecordingFolderUNC.empty())
+          {
+            // Remove the original base path and replace it with the given path
+            sFileName.Replace(it->RecordingFolder.c_str(), it->RecordingFolderUNC.c_str());
+            bFound = true;
+            break;
+          }
         }
       }
     }
@@ -153,13 +170,53 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
   //return CIFSname;
 #endif
 
-  XBMC->Log(LOG_INFO, "CTsReader:TranslatePath %s -> %s", pszFileName, sFileName.c_str());
+  if (bFound)
+  {
+    XBMC->Log(LOG_INFO, "CTsReader:TranslatePath %s -> %s", pszFileName, sFileName.c_str());
+  }
+  else
+  {
+    XBMC->Log(LOG_ERROR, "Could not find a network share for '%s'. Check your TVServerXBMC settings!", pszFileName);
+    if (!XBMC->FileExists(pszFileName, false))
+    {
+      XBMC->Log(LOG_ERROR, "Cannot access '%s'", pszFileName);
+      XBMC->QueueNotification(QUEUE_ERROR, "Cannot access: %s", pszFileName);
+      sFileName.clear();
+      return sFileName;
+    }
+  }
 
 #if defined (TARGET_WINDOWS)
-  // Can we access the given file already?
-  if ( !OS::CFile::Exists(sFileName) )
+  // Can we now access the given file?
+  long errCode;
+  if ( !OS::CFile::Exists(sFileName, &errCode) )
   {
-    XBMC->Log(LOG_ERROR, "%s: Cannot find/access file: %s", __FUNCTION__, sFileName.c_str());
+    switch(errCode)
+    {
+      case ERROR_FILE_NOT_FOUND:
+        XBMC->Log(LOG_ERROR, "File not found: %s.\n", sFileName.c_str());
+        break;
+      case ERROR_ACCESS_DENIED:
+      {
+        char strUserName[256];
+        DWORD lLength = 256;
+
+        if (GetUserName(strUserName, &lLength))
+        {
+          XBMC->Log(LOG_ERROR, "Access denied on %s. Check share access rights for user '%s' or connect as a different user using the Explorer.\n", sFileName.c_str(), strUserName);
+        }
+        else
+        {
+          XBMC->Log(LOG_ERROR, "Access denied on %s. Check share access rights.\n", sFileName.c_str());
+        }
+        XBMC->QueueNotification(QUEUE_ERROR, "Access denied: %s", sFileName.c_str());
+        break;
+      }
+      default:
+        XBMC->Log(LOG_ERROR, "Cannot find or access file: %s. Check share access rights.", sFileName.c_str());
+    }
+
+    sFileName.clear();
   }
 #endif
 
@@ -243,6 +300,9 @@ long CTsReader::Open(const char* pszFileName)
     // Translate path (e.g. Local filepath to smb://user:pass@share)
     m_fileName = TranslatePath(url);
 
+    if (m_fileName.empty())
+      return S_FALSE;
+
     // open file
     m_fileReader->SetFileName(m_fileName.c_str());
     //m_fileReader->SetDebugOutput(true);
@@ -299,7 +359,6 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
 {
 #ifdef TARGET_WINDOWS
   string newFileName;
-  long result = S_FALSE;
 
   XBMC->Log(LOG_NOTICE, "CTsReader::OnZap(%s)", pszFileName);
 
@@ -309,8 +368,7 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
   if (newFileName != m_fileName)
   {
     Close();
-    result = Open(pszFileName);
-    return (result == S_OK);
+    return (S_OK == Open(pszFileName));
   }
   else
   {

@@ -63,10 +63,6 @@ cPVRClientMediaPortal::cPVRClientMediaPortal()
   m_bTimeShiftStarted      = false;
   m_BackendUTCoffset       = 0;
   m_BackendTime            = 0;
-  m_noSignalStreamSize     = 0;
-  m_noSignalStreamData[0]  = '\0';
-  m_noSignalStreamReadPos  = 0;
-  m_bPlayingNoSignal       = false;
   m_tsreader               = NULL;
   m_genretable             = NULL;
   m_iLastRecordingUpdate   = 0;
@@ -1490,7 +1486,7 @@ int cPVRClientMediaPortal::ReadLiveStream(unsigned char *pBuffer, unsigned int i
     {
       usleep(400000);
       read_timeouts++;
-      return read_wanted; //writeNoSignalStream(buf, (buf_size - read_done));
+      return read_wanted;
     }
     read_done += read_wanted;
 
@@ -1500,8 +1496,7 @@ int cPVRClientMediaPortal::ReadLiveStream(unsigned char *pBuffer, unsigned int i
       {
         XBMC->Log(LOG_INFO, "No data in 2 seconds");
         read_timeouts = 0;
-        m_bPlayingNoSignal = true;
-        return read_done; //writeNoSignalStream(bufptr, read_wanted);
+        return read_done;
       }
       bufptr += read_wanted;
       read_timeouts++;
@@ -1509,8 +1504,8 @@ int cPVRClientMediaPortal::ReadLiveStream(unsigned char *pBuffer, unsigned int i
     }
   }
   read_timeouts = 0;
-  m_bPlayingNoSignal = false;
-  return read_done;//TSReadDone*TS_SIZE;
+
+  return read_done;
 }
 
 void cPVRClientMediaPortal::CloseLiveStream(void)
@@ -1740,7 +1735,7 @@ int cPVRClientMediaPortal::ReadRecordedStream(unsigned char *pBuffer, unsigned i
     if (m_tsreader->Read(bufptr, read_wanted, &read_wanted) > 0)
     {
       usleep(20000);
-      return read_wanted; //writeNoSignalStream(buf, (buf_size - read_done));
+      return read_wanted;
     }
     read_done += read_wanted;
 
@@ -1750,9 +1745,8 @@ int cPVRClientMediaPortal::ReadRecordedStream(unsigned char *pBuffer, unsigned i
       usleep(20000);
     }
   }
-  //read_timeouts = 0;
-  m_bPlayingNoSignal = false;
-  return read_done;//TSReadDone*TS_SIZE;
+
+  return read_done;
 }
 
 long long cPVRClientMediaPortal::SeekRecordedStream(long long iPosition, int iWhence)

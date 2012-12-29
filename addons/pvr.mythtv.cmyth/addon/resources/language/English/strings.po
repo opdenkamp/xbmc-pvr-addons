@@ -49,3 +49,7 @@ msgstr ""
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr ""
+
+msgctxt "#30008"
+msgid "MythTV MySql Database Hostname or IP"
+msgstr ""

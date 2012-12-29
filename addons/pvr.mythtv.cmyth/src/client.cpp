@@ -34,6 +34,7 @@ using namespace ADDON;
  * and exported to the other source files.
  */
 CStdString   g_szHostname             = DEFAULT_HOST;             ///< The Host name or IP of the mythtv server
+CStdString   g_szDBHostname           = DEFAULT_HOST;             ///< The Host name or IP of the mysql database server
 int          g_iMythPort              = DEFAULT_PORT;             ///< The mythtv Port (default is 6543)
 CStdString   g_szMythDBuser           = DEFAULT_DB_USER;          ///< The mythtv sql username (default is mythtv)
 CStdString   g_szMythDBpassword       = DEFAULT_DB_PASSWORD;      ///< The mythtv sql password (default is mythtv)
@@ -127,6 +128,17 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'host' setting, falling back to '%s' as default", DEFAULT_HOST);
     g_szHostname = DEFAULT_HOST;
+  }
+  buffer[0] = 0;
+  
+  /* Read setting "dbhost" from settings.xml */
+  if (XBMC->GetSetting("dbhost", buffer))
+    g_szDBHostname = buffer;
+  else
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'dbhost' setting, falling back to '%s' as default", DEFAULT_HOST);
+    g_szDBHostname = DEFAULT_HOST;
   }
   buffer[0] = 0;
 
@@ -279,6 +291,15 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     tmp_sHostname = g_szHostname;
     g_szHostname = (const char*)settingValue;
     if (tmp_sHostname != g_szHostname)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (str == "dbhost")
+  {
+    string tmp_sHostname;
+    XBMC->Log(LOG_INFO, "Changed Setting 'host' from %s to %s", g_szDBHostname.c_str(), (const char*)settingValue);
+    tmp_sHostname = g_szDBHostname;
+    g_szDBHostname = (const char*)settingValue;
+    if (tmp_sHostname != g_szDBHostname)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "port")

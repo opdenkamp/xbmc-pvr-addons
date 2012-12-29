@@ -2,6 +2,7 @@
 <settings>
   <setting id="host" type="text" label="30000" default="127.0.0.1" />
   <setting id="port" type="number" label="30001" default="6543" />
+  <setting id="dbhost" type="text" label="30008" default="127.0.0.1" />
   <setting id="db_user" type="text" label="30002" default="mythtv" />
   <setting id="db_password" type="text" label="30003" default="mythtv" />
   <setting id="db_name" type="text" label="30004" default="mythconverg" />

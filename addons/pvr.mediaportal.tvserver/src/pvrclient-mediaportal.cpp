@@ -1,5 +1,5 @@
 /*
- *      Copyright (C) 2005-2011 Team XBMC
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -135,7 +135,7 @@ bool cPVRClientMediaPortal::SendCommand2(string command, int& code, vector<strin
 
   if (!m_tcpclient->ReadResponse(code, lines))
   {
-    XBMC->Log(LOG_ERROR, "SendCommand - Failed with code: %d (%s)", code, lines[lines.size()-1].c_str());
+    XBMC->Log(LOG_ERROR, "SendCommand2 - Failed with code: %d (%s)", code, lines[lines.size()-1].c_str());
     return false;
   }
   else
@@ -164,7 +164,7 @@ bool cPVRClientMediaPortal::Connect()
 
   if (!m_tcpclient->connect(g_szHostname, (unsigned short) g_iPort))
   {
-    XBMC->Log(LOG_ERROR, "Could not connect to MPTV backend");
+    XBMC->Log(LOG_ERROR, "Could not connect to MediaPortal TV Server backend");
     return false;
   }
 
@@ -277,6 +277,7 @@ bool cPVRClientMediaPortal::IsUp()
   {
     if(!Connect())
     {
+      XBMC->Log(LOG_DEBUG, "Backend not connected!");
       return false;
     }
   }
@@ -296,7 +297,7 @@ void* cPVRClientMediaPortal::Process(void*)
 // Used among others for the server name string in the "Recordings" view
 const char* cPVRClientMediaPortal::GetBackendName(void)
 {
-  if (!m_tcpclient->is_valid())
+  if (!IsUp())
   {
     return g_szHostname.c_str();
   }
@@ -1014,8 +1015,10 @@ PVR_ERROR cPVRClientMediaPortal::DeleteRecording(const PVR_RECORDING &recording)
 
   if(result.find("True") ==  string::npos)
   {
+    XBMC->Log(LOG_ERROR, "Deleting recording %s [failed]", recording.strRecordingId);
     return PVR_ERROR_FAILED;
   }
+  XBMC->Log(LOG_DEBUG, "Deleting recording %s [done]", recording.strRecordingId);
 
   // Although XBMC initiates the deletion of this recording, we still have to trigger XBMC to update its
   // recordings list to remove the recording at the XBMC side
@@ -1040,7 +1043,7 @@ PVR_ERROR cPVRClientMediaPortal::RenameRecording(const PVR_RECORDING &recording)
 
   if(result.find("True") == string::npos)
   {
-    XBMC->Log(LOG_DEBUG, "RenameRecording(%s) to %s [failed]", recording.strRecordingId, recording.strTitle);
+    XBMC->Log(LOG_ERROR, "RenameRecording(%s) to %s [failed]", recording.strRecordingId, recording.strTitle);
     return PVR_ERROR_FAILED;
   }
   XBMC->Log(LOG_DEBUG, "RenameRecording(%s) to %s [done]", recording.strRecordingId, recording.strTitle);
@@ -1069,7 +1072,7 @@ PVR_ERROR cPVRClientMediaPortal::SetRecordingPlayCount(const PVR_RECORDING &reco
 
   if(result.find("True") == string::npos)
   {
-    XBMC->Log(LOG_DEBUG, "%s: id=%s to %i [failed]", __FUNCTION__, recording.strRecordingId, count);
+    XBMC->Log(LOG_ERROR, "%s: id=%s to %i [failed]", __FUNCTION__, recording.strRecordingId, count);
     return PVR_ERROR_FAILED;
   }
 
@@ -1640,8 +1643,14 @@ PVR_ERROR cPVRClientMediaPortal::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 bool cPVRClientMediaPortal::OpenRecordedStream(const PVR_RECORDING &recording)
 {
   XBMC->Log(LOG_DEBUG, "->OpenRecordedStream(index=%s)", recording.strRecordingId);
-  if (!IsUp() || g_eStreamingMethod == ffmpeg)
-     return false;
+  if (!IsUp())
+    return false;
+
+  if (g_eStreamingMethod == ffmpeg)
+  {
+    XBMC->Log(LOG_ERROR, "Addon is in 'ffmpeg' mode. XBMC should play the RTSP url directly. Please reset your XBMC PVR database!");
+    return false;
+  }
 
   std::string recfile = "";
 
@@ -1672,6 +1681,10 @@ bool cPVRClientMediaPortal::OpenRecordedStream(const PVR_RECORDING &recording)
         recfile = myrecording.Stream();
       }
     }
+  }
+  else
+  {
+    XBMC->Log(LOG_ERROR, "Backend command '%s' returned a zero-length answer", command);
   }
 
   if (recfile.length() > 0)

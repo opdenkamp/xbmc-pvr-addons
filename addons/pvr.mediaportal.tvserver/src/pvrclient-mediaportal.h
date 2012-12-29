@@ -32,7 +32,7 @@
 /* Use a forward declaration here. Including RTSPClient.h via TSReader.h at this point gives compile errors */
 class CTsReader;
 
-class cPVRClientMediaPortal
+class cPVRClientMediaPortal: public PLATFORM::PreventCopy
 {
 public:
   /* Class interface */

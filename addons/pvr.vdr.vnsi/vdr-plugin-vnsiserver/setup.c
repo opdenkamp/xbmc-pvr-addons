@@ -20,7 +20,7 @@
 
 #include "setup.h"
 
-int PmtTimeout = 2;
+int PmtTimeout = 5;
 
 cMenuSetupVNSI::cMenuSetupVNSI(void)
 {

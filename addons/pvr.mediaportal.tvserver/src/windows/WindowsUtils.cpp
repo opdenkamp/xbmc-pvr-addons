@@ -23,9 +23,16 @@ namespace OS
     if(bOsVersionInfoEx == NULL ) return Unknown;
 
     // Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
-    GetNativeSystemInfo = (PGNSI) GetProcAddress( GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
-    if (NULL != GetNativeSystemInfo)
-      GetNativeSystemInfo(&si);
+    HMODULE kernel32_dll = GetModuleHandle(TEXT("kernel32.dll"));
+
+    if (NULL != kernel32_dll)
+    {
+      GetNativeSystemInfo = (PGNSI) GetProcAddress( kernel32_dll, "GetNativeSystemInfo");
+      if (NULL != GetNativeSystemInfo)
+        GetNativeSystemInfo(&si);
+      else
+        GetSystemInfo(&si);
+    }
     else
       GetSystemInfo(&si);
 

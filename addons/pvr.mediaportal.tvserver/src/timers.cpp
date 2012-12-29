@@ -49,7 +49,6 @@ cTimer::cTimer()
   m_ismanual           = false;
   m_isrecording        = false;
   m_progid             = -1;
-  m_series             = false;
 }
 
 
@@ -63,9 +62,9 @@ cTimer::cTimer(const PVR_TIMER& timerinfo)
   {
     // Workaround: retrieve the schedule id from the directory name if set
     int schedule_id = 0;
-    int program_id = 0;
+    unsigned int program_id = 0;
 
-    if (sscanf(timerinfo.strDirectory, "%9d/%9d", &schedule_id, &program_id) == 2)
+    if (sscanf(timerinfo.strDirectory, "%9d/%9u", &schedule_id, &program_id) == 2)
     {
       if (program_id == timerinfo.iClientIndex)
       {
@@ -392,7 +391,7 @@ ScheduleRecordingType cTimer::RepeatFlags2SchedRecType(int repeatflags)
       return Daily;
       break;
     default:
-      return Once;
+      break;
   }
 
   return Once;
@@ -457,7 +456,7 @@ std::string cTimer::UpdateScheduleCommand()
   if ( g_iTVServerXBMCBuild >= 100)
   {
     // Sending separate marginStart, marginStop and schedType is supported
-    snprintf(command, 1024, "UpdateSchedule:%i|%i|%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
+    snprintf(command, 1024, "UpdateSchedule:%i|%i|%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
             m_index,                                                           //Schedule index [0]
             m_active,                                                          //Active         [1]
             m_channel,                                                         //Channel number [2]
@@ -469,7 +468,7 @@ std::string cTimer::UpdateScheduleCommand()
             (int) m_schedtype, m_priority, (int) m_keepmethod,                 //SchedType, Priority, keepMethod [16..18]
             keepdate.tm_year + 1900, keepdate.tm_mon + 1, keepdate.tm_mday,    //Keepdate       [19..21]
             keepdate.tm_hour, keepdate.tm_min, keepdate.tm_sec,                //Keeptime       [22..24]
-            m_prerecordinterval, m_postrecordinterval);                        //Prerecord,postrecord [25,26]
+            m_prerecordinterval, m_postrecordinterval, m_progid);              //Prerecord,postrecord,program_id [25,26,27]
   }
   else
   {

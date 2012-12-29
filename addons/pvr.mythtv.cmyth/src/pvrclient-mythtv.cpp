@@ -199,11 +199,11 @@ bool PVRClientMythTV::Connect()
 
   // Create database connection
   m_protocolVersion.Format("%i", m_con.GetProtocolVersion());
-  m_connectionString.Format("%s:%i", g_szHostname, g_iMythPort);
-  m_db = MythDatabase(g_szHostname, g_szMythDBname, g_szMythDBuser, g_szMythDBpassword);
+  m_connectionString.Format("%s:%i", g_szDBHostname, g_iMythPort);
+  m_db = MythDatabase(g_szDBHostname, g_szMythDBname, g_szMythDBuser, g_szMythDBpassword);
   if (m_db.IsNull())
   {
-    XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s %s/%s", g_szMythDBname.c_str(), g_szHostname.c_str(), g_szMythDBuser.c_str(), g_szMythDBpassword.c_str());
+    XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s %s/%s", g_szMythDBname.c_str(), g_szDBHostname.c_str(), g_szMythDBuser.c_str(), g_szMythDBpassword.c_str());
     return false;
   }
 
@@ -211,7 +211,7 @@ bool PVRClientMythTV::Connect()
   CStdString db_test;
   if (!m_db.TestConnection(&db_test))
   {
-    XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s %s/%s\n%s", g_szMythDBname.c_str(), g_szHostname.c_str(), g_szMythDBuser.c_str(), g_szMythDBpassword.c_str(), db_test.c_str());
+    XBMC->QueueNotification(QUEUE_ERROR, "Failed to connect to MythTV MySQL database %s@%s %s/%s\n%s", g_szMythDBname.c_str(), g_szDBHostname.c_str(), g_szMythDBuser.c_str(), g_szMythDBpassword.c_str(), db_test.c_str());
     return false;
   }
 

@@ -62,6 +62,7 @@ extern CStdString   g_szClientPath;       ///< The Path where this driver is loc
 
 /* Client Settings */
 extern CStdString   g_szHostname;         ///< The Host name or IP of the mythtv server
+extern CStdString   g_szDBHostname;       ///< The Host name or IP of the mythtv mysql server
 extern int          g_iMythPort;          ///< The mythtv Port (default is 6543)
 extern CStdString   g_szMythDBuser;       ///< The mythtv sql username (default is mythtv)
 extern CStdString   g_szMythDBpassword;   ///< The mythtv sql password (default is mythtv)

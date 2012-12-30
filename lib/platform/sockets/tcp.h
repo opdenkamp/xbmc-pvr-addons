@@ -50,6 +50,8 @@ namespace PLATFORM
       {
         bool bReturn(false);
         struct addrinfo *address(NULL), *addr(NULL);
+        m_strError.clear();
+        m_iError = 0;
         if (!TcpResolveAddress(m_strName.c_str(), m_iPort, &m_iError, &address))
         {
           m_strError = strerror(m_iError);

@@ -71,6 +71,7 @@ public:
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
   PVR_ERROR RenameRecording(const PVR_RECORDING &recording);
+  PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
 
   /* Timer handling */
   int GetNumTimers(void);

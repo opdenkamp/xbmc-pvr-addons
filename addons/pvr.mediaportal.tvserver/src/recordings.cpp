@@ -42,6 +42,7 @@ cRecording::cRecording()
   m_genretable      = NULL;
   m_scheduleID      = 0;
   m_keepUntil       = 0;
+  m_timesWatched    = 0;
 }
 
 
@@ -57,7 +58,6 @@ void cRecording::SetCardSettings(CCards* cardSettings)
 bool cRecording::ParseLine(const std::string& data)
 {
   time_t endtime;
-  string filePath;
 
   vector<string> fields;
 
@@ -84,6 +84,7 @@ bool cRecording::ParseLine(const std::string& data)
     //[16] genre (string)
     //[17] idchannel (int)
     //[18] isrecording (bool)
+    //[19] timesWatched (int)
 
     m_Index = atoi(fields[0].c_str());
     m_StartTime = DateTimeToTimeT(fields[1]);
@@ -167,7 +168,13 @@ bool cRecording::ParseLine(const std::string& data)
       m_isRecording = stringtobool( fields[18] );
 
       if (m_genretable) m_genretable->GenreToTypes(m_genre, m_genre_type, m_genre_subtype);
+
+      if (fields.size() >= 20) // Since TVServerXBMC 1.2.x.117
+      {
+        m_timesWatched = atoi( fields[19].c_str() );
+      }
     }
+
     return true;
   }
   else

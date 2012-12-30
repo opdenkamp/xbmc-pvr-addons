@@ -624,7 +624,7 @@ long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
     return HRESULT_FROM_WIN32(dwErr);
   }
   return S_OK;
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN)
+#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN) || defined(TARGET_FREEBSD)
   //USES_CONVERSION;
 
   length = 0;

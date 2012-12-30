@@ -1,6 +1,6 @@
 /*
  *  Functions for manipulating HTS messages
- *  Copyright (C) 2007 Andreas Öman
+ *  Copyright (C) 2007 Andreas ï¿½man
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -180,6 +180,7 @@ htsmsg_destroy(htsmsg_t *msg)
   htsmsg_clear(msg);
   free((void *)msg->hm_data);
   free(msg);
+  msg = NULL;
 }
 
 /*

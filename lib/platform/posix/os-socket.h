@@ -114,9 +114,9 @@ namespace PLATFORM
   {
     fd_set port;
     struct timeval timeout, *tv;
-    int64_t iNow(0), iTarget(0);
     ssize_t iBytesRead(0);
     *iError = 0;
+    CTimeout readTimeout(iTimeoutMs);
 
     if (socket == INVALID_SOCKET_VALUE)
     {
@@ -124,13 +124,7 @@ namespace PLATFORM
       return -EINVAL;
     }
 
-    if (iTimeoutMs > 0)
-    {
-      iNow    = GetTimeMs();
-      iTarget = iNow + (int64_t) iTimeoutMs;
-    }
-
-    while (iBytesRead >= 0 && iBytesRead < (ssize_t)len && (iTimeoutMs == 0 || iTarget > iNow))
+    while (iBytesRead >= 0 && iBytesRead < (ssize_t)len && (iTimeoutMs == 0 || readTimeout.TimeLeft() > 0))
     {
       if (iTimeoutMs == 0)
       {
@@ -138,8 +132,9 @@ namespace PLATFORM
       }
       else
       {
-        timeout.tv_sec  = ((long int)iTarget - (long int)iNow) / (long int)1000.;
-        timeout.tv_usec = ((long int)iTarget - (long int)iNow) % (long int)1000.;
+        long iTimeLeft = (long)readTimeout.TimeLeft();
+        timeout.tv_sec  = iTimeLeft / (long int)1000.;
+        timeout.tv_usec = iTimeLeft % (long int)1000.;
         tv = &timeout;
       }
 
@@ -165,9 +160,6 @@ namespace PLATFORM
       }
 
       iBytesRead += returnv;
-
-      if (iTimeoutMs > 0)
-        iNow = GetTimeMs();
     }
 
     return iBytesRead;

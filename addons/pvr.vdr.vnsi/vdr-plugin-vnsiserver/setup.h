@@ -23,7 +23,7 @@
 
 #include <vdr/plugin.h>
 
-#define CONFNAME_PMTTIMEOUT "LogLevel"
+#define CONFNAME_PMTTIMEOUT "PmtTimeout"
 
 class cMenuSetupVNSI : public cMenuSetupPage
 {

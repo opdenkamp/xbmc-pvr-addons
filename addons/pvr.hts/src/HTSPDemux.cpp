@@ -32,7 +32,6 @@ CHTSPDemux::CHTSPDemux(CHTSPConnection* connection) :
     m_subs(0),
     m_channel(0),
     m_tag(0),
-    m_bWaitForIFrame(false),
     m_bIsOpen(false)
 {
   for (unsigned int i = 0; i < PVR_STREAM_MAX_STREAMS; i++)
@@ -50,7 +49,6 @@ bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
 {
   m_channel        = channelinfo.iUniqueId;
   m_bIsRadio       = channelinfo.bIsRadio;
-  m_bWaitForIFrame = !channelinfo.bIsRadio;
   m_bIsOpen        = false;
 
   if(!m_session->CheckConnection(g_iConnectTimeout * 1000))
@@ -153,10 +151,7 @@ bool CHTSPDemux::ProcessMessage(htsmsg* msg)
   else if(strcmp("signalStatus"      , method) == 0)
     ParseSignalStatus(msg);
   else if(strcmp("muxpkt"            , method) == 0)
-  {
-    DemuxPacket *pkt = ParseMuxPacket(msg);
-    m_demuxPacketBuffer.Push(pkt);
-  }
+    ParseMuxPacket(msg);
   else
   {
     // not a demux message
@@ -178,9 +173,8 @@ DemuxPacket* CHTSPDemux::Read()
   return PVR->AllocateDemuxPacket(0);
 }
 
-DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
+void CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
 {
-  DemuxPacket* pkt = NULL;
   uint32_t    index, duration, frametype;
   const void* bin;
   size_t      binlen;
@@ -190,15 +184,12 @@ DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
      htsmsg_get_bin(msg, "payload", &bin, &binlen))
   {
     XBMC->Log(LOG_ERROR, "%s - malformed message", __FUNCTION__);
-    return PVR->AllocateDemuxPacket(0);
+    return;
   }
 
-  // wait for an iframe as first packet for tv channels
-  if (m_bWaitForIFrame && (htsmsg_get_u32(msg, "frametype" , &frametype) || (char)frametype != 'I'))
-    return PVR->AllocateDemuxPacket(0);
-  m_bWaitForIFrame = false;
-
-  pkt = PVR->AllocateDemuxPacket(binlen);
+  DemuxPacket* pkt = PVR->AllocateDemuxPacket(binlen);
+  if (!pkt)
+    return;
   memcpy(pkt->pData, bin, binlen);
 
   pkt->iSize = binlen;
@@ -230,10 +221,10 @@ DemuxPacket *CHTSPDemux::ParseMuxPacket(htsmsg_t *msg)
   if (pkt->iStreamId < 0)
   {
     PVR->FreeDemuxPacket(pkt);
-    pkt = PVR->AllocateDemuxPacket(0);
+    return;
   }
 
-  return pkt;
+  m_demuxPacketBuffer.Push(pkt);
 }
 
 bool CHTSPDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
@@ -338,7 +329,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
   }
 
   m_Streams.iStreamCount = 0;
-  m_bWaitForIFrame       = false;
 
   HTSMSG_FOREACH(f, streams)
   {
@@ -409,15 +399,11 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_MPEG2VIDEO;
-      if (!m_bIsOpen)
-        m_bWaitForIFrame = true;
     }
     else if(!strcmp(type, "H264"))
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_H264;
-      if (!m_bIsOpen)
-        m_bWaitForIFrame = true;
     }
     else if(!strcmp(type, "VP8"))
     {
@@ -428,8 +414,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     {
       newStreams.stream[newStreams.iStreamCount].iCodecType = AVMEDIA_TYPE_VIDEO;
       newStreams.stream[newStreams.iStreamCount].iCodecId   = CODEC_ID_MPEG4;
-      if (!m_bIsOpen)
-        m_bWaitForIFrame = true;
     }
     else if(!strcmp(type, "DVBSUB"))
     {

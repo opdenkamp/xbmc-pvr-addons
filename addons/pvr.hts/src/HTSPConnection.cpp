@@ -51,9 +51,9 @@ CHTSPConnection::CHTSPConnection(CHTSPConnectionCallback* callback) :
     m_bTranscodingSupport(false),
     m_iQueueSize(1000),
     m_callback(callback),
-    m_iReadTimeout(-1),
-    m_reconnect(NULL)
+    m_iReadTimeout(-1)
 {
+  m_reconnect = new CHTSPReconnect(this);
 }
 
 CHTSPConnection::~CHTSPConnection()
@@ -111,59 +111,61 @@ bool CHTSPConnection::OpenSocket(void)
 
 bool CHTSPConnection::Connect(void)
 {
-  CLockObject lock(m_mutex);
-
-  // already connected
-  if (m_bIsConnected)
-    return true;
-
-  // open a socket
-  if (!OpenSocket())
-    return false;
-
-  // send the greeting, get the protocol version and capabilities
-  if (!SendGreeting())
+  bool bFailed(false);
   {
-    XBMC->Log(LOG_ERROR, "%s - failed to read greeting from the backend", __FUNCTION__);
-    Close();
-    return false;
+    CLockObject lock(m_mutex);
+
+    // already connected
+    if (m_bIsConnected)
+      return true;
+
+    // open a socket
+    if (!OpenSocket())
+      return false;
+
+    // send the greeting, get the protocol version and capabilities
+    if (!SendGreeting())
+    {
+      XBMC->Log(LOG_ERROR, "%s - failed to read greeting from the backend", __FUNCTION__);
+      m_socket->Close();
+      return false;
+    }
+
+    // check whether the proto is v2+
+    if(m_iProtocol < 2)
+    {
+      XBMC->Log(LOG_ERROR, "%s - incompatible protocol version %d", __FUNCTION__, m_iProtocol);
+      m_socket->Close();
+      return false;
+    }
+
+    // create reader thread
+    if (!IsRunning() && !CreateThread(true))
+    {
+      XBMC->Log(LOG_ERROR, "%s - failed to create data processing thread", __FUNCTION__);
+      bFailed = true;
+    }
+
+    // send authentication
+    if (!bFailed && !Auth())
+    {
+      XBMC->Log(LOG_ERROR, "%s - failed to authenticate", __FUNCTION__);
+      bFailed = true;
+    }
   }
 
-  // check whether the proto is v2+
-  if(m_iProtocol < 2)
-  {
-    XBMC->Log(LOG_ERROR, "%s - incompatible protocol version %d", __FUNCTION__, m_iProtocol);
+  if (bFailed)
     Close();
-    return false;
-  }
-
-  // create reader thread
-  if (!IsRunning() && !CreateThread(true))
-  {
-    XBMC->Log(LOG_ERROR, "%s - failed to create data processing thread", __FUNCTION__);
-    Close();
-    return false;
-  }
-
-  // send authentication
-  if (!Auth())
-  {
-    XBMC->Log(LOG_ERROR, "%s - failed to authenticate", __FUNCTION__);
-    Close();
-    return false;
-  }
 
   // connected
-  m_bIsConnected = true;
-  if (!m_reconnect)
-    m_reconnect = new CHTSPReconnect(this);
+  CLockObject lock(m_mutex);
   m_connectEvent.Broadcast();
-
   return true;
 }
 
 void CHTSPConnection::TriggerReconnect(void)
 {
+  XBMC->Log(LOG_DEBUG, "reconnect triggered");
   CLockObject lock(m_mutex);
   m_socket->Close();
   m_bIsConnected = false;
@@ -176,8 +178,6 @@ void CHTSPConnection::Close()
 
   // close the socket
   CLockObject lock(m_mutex);
-  delete m_reconnect;
-  m_reconnect = NULL;
   m_bIsConnected = false;
 
   if(m_socket && m_socket->IsOpen())
@@ -564,8 +564,11 @@ void* CHTSPConnection::Process(void)
 
       // process the message
       m_callback->ProcessMessage(msg);
+      htsmsg_destroy(msg);
     }
   }
+
+  m_reconnect->StopThread();
 
   return NULL;
 }

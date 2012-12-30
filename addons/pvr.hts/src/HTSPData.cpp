@@ -78,18 +78,16 @@ bool CHTSPData::Open()
     return false;
   }
 
-  m_started.Wait(m_mutex, m_bIsStarted, g_iConnectTimeout * 1000);
-
-  return m_bIsStarted;
+  return m_started.Wait(m_mutex, m_bIsStarted, g_iConnectTimeout * 1000);
 }
 
 void CHTSPData::Close()
 {
-  SAFE_DELETE(m_demux);
-  SAFE_DELETE(m_session);
   CLockObject lock(m_mutex);
   m_bIsStarted = false;
   m_started.Broadcast();
+  SAFE_DELETE(m_demux);
+  SAFE_DELETE(m_session);
 }
 
 void CHTSPData::ReadResult(htsmsg_t *m, CHTSResult &result)
@@ -674,7 +672,7 @@ bool CHTSPData::ProcessMessage(htsmsg* msg)
   {
     // demux packet
   }
-  else if (strstr(method, "channelAdd"))
+  else if(strstr(method, "channelAdd"))
     ParseChannelUpdate(msg);
   else if(strstr(method, "channelUpdate"))
     ParseChannelUpdate(msg);
@@ -688,7 +686,6 @@ bool CHTSPData::ProcessMessage(htsmsg* msg)
     ParseTagRemove(msg);
   else if(strstr(method, "initialSyncCompleted"))
   {
-    CLockObject lock(m_mutex);
     m_bIsStarted = true;
     m_started.Broadcast();
   }

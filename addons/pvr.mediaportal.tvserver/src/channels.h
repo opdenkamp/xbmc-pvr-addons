@@ -31,6 +31,7 @@ private:
   int external_id;
   bool encrypted;
   bool iswebstream;
+  bool visibleinguide;
   std::string url;
 
 public:
@@ -43,6 +44,7 @@ public:
   int ExternalID(void) const { return external_id; }
   bool Encrypted(void) const { return encrypted; }
   bool IsWebstream(void) const { return iswebstream; }
+  bool VisibleInGuide(void) const { return visibleinguide; }
   const char* URL(void) const { return url.c_str(); }
 };
 

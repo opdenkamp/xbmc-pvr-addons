@@ -35,6 +35,48 @@ using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
 
+CHTSResult::CHTSResult(void) :
+    message(NULL),
+    status(PVR_ERROR_NO_ERROR)
+{
+}
+
+CHTSResult::~CHTSResult(void)
+{
+  if (message != NULL)
+    htsmsg_destroy(message);
+}
+
+
+string CHTSResult::GetErrorMessage(void)
+{
+  if (m_strError.empty())
+  {
+    if (!message)
+    {
+      m_strError = "No response received";
+    }
+    else
+    {
+      const char* error;
+      if((error = htsmsg_get_str(message, "error")))
+        m_strError = error;
+    }
+  }
+  return m_strError;
+}
+
+bool CHTSResult::IsError(void)
+{
+  return !GetErrorMessage().empty();
+}
+
+bool CHTSResult::NoAccess(void)
+{
+  uint32_t noaccess;
+  return (message && !htsmsg_get_u32(message, "noaccess", &noaccess) && noaccess);
+}
+
 CHTSPConnection::CHTSPConnection(CHTSPConnectionCallback* callback) :
     m_socket(new CTcpConnection(g_strHostname, g_iPortHTSP)),
     m_challenge(NULL),
@@ -335,6 +377,29 @@ void CHTSPConnection::ReadResult(htsmsg_t *m, CHTSResult &result, const char* st
   {
     // response received
     result.message = message.msg;
+
+    if (result.NoAccess())
+    {
+      // access denied
+      if (strAction)
+        XBMC->Log(LOG_ERROR, "%s - '%s' failed - access denied", __FUNCTION__, strAction);
+      else
+        XBMC->Log(LOG_ERROR, "%s - command failed - access denied", __FUNCTION__);
+      XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
+      result.status = PVR_ERROR_REJECTED;
+    }
+
+    if (result.IsError())
+    {
+      // server reported an error
+      string strError = result.GetErrorMessage();
+      if (strAction)
+        XBMC->Log(LOG_ERROR, "%s - '%s' failed - %s", __FUNCTION__, strAction, strError.c_str());
+      else
+        XBMC->Log(LOG_ERROR, "%s - command failed - %s", __FUNCTION__, strError.c_str());
+      XBMC->QueueNotification(QUEUE_ERROR, "Command failed: %s", strError.c_str());
+      result.status = PVR_ERROR_REJECTED;
+    }
   }
 
   // delete from the queue
@@ -464,19 +529,34 @@ bool CHTSPConnection::Auth(void)
   if (!TransmitMessage(m))
   {
     XBMC->Log(LOG_ERROR, "CHTSPConnection - %s - failed to transmit auth command", __FUNCTION__);
+    XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
     return false;
   }
 
-  m = ReadMessage(g_iConnectTimeout * 1000, g_iConnectTimeout * 1000);
-  if (m == NULL || m->hm_data == NULL)
+  CHTSResult result;
+  result.message = ReadMessage(g_iConnectTimeout * 1000, g_iConnectTimeout * 1000);
+  if (result.message == NULL)
   {
-    if (m)
-      htsmsg_destroy(m);
     XBMC->Log(LOG_ERROR, "CHTSPConnection - %s - failed to get a reply from the auth command", __FUNCTION__);
+    XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
+    return false;
+  }
+  else if (result.NoAccess())
+  {
+    // access denied
+    XBMC->Log(LOG_ERROR, "%s - auth failed - access denied", __FUNCTION__);
+    XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
+    return false;
+  }
+  else if (result.IsError())
+  {
+    // server reported an error
+    string strError = result.GetErrorMessage();
+    XBMC->Log(LOG_ERROR, "%s - auth failed - %s", __FUNCTION__, strError.c_str());
+    XBMC->QueueNotification(QUEUE_ERROR, "Access denied");
     return false;
   }
 
-  htsmsg_destroy(m);
   return true;
 }
 

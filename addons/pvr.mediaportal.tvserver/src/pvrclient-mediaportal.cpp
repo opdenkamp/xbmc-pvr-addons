@@ -579,28 +579,28 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
       return PVR_ERROR_NO_ERROR;
     }
 
-    if (g_szRadioGroup.length() > 0)
-    {
-      XBMC->Log(LOG_DEBUG, "GetChannels(radio) for radio group: '%s'", g_szRadioGroup.c_str());
-      command.Format("ListRadioChannels:%s\n", uri::encode(uri::PATH_TRAITS, g_szRadioGroup).c_str());
-    }
-    else
+    if (g_szRadioGroup.empty())
     {
       XBMC->Log(LOG_DEBUG, "GetChannels(radio) all channels");
       command = "ListRadioChannels\n";
     }
+    else
+    {
+      XBMC->Log(LOG_DEBUG, "GetChannels(radio) for radio group: '%s'", g_szRadioGroup.c_str());
+      command.Format("ListRadioChannels:%s\n", uri::encode(uri::PATH_TRAITS, g_szRadioGroup).c_str());
+    }
   }
   else
   {
-    if (g_szTVGroup.length() > 0)
-    {
-      XBMC->Log(LOG_DEBUG, "GetChannels(tv) for TV group: '%s'", g_szTVGroup.c_str());
-      command.Format("ListTVChannels:%s\n", uri::encode(uri::PATH_TRAITS, g_szTVGroup).c_str());
-    }
-    else
+    if (g_szTVGroup.empty())
     {
       XBMC->Log(LOG_DEBUG, "GetChannels(tv) all channels");
       command = "ListTVChannels\n";
+    }
+    else
+    {
+      XBMC->Log(LOG_DEBUG, "GetChannels(tv) for TV group: '%s'", g_szTVGroup.c_str());
+      command.Format("ListTVChannels:%s\n", uri::encode(uri::PATH_TRAITS, g_szTVGroup).c_str());
     }
   }
 
@@ -762,9 +762,21 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRad
       XBMC->Log(LOG_DEBUG, "Skipping GetChannelGroups for radio. Radio support is disabled.");
       return PVR_ERROR_NO_ERROR;
     }
+
+    if (!g_szRadioGroup.empty())
+    {
+      XBMC->Log(LOG_DEBUG, "Skipping GetChannelGroups for radio due to setting: Import only Radio channels from group '%s'.", g_szRadioGroup.c_str());
+      return PVR_ERROR_NO_ERROR;
+    }
   }
   else
   {
+    if (!g_szTVGroup.empty())
+    {
+      XBMC->Log(LOG_DEBUG, "Skipping GetChannelGroups for TV due to setting: Import only TV channels from group '%s'.", g_szTVGroup.c_str());
+      return PVR_ERROR_NO_ERROR;
+    }
+
     XBMC->Log(LOG_DEBUG, "GetChannelGroups for TV");
     if (!SendCommand2("ListGroups\n", code, lines))
       return PVR_ERROR_SERVER_ERROR;

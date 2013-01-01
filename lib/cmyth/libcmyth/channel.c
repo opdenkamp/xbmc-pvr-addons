@@ -26,7 +26,7 @@
 #include <cmyth_local.h>
 
 /*
- * cmyth_chanlist_destroy(cmyth_chanlist_t rs)
+ * cmyth_chanlist_destroy()
  *
  * Scope: PRIVATE (static)
  *
@@ -61,7 +61,7 @@ cmyth_chanlist_destroy(cmyth_chanlist_t cl)
 }
 
 /*
- * cmyth_chanlist_create(void)
+ * cmyth_chanlist_create()
  *
  * Scope: PRIVATE
  *
@@ -95,7 +95,7 @@ cmyth_chanlist_create(void)
 }
 
 /*
- * cmyth_chanlist_get_item(cmyth_chanlist_t cl, int index)
+ * cmyth_chanlist_get_item()
  *
  * Scope: PUBLIC
  *
@@ -135,7 +135,7 @@ cmyth_chanlist_get_item(cmyth_chanlist_t cl, int index)
 }
 
 /*
- * cmyth_chanlist_get_count(cmyth_chanlist_t cl)
+ * cmyth_chanlist_get_count()
  *
  * Scope: PUBLIC
  *
@@ -162,7 +162,7 @@ cmyth_chanlist_get_count(cmyth_chanlist_t cl)
 }
 
 /*
- * cmyth_channel_destroy(cmyth_channel_t c)
+ * cmyth_channel_destroy()
  *
  * Scope: PRIVATE (static)
  *
@@ -195,7 +195,7 @@ cmyth_channel_destroy(cmyth_channel_t c)
 }
 
 /*
- * cmyth_channel_create(void)
+ * cmyth_channel_create()
  *
  * Scope: PRIVATE
  *
@@ -228,7 +228,7 @@ cmyth_channel_create(void)
 }
 
 /*
- * cmyth_channel_chanid(cmyth_channel_t channel)
+ * cmyth_channel_chanid()
  *
  *
  * Scope: PUBLIC
@@ -241,19 +241,19 @@ cmyth_channel_create(void)
  *
  * Success: long chan ID.
  *
- * Failure: -(errno)
+ * Failure: 0
  */
-unsigned long
+uint32_t
 cmyth_channel_chanid(cmyth_channel_t channel)
 {
 	if (!channel) {
-		return -EINVAL;
+		return 0;
 	}
 	return channel->chanid;
 }
 
 /*
- * cmyth_channel_channum(cmyth_channel_t channel)
+ * cmyth_channel_channum()
  *
  *
  * Scope: PUBLIC
@@ -266,19 +266,19 @@ cmyth_channel_chanid(cmyth_channel_t channel)
  *
  * Success: long channel number.
  *
- * Failure: -(errno)
+ * Failure: 0
  */
-unsigned long
+uint32_t
 cmyth_channel_channum(cmyth_channel_t channel)
 {
 	if (!channel) {
-		return -EINVAL;
+		return 0;
 	}
 	return channel->channum;
 }
 
 /*
- * cmyth_channel_channumstr(cmyth_channel_t channel)
+ * cmyth_channel_channumstr()
  *
  *
  * Scope: PUBLIC
@@ -309,7 +309,7 @@ cmyth_channel_channumstr(cmyth_channel_t channel)
 }
 
 /*
- * cmyth_channel_name(cmyth_channel_t channel)
+ * cmyth_channel_name()
  *
  *
  * Scope: PUBLIC
@@ -340,7 +340,7 @@ cmyth_channel_name(cmyth_channel_t channel)
 }
 
 /*
- * cmyth_channel_callsign(cmyth_channel_t channel)
+ * cmyth_channel_callsign()
  *
  *
  * Scope: PUBLIC
@@ -371,7 +371,7 @@ cmyth_channel_callsign(cmyth_channel_t channel)
 }
 
 /*
- * cmyth_channel_icon(cmyth_channel_t channel)
+ * cmyth_channel_icon()
  *
  *
  * Scope: PUBLIC
@@ -402,7 +402,7 @@ cmyth_channel_icon(cmyth_channel_t channel)
 }
 
 /*
- * cmyth_channel_visible(cmyth_channel_t channel)
+ * cmyth_channel_visible()
  *
  *
  * Scope: PUBLIC
@@ -415,19 +415,19 @@ cmyth_channel_icon(cmyth_channel_t channel)
  *
  * Success: visible flag.
  *
- * Failure: -(errno)
+ * Failure: 0
  */
-unsigned short
+uint8_t
 cmyth_channel_visible(cmyth_channel_t channel)
 {
 	if (!channel) {
-		return -EINVAL;
+		return 0;
 	}
 	return channel->visible;
 }
 
 /*
- * cmyth_channel_sourceid(cmyth_channel_t channel)
+ * cmyth_channel_sourceid()
  *
  *
  * Scope: PUBLIC
@@ -440,19 +440,19 @@ cmyth_channel_visible(cmyth_channel_t channel)
  *
  * Success: long source ID.
  *
- * Failure: -(errno)
+ * Failure: 0
  */
-unsigned long
+uint32_t
 cmyth_channel_sourceid(cmyth_channel_t channel)
 {
 	if (!channel) {
-		return -EINVAL;
+		return 0;
 	}
 	return channel->sourceid;
 }
 
 /*
- * cmyth_channel_multiplex(cmyth_channel_t channel)
+ * cmyth_channel_multiplex()
  *
  *
  * Scope: PUBLIC
@@ -465,13 +465,13 @@ cmyth_channel_sourceid(cmyth_channel_t channel)
  *
  * Success: long multiplex ID.
  *
- * Failure: -(errno)
+ * Failure: 0
  */
-unsigned long
+uint32_t
 cmyth_channel_multiplex(cmyth_channel_t channel)
 {
 	if (!channel) {
-		return -EINVAL;
+		return 0;
 	}
 	return channel->multiplex;
 }

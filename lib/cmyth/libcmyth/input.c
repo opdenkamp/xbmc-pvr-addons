@@ -100,7 +100,7 @@ cmyth_input_create(void)
 cmyth_inputlist_t
 cmyth_get_free_inputlist(cmyth_recorder_t rec)
 {
-	unsigned int len = CMYTH_LONGLONG_LEN + 36;
+	unsigned int len = CMYTH_INT64_LEN + 36;
 	int err;
 	int count;
 	char *buf;
@@ -113,7 +113,7 @@ cmyth_get_free_inputlist(cmyth_recorder_t rec)
 		return inputlist;
 	}
 
-	sprintf(buf,"QUERY_RECORDER %d[]:[]GET_FREE_INPUTS", rec->rec_id);
+	sprintf(buf,"QUERY_RECORDER %"PRIu32"[]:[]GET_FREE_INPUTS", rec->rec_id);
 	pthread_mutex_lock(&mutex);
 	if ((err = cmyth_send_message(rec->rec_conn, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -167,7 +167,7 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 		}
 		input->inputname = ref_strdup(tmp_str);
 
-		consumed = cmyth_rcv_ulong(conn, err, &input->sourceid, count);
+		consumed = cmyth_rcv_uint32(conn, err, &input->sourceid, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
@@ -175,7 +175,7 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 			goto fail;
 		}
 
-		consumed = cmyth_rcv_ulong(conn, err, &input->inputid, count);
+		consumed = cmyth_rcv_uint32(conn, err, &input->inputid, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
@@ -183,7 +183,7 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 			goto fail;
 		}
 
-		consumed = cmyth_rcv_ulong(conn, err, &input->cardid, count);
+		consumed = cmyth_rcv_uint32(conn, err, &input->cardid, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
@@ -191,7 +191,7 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 			goto fail;
 		}
 
-		consumed = cmyth_rcv_ulong(conn, err, &input->multiplexid , count);
+		consumed = cmyth_rcv_uint32(conn, err, &input->multiplexid , count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
@@ -200,7 +200,7 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 		}
 
 		if (conn->conn_version >= 71) {
-			consumed = cmyth_rcv_ulong(conn, err, &input->livetvorder, count);
+			consumed = cmyth_rcv_uint32(conn, err, &input->livetvorder, count);
 			count -= consumed;
 			total += consumed;
 			if (*err) {

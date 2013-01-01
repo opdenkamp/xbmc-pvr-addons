@@ -82,7 +82,7 @@ static myth_protomap_t protomap[] = {
 };
 
 /*
- * cmyth_conn_destroy(cmyth_conn_t conn)
+ * cmyth_conn_destroy()
  *
  * Scope: PRIVATE (static)
  *
@@ -122,7 +122,7 @@ cmyth_conn_destroy(cmyth_conn_t conn)
 }
 
 /*
- * cmyth_conn_create(void)
+ * cmyth_conn_create()
  *
  * Scope: PRIVATE (static)
  *
@@ -162,7 +162,7 @@ cmyth_conn_create(void)
 }
 
 /*
- * cmyth_connect(char *server, unsigned short port, unsigned buflen)
+ * cmyth_connect()
  *
  * Scope: PUBLIC
  *
@@ -198,8 +198,8 @@ sighandler(int sig)
 }
 
 static cmyth_conn_t
-cmyth_connect_addr(struct addrinfo* addr, unsigned buflen,
-		    int tcp_rcvbuf)
+cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
+		    int32_t tcp_rcvbuf)
 {
 	cmyth_conn_t ret = NULL;
 	unsigned char *buf = NULL;
@@ -406,8 +406,8 @@ cmyth_reconnect_addr(cmyth_conn_t conn, struct addrinfo* addr)
 }
 
 static cmyth_conn_t
-cmyth_connect(char *server, unsigned short port, unsigned buflen,
-		    int tcp_rcvbuf)
+cmyth_connect(char *server, uint16_t port, uint32_t buflen,
+		    int32_t tcp_rcvbuf)
 {
 	struct   addrinfo hints;
 	struct   addrinfo *result, *addr;
@@ -419,7 +419,7 @@ cmyth_connect(char *server, unsigned short port, unsigned buflen,
 	hints.ai_family   = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
-	sprintf(service, "%d", port);
+	sprintf(service, "%"PRIu16, port);
 
 	res = getaddrinfo(server, service, &hints, &result);
 	if(res) {
@@ -479,7 +479,7 @@ cmyth_reconnect(cmyth_conn_t conn)
 	hints.ai_family   = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
-	sprintf(service, "%d", conn->port);
+	sprintf(service, "%"PRIu16, conn->port);
 
 	res = getaddrinfo(conn->server, service, &hints, &result);
 	if (res) {
@@ -523,19 +523,19 @@ cmyth_reconnect(cmyth_conn_t conn)
 }
 
 static cmyth_conn_t
-cmyth_conn_connect(char *server, unsigned short port, unsigned buflen,
-		   int tcp_rcvbuf, int event)
+cmyth_conn_connect(char *server, uint16_t port, uint32_t buflen,
+		   int32_t tcp_rcvbuf, int event)
 {
 	cmyth_conn_t conn;
 	char announcement[256];
-	unsigned long tmp_ver;
+	uint32_t tmp_ver;
 	int attempt = 0;
 
     top:
 	conn = cmyth_connect(server, port, buflen, tcp_rcvbuf);
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_connect(%s, %d, %d) failed\n",
+			  "%s: cmyth_connect(%s, %"PRIu16", %"PRIu32") failed\n",
 			  __FUNCTION__, server, port, buflen);
 		return NULL;
 	}
@@ -564,9 +564,9 @@ cmyth_conn_connect(char *server, unsigned short port, unsigned buflen,
 				  __FUNCTION__);
 			goto shut;
 		}
-		sprintf(announcement, "MYTH_PROTO_VERSION %ld %s", conn->conn_version, map->token);
+		sprintf(announcement, "MYTH_PROTO_VERSION %"PRIu32" %s", conn->conn_version, map->token);
 	} else {
-		sprintf(announcement, "MYTH_PROTO_VERSION %ld", conn->conn_version);
+		sprintf(announcement, "MYTH_PROTO_VERSION %"PRIu32, conn->conn_version);
 	}
 	if (cmyth_send_message(conn, announcement) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -581,7 +581,7 @@ cmyth_conn_connect(char *server, unsigned short port, unsigned buflen,
 		goto shut;
 	}
 	cmyth_dbg(CMYTH_DBG_ERROR,
-		  "%s: asked for version %ld, got version %ld\n",
+		  "%s: asked for version %"PRIu32", got version %"PRIu32"\n",
 		  __FUNCTION__, conn->conn_version, tmp_ver);
 	if (conn->conn_version != tmp_ver) {
 		if (attempt == 1) {
@@ -594,7 +594,7 @@ cmyth_conn_connect(char *server, unsigned short port, unsigned buflen,
 		ref_release(conn);
 		goto top;
 	}
-	cmyth_dbg(CMYTH_DBG_PROTO, "%s: agreed on Version %ld protocol\n",
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: agreed on Version %"PRIu32" protocol\n",
 		  __FUNCTION__, conn->conn_version);
 
 	sprintf(announcement, "ANN Playback %s %d", my_hostname, event);
@@ -633,7 +633,7 @@ static int
 cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 {
 	char announcement[256];
-	unsigned long tmp_ver;
+	uint32_t tmp_ver;
 	int attempt = 0;
 	int ret = 0;
 
@@ -669,9 +669,9 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 				  __FUNCTION__);
 			goto shut;
 		}
-		sprintf(announcement, "MYTH_PROTO_VERSION %ld %s", conn->conn_version, map->token);
+		sprintf(announcement, "MYTH_PROTO_VERSION %"PRIu32" %s", conn->conn_version, map->token);
 	} else {
-		sprintf(announcement, "MYTH_PROTO_VERSION %ld", conn->conn_version);
+		sprintf(announcement, "MYTH_PROTO_VERSION %"PRIu32, conn->conn_version);
 	}
 	if (cmyth_send_message(conn, announcement) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message('%s') failed\n",
@@ -683,7 +683,7 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 			  __FUNCTION__);
 		goto shut;
 	}
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: asked for version %ld, got version %ld\n",
+	cmyth_dbg(CMYTH_DBG_ERROR, "%s: asked for version %"PRIu32", got version %"PRIu32"\n",
 		  __FUNCTION__, conn->conn_version, tmp_ver);
 	if (conn->conn_version != tmp_ver) {
 		if (attempt == 1) {
@@ -694,7 +694,7 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 		attempt = 1;
 		goto top;
 	}
-	cmyth_dbg(CMYTH_DBG_PROTO, "%s: agreed on Version %ld protocol\n",
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: agreed on Version %"PRIu32" protocol\n",
 		  __FUNCTION__, conn->conn_version);
 
 	sprintf(announcement, "ANN Playback %s %d", my_hostname, event);
@@ -728,7 +728,7 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 }
 
 /*
- * cmyth_conn_connect_ctrl(char *server, unsigned short port, unsigned buflen)
+ * cmyth_conn_connect_ctrl()
  *
  * Scope: PUBLIC
  *
@@ -746,8 +746,8 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
  * Failure: NULL cmyth_conn_t
  */
 cmyth_conn_t
-cmyth_conn_connect_ctrl(char *server, unsigned short port, unsigned buflen,
-			int tcp_rcvbuf)
+cmyth_conn_connect_ctrl(char *server, uint16_t port, uint32_t buflen,
+			int32_t tcp_rcvbuf)
 {
 	cmyth_conn_t ret;
 
@@ -760,7 +760,7 @@ cmyth_conn_connect_ctrl(char *server, unsigned short port, unsigned buflen,
 }
 
 /*
- * cmyth_conn_reconnect_ctrl(cmyth_conn_t control)
+ * cmyth_conn_reconnect_ctrl()
  *
  * Scope: PUBLIC
  *
@@ -796,8 +796,8 @@ cmyth_conn_reconnect_ctrl(cmyth_conn_t control)
 }
 
 cmyth_conn_t
-cmyth_conn_connect_event(char *server, unsigned short port, unsigned buflen,
-			 int tcp_rcvbuf)
+cmyth_conn_connect_event(char *server, uint16_t port, uint32_t buflen,
+			 int32_t tcp_rcvbuf)
 {
 	cmyth_conn_t ret;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting event channel connection\n",
@@ -825,8 +825,7 @@ cmyth_conn_reconnect_event(cmyth_conn_t conn)
 }
 
 /*
- * cmyth_conn_connect_file(char *server, unsigned short port, unsigned buflen
- *                         cmyth_proginfo_t prog)
+ * cmyth_conn_connect_file()
  *
  * Scope: PUBLIC
  *
@@ -847,7 +846,7 @@ cmyth_conn_reconnect_event(cmyth_conn_t conn)
  */
 cmyth_file_t
 cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
-			unsigned buflen, int tcp_rcvbuf)
+			uint32_t buflen, int32_t tcp_rcvbuf)
 {
 	cmyth_conn_t conn = NULL;
 	char *announcement = NULL;
@@ -858,8 +857,8 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 	int r;
 	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
 	cmyth_file_t ret = NULL;
-	long file_id;
-	uint64_t file_length;
+	uint32_t file_id;
+	int64_t file_length;
 
 	if (!prog) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: prog is NULL\n", __FUNCTION__);
@@ -899,7 +898,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		  __FUNCTION__, conn);
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_connect(%s, %d, %d) failed\n",
+			  "%s: cmyth_connect(%s, %"PRIu16", %"PRIu32") failed\n",
 			  __FUNCTION__,
 			  myth_host, prog->proginfo_port, buflen);
 		goto shut;
@@ -956,7 +955,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_long(conn, &err, &file_id, count);
+	r = cmyth_rcv_uint32(conn, &err, &file_id, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (id) cmyth_rcv_long() failed (%d)\n",
@@ -964,10 +963,10 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_uint64(conn, &err, &file_length, count);
+	r = cmyth_rcv_int64(conn, &err, &file_length, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: (length) cmyth_rcv_uint64() failed (%d)\n",
+			  "%s: (length) cmyth_rcv_int64() failed (%d)\n",
 			  __FUNCTION__, err);
 		goto shut;
 	}
@@ -996,8 +995,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
 }
 
 /*
- * cmyth_conn_connect_path(char* path, cmyth_conn_t control,
- *                         unsigned buflen, int tcp_rcvbuf)
+ * cmyth_conn_connect_path()
  *
  * Scope: PUBLIC
  *
@@ -1018,7 +1016,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
  */
 cmyth_file_t
 cmyth_conn_connect_path(char* path, cmyth_conn_t control,
-			unsigned buflen, int tcp_rcvbuf, char* storage_group)
+			uint32_t buflen, int32_t tcp_rcvbuf, char* storage_group)
 {
 	cmyth_conn_t conn = NULL;
 	char *announcement = NULL;
@@ -1028,8 +1026,8 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	int r;
 	int ann_size = sizeof("ANN FileTransfer  0 0 0000[]:[][]:[]");
 	cmyth_file_t ret = NULL;
-	long file_id;
-	uint64_t file_length;
+	uint32_t file_id;
+	int64_t file_length;
 
 	ret = cmyth_file_create(control);
 	if (!ret) {
@@ -1046,7 +1044,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		  __FUNCTION__, conn);
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_connect(%s, %d, %d) failed\n",
+			  "%s: cmyth_connect(%s, %"PRIu16", %"PRIu32") failed\n",
 			  __FUNCTION__, control->server, control->port, buflen);
 		goto shut;
 	}
@@ -1105,7 +1103,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_long(conn, &err, &file_id, count);
+	r = cmyth_rcv_uint32(conn, &err, &file_id, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: (id) cmyth_rcv_long() failed (%d)\n",
@@ -1113,10 +1111,10 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 		goto shut;
 	}
 	count -= r;
-	r = cmyth_rcv_uint64(conn, &err, &file_length, count);
+	r = cmyth_rcv_int64(conn, &err, &file_length, count);
 	if (err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: (length) cmyth_rcv_uint64() failed (%d)\n",
+			  "%s: (length) cmyth_rcv_int64() failed (%d)\n",
 			  __FUNCTION__, err);
 		goto shut;
 	}
@@ -1143,8 +1141,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 }
 
 /*
- * cmyth_conn_connect_ring(char *server, unsigned short port, unsigned buflen
- *                         cmyth_recorder_t rec)
+ * cmyth_conn_connect_ring()
  *
  * Scope: PUBLIC
  *
@@ -1162,13 +1159,13 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
  * Failure: NULL cmyth_conn_t
  */
 int
-cmyth_conn_connect_ring(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf)
+cmyth_conn_connect_ring(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvbuf)
 {
 	cmyth_conn_t conn;
 	char *announcement;
 	int ann_size = sizeof("ANN RingBuffer  ");
 	char *server;
-	unsigned short port;
+	uint16_t port;
 
 	if (!rec) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: rec is NULL\n", __FUNCTION__);
@@ -1186,12 +1183,12 @@ cmyth_conn_connect_ring(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf)
 		  __FUNCTION__, conn);
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_connect(%s, %d, %d) failed\n",
+			  "%s: cmyth_connect(%s, %"PRIu16", %"PRIu32") failed\n",
 			  __FUNCTION__, server, port, buflen);
 		return -1;
 	}
 
-	ann_size += CMYTH_LONG_LEN + strlen(my_hostname);
+	ann_size += CMYTH_INT32_LEN + strlen(my_hostname);
 	announcement = malloc(ann_size);
 	if (!announcement) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1200,7 +1197,7 @@ cmyth_conn_connect_ring(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf)
 		goto shut;
 	}
 	sprintf(announcement,
-		"ANN RingBuffer %s %d", my_hostname, rec->rec_id);
+		"ANN RingBuffer %s %"PRIu32, my_hostname, rec->rec_id);
 	if (cmyth_send_message(conn, announcement) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message('%s') failed\n",
@@ -1224,12 +1221,12 @@ cmyth_conn_connect_ring(cmyth_recorder_t rec, unsigned buflen, int tcp_rcvbuf)
 }
 
 int
-cmyth_conn_connect_recorder(cmyth_recorder_t rec, unsigned buflen,
-			    int tcp_rcvbuf)
+cmyth_conn_connect_recorder(cmyth_recorder_t rec, uint32_t buflen,
+			    int32_t tcp_rcvbuf)
 {
 	cmyth_conn_t conn;
 	char *server;
-	unsigned short port;
+	uint16_t port;
 
 	if (!rec) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: rec is NULL\n", __FUNCTION__);
@@ -1247,7 +1244,7 @@ cmyth_conn_connect_recorder(cmyth_recorder_t rec, unsigned buflen,
 		  __FUNCTION__, conn);
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_connect(%s, %d, %d) failed\n",
+			  "%s: cmyth_connect(%s, %"PRIu16", %"PRIu32") failed\n",
 			  __FUNCTION__, server, port, buflen);
 		return -1;
 	}
@@ -1260,7 +1257,7 @@ cmyth_conn_connect_recorder(cmyth_recorder_t rec, unsigned buflen,
 }
 
 /*
- * cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
+ * cmyth_conn_check_block()
  *
  * Scope: PUBLIC
  *
@@ -1278,13 +1275,13 @@ cmyth_conn_connect_recorder(cmyth_recorder_t rec, unsigned buflen,
  * Failure: -(errno)
  */
 int
-cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
+cmyth_conn_check_block(cmyth_conn_t conn, uint32_t size)
 {
 	fd_set check;
 	struct timeval timeout;
 	int length;
 	int err = 0;
-	unsigned long sent;
+	uint32_t sent;
 
 	if (!conn) {
 		return -EINVAL;
@@ -1305,7 +1302,7 @@ cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
 		if (length < 0) {
 			return length;
 		}
-		cmyth_rcv_ulong(conn, &err, &sent, length);
+		cmyth_rcv_uint32(conn, &err, &sent, length);
 		if (err) {
 			return -err;
 		}
@@ -1314,12 +1311,12 @@ cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
 			 * This block has been sent, return TRUE.
 			 */
 			cmyth_dbg(CMYTH_DBG_DEBUG,
-				  "%s: block finished (%d bytes)\n",
+				  "%s: block finished (%"PRIu32" bytes)\n",
 				  __FUNCTION__, sent);
 			return 1;
 		} else {
 			cmyth_dbg(CMYTH_DBG_ERROR,
-				  "%s: block finished short (%d bytes)\n",
+				  "%s: block finished short (%"PRIu32" bytes)\n",
 				  __FUNCTION__, sent);
 			return -ECANCELED;
 		}
@@ -1328,9 +1325,7 @@ cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
 }
 
 /*
- * cmyth_conn_get_recorder_from_num(cmyth_conn_t control,
- *                                  cmyth_recorder_num_t num,
- *                                  cmyth_recorder_t rec)
+ * cmyth_conn_get_recorder_from_num()
  *
  * Scope: PUBLIC
  *
@@ -1344,16 +1339,16 @@ cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size)
  *
  * Return Value:
  *
- * Success: 0 for not complete, 1 for complete
+ * Success: non-NULL cmyth_recorder_t (this type is a pointer)
  *
- * Failure: -(errno)
+ * Failure: NULL cmyth_recorder_t
  */
 cmyth_recorder_t
-cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int id)
+cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int32_t id)
 {
 	int err, count;
 	int r;
-	long port;
+	uint16_t port;
 	char msg[256];
 	char reply[256];
 	cmyth_recorder_t rec = NULL;
@@ -1369,7 +1364,7 @@ cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int id)
 	if ((rec=cmyth_recorder_create()) == NULL)
 		goto fail;
 
-	snprintf(msg, sizeof(msg), "GET_RECORDER_FROM_NUM[]:[]%d", id);
+	snprintf(msg, sizeof(msg), "GET_RECORDER_FROM_NUM[]:[]%"PRId32, id);
 
 	if ((err = cmyth_send_message(conn, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1395,15 +1390,12 @@ cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int id)
 	}
 	count -= r;
 
-	if ((r=cmyth_rcv_long(conn, &err, &port, count)) < 0) {
+	if ((r=cmyth_rcv_uint16(conn, &err, &port, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_long() failed (%d)\n",
 			  __FUNCTION__, r);
 		goto fail;
 	}
-
-	if (port == -1)
-		goto fail;
 
 	rec->rec_id = id;
 	rec->rec_server = ref_strdup(reply);
@@ -1427,7 +1419,7 @@ cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int id)
 }
 
 /*
- * cmyth_conn_get_free_recorder(cmyth_conn_t control, cmyth_recorder_t rec)
+ * cmyth_conn_get_free_recorder()
  *
  *
  * Scope: PUBLIC
@@ -1439,16 +1431,17 @@ cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int id)
  *
  * Return Value:
  *
- * Success: 0 for not complete, 1 for complete
+ * Success: non-NULL cmyth_recorder_t (this type is a pointer)
  *
- * Failure: -(errno)
+ * Failure: NULL cmyth_recorder_t
  */
 cmyth_recorder_t
 cmyth_conn_get_free_recorder(cmyth_conn_t conn)
 {
 	int err, count;
 	int r;
-	long port, id;
+	uint16_t port;
+	uint32_t id;
 	char msg[256];
 	char reply[256];
 	cmyth_recorder_t rec = NULL;
@@ -1480,7 +1473,7 @@ cmyth_conn_get_free_recorder(cmyth_conn_t conn)
 			  __FUNCTION__, count);
 		goto fail;
 	}
-	if ((r=cmyth_rcv_long(conn, &err, &id, count)) < 0) {
+	if ((r=cmyth_rcv_uint32(conn, &err, &id, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_long() failed (%d)\n",
 			  __FUNCTION__, r);
@@ -1495,15 +1488,12 @@ cmyth_conn_get_free_recorder(cmyth_conn_t conn)
 		goto fail;
 	}
 	count -= r;
-	if ((r=cmyth_rcv_long(conn, &err, &port, count)) < 0) {
+	if ((r=cmyth_rcv_uint16(conn, &err, &port, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_long() failed (%d)\n",
 			  __FUNCTION__, r);
 		goto fail;
 	}
-
-	if (port == -1)
-		goto fail;
 
 	rec->rec_id = id;
 	rec->rec_server = ref_strdup(reply);
@@ -1528,7 +1518,7 @@ cmyth_conn_get_free_recorder(cmyth_conn_t conn)
 
 int
 cmyth_conn_get_freespace(cmyth_conn_t control,
-			 long long *total, long long *used)
+			 int64_t *total, int64_t *used)
 {
 	int err, count, ret = 0;
 	int r;
@@ -1595,7 +1585,7 @@ cmyth_conn_get_freespace(cmyth_conn_t control,
 				ret = err;
 				goto out;
 			}
-			*total = atoi(reply);
+			*total = atol(reply);
 			if ((r=cmyth_rcv_string(control, &err, reply,
 						sizeof(reply)-1,
 						count-r)) < 0) {
@@ -1605,7 +1595,7 @@ cmyth_conn_get_freespace(cmyth_conn_t control,
 				ret = err;
 				goto out;
 			}
-			*used = atoi(reply);
+			*used = atol(reply);
 
 			*used *= 1024;
 			*total *= 1024;
@@ -1626,7 +1616,7 @@ cmyth_conn_hung(cmyth_conn_t control)
 	return control->conn_hang;
 }
 
-int
+int32_t
 cmyth_conn_get_protocol_version(cmyth_conn_t conn)
 {
 	if (!conn) {
@@ -1639,12 +1629,13 @@ cmyth_conn_get_protocol_version(cmyth_conn_t conn)
 }
 
 
-int
+int32_t
 cmyth_conn_get_free_recorder_count(cmyth_conn_t conn)
 {
 	char msg[256];
 	int count, err;
-	long c, r;
+	uint16_t c;
+	int r;
 	int ret;
 
 	if (!conn) {
@@ -1664,14 +1655,14 @@ cmyth_conn_get_free_recorder_count(cmyth_conn_t conn)
 		goto err;
 	}
 
-	if ((count=cmyth_rcv_length(conn)) < 0) {
+	if ((count = cmyth_rcv_length(conn)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, count);
 		ret = count;
 		goto err;
 	}
-	if ((r=cmyth_rcv_long(conn, &err, &c, count)) < 0) {
+	if ((r = cmyth_rcv_uint16(conn, &err, &c, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_long() failed (%d)\n",
 			  __FUNCTION__, r);
@@ -1679,7 +1670,7 @@ cmyth_conn_get_free_recorder_count(cmyth_conn_t conn)
 		goto err;
 	}
 
-	ret = c;
+	ret = (int)c;
 
     err:
 	pthread_mutex_unlock(&mutex);
@@ -1713,7 +1704,7 @@ cmyth_conn_get_backend_hostname(cmyth_conn_t conn)
 		goto err;
 	}
 
-	if ((count=cmyth_rcv_length(conn)) < 0) {
+	if ((count = cmyth_rcv_length(conn)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, count);
@@ -1870,13 +1861,13 @@ static int cmyth_conn_set_setting_unlocked(cmyth_conn_t conn,
 		return -4;
 	}
 
-	return 1;
+	return 0;
 }
 
 int cmyth_conn_set_setting(cmyth_conn_t conn,
                const char* hostname, const char* setting, const char* value)
 {
-	int result = -1;
+	int result;
 
 	pthread_mutex_lock(&mutex);
 	result = cmyth_conn_set_setting_unlocked(conn, hostname, setting, value);
@@ -1886,14 +1877,14 @@ int cmyth_conn_set_setting(cmyth_conn_t conn,
 }
 
 /*
- * cmyth_conn_reschedule_recordings(cmyth_conn_t rec, int recordid)
+ * cmyth_conn_reschedule_recordings()
  *
  * Scope: PUBLIC
  *
  * Description
  *
  * Issues a run of the re-scheduler.
- * Takes an optional recordid, or -1 performs a full run.
+ * Takes an optional recordid, or -1 (0xFFFFFFFF) performs a full run.
  *
  * Return Value:
  *
@@ -1902,10 +1893,9 @@ int cmyth_conn_set_setting(cmyth_conn_t conn,
  * Failure: -(ERRNO)
  */
 int
-cmyth_conn_reschedule_recordings(cmyth_conn_t conn, int recordid)
+cmyth_conn_reschedule_recordings(cmyth_conn_t conn, uint32_t recordid)
 {
 	int err = 0;
-	int id;
 	char msg[256];
 
 	if (conn->conn_version < 15) {
@@ -1934,14 +1924,18 @@ cmyth_conn_reschedule_recordings(cmyth_conn_t conn, int recordid)
 	 *    <programid>
 	 */
 	if (conn->conn_version < 73) {
-		id = (recordid > 0 ? recordid : -1);
-		snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS %i", id);
+		if (recordid > 0 && recordid < UINT32_MAX)
+			snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS %"PRIu32, recordid);
+		else
+			snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS -1");
 	} else {
 		if (recordid == 0) {
 			strncpy(msg, "RESCHEDULE_RECORDINGS []:[]CHECK 0 0 0 cmyth[]:[][]:[][]:[][]:[]**any**", sizeof(msg));
 		} else {
-			id = (recordid > 0 ? recordid : 0);
-			snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS []:[]MATCH %i 0 0 - cmyth", id);
+			if (recordid > 0 && recordid < UINT32_MAX)
+				snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS []:[]MATCH %"PRIu32" 0 0 - cmyth", recordid);
+			else
+				snprintf(msg, sizeof(msg), "RESCHEDULE_RECORDINGS []:[]MATCH 0 0 0 - cmyth");
 		}
 	}
 

@@ -24,7 +24,7 @@
 #include <cmyth_local.h>
 
 cmyth_event_t
-cmyth_event_get(cmyth_conn_t conn, char * data, int len)
+cmyth_event_get(cmyth_conn_t conn, char * data, int32_t len)
 {
 	cmyth_proginfo_t proginfo = NULL;
 	cmyth_event_t event = cmyth_event_get_message(conn, data, len, &proginfo);
@@ -33,7 +33,7 @@ cmyth_event_get(cmyth_conn_t conn, char * data, int len)
 }
 
 cmyth_event_t
-cmyth_event_get_message(cmyth_conn_t conn, char * data, int len, cmyth_proginfo_t * prog)
+cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_proginfo_t * prog)
 {
 	int count, err, consumed, i;
 	char tmp[1024];
@@ -97,7 +97,7 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int len, cmyth_proginfo_
 		event = CMYTH_EVENT_LIVETV_CHAIN_UPDATE;
 		strncpy(data, tmp + 20, len);
 	} else if (strncmp(tmp, "SIGNAL", 6) == 0) {
-		int dstlen = len;
+		int32_t dstlen = len;
 		event = CMYTH_EVENT_SIGNAL;
 
 		/*Get Recorder ID */
@@ -205,4 +205,3 @@ cmyth_event_select(cmyth_conn_t conn, struct timeval *timeout)
 
 	return ret;
 }
-

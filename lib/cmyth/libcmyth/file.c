@@ -25,7 +25,7 @@
 #include <cmyth_local.h>
 
 /*
- * cmyth_file_destroy(cmyth_file_t file)
+ * cmyth_file_destroy()
  *
  * Scope: PRIVATE (static)
  *
@@ -58,7 +58,7 @@ cmyth_file_destroy(cmyth_file_t file)
 		 * if it fails other than log it.
 		 */
 		snprintf(msg, sizeof(msg),
-			 "QUERY_FILETRANSFER %ld[]:[]DONE", file->file_id);
+			 "QUERY_FILETRANSFER %"PRIu32"[]:[]DONE", file->file_id);
 
 		if ((err = cmyth_send_message(file->file_control, msg)) < 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
@@ -88,7 +88,7 @@ cmyth_file_destroy(cmyth_file_t file)
 }
 
 /*
- * cmyth_file_set_closed_callback(cmyth_file_t file, void (*callback)(cmyth_file_t))
+ * cmyth_file_set_closed_callback()
  *
  * Scope: PUBLIC
  *
@@ -106,7 +106,7 @@ void cmyth_file_set_closed_callback(cmyth_file_t file, void (*callback)(cmyth_fi
 }
 
 /*
- * cmyth_file_create(cmyth_conn_t control)
+ * cmyth_file_create()
  *
  * Scope: PRIVATE (mapped to __cmyth_file_create)
  *
@@ -136,7 +136,7 @@ cmyth_file_create(cmyth_conn_t control)
 
 	ret->file_control = ref_hold(control);
 	ret->file_data = NULL;
-	ret->file_id = -1;
+	ret->file_id = 0;
 	ret->file_start = 0;
 	ret->file_length = 0;
 	ret->file_pos = 0;
@@ -147,7 +147,7 @@ cmyth_file_create(cmyth_conn_t control)
 }
 
 /*
- * cmyth_file_data(cmyth_file_t p)
+ * cmyth_file_data()
  *
  * Scope: PUBLIC
  *
@@ -176,7 +176,7 @@ cmyth_file_data(cmyth_file_t file)
 }
 
 /*
- * cmyth_file_control(cmyth_file_t p)
+ * cmyth_file_control()
  *
  * Scope: PUBLIC
  *
@@ -205,7 +205,7 @@ cmyth_file_control(cmyth_file_t file)
 }
 
 /*
- * cmyth_file_start(cmyth_file_t p)
+ * cmyth_file_start()
  *
  * Scope: PUBLIC
  *
@@ -219,7 +219,7 @@ cmyth_file_control(cmyth_file_t file)
  *
  * Failure: a long long containing -errno
  */
-unsigned long long
+int64_t
 cmyth_file_start(cmyth_file_t file)
 {
 	if (!file) {
@@ -229,7 +229,7 @@ cmyth_file_start(cmyth_file_t file)
 }
 
 /*
- * cmyth_file_length(cmyth_file_t p)
+ * cmyth_file_length()
  *
  * Scope: PUBLIC
  *
@@ -243,7 +243,7 @@ cmyth_file_start(cmyth_file_t file)
  *
  * Failure: a long long containing -errno
  */
-unsigned long long
+int64_t
 cmyth_file_length(cmyth_file_t file)
 {
 	if (!file) {
@@ -253,7 +253,7 @@ cmyth_file_length(cmyth_file_t file)
 }
 
 /*
- * cmyth_file_update_length(cmyth_file_t file, unsigned long long newlen)
+ * cmyth_file_update_length()
  *
  * Scope: PUBLIC
  *
@@ -263,12 +263,12 @@ cmyth_file_length(cmyth_file_t file)
  *
  * Return Value:
  *
- * Sucess: a int value >= 0
+ * Success: a int value >= 0
  *
  * Failure: a int containing -errno
  */
 int
-cmyth_file_update_length(cmyth_file_t file, unsigned long long newlen)
+cmyth_file_update_length(cmyth_file_t file, int64_t newlen)
 {
 	if (!file) {
 		return -EINVAL;
@@ -278,7 +278,7 @@ cmyth_file_update_length(cmyth_file_t file, unsigned long long newlen)
 }
 
 /*
- * cmyth_file_position(cmyth_file_t p)
+ * cmyth_file_position()
  *
  * Scope: PUBLIC
  *
@@ -292,7 +292,7 @@ cmyth_file_update_length(cmyth_file_t file, unsigned long long newlen)
  *
  * Failure: a long long containing -errno
  */
-unsigned long long
+int64_t
 cmyth_file_position(cmyth_file_t file)
 {
 	if (!file) {
@@ -303,7 +303,7 @@ cmyth_file_position(cmyth_file_t file)
 
 
 /*
- * cmyth_file_get_block(cmyth_file_t file, char *buf, unsigned long len)
+ * cmyth_file_get_block()
  *
  * Scope: PUBLIC
  *
@@ -317,8 +317,8 @@ cmyth_file_position(cmyth_file_t file)
  *
  * Failure: -1
  */
-int
-cmyth_file_get_block(cmyth_file_t file, char *buf, unsigned long len)
+int32_t
+cmyth_file_get_block(cmyth_file_t file, char *buf, int32_t len)
 {
 	struct timeval tv;
 	fd_set fds;
@@ -326,6 +326,9 @@ cmyth_file_get_block(cmyth_file_t file, char *buf, unsigned long len)
 
 	if (file == NULL || file->file_data == NULL)
 		return -EINVAL;
+
+	if(len > file->file_data->conn_tcp_rcvbuf)
+		len = file->file_data->conn_tcp_rcvbuf;
 
 	tv.tv_sec = 10;
 	tv.tv_usec = 0;
@@ -377,7 +380,7 @@ cmyth_file_select(cmyth_file_t file, struct timeval *timeout)
 }
 
 /*
- * cmyth_file_request_block(cmyth_file_t file, unsigned long len)
+ * cmyth_file_request_block()
  *
  * Scope: PUBLIC
  *
@@ -392,12 +395,12 @@ cmyth_file_select(cmyth_file_t file, struct timeval *timeout)
  *
  * Failure: an int containing -errno
  */
-int
-cmyth_file_request_block(cmyth_file_t file, unsigned long len)
+int32_t
+cmyth_file_request_block(cmyth_file_t file, int32_t len)
 {
 	int err, count;
 	int r;
-	long c, ret;
+	int32_t c, ret;
 	char msg[256];
 
 	if (!file) {
@@ -408,11 +411,11 @@ cmyth_file_request_block(cmyth_file_t file, unsigned long len)
 
 	pthread_mutex_lock(&mutex);
 
-	if(len > (unsigned int)file->file_control->conn_tcp_rcvbuf)
-		len = (unsigned int)file->file_control->conn_tcp_rcvbuf;
+	if(len > file->file_data->conn_tcp_rcvbuf)
+		len = file->file_data->conn_tcp_rcvbuf;
 
 	snprintf(msg, sizeof(msg),
-		 "QUERY_FILETRANSFER %ld[]:[]REQUEST_BLOCK[]:[]%ld",
+		 "QUERY_FILETRANSFER %"PRIu32"[]:[]REQUEST_BLOCK[]:[]%"PRId32,
 		 file->file_id, len);
 
 	if ((err = cmyth_send_message(file->file_control, msg)) < 0) {
@@ -430,7 +433,7 @@ cmyth_file_request_block(cmyth_file_t file, unsigned long len)
 		ret = count;
 		goto out;
 	}
-	if ((r=cmyth_rcv_long(file->file_control, &err, &c, count)) < 0) {
+	if ((r=cmyth_rcv_int32(file->file_control, &err, &c, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_long() failed (%d)\n",
 			  __FUNCTION__, r);
@@ -448,18 +451,18 @@ cmyth_file_request_block(cmyth_file_t file, unsigned long len)
 }
 
 /*
- * cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
+ * cmyth_file_seek()
  *
  * Scope: PUBLIC
  *
  * Description
  *
  * Seek to a new position in the file based on the value of whence:
- *	SEEK_SET
+ *	WHENCE_SET
  *		The offset is set to offset bytes.
- *	SEEK_CUR
+ *	WHENCE_CUR
  *		The offset is set to the current position plus offset bytes.
- *	SEEK_END
+ *	WHENCE_END
  *		The offset is set to the size of the file minus offset bytes.
  *
  * Return Value:
@@ -468,23 +471,23 @@ cmyth_file_request_block(cmyth_file_t file, unsigned long len)
  *
  * Failure: an int containing -errno
  */
-long long
-cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
+int64_t
+cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 {
 	char msg[128];
 	int err;
 	int count;
 	int64_t c;
-	long r;
-	long long ret;
+	int r;
+	int64_t ret;
 
 	if (file == NULL)
 		return -EINVAL;
 
-	if ((offset == 0) && (whence == SEEK_CUR))
+	if ((offset == 0) && (whence == WHENCE_CUR))
 		return file->file_pos;
 
-	if ((offset == file->file_pos) && (whence == SEEK_SET))
+	if ((offset == file->file_pos) && (whence == WHENCE_SET))
 		return file->file_pos;
 
 	pthread_mutex_lock(&mutex);
@@ -495,7 +498,7 @@ cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
 		if(c > sizeof(msg))
 			c = sizeof(msg);
 
-		if ((ret = cmyth_file_get_block(file, msg, (unsigned long)c)) < 0)
+		if ((ret = cmyth_file_get_block(file, msg, (size_t)c)) < 0)
 			break;
 	}
 	if (ret < 0)
@@ -507,15 +510,15 @@ cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
 		 * two 32 bit hi and lo integers.
 		 */
 		snprintf(msg, sizeof(msg),
-			 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%"PRIu64"[]:[]%d[]:[]%"PRIu64,
+			 "QUERY_FILETRANSFER %"PRIu32"[]:[]SEEK[]:[]%"PRId64"[]:[]%"PRId8"[]:[]%"PRId64,
 			 file->file_id,
-			 (int64_t)offset,
+			 offset,
 			 whence,
-			 (int64_t)file->file_pos);
+			 file->file_pos);
 	}
 	else {
 		snprintf(msg, sizeof(msg),
-			 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%d[]:[]%d[]:[]%d[]:[]%d[]:[]%d",
+			 "QUERY_FILETRANSFER %"PRIu32"[]:[]SEEK[]:[]%"PRId32"[]:[]%"PRId32"[]:[]%"PRId8"[]:[]%"PRId32"[]:[]%"PRId32,
 			 file->file_id,
 			 (int32_t)(offset >> 32),
 			 (int32_t)(offset & 0xffffffff),
@@ -548,13 +551,13 @@ cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
 	}
 
 	switch (whence) {
-	case SEEK_SET:
+	case WHENCE_SET:
 		file->file_pos = offset;
 		break;
-	case SEEK_CUR:
+	case WHENCE_CUR:
 		file->file_pos += offset;
 		break;
-	case SEEK_END:
+	case WHENCE_END:
 		file->file_pos = file->file_length - offset;
 		break;
 	}
@@ -572,7 +575,7 @@ cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
 }
 
 /*
- * cmyth_file_read(cmyth_file_t file, char *buf, unsigned long len)
+ * cmyth_file_read()
  *
  * Scope: PUBLIC
  *
@@ -586,10 +589,11 @@ cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
  *
  * Failure: an int containing -errno
  */
-int cmyth_file_read(cmyth_file_t file, char *buf, unsigned long len)
+int32_t cmyth_file_read(cmyth_file_t file, char *buf, int32_t len)
 {
 	int err, count;
-	int ret, req, nfds, rec;
+	int32_t ret;
+	int req, nfds, rec;
 	char *end, *cur;
 	char msg[256];
 	int64_t len64;
@@ -604,6 +608,9 @@ int cmyth_file_read(cmyth_file_t file, char *buf, unsigned long len)
 	if (len == 0)
 		return 0;
 
+	if(len > file->file_data->conn_tcp_rcvbuf)
+		len = file->file_data->conn_tcp_rcvbuf;
+
 	pthread_mutex_lock (&mutex);
 
 	/* make sure we have outstanding requests that fill the buffer that was called with */
@@ -611,8 +618,8 @@ int cmyth_file_read(cmyth_file_t file, char *buf, unsigned long len)
 	if (file->file_req < file->file_pos + len) {
 
 		snprintf (msg, sizeof (msg),
-	            "QUERY_FILETRANSFER %ld[]:[]REQUEST_BLOCK[]:[]%ld",
-	            file->file_id, (unsigned long)(file->file_pos + len - file->file_req));
+	            "QUERY_FILETRANSFER %"PRIu32"[]:[]REQUEST_BLOCK[]:[]%"PRId32,
+	            file->file_id, (int32_t)(file->file_pos + len - file->file_req));
 
 		if ( (err = cmyth_send_message (file->file_control, msg) ) < 0) {
 			cmyth_dbg (CMYTH_DBG_ERROR,
@@ -680,33 +687,33 @@ int cmyth_file_read(cmyth_file_t file, char *buf, unsigned long len)
 			 * signed 64bit value in http://svn.mythtv.org/trac/changeset/18011 (1-Aug-2008).
 			 *
 			 * libcmyth now retrieves the 64-bit signed value, does error-checking,
-			 * and then converts to a 32bit unsigned.
+			 * and then converts to a 32bit signed.
 			 *
 			 * This rcv_ method needs to be forced to use new_int64 to pull back a
 			 * single 64bit number otherwise the handling in rcv_int64 will revert to
 			 * the old two 32bit hi and lo long values.
 			 */
-			if ((ret=cmyth_rcv_new_int64 (file->file_control, &err, &len64, count, 1))< 0) {
+			if ((ret = cmyth_rcv_new_int64(file->file_control, &err, &len64, count, 1))< 0) {
 				cmyth_dbg (CMYTH_DBG_ERROR,
 				           "%s: cmyth_rcv_new_int64() failed (%d)\n",
 				           __FUNCTION__, ret);
 				ret = err;
 				goto out;
 			}
-			if (len64 >= 0x100000000LL || len64 < 0) {
+			if (len64 > 0x7fffffff || len64 < 0) {
 				/* -1 seems to be a common result, but isn't valid so use 0 instead. */
 				cmyth_dbg (CMYTH_DBG_WARN,
 				           "%s: cmyth_rcv_new_int64() returned out of bound value (%"PRId64"). Using 0 instead.\n",
 				           __FUNCTION__, len64);
 				len64 = 0;
 			}
-			len = (unsigned long)len64;
+			len = (int32_t)len64;
 			req = 0;
 			file->file_req += len;
 
 			if (file->file_req < file->file_pos) {
 				cmyth_dbg (CMYTH_DBG_ERROR,
-				           "%s: received invalid invalid length, read position is ahead of request (req: %"PRIu64", pos: %"PRIu64", len: %"PRId64")\n",
+				           "%s: received invalid invalid length, read position is ahead of request (req: %"PRId64", pos: %"PRId64", len: %"PRId64")\n",
 				           __FUNCTION__, file->file_req, file->file_pos, len64);
 				ret = -1;
 				goto out;
@@ -730,7 +737,7 @@ int cmyth_file_read(cmyth_file_t file, char *buf, unsigned long len)
 				ret = -1;
 				goto out;
 			}
-			if ((ret = recv (file->file_data->conn_fd, cur, (int)(end-cur), 0)) < 0) {
+			if ((ret = recv (file->file_data->conn_fd, cur, (int32_t)(end - cur), 0)) < 0) {
 				cmyth_dbg (CMYTH_DBG_ERROR,
 				           "%s: recv() failed (%d)\n",
 				           __FUNCTION__, ret);
@@ -747,14 +754,14 @@ int cmyth_file_read(cmyth_file_t file, char *buf, unsigned long len)
 	if (file->file_pos > file->file_length)
 		file->file_length = file->file_pos;
 
-	ret = (int)(cur - buf);
+	ret = (int32_t)(cur - buf);
 out:
 	pthread_mutex_unlock (&mutex);
 	return ret;
 }
 
 /*
- * cmyth_file_is_open(cmyth_file_t file)
+ * cmyth_file_is_open()
  *
  * Scope: PUBLIC
  *
@@ -773,13 +780,13 @@ out:
 int cmyth_file_is_open(cmyth_file_t file)
 {
 	int err, count, ret;
-	long status;
+	uint8_t status;
 	char msg[256];
 
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s {\n", __FUNCTION__);
 
 	if (!file || !file->file_control) {
-		cmyth_dbg (CMYTH_DBG_ERROR, "%s: no connection\n",
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 		           __FUNCTION__);
 		return -EINVAL;
 	}
@@ -787,7 +794,7 @@ int cmyth_file_is_open(cmyth_file_t file)
 	pthread_mutex_lock (&mutex);
 
 	snprintf (msg, sizeof (msg),
-	    "QUERY_FILETRANSFER %ld[]:[]IS_OPEN",
+	    "QUERY_FILETRANSFER %"PRIu32"[]:[]IS_OPEN",
 	    file->file_id);
 
 	if ( (err = cmyth_send_message (file->file_control, msg) ) < 0) {
@@ -797,14 +804,14 @@ int cmyth_file_is_open(cmyth_file_t file)
 		ret = err;
 		goto out;
 	}
-	if ((count=cmyth_rcv_length (file->file_control)) < 0) {
+	if ((count = cmyth_rcv_length (file->file_control)) < 0) {
 		cmyth_dbg (CMYTH_DBG_ERROR,
 			    "%s: cmyth_rcv_length() failed (%d)\n",
 			    __FUNCTION__, count);
 		ret = count;
 		goto out;
 	}
-	if ((ret=cmyth_rcv_long (file->file_control, &err, &status, count))< 0) {
+	if ((ret = cmyth_rcv_uint8 (file->file_control, &err, &status, count))< 0) {
 		cmyth_dbg (CMYTH_DBG_ERROR,
 			    "%s: cmyth_rcv_long() failed (%d)\n",
 			    __FUNCTION__, ret);
@@ -812,8 +819,8 @@ int cmyth_file_is_open(cmyth_file_t file)
 		goto out;
 	}
 
-	ret = (int)status;
-	if (ret==0)
+	ret = status;
+	if (ret == 0)
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: file transfer socket is closed\n", __FUNCTION__);
 out:
 	pthread_mutex_unlock (&mutex);
@@ -821,7 +828,7 @@ out:
 }
 
 /*
- * cmyth_file_set_timeout(cmyth_file_t file, int fast)
+ * cmyth_file_set_timeout()
  *
  * Scope: PUBLIC
  *
@@ -838,7 +845,7 @@ out:
  * Failure: an int containing -errno
  */
 int
-cmyth_file_set_timeout(cmyth_file_t file, int fast)
+cmyth_file_set_timeout(cmyth_file_t file, int32_t fast)
 {
 	int ret;
 	char msg[256];
@@ -852,7 +859,7 @@ cmyth_file_set_timeout(cmyth_file_t file, int fast)
 	pthread_mutex_lock (&mutex);
 
 	snprintf(msg, sizeof(msg),
-		 "QUERY_FILETRANSFER %ld[]:[]SET_TIMEOUT[]:[]%i",
+		 "QUERY_FILETRANSFER %"PRIu32"[]:[]SET_TIMEOUT[]:[]%"PRId32,
 		 file->file_id, fast);
 	if ((ret = cmyth_send_message(file->file_control, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,

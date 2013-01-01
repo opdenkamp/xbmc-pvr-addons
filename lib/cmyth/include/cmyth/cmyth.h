@@ -46,6 +46,8 @@
 #include <time.h>
 #endif
 
+#include <stdint.h>
+
 /*
  * -----------------------------------------------------------------
  * Types
@@ -146,16 +148,16 @@ struct cmyth_file;
 typedef struct cmyth_file *cmyth_file_t;
 
 struct cmyth_commbreak {
-        long long start_mark;
-        long long start_offset;
-        long long end_mark;
-        long long end_offset;
+        int64_t start_mark;
+        int64_t start_offset;
+        int64_t end_mark;
+        int64_t end_offset;
 };
 typedef struct cmyth_commbreak *cmyth_commbreak_t;
 
 struct cmyth_commbreaklist {
         cmyth_commbreak_t *commbreak_list;
-        long commbreak_count;
+        int commbreak_count;
 };
 typedef struct cmyth_commbreaklist *cmyth_commbreaklist_t;
 
@@ -223,8 +225,8 @@ extern void cmyth_set_dbg_msgcallback(void (*msgcb)(int level,char *));
  * \return control handle
  */
 extern cmyth_conn_t cmyth_conn_connect_ctrl(char *server,
-					    unsigned short port,
-					    unsigned buflen, int tcp_rcvbuf);
+					    uint16_t port,
+					    uint32_t buflen, int32_t tcp_rcvbuf);
 
 /**
  * Reconnect control connection to a backend.
@@ -243,8 +245,8 @@ extern int cmyth_conn_reconnect_ctrl(cmyth_conn_t control);
  * \return event handle
  */
 extern cmyth_conn_t cmyth_conn_connect_event(char *server,
-					     unsigned short port,
-					     unsigned buflen, int tcp_rcvbuf);
+					     uint16_t port,
+					     uint32_t buflen, int32_t tcp_rcvbuf);
 
 /**
  * Reconnect event connection to a backend.
@@ -264,7 +266,7 @@ extern int cmyth_conn_reconnect_event(cmyth_conn_t conn);
  */
 extern cmyth_file_t cmyth_conn_connect_file(cmyth_proginfo_t prog,
 					    cmyth_conn_t control,
-					    unsigned buflen, int tcp_rcvbuf);
+					    uint32_t buflen, int32_t tcp_rcvbuf);
 
 /**
  * Create a file connection to a backend.
@@ -276,39 +278,39 @@ extern cmyth_file_t cmyth_conn_connect_file(cmyth_proginfo_t prog,
  * \return file handle
  */
 extern cmyth_file_t cmyth_conn_connect_path(char* path, cmyth_conn_t control,
-					    unsigned buflen, int tcp_rcvbuf, char* storage_group);
+					    uint32_t buflen, int32_t tcp_rcvbuf, char* storage_group);
 
 /**
  * Create a ring buffer connection to a recorder.
  * \param rec recorder handle
  * \param buflen buffer size for the connection to use
  * \param tcp_rcvbuf if non-zero, the TCP receive buffer size for the socket
- * \retval 0 success
- * \retval -1 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
-extern int cmyth_conn_connect_ring(cmyth_recorder_t rec, unsigned buflen,
-				   int tcp_rcvbuf);
+extern int cmyth_conn_connect_ring(cmyth_recorder_t rec, uint32_t buflen,
+				   int32_t tcp_rcvbuf);
 
 /**
  * Create a connection to a recorder.
  * \param rec recorder to connect to
  * \param buflen buffer size for the connection to use
  * \param tcp_rcvbuf if non-zero, the TCP receive buffer size for the socket
- * \retval 0 success
- * \retval -1 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_conn_connect_recorder(cmyth_recorder_t rec,
-				       unsigned buflen, int tcp_rcvbuf);
+				       uint32_t buflen, int32_t tcp_rcvbuf);
 
 /**
  * Check whether a block has finished transfering from a backend.
  * \param conn control handle
  * \param size size of block
- * \retval 0 not complete
- * \retval 1 complete
- * \retval <0 error
+ * \return complete: 1
+ * \return not complete: 0
+ * \return failure: -(errno)
  */
-extern int cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size);
+extern int cmyth_conn_check_block(cmyth_conn_t conn, uint32_t size);
 
 /**
  * Obtain a recorder from a connection by its recorder number.
@@ -317,7 +319,7 @@ extern int cmyth_conn_check_block(cmyth_conn_t conn, unsigned long size);
  * \return recorder handle
  */
 extern cmyth_recorder_t cmyth_conn_get_recorder_from_num(cmyth_conn_t conn,
-							 int num);
+							 int32_t id);
 
 /**
  * Obtain the next available free recorder on a backend.
@@ -331,18 +333,18 @@ extern cmyth_recorder_t cmyth_conn_get_free_recorder(cmyth_conn_t conn);
  * \param control control handle
  * \param[out] total total disk space
  * \param[out] used used disk space
- * \retval 0 success
- * \retval <0 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_conn_get_freespace(cmyth_conn_t control,
-				    long long *total, long long *used);
+				    int64_t *total, int64_t *used);
 
 /**
  * Determine if a control connection is not responding.
  * \param control control handle
- * \retval 0 not hung
- * \retval 1 hung
- * \retval <0 error
+ * \return not hung: 0
+ * \return hung: 1
+ * \return failure: -(errno)
  */
 extern int cmyth_conn_hung(cmyth_conn_t control);
 
@@ -351,14 +353,14 @@ extern int cmyth_conn_hung(cmyth_conn_t control);
  * \param conn connection handle
  * \return number of free recorders
  */
-extern int cmyth_conn_get_free_recorder_count(cmyth_conn_t conn);
+extern int32_t cmyth_conn_get_free_recorder_count(cmyth_conn_t conn);
 
 /**
  * Determine the MythTV protocol version being used.
  * \param conn connection handle
  * \return protocol version
  */
-extern int cmyth_conn_get_protocol_version(cmyth_conn_t conn);
+extern int32_t cmyth_conn_get_protocol_version(cmyth_conn_t conn);
 
 /**
  * Return a MythTV setting for a hostname
@@ -376,7 +378,8 @@ extern char * cmyth_conn_get_setting(cmyth_conn_t conn,
  * \param hostname hostname to apply the setting to
  * \param setting the setting name to set
  * \param value the value of the setting
- * \retval <0 for failure
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_conn_set_setting(cmyth_conn_t conn,
                const char* hostname, const char* setting, const char* value);
@@ -384,7 +387,7 @@ extern int cmyth_conn_set_setting(cmyth_conn_t conn,
 /**
  * Get the backend hostname used in the settings database
  * \param conn connection handle
- * \retval ref counted string with backend hostname
+ * \return ref counted string with backend hostname
  */
 extern char* cmyth_conn_get_backend_hostname(cmyth_conn_t conn);
 
@@ -398,10 +401,11 @@ extern char* cmyth_conn_get_client_hostname(cmyth_conn_t conn);
 /**
  * Issues a run of the re-scheduler
  * \param conn connection handle
- * \param recordid or -1 performs a full run
- * \retval <0 for failure
+ * \param recordid or -1 (0xFFFFFFFF) performs a full run
+ * \return success: 0
+ * \return failure: -(errno)
  */
-extern int cmyth_conn_reschedule_recordings(cmyth_conn_t conn, int recordid);
+extern int cmyth_conn_reschedule_recordings(cmyth_conn_t conn, uint32_t recordid);
 
 /*
  * -----------------------------------------------------------------
@@ -416,12 +420,14 @@ extern int cmyth_conn_reschedule_recordings(cmyth_conn_t conn, int recordid);
  * \param len size of data buffer
  * \return event type
  */
-extern cmyth_event_t cmyth_event_get(cmyth_conn_t conn, char * data, int len);
+extern cmyth_event_t cmyth_event_get(cmyth_conn_t conn, char * data, int32_t len);
 
 /**
  * Selects on the event socket, waiting for an event to show up.
  * allows nonblocking access to events.
- * \return <= 0 on failure
+ * \return success: >0
+ * \retutn timeout: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_event_select(cmyth_conn_t conn, struct timeval *timeout);
 
@@ -432,7 +438,7 @@ extern int cmyth_event_select(cmyth_conn_t conn, struct timeval *timeout);
  * \param len size of data buffer
  * \return event message handle
  */
-extern cmyth_event_t cmyth_event_get_message(cmyth_conn_t conn, char * data, int len, cmyth_proginfo_t * proginfo);
+extern cmyth_event_t cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_proginfo_t * proginfo);
 
 /*
  * -----------------------------------------------------------------
@@ -456,9 +462,9 @@ extern cmyth_recorder_t cmyth_recorder_dup(cmyth_recorder_t p);
 /**
  * Determine if a recorder is in use.
  * \param rec recorder handle
- * \retval 0 not recording
- * \retval 1 recording
- * \retval <0 error
+ * \return recording: 1
+ * \return not recording: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_recorder_is_recording(cmyth_recorder_t rec);
 
@@ -466,22 +472,22 @@ extern int cmyth_recorder_is_recording(cmyth_recorder_t rec);
  * Determine the framerate for a recorder.
  * \param rec recorder handle
  * \param[out] rate framerate
- * \retval 0 success
- * \retval <0 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_recorder_get_framerate(cmyth_recorder_t rec,
 					double *rate);
 
-extern long long cmyth_recorder_get_frames_written(cmyth_recorder_t rec);
+extern int64_t cmyth_recorder_get_frames_written(cmyth_recorder_t rec);
 
-extern long long cmyth_recorder_get_free_space(cmyth_recorder_t rec);
+extern int64_t cmyth_recorder_get_free_space(cmyth_recorder_t rec);
 
-extern long long cmyth_recorder_get_keyframe_pos(cmyth_recorder_t rec,
-						 unsigned long keynum);
+extern int64_t cmyth_recorder_get_keyframe_pos(cmyth_recorder_t rec,
+						 uint32_t keynum);
 
 extern cmyth_posmap_t cmyth_recorder_get_position_map(cmyth_recorder_t rec,
-						      unsigned long start,
-						      unsigned long end);
+						      uint32_t start,
+						      uint32_t end);
 
 extern cmyth_proginfo_t cmyth_recorder_get_recording(cmyth_recorder_t rec);
 
@@ -494,8 +500,8 @@ extern int cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec);
 /**
  * Request that the recorder stop transmitting data.
  * \param rec recorder handle
- * \retval 0 success
- * \retval <0 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_recorder_pause(cmyth_recorder_t rec);
 
@@ -507,8 +513,8 @@ extern int cmyth_recorder_toggle_channel_favorite(cmyth_recorder_t rec);
  * Request that the recorder change the channel being recorded.
  * \param rec recorder handle
  * \param direction direction in which to change channel
- * \retval 0 success
- * \retval <0 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_recorder_change_channel(cmyth_recorder_t rec,
 					 cmyth_channeldir_t direction);
@@ -517,8 +523,8 @@ extern int cmyth_recorder_change_channel(cmyth_recorder_t rec,
  * Set the channel for a recorder.
  * \param rec recorder handle
  * \param channame channel name to change to
- * \retval 0 success
- * \retval <0 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_recorder_set_channel(cmyth_recorder_t rec,
 				      char *channame);
@@ -553,8 +559,8 @@ extern cmyth_proginfo_t cmyth_recorder_get_cur_proginfo(cmyth_recorder_t rec);
  * \param rec recorder handle
  * \param current current program
  * \param direction direction of next program
- * \retval 0 success
- * \retval <0 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern cmyth_proginfo_t cmyth_recorder_get_next_proginfo(
 	cmyth_recorder_t rec,
@@ -565,10 +571,10 @@ extern int cmyth_recorder_get_input_name(cmyth_recorder_t rec,
 					 char *name,
 					 unsigned len);
 
-extern long long cmyth_recorder_seek(cmyth_recorder_t rec,
-				     long long pos,
-				     cmyth_whence_t whence,
-				     long long curpos);
+extern int64_t cmyth_recorder_seek(cmyth_recorder_t rec,
+				     int64_t pos,
+				     int8_t whence,
+				     int64_t curpos);
 
 extern int cmyth_recorder_spawn_chain_livetv(cmyth_recorder_t rec, char* channame);
 
@@ -580,7 +586,7 @@ extern int cmyth_recorder_end_stream(cmyth_recorder_t rec);
 extern char*cmyth_recorder_get_filename(cmyth_recorder_t rec);
 extern int cmyth_recorder_stop_livetv(cmyth_recorder_t rec);
 extern int cmyth_recorder_done_ringbuf(cmyth_recorder_t rec);
-extern int cmyth_recorder_get_recorder_id(cmyth_recorder_t rec);
+extern uint32_t cmyth_recorder_get_recorder_id(cmyth_recorder_t rec);
 
 /*
  * -----------------------------------------------------------------
@@ -592,7 +598,7 @@ extern cmyth_livetv_chain_t cmyth_livetv_chain_create(char * chainid);
 
 extern cmyth_file_t cmyth_livetv_get_cur_file(cmyth_recorder_t rec);
 
-extern long long cmyth_livetv_chain_duration(cmyth_recorder_t rec);
+extern int64_t cmyth_livetv_chain_duration(cmyth_recorder_t rec);
 
 extern int cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir);
 
@@ -607,28 +613,28 @@ extern int cmyth_livetv_watch(cmyth_recorder_t rec, char * msg);
 extern int cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg);
 
 extern cmyth_recorder_t cmyth_spawn_live_tv(cmyth_recorder_t rec,
-										unsigned buflen,
-										int tcp_rcvbuf,
-                    void (*prog_update_callback)(cmyth_proginfo_t),
-										char ** err, char * channame);
+				uint32_t buflen,
+				int32_t tcp_rcvbuf,
+				void (*prog_update_callback)(cmyth_proginfo_t),
+				char ** err, char * channame);
 
 extern cmyth_recorder_t cmyth_livetv_chain_setup(cmyth_recorder_t old_rec,
-						 int tcp_rcvbuf,
-						 void (*prog_update_callback)(cmyth_proginfo_t));
+				int32_t tcp_rcvbuf,
+				void (*prog_update_callback)(cmyth_proginfo_t));
 
-extern int cmyth_livetv_get_block(cmyth_recorder_t rec, char *buf,
-                                  unsigned long len);
+extern int32_t cmyth_livetv_get_block(cmyth_recorder_t rec, char *buf,
+                                int32_t len);
 
 extern int cmyth_livetv_select(cmyth_recorder_t rec, struct timeval *timeout);
 
-extern int cmyth_livetv_request_block(cmyth_recorder_t rec, unsigned long len);
+extern int32_t cmyth_livetv_request_block(cmyth_recorder_t rec, int32_t len);
 
-extern long long cmyth_livetv_seek(cmyth_recorder_t rec,
-						long long offset, int whence);
+extern int64_t cmyth_livetv_seek(cmyth_recorder_t rec,
+				int64_t offset, int8_t whence);
 
-extern int cmyth_livetv_read(cmyth_recorder_t rec,
-			     char *buf,
-			     unsigned long len);
+extern int32_t cmyth_livetv_read(cmyth_recorder_t rec,
+				char *buf,
+				int32_t len);
 
 extern int cmyth_mysql_tuner_type_check(cmyth_database_t db, cmyth_recorder_t rec, int check_tuner_enabled);
 
@@ -645,9 +651,9 @@ extern int cmyth_database_set_host(cmyth_database_t db, char *host);
 extern int cmyth_database_set_user(cmyth_database_t db, char *user);
 extern int cmyth_database_set_pass(cmyth_database_t db, char *pass);
 extern int cmyth_database_set_name(cmyth_database_t db, char *name);
-extern int cmyth_database_set_port(cmyth_database_t db, unsigned short port);
+extern int cmyth_database_set_port(cmyth_database_t db, uint16_t port);
 
-extern int cmyth_database_get_version(cmyth_database_t db);
+extern uint32_t cmyth_database_get_version(cmyth_database_t db);
 
 extern int cmyth_database_setup(cmyth_database_t db);
 
@@ -662,22 +668,22 @@ extern cmyth_ringbuf_t cmyth_ringbuf_create(void);
 
 extern cmyth_recorder_t cmyth_ringbuf_setup(cmyth_recorder_t old_rec);
 
-extern int cmyth_ringbuf_request_block(cmyth_recorder_t rec,
-				       unsigned long len);
+extern int32_t cmyth_ringbuf_request_block(cmyth_recorder_t rec,
+				       int32_t len);
 
 extern int cmyth_ringbuf_select(cmyth_recorder_t rec, struct timeval *timeout);
 
-extern int cmyth_ringbuf_get_block(cmyth_recorder_t rec,
+extern int32_t cmyth_ringbuf_get_block(cmyth_recorder_t rec,
 				   char *buf,
-				   unsigned long len);
+				   int32_t len);
 
-extern long long cmyth_ringbuf_seek(cmyth_recorder_t rec,
-				    long long offset,
-				    int whence);
+extern int64_t cmyth_ringbuf_seek(cmyth_recorder_t rec,
+				    int64_t offset,
+				    int8_t whence);
 
-extern int cmyth_ringbuf_read(cmyth_recorder_t rec,
+extern int32_t cmyth_ringbuf_read(cmyth_recorder_t rec,
 			      char *buf,
-			      unsigned long len);
+			      int32_t len);
 /*
  * -----------------------------------------------------------------
  * Recorder Number Operations
@@ -686,8 +692,8 @@ extern int cmyth_ringbuf_read(cmyth_recorder_t rec,
 extern cmyth_rec_num_t cmyth_rec_num_create(void);
 
 extern cmyth_rec_num_t cmyth_rec_num_get(char *host,
-					 unsigned short port,
-					 unsigned id);
+					 uint16_t port,
+					 int32_t id);
 
 extern char *cmyth_rec_num_string(cmyth_rec_num_t rn);
 
@@ -709,7 +715,7 @@ extern int cmyth_timestamp_to_string(char *str, cmyth_timestamp_t ts);
 extern int cmyth_timestamp_to_isostring(char *str, cmyth_timestamp_t ts);
 
 extern int cmyth_timestamp_to_display_string(char *str, cmyth_timestamp_t ts,
-																						 int time_format_12);
+				   int time_format_12);
 
 extern int cmyth_datetime_to_string(char *str, cmyth_timestamp_t ts);
 
@@ -724,10 +730,6 @@ extern int cmyth_timestamp_compare(cmyth_timestamp_t ts1,
  * -----------------------------------------------------------------
  */
 extern cmyth_keyframe_t cmyth_keyframe_create(void);
-
-extern cmyth_keyframe_t cmyth_keyframe_tcmyth_keyframe_get(
-	unsigned long keynum,
-	unsigned long long pos);
 
 extern char *cmyth_keyframe_string(cmyth_keyframe_t kf);
 
@@ -790,8 +792,8 @@ extern int cmyth_proginfo_check_recording(cmyth_conn_t control,
  * Delete a program.
  * \param control backend control handle
  * \param prog proginfo handle
- * \retval 0 success
- * \retval <0 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_proginfo_delete_recording(cmyth_conn_t control,
 					   cmyth_proginfo_t prog);
@@ -800,8 +802,8 @@ extern int cmyth_proginfo_delete_recording(cmyth_conn_t control,
  * Delete a program such that it may be recorded again.
  * \param control backend control handle
  * \param prog proginfo handle
- * \retval 0 success
- * \retval <0 error
+ * \return success: 0
+ * \return failure: -(errno)
  */
 extern int cmyth_proginfo_forget_recording(cmyth_conn_t control,
 					   cmyth_proginfo_t prog);
@@ -823,7 +825,7 @@ extern cmyth_proginfo_t cmyth_proginfo_get_from_basename(cmyth_conn_t control,
  * \return NULL or proginfo handle
  */
 extern cmyth_proginfo_t cmyth_proginfo_get_from_timeslot(cmyth_conn_t control,
-					   unsigned long chanid,
+					   uint32_t chanid,
 					   time_t recstartts);
 
 /**
@@ -852,14 +854,14 @@ extern char *cmyth_proginfo_description(cmyth_proginfo_t prog);
  * \param prog proginfo handle
  * \return season
  */
-extern unsigned short cmyth_proginfo_season(cmyth_proginfo_t prog);
+extern uint16_t cmyth_proginfo_season(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the episode of a program.
  * \param prog proginfo handle
  * \return episode
  */
-extern unsigned short cmyth_proginfo_episode(cmyth_proginfo_t prog);
+extern uint16_t cmyth_proginfo_episode(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the category of a program.
@@ -894,7 +896,7 @@ extern char *cmyth_proginfo_channame(cmyth_proginfo_t prog);
  * \param prog proginfo handle
  * \return channel number
  */
-extern long cmyth_proginfo_chan_id(cmyth_proginfo_t prog);
+extern uint32_t cmyth_proginfo_chan_id(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the pathname of a program file.
@@ -927,16 +929,16 @@ extern char *cmyth_proginfo_inetref(cmyth_proginfo_t prog);
 /**
  * Retrieve the record ID of the matching record rule
  * \param prog proginfo handle
- * \return unsigned long
+ * \return uint32_t
  */
-extern unsigned long cmyth_proginfo_recordid(cmyth_proginfo_t prog);
+extern uint32_t cmyth_proginfo_recordid(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the priority of a program
  * \param prog proginfo handle
- * \return long
+ * \return int32_t
  */
-extern long cmyth_proginfo_priority(cmyth_proginfo_t prog);
+extern int8_t cmyth_proginfo_priority(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the critics rating (number of stars) of a program.
@@ -979,7 +981,7 @@ extern cmyth_proginfo_rec_status_t cmyth_proginfo_rec_status(
  * \param prog proginfo handle
  * \return flags
  */
-extern unsigned long cmyth_proginfo_flags(
+extern uint32_t cmyth_proginfo_flags(
   cmyth_proginfo_t prog);
 
 /**
@@ -987,7 +989,7 @@ extern unsigned long cmyth_proginfo_flags(
  * \param prog proginfo handle
  * \return program length
  */
-extern long long cmyth_proginfo_length(cmyth_proginfo_t prog);
+extern int64_t cmyth_proginfo_length(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the hostname of the MythTV backend that recorded a program.
@@ -996,14 +998,14 @@ extern long long cmyth_proginfo_length(cmyth_proginfo_t prog);
  */
 extern char *cmyth_proginfo_host(cmyth_proginfo_t prog);
 
-extern int cmyth_proginfo_port(cmyth_proginfo_t prog);
+extern uint16_t cmyth_proginfo_port(cmyth_proginfo_t prog);
 
 /**
  * Determine if two proginfo handles refer to the same program.
  * \param a proginfo handle a
  * \param b proginfo handle b
- * \retval 0 programs are the same
- * \retval -1 programs are different
+ * \return programs are the same: 0
+ * \return programs are different: -1
  */
 extern int cmyth_proginfo_compare(cmyth_proginfo_t a, cmyth_proginfo_t b);
 
@@ -1012,7 +1014,7 @@ extern int cmyth_proginfo_compare(cmyth_proginfo_t a, cmyth_proginfo_t b);
  * \param prog proginfo handle
  * \return program length in seconds
  */
-extern int cmyth_proginfo_length_sec(cmyth_proginfo_t prog);
+extern uint32_t cmyth_proginfo_length_sec(cmyth_proginfo_t prog);
 
 extern cmyth_proginfo_t cmyth_proginfo_get_detail(cmyth_conn_t control,
 						  cmyth_proginfo_t p);
@@ -1036,7 +1038,7 @@ extern cmyth_timestamp_t cmyth_proginfo_end(cmyth_proginfo_t prog);
  * \param prog proginfo handle
  * \return card ID
  */
-extern unsigned long cmyth_proginfo_card_id(cmyth_proginfo_t prog);
+extern uint32_t cmyth_proginfo_card_id(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the recording group of a program.
@@ -1058,7 +1060,7 @@ extern char *cmyth_proginfo_chanicon(cmyth_proginfo_t prog);
  * \param prog proginfo handle
  * \return production year
  */
-extern unsigned short cmyth_proginfo_year(cmyth_proginfo_t prog);
+extern uint16_t cmyth_proginfo_year(cmyth_proginfo_t prog);
 
 /*
  * -----------------------------------------------------------------
@@ -1094,34 +1096,29 @@ extern int cmyth_proglist_sort(cmyth_proglist_t pl, int count,
  */
 extern cmyth_conn_t cmyth_file_data(cmyth_file_t file);
 
-extern unsigned long long cmyth_file_start(cmyth_file_t file);
+extern int64_t cmyth_file_start(cmyth_file_t file);
 
-extern unsigned long long cmyth_file_length(cmyth_file_t file);
+extern int64_t cmyth_file_length(cmyth_file_t file);
 
-extern unsigned long long cmyth_file_position(cmyth_file_t file);
+extern int64_t cmyth_file_position(cmyth_file_t file);
 
-extern int cmyth_file_update_length(cmyth_file_t file, unsigned long long newlen);
+extern int cmyth_file_update_length(cmyth_file_t file, int64_t newlen);
 
-extern int cmyth_file_get_block(cmyth_file_t file, char *buf,
-				unsigned long len);
+extern int32_t cmyth_file_get_block(cmyth_file_t file, char *buf, int32_t len);
 
-extern int cmyth_file_request_block(cmyth_file_t file, unsigned long len);
+extern int32_t cmyth_file_request_block(cmyth_file_t file, int32_t len);
 
-extern long long cmyth_file_seek(cmyth_file_t file,
-				 long long offset, int whence);
+extern int64_t cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence);
 
 extern int cmyth_file_select(cmyth_file_t file, struct timeval *timeout);
 
-extern void cmyth_file_set_closed_callback(cmyth_file_t file,
-					void (*callback)(cmyth_file_t));
+extern void cmyth_file_set_closed_callback(cmyth_file_t file, void (*callback)(cmyth_file_t));
 
-extern int cmyth_file_read(cmyth_file_t file,
-			   char *buf,
-			   unsigned long len);
+extern int32_t cmyth_file_read(cmyth_file_t file, char *buf, int32_t len);
 
 extern int cmyth_file_is_open(cmyth_file_t file);
 
-extern int cmyth_file_set_timeout(cmyth_file_t file, int fast);
+extern int cmyth_file_set_timeout(cmyth_file_t file, int32_t fast);
 
 /*
  * -----------------------------------------------------------------
@@ -1135,12 +1132,11 @@ extern cmyth_freespace_t cmyth_freespace_create(void);
  * Bookmark,Commercial Skip Operations
  * -------
  */
-extern long long cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog);
-extern long long cmyth_mysql_get_bookmark_offset(cmyth_database_t db, unsigned long chanid, long long mark, time_t starttime, int mode);
-extern int cmyth_mysql_update_bookmark_setting(cmyth_database_t, cmyth_proginfo_t);
-extern long long cmyth_mysql_get_bookmark_mark(cmyth_database_t, cmyth_proginfo_t, long long, int);
-extern int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog,
-	long long bookmark);
+extern int64_t cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog);
+extern int64_t cmyth_mysql_get_bookmark_offset(cmyth_database_t db, uint32_t chanid, int64_t mark, time_t starttime, int mode);
+extern int cmyth_mysql_update_bookmark_setting(cmyth_database_t db, cmyth_proginfo_t prog);
+extern int64_t cmyth_mysql_get_bookmark_mark(cmyth_database_t db, cmyth_proginfo_t prog, int64_t bk, int mode);
+extern int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, int64_t bookmark);
 extern cmyth_commbreaklist_t cmyth_commbreaklist_create(void);
 extern cmyth_commbreak_t cmyth_commbreak_create(void);
 extern cmyth_commbreaklist_t cmyth_mysql_get_commbreaklist(cmyth_database_t db, cmyth_conn_t conn, cmyth_proginfo_t prog);
@@ -1154,10 +1150,10 @@ extern int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err, cmyth_commbreakl
 
 
 typedef struct cmyth_program {
-	unsigned long chanid;
+	uint32_t chanid;
 	char callsign[30];
 	char name[84];
-	unsigned long sourceid;
+	uint32_t sourceid;
 	char title[150];
 	char subtitle[150];
 	char description[280];
@@ -1166,30 +1162,23 @@ typedef struct cmyth_program {
 	char programid[30];
 	char seriesid[24];
 	char category[84];
-	unsigned long recording;
-	long rec_status;
-	unsigned long channum;
-	unsigned long event_flags;
-	long startoffset;
-	long endoffset;
+	int8_t rec_status;
+	uint32_t channum;
 } cmyth_program_t;
 
 typedef struct cmyth_recgrougs {
 	char recgroups[33];
-}cmyth_recgroups_t;
+} cmyth_recgroups_t;
 
 extern int cmyth_mysql_get_recgroups(cmyth_database_t, cmyth_recgroups_t **);
 
-extern char *cmyth_mysql_get_recordid(cmyth_database_t db, unsigned long chanid, char *title, char *subtitle, char *description, char *seriesid, char *programid);
-extern int cmyth_mysql_get_offset(cmyth_database_t db, int type, unsigned long recordid, unsigned long chanid, char *title, char *subtitle, char *description, char *seriesid, char *programid);
-
 extern int cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **prog, time_t starttime, char *program_name);
 extern int cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  time_t starttime, char *program_name);
-extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_program_t *prog, time_t starttime, char *program_name, unsigned long chanid);
+extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_program_t *prog, time_t starttime, char *program_name, uint32_t chanid);
 extern int cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, time_t starttime, time_t endtime);
 extern int cmyth_mysql_testdb_connection(cmyth_database_t db,char **message);
 extern char *cmyth_mysql_escape_chars(cmyth_database_t db, char * string);
-extern int cmyth_mysql_get_commbreak_list(cmyth_database_t db, unsigned long chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, int conn_version);
+extern int cmyth_mysql_get_commbreak_list(cmyth_database_t db, uint32_t chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, uint32_t conn_version);
 
 extern int cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_program_t **prog);
 
@@ -1206,18 +1195,18 @@ extern int cmyth_mysql_set_watched_status(cmyth_database_t db, cmyth_proginfo_t 
 
 struct cmyth_input {
 	char *inputname;
-	unsigned long sourceid;
-	unsigned long inputid;
-	unsigned long cardid;
-	unsigned long multiplexid;
-	unsigned long livetvorder; /* new in V71 */
+	uint32_t sourceid;
+	uint32_t inputid;
+	uint32_t cardid;
+	uint32_t multiplexid;
+	uint32_t livetvorder; /* new in V71 */
 };
 
 typedef struct cmyth_input *cmyth_input_t;
 
 struct cmyth_inputlist {
 	cmyth_input_t *input_list;
-	long input_count;
+	int input_count;
 };
 
 typedef struct cmyth_inputlist *cmyth_inputlist_t;
@@ -1297,14 +1286,14 @@ extern cmyth_recordingrule_t cmyth_recordingrule_init(void);
  * \return success: recordid
  * \return failure: -(errno)
  */
-extern unsigned long cmyth_recordingrule_recordid(cmyth_recordingrule_t rr);
+extern uint32_t cmyth_recordingrule_recordid(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'recordid' field of the recording rule structure 'rr'.
  * \param rr
  * \param recordid
  */
-extern void cmyth_recordingrule_set_recordid(cmyth_recordingrule_t rr, unsigned long recordid);
+extern void cmyth_recordingrule_set_recordid(cmyth_recordingrule_t rr, uint32_t recordid);
 
 /**
  * Retrieves the 'chanid' field of a recording rule structure.
@@ -1312,14 +1301,14 @@ extern void cmyth_recordingrule_set_recordid(cmyth_recordingrule_t rr, unsigned 
  * \return success: chanid
  * \return failure: -(errno)
  */
-extern unsigned long cmyth_recordingrule_chanid(cmyth_recordingrule_t rr);
+extern uint32_t cmyth_recordingrule_chanid(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'chanid' field of the recording rule structure 'rr'.
  * \param rr
  * \param chanid
  */
-extern void cmyth_recordingrule_set_chanid(cmyth_recordingrule_t rr, unsigned long chanid);
+extern void cmyth_recordingrule_set_chanid(cmyth_recordingrule_t rr, uint32_t chanid);
 
 /**
  * Retrieves the 'starttime' field of a recording rule structure.
@@ -1391,14 +1380,14 @@ extern void cmyth_recordingrule_set_description(cmyth_recordingrule_t rr, char *
  * \return success: type
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_type(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_type(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'type' field of the recording rule structure 'rr'.
  * \param rr
  * \param type
  */
-extern void cmyth_recordingrule_set_type(cmyth_recordingrule_t rr, long type);
+extern void cmyth_recordingrule_set_type(cmyth_recordingrule_t rr, uint8_t type);
 
 /**
  * Retrieves the 'category' field of a recording rule structure.
@@ -1440,14 +1429,14 @@ extern void cmyth_recordingrule_set_subtitle(cmyth_recordingrule_t rr, char *sub
  * \return success: recpriority
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_recpriority(cmyth_recordingrule_t rr);
+extern int8_t cmyth_recordingrule_recpriority(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'recpriority' field of the recording rule structure 'rr'.
  * \param rr
  * \param recpriority
  */
-extern void cmyth_recordingrule_set_recpriority(cmyth_recordingrule_t rr, long recpriority);
+extern void cmyth_recordingrule_set_recpriority(cmyth_recordingrule_t rr, int8_t recpriority);
 
 /**
  * Retrieves the 'startoffset' field of a recording rule structure.
@@ -1455,14 +1444,14 @@ extern void cmyth_recordingrule_set_recpriority(cmyth_recordingrule_t rr, long r
  * \return success: startoffset
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_startoffset(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_startoffset(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'startoffset' field of the recording rule structure 'rr'.
  * \param rr
  * \param startoffset
  */
-extern void cmyth_recordingrule_set_startoffset(cmyth_recordingrule_t rr, long startoffset);
+extern void cmyth_recordingrule_set_startoffset(cmyth_recordingrule_t rr, uint8_t startoffset);
 
 /**
  * Retrieves the 'endoffset' field of a recording rule structure.
@@ -1470,14 +1459,14 @@ extern void cmyth_recordingrule_set_startoffset(cmyth_recordingrule_t rr, long s
  * \return success: endoffset
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_endoffset(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_endoffset(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'endoffset' field of the recording rule structure 'rr'.
  * \param rr
  * \param endoffset
  */
-extern void cmyth_recordingrule_set_endoffset(cmyth_recordingrule_t rr, long endoffset);
+extern void cmyth_recordingrule_set_endoffset(cmyth_recordingrule_t rr, uint8_t endoffset);
 
 /**
  * Retrieves the 'searchtype' field of a recording rule structure.
@@ -1485,14 +1474,14 @@ extern void cmyth_recordingrule_set_endoffset(cmyth_recordingrule_t rr, long end
  * \return success: searchtype
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_searchtype(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_searchtype(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'searchtype' field of the recording rule structure 'rr'.
  * \param rr
  * \param searchtype
  */
-extern void cmyth_recordingrule_set_searchtype(cmyth_recordingrule_t rr, long searchtype);
+extern void cmyth_recordingrule_set_searchtype(cmyth_recordingrule_t rr, uint8_t searchtype);
 
 /**
  * Retrieves the 'inactive' field of a recording rule structure.
@@ -1500,14 +1489,14 @@ extern void cmyth_recordingrule_set_searchtype(cmyth_recordingrule_t rr, long se
  * \return success: inactive flag
  * \return failure: -(errno)
  */
-extern unsigned short cmyth_recordingrule_inactive(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_inactive(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'inactive' field of the recording rule structure 'rr'.
  * \param rr
  * \param inactive
  */
-extern void cmyth_recordingrule_set_inactive(cmyth_recordingrule_t rr, unsigned short inactive);
+extern void cmyth_recordingrule_set_inactive(cmyth_recordingrule_t rr, uint8_t inactive);
 
 /**
  * Retrieves the 'callsign' field of a recording rule structure.
@@ -1532,14 +1521,14 @@ extern void cmyth_recordingrule_set_callsign(cmyth_recordingrule_t rr, char *cal
  * \return success: dupmethod
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_dupmethod(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_dupmethod(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'dupmethod' field of the recording rule structure 'rr'.
  * \param rr
  * \param dupmethod
  */
-extern void cmyth_recordingrule_set_dupmethod(cmyth_recordingrule_t rr, long dupmethod);
+extern void cmyth_recordingrule_set_dupmethod(cmyth_recordingrule_t rr, uint8_t dupmethod);
 
 /**
  * Retrieves the 'dupin' field of a recording rule structure.
@@ -1547,14 +1536,14 @@ extern void cmyth_recordingrule_set_dupmethod(cmyth_recordingrule_t rr, long dup
  * \return success: dupin
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_dupin(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_dupin(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'dupin' field of the recording rule structure 'rr'.
  * \param rr
  * \param dupin
  */
-extern void cmyth_recordingrule_set_dupin(cmyth_recordingrule_t rr, long dupin);
+extern void cmyth_recordingrule_set_dupin(cmyth_recordingrule_t rr, uint8_t dupin);
 
 /**
  * Retrieves the 'recgroup' field of a recording rule structure.
@@ -1613,14 +1602,14 @@ extern void cmyth_recordingrule_set_playgroup(cmyth_recordingrule_t rr, char *pl
  * \return success: autotranscode
  * \return failure: -(errno)
  */
-extern unsigned short cmyth_recordingrule_autotranscode(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_autotranscode(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'autotranscode' field of the recording rule structure 'rr'.
  * \param rr
  * \param autotranscode
  */
-extern void cmyth_recordingrule_set_autotranscode(cmyth_recordingrule_t rr, unsigned short autotranscode);
+extern void cmyth_recordingrule_set_autotranscode(cmyth_recordingrule_t rr, uint8_t autotranscode);
 
 /**
  * Retrieves the 'userjobs' field of a recording rule structure.
@@ -1628,14 +1617,14 @@ extern void cmyth_recordingrule_set_autotranscode(cmyth_recordingrule_t rr, unsi
  * \return success: userjobs mask
  * \return failure: -(errno)
  */
-extern int cmyth_recordingrule_userjobs(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_userjobs(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'userjobs' field of the recording rule structure 'rr'.
  * \param rr
  * \param userjobs
  */
-extern void cmyth_recordingrule_set_userjobs(cmyth_recordingrule_t rr, int userjobs);
+extern void cmyth_recordingrule_set_userjobs(cmyth_recordingrule_t rr, uint8_t userjobs);
 
 /**
  * Retrieves the 'autocommflag' field of a recording rule structure.
@@ -1643,14 +1632,14 @@ extern void cmyth_recordingrule_set_userjobs(cmyth_recordingrule_t rr, int userj
  * \return success: autocommflag
  * \return failure: -(errno)
  */
-extern unsigned short cmyth_recordingrule_autocommflag(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_autocommflag(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'autocommflag' field of the recording rule structure 'rr'.
  * \param rr
  * \param autocommflag
  */
-extern void cmyth_recordingrule_set_autocommflag(cmyth_recordingrule_t rr, unsigned short autocommflag);
+extern void cmyth_recordingrule_set_autocommflag(cmyth_recordingrule_t rr, uint8_t autocommflag);
 
 /**
  * Retrieves the 'autoexpire' field of a recording rule structure.
@@ -1658,14 +1647,14 @@ extern void cmyth_recordingrule_set_autocommflag(cmyth_recordingrule_t rr, unsig
  * \return success: autoexpire
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_autoexpire(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_autoexpire(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'autoexpire' field of the recording rule structure 'rr'.
  * \param rr
  * \param autoexpire
  */
-extern void cmyth_recordingrule_set_autoexpire(cmyth_recordingrule_t rr, long autoexpire);
+extern void cmyth_recordingrule_set_autoexpire(cmyth_recordingrule_t rr, uint8_t autoexpire);
 
 /**
  * Retrieves the 'maxepisodes' field of a recording rule structure.
@@ -1673,14 +1662,14 @@ extern void cmyth_recordingrule_set_autoexpire(cmyth_recordingrule_t rr, long au
  * \return success: maxepisodes
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_maxepisodes(cmyth_recordingrule_t rr);
+extern uint32_t cmyth_recordingrule_maxepisodes(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'maxepisodes' field of the recording rule structure 'rr'.
  * \param rr
  * \param maxepisodes
  */
-extern void cmyth_recordingrule_set_maxepisodes(cmyth_recordingrule_t rr, long maxepisodes);
+extern void cmyth_recordingrule_set_maxepisodes(cmyth_recordingrule_t rr, uint32_t maxepisodes);
 
 /**
  * Retrieves the 'maxnewest' field of a recording rule structure.
@@ -1688,14 +1677,14 @@ extern void cmyth_recordingrule_set_maxepisodes(cmyth_recordingrule_t rr, long m
  * \return success: maxnewest
  * \return failure: -(errno)
  */
-extern long cmyth_recordingrule_maxnewest(cmyth_recordingrule_t rr);
+extern uint8_t cmyth_recordingrule_maxnewest(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'maxnewest' field of the recording rule structure 'rr'.
  * \param rr
  * \param maxnewest
  */
-extern void cmyth_recordingrule_set_maxnewest(cmyth_recordingrule_t rr, long maxnewest);
+extern void cmyth_recordingrule_set_maxnewest(cmyth_recordingrule_t rr, uint8_t maxnewest);
 
 /**
  * Retrieves the 'transcoder' field of a recording rule structure.
@@ -1703,14 +1692,14 @@ extern void cmyth_recordingrule_set_maxnewest(cmyth_recordingrule_t rr, long max
  * \return success: transcoder
  * \return failure: -(errno)
  */
-extern unsigned long cmyth_recordingrule_transcoder(cmyth_recordingrule_t rr);
+extern uint32_t cmyth_recordingrule_transcoder(cmyth_recordingrule_t rr);
 
 /**
  * Set the 'transcoder' field of the recording rule structure 'rr'.
  * \param rr
  * \param transcoder
  */
-extern void cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, unsigned long transcoder);
+extern void cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, uint32_t transcoder);
 
 /**
  * Retrieve the recording rule structure found at index 'index' in the list
@@ -1738,13 +1727,13 @@ extern int cmyth_recordingrulelist_get_count(cmyth_recordingrulelist_t rrl);
  * \return success: recording rule list handle
  * \return failure: NULL
  */
-extern cmyth_recordingrulelist_t cmyth_mysql_get_recordingrules(cmyth_database_t db);
+extern int cmyth_mysql_get_recordingrules(cmyth_database_t db, cmyth_recordingrulelist_t *rll);
 
 /**
  * Add a recording rule within the database.
  * \param db database
  * \param rr recording rule to add
- * \return success: the new recordid
+ * \return success: 0 , a new recordid is assigned
  * \return failure: -(errno)
  */
 extern int cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr);
@@ -1754,10 +1743,10 @@ extern int cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrul
  * \param db database
  * \param recordid handle
  * \return success: 0
- * \return failire: -(errno)
+ * \return failure: -(errno)
  * \see cmyth_recordingrule_recordid
  */
-extern int cmyth_mysql_delete_recordingrule(cmyth_database_t db, unsigned long recordid);
+extern int cmyth_mysql_delete_recordingrule(cmyth_database_t db, uint32_t recordid);
 
 /**
  * Update recording rule within the database.
@@ -1786,7 +1775,7 @@ typedef struct cmyth_chanlist *cmyth_chanlist_t;
  * \return success: chanid
  * \return failure: -(errno)
  */
-extern unsigned long cmyth_channel_chanid(cmyth_channel_t channel);
+extern uint32_t cmyth_channel_chanid(cmyth_channel_t channel);
 
 /**
  * Retrieves the 'channum' field of a channel structure.
@@ -1794,7 +1783,7 @@ extern unsigned long cmyth_channel_chanid(cmyth_channel_t channel);
  * \return success: channum
  * \return failure: -(errno)
  */
-extern unsigned long cmyth_channel_channum(cmyth_channel_t channel);
+extern uint32_t cmyth_channel_channum(cmyth_channel_t channel);
 
 /**
  * Retrieves the 'chanstr' field of a channel structure.
@@ -1842,7 +1831,7 @@ extern char *cmyth_channel_icon(cmyth_channel_t channel);
  * \return success: visible flag
  * \return failure: -(errno)
  */
-extern unsigned short cmyth_channel_visible(cmyth_channel_t channel);
+extern uint8_t cmyth_channel_visible(cmyth_channel_t channel);
 
 /**
  * Retrieves the 'sourceid' field of a channel structure.
@@ -1850,7 +1839,7 @@ extern unsigned short cmyth_channel_visible(cmyth_channel_t channel);
  * \return success: sourceid
  * \return failure: -(errno)
  */
-extern unsigned long cmyth_channel_sourceid(cmyth_channel_t channel);
+extern uint32_t cmyth_channel_sourceid(cmyth_channel_t channel);
 
 /**
  * Retrieves the 'multiplex' field of a channel structure.
@@ -1858,7 +1847,7 @@ extern unsigned long cmyth_channel_sourceid(cmyth_channel_t channel);
  * \return success: multiplex
  * \return failure: -(errno)
  */
-extern unsigned long cmyth_channel_multiplex(cmyth_channel_t channel);
+extern uint32_t cmyth_channel_multiplex(cmyth_channel_t channel);
 
 /**
  * Retrieve the channel structure found at index 'index' in the list in 'cl'.
@@ -1887,25 +1876,25 @@ extern int cmyth_chanlist_get_count(cmyth_chanlist_t cl);
  * \return success: channels list handle
  * \return failure: NULL
  */
-extern cmyth_chanlist_t cmyth_mysql_get_chanlist(cmyth_database_t db);
+extern int cmyth_mysql_get_chanlist(cmyth_database_t db, cmyth_chanlist_t *chanlist);
 
 /**
  * Returns 'radio' flag of the channel identified by its 'chanid' from database.
  * \param db
  * \param chanid
  * \return success: radio flag
- * \return failure: -1
+ * \return failure: -(errno)
  */
-extern int cmyth_mysql_is_radio(cmyth_database_t db, unsigned long chanid);
+extern int cmyth_mysql_is_radio(cmyth_database_t db, uint32_t chanid);
 
 /**
  * Returns capture card type for the channel identified by its 'chanid' from database.
  * \param db
  * \param chanid
  * \return success: capture card type
- * \return failure: NULL
+ * \return failure: -(errno)
  */
-extern char *cmyth_mysql_get_cardtype(cmyth_database_t db, unsigned long chanid);
+extern int cmyth_mysql_get_cardtype(cmyth_database_t db, uint32_t chanid, char* *cardtype);
 
 /*
  * -----------------------------------------------------------------
@@ -1978,17 +1967,17 @@ extern char *cmyth_storagegroup_file_filename(cmyth_storagegroup_file_t file);
  * Retrieves the 'lastmodified' field of a storagegroup file structure.
  * \param file
  * \return success: time_t lastmodified
- * \return failure: -(errno)
+ * \return failure: 0
  */
-extern unsigned long cmyth_storagegroup_file_lastmodified(cmyth_storagegroup_file_t file);
+extern time_t cmyth_storagegroup_file_lastmodified(cmyth_storagegroup_file_t file);
 
 /**
  * Retrieves the 'filesize' field of a storagegroup file structure.
  * \param file
- * \return success: long long file size
- * \return failure: -(errno)
+ * \return success: int64_t file size
+ * \return failure: 0
  */
-extern unsigned long long cmyth_storagegroup_file_size(cmyth_storagegroup_file_t file);
+extern int64_t cmyth_storagegroup_file_size(cmyth_storagegroup_file_t file);
 
 /*
  * -----------------------------------------------------------------
@@ -1997,8 +1986,8 @@ extern unsigned long long cmyth_storagegroup_file_size(cmyth_storagegroup_file_t
  */
 
 typedef struct cmyth_recorder_source {
-	unsigned long recid;
-	unsigned long sourceid;
+	uint32_t recid;
+	uint32_t sourceid;
 } cmyth_recorder_source_t;
 
 /**
@@ -2006,7 +1995,7 @@ typedef struct cmyth_recorder_source {
  * \param db
  * \param rsrc recorder source list handle
  * \return success: A number indicating the number of recorder source in rsrc
- * \return failure: -1
+ * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_recorder_source_list(cmyth_database_t db, cmyth_recorder_source_t **rsrc);
 
@@ -2016,13 +2005,13 @@ extern int cmyth_mysql_get_recorder_source_list(cmyth_database_t db, cmyth_recor
  * \param channum desired channel number
  * \param rsrc recorder source list handle
  * \return success: A number indicating the number of recorder source in rsrc
- * \return failure: -1
+ * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_recorder_source_channum(cmyth_database_t db, char *channum, cmyth_recorder_source_t **rsrc);
 
 typedef struct cmyth_channelgroup {
 	char name[65];
-	unsigned long grpid;
+	uint32_t grpid;
 } cmyth_channelgroup_t;
 
 /**
@@ -2030,7 +2019,7 @@ typedef struct cmyth_channelgroup {
  * \param db
  * \param changroups channel group list handle
  * \return success: A number indicating the number of channel group in changroups
- * \return failure: -1
+ * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_channelgroups(cmyth_database_t db, cmyth_channelgroup_t **changroups);
 
@@ -2039,21 +2028,21 @@ extern int cmyth_mysql_get_channelgroups(cmyth_database_t db, cmyth_channelgroup
  * \param db
  * \param chanids channel ID list handle
  * \return success: A number indicating the number of channel group in changroups
- * \return failure: -1
+ * \return failure: -(errno)
  */
-extern int cmyth_mysql_get_channelids_in_group(cmyth_database_t db, unsigned long grpid, unsigned long **chanids);
+extern int cmyth_mysql_get_channelids_in_group(cmyth_database_t db, uint32_t grpid, uint32_t **chanids);
 
 /**
  * Retrieves storagegroup name list from database.
  * \param db
  * \param sg storagegroup name list handle
  * \return success: A number indicating the number of storagegroup name in sg
- * \return failure: -1
+ * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_storagegroups(cmyth_database_t db, char** *sg);
 
 typedef struct cmyth_recprofile {
-	int id;
+	uint32_t id;
 	char name[128];
 	char cardtype[32];
 } cmyth_recprofile_t;
@@ -2063,7 +2052,7 @@ typedef struct cmyth_recprofile {
  * \param db
  * \param profiles recording profile list handle
  * \return success: A number indicating the number of profile in profiles
- * \return failure: -1
+ * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_recprofiles(cmyth_database_t db, cmyth_recprofile_t **profiles);
 
@@ -2072,7 +2061,7 @@ extern int cmyth_mysql_get_recprofiles(cmyth_database_t db, cmyth_recprofile_t *
  * \param db
  * \param pg play group list handle
  * \return success: A number indicating the number of playgroup in pg
- * \return failure: -1
+ * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_playgroups(cmyth_database_t db, char** *pg);
 
@@ -2084,7 +2073,7 @@ extern int cmyth_mysql_get_playgroups(cmyth_database_t db, char** *pg);
  * \param global setting name
  * \param data setting data handle
  * \return success: 0 not available, 1 available
- * \return failure: -1
+ * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_setting(cmyth_database_t db, char *setting, char **data);
 
@@ -2127,20 +2116,20 @@ typedef enum {
  * \param db
  * \param prog program info
  * \param type of markup
- * \retval >=0 markup data
- * \retval <0 error
+ * \return success: markup data
+ * \return failure: -(errno)
  */
-extern long long cmyth_mysql_get_recording_markup(cmyth_database_t db, cmyth_proginfo_t prog, cmyth_recording_markup_t type);
+extern int64_t cmyth_mysql_get_recording_markup(cmyth_database_t db, cmyth_proginfo_t prog, cmyth_recording_markup_t type);
 
 /**
  * Retrieve recording framerate (fps x 1000)
  * \param db
  * \param prog program info
- * \retval >0 recording framerate
- * \retval =0 invalid framerate
- * \retval <0 error
+ * \return success: recording framerate >0
+ * \return unknown: 0
+ * \return failure: -(errno)
  */
-extern long long cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_proginfo_t prog);
+extern int64_t cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_proginfo_t prog);
 
 /*
  * -----------------------------------------------------------------
@@ -2158,7 +2147,7 @@ extern long long cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_
  * \param fanart fanart filename handle
  * \param banner banner filename handle
  * \return success: 0 not available, 1 available
- * \return failure: -1
+ * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_recording_artwork(cmyth_database_t db, cmyth_proginfo_t prog, char **coverart, char **fanart, char **banner);
 

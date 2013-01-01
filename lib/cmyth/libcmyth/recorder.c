@@ -34,7 +34,7 @@
 #include <cmyth_local.h>
 
 /*
- * cmyth_recorder_destroy(cmyth_recorder_t rec)
+ * cmyth_recorder_destroy()
  *
  * Scope: PRIVATE (static)
  *
@@ -76,7 +76,7 @@ cmyth_recorder_destroy(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_create(void)
+ * cmyth_recorder_create()
  *
  * Scope: PUBLIC
  *
@@ -114,7 +114,7 @@ cmyth_recorder_create(void)
 }
 
 /*
- * cmyth_recorder_dup(cmyth_recorder_t old)
+ * cmyth_recorder_dup()
  *
  * Scope: PUBLIC
  *
@@ -150,7 +150,7 @@ cmyth_recorder_dup(cmyth_recorder_t old)
 }
 
 /*
- * cmyth_recorder_is_recording(cmyth_recorder_t rec)
+ * cmyth_recorder_is_recording()
  *
  * Scope: PUBLIC
  *
@@ -170,7 +170,8 @@ cmyth_recorder_is_recording(cmyth_recorder_t rec)
 {
 	int err, count;
 	int r;
-	long c, ret;
+	uint8_t c;
+	int ret;
 	char msg[256];
 
 	if (!rec) {
@@ -181,7 +182,7 @@ cmyth_recorder_is_recording(cmyth_recorder_t rec)
 
 	pthread_mutex_lock(&mutex);
 
-	snprintf(msg, sizeof(msg), "QUERY_RECORDER %u[]:[]IS_RECORDING",
+	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]IS_RECORDING",
 		 rec->rec_id);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -193,7 +194,7 @@ cmyth_recorder_is_recording(cmyth_recorder_t rec)
 	}
 
 	count = cmyth_rcv_length(rec->rec_conn);
-	if ((r=cmyth_rcv_long(rec->rec_conn, &err, &c, count)) < 0) {
+	if ((r = cmyth_rcv_uint8(rec->rec_conn, &err, &c, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, r);
@@ -210,9 +211,7 @@ cmyth_recorder_is_recording(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_get_framerate(
- *                              cmyth_recorder_t rec,
- *                              double *rate)
+ * cmyth_recorder_get_framerate()
  *
  * Scope: PUBLIC
  *
@@ -245,7 +244,7 @@ cmyth_recorder_get_framerate(cmyth_recorder_t rec,
 
 	pthread_mutex_lock(&mutex);
 
-	snprintf(msg, sizeof(msg), "QUERY_RECORDER %u[]:[]GET_FRAMERATE",
+	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_FRAMERATE",
 		 rec->rec_id);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -276,8 +275,7 @@ cmyth_recorder_get_framerate(cmyth_recorder_t rec,
 }
 
 /*
- * cmyth_recorder_get_frames_written(cmyth_recorder_t rec,
- *                                   double *rate)
+ * cmyth_recorder_get_frames_written()
  *
  * Scope: PUBLIC
  *
@@ -291,14 +289,14 @@ cmyth_recorder_get_framerate(cmyth_recorder_t rec,
  *
  * Failure: long long -(ERRNO)
  */
-long long
+int64_t
 cmyth_recorder_get_frames_written(cmyth_recorder_t rec)
 {
-	return (long long) -ENOSYS;
+	return (int64_t) -ENOSYS;
 }
 
 /*
- * cmyth_recorder_get_free_space(cmyth_recorder_t rec)
+ * cmyth_recorder_get_free_space()
  *
  * Scope: PUBLIC
  *
@@ -313,14 +311,14 @@ cmyth_recorder_get_frames_written(cmyth_recorder_t rec)
  *
  * Failure: long long -(ERRNO)
  */
-long long
+int64_t
 cmyth_recorder_get_free_space(cmyth_recorder_t rec)
 {
-	return (long long) -ENOSYS;
+	return (int64_t) -ENOSYS;
 }
 
 /*
- * cmyth_recorder_get_key_frame(cmyth_recorder_t rec, long keynum)
+ * cmyth_recorder_get_key_frame()
  *
  * Scope: PUBLIC
  *
@@ -335,17 +333,14 @@ cmyth_recorder_get_free_space(cmyth_recorder_t rec)
  *
  * Failure: long long -(ERRNO)
  */
-long long
-cmyth_recorder_get_keyframe_pos(cmyth_recorder_t rec, unsigned long keynum)
+int64_t
+cmyth_recorder_get_keyframe_pos(cmyth_recorder_t rec, uint32_t keynum)
 {
-	return (long long)-ENOSYS;
+	return (int64_t)-ENOSYS;
 }
 
 /*
- * cmyth_recorder_get_position_map(cmyth_recorder_t rec,
- *                                 cmyth_posmap_t map,
- *                                 long start,
- *                                 long end)
+ * cmyth_recorder_get_position_map()
  *
  * Scope: PUBLIC
  *
@@ -363,14 +358,14 @@ cmyth_recorder_get_keyframe_pos(cmyth_recorder_t rec, unsigned long keynum)
  */
 cmyth_posmap_t
 cmyth_recorder_get_position_map(cmyth_recorder_t rec,
-				unsigned long start,
-				unsigned long end)
+				uint32_t start,
+				uint32_t end)
 {
 	return NULL;
 }
 
 /*
- * cmyth_recorder_get_recording(cmyth_recorder_t rec)
+ * cmyth_recorder_get_recording()
  *
  * Scope: PUBLIC
  *
@@ -392,7 +387,7 @@ cmyth_recorder_get_recording(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_stop_playing(cmyth_recorder_t rec)
+ * cmyth_recorder_stop_playing()
  *
  * Scope: PUBLIC
  *
@@ -414,7 +409,7 @@ cmyth_recorder_stop_playing(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_frontend_ready(cmyth_recorder_t rec)
+ * cmyth_recorder_frontend_ready()
  *
  * Scope: PUBLIC
  *
@@ -435,7 +430,7 @@ cmyth_recorder_frontend_ready(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec)
+ * cmyth_recorder_cancel_next_recording()
  *
  * Scope: PUBLIC
  *
@@ -457,7 +452,7 @@ cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_pause(cmyth_recorder_t rec)
+ * cmyth_recorder_pause()
  *
  * Scope: PUBLIC
  *
@@ -489,7 +484,7 @@ cmyth_recorder_pause(cmyth_recorder_t rec)
 
 	pthread_mutex_lock(&mutex);
 
-	sprintf(Buffer, "QUERY_RECORDER %ld[]:[]PAUSE", (long) rec->rec_id);
+	sprintf(Buffer, "QUERY_RECORDER %"PRIu32"[]:[]PAUSE", rec->rec_id);
 	if ((ret=cmyth_send_message(rec->rec_conn, Buffer)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message('%s') failed\n",
@@ -512,7 +507,7 @@ cmyth_recorder_pause(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_finish_recording(cmyth_recorder_t rec)
+ * cmyth_recorder_finish_recording()
  *
  * Scope: PUBLIC
  *
@@ -534,7 +529,7 @@ cmyth_recorder_finish_recording(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_toggle_channel_favorite(cmyth_recorder_t rec)
+ * cmyth_recorder_toggle_channel_favorite()
  *
  * Scope: PUBLIC
  *
@@ -558,8 +553,7 @@ cmyth_recorder_toggle_channel_favorite(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_change_channel(cmyth_recorder_t rec,
- *                               cmyth_channeldir_t direction)
+ * cmyth_recorder_change_channel()
  *
  * Scope: PUBLIC
  *
@@ -604,7 +598,7 @@ cmyth_recorder_change_channel(cmyth_recorder_t rec,
 	pthread_mutex_lock(&mutex);
 
 	snprintf(msg, sizeof(msg),
-		 "QUERY_RECORDER %d[]:[]CHANGE_CHANNEL[]:[]%d",
+		 "QUERY_RECORDER %"PRIu32"[]:[]CHANGE_CHANNEL[]:[]%d",
 		 rec->rec_id, direction);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -641,8 +635,7 @@ cmyth_recorder_change_channel(cmyth_recorder_t rec,
 }
 
 /*
- * cmyth_recorder_set_channel(cmyth_recorder_t rec,
- *                            char *channame)
+ * cmyth_recorder_set_channel()
  *
  * Scope: PUBLIC
  *
@@ -678,7 +671,7 @@ cmyth_recorder_set_channel(cmyth_recorder_t rec, char *channame)
 	pthread_mutex_lock(&mutex);
 
 	snprintf(msg, sizeof(msg),
-		 "QUERY_RECORDER %d[]:[]SET_CHANNEL[]:[]%s",
+		 "QUERY_RECORDER %"PRIu32"[]:[]SET_CHANNEL[]:[]%s",
 		 rec->rec_id, channame);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -715,8 +708,7 @@ cmyth_recorder_set_channel(cmyth_recorder_t rec, char *channame)
 }
 
 /*
- * cmyth_recorder_change_color(cmyth_recorder_t rec,
- *                             cmyth_adjdir_t direction)
+ * cmyth_recorder_change_color()
  *
  * Scope: PUBLIC
  *
@@ -746,8 +738,7 @@ cmyth_recorder_change_color(cmyth_recorder_t rec, cmyth_adjdir_t direction)
 }
 
 /*
- * cmyth_recorder_change_brightness(cmyth_recorder_t rec,
- *                                  cmyth_adjdir_t direction)
+ * cmyth_recorder_change_brightness()
  *
  * Scope: PUBLIC
  *
@@ -778,8 +769,7 @@ cmyth_recorder_change_brightness(cmyth_recorder_t rec,
 }
 
 /*
- * cmyth_recorder_change_contrast(cmyth_recorder_t rec,
- *                                cmyth_adjdir_t direction)
+ * cmyth_recorder_change_contrast()
  *
  * Scope: PUBLIC
  *
@@ -809,8 +799,7 @@ cmyth_recorder_change_contrast(cmyth_recorder_t rec, cmyth_adjdir_t direction)
 }
 
 /*
- * cmyth_recorder_change_hue(cmyth_recorder_t rec,
- *                           cmyth_adjdir_t direction)
+ * cmyth_recorder_change_hue()
  *
  * Scope: PUBLIC
  *
@@ -840,7 +829,7 @@ cmyth_recorder_change_hue(cmyth_recorder_t rec, cmyth_adjdir_t direction)
 }
 
 /*
- * cmyth_recorder_check_channel(cmyth_recorder_t rec, char *channame)
+ * cmyth_recorder_check_channel()
  *
  * Scope: PUBLIC
  *
@@ -874,7 +863,7 @@ cmyth_recorder_check_channel(cmyth_recorder_t rec,
 	pthread_mutex_lock(&mutex);
 
 	snprintf(msg, sizeof(msg),
-		 "QUERY_RECORDER %d[]:[]CHECK_CHANNEL[]:[]%s",
+		 "QUERY_RECORDER %"PRIu32"[]:[]CHECK_CHANNEL[]:[]%s",
 		 rec->rec_id, channame);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -885,13 +874,11 @@ cmyth_recorder_check_channel(cmyth_recorder_t rec,
 	}
 
 	if ((err=cmyth_rcv_feedback(rec->rec_conn, "1")) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_rcv_feedback() failed (%d)\n",
-			  __FUNCTION__, err);
+		ret = 0;
 		goto fail;
 	}
 
-	ret = 0;
+	ret = 1;
 
     fail:
 	pthread_mutex_unlock(&mutex);
@@ -900,8 +887,7 @@ cmyth_recorder_check_channel(cmyth_recorder_t rec,
 }
 
 /*
- * cmyth_recorder_check_channel_prefix(cmyth_recorder_t rec,
- *                                     char *channame)
+ * cmyth_recorder_check_channel_prefix()
  *
  * Scope: PUBLIC
  *
@@ -923,7 +909,7 @@ cmyth_recorder_check_channel_prefix(cmyth_recorder_t rec, char *channame)
 }
 
 /*
- * cmyth_recorder_get_program_info(cmyth_recorder_t rec)
+ * cmyth_recorder_get_program_info()
  *
  * Scope: PRIVATE (static)
  *
@@ -964,10 +950,10 @@ cmyth_recorder_get_program_info(cmyth_recorder_t rec)
 	pthread_mutex_lock(&mutex);
 
 	if(rec->rec_conn->conn_version >= 26)
-		snprintf(msg, sizeof(msg), "QUERY_RECORDER %d[]:[]GET_CURRENT_RECORDING",
+		snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_CURRENT_RECORDING",
 		 	rec->rec_id);
 	else
-		snprintf(msg, sizeof(msg), "QUERY_RECORDER %d[]:[]GET_PROGRAM_INFO",
+		snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_PROGRAM_INFO",
 		 	rec->rec_id);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -1001,7 +987,7 @@ cmyth_recorder_get_program_info(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_get_cur_proginfo(cmyth_recorder_t rec)
+ * cmyth_recorder_get_cur_proginfo()
  *
  * Scope: PUBLIC
  *
@@ -1038,9 +1024,7 @@ cmyth_recorder_get_cur_proginfo(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_get_next_program_info(cmyth_recorder_t rec,
- *                                      cmyth_proginfo_t proginfo,
- *                                      cmyth_browsedir_t direction)
+ * cmyth_recorder_get_next_program_info()
  *
  * Scope: PRIVATE (static)
  *
@@ -1101,7 +1085,7 @@ cmyth_recorder_get_next_program_info(cmyth_recorder_t rec,
 		 tm->tm_year + 1900, tm->tm_mon + 1,
 		 tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 
-        snprintf(msg, sizeof(msg), "QUERY_RECORDER %d[]:[]GET_NEXT_PROGRAM_INFO[]:[]%s[]:[]%ld[]:[]%i[]:[]%s",
+        snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_NEXT_PROGRAM_INFO[]:[]%s[]:[]%"PRIu32"[]:[]%d[]:[]%s",
                  rec->rec_id, cur_prog->proginfo_channame,
 		 cur_prog->proginfo_chanId, direction, date);
 
@@ -1185,9 +1169,7 @@ cmyth_recorder_get_next_program_info(cmyth_recorder_t rec,
 }
 
 /*
- * cmyth_recorder_get_next_proginfo(cmyth_recorder_t rec,
- *                                  cmyth_proginfo_t current,
- *                                  cmyth_browsedir_t direction)
+ * cmyth_recorder_get_next_proginfo()
  *
  * Scope: PUBLIC
  *
@@ -1244,7 +1226,7 @@ cmyth_recorder_get_next_proginfo(cmyth_recorder_t rec,
 }
 
 /*
- * cmyth_recorder_get_input_name(cmyth_recorder_t rec)
+ * cmyth_recorder_get_input_name()
  *
  * Scope: PUBLIC
  *
@@ -1275,10 +1257,7 @@ cmyth_recorder_get_input_name(cmyth_recorder_t rec,
 }
 
 /*
- * cmyth_recorder_seek(cmyth_recorder_t rec,
- *                     long long pos,
- *                     cmyth_whence_t whence,
- *                     long long curpos)
+ * cmyth_recorder_seek()
  *
  * Scope: PUBLIC
  *
@@ -1304,18 +1283,18 @@ cmyth_recorder_get_input_name(cmyth_recorder_t rec,
  *
  * Failure: (long long) -(ERRNO)
  */
-long long
+int64_t
 cmyth_recorder_seek(cmyth_recorder_t rec,
-                    long long pos,
-		    cmyth_whence_t whence,
-		    long long curpos)
+                    int64_t pos,
+		    int8_t whence,
+		    int64_t curpos)
 
 {
-	return (long long) -ENOSYS;
+	return (int64_t) -ENOSYS;
 }
 
 /*
- * cmyth_recorder_spawn_livetv(cmyth_recorder_t rec)
+ * cmyth_recorder_spawn_livetv()
  *
  * Scope: PUBLIC
  *
@@ -1345,7 +1324,7 @@ cmyth_recorder_spawn_livetv(cmyth_recorder_t rec)
 
 	pthread_mutex_lock(&mutex);
 
-	snprintf(msg, sizeof(msg), "QUERY_RECORDER %d[]:[]SPAWN_LIVETV",
+	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]SPAWN_LIVETV",
 		 rec->rec_id);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -1400,11 +1379,11 @@ cmyth_recorder_spawn_chain_livetv(cmyth_recorder_t rec, char* channame)
 	/* Now build the SPAWN_LIVETV message */
 	if(rec->rec_conn->conn_version >= 34 && channame)
 		snprintf(msg, sizeof(msg),
-			"QUERY_RECORDER %d[]:[]SPAWN_LIVETV[]:[]live-%s-%s[]:[]%d[]:[]%s",
+			"QUERY_RECORDER %"PRIu32"[]:[]SPAWN_LIVETV[]:[]live-%s-%s[]:[]%d[]:[]%s",
 			 rec->rec_id, myhostname, datestr, 0, channame);
 	else
 		snprintf(msg, sizeof(msg),
-			"QUERY_RECORDER %d[]:[]SPAWN_LIVETV[]:[]live-%s-%s[]:[]%d",
+			"QUERY_RECORDER %"PRIu32"[]:[]SPAWN_LIVETV[]:[]live-%s-%s[]:[]%d",
 			 rec->rec_id, myhostname, datestr, 0);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -1448,7 +1427,7 @@ cmyth_recorder_stop_livetv(cmyth_recorder_t rec)
 
 	pthread_mutex_lock(&mutex);
 
-	snprintf(msg, sizeof(msg), "QUERY_RECORDER %d[]:[]STOP_LIVETV",
+	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]STOP_LIVETV",
 		 rec->rec_id);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -1491,7 +1470,7 @@ cmyth_recorder_done_ringbuf(cmyth_recorder_t rec)
 
 	pthread_mutex_lock(&mutex);
 
-	snprintf(msg, sizeof(msg), "QUERY_RECORDER %d[]:[]DONE_RINGBUF",
+	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]DONE_RINGBUF",
 		 rec->rec_id);
 
 	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
@@ -1517,7 +1496,7 @@ cmyth_recorder_done_ringbuf(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_start_stream(cmyth_recorder_t rec)
+ * cmyth_recorder_start_stream()
  *
  * Scope: PUBLIC
  *
@@ -1539,7 +1518,7 @@ cmyth_recorder_start_stream(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_end_stream(cmyth_recorder_t rec)
+ * cmyth_recorder_end_stream()
  *
  * Scope: PUBLIC
  *
@@ -1580,20 +1559,20 @@ cmyth_recorder_get_filename(cmyth_recorder_t rec)
 			buf[0] = '\0';
 	}
 	else
-		snprintf(buf, sizeof(buf), "ringbuf%d.nuv", rec->rec_id);
+		snprintf(buf, sizeof(buf), "ringbuf%"PRIu32".nuv", rec->rec_id);
 
 	ret = ref_strdup(buf);
 
 	return ret;
 }
 
-int
+uint32_t
 cmyth_recorder_get_recorder_id(cmyth_recorder_t rec)
 {
 	if (!rec) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
 			  __FUNCTION__);
-		return -EINVAL;
+		return 0;
 	}
 
 	return rec->rec_id;

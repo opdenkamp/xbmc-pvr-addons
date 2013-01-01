@@ -35,7 +35,7 @@
 #include <refmem/refmem.h>
 #include <cmyth/cmyth.h>
 #include <time.h>
-#include <stdint.h>
+#include <inttypes.h>
 #include <mysql/mysql.h>
 
 #if defined(_MSC_VER)
@@ -64,10 +64,10 @@ extern pthread_mutex_t mutex;
 /*
  * Some useful constants
  */
-#define CMYTH_LONGLONG_LEN (sizeof("-18446744073709551616") - 1)
-#define CMYTH_LONG_LEN (sizeof("-4294967296") - 1)
-#define CMYTH_SHORT_LEN (sizeof("-65536") - 1)
-#define CMYTH_BYTE_LEN (sizeof("-256") - 1)
+#define CMYTH_INT64_LEN (sizeof("-18446744073709551616") - 1)
+#define CMYTH_INT32_LEN (sizeof("-4294967296") - 1)
+#define CMYTH_INT16_LEN (sizeof("-65536") - 1)
+#define CMYTH_INT8_LEN (sizeof("-256") - 1)
 #define CMYTH_TIMESTAMP_LEN (sizeof("YYYY-MM-DDTHH:MM:SS") - 1)
 #define CMYTH_DATESTAMP_LEN (sizeof("YYYY-MM-DD") - 1)
 #define CMYTH_UTC_LEN (sizeof("1240120680") - 1)
@@ -82,29 +82,29 @@ extern pthread_mutex_t mutex;
 struct cmyth_conn {
 	cmyth_socket_t	conn_fd;	/**< socket file descriptor */
 	unsigned char	*conn_buf;	/**< connection buffer */
-	int		conn_buflen;	/**< buffer size */
-	int		conn_len;	/**< amount of data in buffer */
-	int		conn_pos;	/**< current position in buffer */
-	unsigned long	conn_version;	/**< protocol version */
-	volatile int	conn_hang;	/**< is connection stuck? */
-	int		conn_tcp_rcvbuf;/**< TCP receive buffer size */
+	uint32_t	conn_buflen;	/**< buffer size */
+	int32_t		conn_len;	/**< amount of data in buffer */
+	int32_t		conn_pos;	/**< current position in buffer */
+	uint32_t	conn_version;	/**< protocol version */
+	volatile int8_t	conn_hang;	/**< is connection stuck? */
+	int32_t		conn_tcp_rcvbuf;/**< TCP receive buffer size */
 	char *          server;         /**< hostname of server */
-	unsigned short  port;           /**< port of server */
+	uint16_t	port;           /**< port of server */
 };
 
 /* Sergio: Added to support new livetv protocol */
 struct cmyth_livetv_chain {
 	char *chainid;
-	int chain_ct;
-	int chain_switch_on_create;
-	int chain_current;
+	int32_t chain_ct;
+	volatile int8_t chain_switch_on_create;
+	int32_t chain_current;
 	void (*prog_update_callback)(cmyth_proginfo_t prog);
 	cmyth_proginfo_t *progs;
 	char **chain_urls;
 	cmyth_file_t *chain_files; /* File pointers for the urls */
-	int livetv_watch; /* JLB: Manage program breaks */
-	int livetv_tcp_rcvbuf;
-	unsigned long livetv_block_len;
+	volatile int8_t livetv_watch; /* JLB: Manage program breaks */
+	int32_t livetv_tcp_rcvbuf;
+	int32_t livetv_block_len;
 };
 
 /* Sergio: Added to clean up database interaction */
@@ -113,18 +113,19 @@ struct cmyth_database {
 	char * db_user;
 	char * db_pass;
 	char * db_name;
-	unsigned short db_port;
+	uint16_t db_port;
 	MYSQL * mysql;
-	int db_version; /* JLB: -1 = No set, 0 = unknown else DBSchemaVer */
-	int db_tz_utc; /* JLB: 0 = No conversion, 1 = Enable UTC time zone conversion */
+	int8_t db_setup; /* JLB: 0 = No setup, 1 = setup done */
+	uint32_t db_version; /* 0 = unknown else DBSchemaVer */
+	int8_t db_tz_utc; /* JLB: 0 = No conversion, 1 = Enable UTC time zone conversion */
 	char db_tz_name[64]; /* JLB: db time zone name to convert query projection */
 };
 
 struct cmyth_recorder {
-	unsigned rec_have_stream;
-	unsigned rec_id;
+	int8_t rec_have_stream;
+	uint32_t rec_id;
 	char *rec_server;
-	int rec_port;
+	uint16_t rec_port;
 	cmyth_ringbuf_t rec_ring;
 	cmyth_conn_t rec_conn;
 	/* Sergio: Added to support new livetv protocol */
@@ -138,47 +139,47 @@ struct cmyth_recorder {
  */
 struct cmyth_file {
 	cmyth_conn_t file_data;		/**< backend connection */
-	long file_id;			/**< file identifier */
+	uint32_t file_id;		/**< file identifier */
 	/** callback when close is completed */
 	void (*closed_callback)(cmyth_file_t file);
-	uint64_t file_start;	/**< file start offest */
-	uint64_t file_length;	/**< file length */
-	uint64_t file_pos;	/**< current file position */
-	uint64_t file_req;	/**< current file position requested */
+	int64_t file_start;	/**< file start offest */
+	int64_t file_length;	/**< file length */
+	int64_t file_pos;	/**< current file position */
+	int64_t file_req;	/**< current file position requested */
 	cmyth_conn_t file_control;	/**< master backend connection */
 };
 
 struct cmyth_ringbuf {
 	cmyth_conn_t conn_data;
-	long file_id;
+	uint32_t file_id;
 	char *ringbuf_url;
-	uint64_t ringbuf_size;
-	uint64_t file_length;
-	uint64_t file_pos;
-	uint64_t ringbuf_fill;
+	int64_t ringbuf_size;
+	int64_t file_length;
+	int64_t file_pos;
+	int64_t ringbuf_fill;
 	char *ringbuf_hostname;
-	int ringbuf_port;
+	uint16_t ringbuf_port;
 };
 
 struct cmyth_rec_num {
 	char *recnum_host;
-	unsigned short recnum_port;
-	unsigned int recnum_id;
+	uint16_t recnum_port;
+	int32_t recnum_id;
 };
 
 struct cmyth_keyframe {
-	unsigned long keyframe_number;
-	uint64_t keyframe_pos;
+	uint32_t keyframe_number;
+	int64_t keyframe_pos;
 };
 
 struct cmyth_posmap {
-	unsigned int posmap_count;
 	struct cmyth_keyframe **posmap_list;
+	int posmap_count;
 };
 
 struct cmyth_freespace {
-	uint64_t freespace_total;
-	uint64_t freespace_used;
+	int64_t freespace_total;
+	int64_t freespace_used;
 };
 
 struct cmyth_timestamp {
@@ -195,10 +196,10 @@ struct cmyth_proginfo {
 	char *proginfo_title;
 	char *proginfo_subtitle;
 	char *proginfo_description;
-	unsigned short proginfo_season;    /* new in V67 */
-	unsigned short proginfo_episode;    /* new in V67 */
+	uint16_t proginfo_season;    /* new in V67 */
+	uint16_t proginfo_episode;    /* new in V67 */
 	char *proginfo_category;
-	unsigned long proginfo_chanId;
+	uint32_t proginfo_chanId;
 	char *proginfo_chanstr;
 	char *proginfo_chansign;
 	char *proginfo_channame;  /* Deprecated in V8, simulated for compat. */
@@ -207,24 +208,24 @@ struct cmyth_proginfo {
 	int64_t proginfo_Length;
 	cmyth_timestamp_t proginfo_start_ts;
 	cmyth_timestamp_t proginfo_end_ts;
-	unsigned long proginfo_conflicting; /* Deprecated in V8, always 0 */
+	uint32_t proginfo_conflicting; /* Deprecated in V8, always 0 */
 	char *proginfo_unknown_0;   /* May be new 'conflicting' in V8 */
-	unsigned long proginfo_recording;
-	unsigned long proginfo_override;
+	uint32_t proginfo_recording;
+	uint32_t proginfo_override;
 	char *proginfo_hostname;
-	unsigned long proginfo_source_id; /* ??? in V8 */
-	unsigned long proginfo_card_id;   /* ??? in V8 */
-	unsigned long proginfo_input_id;  /* ??? in V8 */
-	long proginfo_rec_priority;  /* ??? in V8 */
-	long proginfo_rec_status; /* ??? in V8 */
-	unsigned long proginfo_record_id;  /* ??? in V8 */
-	long proginfo_rec_type;   /* ??? in V8 */
-	long proginfo_rec_dupin;   /* ??? in V8 */
-	long proginfo_rec_dupmethod;  /* new in V8 */
+	uint32_t proginfo_source_id; /* ??? in V8 */
+	uint32_t proginfo_card_id;   /* ??? in V8 */
+	uint32_t proginfo_input_id;  /* ??? in V8 */
+	int8_t proginfo_rec_priority;  /* ??? in V8 */
+	int8_t proginfo_rec_status; /* ??? in V8 */
+	uint32_t proginfo_record_id;  /* ??? in V8 */
+	uint8_t proginfo_rec_type;   /* ??? in V8 */
+	uint8_t proginfo_rec_dupin;   /* ??? in V8 */
+	uint8_t proginfo_rec_dupmethod;  /* new in V8 */
 	cmyth_timestamp_t proginfo_rec_start_ts;
 	cmyth_timestamp_t proginfo_rec_end_ts;
-	unsigned long proginfo_repeat;   /* ??? in V8 */
-	unsigned long proginfo_program_flags;
+	uint8_t proginfo_repeat;   /* ??? in V8 */
+	uint32_t proginfo_program_flags;
 	char *proginfo_rec_profile;  /* new in V8 */
 	char *proginfo_recgroup;    /* new in V8 */
 	char *proginfo_chancommfree;    /* new in V8 */
@@ -236,23 +237,23 @@ struct cmyth_proginfo {
 	char *proginfo_stars;    /* new in V12 */
 	cmyth_timestamp_t proginfo_originalairdate;	/* new in V12 */
 	char *proginfo_pathname;
-	int proginfo_port;
-        unsigned long proginfo_hasairdate;
+	uint16_t proginfo_port;
+        uint8_t proginfo_hasairdate;
 	char *proginfo_host;
-	unsigned long proginfo_version;
+	uint32_t proginfo_version;
 	char *proginfo_playgroup; /* new in v18 */
-	long proginfo_recpriority_2;  /* new in V25 */
-	long proginfo_parentid; /* new in V31 */
+	int8_t proginfo_recpriority_2;  /* new in V25 */
+	uint32_t proginfo_parentid; /* new in V31 */
 	char *proginfo_storagegroup; /* new in v32 */
-	unsigned long proginfo_audioproperties; /* new in v35 */
-	unsigned long proginfo_videoproperties; /* new in v35 */
-	unsigned long proginfo_subtitletype; /* new in v35 */
-	unsigned short proginfo_year; /* new in v43 */
+	uint16_t proginfo_audioproperties; /* new in v35 */
+	uint16_t proginfo_videoproperties; /* new in v35 */
+	uint16_t proginfo_subtitletype; /* new in v35 */
+	uint16_t proginfo_year; /* new in v43 */
 };
 
 struct cmyth_proglist {
 	cmyth_proginfo_t *proglist_list;
-	long proglist_count;
+	int proglist_count;
 };
 
 /*
@@ -277,61 +278,36 @@ extern int cmyth_rcv_okay(cmyth_conn_t conn);
 extern int cmyth_rcv_feedback(cmyth_conn_t conn, char *fb);
 
 #define cmyth_rcv_version __cmyth_rcv_version
-extern int cmyth_rcv_version(cmyth_conn_t conn, unsigned long *vers);
+extern int cmyth_rcv_version(cmyth_conn_t conn, uint32_t *vers);
 
-#define cmyth_rcv_byte __cmyth_rcv_byte
-extern int cmyth_rcv_byte(cmyth_conn_t conn, int *err, char *buf, int count);
+#define cmyth_rcv_int8 __cmyth_rcv_int8
+extern int cmyth_rcv_int8(cmyth_conn_t conn, int *err, int8_t *buf, int count);
 
-#define cmyth_rcv_short __cmyth_rcv_short
-extern int cmyth_rcv_short(cmyth_conn_t conn, int *err, short *buf, int count);
+#define cmyth_rcv_int16 __cmyth_rcv_int16
+extern int cmyth_rcv_int16(cmyth_conn_t conn, int *err, int16_t *buf, int count);
 
-#define cmyth_rcv_long __cmyth_rcv_long
-extern int cmyth_rcv_long(cmyth_conn_t conn, int *err, long *buf, int count);
-#define cmyth_rcv_u_long(c, e, b, n) cmyth_rcv_long(c, e, (long*)b, n)
+#define cmyth_rcv_int32 __cmyth_rcv_int32
+extern int cmyth_rcv_int32(cmyth_conn_t conn, int *err, int32_t *buf, int count);
 
 #define cmyth_rcv_old_int64 __cmyth_rcv_old_int64
-extern int cmyth_rcv_old_int64(cmyth_conn_t conn, int *err, int64_t *buf,
-			       int count);
+extern int cmyth_rcv_old_int64(cmyth_conn_t conn, int *err, int64_t *buf, int count);
 
 #define cmyth_rcv_new_int64 __cmyth_rcv_new_int64
-extern int cmyth_rcv_new_int64(cmyth_conn_t conn, int *err, int64_t *buf,
-			       int count, int forced);
+extern int cmyth_rcv_new_int64(cmyth_conn_t conn, int *err, int64_t *buf, int count, int forced);
 
-#define cmyth_rcv_old_uint64 __cmyth_rcv_old_uint64
-extern int cmyth_rcv_old_uint64(cmyth_conn_t conn, int *err, uint64_t *buf,
-				int count);
+#define cmyth_rcv_int64(conn, err, buf, count)	cmyth_rcv_new_int64(conn, err, buf, count, 0)
 
-#define cmyth_rcv_new_uint64 __cmyth_rcv_new_uint64
-extern int cmyth_rcv_new_uint64(cmyth_conn_t conn, int *err, uint64_t *buf,
-				int count, int forced);
+#define cmyth_rcv_uint8 __cmyth_rcv_uint8
+extern int cmyth_rcv_uint8(cmyth_conn_t conn, int *err, uint8_t *buf, int count);
 
-#define cmyth_rcv_int64(conn, err, buf, count)	\
-	cmyth_rcv_new_int64(conn, err, buf, count, 0)
+#define cmyth_rcv_uint16 __cmyth_rcv_uint16
+extern int cmyth_rcv_uint16(cmyth_conn_t conn, int *err, uint16_t *buf, int count);
 
-#define cmyth_rcv_uint64(conn, err, buf, count)	\
-	cmyth_rcv_new_uint64(conn, err, buf, count, 0)
-
-#define cmyth_rcv_ubyte __cmyth_rcv_ubyte
-extern int cmyth_rcv_ubyte(cmyth_conn_t conn, int *err, unsigned char *buf,
-			   int count);
-
-#define cmyth_rcv_ushort __cmyth_rcv_ushort
-extern int cmyth_rcv_ushort(cmyth_conn_t conn, int *err, unsigned short *buf,
-			    int count);
-
-#define cmyth_rcv_ulong __cmyth_rcv_ulong
-extern int cmyth_rcv_ulong(cmyth_conn_t conn, int *err, unsigned long *buf,
-			   int count);
-
-#define cmyth_rcv_ulong_long __cmyth_rcv_ulong_long
-extern int cmyth_rcv_ulong_long(cmyth_conn_t conn,
-				int *err,
-				unsigned long long *buf,
-				int count);
+#define cmyth_rcv_uint32 __cmyth_rcv_uint32
+extern int cmyth_rcv_uint32(cmyth_conn_t conn, int *err, uint32_t *buf, int count);
 
 #define cmyth_rcv_data __cmyth_rcv_data
-extern int cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf,
-			  int count);
+extern int cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int count);
 
 #define cmyth_rcv_timestamp __cmyth_rcv_timestamp
 extern int cmyth_rcv_timestamp(cmyth_conn_t conn, int *err,
@@ -414,17 +390,15 @@ extern cmyth_mysql_query_t * cmyth_mysql_query_create(cmyth_database_t db, const
 
 extern void cmyth_mysql_query_reset(cmyth_mysql_query_t *query);
 
-extern int cmyth_mysql_query_param_long(cmyth_mysql_query_t * query,long param);
+extern int cmyth_mysql_query_param_int32(cmyth_mysql_query_t * query, int32_t param);
 
-extern int cmyth_mysql_query_param_ulong(cmyth_mysql_query_t * query,unsigned long param);
+extern int cmyth_mysql_query_param_uint32(cmyth_mysql_query_t * query, uint32_t param);
 
-extern int cmyth_mysql_query_param_int64(cmyth_mysql_query_t * query,int64_t param);
+extern int cmyth_mysql_query_param_int64(cmyth_mysql_query_t * query, int64_t param);
 
-extern int cmyth_mysql_query_param_uint64(cmyth_mysql_query_t * query,uint64_t param);
+extern int cmyth_mysql_query_param_int(cmyth_mysql_query_t * query, int param);
 
-extern int cmyth_mysql_query_param_int(cmyth_mysql_query_t * query,int param);
-
-extern int cmyth_mysql_query_param_uint(cmyth_mysql_query_t * query,int param);
+extern int cmyth_mysql_query_param_uint(cmyth_mysql_query_t * query, unsigned int param);
 
 extern int cmyth_mysql_query_param_unixtime(cmyth_mysql_query_t * query, time_t param, int tz_utc);
 
@@ -442,15 +416,15 @@ extern char* cmyth_utf8tolatin1(char* s);
  * From channel.c
  */
 struct cmyth_channel {
-	unsigned long chanid;
-	unsigned long channum;
+	uint32_t chanid;
+	uint32_t channum;
 	char *chanstr;
 	char *callsign;
 	char *name;
 	char *icon;
-	unsigned short visible;
-	unsigned long sourceid;
-	unsigned long multiplex;
+	uint8_t visible;
+	uint32_t sourceid;
+	uint32_t multiplex;
 };
 
 struct cmyth_chanlist {
@@ -468,35 +442,35 @@ extern cmyth_chanlist_t cmyth_chanlist_create(void);
  * From recordingrule.c
  */
 struct cmyth_recordingrule {
-	unsigned long recordid;
-	unsigned long chanid;
+	uint32_t recordid;
+	uint32_t chanid;
 	cmyth_timestamp_t starttime;
 	cmyth_timestamp_t endtime;
 	char* title;
 	char* description;
-	long type;                     //enum
+	uint8_t type;                    //enum
 	char* category;
 	char* subtitle;
-	long recpriority;              //range -99,+99
-	long startoffset;              //nb minutes
-	long endoffset;                //nb minutes
-	long searchtype;               //enum
-	unsigned short inactive;       //bool
+	int8_t recpriority;              //range -99,+99
+	uint8_t startoffset;             //nb minutes
+	uint8_t endoffset;               //nb minutes
+	uint8_t searchtype;              //enum
+	uint8_t inactive;                //bool
 	char* callsign;
-	long dupmethod;                //enum
-	long dupin;                    //enum
+	uint8_t dupmethod;               //enum
+	uint8_t dupin;                   //enum
 	char* recgroup;
 	char* storagegroup;
 	char* playgroup;
-	unsigned short autotranscode;  //bool
-	int userjobs;                  //#1111
-	unsigned short autocommflag;   //bool
-	long autoexpire;               //bool
-	long maxepisodes;              //range 0,100
-	long maxnewest;                //bool
-	unsigned long transcoder;      //recordingprofiles id
+	uint8_t autotranscode;           //bool
+	uint8_t userjobs;                //#1111
+	uint8_t autocommflag;            //bool
+	uint8_t autoexpire;              //bool
+	uint32_t maxepisodes;            //range 0,100
+	uint8_t maxnewest;               //bool
+	uint32_t transcoder;             //recordingprofiles id
 	//char* profile;
-	//unsigned long prefinput;
+	//uint32_t prefinput;
 	};
 
 struct cmyth_recordingrulelist {
@@ -517,8 +491,8 @@ struct cmyth_storagegroup_file {
 	char* filename;
 	char* storagegroup;
 	char* hostname;
-	unsigned long lastmodified;
-	unsigned long size;
+	time_t lastmodified;
+	int64_t size;
 };
 
 struct cmyth_storagegroup_filelist {

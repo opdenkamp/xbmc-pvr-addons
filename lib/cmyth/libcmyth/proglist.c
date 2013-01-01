@@ -30,7 +30,7 @@
 #include <cmyth_local.h>
 
 /*
- * cmyth_proglist_destroy(void)
+ * cmyth_proglist_destroy()
  *
  * Scope: PRIVATE (static)
  *
@@ -65,7 +65,7 @@ cmyth_proglist_destroy(cmyth_proglist_t pl)
 }
 
 /*
- * cmyth_proglist_create(void)
+ * cmyth_proglist_create()
  *
  * Scope: PUBLIC
  *
@@ -97,7 +97,7 @@ cmyth_proglist_create(void)
 }
 
 /*
- * cmyth_proglist_get_item(cmyth_proglist_t pl, int index)
+ * cmyth_proglist_get_item()
  *
  * Scope: PUBLIC
  *
@@ -176,7 +176,7 @@ cmyth_proglist_delete_item(cmyth_proglist_t pl, cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proglist_get_count(cmyth_proglist_t pl)
+ * cmyth_proglist_get_count()
  *
  * Scope: PUBLIC
  *
@@ -203,9 +203,7 @@ cmyth_proglist_get_count(cmyth_proglist_t pl)
 }
 
 /*
- * cmyth_proglist_get_list(cmyth_conn_t conn,
- *                         cmyth_proglist_t proglist,
- *                         char *msg, char *func)
+ * cmyth_proglist_get_list()
  *
  * Scope: PRIVATE (static)
  *
@@ -257,9 +255,9 @@ cmyth_proglist_get_list(cmyth_conn_t conn,
 		goto out;
 	}
 	if (strcmp(msg, "QUERY_GETALLPENDING") == 0) {
-		long c;
+		int32_t c;
 		int r;
-		if ((r=cmyth_rcv_long(conn, &err, &c, count)) < 0) {
+		if ((r = cmyth_rcv_int32(conn, &err, &c, count)) < 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: cmyth_rcv_length() failed (%d)\n",
 				  __FUNCTION__, r);
@@ -290,8 +288,7 @@ cmyth_proglist_get_list(cmyth_conn_t conn,
 }
 
 /*
- * cmyth_proglist_get_all_recorded(cmyth_conn_t control,
- *                                 cmyth_proglist_t *proglist)
+ * cmyth_proglist_get_all_recorded()
  *
  * Scope: PUBLIC
  *
@@ -340,8 +337,7 @@ cmyth_proglist_get_all_recorded(cmyth_conn_t control)
 }
 
 /*
- * cmyth_proglist_get_all_pending(cmyth_conn_t control,
- *                                cmyth_proglist_t *proglist)
+ * cmyth_proglist_get_all_pending()
  *
  * Scope: PUBLIC
  *
@@ -383,8 +379,7 @@ cmyth_proglist_get_all_pending(cmyth_conn_t control)
 }
 
 /*
- * cmyth_proglist_get_all_scheduled(cmyth_conn_t control,
- *                                  cmyth_proglist_t *proglist)
+ * cmyth_proglist_get_all_scheduled()
  *
  * Scope: PUBLIC
  *
@@ -426,8 +421,7 @@ cmyth_proglist_get_all_scheduled(cmyth_conn_t control)
 }
 
 /*
- * cmyth_proglist_get_conflicting(cmyth_conn_t control,
- *                                cmyth_proglist_t *proglist)
+ * cmyth_proglist_get_conflicting()
  *
  * Scope: PUBLIC
  *
@@ -469,7 +463,7 @@ cmyth_proglist_get_conflicting(cmyth_conn_t control)
 }
 
 /*
- * sort_timestamp(const void *a, const void *b)
+ * sort_timestamp()
  *
  * Scope: PRIVATE
  *
@@ -533,7 +527,7 @@ static int sort_timestamp(cmyth_timestamp_t X, cmyth_timestamp_t Y)
 }
 
 /*
- * recorded_compare(const void *a, const void *b)
+ * recorded_compare()
  *
  * Scope: PRIVATE
  *
@@ -561,7 +555,7 @@ recorded_compare(const void *a, const void *b)
 }
 
 /*
- * airdate_compare(const void *a, const void *b)
+ * airdate_compare()
  *
  * Scope: PRIVATE
  *
@@ -589,7 +583,7 @@ airdate_compare(const void *a, const void *b)
 }
 
 /*
- * cmyth_proglist_sort(cmyth_proglist_t pl, int count, int sort)
+ * cmyth_proglist_sort()
  *
  * Scope: PUBLIC
  *

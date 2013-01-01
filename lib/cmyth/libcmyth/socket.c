@@ -227,7 +227,7 @@ cmyth_conn_refill(cmyth_conn_t conn, int len)
 			  __FUNCTION__);
 		return -EINVAL;
 	}
-	if (len > conn->conn_buflen) {
+	if ((unsigned)len > conn->conn_buflen) {
 		len = conn->conn_buflen;
 	}
 	p = conn->conn_buf;
@@ -418,14 +418,14 @@ cmyth_rcv_string(cmyth_conn_t conn, int *err, char *buf, int buflen, int count)
 }
 
 /*
- * cmyth_rcv_ulong(cmyth_conn_t conn, int *err, unsigned long *buf,
+ * cmyth_rcv_uint32(cmyth_conn_t conn, int *err, uint32_t *buf,
  *                      int count)
  *
- * Scope: PRIVATE (mapped to __cmyth_rcv_ulong_long)
+ * Scope: PRIVATE (mapped to __cmyth_rcv_uint32)
  *
  * Description
  *
- * Receive an unsigned long long (64 bit) integer token from a list of
+ * Receive an unsigned (32 bit) integer token from a list of
  * tokens in a MythTV Protocol message.  Tokens in MythTV Protocol
  * messages are separated by the string: []:[] or terminated by
  * running out of message.  Up to 'count' Bytes will be consumed from
@@ -452,13 +452,12 @@ cmyth_rcv_string(cmyth_conn_t conn, int *err, char *buf, int buflen, int count)
  * EINVAL       The token received is not numeric or is signed
  */
 int
-cmyth_rcv_ulong(cmyth_conn_t conn, int *err, unsigned long *buf,
-		int count)
+cmyth_rcv_uint32(cmyth_conn_t conn, int *err, uint32_t *buf, int count)
 {
 	char num[32];
 	char *num_p = num;
-	unsigned long long val = 0;
-	unsigned long limit = 0xffffffff;
+	uint64_t val = 0;
+	uint64_t limit = UINT32_MAX;
 	int consumed;
 	int tmp;
 
@@ -505,18 +504,18 @@ cmyth_rcv_ulong(cmyth_conn_t conn, int *err, unsigned long *buf,
 	/*
 	 * Got a result, return it.
 	 */
-	*buf = (unsigned long)val;
+	*buf = (uint32_t)val;
 	return consumed;
 }
 
 /*
- * cmyth_rcv_long(cmyth_conn_t conn, int *err, long *buf, int count)
+ * cmyth_rcv_int32(cmyth_conn_t conn, int *err, int32_t *buf, int count)
  *
- * Scope: PRIVATE (mapped to __cmyth_rcv_long_long)
+ * Scope: PRIVATE (mapped to __cmyth_rcv_int32)
  *
  * Description
  *
- * Receive a long (signed 32 bit) integer token from a list of
+ * Receive a signed (32 bit) integer token from a list of
  * tokens in a MythTV Protocol message.  Tokens in MythTV Protocol
  * messages are separated by the string: []:[] or terminated by
  * running out of message.  Up to 'count' Bytes will be consumed from
@@ -542,13 +541,13 @@ cmyth_rcv_ulong(cmyth_conn_t conn, int *err, unsigned long *buf,
  * EINVAL       The token received is not numeric
  */
 int
-cmyth_rcv_long(cmyth_conn_t conn, int *err, long *buf, int count)
+cmyth_rcv_int32(cmyth_conn_t conn, int *err, int32_t *buf, int count)
 {
 	char num[32];
 	char *num_p = num;
-	unsigned long long val = 0;
+	uint64_t val = 0;
 	int sign = 1;
-	long limit = 0x7fffffff;
+	uint64_t limit = INT32_MAX;
 	int consumed;
 	int tmp;
 
@@ -585,7 +584,7 @@ cmyth_rcv_long(cmyth_conn_t conn, int *err, long *buf, int count)
 		 * Check and make sure we are still under the limit (this is
 		 * an absolute value limit, sign will be applied later).
 		 */
-		if (val > (unsigned long)limit) {
+		if (val > limit) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: long out of range: '%s'\n",
 				  __FUNCTION__, num);
@@ -598,7 +597,7 @@ cmyth_rcv_long(cmyth_conn_t conn, int *err, long *buf, int count)
 	/*
 	 * Got a result, return it.
 	 */
-	*buf = (long)(sign * val);
+	*buf = (int32_t)(sign * val);
 
 	return consumed;
 }
@@ -727,12 +726,12 @@ cmyth_rcv_feedback(cmyth_conn_t conn, char *fb)
  * Failure: -(errno)
  */
 int
-cmyth_rcv_version(cmyth_conn_t conn, unsigned long *vers)
+cmyth_rcv_version(cmyth_conn_t conn, uint32_t *vers)
 {
 	int len;
 	int consumed;
 	char buf[8];
-	unsigned long tmp_vers;
+	uint32_t tmp_vers;
 	int err;
 
 	if (!vers) {
@@ -756,7 +755,7 @@ cmyth_rcv_version(cmyth_conn_t conn, unsigned long *vers)
 	 * either case, the number following it is the correct version, and
 	 * we use it as an unsigned long.
 	 */
-	consumed = cmyth_rcv_ulong(conn, &err, vers, len);
+	consumed = cmyth_rcv_uint32(conn, &err, vers, len);
 	if (consumed < len) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: did not consume everything %d < %d\n",
@@ -766,9 +765,9 @@ cmyth_rcv_version(cmyth_conn_t conn, unsigned long *vers)
 }
 
 /*
- * cmyth_rcv_byte(cmyth_conn_t conn, int *err, char *buf, int count)
+ * cmyth_rcv_int8(cmyth_conn_t conn, int *err, int8_t *buf, int count)
  *
- * Scope: PRIVATE (mapped to __cmyth_rcv_byte)
+ * Scope: PRIVATE (mapped to __cmyth_rcv_int8)
  *
  * Description
  *
@@ -798,9 +797,9 @@ cmyth_rcv_version(cmyth_conn_t conn, unsigned long *vers)
  * EINVAL       The token received is not numeric
  */
 int
-cmyth_rcv_byte(cmyth_conn_t conn, int *err, char *buf, int count)
+cmyth_rcv_int8(cmyth_conn_t conn, int *err, int8_t *buf, int count)
 {
-	long val;
+	int32_t val;
 	int consumed;
 	int tmp;
 
@@ -811,7 +810,7 @@ cmyth_rcv_byte(cmyth_conn_t conn, int *err, char *buf, int count)
 		*err = EINVAL;
 		return 0;
 	}
-	consumed = cmyth_rcv_long(conn, err, &val, count);
+	consumed = cmyth_rcv_int32(conn, err, &val, count);
 	if (*err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_long() failed (%d)\n",
@@ -819,24 +818,24 @@ cmyth_rcv_byte(cmyth_conn_t conn, int *err, char *buf, int count)
 		return consumed;
 	}
 	if ((val > 127) || (val < -128)) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: value doesn't fit: '%lld'\n",
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: value doesn't fit: '%"PRId32"'\n",
 			  __FUNCTION__, val);
 		*err = ERANGE;
 		return consumed;
 	}
 	*err = 0;
-	*buf = (char)val;
+	*buf = (int8_t)val;
 	return consumed;
 }
 
 /*
- * cmyth_rcv_short(cmyth_conn_t conn, int *err, short *buf, int count)
+ * cmyth_rcv_int16(cmyth_conn_t conn, int *err, int16_t *buf, int count)
  *
- * Scope: PRIVATE (mapped to __cmyth_rcv_short)
+ * Scope: PRIVATE (mapped to __cmyth_rcv_int16)
  *
  * Description
  *
- * Receive a short (signed 16 bit) integer token from a list of tokens
+ * Receive a signed (16 bit) integer token from a list of tokens
  * in a MythTV Protocol message.  Tokens in MythTV Protocol messages
  * are separated by the string: []:[] or terminated by running out of
  * message.  Up to 'count' Bytes will be consumed from the socket
@@ -861,9 +860,9 @@ cmyth_rcv_byte(cmyth_conn_t conn, int *err, char *buf, int count)
  * EINVAL       The token received is not numeric
  */
 int
-cmyth_rcv_short(cmyth_conn_t conn, int *err, short *buf, int count)
+cmyth_rcv_int16(cmyth_conn_t conn, int *err, int16_t *buf, int count)
 {
-	long val;
+	int32_t val;
 	int consumed;
 	int tmp;
 
@@ -874,7 +873,7 @@ cmyth_rcv_short(cmyth_conn_t conn, int *err, short *buf, int count)
 		*err = EINVAL;
 		return 0;
 	}
-	consumed = cmyth_rcv_long(conn, err, &val, count);
+	consumed = cmyth_rcv_int32(conn, err, &val, count);
 	if (*err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_long() failed (%d)\n",
@@ -882,13 +881,13 @@ cmyth_rcv_short(cmyth_conn_t conn, int *err, short *buf, int count)
 		return consumed;
 	}
 	if ((val > 32767) || (val < -32768)) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: value doesn't fit: '%lld'\n",
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: value doesn't fit: '%"PRId32"'\n",
 			  __FUNCTION__, val);
 		*err = ERANGE;
 		return consumed;
 	}
 	*err = 0;
-	*buf = (short)val;
+	*buf = (int16_t)val;
 	return consumed;
 }
 
@@ -929,7 +928,7 @@ cmyth_rcv_old_int64(cmyth_conn_t conn, int *err, int64_t *buf, int count)
 	int64_t val;
 	int consumed;
 	int tmp;
-	unsigned long hi, lo;
+	uint32_t hi, lo;
 
 	if (!err) {
 		err = &tmp;
@@ -940,21 +939,21 @@ cmyth_rcv_old_int64(cmyth_conn_t conn, int *err, int64_t *buf, int count)
 		return 0;
 	}
 
-	consumed = cmyth_rcv_u_long(conn, err, &hi, count);
+	consumed = cmyth_rcv_int32(conn, err, (int32_t*)&hi, count);
 	if (*err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_u_long() failed (%d)\n",
 			  __FUNCTION__, consumed);
 		return consumed;
 	}
-	consumed += cmyth_rcv_u_long(conn, err, &lo, count-consumed);
+	consumed += cmyth_rcv_int32(conn, err, (int32_t*)&lo, count-consumed);
 	if (*err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_u_long() failed (%d)\n",
 			  __FUNCTION__, consumed);
 		return consumed;
 	}
-	val = (((long long)hi) << 32) | ((long long)(lo & 0xFFFFFFFF));
+	val = (((int64_t)hi) << 32) | ((int64_t)(lo & 0xffffffff));
 
 	*err = 0;
 	*buf = val;
@@ -1004,9 +1003,9 @@ cmyth_rcv_new_int64(cmyth_conn_t conn, int *err, int64_t *buf, int count,
 {
 	char num[32];
 	char *num_p = num;
-	unsigned long long val = 0;
+	uint64_t val = 0;
 	int sign = 1;
-	long long limit = 0x7fffffffffffffffLL;
+	uint64_t limit = INT64_MAX;
 	int consumed;
 	int tmp;
 
@@ -1052,118 +1051,10 @@ cmyth_rcv_new_int64(cmyth_conn_t conn, int *err, int64_t *buf, int count,
 		 * Check and make sure we are still under the limit (this is
 		 * an absolute value limit, sign will be applied later).
 		 */
-		if (val > (unsigned long long)limit) {
+		if (val > limit) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: long long out of range: '%s'\n",
-				  __FUNCTION__, num, limit);
-			*err = ERANGE;
-			return consumed;
-		}
-		num_p++;
-	}
-
-	/*
-	 * Got a result, return it.
-	 */
-	*buf = (long long)(sign * val);
-
-	return consumed;
-}
-
-/*
- * cmyth_rcv_new_uint64(cmyth_conn_t conn, int *err, uint64_t *buf, int count)
- *
- * Scope: PRIVATE (mapped to __cmyth_rcv_long)
- *
- * Description
- *
- * Receive a long long (signed 64 bit) integer token from a list of tokens
- * in a MythTV Protocol message.  Tokens in MythTV Protocol messages
- * are separated by the string: []:[] or terminated by running out of
- * message.  Up to 'count' Bytes will be consumed from the socket
- * specified by 'conn' (stopping when a separator is seen or 'count'
- * is exhausted).  The long integer value of the token is placed in
- * the location pointed to by 'buf'.  If an error is encountered and
- * 'err' is not NULL, an indication of the nature of the error will be
- * recorded by placing an error code in the location pointed to by
- * 'err'.  If all goes well, 'err' wil be set to 0.
- *
- * As of protocol version 57, Myth now sends a single 64bit string instead
- * of 2 32bit strings when sending proginfo data.  This does not seem to
- * apply uniformly though. For instance 'ANN FILETRANSFER' still uses
- * the old method
- *
- * Return Value:
- *
- * A value >=0 indicating the number of bytes consumed.
- *
- * Error Codes:
- *
- * In addition to system call error codes, the following errors may be
- * placed in 'err':
- *
- * ERANGE       The token received is too large to fit in a long integer
- *
- * EINVAL       The token received is not numeric
- */
-int
-cmyth_rcv_new_uint64(cmyth_conn_t conn, int *err, uint64_t *buf, int count,
-		     int forced)
-{
-	char num[32];
-	char *num_p = num;
-	uint64_t val = 0;
-	int sign = 1;
-	long long limit = 0x7fffffffffffffffLL;
-	int consumed;
-	int tmp;
-
-	/*
-	 * Between protocols 57 and 66, not all messages used the new
-	 * format for 64-bit values.
-	 */
-	if ((conn->conn_version < 57) ||
-	    ((conn->conn_version < 66) && !forced)) {
-		return cmyth_rcv_old_uint64(conn, err, buf, count);
-	}
-
-	if (!err) {
-		err = &tmp;
-	}
-	if (count <= 0) {
-		*err = EINVAL;
-		return 0;
-	}
-	*err = 0;
-	consumed = cmyth_rcv_string(conn, err, num, sizeof(num), count);
-	if (*err) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			"%s: cmyth_rcv_string() failed (%d)\n",
-			__FUNCTION__, consumed);
-		return consumed;
-	}
-	if (*num_p && (*num_p == '-')) {
-		++num_p;
-		sign = -1;
-	}
-	while (*num_p) {
-		if (!isdigit(*num_p)) {
-			cmyth_dbg(CMYTH_DBG_ERROR,
-				  "%s: received illegal integer: '%s'\n",
 				  __FUNCTION__, num);
-			*err = EINVAL;
-			return consumed;
-		}
-		val *= 10;
-		val += ((*num_p) - '0');
-		/*
-		 * Check and make sure we are still under the limit (this is
-		 * an absolute value limit, sign will be applied later).
-		 */
-		if (val > (unsigned long long)limit) {
-			cmyth_dbg(CMYTH_DBG_ERROR,
-				  "%s: long long out of range: '%s'\n",
-				  __FUNCTION__, num, limit);
 			*err = ERANGE;
 			return consumed;
 		}
@@ -1173,15 +1064,15 @@ cmyth_rcv_new_uint64(cmyth_conn_t conn, int *err, uint64_t *buf, int count,
 	/*
 	 * Got a result, return it.
 	 */
-	*buf = (long long)(sign * val);
+	*buf = (int64_t)(sign * val);
 
 	return consumed;
 }
 
 /*
- * cmyth_rcv_ubyte(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
+ * cmyth_rcv_uint8(cmyth_conn_t conn, int *err, uint8_t *buf, int count)
  *
- * Scope: PRIVATE (mapped to __cmyth_rcv_ubyte)
+ * Scope: PRIVATE (mapped to __cmyth_rcv_uint8)
  *
  * Description
  *
@@ -1212,9 +1103,9 @@ cmyth_rcv_new_uint64(cmyth_conn_t conn, int *err, uint64_t *buf, int count,
  * EINVAL       The token received is not numeric or is signed
  */
 int
-cmyth_rcv_ubyte(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
+cmyth_rcv_uint8(cmyth_conn_t conn, int *err, uint8_t *buf, int count)
 {
-	unsigned long val;
+	uint32_t val;
 	int consumed;
 	int tmp;
 
@@ -1225,7 +1116,7 @@ cmyth_rcv_ubyte(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
 		*err = EINVAL;
 		return 0;
 	}
-	consumed = cmyth_rcv_ulong(conn, err, &val, count);
+	consumed = cmyth_rcv_uint32(conn, err, &val, count);
 	if (*err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_ulong() failed (%d)\n",
@@ -1239,19 +1130,18 @@ cmyth_rcv_ubyte(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
 		return consumed;
 	}
 	*err = 0;
-	*buf = (unsigned char)val;
+	*buf = (uint8_t)val;
 	return consumed;
 }
 
 /*
- * cmyth_rcv_ushort(cmyth_conn_t conn, int *err, unsigned short *buf,
- *                  int count)
+ * cmyth_rcv_uint16(cmyth_conn_t conn, int *err, uint16_t *buf, int count)
  *
- * Scope: PRIVATE (mapped to __cmyth_rcv_ushort)
+ * Scope: PRIVATE (mapped to __cmyth_rcv_uint16)
  *
  * Description
  *
- * Receive an unsigned short (16 bit) integer token from a list of
+ * Receive an unsigned (16 bit) integer token from a list of
  * tokens in a MythTV Protocol message.  Tokens in MythTV Protocol
  * messages are separated by the string: []:[] or terminated by
  * running out of message.  Up to 'count' Bytes will be consumed from
@@ -1278,9 +1168,9 @@ cmyth_rcv_ubyte(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
  * EINVAL       The token received is not numeric or is signed
  */
 int
-cmyth_rcv_ushort(cmyth_conn_t conn, int *err, unsigned short *buf, int count)
+cmyth_rcv_uint16(cmyth_conn_t conn, int *err, uint16_t *buf, int count)
 {
-	unsigned long val;
+	uint32_t val;
 	int consumed;
 	int tmp;
 
@@ -1291,7 +1181,7 @@ cmyth_rcv_ushort(cmyth_conn_t conn, int *err, unsigned short *buf, int count)
 		*err = EINVAL;
 		return 0;
 	}
-	consumed = cmyth_rcv_ulong(conn, err, &val, count);
+	consumed = cmyth_rcv_uint32(conn, err, &val, count);
 	if (*err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_ulong() failed (%d)\n",
@@ -1305,81 +1195,7 @@ cmyth_rcv_ushort(cmyth_conn_t conn, int *err, unsigned short *buf, int count)
 		return consumed;
 	}
 	*err = 0;
-	*buf = (unsigned short)val;
-	return consumed;
-}
-
-/*
- * cmyth_rcv_ulong(cmyth_conn_t conn, int *err, unsigned long *buf, int count)
- *
- * Scope: PRIVATE (mapped to __cmyth_rcv_ulong)
- *
- * Description
- *
- * Receive an unsigned long (32 bit) integer token from a list of
- * tokens in a MythTV Protocol message.  Tokens in MythTV Protocol
- * messages are separated by the string: []:[] or terminated by
- * running out of message.  Up to 'count' Bytes will be consumed from
- * the socket specified by 'conn' (stopping when a separator is seen
- * or 'count' is exhausted).  The unsigned long integer value of the
- * token is placed in the location pointed to by 'buf'.  If an error
- * is encountered and 'err' is not NULL, an indication of the nature
- * of the error will be recorded by placing an error code in the
- * location pointed to by 'err'.  If all goes well, 'err' wil be set
- * to 0.
- *
- * Return Value:
- *
- * A value >=0 indicating the number of bytes consumed.
- *
- * Error Codes:
- *
- * In addition to system call error codes, the following errors may be
- * placed in 'err':
- *
- * ERANGE       The token received is too large to fit in an unsigned
- *              long integer
- *
- * EINVAL       The token received is not numeric or is signed
- */
-int
-cmyth_rcv_old_uint64(cmyth_conn_t conn, int *err, uint64_t *buf, int count)
-{
-	unsigned long long val;
-	unsigned long hi, lo;
-	int consumed;
-	int tmp;
-
-	*buf = 0;
-
-	if (!err) {
-		err = &tmp;
-	}
-
-	if (count <= 0) {
-		*err = EINVAL;
-		return 0;
-	}
-
-	consumed = cmyth_rcv_u_long(conn, err, &hi, count);
-	if (*err) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_rcv_u_long() failed (%d)\n",
-			  __FUNCTION__, consumed);
-		return consumed;
-	}
-	consumed += cmyth_rcv_u_long(conn, err, &lo, count - consumed);
-	if (*err) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: cmyth_rcv_u_long() failed (%d)\n",
-			  __FUNCTION__, consumed);
-		return consumed;
-	}
-	val = (((unsigned long long)hi) << 32) | ((unsigned long long)(lo & 0xFFFFFFFF));
-
-	*err = 0;
-	*buf = val;
-
+	*buf = (uint16_t)val;
 	return consumed;
 }
 
@@ -1506,7 +1322,7 @@ cmyth_rcv_datetime(cmyth_conn_t conn, int *err, cmyth_timestamp_t *ts,
 		   int count)
 {
 	int consumed;
-	char tbuf[CMYTH_LONG_LEN + 1];
+	char tbuf[CMYTH_INT32_LEN + 1];
 	int tmp;
 
 	if (!err) {
@@ -1517,8 +1333,8 @@ cmyth_rcv_datetime(cmyth_conn_t conn, int *err, cmyth_timestamp_t *ts,
 		return 0;
 	}
 	*err = 0;
-	tbuf[CMYTH_LONG_LEN] = '\0';
-	consumed = cmyth_rcv_string(conn, err, tbuf, CMYTH_LONG_LEN, count);
+	tbuf[CMYTH_INT32_LEN] = '\0';
+	consumed = cmyth_rcv_string(conn, err, tbuf, CMYTH_INT32_LEN, count);
 	if (*err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_string() failed (%d)\n",
@@ -1693,7 +1509,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	tmp_str[sizeof(tmp_str) - 1] = '\0';
 
 	buf->proginfo_version = conn->conn_version;
-	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: VERSION IS %ld\n",
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: VERSION IS %"PRIu32"\n",
 		  __FUNCTION__, buf->proginfo_version);
 
 	/*
@@ -1745,7 +1561,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		/*
 		 * Get season and episode (unsigned int)
 		 */
-		consumed = cmyth_rcv_ushort(conn, err,
+		consumed = cmyth_rcv_uint16(conn, err,
 					   &buf->proginfo_season, count);
 		count -= consumed;
 		total += consumed;
@@ -1754,7 +1570,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 			goto fail;
 		}
 
-		consumed = cmyth_rcv_ushort(conn, err,
+		consumed = cmyth_rcv_uint16(conn, err,
 					   &buf->proginfo_episode, count);
 		count -= consumed;
 		total += consumed;
@@ -1782,7 +1598,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	/*
 	 * Get proginfo_chanId (ulong)
 	 */
-	consumed = cmyth_rcv_ulong(conn, err,
+	consumed = cmyth_rcv_uint32(conn, err,
 				    &buf->proginfo_chanId, count);
 	count -= consumed;
 	total += consumed;
@@ -1949,7 +1765,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 				ref_release(buf->proginfo_unknown_0);
 			buf->proginfo_unknown_0 = ref_strdup(tmp_str);
 		} else { /* Assume version 1 */
-			consumed = cmyth_rcv_ulong(conn, err,
+			consumed = cmyth_rcv_uint32(conn, err,
 						   &buf->proginfo_conflicting, count);
 			count -= consumed;
 			total += consumed;
@@ -1962,7 +1778,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		/*
 		 * Get proginfo_recording (ulong)
 		 */
-		consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_recording, count);
+		consumed = cmyth_rcv_uint32(conn, err, &buf->proginfo_recording, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
@@ -1974,7 +1790,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	/*
 	 * Get proginfo_override (ulong)
 	 */
-	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_override, count);
+	consumed = cmyth_rcv_uint32(conn, err, &buf->proginfo_override, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2000,7 +1816,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	/*
 	 * Get proginfo_source_id (ulong)
 	 */
-	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_source_id, count);
+	consumed = cmyth_rcv_uint32(conn, err, &buf->proginfo_source_id, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2011,7 +1827,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	/*
 	 * Get proginfo_card_id (ulong)
 	 */
-	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_card_id, count);
+	consumed = cmyth_rcv_uint32(conn, err, &buf->proginfo_card_id, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2022,7 +1838,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	/*
 	 * Get proginfo_input_id (ulong)
 	 */
-	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_input_id, count);
+	consumed = cmyth_rcv_uint32(conn, err, &buf->proginfo_input_id, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2031,9 +1847,9 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 
 	/*
-	 * Get proginfo_rec_priority (long)
+	 * Get proginfo_rec_priority (byte)
 	 */
-	consumed = cmyth_rcv_long(conn, err,
+	consumed = cmyth_rcv_int8(conn, err,
 				    &buf->proginfo_rec_priority, count);
 	count -= consumed;
 	total += consumed;
@@ -2043,20 +1859,20 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 
 	/*
-	 * Get proginfo_rec_status (long)
+	 * Get proginfo_rec_status (byte)
 	 */
-	consumed = cmyth_rcv_long(conn, err, &buf->proginfo_rec_status, count);
+	consumed = cmyth_rcv_int8(conn, err, &buf->proginfo_rec_status, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_long";
+		failed = "cmyth_rcv_byte";
 		goto fail;
 	}
 
 	/*
 	 * Get proginfo_record_id (ulong)
 	 */
-	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_record_id, count);
+	consumed = cmyth_rcv_uint32(conn, err, &buf->proginfo_record_id, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
@@ -2065,37 +1881,37 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 
 	/*
-	 * Get proginfo_rec_type (long)
+	 * Get proginfo_rec_type (ubyte)
 	 */
-	consumed = cmyth_rcv_long(conn, err, &buf->proginfo_rec_type, count);
+	consumed = cmyth_rcv_uint8(conn, err, &buf->proginfo_rec_type, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_long";
+		failed = "cmyth_rcv_ubyte";
 		goto fail;
 	}
 
 	/*
-	 * Get proginfo_rec_dupin (long)
+	 * Get proginfo_rec_dupin (ubyte)
 	 */
-	consumed = cmyth_rcv_long(conn, err, &buf->proginfo_rec_dupin, count);
+	consumed = cmyth_rcv_uint8(conn, err, &buf->proginfo_rec_dupin, count);
 	count -= consumed;
 	total += consumed;
 	if (*err) {
-		failed = "cmyth_rcv_long";
+		failed = "cmyth_rcv_ubyte";
 		goto fail;
 	}
 
 	if (buf->proginfo_version >= 8) {
 		/*
-		 * Get proginfo_rec_dupmethod (long)
+		 * Get proginfo_rec_dupmethod (ubyte)
 		 */
-		consumed = cmyth_rcv_long(conn, err,
+		consumed = cmyth_rcv_uint8(conn, err,
 					   &buf->proginfo_rec_dupmethod, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_long";
+			failed = "cmyth_rcv_ubyte";
 			goto fail;
 		}
 	}
@@ -2144,21 +1960,21 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 
 	if (buf->proginfo_version < 57) {
 		/*
-		 * Get proginfo_repeat (ulong)
+		 * Get proginfo_repeat (ubyte)
 		 */
-		consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_repeat, count);
+		consumed = cmyth_rcv_uint8(conn, err, &buf->proginfo_repeat, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_ulong";
+			failed = "cmyth_rcv_ubyte";
 			goto fail;
 		}
 	}
 
 	/*
-	 * Get proginfo_program_flags (long)
+	 * Get proginfo_program_flags (ulong)
 	 */
-	consumed = cmyth_rcv_ulong(conn, err, &buf->proginfo_program_flags,
+	consumed = cmyth_rcv_uint32(conn, err, &buf->proginfo_program_flags,
 				  count);
 	count -= consumed;
 	total += consumed;
@@ -2342,12 +2158,15 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 
 	if (buf->proginfo_version >= 15 && buf->proginfo_version < 57) {
-		consumed = cmyth_rcv_ulong(conn, err,
+		/*
+		 * Get has_air_date (ubyte)
+		 */
+		consumed = cmyth_rcv_uint8(conn, err,
 					   &buf->proginfo_hasairdate, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_ulong";
+			failed = "cmyth_rcv_ubyte";
 			goto fail;
 		}
 	}
@@ -2370,9 +2189,9 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 	if (buf->proginfo_version >= 25) {
 		/*
-		 * Get proginfo_recpriority_2 (long)
+		 * Get proginfo_recpriority_2 (byte)
 		 */
-		consumed = cmyth_rcv_long(conn, err,
+		consumed = cmyth_rcv_int8(conn, err,
 					    &buf->proginfo_recpriority_2,
 					    count);
 		count -= consumed;
@@ -2384,14 +2203,14 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 	if (buf->proginfo_version >= 31) {
 		/*
-		 * Get proginfo_parentid (long)
+		 * Get proginfo_parentid (ulong)
 		 */
-		consumed = cmyth_rcv_long(conn, err,
+		consumed = cmyth_rcv_uint32(conn, err,
 					&buf->proginfo_parentid, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_long";
+			failed = "cmyth_rcv_ulong";
 			goto fail;
 		}
 	}
@@ -2413,30 +2232,30 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	}
 	if (buf->proginfo_version >= 35) {
 		/*
-		 * Get audioproperties,videoproperties,subtitletype (int)
+		 * Get audioproperties,videoproperties,subtitletype (ushort)
 		 */
-		consumed = cmyth_rcv_ulong(conn, err,
+		consumed = cmyth_rcv_uint16(conn, err,
 				&buf->proginfo_audioproperties, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_ulong audio";
+			failed = "cmyth_rcv_ushort audio";
 			goto fail;
 		}
-		consumed = cmyth_rcv_ulong(conn, err,
+		consumed = cmyth_rcv_uint16(conn, err,
 				&buf->proginfo_videoproperties, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_ulong video";
+			failed = "cmyth_rcv_ushort video";
 			goto fail;
 		}
-		consumed = cmyth_rcv_ulong(conn, err,
+		consumed = cmyth_rcv_uint16(conn, err,
 				&buf->proginfo_subtitletype, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_ulong subtitletype";
+			failed = "cmyth_rcv_ushort subtitletype";
 			goto fail;
 		}
 	}
@@ -2445,7 +2264,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	 * Get Year
 	 */
 	if (buf->proginfo_version >= 43) {
-		consumed = cmyth_rcv_ushort(conn, err, &buf->proginfo_year,
+		consumed = cmyth_rcv_uint16(conn, err, &buf->proginfo_year,
 						count);
 		count -= consumed;
 		total += consumed;
@@ -2789,7 +2608,7 @@ cmyth_rcv_proglist(cmyth_conn_t conn, int *err, cmyth_proglist_t buf,
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL buffer\n", __FUNCTION__);
 		return 0;
 	}
-	r = cmyth_rcv_long(conn, err, &buf->proglist_count, count);
+	r = cmyth_rcv_int32(conn, err, &buf->proglist_count, count);
 	consumed += r;
 	if (*err) {
 		cmyth_dbg(CMYTH_DBG_ERROR,

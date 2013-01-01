@@ -26,7 +26,7 @@
 #include <cmyth_local.h>
 
 /*
- * cmyth_recordingrule_destroy(cmyth_recordingrule_t rr)
+ * cmyth_recordingrule_destroy()
  *
  * Scope: PRIVATE (static)
  *
@@ -68,7 +68,7 @@ cmyth_recordingrule_destroy(cmyth_recordingrule_t rr)
 }
 
 /*
- * cmyth_recordingrule_create(void)
+ * cmyth_recordingrule_create()
  *
  * Scope: PRIVATE
  *
@@ -116,7 +116,7 @@ cmyth_recordingrule_create(void)
 }
 
 /*
- * cmyth_recordingrulelist_destroy(cmyth_recordingrulelist_t rrl)
+ * cmyth_recordingrulelist_destroy()
  *
  * Scope: PRIVATE (static)
  *
@@ -152,7 +152,7 @@ cmyth_recordingrulelist_destroy(cmyth_recordingrulelist_t rrl)
 }
 
 /*
- * cmyth_recordingrulelist_create(void)
+ * cmyth_recordingrulelist_create()
  *
  * Scope: PRIVATE
  *
@@ -187,7 +187,7 @@ cmyth_recordingrulelist_create(void)
 }
 
 /*
- * cmyth_recordingrule_init(void)
+ * cmyth_recordingrule_init()
  *
  * Scope: PUBLIC
  *
@@ -242,32 +242,32 @@ cmyth_recordingrule_init(void)
 	return rr;
 }
 
-unsigned long
+uint32_t
 cmyth_recordingrule_recordid(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->recordid;
 }
 
 void
-cmyth_recordingrule_set_recordid(cmyth_recordingrule_t rr, unsigned long recordid)
+cmyth_recordingrule_set_recordid(cmyth_recordingrule_t rr, uint32_t recordid)
 {
 	rr->recordid = recordid;
 }
 
-unsigned long
+uint32_t
 cmyth_recordingrule_chanid(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->chanid;
 }
 
 void
-cmyth_recordingrule_set_chanid(cmyth_recordingrule_t rr, unsigned long chanid)
+cmyth_recordingrule_set_chanid(cmyth_recordingrule_t rr, uint32_t chanid)
 {
 	rr->chanid = chanid;
 }
@@ -357,17 +357,17 @@ cmyth_recordingrule_set_description(cmyth_recordingrule_t rr, char *description)
 	rr->description = ref_strdup(description);
 }
 
-long
+uint8_t
 cmyth_recordingrule_type(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->type;
 }
 
 void
-cmyth_recordingrule_set_type(cmyth_recordingrule_t rr, long type)
+cmyth_recordingrule_set_type(cmyth_recordingrule_t rr, uint8_t type)
 {
 	rr->type = type;
 }
@@ -406,107 +406,107 @@ cmyth_recordingrule_set_subtitle(cmyth_recordingrule_t rr, char *subtitle)
 	rr->subtitle = ref_strdup(subtitle);
 }
 
-long
+int8_t
 cmyth_recordingrule_recpriority(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->recpriority;
 }
 
 void
-cmyth_recordingrule_set_recpriority(cmyth_recordingrule_t rr, long recpriority)
+cmyth_recordingrule_set_recpriority(cmyth_recordingrule_t rr, int8_t recpriority)
 {
 	rr->recpriority = recpriority;
 }
 
-long
+uint8_t
 cmyth_recordingrule_startoffset(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->startoffset;
 }
 
 void
-cmyth_recordingrule_set_startoffset(cmyth_recordingrule_t rr, long startoffset)
+cmyth_recordingrule_set_startoffset(cmyth_recordingrule_t rr, uint8_t startoffset)
 {
 	rr->startoffset = startoffset;
 }
 
-long
+uint8_t
 cmyth_recordingrule_endoffset(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->endoffset;
 }
 
 void
-cmyth_recordingrule_set_endoffset(cmyth_recordingrule_t rr, long endoffset)
+cmyth_recordingrule_set_endoffset(cmyth_recordingrule_t rr, uint8_t endoffset)
 {
 	rr->endoffset = endoffset;
 }
 
-long
+uint8_t
 cmyth_recordingrule_searchtype(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->searchtype;
 }
 
 void
-cmyth_recordingrule_set_searchtype(cmyth_recordingrule_t rr, long searchtype)
+cmyth_recordingrule_set_searchtype(cmyth_recordingrule_t rr, uint8_t searchtype)
 {
 	rr->searchtype = searchtype;
 }
 
-unsigned short
+uint8_t
 cmyth_recordingrule_inactive(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->inactive;
 }
 
 void
-cmyth_recordingrule_set_inactive(cmyth_recordingrule_t rr, unsigned short inactive)
+cmyth_recordingrule_set_inactive(cmyth_recordingrule_t rr, uint8_t inactive)
 {
 	rr->inactive = inactive;
 }
 
-long
+uint8_t
 cmyth_recordingrule_dupmethod(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->dupmethod;
 }
 
 void
-cmyth_recordingrule_set_dupmethod(cmyth_recordingrule_t rr, long dupmethod)
+cmyth_recordingrule_set_dupmethod(cmyth_recordingrule_t rr, uint8_t dupmethod)
 {
 	rr->dupmethod = dupmethod;
 }
 
-long
+uint8_t
 cmyth_recordingrule_dupin(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->dupin;
 }
 
 void
-cmyth_recordingrule_set_dupin(cmyth_recordingrule_t rr, long dupin)
+cmyth_recordingrule_set_dupin(cmyth_recordingrule_t rr, uint8_t dupin)
 {
 	rr->dupin = dupin;
 }
@@ -562,113 +562,113 @@ cmyth_recordingrule_set_playgroup(cmyth_recordingrule_t rr, char *playgroup)
 	rr->playgroup = ref_strdup(playgroup);
 }
 
-unsigned short
+uint8_t
 cmyth_recordingrule_autotranscode(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->autotranscode;
 }
 
 void
-cmyth_recordingrule_set_autotranscode(cmyth_recordingrule_t rr, unsigned short autotranscode)
+cmyth_recordingrule_set_autotranscode(cmyth_recordingrule_t rr, uint8_t autotranscode)
 {
 	rr->autotranscode = autotranscode;
 }
 
-int
+uint8_t
 cmyth_recordingrule_userjobs(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->userjobs;
 }
 
 void
-cmyth_recordingrule_set_userjobs(cmyth_recordingrule_t rr, int userjobs)
+cmyth_recordingrule_set_userjobs(cmyth_recordingrule_t rr, uint8_t userjobs)
 {
 	rr->userjobs = userjobs;
 }
 
-unsigned short
+uint8_t
 cmyth_recordingrule_autocommflag(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->autocommflag;
 }
 
 void
-cmyth_recordingrule_set_autocommflag(cmyth_recordingrule_t rr, unsigned short autocommflag)
+cmyth_recordingrule_set_autocommflag(cmyth_recordingrule_t rr, uint8_t autocommflag)
 {
 	rr->autocommflag = autocommflag;
 }
 
-long
+uint8_t
 cmyth_recordingrule_autoexpire(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->autoexpire;
 }
 
 void
-cmyth_recordingrule_set_autoexpire(cmyth_recordingrule_t rr, long autoexpire)
+cmyth_recordingrule_set_autoexpire(cmyth_recordingrule_t rr, uint8_t autoexpire)
 {
 	rr->autoexpire = autoexpire;
 }
 
-long
+uint32_t
 cmyth_recordingrule_maxepisodes(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->maxepisodes;
 }
 
 void
-cmyth_recordingrule_set_maxepisodes(cmyth_recordingrule_t rr, long maxepisodes)
+cmyth_recordingrule_set_maxepisodes(cmyth_recordingrule_t rr, uint32_t maxepisodes)
 {
 	rr->maxepisodes = maxepisodes;
 }
 
-long
+uint8_t
 cmyth_recordingrule_maxnewest(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->maxnewest;
 }
 
 void
-cmyth_recordingrule_set_maxnewest(cmyth_recordingrule_t rr, long maxnewest)
+cmyth_recordingrule_set_maxnewest(cmyth_recordingrule_t rr, uint8_t maxnewest)
 {
 	rr->maxnewest = maxnewest;
 }
 
-unsigned long
+uint32_t
 cmyth_recordingrule_transcoder(cmyth_recordingrule_t rr)
 {
 	if (!rr) {
-		return -EINVAL;
+		return 0;
 	}
 	return rr->transcoder;
 }
 
 void
-cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, unsigned long transcoder)
+cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, uint32_t transcoder)
 {
 	rr->transcoder = transcoder;
 }
 
 /*
- * cmyth_recordingrulelist_get_item(cmyth_recordingrulelist_t rrl, int index)
+ * cmyth_recordingrulelist_get_item()
  *
  * Scope: PUBLIC
  *
@@ -708,7 +708,7 @@ cmyth_recordingrulelist_get_item(cmyth_recordingrulelist_t rrl, int index)
 }
 
 /*
- * cmyth_recordingrulelist_get_count(cmyth_recordingrulelist_t rrl)
+ * cmyth_recordingrulelist_get_count()
  *
  * Scope: PUBLIC
  *

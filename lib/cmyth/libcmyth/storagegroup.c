@@ -138,17 +138,18 @@ cmyth_storagegroup_update_fileinfo(cmyth_conn_t control, cmyth_storagegroup_file
 		return -1;
 	}
 
-	consumed = cmyth_rcv_ulong(control, &err, &(file->lastmodified), count);
+	consumed = cmyth_rcv_string(control, &err, tmp_str, sizeof(tmp_str), count);
 	count -= consumed;
 	if (err) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_ulong() failed (%d)\n", __FUNCTION__, count);
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed (%d)\n", __FUNCTION__, count);
 		return -1;
 	}
+	file->lastmodified = atol(tmp_str);
 
-	consumed = cmyth_rcv_ulong(control, &err, &(file->size), count);
+	consumed = cmyth_rcv_new_int64(control, &err, &(file->size), count, 1);
 	count -= consumed;
 	if (err) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_ulong_long() failed (%d)\n", __FUNCTION__, count);
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_int64() failed (%d)\n", __FUNCTION__, count);
 		return -1;
 	}
 
@@ -320,19 +321,20 @@ cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *storagegroup, char *
 	}
 	ret->filename = ref_strdup(tmp_str);
 
-	consumed = cmyth_rcv_ulong(control, &err, &(ret->lastmodified), count);
+	consumed = cmyth_rcv_string(control, &err, tmp_str, sizeof(tmp_str) - 1, count);
 	count -= consumed;
 	if (err) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_ulong() failed (%d)\n", __FUNCTION__, count);
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed (%d)\n", __FUNCTION__, count);
 		ref_release(ret);
 		ret = NULL;
 		goto out;
 	}
+        ret->lastmodified = atol(tmp_str);
 
-	consumed = cmyth_rcv_ulong(control, &err, &(ret->size), count);
+	consumed = cmyth_rcv_new_int64(control, &err, &(ret->size), count, 1);
 	count -= consumed;
 	if (err) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_ulong_long() failed (%d)\n", __FUNCTION__, count);
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_int64() failed (%d)\n", __FUNCTION__, count);
 		ref_release(ret);
 		ret = NULL;
 		goto out;
@@ -354,7 +356,7 @@ cmyth_storagegroup_file_filename(cmyth_storagegroup_file_t file)
 	return ref_hold(file->filename);
 }
 
-unsigned long
+time_t
 cmyth_storagegroup_file_lastmodified(cmyth_storagegroup_file_t file)
 {
 	if (!file) {
@@ -363,7 +365,7 @@ cmyth_storagegroup_file_lastmodified(cmyth_storagegroup_file_t file)
 	return file->lastmodified;
 }
 
-unsigned long long
+int64_t
 cmyth_storagegroup_file_size(cmyth_storagegroup_file_t file)
 {
 	if (!file) {

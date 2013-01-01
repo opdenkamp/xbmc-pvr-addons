@@ -34,7 +34,7 @@
 #include <cmyth_local.h>
 
 /*
- * cmyth_proginfo_destroy(cmyth_proginfo_t p)
+ * cmyth_proginfo_destroy()
  *
  * Scope: PRIVATE (static)
  *
@@ -149,7 +149,7 @@ cmyth_proginfo_destroy(cmyth_proginfo_t p)
 }
 
 /*
- * cmyth_proginfo_create(void)
+ * cmyth_proginfo_create()
  *
  * Scope: PUBLIC
  *
@@ -221,7 +221,7 @@ cmyth_proginfo_create(void)
 	ret->proginfo_url = NULL;
 	ret->proginfo_pathname = NULL;
 	ret->proginfo_host = NULL;
-	ret->proginfo_port = -1;
+	ret->proginfo_port = 0;
 	ret->proginfo_Length = 0;
 	ret->proginfo_conflicting = 0;
 	ret->proginfo_unknown_0 = NULL;
@@ -267,7 +267,7 @@ cmyth_proginfo_create(void)
 }
 
 /*
- * cmyth_proginfo_create(void)
+ * cmyth_proginfo_create()
  *
  * Scope: PRIVATE (static)
  *
@@ -358,9 +358,9 @@ char *
 cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 {
 	char *buf;
-	unsigned int len = ((2 * CMYTH_LONGLONG_LEN) +
+	unsigned int len = ((2 * CMYTH_INT64_LEN) +
 			    (6 * CMYTH_TIMESTAMP_LEN) +
-			    (16 * CMYTH_LONG_LEN));
+			    (16 * CMYTH_INT32_LEN));
 	char start_ts[CMYTH_TIMESTAMP_LEN + 1];
 	char end_ts[CMYTH_TIMESTAMP_LEN + 1];
 	char rec_start_ts[CMYTH_TIMESTAMP_LEN + 1];
@@ -423,11 +423,11 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_subtitle));
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_description));
 	if (control->conn_version >= 67) {
-		sprintf(buf + strlen(buf), "%u[]:[]", prog->proginfo_season);
-		sprintf(buf + strlen(buf), "%u[]:[]", prog->proginfo_episode);
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_season);
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_episode);
 	}
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_category));
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_chanId);
+	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_chanId);
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_chanstr));
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_chansign));
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_channame));
@@ -435,8 +435,8 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	if (control->conn_version >= 57) {
 		sprintf(buf + strlen(buf), "%"PRId64"[]:[]", prog->proginfo_Length);
 	} else {
-		sprintf(buf + strlen(buf), "%d[]:[]", (int32_t)(prog->proginfo_Length >> 32));
-		sprintf(buf + strlen(buf), "%d[]:[]", (int32_t)(prog->proginfo_Length & 0xffffffff));
+		sprintf(buf + strlen(buf), "%"PRId32"[]:[]", (int32_t)(prog->proginfo_Length >> 32));
+		sprintf(buf + strlen(buf), "%"PRId32"[]:[]", (int32_t)(prog->proginfo_Length & 0xffffffff));
 	}
 	sprintf(buf + strlen(buf), "%s[]:[]",  start_ts);
 	sprintf(buf + strlen(buf), "%s[]:[]",  end_ts);
@@ -446,21 +446,21 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	}
 	sprintf(buf + strlen(buf), "%ld[]:[]", 0L); // "findid"
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_hostname));
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_source_id);
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_card_id);
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_input_id);
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_rec_priority);
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_rec_status);
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_record_id);
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_rec_type);
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_rec_dupin);
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_rec_dupmethod);
+	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_source_id);
+	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_card_id);
+	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_input_id);
+	sprintf(buf + strlen(buf), "%"PRId8"[]:[]", prog->proginfo_rec_priority);
+	sprintf(buf + strlen(buf), "%"PRId8"[]:[]", prog->proginfo_rec_status);
+	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_record_id);
+	sprintf(buf + strlen(buf), "%"PRIu8"[]:[]", prog->proginfo_rec_type);
+	sprintf(buf + strlen(buf), "%"PRIu8"[]:[]", prog->proginfo_rec_dupin);
+	sprintf(buf + strlen(buf), "%"PRIu8"[]:[]", prog->proginfo_rec_dupmethod);
 	sprintf(buf + strlen(buf), "%s[]:[]",  rec_start_ts);
 	sprintf(buf + strlen(buf), "%s[]:[]",  rec_end_ts);
 	if (control->conn_version < 57) {
-		sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_repeat);
+		sprintf(buf + strlen(buf), "%"PRIu8"[]:[]", prog->proginfo_repeat);
 	}
-	sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_program_flags);
+	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_program_flags);
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_recgroup));
 	if (control->conn_version < 57) {
 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_chancommfree));
@@ -475,27 +475,27 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_stars));
 	sprintf(buf + strlen(buf), "%s[]:[]",  originalairdate);
 	if (control->conn_version >= 15 && control->conn_version < 57) {
-		sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_hasairdate);
+		sprintf(buf + strlen(buf), "%"PRIu8"[]:[]", prog->proginfo_hasairdate);
 	}
 	if (control->conn_version >= 18) {
 		sprintf(buf + strlen(buf), "%s[]:[]", S(prog->proginfo_playgroup));
 	}
 	if (control->conn_version >= 25) {
-		sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_recpriority_2);
+		sprintf(buf + strlen(buf), "%"PRId8"[]:[]", prog->proginfo_recpriority_2);
 	}
 	if (control->conn_version >= 31) {
-		sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_parentid);
+		sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_parentid);
 	}
 	if (control->conn_version >= 32) {
 		sprintf(buf + strlen(buf), "%s[]:[]", S(prog->proginfo_storagegroup));
 	}
 	if (control->conn_version >= 35) {
-		sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_audioproperties);
-		sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_videoproperties);
-		sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_subtitletype);
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_audioproperties);
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_videoproperties);
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_subtitletype);
 	}
 	if (control->conn_version >= 43) {
-		sprintf(buf + strlen(buf), "%d[]:[]", prog->proginfo_year);
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_year);
 	}
 #undef S
 
@@ -503,8 +503,7 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_check_recording(cmyth_conn_t control,
- *                                cmyth_proginfo_t prog)
+ * cmyth_proginfo_check_recording()
  *
  * Scope: PUBLIC
  *
@@ -527,8 +526,7 @@ cmyth_proginfo_check_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_delete_recording(cmyth_conn_t control,
- *                                 cmyth_proginfo_t prog)
+ * cmyth_proginfo_delete_recording()
  *
  * Scope: PUBLIC
  *
@@ -546,10 +544,10 @@ cmyth_proginfo_check_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 int
 cmyth_proginfo_delete_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 {
-	long c = 0;
+	int32_t c = 0;
 	int err = 0;
 	int count = 0;
-	long r = 0;
+	int r = 0;
 	int ret = 0;
 	char *buf;
 	char *proginfo;
@@ -594,7 +592,7 @@ cmyth_proginfo_delete_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 	}
 
 	count = cmyth_rcv_length(control);
-	if ((r = cmyth_rcv_long(control, &err, &c, count)) < 0) {
+	if ((r = cmyth_rcv_int32(control, &err, &c, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, r);
@@ -610,8 +608,7 @@ cmyth_proginfo_delete_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_forget_recording(cmyth_conn_t control,
- *                                 cmyth_proginfo_t prog)
+ * cmyth_proginfo_forget_recording()
  *
  * Scope: PUBLIC
  *
@@ -629,10 +626,10 @@ cmyth_proginfo_delete_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 int
 cmyth_proginfo_forget_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 {
-	long c = 0;
+	int32_t c = 0;
 	int err = 0;
 	int count = 0;
-	long r = 0;
+	int r = 0;
 	int ret = 0;
 	char *buf;
 	char *proginfo;
@@ -677,7 +674,7 @@ cmyth_proginfo_forget_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 	}
 
 	count = cmyth_rcv_length(control);
-	if ((r = cmyth_rcv_long(control, &err, &c, count)) < 0) {
+	if ((r = cmyth_rcv_int32(control, &err, &c, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, r);
@@ -693,8 +690,7 @@ cmyth_proginfo_forget_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_stop_recording(cmyth_conn_t control,
- *                               cmyth_proginfo_t prog)
+ * cmyth_proginfo_stop_recording()
  *
  * Scope: PUBLIC
  *
@@ -712,10 +708,10 @@ cmyth_proginfo_forget_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 int
 cmyth_proginfo_stop_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 {
-	long c = 0;
+	int32_t c = 0;
 	int err = 0;
 	int count = 0;
-	long r = 0;
+	int r = 0;
 	int ret = 0;
 	char *buf;
 	char *proginfo;
@@ -760,7 +756,7 @@ cmyth_proginfo_stop_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 	}
 
 	count = cmyth_rcv_length(control);
-	if ((r = cmyth_rcv_long(control, &err, &c, count)) < 0) {
+	if ((r = cmyth_rcv_int32(control, &err, &c, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, r);
@@ -776,9 +772,7 @@ cmyth_proginfo_stop_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_get_recorder_num(cmyth_conn_t control,
- *                                 cmyth_rec_num_t rnum,
- *                                 cmyth_proginfo_t prog)
+ * cmyth_proginfo_get_recorder_num()
  *
  * Scope: PUBLIC
  *
@@ -803,7 +797,7 @@ cmyth_proginfo_get_recorder_num(cmyth_conn_t control,
 }
 
 /*
- * cmyth_proginfo_chan_id(cmyth_proginfo_t prog)
+ * cmyth_proginfo_chan_id()
  *
  * Scope: PUBLIC
  *
@@ -816,19 +810,19 @@ cmyth_proginfo_get_recorder_num(cmyth_conn_t control,
  * Success: A positive integer channel identifier (these are formed from
  *          the recorder number and the channel number).
  *
- * Failure: -(ERRNO)
+ * Failure: 0
  */
-long
+uint32_t
 cmyth_proginfo_chan_id(cmyth_proginfo_t prog)
 {
 	if (!prog) {
-		return -EINVAL;
+		return 0;
 	}
 	return prog->proginfo_chanId;
 }
 
 /*
- * cmyth_proginfo_title(cmyth_proginfo_t prog)
+ * cmyth_proginfo_title()
  *
  *
  * Scope: PUBLIC
@@ -859,7 +853,7 @@ cmyth_proginfo_title(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_subtitle(cmyth_proginfo_t prog)
+ * cmyth_proginfo_subtitle()
  *
  *
  * Scope: PUBLIC
@@ -890,7 +884,7 @@ cmyth_proginfo_subtitle(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_description(cmyth_proginfo_t prog)
+ * cmyth_proginfo_description()
  *
  *
  * Scope: PUBLIC
@@ -920,7 +914,7 @@ cmyth_proginfo_description(cmyth_proginfo_t prog)
 	return ref_hold(prog->proginfo_description);
 }
 
-unsigned short
+uint16_t
 cmyth_proginfo_season(cmyth_proginfo_t prog)
 {
 	if (!prog) {
@@ -929,7 +923,7 @@ cmyth_proginfo_season(cmyth_proginfo_t prog)
 	return prog->proginfo_season;
 }
 
-unsigned short
+uint16_t
 cmyth_proginfo_episode(cmyth_proginfo_t prog)
 {
 	if (!prog) {
@@ -939,7 +933,7 @@ cmyth_proginfo_episode(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_category(cmyth_proginfo_t prog)
+ * cmyth_proginfo_category()
  *
  *
  * Scope: PUBLIC
@@ -1036,7 +1030,7 @@ cmyth_proginfo_originalairdate(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_chanstr(cmyth_proginfo_t prog)
+ * cmyth_proginfo_chanstr()
  *
  *
  * Scope: PUBLIC
@@ -1067,7 +1061,7 @@ cmyth_proginfo_chanstr(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_chansign(cmyth_proginfo_t prog)
+ * cmyth_proginfo_chansign()
  *
  *
  * Scope: PUBLIC
@@ -1099,7 +1093,7 @@ cmyth_proginfo_chansign(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_channame(cmyth_proginfo_t prog)
+ * cmyth_proginfo_channame()
  *
  *
  * Scope: PUBLIC
@@ -1131,7 +1125,7 @@ cmyth_proginfo_channame(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_channame(cmyth_proginfo_t prog)
+ * cmyth_proginfo_channame()
  *
  *
  * Scope: PUBLIC
@@ -1161,7 +1155,7 @@ cmyth_proginfo_pathname(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_length(cmyth_proginfo_t prog)
+ * cmyth_proginfo_length()
  *
  *
  * Scope: PUBLIC
@@ -1175,19 +1169,19 @@ cmyth_proginfo_pathname(cmyth_proginfo_t prog)
  *
  * Success: long long file length
  *
- * Failure: NULL
+ * Failure: 0
  */
-long long
+int64_t
 cmyth_proginfo_length(cmyth_proginfo_t prog)
 {
 	if (!prog) {
-		return -1;
+		return 0;
 	}
 	return prog->proginfo_Length;
 }
 
 /*
- * cmyth_proginfo_length_sec(cmyth_proginfo_t prog)
+ * cmyth_proginfo_length_sec()
  *
  *
  * Scope: PUBLIC
@@ -1200,24 +1194,26 @@ cmyth_proginfo_length(cmyth_proginfo_t prog)
  *
  * Success: int file length
  *
- * Failure: NULL
+ * Failure: 0
  */
-int
+uint32_t
 cmyth_proginfo_length_sec(cmyth_proginfo_t prog)
 {
 	int seconds;
 
 	if (!prog) {
-		return -1;
+		return 0;
 	}
 
 	seconds = cmyth_timestamp_diff(prog->proginfo_start_ts,
 				       prog->proginfo_end_ts);
-
-	return seconds;
+	if (seconds < 0) {
+		return 0;
+	}
+	return (uint32_t)seconds;
 }
 /*
- * cmyth_proginfo_start(cmyth_proginfo_t prog)
+ * cmyth_proginfo_start()
  *
  *
  * Scope: PUBLIC
@@ -1247,7 +1243,7 @@ cmyth_proginfo_start(cmyth_proginfo_t prog)
 
 
 /*
- * cmyth_proginfo_rec_end(cmyth_proginfo_t prog)
+ * cmyth_proginfo_rec_end()
  *
  *
  * Scope: PUBLIC
@@ -1276,7 +1272,7 @@ cmyth_proginfo_end(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_rec_start(cmyth_proginfo_t prog)
+ * cmyth_proginfo_rec_start()
  *
  *
  * Scope: PUBLIC
@@ -1306,7 +1302,7 @@ cmyth_proginfo_rec_start(cmyth_proginfo_t prog)
 
 
 /*
- * cmyth_proginfo_rec_end(cmyth_proginfo_t prog)
+ * cmyth_proginfo_rec_end()
  *
  *
  * Scope: PUBLIC
@@ -1335,7 +1331,7 @@ cmyth_proginfo_rec_end(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_rec_status(cmyth_proginfo_t prog)
+ * cmyth_proginfo_rec_status()
  *
  * Scope: PUBLIC
  *
@@ -1377,7 +1373,7 @@ cmyth_proginfo_rec_status(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_flags(cmyth_proginfo_t prog)
+ * cmyth_proginfo_flags()
  *
  * Scope: PUBLIC
  *
@@ -1389,19 +1385,19 @@ cmyth_proginfo_rec_status(cmyth_proginfo_t prog)
  *
  * Success: The program flag mask.
  *
- * Failure: 0 (an invalid status)
+ * Failure: 0 (NULL mask)
  */
-unsigned long
+uint32_t
 cmyth_proginfo_flags(cmyth_proginfo_t prog)
 {
-  if (!prog) {
-    return 0;
-  }
-  return prog->proginfo_program_flags;
+	if (!prog) {
+		return 0;
+	}
+	return prog->proginfo_program_flags;
 }
 
 /*
- * cmyth_proginfo_year(cmyth_proginfo_t prog)
+ * cmyth_proginfo_year()
  *
  *
  * Scope: PUBLIC
@@ -1417,7 +1413,7 @@ cmyth_proginfo_flags(cmyth_proginfo_t prog)
  *
  * Failure: 0
  */
-unsigned short
+uint16_t
 cmyth_proginfo_year(cmyth_proginfo_t prog)
 {
 	if (!prog) {
@@ -1427,7 +1423,7 @@ cmyth_proginfo_year(cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_fill(cmyth_conn_t control, cmyth_proginfo_t prog)
+ * cmyth_proginfo_fill()
  *
  * Scope: PRIVATE (static)
  *
@@ -1452,7 +1448,7 @@ cmyth_proginfo_fill(cmyth_conn_t control, cmyth_proginfo_t prog)
 	int ret = 0;
 	char *buf;
 	char *proginfo;
-	long long length = 0;
+	int64_t length = 0;
 
 	if (!control) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
@@ -1529,7 +1525,7 @@ cmyth_proginfo_fill(cmyth_conn_t control, cmyth_proginfo_t prog)
 }
 
 /*
- * cmyth_proginfo_get_detail(cmyth_conn_t control, cmyth_proginfo_t prog)
+ * cmyth_proginfo_get_detail()
  *
  * Scope: PUBLIC
  *
@@ -1573,7 +1569,7 @@ cmyth_proginfo_get_detail(cmyth_conn_t control, cmyth_proginfo_t p)
 }
 
 /*
- * cmyth_proginfo_compare(cmyth_proginfo_t a, cmyth_proginfo_t b)
+ * cmyth_proginfo_compare()
  *
  * Scope: PUBLIC
  *
@@ -1627,7 +1623,7 @@ cmyth_proginfo_compare(cmyth_proginfo_t a, cmyth_proginfo_t b)
 }
 
 /*
- * cmyth_proginfo_host(cmyth_proginfo_t prog)
+ * cmyth_proginfo_host()
  *
  * Scope: PUBLIC
  *
@@ -1653,49 +1649,49 @@ cmyth_proginfo_host(cmyth_proginfo_t prog)
 	return ref_hold(prog->proginfo_host);
 }
 
-int
+uint16_t
 cmyth_proginfo_port(cmyth_proginfo_t prog)
 {
 	if (!prog) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: no program info\n", __FUNCTION__);
-		return -1;
+		return 0;
 	}
 
 	return prog->proginfo_port;
 }
 
-unsigned long
+uint32_t
 cmyth_proginfo_card_id(cmyth_proginfo_t prog)
 {
 	if (!prog) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: no program info\n", __FUNCTION__);
-		return -1;
+		return 0;
 	}
 
 	return prog->proginfo_card_id;
 }
 
-unsigned long
+uint32_t
 cmyth_proginfo_recordid(cmyth_proginfo_t prog)
 {
 	if (!prog) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: no program info\n", __FUNCTION__);
-		return -1;
+		return 0;
 	}
 
 	return prog->proginfo_record_id;
 }
 
-long
+int8_t
 cmyth_proginfo_priority(cmyth_proginfo_t prog)
 {
 	if (!prog) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: no program info\n", __FUNCTION__);
-		return -1;
+		return 0;
 	}
 
 	return prog->proginfo_rec_priority;
@@ -1850,7 +1846,7 @@ cmyth_proginfo_get_from_basename(cmyth_conn_t control, const char* basename)
 }
 
 cmyth_proginfo_t
-cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, unsigned long chanid, time_t recstartts)
+cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, time_t recstartts)
 {
 	int err = 0;
 	int count, i;
@@ -1885,7 +1881,7 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, unsigned long chanid, tim
 	if(control->conn_version >= 32) {
 		pthread_mutex_lock(&mutex);
 
-		snprintf(msg, sizeof(msg), "QUERY_RECORDING TIMESLOT %ld %s",
+		snprintf(msg, sizeof(msg), "QUERY_RECORDING TIMESLOT %"PRIu32" %s",
 			chanid, time);
 
 		if ((err=cmyth_send_message(control, msg)) < 0) {

@@ -962,31 +962,15 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     case RS_WILL_RECORD:
       tag.state = PVR_TIMER_STATE_SCHEDULED;
       break;
-    case RS_UNKNOWN:
-    case RS_DONT_RECORD:
-    case RS_PREVIOUS_RECORDING:
-    case RS_CURRENT_RECORDING:
-    case RS_EARLIER_RECORDING:
-    case RS_TOO_MANY_RECORDINGS:
-    case RS_NOT_LISTED:
     case RS_CONFLICT:
       tag.state = PVR_TIMER_STATE_CONFLICT_NOK;
       break;
-    case RS_LATER_SHOWING:
-    case RS_REPEAT:
-    case RS_INACTIVE:
-    case RS_NEVER_RECORD:
-    case RS_OFFLINE:
-    case RS_OTHER_SHOWING:
     case RS_FAILED:
       tag.state = PVR_TIMER_STATE_ERROR;
       break;
-    case RS_TUNER_BUSY:
     case RS_LOW_DISKSPACE:
       tag.state = PVR_TIMER_STATE_ERROR;
       break;
-    case RS_CANCELLED:
-    case RS_MISSED:
     default:
       tag.state = PVR_TIMER_STATE_CANCELLED;
       break;

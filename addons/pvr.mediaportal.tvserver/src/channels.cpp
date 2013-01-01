@@ -29,6 +29,7 @@ cChannel::cChannel()
   external_id = 0;
   iswebstream = false;
   encrypted = false;
+  visibleinguide = true;
 }
 
 cChannel::~cChannel()
@@ -52,6 +53,7 @@ bool cChannel::Parse(const std::string& data)
     // ListRadioChannels only: (TVServerXBMC >= v1.1.0.100)
     // 4 = iswebstream
     // 5 = webstream url
+    // 6 = visibleinguide (TVServerXBMC >= v1.2.3.120)
 
     uid = atoi(fields[0].c_str());
     external_id = atoi(fields[1].c_str());
@@ -62,6 +64,11 @@ bool cChannel::Parse(const std::string& data)
     {
       iswebstream = (strncmp(fields[4].c_str(), "1", 1) == 0);
       url = fields[5].c_str();
+
+      if (fields.size() >= 7)
+      {
+        visibleinguide = (strncmp(fields[6].c_str(), "1", 1) == 0);
+      }
     }
 
     return true;

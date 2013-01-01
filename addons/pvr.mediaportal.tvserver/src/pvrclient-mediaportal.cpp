@@ -42,13 +42,13 @@ using namespace ADDON;
 int g_iTVServerXBMCBuild = 0;
 
 /* PVR client version (don't forget to update also the addon.xml and the Changelog.txt files) */
-#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.2.3.118"
+#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.6.7"
 
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.0.90"
 #define TVSERVERXBMC_MIN_VERSION_BUILD          90
-#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.118"
-#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  118
+#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.120"
+#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  120
 
 /************************************************************/
 /** Class interface */
@@ -683,7 +683,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
 #endif
       tag.iEncryptionSystem = channel.Encrypted();
       tag.bIsRadio = bRadio;
-      tag.bIsHidden = false;
+      tag.bIsHidden = !channel.VisibleInGuide();
 
       if(channel.IsWebstream())
       {

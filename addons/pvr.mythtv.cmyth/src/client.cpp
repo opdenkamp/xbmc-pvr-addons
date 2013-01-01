@@ -27,8 +27,6 @@
 using namespace std;
 using namespace ADDON;
 
-#define SEEK_POSSIBLE 0x10 // Flag used to check if protocol allows seeks
-
 /* User adjustable settings are saved here.
  * Default values are defined inside client.h
  * and exported to the other source files.

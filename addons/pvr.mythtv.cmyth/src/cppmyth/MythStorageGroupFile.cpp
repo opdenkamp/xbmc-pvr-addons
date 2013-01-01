@@ -53,8 +53,8 @@ unsigned long long MythStorageGroupFile::Size()
   return retval;
 }
 
-unsigned long MythStorageGroupFile::LastModified()
+time_t MythStorageGroupFile::LastModified()
 {
-  unsigned long retval = cmyth_storagegroup_file_lastmodified(*m_storagegroup_file_t);
+  time_t retval = cmyth_storagegroup_file_lastmodified(*m_storagegroup_file_t);
   return retval;
 }

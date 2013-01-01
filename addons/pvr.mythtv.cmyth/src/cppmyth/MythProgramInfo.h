@@ -58,12 +58,12 @@ public:
   bool HasBookmark();
   bool IsVisible();
 
-  int ChannelID();
+  unsigned int ChannelID();
   CStdString ChannelName();
 
   RecordStatus Status();
   CStdString RecordingGroup();
-  unsigned long RecordID();
+  unsigned int RecordID();
   time_t RecordingStartTime();
   time_t RecordingEndTime();
   int Priority();

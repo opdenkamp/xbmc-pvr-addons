@@ -102,16 +102,16 @@ bool MythConnection::IsNull() const
 void MythConnection::Lock()
 {
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "Lock %i", m_conn_t.get());
+    XBMC->Log(LOG_DEBUG, "Lock %u", m_conn_t.get());
   m_conn_t->Lock();
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "Lock acquired %i", m_conn_t.get());
+    XBMC->Log(LOG_DEBUG, "Lock acquired %u", m_conn_t.get());
 }
 
 void MythConnection::Unlock()
 {
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "Unlock %i", m_conn_t.get());
+    XBMC->Log(LOG_DEBUG, "Unlock %u", m_conn_t.get());
   m_conn_t->Unlock();
 }
 
@@ -121,7 +121,7 @@ bool MythConnection::IsConnected()
   bool connected = *m_conn_t != 0 && !cmyth_conn_hung(*m_conn_t);
   Unlock();
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s - %i", __FUNCTION__, connected);
+    XBMC->Log(LOG_DEBUG, "%s - %s", __FUNCTION__, (connected ? "true" : "false"));
   return connected;
 }
 
@@ -169,8 +169,8 @@ int MythConnection::GetProtocolVersion()
 bool MythConnection::GetDriveSpace(long long &total, long long &used)
 {
   int retval = 0;
-  CMYTH_CONN_CALL(retval, retval != 0, cmyth_conn_get_freespace(*m_conn_t, &total, &used));
-  return retval == 0;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_conn_get_freespace(*m_conn_t, (int64_t*)&total, (int64_t*)&used));
+  return retval >= 0;
 }
 
 CStdString MythConnection::GetSettingOnHost(const CStdString &setting, const CStdString &hostname)
@@ -208,8 +208,8 @@ MythRecorder MythConnection::GetRecorder(int n)
 bool  MythConnection::DeleteRecording(MythProgramInfo &recording)
 {
   int retval = 0;
-  CMYTH_CONN_CALL(retval, retval != 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t));
-  return retval == 0;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t));
+  return retval >= 0;
 }
 
 ProgramInfoMap MythConnection::GetRecordedPrograms()
@@ -321,7 +321,7 @@ bool MythConnection::StopRecording(const MythProgramInfo &recording)
 {
   int retval;
   CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_stop_recording(*m_conn_t, *recording.m_proginfo_t));
-  return (retval == 0);
+  return (retval >= 0);
 }
 
 MythStorageGroupFile MythConnection::GetStorageGroupFile(const CStdString &storageGroup, const CStdString &filename)

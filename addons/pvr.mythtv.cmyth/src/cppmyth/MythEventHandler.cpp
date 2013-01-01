@@ -163,7 +163,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
       if (myth_event == CMYTH_EVENT_UPDATE_FILE_SIZE)
       {
         if (g_bExtraDebug)
-          XBMC->Log(LOG_NOTICE,"%s - Event file size update: %i", __FUNCTION__, databuf);
+          XBMC->Log(LOG_NOTICE,"%s - Event file size update: %s", __FUNCTION__, databuf);
         HandleUpdateFileSize(databuf);
       }
 
@@ -233,14 +233,14 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
       else if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_ADD)
       {
         //Event data: "4121 2010-03-06T01:06:43[]:[]empty"
-        int chanid;
+        unsigned int chanid;
         char recstartts[20];
-        if (strlen(databuf)>=24 && sscanf(databuf, "%d %19s", &chanid, recstartts) == 2) {
+        if (strlen(databuf)>=24 && sscanf(databuf, "%u %19s", &chanid, recstartts) == 2) {
           Lock();
           m_recordingChangeEventList.push_back(RecordingChangeEvent(CHANGE_ADD, chanid, recstartts));
           Unlock();
           if (g_bExtraDebug)
-            XBMC->Log(LOG_DEBUG,"%s - Event recording list add: CHANID=%d TS=%s", __FUNCTION__, chanid, recstartts);
+            XBMC->Log(LOG_DEBUG,"%s - Event recording list add: CHANID=%u TS=%s", __FUNCTION__, chanid, recstartts);
           recordingChange = true;
         }
       }
@@ -263,14 +263,14 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
       else if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_DELETE)
       {
         //Event data: "4121 2010-03-06T01:06:43[]:[]empty"
-        int chanid;
+        unsigned int chanid;
         char recstartts[20];
-        if (strlen(databuf)>=24 && sscanf(databuf, "%d %19s", &chanid, recstartts) == 2) {
+        if (strlen(databuf)>=24 && sscanf(databuf, "%u %19s", &chanid, recstartts) == 2) {
           Lock();
           m_recordingChangeEventList.push_back(RecordingChangeEvent(CHANGE_DELETE, chanid, recstartts));
           Unlock();
           if (g_bExtraDebug)
-            XBMC->Log(LOG_DEBUG,"%s - Event recording list delete: CHANID=%d TS=%s", __FUNCTION__, chanid, recstartts);
+            XBMC->Log(LOG_DEBUG,"%s - Event recording list delete: CHANID=%u TS=%s", __FUNCTION__, chanid, recstartts);
           recordingChange = true;
         }
       }
@@ -374,9 +374,9 @@ void MythEventHandler::MythEventHandlerPrivate::HandleUpdateSignal(const CStdStr
       else if (tokenList2[0] == "snr")
         m_signal.m_SNR = std::atoi(tokenList2[1].c_str());
       else if (tokenList2[0] == "ber")
-        m_signal.m_BER = std::atoi(tokenList2[1].c_str());
+        m_signal.m_BER = std::atol(tokenList2[1].c_str());
       else if (tokenList2[0] == "ucb")
-        m_signal.m_UNC = std::atoi(tokenList2[1].c_str());
+        m_signal.m_UNC = std::atol(tokenList2[1].c_str());
       else if (tokenList2[0] == "cardid")
         m_signal.m_ID = std::atoi(tokenList2[1].c_str());
     }
@@ -390,12 +390,12 @@ void MythEventHandler::MythEventHandlerPrivate::HandleUpdateFileSize(const CStdS
 
   long long length;
   char recordIDBuffer[20];
-  sscanf(buffer.c_str(),"%4s %4s-%2s-%2sT%2s:%2s:%2s %lli", recordIDBuffer, recordIDBuffer + 4, recordIDBuffer + 8, recordIDBuffer + 10, recordIDBuffer + 12, recordIDBuffer + 14, recordIDBuffer + 16, &length);
+  sscanf(buffer.c_str(),"%4s %4s-%2s-%2sT%2s:%2s:%2s %lld", recordIDBuffer, recordIDBuffer + 4, recordIDBuffer + 8, recordIDBuffer + 10, recordIDBuffer + 12, recordIDBuffer + 14, recordIDBuffer + 16, &length);
   CStdString recordID = recordIDBuffer;
 
   if (m_currentRecordID.compare(recordID) == 0) {
     if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG,"EVENT: %s, --UPDATING CURRENT RECORDING LENGTH-- EVENT msg: %s %ll", __FUNCTION__, recordID.c_str(), length);
+      XBMC->Log(LOG_DEBUG,"EVENT: %s, --UPDATING CURRENT RECORDING LENGTH-- EVENT msg: %s %lld", __FUNCTION__, recordID.c_str(), length);
     m_currentFile.UpdateLength(length);
   }
 }

@@ -79,13 +79,13 @@ public:
   RecorderSourceList GetLiveTVRecorderSourceList(const CStdString &channum);
 
   RecordingRuleMap GetRecordingRules();
-  int AddRecordingRule(const MythRecordingRule &timer);
-  bool UpdateRecordingRule(const MythRecordingRule &timer);
-  bool DeleteRecordingRule(int recordid);
+  bool AddRecordingRule(const MythRecordingRule &rule);
+  bool UpdateRecordingRule(const MythRecordingRule &rule);
+  bool DeleteRecordingRule(unsigned int recordid);
 
   RecordingProfileList GetRecordingProfiles();
 
-  int SetWatchedStatus(const MythProgramInfo &recording, bool watched);
+  bool SetWatchedStatus(const MythProgramInfo &recording, bool watched);
   long long GetBookmarkMark(const MythProgramInfo &recording, long long bk, int mode);
 
   long long GetRecordingMarkup(const MythProgramInfo &recording, int type);

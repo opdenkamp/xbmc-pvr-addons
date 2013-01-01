@@ -30,7 +30,7 @@ class RecordingRule : public MythRecordingRule, public std::vector<std::pair<PVR
 public:
   RecordingRule(const MythRecordingRule &rule);
   RecordingRule& operator=(const MythRecordingRule &rule);
-  bool operator==(const unsigned long &id);
+  bool operator==(const unsigned int &id);
 
   RecordingRule* GetParent() const;
   void SetParent(RecordingRule &parent);

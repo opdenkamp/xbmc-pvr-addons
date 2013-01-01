@@ -40,22 +40,22 @@ bool MythRecordingRule::IsNull() const
   return *m_recordingrule_t == NULL;
 }
 
-unsigned long MythRecordingRule::RecordID() const
+unsigned int MythRecordingRule::RecordID() const
 {
   return cmyth_recordingrule_recordid(*m_recordingrule_t);
 }
 
-void MythRecordingRule::SetRecordID(unsigned long recordid)
+void MythRecordingRule::SetRecordID(unsigned int recordid)
 {
   cmyth_recordingrule_set_recordid(*m_recordingrule_t, recordid);
 }
 
-unsigned long MythRecordingRule::ChannelID() const
+unsigned int MythRecordingRule::ChannelID() const
 {
   return cmyth_recordingrule_chanid(*m_recordingrule_t);
 }
 
-void MythRecordingRule::SetChannelID(unsigned long chanid)
+void MythRecordingRule::SetChannelID(unsigned int chanid)
 {
   cmyth_recordingrule_set_chanid(*m_recordingrule_t, chanid);
 }
@@ -175,12 +175,12 @@ void MythRecordingRule::SetEndOffset(int endoffset)
   cmyth_recordingrule_set_endoffset(*m_recordingrule_t, endoffset);
 }
 
-long MythRecordingRule::Priority() const
+int MythRecordingRule::Priority() const
 {
   return cmyth_recordingrule_recpriority(*m_recordingrule_t);
 }
 
-void MythRecordingRule::SetPriority(long priority)
+void MythRecordingRule::SetPriority(int priority)
 {
   cmyth_recordingrule_set_recpriority(*m_recordingrule_t, priority);
 }
@@ -300,7 +300,7 @@ unsigned short MythRecordingRule::UserJobs() const
 
 void MythRecordingRule::SetUserJobs(unsigned short jobs)
 {
-  cmyth_recordingrule_set_userjobs(*m_recordingrule_t, jobs);
+  cmyth_recordingrule_set_userjobs(*m_recordingrule_t, (uint8_t)jobs);
 }
 
 bool  MythRecordingRule::AutoCommFlag() const
@@ -323,12 +323,12 @@ void  MythRecordingRule::SetAutoExpire(bool enable)
   cmyth_recordingrule_set_autoexpire(*m_recordingrule_t, (enable ? 1 : 0));
 }
 
-long  MythRecordingRule::MaxEpisodes() const
+int  MythRecordingRule::MaxEpisodes() const
 {
   return cmyth_recordingrule_maxepisodes(*m_recordingrule_t);
 }
 
-void  MythRecordingRule::SetMaxEpisodes(long max)
+void  MythRecordingRule::SetMaxEpisodes(int max)
 {
   cmyth_recordingrule_set_maxepisodes(*m_recordingrule_t, max);
 }
@@ -343,12 +343,12 @@ void  MythRecordingRule::SetNewExpiresOldRecord(bool enable)
   cmyth_recordingrule_set_maxnewest(*m_recordingrule_t, (enable ? 1 :0));
 }
 
-unsigned long MythRecordingRule::Transcoder() const
+unsigned int MythRecordingRule::Transcoder() const
 {
   return cmyth_recordingrule_transcoder(*m_recordingrule_t);
 }
 
-void MythRecordingRule::SetTranscoder(unsigned long transcoder)
+void MythRecordingRule::SetTranscoder(unsigned int transcoder)
 {
   cmyth_recordingrule_set_transcoder(*m_recordingrule_t, transcoder);
 }

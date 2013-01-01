@@ -81,11 +81,11 @@ public:
 
   bool IsNull() const;
 
-  unsigned long RecordID() const;
-  void SetRecordID(unsigned long recordid);
+  unsigned int RecordID() const;
+  void SetRecordID(unsigned int recordid);
 
-  unsigned long ChannelID() const;
-  void SetChannelID(unsigned long channelid);
+  unsigned int ChannelID() const;
+  void SetChannelID(unsigned int channelid);
 
   CStdString Callsign() const;
   void SetCallsign(const CStdString &callsign);
@@ -117,8 +117,8 @@ public:
   int EndOffset() const;
   void SetEndOffset(int endoffset);
 
-  long Priority() const;
-  void SetPriority(long priority);
+  int Priority() const;
+  void SetPriority(int priority);
 
   bool Inactive() const;
   void SetInactive(bool inactive);
@@ -156,14 +156,14 @@ public:
   bool AutoExpire() const;
   void SetAutoExpire(bool enable);
 
-  long MaxEpisodes() const;
-  void SetMaxEpisodes(long max);
+  int MaxEpisodes() const;
+  void SetMaxEpisodes(int max);
 
   bool NewExpiresOldRecord() const;
   void SetNewExpiresOldRecord(bool enable);
 
-  unsigned long Transcoder() const;
-  void SetTranscoder(unsigned long transcoder);
+  unsigned int Transcoder() const;
+  void SetTranscoder(unsigned int transcoder);
 
 private:
   boost::shared_ptr<MythPointer<cmyth_recordingrule_t> > m_recordingrule_t;

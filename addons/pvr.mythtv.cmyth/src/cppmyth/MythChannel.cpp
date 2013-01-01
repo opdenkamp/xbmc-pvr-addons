@@ -41,7 +41,7 @@ bool MythChannel::IsNull() const
   return *m_channel_t == NULL;
 }
 
-unsigned long MythChannel::ID()
+unsigned int MythChannel::ID()
 {
   return cmyth_channel_chanid(*m_channel_t);
 }
@@ -54,7 +54,7 @@ CStdString MythChannel::Name()
   return retval;
 }
 
-unsigned long MythChannel::NumberInt()
+unsigned int MythChannel::NumberInt()
 {
   return cmyth_channel_channum(*m_channel_t);
 }
@@ -91,12 +91,12 @@ bool MythChannel::IsRadio() const
   return m_radio;
 }
 
-unsigned long MythChannel::SourceID()
+unsigned int MythChannel::SourceID()
 {
   return cmyth_channel_sourceid(*m_channel_t);
 }
 
-unsigned long MythChannel::MultiplexID()
+unsigned int MythChannel::MultiplexID()
 {
   return cmyth_channel_multiplex(*m_channel_t);
 }

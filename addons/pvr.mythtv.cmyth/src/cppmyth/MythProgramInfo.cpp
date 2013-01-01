@@ -51,7 +51,7 @@ CStdString MythProgramInfo::UID()
   // Creates unique IDs from ChannelID, StartTime and RecordID like "100_2011-12-10T12:00:00_247"
   char buf[50] = "";
   MythTimestamp time(RecordingStartTime());
-  sprintf(buf, "%d_%s_%lu", ChannelID(), time.String().c_str(), RecordID());
+  sprintf(buf, "%u_%s_%u", ChannelID(), time.String().c_str(), RecordID());
   return CStdString(buf);
 }
 
@@ -158,7 +158,7 @@ bool MythProgramInfo::IsVisible()
   return true;
 }
 
-int MythProgramInfo::ChannelID()
+unsigned int MythProgramInfo::ChannelID()
 {
   return cmyth_proginfo_chan_id(*m_proginfo_t);
 }
@@ -184,7 +184,7 @@ CStdString MythProgramInfo::RecordingGroup()
   return retval;
 }
 
-unsigned long MythProgramInfo::RecordID()
+unsigned int MythProgramInfo::RecordID()
 {
   return cmyth_proginfo_recordid(*m_proginfo_t);
 }

@@ -55,7 +55,7 @@ long MythSignal::UNC() const
   return m_UNC;
 }
 
-int MythSignal::ID() const
+unsigned int MythSignal::ID() const
 {
   return m_ID;
 }

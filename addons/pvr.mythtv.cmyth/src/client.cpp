@@ -83,7 +83,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   XBMC->Log(LOG_DEBUG, "Addon compiled with XBMC_PVR_API_VERSION: %s and XBMC_PVR_MIN_API_VERSION: %s", GetPVRAPIVersion(), GetMininumPVRAPIVersion());
 
   XBMC->Log(LOG_DEBUG, "Register handle @ libXBMC_addon...done");
-  
+
   XBMC->Log(LOG_DEBUG, "Checking props...");
   if (!props)
   {
@@ -136,7 +136,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   if (!XBMC->GetSetting("port", &g_iMythPort))
   {
     /* If setting is unknown fallback to defaults */
-    XBMC->Log(LOG_ERROR, "Couldn't get 'port' setting, falling back to '%i' as default", DEFAULT_PORT);
+    XBMC->Log(LOG_ERROR, "Couldn't get 'port' setting, falling back to '%d' as default", DEFAULT_PORT);
     g_iMythPort = DEFAULT_PORT;
   }
 
@@ -169,7 +169,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     g_szDBPassword = DEFAULT_DB_PASSWORD;
   }
   buffer[0] = 0;
-  
+
   /* Read setting "db_name" from settings.xml */
   if (XBMC->GetSetting("db_name", buffer))
     g_szDBName = buffer;
@@ -294,7 +294,7 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   string str = settingName;
   if (!g_bCreated)
     return ADDON_STATUS_OK;
-  
+
   if (str == "host")
   {
     string tmp_sHostname;
@@ -682,7 +682,7 @@ int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
   int dataread = g_client->ReadLiveStream(pBuffer, iBufferSize);
   if (dataread < 0)
   {
-    XBMC->Log(LOG_ERROR,"%s: Failed to read liveStream. Errorcode: %i!", __FUNCTION__, dataread);
+    XBMC->Log(LOG_ERROR,"%s: Failed to read liveStream. Errorcode: %d!", __FUNCTION__, dataread);
   }
   return dataread;
 }
@@ -726,7 +726,7 @@ bool CanSeekStream(void)
   return true;
 }
 
-long long SeekLiveStream(long long iPosition, int iWhence) 
+long long SeekLiveStream(long long iPosition, int iWhence)
 {
   if (g_client == NULL)
     return -1;
@@ -734,7 +734,7 @@ long long SeekLiveStream(long long iPosition, int iWhence)
   return g_client->SeekLiveStream(iPosition,iWhence);
 }
 
-long long PositionLiveStream(void) 
+long long PositionLiveStream(void)
 {
   if (g_client == NULL)
     return -1;
@@ -742,7 +742,7 @@ long long PositionLiveStream(void)
   return g_client->SeekLiveStream(0,SEEK_CUR);
 }
 
-long long LengthLiveStream(void) 
+long long LengthLiveStream(void)
 {
   if (g_client == NULL)
     return -1;

@@ -67,7 +67,7 @@ public:
   class RecordingChangeEvent
   {
   public:
-    RecordingChangeEvent(RecordingChangeType type, int chanid, char *recstartts)
+    RecordingChangeEvent(RecordingChangeType type, unsigned int chanid, char *recstartts)
       : m_type(type)
       , m_channelID(chanid)
       , m_recordStartTimeSlot(0)
@@ -94,13 +94,13 @@ public:
     }
 
     RecordingChangeType Type() const { return m_type; }
-    int ChannelID() const { return m_channelID; };
+    unsigned int ChannelID() const { return m_channelID; };
     time_t RecordingStartTimeslot() const { return m_recordStartTimeSlot; }
     MythProgramInfo Program() const { return m_prog; }
 
   private:
     RecordingChangeType m_type;
-    int m_channelID;              // ADD and DELETE
+    unsigned int m_channelID;     // ADD and DELETE
     time_t m_recordStartTimeSlot; // ADD and DELETE
     MythProgramInfo m_prog;       // UPDATE
   };

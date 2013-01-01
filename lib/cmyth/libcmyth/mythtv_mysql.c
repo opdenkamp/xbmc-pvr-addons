@@ -1947,14 +1947,25 @@ cmyth_mysql_get_recording_artwork(cmyth_database_t db, cmyth_proginfo_t prog, ch
 {
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
-	const char *query_str = "SELECT coverart, fanart, banner FROM recordedartwork WHERE inetref = ? AND season = ? AND host = ?;";
+	const char *query_str = "SELECT coverart, fanart, banner FROM recordedartwork WHERE inetref = ? AND host = ? AND season = ? "
+				"UNION ALL "
+				"SELECT coverart, fanart, banner FROM recordedartwork WHERE inetref = ? AND host = ?";
 	int rows = 0;
 	cmyth_mysql_query_t * query;
+
+	if (cmyth_database_check_version(db) < 0)
+		return -1;
+
+	/* DB version change at mythtv/libs/libmythtv/dbcheck.cpp:1473 */
+	if (db->db_version < 1279)
+		return 0;
 
 	query = cmyth_mysql_query_create(db, query_str);
 
 	if (cmyth_mysql_query_param_str(query, prog->proginfo_inetref) < 0
+			|| cmyth_mysql_query_param_str(query, prog->proginfo_hostname) < 0
 			|| cmyth_mysql_query_param_uint(query, prog->proginfo_season) < 0
+			|| cmyth_mysql_query_param_str(query, prog->proginfo_inetref) < 0
 			|| cmyth_mysql_query_param_str(query, prog->proginfo_hostname) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);

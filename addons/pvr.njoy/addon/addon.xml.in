@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.njoy"
-  version="1.6.1"
+  version="1.6.2"
   name="Njoy N7 PVR Client"
   provider-name="Team XBMC">
   <requires>
@@ -16,9 +16,7 @@
     library_windx="XBMC_njoy_win32.dll"
     library_android="libXBMC_njoy.so"/>
   <extension point="xbmc.addon.metadata">
-    <summary></summary>
-    <description></description>
+    <summary lang="en">Njoy N7 PVR Client</summary>
     <platform>@OS@</platform>
   </extension>
 </addon>
-

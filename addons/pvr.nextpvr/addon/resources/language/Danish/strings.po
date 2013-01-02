@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.2
+# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr "NextPVR PinKode"
 
 msgctxt "#30003"
 msgid "Enable TimeShift with Live TV"
-msgstr "Aktivér Tidsforskydelse af Direkte TV"
+msgstr "Aktiver Tidsforskydelse af Direkte TV"
 
 msgctxt "#30040"
 msgid "Connection"

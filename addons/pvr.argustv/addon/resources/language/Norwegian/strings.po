@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: ARGUS TV client
 # Addon id: pvr.argustv
-# Addon version: 1.6.162
+# Addon version: 1.6.163
 # Addon Provider: Fred Hoogduin, Marcel Groothuis
 msgid ""
 msgstr ""
@@ -16,6 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: no\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30002"
+msgid "Include Radio"
+msgstr "Inkluder radio"
 
 msgctxt "#30005"
 msgid "Password"

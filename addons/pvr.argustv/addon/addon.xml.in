@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.argustv"
-  version="1.6.162"
+  version="1.6.163"
   name="ARGUS TV client"
   provider-name="Fred Hoogduin, Marcel Groothuis">
   <requires>
@@ -30,13 +30,15 @@
     <summary lang="he">ממשק קדמי של XBMC ל ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="hu">XBMC ARGUS TV előtér-kiszolgáló http://www.argus-tv.com//</summary>
     <summary lang="it">Frontend XBMC di ARGUS TV PVR http://www.argus-tv.com//</summary>
+    <summary lang="ja">ARGUS TV PVR 用 XBMC フロントエンド http://www.argus-tv.com//</summary>
     <summary lang="ko">ARGUS TV PVR을 위한 XBMC 프론트엔드 http://www.argus-tv.com//</summary>
     <summary lang="lt">XBMC sąsaja su ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="mk">XBMC интерфејс за ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="nl">XBMC frontend voor het ARGUS-TV PVR http://www.argus-tv.com//</summary>
     <summary lang="pl">Interfejs XBMC dla ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="pt">Frontend XBMC para ARGUS TV PVR http://www.argus-tv.com//</summary>
-    <summary lang="pt_BR">XBMC frontend para o ARGUS TV PVR http://www.argus-tv.com/</summary>
+    <summary lang="pt_BR">Frontend do XBMC para o PVR ARGUS TV http://www.argus-tv.com//</summary>
+    <summary lang="ro">Frontend XBMC pentru PVR-ul ARGUS TV http://www.argus-tv.com/</summary>
     <summary lang="ru">Интерфейс XBMC для ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="sk">XBMC rozhranie pre ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="sl">XBMC-jev vmesnik za ARGUS TV PVR http://www.argus-tv.com//</summary>
@@ -56,13 +58,15 @@
     <description lang="he">ממשק קידמי של ARGOS TV  PVR. תומך בהצגת שידורי טלויזיה חיים והקלטות רשימות של תחנות רדיו לוחות שידורים ותזמוני הקלטות.</description>
     <description lang="hu">ARGUS TV PVR előtér-kiszolgáló. Élő adások, felvételek és rádió csatornák sugárzásának támogatása EPG-vel és időzítéssel.</description>
     <description lang="it">Frontend ARGUS TV PVR. Supporta lo streaming e la registrazione di Live TV, l'ascolto dei canali radio, la guida ai programmi e gli orari.</description>
+    <description lang="ja">ARGUS TV PVR フロントエンドです。テレビ放送のストリーミング、録画、ラジオチャンネルの視聴、EPG、録画予約をサポートしています。</description>
     <description lang="ko">ARGUS TV PVR 프론트엔드. 라이브 TV 스트리밍과 녹화, 라디오 청취, EPG와 예약 지원.</description>
     <description lang="lt">ARGUS TV PVR frontend. Palaiko transliaciją ir įrašus iš Live TV. Klausykite radijo kanalus ir derinkite EPG tvarkaraščius.</description>
     <description lang="mk">ARGUS TV PVR интерфејс. Подржува стриминг на Live TV &amp; Снимки, слушање на радио канали, EPG и планирања.</description>
     <description lang="nl">ARGUS TV PVR frontend. Ondersteunt het bekijken van Live TV en opnames, het beluisteren van radio zenders, het tonen van de EPG en het inplannen/beheren van nieuwe opnames (Timers).</description>
     <description lang="pl">Interfejs ARGUS TV PVR. Obsługuje strumieniowe przesyłanie TV na żywo oraz nagrań, słuchanie kanałów radiowych, EPG i harmonogramy.</description>
     <description lang="pt">Frontend ARGUS TV PVR. Suporta transmissão de TV em directo e Gravações, audição de estações de Rádio, EPG e agendamentos.</description>
-    <description lang="pt_BR">ARGUS TV PVR frontend. Suporta streaming de TV ao vivo &amp; Gravações, sintoniza rádios, EPG e agendamento.</description>
+    <description lang="pt_BR">Frontend do PVR ARGUS TV. Suporta streaming de TV Ao Vivo &amp; Gravações, canais de Rádio, EPG e agendamento.</description>
+    <description lang="ro">Frontend PVR ARGUS TV. Suportă difuzare în flux pentru televiziune în direct și pentru înregistrări, ascultarea canalelor radio, EPG și planificări.</description>
     <description lang="ru">Интерфейс для ARGUS TV PVR. Поддерживает просмотр потокового ТВ и видеозаписей, прослушивание радиоканалов и работу с электронным телегидом и расписаниями.</description>
     <description lang="sk">ARGUS TV PVR rozhranie. Podporuje streamovanie živého TV vysielania a nahrávok, počúvanie rozhlasových kanálov, EPG a plánovače.</description>
     <description lang="sl">Vmesnik za ARGUS TV PVR; podpira pretakanje televizije v živo &amp; posnetkov, poslušanje radia, EPG in časovnike.</description>
@@ -94,7 +98,7 @@
     <disclaimer lang="no">Dette er ustabil programvare! Skaperen har ikke på noen måte ansvar for feilede opptak, feile timere, bortkastede timer, eller andre uønskede effekter..</disclaimer>
     <disclaimer lang="pl">To oprogramowanie jest niestabilne! Autorzy w żaden sposób nie odpowiadają za nieudane nagrania, źle działające wyłączniki czasowe, stracone godziny czy też jakiekolwiek inne niepożądane efekty.</disclaimer>
     <disclaimer lang="pt">Este software é instável! Os autores não são de forma alguma responsáveis por gravações falhadas, temporizadores incorrectos, horas desperdiçadas, ou qualquer outro tipo de efeitos indesejáveis..</disclaimer>
-    <disclaimer lang="pt_BR">Este é um software instável! Os autores não são responsáveis por falhas nas gravações, agendamentos incorretos, horas dispendidas, ou quaisquer outros efeitos indesejáveis</disclaimer>
+    <disclaimer lang="pt_BR">Este é um software instável! Os autores não são responsáveis por falhas nas gravações, agendamentos incorretos, horas desperdiçadas, ou quaisquer outros efeitos indesejáveis.</disclaimer>
     <disclaimer lang="ro">Acesta nu este o aplicație definitivă! Autorii nu sunt în nici un fel responsabili pentru înregistrări eșuate, cronometre incorecte, ore pierdute, sau orice alte efecte nedorite...</disclaimer>
     <disclaimer lang="ru">Это нестабильная программа! Авторы не несут ответственности за неудачные записи, неверные таймеры, потраченное время и прочие нежелательные эффекты.</disclaimer>
     <disclaimer lang="sk">Tento softvér nie je stabilný! Autori nenesú žiadnu zodpovednosť za chybné nahrávky vysielania, nesprávne časovače alebo iné neželané udalosti spôsobené týmto softvérom..</disclaimer>

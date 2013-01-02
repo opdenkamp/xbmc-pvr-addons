@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.nextpvr"
-  version="1.6.2"
+  version="1.6.3"
   name="NextPVR PVR Client"
   provider-name="Graeme Blackley">
   <requires>
@@ -16,6 +16,7 @@
     library_windx="XBMC_NextPVR_win32.dll"
     library_android="libXBMC_NextPVR.so"/>
   <extension point="xbmc.addon.metadata">
+    <summary lang="af">XBMC voorprogram vir die NextPVR</summary>
     <summary lang="be">XBMC frontend for the NextPVR</summary>
     <summary lang="ca">Frontal XBMC pel NextPVR</summary>
     <summary lang="cs">Rozhraní XBMC pro NextPVR</summary>
@@ -45,6 +46,7 @@
     <summary lang="sl">XBMC-jev vmesnik za NextPVR</summary>
     <summary lang="sv">XBMC-frontend för NextPVR</summary>
     <summary lang="zh">XBMC的NextPVR前端</summary>
+    <description lang="af">NextPVR voorprogram. Ondersteun stroom van Lewendige TV &amp; Opnames, luister na Radio kanale en EPG.</description>
     <description lang="be">NextPVR frontend. Supports streaming of Live TV &amp; Recordings, listening to Radio channels and EPG.</description>
     <description lang="ca">Frontal NextPVR. Suporta fluxes de TV en directe i enregistraments, escoltes de ràdiio i EPG.</description>
     <description lang="cs">Rozhraní NextPVR. Podporuje proudové vysílání živého vysílání a nahrávek, poslech kanálů rádia a EPG.</description>
@@ -74,6 +76,7 @@
     <description lang="sl">Vmesnik za NextPVR; podpira pretakanje televizije v živo &amp; posnetkov, poslušanje radia in EPG.</description>
     <description lang="sv">NextPVR-frontend. Stödjer strömning av direktsänd TV &amp; inspelningar, lyssna på radiokanaler och EPG.</description>
     <description lang="zh">Tvheadend前端，支持直播电视播放和录制、收听电台和电子节目单</description>
+    <disclaimer lang="af">Hierdie is werk in vordering. Gebruik op jou eie risiko.</disclaimer>
     <disclaimer lang="be">This is a work in progress. Use at your own risk.</disclaimer>
     <disclaimer lang="ca">Això és un treball en curs. Utilitzau baix la vostra responsabilitat.</disclaimer>
     <disclaimer lang="cs">Práce na tomto rozhraní stále probíhají. Používejte na vlastní nebezpečí.</disclaimer>

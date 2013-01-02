@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.5
+# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
@@ -17,9 +17,21 @@ msgstr ""
 "Language: fa\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "نام سرور مدیا پورتال"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "پورت پلاگین مدیاپورتال XBMC"
+
 msgctxt "#30002"
 msgid "Free-to-air only"
 msgstr "فقط کانالهلی Free"
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "در برگرفتن رادیو"
 
 msgctxt "#30040"
 msgid "Connection"
@@ -60,6 +72,10 @@ msgstr "کانال ناشناخته"
 msgctxt "#30069"
 msgid "Card is disabled"
 msgstr "کارت غیر فعال است"
+
+msgctxt "#30073"
+msgid "SW Encoder missing"
+msgstr "انکودر نرافزاری پیدا نشد"
 
 msgctxt "#30074"
 msgid "No free disk space"

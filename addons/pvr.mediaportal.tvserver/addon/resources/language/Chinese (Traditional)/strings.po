@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.5
+# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
@@ -20,3 +20,7 @@ msgstr ""
 msgctxt "#30042"
 msgid "Playback"
 msgstr "播放"
+
+msgctxt "#30064"
+msgid "Unknown error"
+msgstr "未知的錯誤"

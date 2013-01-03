@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.3
+# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -28,6 +28,10 @@ msgstr "פפורט VNSI"
 msgctxt "#30002"
 msgid "Priority"
 msgstr "עדיפות"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "המרת מערך תווים"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
@@ -69,6 +73,10 @@ msgctxt "#30013"
 msgid "Radio channels"
 msgstr "ערוצי רדיו"
 
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "ערוצי FTA"
+
 msgctxt "#30015"
 msgid "Scrambled channels"
 msgstr "ערוצים מעורבלים"
@@ -81,6 +89,22 @@ msgctxt "#30017"
 msgid "Country"
 msgstr "ארץ"
 
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "כבל Inversion"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "כבל Symbolrate"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "כבל modulation"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Terr Inversion"
+
 msgctxt "#30022"
 msgid "Satellite"
 msgstr "לווין"
@@ -92,6 +116,10 @@ msgstr "סוג ATSC"
 msgctxt "#30024"
 msgid "Back"
 msgstr "אחורה"
+
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "חיפוש ערוץ - רץ... %i %%"
 
 msgctxt "#30026"
 msgid "Type:"
@@ -124,6 +152,10 @@ msgstr "שידורי טלוויזיה אנלוגיים"
 msgctxt "#30033"
 msgid "Analog Radio"
 msgstr "שידורי רדיו אנלוגיים "
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Transponder:"
 
 msgctxt "#30035"
 msgid "New channels"

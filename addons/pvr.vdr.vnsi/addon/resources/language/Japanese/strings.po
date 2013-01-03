@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.3
+# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -24,6 +24,10 @@ msgstr "VDR のホスト名またはIPアドレス"
 msgctxt "#30001"
 msgid "VNSI Port"
 msgstr "VNSI ポート"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "接続タイムアウト (秒)"
 
 msgctxt "#30008"
 msgid "Channel search"

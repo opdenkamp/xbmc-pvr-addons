@@ -17,7 +17,7 @@ VERSION = $(shell grep 'static const char \*VERSION *=' vnsi.h | awk '{ print $$
 
 # Use package data if installed...otherwise assume we're under the VDR source directory:
 PKGCFG = $(if $(VDRDIR),$(shell pkg-config --variable=$(1) $(VDRDIR)/vdr.pc),$(shell pkg-config --variable=$(1) vdr || pkg-config --variable=$(1) ../../../vdr.pc))
-LIBDIR = $(DESTDIR)$(call PKGCFG,libdir)
+LIBDIR ?= $(DESTDIR)$(call PKGCFG,libdir)
 LOCDIR = $(DESTDIR)$(call PKGCFG,locdir)
 #
 TMPDIR ?= /tmp
@@ -88,7 +88,11 @@ OBJS = vnsi.o bitstream.o vnsiclient.o config.o cxsocket.o demuxer.o demuxer_AAC
 
 ### The main target:
 
+ifdef API1733
+all: install-lib
+else
 all: $(SOFILE)
+endif
 
 ### Implicit rules:
 
@@ -134,9 +138,6 @@ install-i18n: $(I18Nmsgs)
 
 $(SOFILE): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(OBJS) -o $@
-ifdef API1733
-	@cp $@ $(LIBDIR)/$@.$(APIVERSION)
-endif
 
 install-lib: $(SOFILE)
 	install -D $^ $(LIBDIR)/$^.$(APIVERSION)
@@ -155,3 +156,4 @@ clean:
 	@-rm -f $(PODIR)/*.mo $(PODIR)/*.pot
 	@-rm -f $(OBJS) $(DEPFILE) *.so *.so.* *.tgz core* *~
 
+compile: $(SOFILE)

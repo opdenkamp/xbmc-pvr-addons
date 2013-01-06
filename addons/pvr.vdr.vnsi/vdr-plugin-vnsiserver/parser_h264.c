@@ -106,7 +106,7 @@ void cParserH264::Parse(sStreamPacket *pkt)
 //      int fpsScale = DVD_TIME_BASE / m_FPS;
       if (m_FpsScale == 0)
       {
-        m_FpsScale = m_Stream->Rescale(m_curDTS - m_prevDTS);
+        m_FpsScale = m_Stream->Rescale(m_curDTS - m_prevDTS, DVD_TIME_BASE, 90000);
       }
       bool streamChange = m_Stream->SetVideoInformation(m_FpsScale,DVD_TIME_BASE, m_Height, m_Width, DAR);
 

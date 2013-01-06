@@ -19,13 +19,25 @@
 */
 
 #include "setup.h"
+#include "vnsicommand.h"
 
 int PmtTimeout = 5;
+int TimeshiftMode = 0;
+int TimeshiftBufferSize = 5;
 
 cMenuSetupVNSI::cMenuSetupVNSI(void)
 {
   newPmtTimeout = PmtTimeout;
   Add(new cMenuEditIntItem( tr("PMT Timeout (0-10)"), &newPmtTimeout));
+
+  timeshiftModesTexts[0] = tr("Off");
+  timeshiftModesTexts[1] = tr("RAM");
+  timeshiftModesTexts[2] = tr("File");
+  newTimeshiftMode = TimeshiftMode;
+  Add(new cMenuEditStraItem( tr("Time Shift Mode"), &newTimeshiftMode, 2, timeshiftModesTexts));
+
+  newTimeshiftBufferSize = TimeshiftBufferSize;
+  Add(new cMenuEditIntItem( tr("Time Shift Buffersize (1-20) x 100MB"), &newTimeshiftBufferSize));
 }
 
 void cMenuSetupVNSI::Store(void)
@@ -33,4 +45,12 @@ void cMenuSetupVNSI::Store(void)
   if (newPmtTimeout > 10 || newPmtTimeout < 0)
     newPmtTimeout = 2;
   SetupStore(CONFNAME_PMTTIMEOUT, PmtTimeout = newPmtTimeout);
+
+  SetupStore(CONFNAME_TIMESHIFT, TimeshiftMode = newTimeshiftMode);
+
+  if (newTimeshiftBufferSize > 20)
+    newTimeshiftBufferSize = 20;
+  else if (newTimeshiftBufferSize < 1)
+    newTimeshiftBufferSize = 1;
+  SetupStore(CONFNAME_TIMESHIFTBUFFERSIZE, TimeshiftBufferSize = newTimeshiftBufferSize);
 }

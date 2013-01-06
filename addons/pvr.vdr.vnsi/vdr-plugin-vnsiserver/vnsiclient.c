@@ -35,6 +35,7 @@
 #include <vdr/menu.h>
 #include <vdr/device.h>
 
+#include "vnsi.h"
 #include "config.h"
 #include "vnsicommand.h"
 #include "recordingscache.h"
@@ -411,6 +412,13 @@ bool cVNSIClient::processRequest(cRequestPacket* req)
       result = process_Ping();
       break;
 
+    case VNSI_GETSETUP:
+      result = process_GetSetup();
+      break;
+
+    case VNSI_STORESETUP:
+      result = process_StoreSetup();
+      break;
 
     /** OPCODE 20 - 39: VNSI network functions for live streaming */
     case VNSI_CHANNELSTREAM_OPEN:
@@ -421,6 +429,9 @@ bool cVNSIClient::processRequest(cRequestPacket* req)
       result = processChannelStream_Close();
       break;
 
+    case VNSI_CHANNELSTREAM_SEEK:
+      result = processChannelStream_Seek();
+      break;
 
     /** OPCODE 40 - 59: VNSI network functions for recording streaming */
     case VNSI_RECSTREAM_OPEN:
@@ -637,6 +648,46 @@ bool cVNSIClient::process_Ping() /* OPCODE 7 */
   return true;
 }
 
+bool cVNSIClient::process_GetSetup() /* OPCODE 8 */
+{
+  char* name = m_req->extract_String();
+  if (!strcasecmp(name, CONFNAME_PMTTIMEOUT))
+    m_resp->add_U32(PmtTimeout);
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFT))
+    m_resp->add_U32(TimeshiftMode);
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFTBUFFERSIZE))
+    m_resp->add_U32(TimeshiftBufferSize);
+
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+  return true;
+}
+
+bool cVNSIClient::process_StoreSetup() /* OPCODE 9 */
+{
+  char* name = m_req->extract_String();
+
+  if (!strcasecmp(name, CONFNAME_PMTTIMEOUT))
+  {
+    int value = m_req->extract_U32();
+    cPluginVNSIServer::StoreSetup(CONFNAME_PMTTIMEOUT, value);
+  }
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFT))
+  {
+    int value = m_req->extract_U32();
+    cPluginVNSIServer::StoreSetup(CONFNAME_TIMESHIFT, value);
+  }
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFTBUFFERSIZE))
+  {
+    int value = m_req->extract_U32();
+    cPluginVNSIServer::StoreSetup(CONFNAME_TIMESHIFTBUFFERSIZE, value);
+  }
+
+  m_resp->add_U32(VNSI_RET_OK);
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+  return true;
+}
 
 /** OPCODE 20 - 39: VNSI network functions for live streaming */
 
@@ -694,6 +745,23 @@ bool cVNSIClient::processChannelStream_Close() /* OPCODE 21 */
   return true;
 }
 
+bool cVNSIClient::processChannelStream_Seek() /* OPCODE 22 */
+{
+  if (m_isStreaming && m_Streamer)
+  {
+    int64_t time = m_req->extract_S64();
+    if (m_Streamer->SeekTime(time))
+      m_resp->add_U32(VNSI_RET_OK);
+    else
+      m_resp->add_U32(VNSI_RET_ERROR);
+  }
+  else
+    m_resp->add_U32(VNSI_RET_ERROR);
+
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+  return true;
+}
 
 /** OPCODE 40 - 59: VNSI network functions for recording streaming */
 

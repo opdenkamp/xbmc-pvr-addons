@@ -40,15 +40,22 @@
 
 /** Response packets operation codes */
 
+#define CONFNAME_PMTTIMEOUT "PmtTimeout"
+#define CONFNAME_TIMESHIFT "Timeshift"
+#define CONFNAME_TIMESHIFTBUFFERSIZE "TimeshiftBufferSize"
+
 /* OPCODE 1 - 19: VNSI network functions for general purpose */
 #define VNSI_LOGIN                 1
 #define VNSI_GETTIME               2
 #define VNSI_ENABLESTATUSINTERFACE 3
 #define VNSI_PING                  7
+#define VNSI_GETSETUP              8
+#define VNSI_STORESETUP            9
 
 /* OPCODE 20 - 39: VNSI network functions for live streaming */
-#define VNSI_CHANNELSTREAM_OPEN    20
-#define VNSI_CHANNELSTREAM_CLOSE   21
+#define VNSI_CHANNELSTREAM_OPEN     20
+#define VNSI_CHANNELSTREAM_CLOSE    21
+#define VNSI_CHANNELSTREAM_SEEK     22
 
 /* OPCODE 40 - 59: VNSI network functions for recording streaming */
 #define VNSI_RECSTREAM_OPEN        40

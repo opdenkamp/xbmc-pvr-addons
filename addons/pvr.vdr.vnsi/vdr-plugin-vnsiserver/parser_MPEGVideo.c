@@ -97,7 +97,7 @@ void cParserMPEG2Video::Parse(sStreamPacket *pkt)
   {
     if (!m_NeedSPS && !m_NeedIFrame)
     {
-      int fpsScale = m_Stream->Rescale(m_FrameDuration);
+      int fpsScale = m_Stream->Rescale(m_FrameDuration, DVD_TIME_BASE, 90000);
       bool streamChange = m_Stream->SetVideoInformation(fpsScale,DVD_TIME_BASE, m_Height, m_Width, m_Dar);
 
       pkt->id       = m_pID;

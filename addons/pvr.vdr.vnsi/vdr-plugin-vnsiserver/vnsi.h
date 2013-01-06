@@ -31,10 +31,13 @@ static const char *VERSION        = "0.9.1";
 static const char *DESCRIPTION    = "VDR-Network-Streaming-Interface (VNSI) Server";
 
 extern int PmtTimeout;
+extern int TimeshiftMode;
+extern int TimeshiftBufferSize;
 
 class cPluginVNSIServer : public cPlugin {
 private:
   cVNSIServer *Server;
+  static cPluginVNSIServer *VNSIServer;
 
 public:
   cPluginVNSIServer(void);
@@ -57,5 +60,7 @@ public:
   virtual bool Service(const char *Id, void *Data = NULL);
   virtual const char **SVDRPHelpPages(void);
   virtual cString SVDRPCommand(const char *Command, const char *Option, int &ReplyCode);
+
+  static void StoreSetup(const char *Name, int Value);
 };
 

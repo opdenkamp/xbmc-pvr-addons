@@ -111,9 +111,12 @@ private:
   bool process_GetTime();
   bool process_EnableStatusInterface();
   bool process_Ping();
+  bool process_GetSetup();
+  bool process_StoreSetup();
 
   bool processChannelStream_Open();
   bool processChannelStream_Close();
+  bool processChannelStream_Seek();
 
   bool processRecStream_Open();
   bool processRecStream_Close();

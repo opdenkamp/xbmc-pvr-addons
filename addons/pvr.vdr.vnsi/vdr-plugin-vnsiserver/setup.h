@@ -23,12 +23,13 @@
 
 #include <vdr/plugin.h>
 
-#define CONFNAME_PMTTIMEOUT "PmtTimeout"
-
 class cMenuSetupVNSI : public cMenuSetupPage
 {
 private:
   int newPmtTimeout;
+  int newTimeshiftMode;
+  const char *timeshiftModesTexts[3];
+  int newTimeshiftBufferSize;
 protected:
   virtual void Store(void);
 public:

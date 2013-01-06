@@ -57,13 +57,16 @@ public:
   cTSStream *GetNextStream();
   void Open(const cChannel &channel, cVideoBuffer *videoBuffer);
   void Close();
+  bool SeekTime(int64_t time);
 
 protected:
   bool EnsureParsers();
+  void ResetParsers();
   void SetChannelStreams(const cChannel *channel);
   void SetChannelPids(cChannel *channel, cPatPmtParser *patPmtParser);
   cTSStream *FindStream(int Pid);
   void AddStreamInfo(sStreamInfo &stream);
+  bool GetTimeAtPos(size_t *pos, int64_t *time);
   std::list<cTSStream*> m_Streams;
   std::list<cTSStream*>::iterator m_StreamsIterator;
   std::list<sStreamInfo> m_StreamInfos;
@@ -72,4 +75,5 @@ protected:
   int m_OldPmtVersion;
   bool m_WaitIFrame;
   cVideoBuffer *m_VideoBuffer;
+  cMutex m_Mutex;
 };

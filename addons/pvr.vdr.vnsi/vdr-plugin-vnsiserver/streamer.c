@@ -109,9 +109,10 @@ void cLiveStreamer::Action(void)
         sendSignalInfo();
       }
     }
-    else
+    else if (ret < 0)
     {
       // no data
+      usleep(10000);
       if(m_last_tick.Elapsed() >= (uint64_t)(m_scanTimeout*1000))
       {
         INFOLOG("No Signal");
@@ -480,4 +481,10 @@ void cLiveStreamer::sendStreamStatus()
   resp->finaliseStream();
   m_Socket->write(resp->getPtr(), resp->getLen());
   delete resp;
+}
+
+bool cLiveStreamer::SeekTime(int64_t time)
+{
+  bool ret = m_Demuxer.SeekTime(time);
+  return ret;
 }

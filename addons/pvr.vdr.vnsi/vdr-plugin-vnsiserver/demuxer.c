@@ -39,6 +39,8 @@ cVNSIDemuxer::~cVNSIDemuxer()
 
 void cVNSIDemuxer::Open(const cChannel &channel, cVideoBuffer *videoBuffer)
 {
+  cMutexLock lock(&m_Mutex);
+
   m_CurrentChannel = channel;
   m_VideoBuffer = videoBuffer;
   m_OldPmtVersion = -1;
@@ -47,10 +49,16 @@ void cVNSIDemuxer::Open(const cChannel &channel, cVideoBuffer *videoBuffer)
     m_WaitIFrame = true;
   else
     m_WaitIFrame = false;
+
+  cParser::m_Wrap = false;
+  cParser::m_NoOfWraps = 0;
+  cParser::m_ConfirmCount = 0;
 }
 
 void cVNSIDemuxer::Close()
 {
+  cMutexLock lock(&m_Mutex);
+
   for (std::list<cTSStream*>::iterator it = m_Streams.begin(); it != m_Streams.end(); ++it)
   {
     DEBUGLOG("Deleting stream parser for pid=%i and type=%i", (*it)->GetPID(), (*it)->Type());
@@ -65,6 +73,8 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
   uint8_t *buf;
   int len;
   cTSStream *stream;
+
+  cMutexLock lock(&m_Mutex);
 
   // clear packet
   if (!packet)
@@ -112,16 +122,169 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
   }
   else if (stream = FindStream(ts_pid))
   {
-    if (stream->ProcessTSPacket(buf, packet, m_WaitIFrame))
+    if (stream->ProcessTSPacket(buf, packet, NULL, m_WaitIFrame))
     {
       m_WaitIFrame = false;
       return 1;
     }
   }
-  else
-    return -1;
 
   return 0;
+}
+
+bool cVNSIDemuxer::SeekTime(int64_t time)
+{
+  size_t pos, pos_min, pos_max, pos_limit, start_pos;
+  int64_t ts, ts_min, ts_max, last_ts;
+  int no_change;
+
+  cMutexLock lock(&m_Mutex);
+
+//  INFOLOG("----- seek to time: %ld", time);
+
+  // rescale to 90khz
+  time = cTSStream::Rescale(time, 90000, DVD_TIME_BASE);
+
+  m_VideoBuffer->GetPositions(&pos, &pos_min, &pos_max);
+
+//  INFOLOG("----- seek to time: %ld", time);
+//  INFOLOG("------pos: %ld, pos min: %ld, pos max: %ld", pos, pos_min, pos_max);
+
+  if (!GetTimeAtPos(&pos_min, &ts_min))
+  {
+    ResetParsers();
+    m_WaitIFrame = true;
+    return false;
+  }
+
+//  INFOLOG("----time at min: %ld", ts_min);
+
+  if (ts_min >= time)
+  {
+    m_VideoBuffer->SetPos(pos_min);
+    ResetParsers();
+    m_WaitIFrame = true;
+    return true;
+  }
+
+  int64_t timecur;
+  GetTimeAtPos(&pos, &timecur);
+
+  // get time at end of buffer
+  unsigned int step= 1024;
+  bool gotTime;
+  do
+  {
+    pos_max -= step;
+    gotTime = GetTimeAtPos(&pos_max, &ts_max);
+    step += step;
+  } while (!gotTime && pos_max >= step);
+
+  if (!gotTime)
+  {
+    ResetParsers();
+    m_WaitIFrame = true;
+    return false;
+  }
+
+  if (ts_max <= time)
+  {
+    ResetParsers();
+    m_WaitIFrame = true;
+    return true;
+  }
+
+//  INFOLOG(" - time in buffer: %ld", cTSStream::Rescale(ts_max-ts_min, DVD_TIME_BASE, 90000)/1000000);
+
+  // bisect seek
+  if(ts_min > ts_max)
+  {
+    ResetParsers();
+    m_WaitIFrame = true;
+    return false;
+  }
+  else if (ts_min == ts_max)
+  {
+    pos_limit = pos_min;
+  }
+  else
+    pos_limit = pos_max;
+
+  no_change = 0;
+  ts = time;
+  last_ts = 0;
+  while (pos_min < pos_limit)
+  {
+    if (no_change==0)
+    {
+      // interpolate position
+      pos = cTSStream::Rescale(time - ts_min, pos_max - pos_min, ts_max - ts_min)
+          + pos_min - (pos_max - pos_limit);
+    }
+    else if (no_change==1)
+    {
+      // bisection, if interpolation failed to change min or max pos last time
+      pos = (pos_min + pos_limit) >> 1;
+    }
+    else
+    {
+      // linear search if bisection failed
+      pos = pos_min;
+    }
+
+    // clamp calculated pos into boundaries
+    if( pos <= pos_min)
+      pos = pos_min + 1;
+    else if (pos > pos_limit)
+      pos = pos_limit;
+    start_pos = pos;
+
+    // get time stamp at pos
+    if (!GetTimeAtPos(&pos, &ts))
+    {
+      ResetParsers();
+      m_WaitIFrame = true;
+      return false;
+    }
+    pos = m_VideoBuffer->GetPosCur();
+
+    // determine method for next calculation of pos
+    if ((last_ts == ts) || (pos >= pos_max))
+      no_change++;
+    else
+      no_change=0;
+
+//    INFOLOG("--- pos: %ld, \t time: %ld, diff time: %ld", pos, ts, time-ts);
+
+    // 0.4 sec is close enough
+    if (abs(time - ts) <= 36000)
+    {
+      break;
+    }
+    // target is to the left
+    else if (time <= ts)
+    {
+      pos_limit = start_pos - 1;
+      pos_max = pos;
+      ts_max = ts;
+    }
+    // target is to the right
+    if (time >= ts)
+    {
+      pos_min = pos;
+      ts_min = ts;
+    }
+    last_ts = ts;
+  }
+
+//  INFOLOG("----pos found: %ld", pos);
+//  INFOLOG("----time at pos: %ld, diff time: %ld", ts, cTSStream::Rescale(timecur-ts, DVD_TIME_BASE, 90000));
+
+  m_VideoBuffer->SetPos(pos);
+
+  ResetParsers();
+  m_WaitIFrame = true;
+  return true;
 }
 
 cTSStream *cVNSIDemuxer::GetFirstStream()
@@ -150,6 +313,14 @@ cTSStream *cVNSIDemuxer::FindStream(int Pid)
       return *it;
   }
   return NULL;
+}
+
+void cVNSIDemuxer::ResetParsers()
+{
+  for (std::list<cTSStream*>::iterator it = m_Streams.begin(); it != m_Streams.end(); ++it)
+  {
+    (*it)->ResetParser();
+  }
 }
 
 void cVNSIDemuxer::AddStreamInfo(sStreamInfo &stream)
@@ -384,4 +555,26 @@ void cVNSIDemuxer::SetChannelPids(cChannel *channel, cPatPmtParser *patPmtParser
                    Dpids, Dtypes, DLangs,
                    Spids, SLangs,
                    Tpid);
+}
+
+bool cVNSIDemuxer::GetTimeAtPos(size_t *pos, int64_t *time)
+{
+  uint8_t *buf;
+  int len;
+  cTSStream *stream;
+  int ts_pid;
+
+  m_VideoBuffer->SetPos(*pos);
+  while (len = m_VideoBuffer->Read(&buf, TS_SIZE) == TS_SIZE)
+  {
+    ts_pid = TsPid(buf);
+    if (stream = FindStream(ts_pid))
+    {
+      if (stream->ReadTime(buf, time))
+      {
+        return true;
+      }
+    }
+  }
+  return false;
 }

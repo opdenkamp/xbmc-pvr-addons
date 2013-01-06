@@ -208,17 +208,22 @@ class cTSStream;
 
 class cParser
 {
+friend class cTSStream;
 public:
   cParser(int pID, cTSStream *stream);
   virtual ~cParser();
 
   bool AddPESPacket(uint8_t *data, int size);
   virtual void Parse(sStreamPacket *pkt) = 0;
-  void ClearFrame() {m_PesBufferPtr = 0;}
+//  void ClearFrame() {m_PesBufferPtr = 0;}
   int ParsePacketHeader(uint8_t *data);
   int ParsePESHeader(uint8_t *buf, size_t len);
   virtual void Reset();
   bool IsVideo() {return m_IsVideo; }
+
+  static bool m_Wrap;
+  static int m_NoOfWraps;
+  static int m_ConfirmCount;
 
 protected:
   virtual bool IsValidStartCode(uint8_t *buf, int size);
@@ -280,7 +285,9 @@ public:
   cTSStream(eStreamType type, int pid);
   virtual ~cTSStream();
 
-  bool ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, bool iframe);
+  bool ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, int64_t *dts, bool iframe);
+  bool ReadTime(uint8_t *data, int64_t *dts);
+  void ResetParser();
 
   void SetLanguage(const char *language);
   const char *GetLanguage() { return m_language; }
@@ -302,7 +309,7 @@ public:
   uint16_t CompositionPageId() const { return m_compositionPageId; }
   uint16_t AncillaryPageId() const { return m_ancillaryPageId; }
 
-  int64_t Rescale(int64_t a);
+  static int64_t Rescale(int64_t a, int64_t b, int64_t c);
 };
 
 #endif // VNSI_DEMUXER_H

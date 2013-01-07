@@ -134,11 +134,6 @@ private:
   // Categories
   Categories m_categories;
 
-  // EPG
-  time_t m_EPGstart;
-  time_t m_EPGend;
-  ProgramList m_EPG;
-
   // Channels
   ChannelIdMap m_channelsById;
   ChannelNumberMap m_channelsByNumber;

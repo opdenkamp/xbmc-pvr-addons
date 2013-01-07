@@ -94,11 +94,11 @@ bool MythDatabase::FindProgram(time_t starttime, int channelid, const CStdString
   return retval > 0;
 }
 
-ProgramList MythDatabase::GetGuide(time_t starttime, time_t endtime)
+ProgramList MythDatabase::GetGuide(int channelid, time_t starttime, time_t endtime)
 {
   MythProgram *programs = 0;
   int len = 0;
-  CMYTH_DB_CALL(len, len < 0, cmyth_mysql_get_guide(*m_database_t, &programs, starttime, endtime));
+  CMYTH_DB_CALL(len, len < 0, cmyth_mysql_get_guide(*m_database_t, &programs, channelid, starttime, endtime));
 
   if (len < 1)
     return ProgramList();

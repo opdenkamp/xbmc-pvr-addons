@@ -371,7 +371,7 @@ cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_program_t **prog)
 }
 
 int
-cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, time_t starttime, time_t endtime)
+cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, uint32_t chanid, time_t starttime, time_t endtime)
 {
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
@@ -379,7 +379,7 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, time_t startt
 				"program.title, program.description, program.subtitle, program.programid, program.seriesid, program.category, "
 				"channel.channum, channel.callsign, channel.name, channel.sourceid "
 				"FROM program INNER JOIN channel ON program.chanid=channel.chanid "
-				"WHERE channel.visible = 1 AND ((program.endtime > ? AND program.endtime < ?) OR (program.starttime >= ? AND program.starttime <= ?) OR (program.starttime <= ? AND program.endtime >= ?)) "
+				"WHERE channel.chanid = ? AND ((program.endtime > ? AND program.endtime < ?) OR (program.starttime >= ? AND program.starttime <= ?) OR (program.starttime <= ? AND program.endtime >= ?)) "
 				"ORDER BY (channel.channum + 0), program.starttime ASC";
 	int rows = 0;
 	int n = 0;
@@ -392,6 +392,7 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, time_t startt
 
 	if (cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
 			|| cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
+			|| cmyth_mysql_query_param_uint32(query, chanid) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
 			|| cmyth_mysql_query_param_unixtime(query, endtime, db->db_tz_utc) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0

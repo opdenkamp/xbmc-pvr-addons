@@ -558,7 +558,7 @@ PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
 
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "method",      "addDvrEntry");
-  if ((GetProtocol() >= 6) && timer.iEpgUid)
+  if ((GetProtocol() >= 6) && timer.iEpgUid > 0)
   {
     htsmsg_add_u32(msg, "eventId",     timer.iEpgUid);
     htsmsg_add_s64(msg, "startExtra",  timer.iMarginStart);
@@ -801,16 +801,23 @@ PVR_ERROR CHTSPData::GetEvents(ADDON_HANDLE handle, uint32_t cid, time_t stop)
 
   htsmsg_t *e;
   htsmsg_field_t *f;
+
+  unsigned int failedEvents = 0;
+  unsigned int goodEvents = 0;
+
   HTSMSG_FOREACH(f, msg)
   {
     if ((e = htsmsg_get_map_by_field(f)))
     {
-      if (!ParseEvent(handle, e, NULL, stop))
-      {
-        retVal = PVR_ERROR_UNKNOWN;
-      }
+      if (ParseEvent(handle, e, NULL, stop))
+        goodEvents++;
+      else
+        failedEvents++;
     }
   }
+
+  if (goodEvents == 0 && failedEvents > 0)
+    retVal = PVR_ERROR_SERVER_ERROR;
 
   return retVal;
 }
@@ -912,7 +919,7 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
   }
 
   htsmsg_t *services;
-  bool bIsRadio(false);
+  bool bIsRadio = channel.radio;
   if((services = htsmsg_get_list(msg, "services")))
   {
     htsmsg_field_t *f;

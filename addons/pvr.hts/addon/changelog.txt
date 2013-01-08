@@ -1,3 +1,20 @@
+1.6.15
+
+- fix false disconnects by raising default (hardcoded) read timeout value when opening streams from 10 to 20 seconds.
+
+1.6.14
+
+- fix errors sent by client when fetching events for a channel with no epg data
+
+1.6.13
+
+- make channel.radio to not reset to false during update if tvheadend not provided channel services
+- change handling of EPG events to not fail all events if only one/few events were broken/malformed
+
+1.6.12
+
+- fix instant recordings when channel has no epg data
+
 1.6.11
 
 - disable read timeout check while the stream is paused

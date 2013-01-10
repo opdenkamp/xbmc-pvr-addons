@@ -100,6 +100,8 @@ public:
   int         GetProtocol() const { return m_iProtocol; }
   const char *GetServerName() const { return m_strServerName.c_str(); }
   const char *GetVersion() const { return m_strVersion.c_str(); }
+  const char *GetWebroot() const { return m_strWebroot.c_str(); }
+  const       CStdString GetWebURL(const char *fmt, ...) const;
 
   bool        TransmitMessage(htsmsg_t* m);
   void        ReadResult(htsmsg_t *m, CHTSResult &result, const char* strAction = NULL);
@@ -131,6 +133,7 @@ private:
   std::string               m_strPassword;
   std::string               m_strVersion;
   std::string               m_strHostname;
+  std::string               m_strWebroot;
   bool                      m_bIsConnected;
   bool                      m_bTimeshiftSupport;
   bool                      m_bTimeshiftSeekSupport;

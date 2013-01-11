@@ -408,7 +408,7 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid)
 {
 	int ret;
 	char url[1024];
-	cmyth_proginfo_t loc_prog;
+	cmyth_proginfo_t loc_prog = NULL;
 	cmyth_file_t ft = NULL;
 
 	ret = 0;
@@ -425,15 +425,15 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid)
 		return -1;
 	}
 
-	loc_prog = cmyth_recorder_get_cur_proginfo(rec);
-	if (!loc_prog) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: recorder is not recording\n",
-			  __FUNCTION__);
-		return -1;
-	}
-
 	if (strncmp(rec->rec_livetv_chain->chainid, chainid, strlen(chainid)) == 0) {
+		loc_prog = cmyth_recorder_get_cur_proginfo(rec);
+		if (!loc_prog) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: recorder is not recording\n",
+				  __FUNCTION__);
+			ret = -1;
+			goto out;
+		}
 		sprintf(url, "myth://%s:%d%s", loc_prog->proginfo_hostname, rec->rec_port,
 				loc_prog->proginfo_pathname);
 
@@ -474,6 +474,9 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid)
 					&& cmyth_livetv_chain_switch_last(rec) == 1) {
 					rec->rec_livetv_chain->chain_switch_on_create = 0;
 				}
+				cmyth_dbg(CMYTH_DBG_INFO,
+					  "%s: chain count is %d\n",
+					  __FUNCTION__, rec->rec_livetv_chain->chain_ct);
 			}
 			else {
 				ret = -1;
@@ -595,24 +598,32 @@ cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg)
 	if (strlen(msg) >= 1 && sscanf(msg,"%"PRIu32, &rec_id) == 1) {
 		if (rec_id == rec->rec_id
 			&& rec->rec_livetv_chain->livetv_watch == 1
-			&& cmyth_recorder_is_recording(rec) == 1)
-		{
+			&& cmyth_recorder_is_recording(rec) == 1) {
 			/*
-			 * Last recording is now completed.
+			 * Last recording is now completed but watch signal is ON.
 			 * Then force live tv chain update for the new current
-			 * program.
+			 * program. We will retry 3 times before returning.
 			 */
 			cmyth_dbg(CMYTH_DBG_DEBUG,
 				  "%s: previous recording done. Start chain update\n",
 				  __FUNCTION__);
-			if (rec->rec_livetv_chain->chainid) {
-				cmyth_livetv_chain_update(rec, rec->rec_livetv_chain->chainid);
+			ret = -1;
+			if (rec->rec_livetv_chain->chainid && rec->rec_livetv_chain->chain_ct > 0) {
+				int i;
+				for (i = 0; i < 3; i++) {
+					if (cmyth_livetv_chain_update(rec, rec->rec_livetv_chain->chainid) < 0)
+						break;
+					if (rec->rec_livetv_chain->livetv_watch == 0) {
+						ret = 0;
+						break;
+					}
+					usleep(100000);
+				}
 			}
 			else {
 				cmyth_dbg(CMYTH_DBG_ERROR,
 					  "%s: chainid is null for recorder %"PRIu32"\n",
 					  __FUNCTION__, rec_id);
-				ret = -1;
 			}
 		}
 		else {

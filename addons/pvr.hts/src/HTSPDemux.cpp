@@ -24,6 +24,8 @@
 #include "avcodec.h" // For codec id's
 #include "HTSPDemux.h"
 
+#define READ_TIMEOUT 20000
+
 using namespace ADDON;
 
 CHTSPDemux::CHTSPDemux(CHTSPConnection* connection) :
@@ -281,12 +283,12 @@ inline void HTSPSetDemuxStreamInfoVideo(PVR_STREAM_PROPERTIES::PVR_STREAM &strea
 {
   stream.iWidth  = htsmsg_get_u32_or_default(msg,   "width" , 0);
   stream.iHeight = htsmsg_get_u32_or_default(msg,   "height" , 0);
-  unsigned int den = htsmsg_get_u32_or_default(msg, "aspect_den", 1);
+  uint32_t den   = htsmsg_get_u32_or_default(msg, "aspect_den", 1);
   if(den)
     stream.fAspect = (float)htsmsg_get_u32_or_default(msg, "aspect_num", 1) / den;
   else
     stream.fAspect = 0.0f;
-  int iDuration = htsmsg_get_u32_or_default(msg, "duration" , 0);
+  uint32_t iDuration = htsmsg_get_u32_or_default(msg, "duration" , 0);
   if (iDuration > 0)
   {
     stream.iFPSScale = iDuration;
@@ -654,7 +656,7 @@ bool CHTSPDemux::SendSubscribe(int subscription, int channel)
   }
 
   // TODO get this from the pvr api. hardcoded to 10 seconds now
-  m_session->SetReadTimeout(10000);
+  m_session->SetReadTimeout(READ_TIMEOUT);
   Flush();
 
   XBMC->Log(LOG_DEBUG, "%s - new subscription for channel %d (%d)", __FUNCTION__, m_channel, m_subs);
@@ -668,7 +670,12 @@ bool CHTSPDemux::SendSpeed(int subscription, int speed)
   htsmsg_add_str(m, "method"        , "subscriptionSpeed");
   htsmsg_add_s32(m, "subscriptionId", subscription);
   htsmsg_add_s32(m, "speed"         , speed);
-  return m_session->ReadSuccess(m, "pause subscription");
+  if (m_session->ReadSuccess(m, "pause subscription"))
+  {
+    m_session->SetReadTimeout(speed == 0 ? -1 : READ_TIMEOUT);
+    return true;
+  }
+  return false;
 }
 
 bool CHTSPDemux::SendSeek(int subscription, int time, bool backward, double *startpts)

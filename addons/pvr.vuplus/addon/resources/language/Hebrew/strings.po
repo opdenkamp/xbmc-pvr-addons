@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
-# Addon version: 1.6.5
+# Addon version: 1.6.6
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
@@ -53,13 +53,25 @@ msgctxt "#30012"
 msgid "Webinterface Port"
 msgstr "פיתחת ממשק רשת"
 
+msgctxt "#30013"
+msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "Zap before channelswitch (i.e. for Single Tuner boxes)"
+
 msgctxt "#30014"
 msgid "Folder for channeldata"
 msgstr "תיקיה עבור מידע ערוצים"
 
+msgctxt "#30015"
+msgid "Check for bouquett updates"
+msgstr "בדוק לעדכונים לזרים"
+
 msgctxt "#30016"
 msgid "Check for channel updates"
 msgstr "בדוק לעדכוני ערוץ"
+
+msgctxt "#30017"
+msgid "Use only the DVB boxes' current recording path"
+msgstr "השתמש בנתיבי הקלטה רק של קופסאות DVB נוכחיים"
 
 msgctxt "#30018"
 msgid "General"
@@ -84,6 +96,18 @@ msgstr "הקלטות / מתזמנים"
 msgctxt "#30023"
 msgid "Recording folder on the receiver"
 msgstr "תיקית הקלטות על המקלט"
+
+msgctxt "#30024"
+msgid "Send DeepStandby-Command"
+msgstr "שלח פקודת DeepStandby"
+
+msgctxt "#30025"
+msgid "Fetch only one TV bouquet"
+msgstr "תמשוך רק תוכנית זרה אחת"
+
+msgctxt "#30026"
+msgid "TV-Bouquet"
+msgstr "תוכנית זרה"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

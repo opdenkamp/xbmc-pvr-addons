@@ -306,7 +306,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
   for(SRecordings::const_iterator it = recordings.begin(); it != recordings.end(); ++it)
   {
     SRecording recording = it->second;
-    CStdString strStreamURL = "http://";
+    CStdString strStreamURL;
     CStdString strRecordingId;
     CStdString strDirectory = "/";
     std::string strChannelName = "";
@@ -319,25 +319,12 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
         strChannelName = itr->second.name.c_str();
 
       /* HTSPv7+ - use HTSP */
-      if (GetProtocol() >= 7) {
+      if (GetProtocol() >= 7)
         strStreamURL = "";
 
       /* HTSPv6- - use HTTP */
-      } else {
-        strStreamURL = "http://";
-
-        if (g_strUsername != "")
-        {
-          strStreamURL += g_strUsername;
-          if (g_strPassword != "")
-          {
-            strStreamURL += ":";
-            strStreamURL += g_strPassword;
-          }
-          strStreamURL += "@";
-        }
-        strStreamURL.Format("%s%s:%i/dvrfile/%i", strStreamURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, recording.id);
-      }
+      else
+        strStreamURL = m_session->GetWebURL("dvrfile/%i", recording.id);
     }
 
     strRecordingId.Format("%i", recording.id);
@@ -558,7 +545,7 @@ PVR_ERROR CHTSPData::AddTimer(const PVR_TIMER &timer)
 
   htsmsg_t *msg = htsmsg_create_map();
   htsmsg_add_str(msg, "method",      "addDvrEntry");
-  if ((GetProtocol() >= 6) && timer.iEpgUid)
+  if ((GetProtocol() >= 6) && timer.iEpgUid > 0)
   {
     htsmsg_add_u32(msg, "eventId",     timer.iEpgUid);
     htsmsg_add_s64(msg, "startExtra",  timer.iMarginStart);
@@ -801,16 +788,23 @@ PVR_ERROR CHTSPData::GetEvents(ADDON_HANDLE handle, uint32_t cid, time_t stop)
 
   htsmsg_t *e;
   htsmsg_field_t *f;
+
+  unsigned int failedEvents = 0;
+  unsigned int goodEvents = 0;
+
   HTSMSG_FOREACH(f, msg)
   {
     if ((e = htsmsg_get_map_by_field(f)))
     {
-      if (!ParseEvent(handle, e, NULL, stop))
-      {
-        retVal = PVR_ERROR_UNKNOWN;
-      }
+      if (ParseEvent(handle, e, NULL, stop))
+        goodEvents++;
+      else
+        failedEvents++;
     }
   }
+
+  if (goodEvents == 0 && failedEvents > 0)
+    retVal = PVR_ERROR_SERVER_ERROR;
 
   return retVal;
 }
@@ -867,10 +861,17 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
 
   if((strIconPath = htsmsg_get_str(msg, "channelIcon")))
   {
-    if (channel.icon != strIconPath)
+    CStdString strIconURL;
+
+    if (strIconPath[0] != '/' || strIconPath[0] == '\0')
+      strIconURL = strIconPath;
+    else
+      strIconURL = m_session->GetWebURL("%s", strIconPath);
+
+    if (channel.icon != strIconURL)
     {
       bChannelChanged = true;
-      channel.icon = strIconPath;
+      channel.icon = strIconURL;
     }
   }
 
@@ -912,7 +913,7 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
   }
 
   htsmsg_t *services;
-  bool bIsRadio(false);
+  bool bIsRadio = channel.radio;
   if((services = htsmsg_get_list(msg, "services")))
   {
     htsmsg_field_t *f;

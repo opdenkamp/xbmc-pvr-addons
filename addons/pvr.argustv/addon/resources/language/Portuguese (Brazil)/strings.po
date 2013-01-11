@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: ARGUS TV client
 # Addon id: pvr.argustv
-# Addon version: 1.6.162
+# Addon version: 1.6.163
 # Addon Provider: Fred Hoogduin, Marcel Groothuis
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "ARGUS TV Hostname"
-msgstr "ARGUS TV Hostname"
+msgstr "Anfitrião ARGUS TV"
 
 msgctxt "#30001"
 msgid "ARGUS TV webserver port"
@@ -43,4 +43,4 @@ msgstr "Senha"
 
 msgctxt "#30006"
 msgid "Delay after tuning (ms)"
-msgstr "Atraso após conectar (ms)"
+msgstr "Atraso após sintonizar (ms)"

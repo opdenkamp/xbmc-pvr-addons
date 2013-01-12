@@ -1047,11 +1047,11 @@ cmyth_livetv_chain_duration(cmyth_recorder_t rec)
  * Description
  *
  * Seek to a new position in the file based on the value of whence:
- *	SEEK_SET
+ *	WHENCE_SET
  *		The offset is set to offset bytes.
- *	SEEK_CUR
+ *	WHENCE_CUR
  *		The offset is set to the current position plus offset bytes.
- *	SEEK_END
+ *	WHENCE_END
  *		The offset is set to the size of the file minus offset bytes.
  *
  * Return Value:
@@ -1074,20 +1074,18 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, int64_t offset, int8_t whence)
 	cur = -1;
 	ct  = rec->rec_livetv_chain->chain_ct;
 
-	if (whence == SEEK_END) {
-
-		offset -= rec->rec_livetv_file->file_req;
+	if (whence == WHENCE_END) {
+		offset = - rec->rec_livetv_file->file_req - offset;
 		for (cur = rec->rec_livetv_chain->chain_current; cur < ct; cur++) {
 			offset += rec->rec_livetv_chain->chain_files[cur]->file_length;
 		}
 
 		cur = rec->rec_livetv_chain->chain_current;
 		fp  = rec->rec_livetv_chain->chain_files[cur];
-		whence = SEEK_CUR;
+		whence = WHENCE_CUR;
 	}
 
-	if (whence == SEEK_SET) {
-
+	if (whence == WHENCE_SET) {
 		for (cur = 0; cur < ct; cur++) {
     			fp = rec->rec_livetv_chain->chain_files[cur];
 			if (offset < fp->file_length)
@@ -1096,7 +1094,7 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, int64_t offset, int8_t whence)
 		}
 	}
 
-	if (whence == SEEK_CUR) {
+	if (whence == WHENCE_CUR) {
 
 		if (offset == 0) {
 			cur     = rec->rec_livetv_chain->chain_current;
@@ -1128,20 +1126,27 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, int64_t offset, int8_t whence)
 			offset += fp->file_length;
 		}
 
-		offset -= fp->file_req;
+		whence = WHENCE_SET;
 	}
 
 	if (fp && cur >=0)
 	{
 		if ((ret = cmyth_file_seek(fp, offset, whence)) >= 0) {
 			cur -= rec->rec_livetv_chain->chain_current;
-			cmyth_livetv_chain_switch(rec, cur);
+			if (cmyth_livetv_chain_switch(rec, cur) == 1) {
+				/*
+				 * Return the new position in the chain
+				 */
+				for (cur = 0; cur < rec->rec_livetv_chain->chain_current; cur++) {
+					fp = rec->rec_livetv_chain->chain_files[cur];
+					ret += fp->file_length;
+				}
+				return ret;
+			}
 		}
 	}
-	else
-		return -1;
 
-	return ret;
+	return -1;
 }
 
 /*
@@ -1176,11 +1181,11 @@ int32_t cmyth_livetv_read(cmyth_recorder_t rec, char *buf, int32_t len)
  * Description
  *
  * Seek to a new position in the file based on the value of whence:
- *	SEEK_SET
+ *	WHENCE_SET
  *		The offset is set to offset bytes.
- *	SEEK_CUR
+ *	WHENCE_CUR
  *		The offset is set to the current position plus offset bytes.
- *	SEEK_END
+ *	WHENCE_END
  *		The offset is set to the size of the file minus offset bytes.
  * This function will select the appropriate call based on the protocol.
  *

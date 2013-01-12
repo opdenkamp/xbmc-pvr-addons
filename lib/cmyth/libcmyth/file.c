@@ -550,18 +550,7 @@ cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 		goto out;
 	}
 
-	switch (whence) {
-	case WHENCE_SET:
-		file->file_pos = offset;
-		break;
-	case WHENCE_CUR:
-		file->file_pos += offset;
-		break;
-	case WHENCE_END:
-		file->file_pos = file->file_length - offset;
-		break;
-	}
-
+	file->file_pos = c;
 	file->file_req = file->file_pos;
 	if(file->file_pos > file->file_length)
 		file->file_length = file->file_pos;

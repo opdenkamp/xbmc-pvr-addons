@@ -229,21 +229,11 @@ bool cPVRClientMediaPortal::Connect()
   snprintf(buffer, 512, "%s:%i", g_szHostname.c_str(), g_iPort);
   m_ConnectionString = buffer;
 
-  /* Retrieve card settings (needed for Live TV and recordings folders) */
-  if ( g_iTVServerXBMCBuild >= 106 )
-  {
-    int code;
-    vector<string> lines;
-
-    if ( SendCommand2("GetCardSettings\n", code, lines) )
-    {
-      m_cCards.ParseLines(lines);
-    }
-  }
-
   m_bConnected = true;
 
+  /* Load additional settings */
   LoadGenreTable();
+  LoadCardSettings();
 
   return true;
 }
@@ -1833,5 +1823,20 @@ void cPVRClientMediaPortal::LoadGenreTable()
     }
 
     m_genretable = new CGenreTable(sGenreFile);
+  }
+}
+
+void cPVRClientMediaPortal::LoadCardSettings()
+{
+  /* Retrieve card settings (needed for Live TV and recordings folders) */
+  if ( g_iTVServerXBMCBuild >= 106 )
+  {
+    int code;
+    vector<string> lines;
+
+    if ( SendCommand2("GetCardSettings\n", code, lines) )
+    {
+      m_cCards.ParseLines(lines);
+    }
   }
 }

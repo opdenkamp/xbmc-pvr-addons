@@ -109,6 +109,7 @@ protected:
 private:
   bool GetChannel(unsigned int number, PVR_CHANNEL &channeldata);
   void LoadGenreTable(void);
+  void LoadCardSettings(void);
 
   int                     m_iCurrentChannel;
   int                     m_iCurrentCard;

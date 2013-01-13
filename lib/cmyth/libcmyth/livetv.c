@@ -975,6 +975,8 @@ int32_t cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, int32_t len)
 			/* eof, switch to next file */
 			retry = cmyth_livetv_chain_switch(rec, 1);
 			if (retry == 1) {
+				/* Already requested ? seek to 0 */
+				cmyth_file_seek(rec->rec_livetv_file, 0, WHENCE_SET);
 				/* Chain switch done. Retry without limit */
 				vlen = 0;
 			}

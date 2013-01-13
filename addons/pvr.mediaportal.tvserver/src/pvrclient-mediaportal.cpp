@@ -243,12 +243,7 @@ bool cPVRClientMediaPortal::Connect()
 
   m_bConnected = true;
 
-  // Read the genre string to type/subtype translation file:
-  if(g_bReadGenre)
-  {
-    string sGenreFile = g_szClientPath + PATH_SEPARATOR_CHAR + "resources" + PATH_SEPARATOR_CHAR + "genre_translation.xml";
-    m_genretable = new CGenreTable(sGenreFile);
-  }
+  LoadGenreTable();
 
   return true;
 }
@@ -1819,4 +1814,24 @@ bool cPVRClientMediaPortal::CanPauseAndSeek()
     return true;
   else
     return false;
+}
+
+void cPVRClientMediaPortal::LoadGenreTable()
+{
+  // Read the genre string to type/subtype translation file:
+  if(g_bReadGenre)
+  {
+    string sGenreFile = g_szUserPath + PATH_SEPARATOR_CHAR + "resources" + PATH_SEPARATOR_CHAR + "genre_translation.xml";
+
+    if (!XBMC->FileExists(sGenreFile.c_str(), false))
+    {
+      sGenreFile = g_szUserPath + PATH_SEPARATOR_CHAR + "genre_translation.xml";
+      if (!XBMC->FileExists(sGenreFile.c_str(), false))
+      {
+        sGenreFile = g_szClientPath + PATH_SEPARATOR_CHAR + "resources" + PATH_SEPARATOR_CHAR + "genre_translation.xml";
+      }
+    }
+
+    m_genretable = new CGenreTable(sGenreFile);
+  }
 }

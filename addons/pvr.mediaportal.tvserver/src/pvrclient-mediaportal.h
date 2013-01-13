@@ -108,7 +108,7 @@ protected:
 
 private:
   bool GetChannel(unsigned int number, PVR_CHANNEL &channeldata);
-  bool LoadGenreXML(const std::string &filename);
+  void LoadGenreTable(void);
 
   int                     m_iCurrentChannel;
   int                     m_iCurrentCard;

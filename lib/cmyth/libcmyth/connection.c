@@ -97,6 +97,32 @@ static myth_protomap_t protomap[] = {
  * None.
  */
 static void
+cmyth_conn_done(cmyth_conn_t conn)
+{
+	int err;
+	char msg[5] = "DONE";
+
+	if (!conn) {
+		return;
+	}
+	if (!conn->conn_hang && conn->conn_ann != ANN_NONE) {
+		pthread_mutex_lock(&mutex);
+
+		/*
+		 * Try to shut down the connection.  Can't do much
+		 * if it fails other than log it.
+		 */
+		if ((err = cmyth_send_message(conn, msg)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_send_message() failed (%d)\n",
+				  __FUNCTION__, err);
+		}
+
+		pthread_mutex_unlock(&mutex);
+	}
+}
+
+static void
 cmyth_conn_destroy(cmyth_conn_t conn)
 {
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s {\n", __FUNCTION__);
@@ -104,15 +130,17 @@ cmyth_conn_destroy(cmyth_conn_t conn)
 		cmyth_dbg(CMYTH_DBG_DEBUG, "%s } !\n", __FUNCTION__);
 		return;
 	}
-	if (conn->conn_buf) {
-		free(conn->conn_buf);
-	}
 	if (conn->conn_fd >= 0) {
+		/* Try to close nicely before shutdown */
+		cmyth_conn_done(conn);
 		cmyth_dbg(CMYTH_DBG_PROTO,
 			  "%s: shutdown and close connection fd = %d\n",
 			  __FUNCTION__, conn->conn_fd);
 		shutdown(conn->conn_fd, SHUT_RDWR);
 		closesocket(conn->conn_fd);
+	}
+	if (conn->conn_buf) {
+		free(conn->conn_buf);
 	}
 	if (conn->server)
 	{
@@ -157,6 +185,7 @@ cmyth_conn_create(void)
 	ret->conn_hang = 0;
 	ret->server = NULL;
 	ret->port = 0;
+	ret->conn_ann = ANN_NONE;
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s }\n", __FUNCTION__);
 	return ret;
 }
@@ -524,10 +553,10 @@ cmyth_reconnect(cmyth_conn_t conn)
 
 static cmyth_conn_t
 cmyth_conn_connect(char *server, uint16_t port, uint32_t buflen,
-		   int32_t tcp_rcvbuf, int event)
+		   int32_t tcp_rcvbuf, int event, cmyth_conn_ann_t ann)
 {
 	cmyth_conn_t conn;
-	char announcement[256];
+	char msg[256];
 	uint32_t tmp_ver;
 	int attempt = 0;
 
@@ -564,14 +593,14 @@ cmyth_conn_connect(char *server, uint16_t port, uint32_t buflen,
 				  __FUNCTION__);
 			goto shut;
 		}
-		sprintf(announcement, "MYTH_PROTO_VERSION %"PRIu32" %s", conn->conn_version, map->token);
+		sprintf(msg, "MYTH_PROTO_VERSION %"PRIu32" %s", conn->conn_version, map->token);
 	} else {
-		sprintf(announcement, "MYTH_PROTO_VERSION %"PRIu32, conn->conn_version);
+		sprintf(msg, "MYTH_PROTO_VERSION %"PRIu32, conn->conn_version);
 	}
-	if (cmyth_send_message(conn, announcement) < 0) {
+	if (cmyth_send_message(conn, msg) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message('%s') failed\n",
-			  __FUNCTION__, announcement);
+			  __FUNCTION__, msg);
 		goto shut;
 	}
 	if (cmyth_rcv_version(conn, &tmp_ver) < 0) {
@@ -597,11 +626,11 @@ cmyth_conn_connect(char *server, uint16_t port, uint32_t buflen,
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: agreed on Version %"PRIu32" protocol\n",
 		  __FUNCTION__, conn->conn_version);
 
-	sprintf(announcement, "ANN Playback %s %d", my_hostname, event);
-	if (cmyth_send_message(conn, announcement) < 0) {
+	sprintf(msg, "ANN %s %s %d", (ann == ANN_MONITOR ? "Monitor" : "Playback"), my_hostname, event);
+	if (cmyth_send_message(conn, msg) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message('%s') failed\n",
-			  __FUNCTION__, announcement);
+			  __FUNCTION__, msg);
 		goto shut;
 	}
 	if (cmyth_rcv_okay(conn) < 0) {
@@ -609,6 +638,7 @@ cmyth_conn_connect(char *server, uint16_t port, uint32_t buflen,
 			  __FUNCTION__);
 		goto shut;
 	}
+	conn->conn_ann = ann;
 
 	/*
 	 * All of the downstream code in libcmyth assumes a monotonically increasing version number.
@@ -630,9 +660,9 @@ cmyth_conn_connect(char *server, uint16_t port, uint32_t buflen,
 }
 
 static int
-cmyth_conn_reconnect(cmyth_conn_t conn, int event)
+cmyth_conn_reconnect(cmyth_conn_t conn, int event, cmyth_conn_ann_t ann)
 {
-	char announcement[256];
+	char msg[256];
 	uint32_t tmp_ver;
 	int attempt = 0;
 	int ret = 0;
@@ -669,13 +699,13 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 				  __FUNCTION__);
 			goto shut;
 		}
-		sprintf(announcement, "MYTH_PROTO_VERSION %"PRIu32" %s", conn->conn_version, map->token);
+		sprintf(msg, "MYTH_PROTO_VERSION %"PRIu32" %s", conn->conn_version, map->token);
 	} else {
-		sprintf(announcement, "MYTH_PROTO_VERSION %"PRIu32, conn->conn_version);
+		sprintf(msg, "MYTH_PROTO_VERSION %"PRIu32, conn->conn_version);
 	}
-	if (cmyth_send_message(conn, announcement) < 0) {
+	if (cmyth_send_message(conn, msg) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message('%s') failed\n",
-			  __FUNCTION__, announcement);
+			  __FUNCTION__, msg);
 		goto shut;
 	}
 	if (cmyth_rcv_version(conn, &tmp_ver) < 0) {
@@ -697,10 +727,10 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: agreed on Version %"PRIu32" protocol\n",
 		  __FUNCTION__, conn->conn_version);
 
-	sprintf(announcement, "ANN Playback %s %d", my_hostname, event);
-	if (cmyth_send_message(conn, announcement) < 0) {
+	sprintf(msg, "ANN %s %s %d", (ann == ANN_MONITOR ? "Monitor" : "Playback"), my_hostname, event);
+	if (cmyth_send_message(conn, msg) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message('%s') failed\n",
-			  __FUNCTION__, announcement);
+			  __FUNCTION__, msg);
 		goto shut;
 	}
 	if (cmyth_rcv_okay(conn) < 0) {
@@ -708,6 +738,7 @@ cmyth_conn_reconnect(cmyth_conn_t conn, int event)
 			  __FUNCTION__);
 		goto shut;
 	}
+	conn->conn_ann = ann;
 
 	/*
 	 * All of the downstream code in libcmyth assumes a monotonically increasing version number.
@@ -753,7 +784,7 @@ cmyth_conn_connect_ctrl(char *server, uint16_t port, uint32_t buflen,
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting control connection\n",
 		  __FUNCTION__);
-	ret = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 0);
+	ret = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 0, ANN_PLAYBACK);
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done connecting control connection ret = %p\n",
 		  __FUNCTION__, ret);
 	return ret;
@@ -785,7 +816,7 @@ cmyth_conn_reconnect_ctrl(cmyth_conn_t control)
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: reconnecting control connection\n",
 		  __FUNCTION__);
 	if (control)
-		ret = cmyth_conn_reconnect(control, 0);
+		ret = cmyth_conn_reconnect(control, 0, ANN_PLAYBACK);
 	else
 		ret = 0;
 	if (ret)
@@ -802,7 +833,7 @@ cmyth_conn_connect_event(char *server, uint16_t port, uint32_t buflen,
 	cmyth_conn_t ret;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting event channel connection\n",
 		  __FUNCTION__);
-	ret = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 1);
+	ret = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 1, ANN_MONITOR);
 	cmyth_dbg(CMYTH_DBG_PROTO,
 		  "%s: done connecting event channel connection ret = %p\n",
 		  __FUNCTION__, ret);
@@ -816,7 +847,7 @@ cmyth_conn_reconnect_event(cmyth_conn_t conn)
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: re-connecting event channel connection\n",
 		  __FUNCTION__);
 	if (conn)
-		ret = cmyth_conn_reconnect(conn, 1);
+		ret = cmyth_conn_reconnect(conn, 1, ANN_MONITOR);
 	else
 		ret = 0;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done re-connecting event channel connection ret = %d\n",

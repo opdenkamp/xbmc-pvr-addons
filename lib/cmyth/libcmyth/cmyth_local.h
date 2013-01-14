@@ -80,16 +80,17 @@ extern pthread_mutex_t mutex;
  * MythTV backend connection
  */
 struct cmyth_conn {
-	cmyth_socket_t	conn_fd;	/**< socket file descriptor */
-	unsigned char	*conn_buf;	/**< connection buffer */
-	uint32_t	conn_buflen;	/**< buffer size */
-	int32_t		conn_len;	/**< amount of data in buffer */
-	int32_t		conn_pos;	/**< current position in buffer */
-	uint32_t	conn_version;	/**< protocol version */
-	volatile int8_t	conn_hang;	/**< is connection stuck? */
-	int32_t		conn_tcp_rcvbuf;/**< TCP receive buffer size */
-	char *          server;         /**< hostname of server */
-	uint16_t	port;           /**< port of server */
+	cmyth_socket_t   conn_fd;        /**< socket file descriptor */
+	unsigned char    *conn_buf;      /**< connection buffer */
+	uint32_t         conn_buflen;    /**< buffer size */
+	int32_t          conn_len;       /**< amount of data in buffer */
+	int32_t          conn_pos;       /**< current position in buffer */
+	uint32_t         conn_version;   /**< protocol version */
+	volatile int8_t  conn_hang;      /**< is connection stuck? */
+	int32_t          conn_tcp_rcvbuf;/**< TCP receive buffer size */
+	char *           server;         /**< hostname of server */
+	uint16_t         port;           /**< port of server */
+	cmyth_conn_ann_t conn_ann;       /**< connection announcement */
 };
 
 /* Sergio: Added to support new livetv protocol */

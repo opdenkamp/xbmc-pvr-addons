@@ -78,6 +78,11 @@ typedef struct cmyth_proginfo *cmyth_proginfo_t;
 struct cmyth_database;
 typedef struct cmyth_database *cmyth_database_t;
 
+typedef enum {
+	ANN_NONE = 0,
+	ANN_MONITOR = 1,
+	ANN_PLAYBACK,
+} cmyth_conn_ann_t;
 
 typedef enum {
 	CHANNEL_DIRECTION_UP = 0,

@@ -646,7 +646,7 @@ cmyth_rcv_okay(cmyth_conn_t conn)
 		cmyth_dbg(CMYTH_DBG_INFO,
 			  "%s: did not consume everything\n",
 			  __FUNCTION__);
-		while(count > 0) {
+		while(count > 0 && err == 0) {
 			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
 			count -= consumed;
 			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data %s\n", __FUNCTION__, tmp);
@@ -698,7 +698,7 @@ cmyth_rcv_feedback(cmyth_conn_t conn, char *fb)
 		cmyth_dbg(CMYTH_DBG_INFO,
 			  "%s: did not consume everything\n",
 			  __FUNCTION__);
-		while(count > 0) {
+		while(count > 0 && err == 0) {
 			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
 			count -= consumed;
 			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data %s\n", __FUNCTION__, tmp);

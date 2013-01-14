@@ -74,8 +74,8 @@ cmyth_file_destroy(cmyth_file_t file)
 			goto fail;
 		}
 	    fail:
-		ref_release(file->file_control);
 		pthread_mutex_unlock(&mutex);
+		ref_release(file->file_control);
 	}
 	if (file->closed_callback) {
 	    (file->closed_callback)(file);

@@ -85,6 +85,7 @@ public:
   MythSignal m_signal;
 
   bool m_playback;
+  bool m_hang;
   CStdString m_currentRecordID;
   MythFile m_currentFile;
 
@@ -100,6 +101,7 @@ MythEventHandler::MythEventHandlerPrivate::MythEventHandlerPrivate(const CStdStr
   , m_recorder(MythRecorder())
   , m_signal()
   , m_playback(false)
+  , m_hang(false)
   , m_recordingChangeEventList()
 {
   *m_conn_t = cmyth_conn_connect_event(const_cast<char*>(m_server.c_str()), port, 64 * 1024, 16 * 1024);
@@ -297,8 +299,8 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
     }
     else if (select < 0)
     {
-        XBMC->Log(LOG_ERROR, "%s Event client connection error", __FUNCTION__);
-        RetryConnect();
+      XBMC->Log(LOG_ERROR, "%s Event client connection error", __FUNCTION__);
+      RetryConnect();
     }
     else if (cmyth_conn_hung(*m_conn_t))
     {
@@ -403,7 +405,7 @@ void MythEventHandler::MythEventHandlerPrivate::HandleUpdateFileSize(const CStdS
 void MythEventHandler::MythEventHandlerPrivate::RetryConnect()
 {
   XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30302)); // MythTV backend unavailable
-
+  m_hang = true;
   while (!IsStopped())
   {
     usleep(999999);
@@ -417,7 +419,7 @@ void MythEventHandler::MythEventHandlerPrivate::RetryConnect()
     {
       XBMC->Log(LOG_NOTICE, "%s - Connected client to event socket", __FUNCTION__);
       XBMC->QueueNotification(QUEUE_INFO, XBMC->GetLocalizedString(30303)); // MythTV backend available
-
+      m_hang = false;
       RecordingListChange();
       break;
     }
@@ -498,6 +500,11 @@ void MythEventHandler::DisablePlayback()
 bool MythEventHandler::IsPlaybackActive() const
 {
   return m_imp->m_playback;
+}
+
+bool MythEventHandler::IsListening() const
+{
+  return (!m_imp->m_hang);
 }
 
 void MythEventHandler::SetRecordingListener(const CStdString &recordid, const MythFile &file)

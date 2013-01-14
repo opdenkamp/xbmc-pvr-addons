@@ -54,6 +54,7 @@ public:
   void EnablePlayback();
   void DisablePlayback();
   bool IsPlaybackActive() const;
+  bool IsListening() const;
 
   //Recordings change events
   enum RecordingChangeType

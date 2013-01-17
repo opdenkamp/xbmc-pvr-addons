@@ -51,6 +51,8 @@ public:
   bool SwitchChannel(const PVR_CHANNEL &channelinfo);
   int CurrentChannel() { return m_channelinfo.iChannelNumber; }
   bool GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo);
+  bool IsTimeshift() { return m_bTimeshift; }
+  bool SeekTime(int time, bool backwards, double *startpts);
 
 protected:
 
@@ -65,4 +67,5 @@ private:
   PVR_CHANNEL           m_channelinfo;
   SQuality              m_Quality;
   std::map<int, unsigned int> m_StreamIndex;
+  bool m_bTimeshift;
 };

@@ -91,7 +91,7 @@
 		 </item>
 		 <item id="2">
 		   <label>$ADDON[pvr.vdr.vnsi 30101]</label>
-		   <onclick>SetProperty(menu,timeshift)</onclick>
+		   <onclick>SetProperty(menu,setup)</onclick>
 		 </item>
         </content>
       </control>
@@ -150,6 +150,42 @@
             <width>780</width>
             <height>515</height>
           </control>
+	    </control>
+	    <control type="group" id="20">
+	      <visible>StringCompare(Window.Property(menu),setup)</visible>
+		  <defaultcontrol always="true">21</defaultcontrol>
+		  <control type="spincontrolex" id="21">
+            <description>Source Type</description>
+            <posx>10</posx>
+            <posy>50</posy>
+            <width>770</width>
+            <height>40</height>
+            <font>font13</font>
+            <textcolor>grey2</textcolor>
+            <focusedcolor>white</focusedcolor>
+            <texturefocus border="0,2,0,2">MenuItemFO.png</texturefocus>
+            <texturenofocus border="0,2,0,2">MenuItemNF.png</texturenofocus>
+            <aligny>center</aligny>
+            <label>$ADDON[pvr.vdr.vnsi 30104]</label>
+            <onleft>10</onleft>
+			<ondown>22</ondown>
+        </control>
+	    <control type="spincontrolex" id="22">
+            <description>Source Type</description>
+            <posx>10</posx>
+            <posy>100</posy>
+            <width>770</width>
+            <height>40</height>
+            <font>font13</font>
+            <textcolor>grey2</textcolor>
+            <focusedcolor>white</focusedcolor>
+            <texturefocus border="0,2,0,2">MenuItemFO.png</texturefocus>
+            <texturenofocus border="0,2,0,2">MenuItemNF.png</texturenofocus>
+            <aligny>center</aligny>
+            <label>$ADDON[pvr.vdr.vnsi 30105]</label>
+            <onleft>10</onleft>
+			<onup>21</onup>
+        </control>
 	    </control>
       </control>
 	</control>

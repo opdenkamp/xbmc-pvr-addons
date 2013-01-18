@@ -212,7 +212,7 @@ msgid "VDR OSD"
 msgstr ""
 
 msgctxt "#30101"
-msgid "Timeshift"
+msgid "Setup"
 msgstr ""
 
 msgctxt "#30102"
@@ -221,4 +221,12 @@ msgstr ""
 
 msgctxt "#30103"
 msgid "Select to control OSD"
+msgstr ""
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr ""
+
+msgctxt "#30105"
+msgid "Timeshift Buffer x100 MB"
 msgstr ""

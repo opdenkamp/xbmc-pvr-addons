@@ -44,6 +44,7 @@ void cEpg::Reset()
   m_title.clear();
   m_subtitle.clear();
   m_description.clear();
+  m_genre.clear();
 
   m_starttime       = 0;
   m_endtime         = 0;
@@ -82,6 +83,7 @@ bool cEpg::Parse(const Json::Value& data)
       m_title = m_title + " (" + m_subtitle + ")";
     }
     m_description = data["Description"].asString();
+    m_genre = data["Category"].asString();
 
     // Dates are returned in a WCF compatible format ("/Date(9991231231+0100)/")
     std::string starttime = data["StartTime"].asString();

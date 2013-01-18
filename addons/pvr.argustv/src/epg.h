@@ -34,6 +34,7 @@ private:
   std::string m_title;
   std::string m_subtitle;
   std::string m_description;
+  std::string m_genre;
   time_t m_starttime;
   time_t m_endtime;
   time_t m_utcdiff;
@@ -50,6 +51,7 @@ public:
   const char *Title(void) const { return m_title.c_str(); }
   const char *Subtitle(void) const { return m_subtitle.c_str(); }
   const char *Description(void) const { return m_description.c_str(); }
+  const char *Genre(void) const { return m_genre.c_str(); }
 };
 
 #endif //__EPG_H

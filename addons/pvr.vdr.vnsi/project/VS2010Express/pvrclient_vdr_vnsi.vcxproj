@@ -84,6 +84,7 @@
     <ClCompile Include="..\..\src\requestpacket.cpp" />
     <ClCompile Include="..\..\src\responsepacket.cpp" />
     <ClCompile Include="..\..\src\tools.cpp" />
+    <ClCompile Include="..\..\src\VNSIAdmin.cpp" />
     <ClCompile Include="..\..\src\VNSIChannelScan.cpp" />
     <ClCompile Include="..\..\src\VNSIData.cpp" />
     <ClCompile Include="..\..\src\VNSIDemux.cpp" />

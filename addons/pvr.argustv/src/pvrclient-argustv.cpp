@@ -380,9 +380,9 @@ PVR_ERROR cPVRClientArgusTV::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
             broadcast.strPlotOutline      = epg.Subtitle();
             broadcast.strPlot             = epg.Description();
             broadcast.strIconPath         = "";
-            broadcast.iGenreType          = 0;
+            broadcast.iGenreType          = EPG_GENRE_USE_STRING;
             broadcast.iGenreSubType       = 0;
-            broadcast.strGenreDescription = "";
+            broadcast.strGenreDescription = epg.Genre();
             broadcast.firstAired          = 0;
             broadcast.iParentalRating     = 0;
             broadcast.iStarRating         = 0;

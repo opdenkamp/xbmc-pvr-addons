@@ -335,10 +335,9 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
       if (idx == 0 || idx == std::string::npos) {
         strDirectory = "/";
       } else {
-        i = recording.path[0] == '/' ? 1 : 0;
-        strDirectory = recording.path.substr(i, idx - i);
-        strDirectory.Replace("/", " - ");
-        strDirectory = "/" + strDirectory;
+        strDirectory = recording.path.substr(0, idx);
+        if (strDirectory[0] != '/')
+          strDirectory = "/" + strDirectory;
       }
     }
 
@@ -1027,10 +1026,18 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
     recording.error.clear();
   }
 
+  // Missing file (hide)
+  else if (recording.error == "File missing")
+  {
+    recording.state = ST_INVALID;
+    recording.error.clear();
+  }
+
+
 #if HTSP_DEBUGGING
-  XBMC->Log(LOG_DEBUG, "%s - id:%u, state:'%s', title:'%s', description: '%s'"
+  XBMC->Log(LOG_DEBUG, "%s - id:%u, state:'%s', title:'%s', description: '%s', error:'%s'"
       , __FUNCTION__, recording.id, state, recording.title.c_str()
-      , recording.description.c_str());
+      , recording.description.c_str(), recording.error.c_str());
 #endif
 
   m_recordings[recording.id] = recording;

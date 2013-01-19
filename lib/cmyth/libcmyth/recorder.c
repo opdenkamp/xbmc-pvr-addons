@@ -365,6 +365,29 @@ cmyth_recorder_get_position_map(cmyth_recorder_t rec,
 }
 
 /*
+ * cmyth_recorder_get_duration_map()
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Request a list of {keynum, duration} pairs starting at keynum
+ * 'start' and ending with keynum 'end' from the current recording on
+ * recorder 'rec'.
+ *
+ * Return Value:
+ *
+ * Success: 0
+ *
+ * Failure: -(ERRNO)
+ */
+cmyth_posmap_t
+cmyth_recorder_get_duration_map(cmyth_recorder_t rec, uint32_t start, uint32_t end)
+{
+	return NULL;
+}
+
+/*
  * cmyth_recorder_get_recording()
  *
  * Scope: PUBLIC

@@ -534,6 +534,8 @@ extern cmyth_posmap_t cmyth_recorder_get_position_map(cmyth_recorder_t rec,
 						      uint32_t start,
 						      uint32_t end);
 
+extern cmyth_posmap_t cmyth_recorder_get_duration_map(cmyth_recorder_t rec, uint32_t start, uint32_t end);
+
 extern cmyth_proginfo_t cmyth_recorder_get_recording(cmyth_recorder_t rec);
 
 extern int cmyth_recorder_stop_playing(cmyth_recorder_t rec);

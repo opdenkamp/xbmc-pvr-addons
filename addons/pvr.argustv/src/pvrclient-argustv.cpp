@@ -116,9 +116,9 @@ bool cPVRClientArgusTV::Connect()
       default:
          XBMC->Log(LOG_ERROR, "Ping failed... No connection to Argus TV.\n");
          usleep(1000000);
-         if (attemps > 30)
+         if (attemps > 3)
          {
-           XBMC->QueueNotification(QUEUE_ERROR, "No connection to Argus TV");
+           XBMC->QueueNotification(QUEUE_ERROR, "No connection to Argus TV server");
            return false;
          }
     }

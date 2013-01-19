@@ -67,6 +67,9 @@ cmyth_proginfo_destroy(cmyth_proginfo_t p)
 	if (p->proginfo_description) {
 		ref_release(p->proginfo_description);
 	}
+	if (p->proginfo_syndicated_episode) {
+		ref_release(p->proginfo_syndicated_episode);
+	}
 	if (p->proginfo_category) {
 		ref_release(p->proginfo_category);
 	}
@@ -212,6 +215,7 @@ cmyth_proginfo_create(void)
 	ret->proginfo_description = NULL;
 	ret->proginfo_season = 0;
 	ret->proginfo_episode = 0;
+	ret->proginfo_syndicated_episode = NULL;
 	ret->proginfo_category = NULL;
 	ret->proginfo_chanId = 0;
 	ret->proginfo_chanstr = NULL;
@@ -257,6 +261,8 @@ cmyth_proginfo_create(void)
 	ret->proginfo_videoproperties = 0;
 	ret->proginfo_subtitletype = 0;
 	ret->proginfo_year = 0;
+	ret->proginfo_partnumber = 0;
+	ret->proginfo_parttotal = 0;
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s }\n", __FUNCTION__);
 	return ret;
 
@@ -305,6 +311,7 @@ cmyth_proginfo_dup(cmyth_proginfo_t p)
 	ret->proginfo_description = ref_hold(p->proginfo_description);
 	ret->proginfo_season = p->proginfo_season;
 	ret->proginfo_episode = p->proginfo_episode;
+	ret->proginfo_syndicated_episode = ref_hold(p->proginfo_syndicated_episode);
 	ret->proginfo_category = ref_hold(p->proginfo_category);
 	ret->proginfo_chanId = p->proginfo_chanId;
 	ret->proginfo_chanstr = ref_hold(p->proginfo_chanstr);
@@ -350,6 +357,9 @@ cmyth_proginfo_dup(cmyth_proginfo_t p)
 	ret->proginfo_videoproperties = p->proginfo_videoproperties;
 	ret->proginfo_subtitletype = p->proginfo_subtitletype;
 	ret->proginfo_year = p->proginfo_year;
+	ret->proginfo_partnumber = p->proginfo_partnumber;
+	ret->proginfo_parttotal = p->proginfo_parttotal;
+
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s }\n", __FUNCTION__);
 	return ret;
 }
@@ -378,6 +388,7 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	len += strlen(S(prog->proginfo_title));
 	len += strlen(S(prog->proginfo_subtitle));
 	len += strlen(S(prog->proginfo_description));
+	len += strlen(S(prog->proginfo_syndicated_episode));
 	len += strlen(S(prog->proginfo_category));
 	len += strlen(S(prog->proginfo_chanstr));
 	len += strlen(S(prog->proginfo_chansign));
@@ -425,6 +436,9 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	if (control->conn_version >= 67) {
 		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_season);
 		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_episode);
+	}
+	if (control->conn_version >= 76) {
+		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_syndicated_episode));
 	}
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_category));
 	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_chanId);
@@ -496,6 +510,10 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	}
 	if (control->conn_version >= 43) {
 		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_year);
+	}
+	if (control->conn_version >= 76) {
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_partnumber);
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_parttotal);
 	}
 #undef S
 
@@ -956,6 +974,37 @@ cmyth_proginfo_episode(cmyth_proginfo_t prog)
 		return 0;
 	}
 	return prog->proginfo_episode;
+}
+
+/*
+ * cmyth_proginfo_syndicated_episode()
+ *
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Retrieves the 'proginfo_syndicated_episode' field of a program info structure.
+ *
+ * The returned string is a pointer to the string within the program
+ * info structure, so it should not be modified by the caller.
+ * The return value is a 'char *' for this reason.
+ *
+ * Return Value:
+ *
+ * Success: A pointer to a 'char *' pointing to the field.
+ *
+ * Failure: NULL
+ */
+char *
+cmyth_proginfo_syndicated_episode(cmyth_proginfo_t prog)
+{
+	if (!prog) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL program information\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	return ref_hold(prog->proginfo_syndicated_episode);
 }
 
 /*
@@ -1446,6 +1495,58 @@ cmyth_proginfo_year(cmyth_proginfo_t prog)
 		return 0;
 	}
 	return prog->proginfo_year;
+}
+
+/*
+ * cmyth_proginfo_partnumber()
+ *
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Retrieves the 'proginfo_partnumber' field of a program info
+ * structure.
+ *
+ * Return Value:
+ *
+ * Success: the part number for the program
+ *
+ * Failure: 0
+ */
+uint16_t
+cmyth_proginfo_partnumber(cmyth_proginfo_t prog)
+{
+	if (!prog) {
+		return 0;
+	}
+	return prog->proginfo_partnumber;
+}
+
+/*
+ * cmyth_proginfo_parttotal()
+ *
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Retrieves the 'proginfo_total' field of a program info
+ * structure.
+ *
+ * Return Value:
+ *
+ * Success: the part total for the program
+ *
+ * Failure: 0
+ */
+uint16_t
+cmyth_proginfo_parttotal(cmyth_proginfo_t prog)
+{
+	if (!prog) {
+		return 0;
+	}
+	return prog->proginfo_parttotal;
 }
 
 /*

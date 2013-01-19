@@ -53,6 +53,7 @@ static myth_protomap_t protomap[] = {
 	{73, "D7FE8D6F"},
 	{74, "SingingPotato"},
 	{75, "SweetRock"},
+	{76, "FireWilde"},
 	{0, ""}
 };
 

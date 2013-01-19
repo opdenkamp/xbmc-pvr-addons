@@ -195,6 +195,7 @@ struct cmyth_proginfo {
 	char *proginfo_description;
 	uint16_t proginfo_season;    /* new in V67 */
 	uint16_t proginfo_episode;    /* new in V67 */
+	char *proginfo_syndicated_episode; /* new in V76 */
 	char *proginfo_category;
 	uint32_t proginfo_chanId;
 	char *proginfo_chanstr;
@@ -246,6 +247,8 @@ struct cmyth_proginfo {
 	uint16_t proginfo_videoproperties; /* new in v35 */
 	uint16_t proginfo_subtitletype; /* new in v35 */
 	uint16_t proginfo_year; /* new in v43 */
+	uint16_t proginfo_partnumber; /* new in V76 */
+	uint16_t proginfo_parttotal; /* new in V76 */
 };
 
 struct cmyth_proglist {

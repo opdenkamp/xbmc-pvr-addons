@@ -1584,6 +1584,22 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		}
 	}
 
+	if (buf->proginfo_version >= 76) {
+		/*
+		 * Get proginfo_syndicated_episode (string)
+		 */
+		consumed = cmyth_rcv_string(conn, err, tmp_str, sizeof(tmp_str) - 1, count);
+		count -= consumed;
+		total += consumed;
+		if (*err) {
+			failed = "cmyth_rcv_string";
+			goto fail;
+		}
+		if (buf->proginfo_syndicated_episode)
+			ref_release(buf->proginfo_syndicated_episode);
+		buf->proginfo_syndicated_episode = ref_strdup(tmp_str);
+	}
+
 	/*
 	 * Get proginfo_category (string)
 	 */
@@ -2274,6 +2290,26 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		total += consumed;
 		if (*err) {
 			failed = "cmyth_rcv_ushort proginfo_year";
+			goto fail;
+		}
+	}
+
+	if (buf->proginfo_version >= 76) {
+		/*
+		 * Get partnumber and parttotal
+		 */
+		consumed = cmyth_rcv_uint16(conn, err, &buf->proginfo_partnumber, count);
+		count -= consumed;
+		total += consumed;
+		if (*err) {
+			failed = "cmyth_rcv_ushort proginfo_partnumber";
+			goto fail;
+		}
+		consumed = cmyth_rcv_uint16(conn, err, &buf->proginfo_parttotal, count);
+		count -= consumed;
+		total += consumed;
+		if (*err) {
+			failed = "cmyth_rcv_ushort proginfo_parttotal";
 			goto fail;
 		}
 	}

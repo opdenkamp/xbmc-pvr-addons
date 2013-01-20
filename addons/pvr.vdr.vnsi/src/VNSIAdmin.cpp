@@ -27,6 +27,9 @@
 
 #if defined(HAVE_GL)
 #include <GL/gl.h>
+#elif defined(HAS_DX)
+#include "D3D9.h"
+#include "D3DX9.h"
 #endif
 
 #define CONTROL_RENDER_ADDON             9
@@ -214,6 +217,7 @@ public:
   virtual void DisposeTexture(int wndId);
   virtual void FreeResources();
   virtual void Render() {};
+  virtual void SetDevice(void *device) {};
 protected:
   cOSDTexture *m_osdTextures[MAX_TEXTURES];
   std::queue<cOSDTexture*> m_disposedTextures;
@@ -440,6 +444,208 @@ void cOSDRenderGL::Render()
 }
 #endif
 
+#if defined(HAS_DX)
+class cOSDRenderDX : public cOSDRender
+{
+public:
+  cOSDRenderDX();
+  virtual ~cOSDRenderDX();
+  virtual void DisposeTexture(int wndId);
+  virtual void FreeResources();
+  virtual void Render();
+  virtual void SetDevice(void *device) { m_device = (LPDIRECT3DDEVICE9)device; };
+protected:
+  LPDIRECT3DDEVICE9 m_device;
+  LPDIRECT3DTEXTURE9 m_hwTextures[MAX_TEXTURES];
+  std::queue<LPDIRECT3DTEXTURE9> m_disposedHwTextures;
+};
+
+cOSDRenderDX::cOSDRenderDX()
+{
+  for (int i = 0; i < MAX_TEXTURES; i++)
+    m_hwTextures[i] = 0;
+}
+
+cOSDRenderDX::~cOSDRenderDX()
+{
+  for (int i = 0; i < MAX_TEXTURES; i++)
+  {
+    DisposeTexture(i);
+  }
+  FreeResources();
+}
+
+void cOSDRenderDX::DisposeTexture(int wndId)
+{
+  if (m_hwTextures[wndId])
+  {
+    m_disposedHwTextures.push(m_hwTextures[wndId]);
+    m_hwTextures[wndId] = 0;
+  }
+  cOSDRender::DisposeTexture(wndId);
+}
+
+void cOSDRenderDX::FreeResources()
+{
+  while (!m_disposedHwTextures.empty())
+  {
+    if (m_disposedHwTextures.front())
+    {
+      m_disposedHwTextures.front()->Release();
+      m_disposedHwTextures.pop();
+    }
+  }
+  cOSDRender::FreeResources();
+}
+
+void cOSDRenderDX::Render()
+{
+  m_device->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f), 1.0f, 0);
+
+  D3DXMATRIX matProjection;
+  D3DXMatrixIdentity(&matProjection);
+  m_device->SetTransform(D3DTS_PROJECTION, &matProjection);
+
+  D3DXMATRIX matView;
+  D3DXMatrixIdentity(&matView);
+  m_device->SetTransform(D3DTS_VIEW, &matView);
+
+  D3DXMATRIX matWorld;
+  D3DXMatrixIdentity(&matWorld);
+  m_device->SetTransform(D3DTS_WORLD, &matWorld);
+
+  for (int i = 0; i < MAX_TEXTURES; i++)
+  {
+    int width, height, offsetX, offsetY;
+    int x0,x1,y0,y1;
+    bool dirty;
+
+    if (m_osdTextures[i] == 0)
+      continue;
+
+    m_osdTextures[i]->GetSize(width, height);
+    m_osdTextures[i]->GetOrigin(offsetX, offsetY);
+    dirty = m_osdTextures[i]->IsDirty(x0,y0,x1,y1);
+
+    // create texture
+    if (dirty && !m_hwTextures[i])
+    {
+      HRESULT hr = m_device->CreateTexture(width, height, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_hwTextures[i], NULL);
+	    if (hr != D3D_OK)
+	    {
+	      XBMC->Log(LOG_ERROR,"%s - failed to create texture", __FUNCTION__);
+        continue;
+      }
+    }
+    // update texture
+    if (dirty)
+    {
+      D3DLOCKED_RECT lockedRect;
+      RECT dirtyRect;
+      dirtyRect.bottom = y1;
+      dirtyRect.left = x0;
+      dirtyRect.top = y0;
+      dirtyRect.right = x1;
+      HRESULT hr = m_hwTextures[i]->LockRect(0, &lockedRect, &dirtyRect, 0);
+      if (hr != D3D_OK)
+	    {
+	      XBMC->Log(LOG_ERROR,"%s - failed to lock texture", __FUNCTION__);
+        continue;
+      }
+      uint8_t *source = (uint8_t*)m_osdTextures[i]->GetBuffer();
+      uint8_t *dest = (uint8_t*)lockedRect.pBits;
+      for(int y=y0; y<=y1; y++)
+      {
+        for(int x=x0; x<=x1; x++)
+        {
+          dest[y*lockedRect.Pitch+x*4] = source[y*width*4+x*4+2];  // blue
+          dest[y*lockedRect.Pitch+x*4+1] = source[y*width*4+x*4+1];  // green
+          dest[y*lockedRect.Pitch+x*4+2] = source[y*width*4+x*4];    // red
+          dest[y*lockedRect.Pitch+x*4+3] = source[y*width*4+x*4+3];  // alpha
+        }
+      }
+      m_hwTextures[i]->UnlockRect(0);
+      if (hr != D3D_OK)
+	    {
+	      XBMC->Log(LOG_ERROR,"%s - failed to unlock texture", __FUNCTION__);
+        continue;
+      }
+    }
+
+    // render texture
+
+    // calculate ndc for OSD texture
+    float destX0 = (float)offsetX*2/m_osdWidth -1;
+    float destX1 = (float)(offsetX+width)*2/m_osdWidth -1;
+    float destY0 = (float)offsetY*2/m_osdHeight -1;
+    float destY1 = (float)(offsetY+height)*2/m_osdHeight -1;
+    float aspectControl = (float)m_controlWidth/m_controlHeight;
+    float aspectOSD = (float)m_osdWidth/m_osdHeight;
+    if (aspectOSD > aspectControl)
+    {
+      destY0 *= aspectControl/aspectOSD;
+      destY1 *= aspectControl/aspectOSD;
+    }
+    else if (aspectOSD < aspectControl)
+    {
+      destX0 *= aspectOSD/aspectControl;
+      destX1 *= aspectOSD/aspectControl;
+    }
+
+    // y inveted
+    destY0 *= -1;
+    destY1 *= -1;
+
+    struct VERTEX
+    {
+      FLOAT x,y,z;
+      DWORD color;
+      FLOAT tu, tv;
+    };
+
+    VERTEX vertex[] =
+    {
+		  { destX0, destY0, 0.0f, 0xffffffff, 0.0f, 0.0f },
+		  { destX0, destY1, 0.0f, 0xffffffff, 0.0f, 1.0f },
+		  { destX1, destY1, 0.0f, 0xffffffff, 1.0f, 1.0f },
+		  { destX1, destY0, 0.0f, 0xffffffff, 1.0f, 0.0f },
+    };
+
+    m_device->SetTexture(0, m_hwTextures[i]);
+    HRESULT hr;
+    hr = m_device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
+    hr = m_device->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
+    hr = m_device->SetTextureStageState( 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1 );
+    hr = m_device->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
+    hr = m_device->SetTextureStageState( 1, D3DTSS_COLOROP, D3DTOP_DISABLE );
+    hr = m_device->SetTextureStageState( 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE );
+
+    hr = m_device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    hr = m_device->SetRenderState(D3DRS_LIGHTING, FALSE);
+    hr = m_device->SetRenderState(D3DRS_ZENABLE, FALSE);
+    hr = m_device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+    hr = m_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+    hr = m_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+    hr = m_device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+    hr = m_device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA|D3DCOLORWRITEENABLE_BLUE|D3DCOLORWRITEENABLE_GREEN|D3DCOLORWRITEENABLE_RED); 
+
+    hr = m_device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+    hr = m_device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+
+    hr = m_device->SetPixelShader(NULL);
+
+    hr = m_device->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1);
+    hr = m_device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertex, sizeof(VERTEX));
+    if (hr != D3D_OK)
+	  {
+	    XBMC->Log(LOG_ERROR,"%s - failed to render texture", __FUNCTION__);
+    }
+    m_device->SetTexture(0, NULL);
+  }
+}
+#endif
+
+
 //-----------------------------------------------------------------------------
 cVNSIAdmin::cVNSIAdmin()
 {
@@ -462,6 +668,8 @@ bool cVNSIAdmin::Open(const std::string& hostname, int port, const char* name)
   m_bIsOsdControl = false;
 #if defined(HAVE_GL)
   m_osdRender = new cOSDRenderGL();
+#elif defined(HAS_DX)
+  m_osdRender = new cOSDRenderDX();
 #else
   m_osdRender = new cOSDRender();
 #endif
@@ -693,11 +901,12 @@ bool cVNSIAdmin::IsVdrAction(int action)
     return false;
 }
 
-bool cVNSIAdmin::Create(int x, int y, int w, int h)
+bool cVNSIAdmin::Create(int x, int y, int w, int h, void* device)
 {
   if (m_osdRender)
   {
     m_osdRender->SetControlSize(w,h);
+    m_osdRender->SetDevice(device);
   }
   return true;
 }
@@ -757,7 +966,7 @@ bool cVNSIAdmin::OnActionCB(GUIHANDLE cbhdl, int actionId)
 bool cVNSIAdmin::CreateCB(GUIHANDLE cbhdl, int x, int y, int w, int h, void *device)
 {
   cVNSIAdmin* osd = static_cast<cVNSIAdmin*>(cbhdl);
-  return osd->Create(x, y, w, h);
+  return osd->Create(x, y, w, h, device);
 }
 
 void cVNSIAdmin::RenderCB(GUIHANDLE cbhdl)

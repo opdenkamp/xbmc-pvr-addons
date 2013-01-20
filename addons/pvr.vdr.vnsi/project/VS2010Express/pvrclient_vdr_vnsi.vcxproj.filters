@@ -74,5 +74,8 @@
     <ClInclude Include="..\..\src\VNSISession.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\VNSIAdmin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -39,7 +39,7 @@ public:
   bool OnInit();
   bool OnAction(int actionId);
 
-  bool Create(int x, int y, int w, int h);
+  bool Create(int x, int y, int w, int h, void* device);
   void Render();
   void Stop();
   bool Dirty();

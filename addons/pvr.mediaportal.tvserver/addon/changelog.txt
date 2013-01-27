@@ -1,6 +1,8 @@
 v1.6.8
 - Channels: Use MediaPortal VisibleInGuide property as inverted IsHidden flag in XBMC. (requires TVServerXBMC build 120)
 - Channelgroups: Don't import other channel groups when the user selected to import channels from a single group.
+- TSReader: non-Windows: start playback as soon as the buffer file has a non-zero length
+- Genre translation: seach also for the genre_translation.xml file in the profile folder.
 
 v1.6.7
 - Updated language files from Transifex

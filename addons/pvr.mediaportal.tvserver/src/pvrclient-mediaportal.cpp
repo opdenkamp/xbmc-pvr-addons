@@ -611,7 +611,6 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
   bool            bCheckForThumbs = false;
 
   /* Check if we can find the MediaPortal channel logo folders on this machine */
-  std::string strIconName;
   std::string strThumbPath;
   std::string strProgramData;
 
@@ -665,21 +664,27 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
       tag.iUniqueId = channel.UID();
       tag.iChannelNumber = g_iTVServerXBMCBuild >= 102 ? channel.ExternalID() : channel.UID();
       PVR_STRCPY(tag.strChannelName, channel.Name());
+      PVR_STRCLR(tag.strIconPath);
 #ifdef TARGET_WINDOWS
       if (bCheckForThumbs)
       {
-        strIconName = strThumbPath + ToThumbFileName(channel.Name()) + ".png";
-        if ( OS::CFile::Exists(strIconName) )
+        const int ciExtCount = 5;
+        string strIconExt [ciExtCount] = { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
+        string strIconName;
+        string strIconBaseName;
+
+        strIconBaseName = strThumbPath + ToThumbFileName(channel.Name());
+
+        for (int i=0; i < ciExtCount; i++)
         {
-          PVR_STRCPY(tag.strIconPath, strIconName.c_str());
-        }
-        else
-        {
-          PVR_STRCLR(tag.strIconPath);
+          strIconName = strIconBaseName + strIconExt[i];
+          if ( OS::CFile::Exists(strIconName) )
+          {
+            PVR_STRCPY(tag.strIconPath, strIconName.c_str());
+            break;
+          }
         }
       }
-#else
-      PVR_STRCLR(tag.strIconPath);
 #endif
       tag.iEncryptionSystem = channel.Encrypted();
       tag.bIsRadio = bRadio;

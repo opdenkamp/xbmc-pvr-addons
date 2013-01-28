@@ -90,7 +90,7 @@ public:
   bool IsStarting() { return m_startup; }
   bool IsAudioOnly() { return m_IsAudioOnly; }
   bool IsMPEGPS() { return m_IsMPEGPS; }
-  bool SeekTime(int64_t time);
+  bool SeekTime(int64_t time, uint32_t &serial);
 };
 
 #endif  // VNSI_RECEIVER_H

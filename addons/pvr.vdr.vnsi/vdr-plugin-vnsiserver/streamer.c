@@ -183,7 +183,7 @@ void cLiveStreamer::sendStreamPacket(sStreamPacket *pkt)
   if(pkt->size == 0)
     return;
 
-  if (!m_streamHeader.initStream(VNSI_STREAM_MUXPKT, pkt->id, pkt->duration, pkt->pts, pkt->dts))
+  if (!m_streamHeader.initStream(VNSI_STREAM_MUXPKT, pkt->id, pkt->duration, pkt->pts, pkt->dts, pkt->serial))
   {
     ERRORLOG("stream response packet init fail");
     return;
@@ -203,7 +203,7 @@ void cLiveStreamer::sendStreamPacket(sStreamPacket *pkt)
 void cLiveStreamer::sendStreamChange()
 {
   cResponsePacket *resp = new cResponsePacket();
-  if (!resp->initStream(VNSI_STREAM_CHANGE, 0, 0, 0, 0))
+  if (!resp->initStream(VNSI_STREAM_CHANGE, 0, 0, 0, 0, 0))
   {
     ERRORLOG("stream response packet init fail");
     delete resp;
@@ -330,7 +330,7 @@ void cLiveStreamer::sendSignalInfo()
   if (m_Frontend == -2)
   {
     cResponsePacket *resp = new cResponsePacket();
-    if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0))
+    if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0, 0))
     {
       ERRORLOG("stream response packet init fail");
       delete resp;
@@ -378,7 +378,7 @@ void cLiveStreamer::sendSignalInfo()
     if (m_Frontend >= 0)
     {
       cResponsePacket *resp = new cResponsePacket();
-      if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0))
+      if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0, 0))
       {
         ERRORLOG("stream response packet init fail");
         delete resp;
@@ -418,7 +418,7 @@ void cLiveStreamer::sendSignalInfo()
     if (m_Frontend >= 0)
     {
       cResponsePacket *resp = new cResponsePacket();
-      if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0))
+      if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0, 0))
       {
         ERRORLOG("stream response packet init fail");
         delete resp;
@@ -471,7 +471,7 @@ void cLiveStreamer::sendSignalInfo()
 void cLiveStreamer::sendStreamStatus()
 {
   cResponsePacket *resp = new cResponsePacket();
-  if (!resp->initStream(VNSI_STREAM_STATUS, 0, 0, 0, 0))
+  if (!resp->initStream(VNSI_STREAM_STATUS, 0, 0, 0, 0, 0))
   {
     ERRORLOG("stream response packet init fail");
     delete resp;
@@ -483,8 +483,9 @@ void cLiveStreamer::sendStreamStatus()
   delete resp;
 }
 
-bool cLiveStreamer::SeekTime(int64_t time)
+bool cLiveStreamer::SeekTime(int64_t time, uint32_t &serial)
 {
   bool ret = m_Demuxer.SeekTime(time);
+  serial = m_Demuxer.GetSerial();
   return ret;
 }

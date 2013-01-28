@@ -747,10 +747,11 @@ bool cVNSIClient::processChannelStream_Close() /* OPCODE 21 */
 
 bool cVNSIClient::processChannelStream_Seek() /* OPCODE 22 */
 {
+  uint32_t serial = 0;
   if (m_isStreaming && m_Streamer)
   {
     int64_t time = m_req->extract_S64();
-    if (m_Streamer->SeekTime(time))
+    if (m_Streamer->SeekTime(time, serial))
       m_resp->add_U32(VNSI_RET_OK);
     else
       m_resp->add_U32(VNSI_RET_ERROR);
@@ -758,6 +759,7 @@ bool cVNSIClient::processChannelStream_Seek() /* OPCODE 22 */
   else
     m_resp->add_U32(VNSI_RET_ERROR);
 
+  m_resp->add_U32(serial);
   m_resp->finalise();
   m_socket.write(m_resp->getPtr(), m_resp->getLen());
   return true;

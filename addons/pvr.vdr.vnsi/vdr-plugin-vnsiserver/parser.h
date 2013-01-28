@@ -202,6 +202,7 @@ struct sStreamPacket
   int       size;
   bool      streamChange;
   bool      pmtChange;
+  uint32_t  serial;
 };
 
 class cTSStream;

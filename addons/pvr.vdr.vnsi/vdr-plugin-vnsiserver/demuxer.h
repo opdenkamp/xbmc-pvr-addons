@@ -58,6 +58,7 @@ public:
   void Open(const cChannel &channel, cVideoBuffer *videoBuffer);
   void Close();
   bool SeekTime(int64_t time);
+  uint32_t GetSerial() { return m_MuxPacketSerial; }
 
 protected:
   bool EnsureParsers();
@@ -76,4 +77,5 @@ protected:
   bool m_WaitIFrame;
   cVideoBuffer *m_VideoBuffer;
   cMutex m_Mutex;
+  uint32_t m_MuxPacketSerial;
 };

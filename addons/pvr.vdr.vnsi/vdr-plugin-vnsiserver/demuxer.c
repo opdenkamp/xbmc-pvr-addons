@@ -53,6 +53,7 @@ void cVNSIDemuxer::Open(const cChannel &channel, cVideoBuffer *videoBuffer)
   cParser::m_Wrap = false;
   cParser::m_NoOfWraps = 0;
   cParser::m_ConfirmCount = 0;
+  m_MuxPacketSerial = 0;
 }
 
 void cVNSIDemuxer::Close()
@@ -125,6 +126,7 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
     if (stream->ProcessTSPacket(buf, packet, NULL, m_WaitIFrame))
     {
       m_WaitIFrame = false;
+      packet->serial = m_MuxPacketSerial;
       return 1;
     }
   }
@@ -164,6 +166,7 @@ bool cVNSIDemuxer::SeekTime(int64_t time)
     m_VideoBuffer->SetPos(pos_min);
     ResetParsers();
     m_WaitIFrame = true;
+    m_MuxPacketSerial++;
     return true;
   }
 
@@ -191,6 +194,7 @@ bool cVNSIDemuxer::SeekTime(int64_t time)
   {
     ResetParsers();
     m_WaitIFrame = true;
+    m_MuxPacketSerial++;
     return true;
   }
 
@@ -284,6 +288,7 @@ bool cVNSIDemuxer::SeekTime(int64_t time)
 
   ResetParsers();
   m_WaitIFrame = true;
+  m_MuxPacketSerial++;
   return true;
 }
 

@@ -27,7 +27,7 @@
 #define VNSI_COMMAND_H
 
 /** Current VNSI Protocol Version number */
-#define VNSI_PROTOCOLVERSION 3
+#define VNSI_PROTOCOLVERSION 4
 
 /** Packet types */
 #define VNSI_CHANNEL_REQUEST_RESPONSE 1

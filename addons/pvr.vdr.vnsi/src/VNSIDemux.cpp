@@ -145,7 +145,7 @@ DemuxPacket* cVNSIDemux::Read()
       iStreamId = it->second;
 
     // stream found ?
-    if(iStreamId != -1)
+    if(iStreamId != -1 && resp->getMuxSerial() == m_MuxPacketSerial)
     {
       DemuxPacket* p = (DemuxPacket*)resp->getUserData();
       p->iSize      = resp->getUserDataLength();
@@ -156,6 +156,11 @@ DemuxPacket* cVNSIDemux::Read()
       delete resp;
 
       return p;
+    }
+    else if (iStreamId != -1 && resp->getMuxSerial() != m_MuxPacketSerial)
+    {
+      // ignore silently, may happen after a seek
+      XBMC->Log(LOG_DEBUG, "-------------------- serial: %d", resp->getMuxSerial());
     }
     else
     {
@@ -191,10 +196,14 @@ bool cVNSIDemux::SeekTime(int time, bool backwards, double *startpts)
     return false;
   }
   uint32_t retCode = resp->extract_U32();
+  uint32_t serial = resp->extract_U32();
   delete resp;
 
   if (retCode == VNSI_RET_OK)
+  {
+    m_MuxPacketSerial = serial;
     return true;
+  }
   else
     return false;
 }
@@ -228,6 +237,7 @@ bool cVNSIDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
 
   m_channelinfo = channelinfo;
   m_Streams.iStreamCount  = 0;
+  m_MuxPacketSerial = 0;
 
   return true;
 }

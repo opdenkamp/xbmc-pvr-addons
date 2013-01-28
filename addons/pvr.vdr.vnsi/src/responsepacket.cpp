@@ -123,6 +123,8 @@ void cResponsePacket::extractStreamHeader()
   duration = extract_U32();
   pts      = extract_U64();
   dts      = extract_U64();
+  muxSerial= extract_U32();
+
   userDataLength = extract_U32();
 
   userData = NULL;

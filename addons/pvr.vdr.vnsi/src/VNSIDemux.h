@@ -68,4 +68,5 @@ private:
   SQuality              m_Quality;
   std::map<int, unsigned int> m_StreamIndex;
   bool m_bTimeshift;
+  uint32_t m_MuxPacketSerial;
 };

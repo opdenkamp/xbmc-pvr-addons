@@ -47,7 +47,6 @@ CHTSResult::~CHTSResult(void)
     htsmsg_destroy(message);
 }
 
-
 string CHTSResult::GetErrorMessage(void)
 {
   if (m_strError.empty())
@@ -105,6 +104,32 @@ CHTSPConnection::~CHTSPConnection()
 
   delete m_socket;
   delete m_reconnect;
+}
+
+const CStdString CHTSPConnection::GetWebURL (const char *fmt, ...) const
+{
+  CStdString url;
+  CStdString auth;
+
+  /* Authentication */
+  if (!g_strUsername.empty()) {
+    auth = g_strUsername;
+    if (!g_strPassword.empty())
+      auth.AppendFormat(":%s", g_strPassword.c_str());
+    auth += "@";
+  } else {
+    auth = "";
+  }
+
+  /* URL root */
+  url.Format("http://%s%s:%i%s", auth.c_str(), g_strHostname.c_str(), g_iPortHTTP, m_strWebroot.c_str());
+
+  va_list args;
+  va_start(args, fmt);
+  url.AppendFormatV(fmt, args);
+  va_end(args);
+
+  return url;
 }
 
 void CHTSPConnection::SetReadTimeout(int iTimeout)
@@ -421,7 +446,7 @@ bool CHTSPConnection::SendGreeting(void)
 {
   htsmsg_t *m, *cap;
   htsmsg_field_t *f;
-  const char *server, *version;
+  const char *server, *version, *webroot;
   const void * chall = NULL;
   size_t chall_len = 0;
   int32_t proto = 0;
@@ -430,7 +455,7 @@ bool CHTSPConnection::SendGreeting(void)
   m = htsmsg_create_map();
   htsmsg_add_str(m, "method", "hello");
   htsmsg_add_str(m, "clientname", "XBMC Media Center");
-  htsmsg_add_u32(m, "htspversion", 7);
+  htsmsg_add_u32(m, "htspversion", 8);
 
   CLockObject lock(m_mutex);
 
@@ -457,6 +482,7 @@ bool CHTSPConnection::SendGreeting(void)
   version = htsmsg_get_str(m,  "serverversion");
             htsmsg_get_bin(m,  "challenge", &chall, &chall_len);
   cap     = htsmsg_get_list(m, "servercapability");
+  webroot = htsmsg_get_str(m,  "webroot");
 
   // process capabilities
   m_bTimeshiftSupport     = false;
@@ -481,6 +507,7 @@ bool CHTSPConnection::SendGreeting(void)
   m_strServerName = server;
   m_strVersion    = version;
   m_iProtocol     = proto;
+  m_strWebroot    = webroot ? webroot : "/";
 
   if(chall && chall_len)
   {
@@ -663,11 +690,7 @@ void* CHTSPReconnect::Process(void)
     {
       CLockObject lock(m_connection->m_mutex);
       for (SMessages::iterator it = m_connection->m_messageQueue.begin(); it != m_connection->m_messageQueue.end(); it++)
-      {
         it->second.event->Broadcast();
-        delete it->second.event;
-      }
-      m_connection->m_messageQueue.clear();
 
       m_connection->m_bIsConnected = false;
       if(m_connection->m_challenge)

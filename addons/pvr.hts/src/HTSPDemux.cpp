@@ -49,9 +49,10 @@ CHTSPDemux::~CHTSPDemux()
 
 bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
 {
-  m_channel        = channelinfo.iUniqueId;
-  m_bIsRadio       = channelinfo.bIsRadio;
-  m_bIsOpen        = false;
+  m_channel              = channelinfo.iUniqueId;
+  m_bIsRadio             = channelinfo.bIsRadio;
+  m_bIsOpen              = false;
+  m_Streams.iStreamCount = 0;
 
   if(!m_session->CheckConnection(g_iConnectTimeout * 1000))
     return false;
@@ -59,7 +60,6 @@ bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
   if(!SendSubscribe(++m_subs, m_channel))
     return false;
 
-  m_Streams.iStreamCount = 0;
   m_bIsOpen              = true;
   return m_bIsOpen;
 }
@@ -283,12 +283,12 @@ inline void HTSPSetDemuxStreamInfoVideo(PVR_STREAM_PROPERTIES::PVR_STREAM &strea
 {
   stream.iWidth  = htsmsg_get_u32_or_default(msg,   "width" , 0);
   stream.iHeight = htsmsg_get_u32_or_default(msg,   "height" , 0);
-  unsigned int den = htsmsg_get_u32_or_default(msg, "aspect_den", 1);
+  uint32_t den   = htsmsg_get_u32_or_default(msg, "aspect_den", 1);
   if(den)
     stream.fAspect = (float)htsmsg_get_u32_or_default(msg, "aspect_num", 1) / den;
   else
     stream.fAspect = 0.0f;
-  int iDuration = htsmsg_get_u32_or_default(msg, "duration" , 0);
+  uint32_t iDuration = htsmsg_get_u32_or_default(msg, "duration" , 0);
   if (iDuration > 0)
   {
     stream.iFPSScale = iDuration;

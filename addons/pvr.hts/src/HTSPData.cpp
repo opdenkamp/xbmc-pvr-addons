@@ -306,7 +306,7 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
   for(SRecordings::const_iterator it = recordings.begin(); it != recordings.end(); ++it)
   {
     SRecording recording = it->second;
-    CStdString strStreamURL = "http://";
+    CStdString strStreamURL;
     CStdString strRecordingId;
     CStdString strDirectory = "/";
     std::string strChannelName = "";
@@ -319,25 +319,12 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
         strChannelName = itr->second.name.c_str();
 
       /* HTSPv7+ - use HTSP */
-      if (GetProtocol() >= 7) {
+      if (GetProtocol() >= 7)
         strStreamURL = "";
 
       /* HTSPv6- - use HTTP */
-      } else {
-        strStreamURL = "http://";
-
-        if (g_strUsername != "")
-        {
-          strStreamURL += g_strUsername;
-          if (g_strPassword != "")
-          {
-            strStreamURL += ":";
-            strStreamURL += g_strPassword;
-          }
-          strStreamURL += "@";
-        }
-        strStreamURL.Format("%s%s:%i/dvrfile/%i", strStreamURL.c_str(), g_strHostname.c_str(), g_iPortHTTP, recording.id);
-      }
+      else
+        strStreamURL = m_session->GetWebURL("dvrfile/%i", recording.id);
     }
 
     strRecordingId.Format("%i", recording.id);
@@ -348,10 +335,9 @@ PVR_ERROR CHTSPData::GetRecordings(ADDON_HANDLE handle)
       if (idx == 0 || idx == std::string::npos) {
         strDirectory = "/";
       } else {
-        i = recording.path[0] == '/' ? 1 : 0;
-        strDirectory = recording.path.substr(i, idx - i);
-        strDirectory.Replace("/", " - ");
-        strDirectory = "/" + strDirectory;
+        strDirectory = recording.path.substr(0, idx);
+        if (strDirectory[0] != '/')
+          strDirectory = "/" + strDirectory;
       }
     }
 
@@ -874,10 +860,17 @@ void CHTSPData::ParseChannelUpdate(htsmsg_t* msg)
 
   if((strIconPath = htsmsg_get_str(msg, "channelIcon")))
   {
-    if (channel.icon != strIconPath)
+    CStdString strIconURL;
+
+    if (strIconPath[0] != '/' || strIconPath[0] == '\0')
+      strIconURL = strIconPath;
+    else
+      strIconURL = m_session->GetWebURL("%s", strIconPath);
+
+    if (channel.icon != strIconURL)
     {
       bChannelChanged = true;
-      channel.icon = strIconPath;
+      channel.icon = strIconURL;
     }
   }
 
@@ -1033,10 +1026,18 @@ void CHTSPData::ParseDVREntryUpdate(htsmsg_t* msg)
     recording.error.clear();
   }
 
+  // Missing file (hide)
+  else if (recording.error == "File missing")
+  {
+    recording.state = ST_INVALID;
+    recording.error.clear();
+  }
+
+
 #if HTSP_DEBUGGING
-  XBMC->Log(LOG_DEBUG, "%s - id:%u, state:'%s', title:'%s', description: '%s'"
+  XBMC->Log(LOG_DEBUG, "%s - id:%u, state:'%s', title:'%s', description: '%s', error:'%s'"
       , __FUNCTION__, recording.id, state, recording.title.c_str()
-      , recording.description.c_str());
+      , recording.description.c_str(), recording.error.c_str());
 #endif
 
   m_recordings[recording.id] = recording;

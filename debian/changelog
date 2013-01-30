@@ -1,0 +1,6 @@
+xbmc-pvr-addons (1.0.0-1) unstable; urgency=low
+  [Rainer Hochecker]
+   * makefile
+  * Initial release 
+
+ -- wsnipex <wsnipex@a1.net>  Fri, 21 Dec 2012 11:06:07 +0100

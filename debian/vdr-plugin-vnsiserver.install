@@ -1,0 +1,2 @@
+addons/pvr.vdr.vnsi/vdr-plugin-vnsiserver/vnsiserver/allowed_hosts.conf etc/vdr/plugins/vnsiserver
+debian/plugin.vnsiserver.conf etc/vdr/plugins

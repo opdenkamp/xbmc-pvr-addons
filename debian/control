@@ -1,0 +1,96 @@
+Source: xbmc-pvr-addons
+Section: video
+Priority: extra
+Maintainer: wsnipex <wsnipex@a1.net>
+Build-Depends: debhelper (>= 8.0.0), autoconf, autopoint | gettext, automake, libtool, libboost-thread-dev, libmysqlclient-dev, pkg-config, vdr-dev (>= 1.7.17)
+Standards-Version: 3.9.3
+Homepage: http://xbmc.org
+Vcs-Git: git://github.com/opdenkamp/xbmc-pvr-addons.git
+Vcs-Browser: https://github.com/opdenkamp/xbmc-pvr-addons/tree/frodo
+
+Package: xbmc-pvr-mythtv-cmyth
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libmysqlclient19 | libmysqlclient18 | libmysqlclient17 | libmysqlclient16 | libmysqlclient15 | libmysqlclient14
+Description: XBMC PVR Addon MythTv - Cmyth
+ This package contains the Cmyth PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+
+Package: xbmc-pvr-vuplus
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XBMC PVR Addon Vuplus
+ This package contains the Vuplus PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+
+Package: xbmc-pvr-vdr-vnsi
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XBMC PVR Addon VDR Vnsi
+ This package contains the VDR Vnsi PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+
+Package: vdr-plugin-vnsiserver
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${vdr:Depends}
+Description: VDR-Network-Streaming-Interface
+ VDR-Network-Streaming-Interface
+
+Package: xbmc-pvr-njoy
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XBMC PVR Addon Njoy
+ This package contains the Njoy PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+
+Package: xbmc-pvr-nextpvr
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XBMC PVR Addon NextPvr
+ This package contains the NextPvr PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+
+Package: xbmc-pvr-mediaportal-tvserver
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XBMC PVR Addon Mediaportal Tvserver
+ This package contains the Mediaportal PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+
+Package: xbmc-pvr-tvheadend-hts
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XBMC PVR Addon TvHeadend Hts
+ This package contains the TvHeadend PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+
+Package: xbmc-pvr-dvbviewer
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XBMC PVR Addon Dvbviewer
+ This package contains the Dvbviewer PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+
+Package: xbmc-pvr-argustv
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XBMC PVR Addon Argustv
+ This package contains the Argustv PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+
+Package: xbmc-pvr-demo
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: XBMC PVR Demo Addon
+ This package contains the Demo PVR (Personal Video Recorder) Addon for XBMC,
+ the award winning free and open source software media-player and entertainment hub
+ for all your digital media
+

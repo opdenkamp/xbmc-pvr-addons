@@ -24,8 +24,8 @@
 #include <string.h>
 #include <stdarg.h>
 #include "htsbuf.h"
-#ifdef _MSC_VER
-#include "msvc.h"
+#if defined(_MSC_VER) || defined(__MINGW32__)
+#include "Win32/include/msvc.h"
 #endif
 
 #ifndef MIN

@@ -103,7 +103,7 @@ bool Socket::close()
   if (is_valid())
   {
     if (_sd != SOCKET_ERROR)
-#ifdef TARGET_WINDOWS
+#if defined(TARGET_WINDOWS) || defined(__MINGW32__)
       closesocket(_sd);
 #else
       ::close(_sd);
@@ -434,7 +434,7 @@ int Socket::receive ( char* data, const unsigned int buffersize, const unsigned 
     if ( status == SOCKET_ERROR )
     {
       int lasterror = getLastError();
-#if defined(TARGET_WINDOWS)
+#if defined(TARGET_WINDOWS) || defined(__MINGW32__)
       if ( lasterror != WSAEWOULDBLOCK)
         errormessage( lasterror, "Socket::receive" );
 #else
@@ -516,7 +516,7 @@ bool Socket::is_valid() const
   return (_sd != INVALID_SOCKET);
 }
 
-#if defined(TARGET_WINDOWS)
+#if defined(TARGET_WINDOWS) || defined(__MINGW32__)
 bool Socket::set_non_blocking ( const bool b )
 {
   u_long iMode;

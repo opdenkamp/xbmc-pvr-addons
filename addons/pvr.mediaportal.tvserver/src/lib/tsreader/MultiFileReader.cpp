@@ -32,13 +32,13 @@
  *  http://forums.dvbowners.com/
  */
 
+#include "platform/util/StdString.h"
 #include "MultiFileReader.h"
 #include "client.h" //for XBMC->Log
 #include <string>
 #include "utils.h"
 #include <algorithm>
 #include "platform/util/timeutils.h"
-#include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 #include <inttypes.h>
 

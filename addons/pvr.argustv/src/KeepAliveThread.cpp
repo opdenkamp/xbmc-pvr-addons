@@ -18,6 +18,7 @@
  *
  */
 
+#include "platform/util/StdString.h"
 #include "platform/os.h"
 #include "client.h" //for XBMC->Log
 #include "utils.h"

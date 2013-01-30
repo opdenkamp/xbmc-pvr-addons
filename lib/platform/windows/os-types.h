@@ -35,14 +35,19 @@
 #define __WINDOWS__
 #endif
 
-#ifndef _WINSOCKAPI_
-#define _WINSOCKAPI_
+#define WIN32_LEAN_AND_MEAN           // Enable LEAN_AND_MEAN support
+#ifndef NOMINMAX
+#define NOMINMAX                      // don't define min() and max() to prevent a clash with std::min() and std::max
 #endif
 
-#define WIN32_LEAN_AND_MEAN           // Enable LEAN_AND_MEAN support
-#define NOMINMAX                      // don't define min() and max() to prevent a clash with std::min() and std::max
+#pragma warning(disable:4005) // Disable "warning C4005: '_WINSOCKAPI_' : macro redefinition"
+#include <winsock2.h>
+#pragma warning(default:4005)
+
 #include <windows.h>
+#ifndef __MINGW32__
 #include <wchar.h>
+#endif
 
 /* String to 64-bit int */
 #define atoll(S) _atoi64(S)
@@ -57,10 +62,6 @@
 #define WcsLen wcslen
 #define WcsToMbs wcstombs
 typedef wchar_t Wchar_t; /* sizeof(wchar_t) = 2 bytes on Windows */
-
-#pragma warning(disable:4005) // Disable "warning C4005: '_WINSOCKAPI_' : macro redefinition"
-#include <winsock2.h>
-#pragma warning(default:4005)
 
 #include <sys/timeb.h>
 #include <io.h>
@@ -78,7 +79,7 @@ typedef HANDLE serial_socket_t;
 #ifndef _SSIZE_T_DEFINED
 #ifdef  _WIN64
 typedef __int64    ssize_t;
-#else
+#elif !defined(__MINGW32__)
 typedef _W64 int   ssize_t;
 #endif
 #define _SSIZE_T_DEFINED

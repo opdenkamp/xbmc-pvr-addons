@@ -21,6 +21,7 @@
 #include <stdio.h>
 
 #include "dlfcn-win32.h"
+#include "../os.h"
 
 /* Note:
  * MSDN says these functions are not thread-safe. We make no efforts to have
@@ -99,7 +100,7 @@ void *dlopen( const char *file, int mode )
     if( file == 0 )
     {
         /* Save NULL pointer for error message */
-        _snprintf_s( last_name, MAX_PATH, MAX_PATH, "0x%p", file );
+        _snprintf( last_name, MAX_PATH, "0x%p", file );
 
         /* POSIX says that if the value of file is 0, a handle on a global
          * symbol object must be provided. That object must be able to access
@@ -162,7 +163,7 @@ int dlclose( void *handle )
     BOOL ret;
 
     /* Save handle for error message */
-    _snprintf_s( last_name, MAX_PATH, MAX_PATH, "0x%p", handle );
+    _snprintf( last_name, MAX_PATH, "0x%p", handle );
 
     ret = FreeLibrary( hModule );
 

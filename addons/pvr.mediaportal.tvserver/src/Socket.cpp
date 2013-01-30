@@ -496,7 +496,7 @@ bool Socket::is_valid() const
   return (_sd != INVALID_SOCKET);
 }
 
-#if defined(TARGET_WINDOWS)
+#if defined(TARGET_WINDOWS) || defined(__MINGW32__)
 bool Socket::set_non_blocking ( const bool b )
 {
   u_long iMode;

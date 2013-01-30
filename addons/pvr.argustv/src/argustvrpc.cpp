@@ -23,6 +23,7 @@
  * Tested under Windows and Linux
  */
 
+#include "platform/util/StdString.h"
 #include <stdio.h>
 #include <sys/stat.h>
 #include "platform/os.h"

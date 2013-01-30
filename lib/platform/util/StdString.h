@@ -1,7 +1,5 @@
 #pragma once
-#include "../os.h"
-#include <string>
-#include <stdint.h>
+
 #include <vector>
 
 #if defined(_WIN32) && !defined(va_copy)
@@ -634,8 +632,8 @@ inline const Type& SSMAX(const Type& arg1, const Type& arg2)
 
   #else // ...else SS_ANSI is NOT defined
 
-    #include <TCHAR.H>
-    #include <WTYPES.H>
+    #include <tchar.h>
+    #include <wtypes.h>
     #ifndef STRICT
       #define STRICT
     #endif
@@ -643,8 +641,13 @@ inline const Type& SSMAX(const Type& arg1, const Type& arg2)
     // Make sure ASSERT and verify are defined
 
     #ifndef ASSERT
-      #include <crtdbg.h>
-      #define ASSERT(f) _ASSERTE((f))
+      #if !defined(__MINGW32__)
+        #include <crtdbg.h>
+        #define ASSERT(f) _ASSERTE((f))
+      #else
+        #include <cassert>
+        #define ASSERT(f) assert(f)
+      #endif
     #endif
     #ifndef VERIFY
       #ifdef _DEBUG
@@ -664,6 +667,7 @@ inline const Type& SSMAX(const Type& arg1, const Type& arg2)
 
 // Standard headers needed
 
+#include <stdint.h>
 #include <string>      // basic_string
 #include <algorithm>    // for_each, etc.
 #include <functional>    // for StdStringLessNoCase, et al
@@ -948,7 +952,7 @@ inline const Type& SSMAX(const Type& arg1, const Type& arg2)
 // know that's only Microsoft's though I've heard that the function exists
 // elsewhere.
 
-#if defined(SS_ALLOCA) && !defined SS_NO_CONVERSION
+#if defined(SS_ALLOCA) && !defined SS_NO_CONVERSION || defined(__MINGW32__)
 
     #include <malloc.h>  // needed for _alloca
 
@@ -1593,7 +1597,7 @@ inline void ssupr(CT* pT, size_t nLen, const std::locale& loc=std::locale())
   // GNU is supposed to have vsnprintf and vsnwprintf.  But only the newer
   // distributions do.
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) && !defined(__MINGW32__)
 
   inline int ssvsprintf(PSTR pA, size_t nCount, PCSTR pFmtA, va_list vl)
   {
@@ -1605,7 +1609,7 @@ inline void ssupr(CT* pT, size_t nLen, const std::locale& loc=std::locale())
   }
 
   // Microsofties can use
-#elif defined(_MSC_VER) && !defined(SS_ANSI)
+#elif (defined(_MSC_VER) || defined(__MINGW32__)) && !defined(SS_ANSI)
 
   inline int  ssvsprintf(PSTR pA, size_t nCount, PCSTR pFmtA, va_list vl)
   {
@@ -1688,7 +1692,7 @@ inline void ssupr(CT* pT, size_t nLen, const std::locale& loc=std::locale())
 
   inline int  ssnprintf(PSTR pA, size_t nCount, PCSTR pFmtA, va_list vl)
   {
-  #ifdef _MSC_VER
+  #if defined(_MSC_VER) || defined(__MINGW32__)
       return _vsnprintf(pA, nCount, pFmtA, vl);
   #else
       return vsnprintf(pA, nCount, pFmtA, vl);
@@ -1696,7 +1700,7 @@ inline void ssupr(CT* pT, size_t nLen, const std::locale& loc=std::locale())
   }
   inline int  ssnprintf(PWSTR pW, size_t nCount, PCWSTR pFmtW, va_list vl)
   {
-  #ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
       return _vsnwprintf(pW, nCount, pFmtW, vl);
   #else
       return vswprintf(pW, nCount, pFmtW, vl);
@@ -2050,7 +2054,7 @@ public:
   {
     bool bLoaded = false;
 
-#if defined(SS_WIN32) && !defined(SS_ANSI)
+#if defined(SS_WIN32) && !defined(SS_ANSI) && !defined(__MINGW32__)
     if ( ( pT != NULL ) && SS_IS_INTRESOURCE(pT) )
     {
       UINT nId = LOWORD(reinterpret_cast<unsigned long>(pT));
@@ -2098,7 +2102,7 @@ public:
 
   CStdStr(PCSTR pA)
   {
-  #ifdef SS_ANSI
+  #if defined(SS_ANSI) || defined(__MINGW32__)
     *this = pA;
   #else
     if ( !TryLoad(pA) )
@@ -2108,7 +2112,7 @@ public:
 
   CStdStr(PCWSTR pW)
   {
-  #ifdef SS_ANSI
+  #if defined(SS_ANSI) || defined(__MINGW32__)
     *this = pW;
   #else
     if ( !TryLoad(pW) )
@@ -2118,7 +2122,7 @@ public:
 
   CStdStr(uint16_t* pW)
   {
-  #ifdef SS_ANSI
+  #if defined(SS_ANSI) || defined(__MINGW32__)
     *this = pW;
   #else
     if ( !TryLoad(pW) )
@@ -2128,7 +2132,7 @@ public:
 
   CStdStr(uint32_t* pW)
   {
-  #ifdef SS_ANSI
+  #if defined(SS_ANSI) || defined(__MINGW32__)
     *this = pW;
   #else
     if ( !TryLoad(pW) )
@@ -2509,7 +2513,7 @@ public:
   //    true if successful, false otherwise
   // -------------------------------------------------------------------------
 
-#ifndef SS_ANSI
+#if !defined(SS_ANSI) && !defined(__MINGW32__)
 
   bool Load(UINT nId, HMODULE hModule=NULL)
   {
@@ -3189,7 +3193,7 @@ public:
   // The following methods are intended to allow you to use this class as a
   // near drop-in replacement for CString.
   // -------------------------------------------------------------------------
-  #ifdef SS_WIN32
+  #if defined(SS_WIN32) && !defined(__MINGW32__)
     BSTR AllocSysString() const
     {
       ostring os;
@@ -3284,7 +3288,7 @@ public:
              reinterpret_cast<PMYSTR>(&szTemp), 0, &argList) == 0 ||
        szTemp == 0 )
     {
-      throw std::runtime_error("out of memory");
+      throw std::exception("out of memory");
     }
     *this = szTemp;
     LocalFree(szTemp);
@@ -3303,7 +3307,7 @@ public:
              reinterpret_cast<PMYSTR>(&szTemp), 0, &argList) == 0 ||
       szTemp == 0)
     {
-      throw std::runtime_error("out of memory");
+      throw std::exception("out of memory");
     }
     *this = szTemp;
     LocalFree(szTemp);
@@ -3533,7 +3537,7 @@ public:
     this->at(static_cast<MYSIZE>(nIndex))    = ch;
   }
 
-#ifndef SS_ANSI
+#if !defined(SS_ANSI) && !defined(__MINGW32__)
   BSTR SetSysString(BSTR* pbstr) const
   {
     ostring os;
@@ -3558,7 +3562,7 @@ public:
         return pos == MYBASE::npos ? *this : Left(pos);
   }
 
-#if defined SS_WIN32 && !defined(UNICODE) && !defined(SS_ANSI)
+#if defined SS_WIN32 && !defined(UNICODE) && !defined(SS_ANSI) && !defined(__MINGW32__)
 
   // CString's OemToAnsi and AnsiToOem functions are available only in
   // Unicode builds.  However since we're a template we also need a
@@ -3837,7 +3841,7 @@ public:
   }
 #endif // #ifdef SS_INC_COMDEF
 
-#ifndef SS_ANSI
+#if !defined(SS_ANSI) && !defined(__MINGW32__)
 
   // SetResourceHandle/GetResourceHandle.  In MFC builds, these map directly
   // to AfxSetResourceHandle and AfxGetResourceHandle.  In non-MFC builds they
@@ -4131,7 +4135,7 @@ private:
 //    This function allows the caller for format and return a CStdStringA
 //    object with a single line of code.
 // -----------------------------------------------------------------------------
-#ifdef SS_ANSI
+#if defined(SS_ANSI) || defined(__MINGW32__)
 #else
   inline CStdStringA WUFormatA(UINT nId, ...)
   {
@@ -4143,15 +4147,6 @@ private:
     if ( strFmt.Load(nId) )
       strOut.FormatV(strFmt, argList);
 
-    va_end(argList);
-    return strOut;
-  }
-  inline CStdStringA WUFormatA(PCSTR szFormat, ...)
-  {
-    va_list argList;
-    va_start(argList, szFormat);
-    CStdStringA strOut;
-    strOut.FormatV(szFormat, argList);
     va_end(argList);
     return strOut;
   }
@@ -4168,6 +4163,16 @@ private:
     va_end(argList);
     return strOut;
   }
+#endif // #ifdef SS_ANSI
+  inline CStdStringA WUFormatA(PCSTR szFormat, ...)
+  {
+    va_list argList;
+    va_start(argList, szFormat);
+    CStdStringA strOut;
+    strOut.FormatV(szFormat, argList);
+    va_end(argList);
+    return strOut;
+  }
   inline CStdStringW WUFormatW(PCWSTR szwFormat, ...)
   {
     va_list argList;
@@ -4177,7 +4182,6 @@ private:
     va_end(argList);
     return strOut;
   }
-#endif // #ifdef SS_ANSI
 
 
 

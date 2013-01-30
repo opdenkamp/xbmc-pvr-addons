@@ -22,7 +22,7 @@ namespace MPTV //Prevent name clash with Live555 Socket
 {
 
 //Include platform specific datatypes, header files, defines and constants:
-#if defined TARGET_WINDOWS
+#if defined TARGET_WINDOWS || defined(__MINGW32__)
   #define WIN32_LEAN_AND_MEAN           // Enable LEAN_AND_MEAN support
   #pragma warning(disable:4005) // Disable "warning C4005: '_WINSOCKAPI_' : macro redefinition"
   #include <winsock2.h>
@@ -88,7 +88,7 @@ enum SocketFamily
 
 enum SocketDomain
 {
-  #if defined TARGET_LINUX || defined TARGET_DARWIN
+  #if (defined TARGET_LINUX || defined TARGET_DARWIN) && !defined(__MINGW32__)
     pf_unix  = PF_UNIX,
     pf_local = PF_LOCAL,
   #endif
@@ -296,7 +296,7 @@ class Socket
     enum SocketType _type;              ///< Socket Type
     enum SocketDomain _domain;          ///< Socket domain
 
-    #ifdef TARGET_WINDOWS
+    #if defined(TARGET_WINDOWS) || defined(__MINGW32__)
       WSADATA _wsaData;                 ///< Windows Socket data
       static int win_usage_count;       ///< Internal Windows usage counter used to prevent a global WSACleanup when more than one Socket object is used
     #endif

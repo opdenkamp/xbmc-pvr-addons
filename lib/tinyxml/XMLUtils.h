@@ -22,6 +22,10 @@
  */
 
 #include "../platform/util/StdString.h"
+#if defined(__MINGW32__)
+#include <string.h>
+#include <vector>
+#endif
 #include "tinyxml.h"
 
 class CDateTime;

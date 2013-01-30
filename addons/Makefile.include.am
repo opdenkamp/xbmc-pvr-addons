@@ -8,6 +8,10 @@ DEFINES         = @ARCH_DEFINES@ -DUSE_DEMUX -D__STDC_CONSTANT_MACROS -D__STDC_F
 AM_CXXFLAGS     = -g -O2 -fPIC $(WARNINGS) $(DEFINES) @HOST_CXXFLAGS@
 LIB             = @abs_top_srcdir@/addons/$(ADDONNAME)/addon/@BINPREFIX@$(ADDONBINNAME)@BIN_EXT@
 
+if HOST_IS_WINDOWS
+  LIBS += @abs_top_srcdir@/lib/platform/windows/libpvrwindows.la
+endif
+
 clean:
 	-rm -r -f $(LIB) @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@ @abs_top_srcdir@/addons/$(ADDONNAME).@OS@-@ARCHITECTURE@.zip @abs_top_srcdir@/addons/.build/$(ADDONNAME) *.so *.lo *.o *.la *.a *.P *~
 if IS_INTREE_BUILD

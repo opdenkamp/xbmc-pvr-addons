@@ -14,7 +14,6 @@ AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_LIBTOOL
 
-AC_SEARCH_LIBS([pthread_create],[pthread],, AC_MSG_ERROR([required library 'pthread' is missing]))
 
 AC_ARG_ENABLE([release],
   [AS_HELP_STRING([--enable-release],
@@ -62,7 +61,7 @@ DYN_LIB_EXT="so"
 TARGET_LDFLAGS=""
 BIN_EXT=".pvr"
 BINPREFIX=""
-case "${host}" in
+case "${target}" in
   arm-*-linux-androideabi)
     TARGET_LDFLAGS="-avoid-version -no-undefined"
     OS="android"
@@ -119,7 +118,18 @@ case "${host}" in
     OS="freebsd"
     ARCH_DEFINES="-DTARGET_POSIX -DTARGET_FREEBSD -D_LINUX"
     ;;
+  *mingw*)
+    OS="wingl"
+    DYN_LIB_EXT="a"
+    AC_DEFINE([__MINGW32__], [1], ["mingw32 build"])
+    ;;
 esac
+
+if test "$OS" = "wingl"; then
+  echo "Using Windows threading"
+else
+  AC_SEARCH_LIBS([pthread_create],[pthread],, AC_MSG_ERROR([required library 'pthread' is missing]))
+fi
 
 ### External libraries checks
 # FFmpeg
@@ -235,6 +245,12 @@ else
   AM_CONDITIONAL(HOST_IS_OSX, false)
 fi
 
+if test "x$OS" = "xwingl"; then
+  AM_CONDITIONAL(HOST_IS_WINDOWS, true)
+else
+  AM_CONDITIONAL(HOST_IS_WINDOWS, false)
+fi
+
 if test "x${libdir}" != 'x${exec_prefix}/lib'; then
   LIBDIR=${libdir}
 elif test "$prefix" = "NONE"; then
@@ -261,6 +277,7 @@ AC_CONFIG_FILES([Makefile \
                  lib/cmyth/Makefile \
                  lib/cmyth/libcmyth/Makefile \
                  lib/cmyth/librefmem/Makefile \
+                 lib/platform/windows/Makefile \
                  addons/Makefile \
                  addons/pvr.demo/Makefile \
                  addons/pvr.dvbviewer/Makefile \

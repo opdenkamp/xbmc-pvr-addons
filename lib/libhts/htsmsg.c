@@ -25,8 +25,8 @@
 #include <stdarg.h>
 #include <string.h>
 
-#ifdef _MSC_VER
-#include "msvc.h"
+#if defined(_MSC_VER) || defined(__MINGW32__)
+#include "Win32/include/msvc.h"
 #endif
 
 #include "htsmsg.h"

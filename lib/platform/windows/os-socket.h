@@ -43,6 +43,12 @@
 #ifndef ETIMEDOUT
 #define ETIMEDOUT 138
 #endif
+#ifndef EINPROGRESS
+#define EINPROGRESS 112
+#endif
+#ifndef ECONNRESET
+#define ECONNRESET 108
+#endif
 
 namespace PLATFORM
 {

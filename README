@@ -55,3 +55,14 @@ describe how to import the "xbmc-pvr-addons.sln" in "XBMC for Windows.sln"
 XBMC Windows installer with included pvr addons:
 ------------------------------------------------
 Not yet possible. Still a TODO.
+
+=============================
+           MingW
+=============================
+sudo apt-get install binutils-mingw-w64-i686 binutils-mingw-w64-x86-64 \
+                     g++-mingw-w64-i686 gcc-mingw-w64 gcc-mingw-w64-i686 \
+                     gcc-mingw-w64-x86-64 mingw-w64
+./bootstrap
+./configure --host=i686-w64-mingw32 --disable-shared --enable-static \
+            --enable-release --disable-external-ffmpeg --disable-addons-with-dependencies
+make

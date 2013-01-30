@@ -19,11 +19,11 @@
  *
  */
 
+#include "platform/util/StdString.h"
 #include "VNSIData.h"
 #include "responsepacket.h"
 #include "requestpacket.h"
 #include "vnsicommand.h"
-#include "platform/util/StdString.h"
 
 using namespace ADDON;
 using namespace PLATFORM;

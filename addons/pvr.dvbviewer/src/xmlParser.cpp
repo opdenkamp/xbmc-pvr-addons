@@ -59,7 +59,7 @@
 //#include <crtdbg.h>
 //#endif
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h> // to have IsTextUnicode, MultiByteToWideChar, WideCharToMultiByte to handle unicode files
+#include <windows.h> // to have IsTextUnicode, MultiByteToWideChar, WideCharToMultiByte to handle unicode files
                      // to have "MessageBoxA" to display error messages for openFilHelper
 #endif
 

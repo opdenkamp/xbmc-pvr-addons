@@ -32,6 +32,7 @@
  *  http://forums.dvbowners.com/
  */
 
+#include "platform/util/StdString.h"
 #include "FileReader.h"
 #include "client.h" //for XBMC->Log
 #include <algorithm> //std::min, std::max

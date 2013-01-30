@@ -28,7 +28,7 @@
 #include <stdarg.h>
 
 #ifdef _WIN32                   // windows
-#include "dlfcn-win32.h"
+#include "../lib/platform/windows/dlfcn-win32.h"
 #define ADDON_DLL               "\\library.xbmc.addon\\libXBMC_addon" ADDON_HELPER_EXT
 #define ADDON_HELPER_EXT        ".dll"
 #else

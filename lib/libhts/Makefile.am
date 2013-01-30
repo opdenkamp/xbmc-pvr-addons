@@ -4,8 +4,11 @@ libhts_la_SOURCES = htsmsg.c \
                     htsmsg_binary.c \
                     htsbuf.c \
                     htsstr.c \
-                    net_posix.c \
                     sha1.c
+
+if !HOST_IS_WINDOWS
+  libhts_la_SOURCES += net_posix.c
+endif
 
 libhts_la_CPPFLAGS=-std=c99 -D_GNU_SOURCE
 

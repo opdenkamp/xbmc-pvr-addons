@@ -31,6 +31,13 @@
  *     http://www.pulse-eight.net/
  */
 
+#if defined(__MINGW32__)
+typedef struct _RTL_CONDITION_VARIABLE {
+  PVOID Ptr;
+} RTL_CONDITION_VARIABLE, *PRTL_CONDITION_VARIABLE;
+typedef RTL_CONDITION_VARIABLE CONDITION_VARIABLE, *PCONDITION_VARIABLE;
+#endif
+
 namespace PLATFORM
 {
   #define thread_t                                 HANDLE

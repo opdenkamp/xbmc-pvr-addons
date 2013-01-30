@@ -5,7 +5,7 @@
 #ifndef HTSQ_H
 #define HTSQ_H
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
 #undef SLIST_ENTRY
 #include "Win32/include/sys/queue.h"
 #else

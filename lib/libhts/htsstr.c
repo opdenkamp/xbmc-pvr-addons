@@ -23,8 +23,8 @@
 #include <string.h>
 #ifdef __APPLE__
 #include "OSXGNUReplacements.h"
-#elif defined(_MSC_VER)
-#include "msvc.h"
+#elif defined(_MSC_VER) || defined(__MINGW32__)
+#include "Win32/include/msvc.h"
 #endif
 #include "htsstr.h"
 

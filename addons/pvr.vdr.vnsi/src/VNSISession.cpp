@@ -19,6 +19,7 @@
  *
  */
 
+#include "platform/util/StdString.h"
 #include "VNSISession.h"
 #include "client.h"
 

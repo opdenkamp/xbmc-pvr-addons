@@ -62,11 +62,11 @@ distribution.
 #define TIXML_SAFE
 
 #ifdef TIXML_SAFE
-	#if defined(_MSC_VER) && (_MSC_VER >= 1400 )
+	#if !defined(__MINGW32__) && defined(_MSC_VER) && (_MSC_VER >= 1400 )
 		// Microsoft visual studio, version 2005 and higher.
 		#define TIXML_SNPRINTF _snprintf_s
 		#define TIXML_SSCANF   sscanf_s
-	#elif defined(_MSC_VER) && (_MSC_VER >= 1200 )
+	#elif !defined(__MINGW32__) && defined(_MSC_VER) && (_MSC_VER >= 1200 )
 		// Microsoft visual studio, version 6 and higher.
 		//#pragma message( "Using _sn* functions." )
 		#define TIXML_SNPRINTF _snprintf
@@ -81,6 +81,11 @@ distribution.
 		#define TIXML_SSCANF   sscanf
 	#endif
 #endif	
+
+#ifndef _ERRNO_T_DEFINED
+#define _ERRNO_T_DEFINED
+typedef int errno_t;
+#endif
 
 class TiXmlDocument;
 class TiXmlElement;

@@ -32,17 +32,17 @@
  *  http://forums.dvbowners.com/
  */
 
+#include "platform/util/StdString.h"
 #include "MultiFileReader.h"
 #include "client.h" //for XBMC->Log
 #include <string>
 #include "utils.h"
 #include <algorithm>
 #include "platform/util/timeutils.h"
-#include "platform/util/StdString.h"
 
 #include <limits.h>
 
-#if !defined(TARGET_WINDOWS)
+#if !defined(TARGET_WINDOWS) && !defined(__MINGW32__)
 #include <sys/time.h>
 #include "platform/os.h"
 #define SUCCEEDED(hr) (((HRESULT)(hr)) >= 0)

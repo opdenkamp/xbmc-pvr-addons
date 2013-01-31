@@ -79,6 +79,7 @@ bool RecordingRule::SameTimeslot(RecordingRule &rule) const
 
   switch (rule.Type())
   {
+  case MythRecordingRule::TemplateRecord:
   case MythRecordingRule::NotRecording:
   case MythRecordingRule::SingleRecord:
   case MythRecordingRule::OverrideRecord:
@@ -1002,18 +1003,6 @@ PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
   // Fill rule with timer data
   PVRtoMythRecordingRule(timer, rule);
 
-  // Apply default rule setting from backend
-  rule.SetAutoTranscode(atoi(m_db.GetSetting("AutoTranscode").c_str()) > 0);
-  rule.SetUserJob(1, atoi(m_db.GetSetting("AutoRunUserJob1").c_str()) > 0);
-  rule.SetUserJob(2, atoi(m_db.GetSetting("AutoRunUserJob2").c_str()) > 0);
-  rule.SetUserJob(3, atoi(m_db.GetSetting("AutoRunUserJob3").c_str()) > 0);
-  rule.SetUserJob(4, atoi(m_db.GetSetting("AutoRunUserJob4").c_str()) > 0);
-  rule.SetAutoCommFlag(atoi(m_db.GetSetting("AutoCommercialFlag").c_str()) > 0);
-  rule.SetAutoExpire(atoi(m_db.GetSetting("AutoExpireDefault").c_str()) > 0);
-  rule.SetTranscoder(atoi(m_db.GetSetting("DefaultTranscoder").c_str()));
-  if (rule.Category() == m_db.GetSetting("OverTimeCategory"))
-    rule.SetEndOffset(rule.EndOffset() + atoi(m_db.GetSetting("CategoryOverTime")));
-
   if (!m_db.AddRecordingRule(rule))
     return PVR_ERROR_FAILED;
 
@@ -1083,32 +1072,68 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
 
 void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule)
 {
-  // If we have an entry in the EPG for the timer, we use it to set title and subtitle from it
-  // PVR_TIMER has no subtitle thus might send it encoded within the title.
   MythProgram program;
   bool programFound = m_db.FindProgram(timer.startTime, timer.iClientChannelUid, "%", &program);
+
+  // Load rule template from selected provider
+  switch (g_iRecTemplateType)
+  {
+  case 1: // Template provider is 'MythTV', then load the template from backend.
+    if (programFound)
+      rule = m_db.LoadRecordingRuleTemplate(program.category, program.category_type);
+    else
+      rule = m_db.LoadRecordingRuleTemplate("", "");
+    break;
+  case 0: // Template provider is 'Internal', then set rule with settings
+    rule.SetAutoCommFlag(g_bRecAutoCommFlag);
+    rule.SetAutoMetadata(g_bRecAutoMetadata);
+    rule.SetAutoTranscode(g_bRecAutoTranscode);
+    rule.SetUserJob(1, g_bRecAutoRunJob1);
+    rule.SetUserJob(2, g_bRecAutoRunJob2);
+    rule.SetUserJob(3, g_bRecAutoRunJob3);
+    rule.SetUserJob(4, g_bRecAutoRunJob4);
+    rule.SetAutoExpire(g_bRecAutoExpire);
+    rule.SetTranscoder(g_iRecTranscoder);
+  }
+
+  // Override template with PVR settings
+  rule.SetStartOffset(timer.iMarginStart);
+  rule.SetEndOffset(timer.iMarginEnd);
+  rule.SetPriority(timer.iPriority);
+
+  // Category override
+  if (programFound)
+  {
+    CStdString overTimeCategory = m_db.GetSetting("OverTimeCategory");
+    if (!overTimeCategory.IsEmpty() && (overTimeCategory.Equals(program.category) || overTimeCategory.Equals(program.category_type)))
+    {
+      CStdString categoryOverTime = m_db.GetSetting("CategoryOverTime");
+      XBMC->Log(LOG_DEBUG, "Overriding end offset for category %s: +%s", overTimeCategory.c_str(), categoryOverTime.c_str());
+      rule.SetEndOffset(rule.EndOffset() + atoi(categoryOverTime));
+    }
+  }
+
+  // If we have an entry in the EPG for the timer, we use it to set title and subtitle from it
+  // PVR_TIMER has no subtitle thus might send it encoded within the title.
   if (programFound)
   {
     rule.SetSearchType(MythRecordingRule::NoSearch);
     rule.SetTitle(program.title);
     rule.SetSubtitle(program.subtitle);
+    rule.SetCategory(program.category);
   }
   else
   {
     // kManualSearch = http://www.gossamer-threads.com/lists/mythtv/dev/155150?search_string=kManualSearch;#155150
     rule.SetSearchType(MythRecordingRule::ManualSearch);
     rule.SetTitle(timer.strTitle);
+    rule.SetCategory(m_categories.Category(timer.iGenreType));
   }
-
   rule.SetDescription(timer.strSummary);
   rule.SetChannelID(timer.iClientChannelUid);
   rule.SetStartTime((timer.startTime == 0 ? time(NULL) : timer.startTime));
   rule.SetEndTime(timer.endTime);
-  rule.SetStartOffset(timer.iMarginStart);
-  rule.SetEndOffset(timer.iMarginEnd);
-  rule.SetCategory(m_categories.Category(timer.iGenreType));
   rule.SetInactive(timer.state == PVR_TIMER_STATE_ABORTED || timer.state ==  PVR_TIMER_STATE_CANCELLED);
-  rule.SetPriority(timer.iPriority);
 
   ChannelIdMap::iterator channelIt = m_channelsById.find(timer.iClientChannelUid);
   if (channelIt != m_channelsById.end())

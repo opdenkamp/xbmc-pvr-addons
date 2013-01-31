@@ -45,6 +45,7 @@ extern "C" {
 #define DEFAULT_DB_PASSWORD     "mythtv"
 #define DEFAULT_DB_NAME         "mythconverg"
 #define DEFAULT_DB_PORT         3306
+#define DEFAULT_RECORD_TEMPLATE 1
 
 #define SUBTITLE_SEPARATOR " - "
 
@@ -74,6 +75,17 @@ extern int          g_iDBPort;            ///< The mythtv sql database port (def
 extern bool         g_bExtraDebug;        ///< Debug logging
 extern bool         g_bLiveTV;            ///< LiveTV support (or recordings only)
 extern bool         g_bLiveTVPriority;    ///< MythTV Backend setting to allow live TV to move scheduled shows
+extern int          g_iRecTemplateType;   ///< Template type for new record (0=Internal, 1=MythTV)
+///* Internal Record template */
+extern bool         g_bRecAutoMetadata;
+extern bool         g_bRecAutoCommFlag;
+extern bool         g_bRecAutoTranscode;
+extern bool         g_bRecAutoRunJob1;
+extern bool         g_bRecAutoRunJob2;
+extern bool         g_bRecAutoRunJob3;
+extern bool         g_bRecAutoRunJob4;
+extern bool         g_bRecAutoExpire;
+extern int          g_iRecTranscoder;
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr   *PVR;

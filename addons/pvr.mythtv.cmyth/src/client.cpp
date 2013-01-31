@@ -41,6 +41,16 @@ int          g_iDBPort                = DEFAULT_DB_PORT;          ///< The mytht
 bool         g_bExtraDebug            = DEFAULT_EXTRA_DEBUG;      ///< Output extensive debug information to the log
 bool         g_bLiveTV                = DEFAULT_LIVETV;           ///< LiveTV support (or recordings only)
 bool         g_bLiveTVPriority        = DEFAULT_LIVETV_PRIORITY;  ///< MythTV Backend setting to allow live TV to move scheduled shows
+int          g_iRecTemplateType       = DEFAULT_RECORD_TEMPLATE;  ///< Template type for new record (0=Internal, 1=MythTV)
+bool         g_bRecAutoMetadata       = true;
+bool         g_bRecAutoCommFlag       = false;
+bool         g_bRecAutoTranscode      = false;
+bool         g_bRecAutoRunJob1        = false;
+bool         g_bRecAutoRunJob2        = false;
+bool         g_bRecAutoRunJob3        = false;
+bool         g_bRecAutoRunJob4        = false;
+bool         g_bRecAutoExpire         = false;
+int          g_iRecTranscoder         = 0;
 
 ///* Client member variables */
 bool         m_recordingFirstRead;
@@ -208,6 +218,36 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'livetv' setting, falling back to '%b' as default", DEFAULT_LIVETV);
     g_bLiveTV = DEFAULT_LIVETV;
+  }
+
+  /* Read settings "Record template" from settings.xml */
+  if (!XBMC->GetSetting("rec_template_provider", &g_iRecTemplateType))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'rec_template_provider' setting, falling back to '%i' as default", DEFAULT_RECORD_TEMPLATE);
+    g_iRecTemplateType = DEFAULT_RECORD_TEMPLATE;
+  }
+  /* Get internal template settings when selected (0) */
+  if (g_iRecTemplateType == 0)
+  {
+    if (!XBMC->GetSetting("rec_autometadata", &g_bRecAutoMetadata))
+      g_bRecAutoMetadata = true;
+    if (!XBMC->GetSetting("rec_autocommflag", &g_bRecAutoCommFlag))
+      g_bRecAutoCommFlag = false;
+    if (!XBMC->GetSetting("rec_autotranscode", &g_bRecAutoTranscode))
+      g_bRecAutoTranscode = false;
+    if (!XBMC->GetSetting("rec_autorunjob1", &g_bRecAutoRunJob1))
+      g_bRecAutoRunJob1 = false;
+    if (!XBMC->GetSetting("rec_autorunjob2", &g_bRecAutoRunJob2))
+      g_bRecAutoRunJob2 = false;
+    if (!XBMC->GetSetting("rec_autorunjob3", &g_bRecAutoRunJob3))
+      g_bRecAutoRunJob3 = false;
+    if (!XBMC->GetSetting("rec_autorunjob4", &g_bRecAutoRunJob4))
+      g_bRecAutoRunJob4 = false;
+    if (!XBMC->GetSetting("rec_autoexpire", &g_bRecAutoExpire))
+      g_bRecAutoExpire = false;
+    if (!XBMC->GetSetting("rec_transcoder", &g_iRecTranscoder))
+      g_iRecTranscoder = 0;
   }
 
   free (buffer);

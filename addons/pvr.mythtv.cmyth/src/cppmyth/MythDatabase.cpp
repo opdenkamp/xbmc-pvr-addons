@@ -211,6 +211,17 @@ bool MythDatabase::DeleteRecordingRule(unsigned int recordid)
   return retval > 0;
 }
 
+MythRecordingRule MythDatabase::LoadRecordingRuleTemplate(const CStdString &category, const CStdString &category_type)
+{
+  int ret;
+  MythRecordingRule retval;
+  cmyth_recordingrule_t rule = NULL;
+  CMYTH_DB_CALL(ret, ret < 0, cmyth_mysql_recordingrule_from_template(*m_database_t, const_cast<char*>(category.c_str()), const_cast<char*>(category_type.c_str()), &rule));
+  if (ret >= 0)
+    retval = MythRecordingRule(rule);
+  return retval;
+}
+
 RecordingProfileList MythDatabase::GetRecordingProfiles()
 {
   RecordingProfileList retval;

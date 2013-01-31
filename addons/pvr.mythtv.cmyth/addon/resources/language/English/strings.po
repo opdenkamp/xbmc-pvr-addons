@@ -50,6 +50,66 @@ msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr ""
 
+msgctxt "#30019"
+msgid "Basic"
+msgstr ""
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr ""
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr ""
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr ""
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr ""
+
+msgctxt "#30026"
+msgid "Auto metadata lookup"
+msgstr ""
+
+msgctxt "#30027"
+msgid "Auto commercial flag"
+msgstr ""
+
+msgctxt "#30028"
+msgid "Auto transcode"
+msgstr ""
+
+msgctxt "#30029"
+msgid "Auto run job #1"
+msgstr ""
+
+msgctxt "#30030"
+msgid "Auto run job #2"
+msgstr ""
+
+msgctxt "#30031"
+msgid "Auto run job #3"
+msgstr ""
+
+msgctxt "#30032"
+msgid "Auto run job #4"
+msgstr ""
+
+msgctxt "#30033"
+msgid "Default transcoder"
+msgstr ""
+
+msgctxt "#30034"
+msgid "Auto expire"
+msgstr ""
+
+msgctxt "#30049"
+msgid "Record template"
+msgstr ""
+
 # Systeminformation labels
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"

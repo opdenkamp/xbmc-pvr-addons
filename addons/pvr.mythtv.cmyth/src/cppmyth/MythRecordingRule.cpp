@@ -303,6 +303,16 @@ void MythRecordingRule::SetUserJobs(unsigned short jobs)
   cmyth_recordingrule_set_userjobs(*m_recordingrule_t, (uint8_t)jobs);
 }
 
+bool  MythRecordingRule::AutoMetadata() const
+{
+  return (cmyth_recordingrule_autometadata(*m_recordingrule_t) == 1);
+}
+
+void  MythRecordingRule::SetAutoMetadata(bool enable)
+{
+  cmyth_recordingrule_set_autometadata(*m_recordingrule_t, (enable ? 1 : 0));
+}
+
 bool  MythRecordingRule::AutoCommFlag() const
 {
   return (cmyth_recordingrule_autocommflag(*m_recordingrule_t) == 1);

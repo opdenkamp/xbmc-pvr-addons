@@ -46,7 +46,8 @@ public:
     OverrideRecord,
     DontRecord,
     FindDailyRecord,
-    FindWeeklyRecord
+    FindWeeklyRecord,
+    TemplateRecord
   };
 
   enum RuleSearchType
@@ -149,6 +150,9 @@ public:
 
   unsigned short UserJobs() const;
   void SetUserJobs(unsigned short jobs);
+
+  bool AutoMetadata() const;
+  void SetAutoMetadata(bool enable);
 
   bool AutoCommFlag() const;
   void SetAutoCommFlag(bool enable);

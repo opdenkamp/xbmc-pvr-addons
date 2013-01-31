@@ -470,8 +470,13 @@ struct cmyth_recordingrule {
 	uint32_t maxepisodes;            //range 0,100
 	uint8_t maxnewest;               //bool
 	uint32_t transcoder;             //recordingprofiles id
-	//char* profile;
-	//uint32_t prefinput;
+	char* profile;
+	uint32_t prefinput;
+	uint8_t autometadata;            //DB version 1278
+	char* inetref;                   //DB version 1278
+	uint16_t season;                 //DB version 1278
+	uint16_t episode;                //DB version 1278
+	uint32_t filter;		 //DB version 1276
 	};
 
 struct cmyth_recordingrulelist {

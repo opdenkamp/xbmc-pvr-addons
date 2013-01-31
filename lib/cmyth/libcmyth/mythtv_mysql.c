@@ -376,7 +376,7 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, uint32_t chan
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
 	const char *query_str = "SELECT program.chanid, UNIX_TIMESTAMP(CONVERT_TZ(program.starttime, ?, 'SYSTEM')), UNIX_TIMESTAMP(CONVERT_TZ(program.endtime, ?, 'SYSTEM')), "
-				"program.title, program.description, program.subtitle, program.programid, program.seriesid, program.category, "
+				"program.title, program.description, program.subtitle, program.programid, program.seriesid, program.category, program.category_type, "
 				"channel.channum, channel.callsign, channel.name, channel.sourceid "
 				"FROM program INNER JOIN channel ON program.chanid=channel.chanid "
 				"WHERE channel.chanid = ? AND ((program.endtime > ? AND program.endtime < ?) OR (program.starttime >= ? AND program.starttime <= ?) OR (program.starttime <= ? AND program.endtime >= ?)) "
@@ -424,10 +424,11 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, uint32_t chan
 		sizeof_strncpy((*prog)[rows].programid, row[6]);
 		sizeof_strncpy((*prog)[rows].seriesid, row[7]);
 		sizeof_strncpy((*prog)[rows].category, row[8]);
-		(*prog)[rows].channum = safe_atol(row[9]);
-		sizeof_strncpy((*prog)[rows].callsign, row[10]);
-		sizeof_strncpy((*prog)[rows].name, row[11]);
-		(*prog)[rows].sourceid = safe_atol(row[12]);
+		sizeof_strncpy((*prog)[rows].category_type, row[9]);
+		(*prog)[rows].channum = safe_atol(row[10]);
+		sizeof_strncpy((*prog)[rows].callsign, row[11]);
+		sizeof_strncpy((*prog)[rows].name, row[12]);
+		(*prog)[rows].sourceid = safe_atol(row[13]);
 		(*prog)[rows].rec_status = 0;
 		rows++;
 	}
@@ -478,7 +479,6 @@ cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **pr
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
 	char *N_title;
-	char *esctitle;
 	char *query_str;
 	int rows = 0;
 	int n = 0;
@@ -500,16 +500,14 @@ cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **pr
 		query = cmyth_mysql_query_create(db, query_str);
 		N_title = ref_alloc(strlen(program_name) * 2 + 3);
 		sprintf(N_title, "%%%s%%", program_name);
-		esctitle = cmyth_mysql_escape_chars(db, N_title);
-		ref_release(N_title);
 		if (cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
-				|| cmyth_mysql_query_param_str(query, esctitle) < 0) {
+				|| cmyth_mysql_query_param_str(query, N_title) < 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
-			ref_release(esctitle);
 			ref_release(query);
+			ref_release(N_title);
 			return -1;
 		}
-		ref_release(esctitle);
+		ref_release(N_title);
 	}
 
 	res = cmyth_mysql_query_result(query);
@@ -538,8 +536,7 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog, ti
 {
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
-	char *esctitle;
-	const char *query_str = "SELECT program.chanid, UNIX_TIMESTAMP(CONVERT_TZ(program.starttime,?,'SYSTEM')), UNIX_TIMESTAMP(CONVERT_TZ(program.endtime,?,'SYSTEM')), program.title, program.description, program.subtitle, program.programid, program.seriesid, program.category, channel.channum, channel.callsign, channel.name, channel.sourceid FROM program LEFT JOIN channel on program.chanid=channel.chanid WHERE starttime >= ? and title = ? ORDER BY starttime ASC";
+	const char *query_str = "SELECT program.chanid, UNIX_TIMESTAMP(CONVERT_TZ(program.starttime,?,'SYSTEM')), UNIX_TIMESTAMP(CONVERT_TZ(program.endtime,?,'SYSTEM')), program.title, program.description, program.subtitle, program.programid, program.seriesid, program.category, program.category_type, channel.channum, channel.callsign, channel.name, channel.sourceid FROM program LEFT JOIN channel on program.chanid=channel.chanid WHERE starttime >= ? and title = ? ORDER BY starttime ASC";
 	int rows = 0;
 	int n = 0;
 	cmyth_mysql_query_t *query;
@@ -549,18 +546,15 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog, ti
 
 	query = cmyth_mysql_query_create(db, query_str);
 
-	esctitle = cmyth_mysql_escape_chars(db, program_name);
 	if (cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
 			|| cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
-			|| cmyth_mysql_query_param_str(query, esctitle) < 0) {
+			|| cmyth_mysql_query_param_str(query, program_name) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
-		ref_release(esctitle);
 		ref_release(query);
 		return -1;
 	}
 	res = cmyth_mysql_query_result(query);
-	ref_release(esctitle);
 	ref_release(query);
 	if (res == NULL) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
@@ -581,10 +575,11 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog, ti
 		sizeof_strncpy((*prog)[rows].programid, row[6]);
 		sizeof_strncpy((*prog)[rows].seriesid, row[7]);
 		sizeof_strncpy((*prog)[rows].category, row[8]);
-		(*prog)[rows].channum = atol(row[9]);
-		sizeof_strncpy((*prog)[rows].callsign, row[10]);
-		sizeof_strncpy((*prog)[rows].name, row[11]);
-		(*prog)[rows].sourceid = atol(row[12]);
+		sizeof_strncpy((*prog)[rows].category_type, row[9]);
+		(*prog)[rows].channum = atol(row[10]);
+		sizeof_strncpy((*prog)[rows].callsign, row[11]);
+		sizeof_strncpy((*prog)[rows].name, row[12]);
+		(*prog)[rows].sourceid = atol(row[13]);
 		cmyth_dbg(CMYTH_DBG_DEBUG, "prog[%d].chanid = %ld\n", rows, (*prog)[rows].chanid);
 		cmyth_dbg(CMYTH_DBG_DEBUG, "prog[%d].title = %s\n", rows, (*prog)[rows].title);
 		rows++;
@@ -1070,13 +1065,31 @@ cmyth_mysql_get_recordingrules(cmyth_database_t db, cmyth_recordingrulelist_t *r
 {
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
-	const char *query_str = "SELECT recordid, chanid, UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(startdate,starttime),?,'SYSTEM')), UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(enddate,endtime),?,'SYSTEM')),title,description, type, category, subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | (autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder FROM record ORDER BY recordid";
+	char *query_str;
 	int rows = 0;
 	cmyth_recordingrule_t rr;
 	cmyth_mysql_query_t * query;
 
 	if (cmyth_database_check_version(db) < 0)
 		return -1;
+
+	if (db->db_version >= 1278) {
+		query_str = "SELECT recordid, chanid, UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(startdate,starttime),?,'SYSTEM')), "
+			"UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(enddate,endtime),?,'SYSTEM')),title,description, type, category, "
+			"subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod, dupin, recgroup, "
+			"storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | "
+			"(autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, profile, prefinput, "
+			"autometadata, inetref, season, episode , filter "
+			"FROM record ORDER BY recordid";
+	}
+	else {
+		query_str = "SELECT recordid, chanid, UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(startdate,starttime),?,'SYSTEM')), "
+			"UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(enddate,endtime),?,'SYSTEM')),title,description, type, category, "
+			"subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod, dupin, recgroup, "
+			"storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | "
+			"(autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, profile, prefinput "
+			"FROM record ORDER BY recordid";
+	}
 
 	query = cmyth_mysql_query_create(db, query_str);
 	if (cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
@@ -1133,6 +1146,22 @@ cmyth_mysql_get_recordingrules(cmyth_database_t db, cmyth_recordingrulelist_t *r
 		rr->maxepisodes = safe_atol(row[24]);
 		rr->maxnewest = safe_atoi(row[25]);
 		rr->transcoder = safe_atol(row[26]);
+		rr->profile = ref_strdup(row[27]);
+		rr->prefinput = safe_atol(row[28]);
+		if (db->db_version >= 1278) {
+			rr->autometadata = safe_atoi(row[29]);
+			rr->inetref = ref_strdup(row[30]);
+			rr->season = safe_atoi(row[31]);
+			rr->episode = safe_atoi(row[32]);
+			rr->filter = safe_atol(row[33]);
+		}
+		else {
+			rr->autometadata = 0;
+			rr->inetref = ref_strdup("");
+			rr->season = 0;
+			rr->episode = 0;
+			rr->filter = 0;
+		}
 		(*rrl)->recordingrulelist_list[rows] = rr;
 		rows++;
 	}
@@ -1147,35 +1176,38 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 {
 	int ret;
 	MYSQL* sql = cmyth_db_get_connection(db);
-	const char *query_str = "INSERT INTO record (record.type, chanid, starttime, startdate, endtime, enddate, title, description, category, findid, findtime, station, subtitle, recpriority, startoffset, endoffset, search, inactive, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, autouserjob1, autouserjob2, autouserjob3, autouserjob4, autocommflag, autoexpire, maxepisodes, maxnewest, transcoder) VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TO_DAYS(DATE(?)), TIME(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?);";
+	char *query_str;
 	cmyth_mysql_query_t * query;
-	char* esctitle;
-	char* escdescription;
-	char* esccategory;
-	char* esccallsign;
-	char* escsubtitle;
-	char* escrec_group;
-	char* escstore_group;
-	char* escplay_group;
 	time_t starttime;
 	time_t endtime;
 
 	if (cmyth_database_check_version(db) < 0)
 		return -1;
 
-	esctitle = cmyth_mysql_escape_chars(db, rr->title);
-	escdescription = cmyth_mysql_escape_chars(db, rr->description);
-	esccategory = cmyth_mysql_escape_chars(db, rr->category);
-	esccallsign = cmyth_mysql_escape_chars(db, rr->callsign);
-	escsubtitle = cmyth_mysql_escape_chars(db, rr->subtitle);
-	escrec_group = cmyth_mysql_escape_chars(db, rr->recgroup);
-	escstore_group = cmyth_mysql_escape_chars(db, rr->storagegroup);
-	escplay_group = cmyth_mysql_escape_chars(db, rr->playgroup);
+	if (db->db_version >= 1278) {
+		query_str = "INSERT INTO record (record.type, chanid, starttime, startdate, endtime, enddate, title, "
+			"description, category, findid, findtime, station, subtitle, recpriority, startoffset, endoffset, "
+			"search, inactive, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, autouserjob1, "
+			"autouserjob2, autouserjob3, autouserjob4, autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, "
+			"profile, prefinput, autometadata, inetref, season, episode, filter) "
+			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TO_DAYS(DATE(?)), TIME(?), "
+			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	}
+	else {
+		query_str = "INSERT INTO record (record.type, chanid, starttime, startdate, endtime, enddate, title, "
+			"description, category, findid, findtime, station, subtitle, recpriority, startoffset, endoffset, "
+			"search, inactive, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, autouserjob1, "
+			"autouserjob2, autouserjob3, autouserjob4, autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, "
+			"profile, prefinput) "
+			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TO_DAYS(DATE(?)), TIME(?), "
+			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?);";
+	}
+
 	starttime = cmyth_timestamp_to_unixtime(rr->starttime);
 	endtime = cmyth_timestamp_to_unixtime(rr->endtime);
 
 	query = cmyth_mysql_query_create(db, query_str);
-	if (cmyth_mysql_query_param_uint(query, rr->type) < 0
+	if ((cmyth_mysql_query_param_uint(query, rr->type) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->chanid) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
@@ -1207,32 +1239,23 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			|| cmyth_mysql_query_param_uint(query, rr->autoexpire) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->maxepisodes) < 0
 			|| cmyth_mysql_query_param_uint(query, rr->maxnewest) < 0
-			|| cmyth_mysql_query_param_uint32(query, rr->transcoder) < 0) {
+			|| cmyth_mysql_query_param_uint32(query, rr->transcoder) < 0
+			|| cmyth_mysql_query_param_str(query, rr->profile) < 0
+			|| cmyth_mysql_query_param_uint32(query, rr->prefinput) < 0)
+			|| (db->db_version >= 1278
+				&& (cmyth_mysql_query_param_uint(query, rr->autometadata) < 0
+				|| cmyth_mysql_query_param_str(query, rr->inetref) < 0
+				|| cmyth_mysql_query_param_uint(query, rr->season) < 0
+				|| cmyth_mysql_query_param_uint(query, rr->episode) < 0
+				|| cmyth_mysql_query_param_uint32(query, rr->filter) < 0))) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
-		ref_release(esctitle);
-		ref_release(escdescription);
-		ref_release(esccategory);
-		ref_release(esccallsign);
-		ref_release(escsubtitle);
-		ref_release(escrec_group);
-		ref_release(escstore_group);
-		ref_release(escplay_group);
 		return -1;
 	}
 
 	ret = cmyth_mysql_query(query);
 
 	ref_release(query);
-	ref_release(esctitle);
-	ref_release(escdescription);
-	ref_release(esccategory);
-	ref_release(esccallsign);
-	ref_release(escsubtitle);
-
-	ref_release(escrec_group);
-	ref_release(escstore_group);
-	ref_release(escplay_group);
 
 	if (ret != 0)
 		return -1;
@@ -1275,35 +1298,38 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 {
 	int ret;
 	MYSQL* sql = cmyth_db_get_connection(db);
-	const char *query_str = "UPDATE record SET record.type = ?, chanid = ?, starttime = TIME(?), startdate = DATE(?), endtime = TIME(?), enddate = DATE(?) ,title = ?, description = ?, category = ?, subtitle = ?, recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, station = ?, dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, autotranscode = ?, autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, autocommflag = ?, autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ? WHERE recordid = ? ;";
+	char *query_str;
 	cmyth_mysql_query_t * query;
-	char* esctitle;
-	char* escdescription;
-	char* esccategory;
-	char* esccallsign;
-	char* escsubtitle;
-	char* escrec_group;
-	char* escstore_group;
-	char* escplay_group;
 	time_t starttime;
 	time_t endtime;
 
 	if (cmyth_database_check_version(db) < 0)
 		return -1;
 
-	esctitle = cmyth_mysql_escape_chars(db, rr->title);
-	escdescription = cmyth_mysql_escape_chars(db, rr->description);
-	esccategory = cmyth_mysql_escape_chars(db, rr->category);
-	esccallsign = cmyth_mysql_escape_chars(db, rr->callsign);
-	escsubtitle = cmyth_mysql_escape_chars(db, rr->subtitle);
-	escrec_group = cmyth_mysql_escape_chars(db, rr->recgroup);
-	escstore_group = cmyth_mysql_escape_chars(db, rr->storagegroup);
-	escplay_group = cmyth_mysql_escape_chars(db, rr->playgroup);
+	if (db->db_version >= 1278) {
+		query_str = "UPDATE record SET record.type = ?, chanid = ?, starttime = TIME(?), startdate = DATE(?), "
+			"endtime = TIME(?), enddate = DATE(?) ,title = ?, description = ?, category = ?, subtitle = ?, "
+			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, station = ?, "
+			"dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, autotranscode = ?, "
+			"autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, autocommflag = ?, "
+			"autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, profile = ?, prefinput = ?, "
+			"autometadata = ?, inetref = ?, season = ?, episode = ?, filter = ? "
+			"WHERE recordid = ? ;";
+	}
+	else {
+		query_str = "UPDATE record SET record.type = ?, chanid = ?, starttime = TIME(?), startdate = DATE(?), "
+			"endtime = TIME(?), enddate = DATE(?) ,title = ?, description = ?, category = ?, subtitle = ?, "
+			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, station = ?, "
+			"dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, autotranscode = ?, "
+			"autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, autocommflag = ?, "
+			"autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, profile = ?, prefinput = ? "
+			"WHERE recordid = ? ;";
+	}
 	starttime = cmyth_timestamp_to_unixtime(rr->starttime);
 	endtime = cmyth_timestamp_to_unixtime(rr->endtime);
 
 	query = cmyth_mysql_query_create(db, query_str);
-	if (cmyth_mysql_query_param_uint(query, rr->type) < 0
+	if ((cmyth_mysql_query_param_uint(query, rr->type) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->chanid) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0
@@ -1334,32 +1360,23 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			|| cmyth_mysql_query_param_uint32(query, rr->maxepisodes) < 0
 			|| cmyth_mysql_query_param_uint(query, rr->maxnewest) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->transcoder) < 0
+			|| cmyth_mysql_query_param_str(query, rr->playgroup) < 0
+			|| cmyth_mysql_query_param_uint32(query, rr->prefinput) < 0)
+			|| (db->db_version >= 1278
+				&& ( cmyth_mysql_query_param_uint(query, rr->autometadata) < 0
+				|| cmyth_mysql_query_param_str(query, rr->inetref) < 0
+				|| cmyth_mysql_query_param_uint(query, rr->season) < 0
+				|| cmyth_mysql_query_param_uint(query, rr->episode) < 0
+				|| cmyth_mysql_query_param_uint32(query, rr->filter) < 0))
 			|| cmyth_mysql_query_param_uint32(query, rr->recordid) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
-		ref_release(esctitle);
-		ref_release(escdescription);
-		ref_release(esccategory);
-		ref_release(esccallsign);
-		ref_release(escsubtitle);
-		ref_release(escrec_group);
-		ref_release(escstore_group);
-		ref_release(escplay_group);
 		return -1;
 	}
 
 	ret = cmyth_mysql_query(query);
 
 	ref_release(query);
-	ref_release(esctitle);
-	ref_release(escdescription);
-	ref_release(esccategory);
-	ref_release(esccallsign);
-	ref_release(escsubtitle);
-
-	ref_release(escrec_group);
-	ref_release(escstore_group);
-	ref_release(escplay_group);
 
 	if (ret == -1) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
@@ -1367,6 +1384,133 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 	}
 
 	return (int)mysql_affected_rows(sql);
+}
+
+/*
+ * cmyth_mysql_recordingrule_from_template()
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Returns a recording rule initialized from template.
+ *
+ * Success: returns 0 for template unavailable else 1
+ *
+ * Failure: -1
+ */
+int
+cmyth_mysql_recordingrule_from_template(cmyth_database_t db, const char *category, const char *category_type, cmyth_recordingrule_t *rr)
+{
+	MYSQL_RES *res = NULL;
+	MYSQL_ROW row;
+	char *query_str;
+	int ret = 0;
+	cmyth_mysql_query_t * query;
+	char *buf;
+	uint32_t recordid;
+
+	if (cmyth_database_check_version(db) < 0)
+		return -1;
+
+	*rr = cmyth_recordingrule_init();
+	if (!*rr)
+		return -1;
+
+	if (db->db_version >= 1302) {
+		query_str = "SELECT recordid, recpriority, startoffset, endoffset, search, dupmethod, dupin, recgroup, storagegroup, "
+			"playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | (autouserjob4 << 3)), "
+			"autocommflag, autoexpire, profile, prefinput, autometadata, maxepisodes, maxnewest, filter, "
+			"(category = ?) AS catmatch, (category = ?) AS typematch "
+			"FROM record WHERE type = ? AND (category = ? OR category = ? OR category = 'Default') "
+			"ORDER BY catmatch DESC, typematch DESC";
+
+		query = cmyth_mysql_query_create(db, query_str);
+		if (cmyth_mysql_query_param_str(query, category) < 0
+			|| cmyth_mysql_query_param_str(query, category_type) < 0
+			|| cmyth_mysql_query_param_uint(query, RRULE_TEMPLATE_RECORD) < 0
+			|| cmyth_mysql_query_param_str(query, category) < 0
+			|| cmyth_mysql_query_param_str(query, category_type) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+			ref_release(query);
+			return -1;
+		}
+
+		res = cmyth_mysql_query_result(query);
+		ref_release(query);
+
+		if (res == NULL) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
+			return -1;
+		}
+
+		if ((row = mysql_fetch_row(res))) {
+			recordid = safe_atol(row[0]);
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use record template id: %"PRIu32"\n", __FUNCTION__, recordid);
+			(*rr)->type = RRULE_TEMPLATE_RECORD;
+			(*rr)->recpriority = safe_atoi(row[1]);
+			(*rr)->startoffset = safe_atoi(row[2]);
+			(*rr)->endoffset = safe_atoi(row[3]);
+			(*rr)->searchtype = safe_atoi(row[4]);
+			(*rr)->dupmethod = safe_atoi(row[5]);
+			(*rr)->dupin = safe_atoi(row[6]);
+			(*rr)->recgroup = ref_strdup(row[7]);
+			(*rr)->storagegroup = ref_strdup(row[8]);
+			(*rr)->playgroup = ref_strdup(row[9]);
+			(*rr)->autotranscode = safe_atoi(row[10]);
+			(*rr)->userjobs = safe_atoi(row[11]);
+			(*rr)->autocommflag = safe_atoi(row[12]);
+			(*rr)->autoexpire = safe_atoi(row[13]);
+			(*rr)->profile = ref_strdup(row[14]);
+			(*rr)->prefinput = safe_atol(row[15]);
+			(*rr)->autometadata = safe_atoi(row[16]);
+			(*rr)->maxepisodes = safe_atol(row[17]);
+			(*rr)->maxnewest = safe_atoi(row[18]);
+			(*rr)->filter = safe_atol(row[19]);
+			ret = 1;
+		}
+		mysql_free_result(res);
+	}
+	else {
+		if (cmyth_mysql_get_setting(db, "AutoRunUserJob1", &buf) > 0) {
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use setting AutoRunUserJob1: %s\n", __FUNCTION__, buf);
+			(*rr)->userjobs |= (atoi(buf) == 1 ? 1 : 0 );
+		}
+		if (cmyth_mysql_get_setting(db, "AutoRunUserJob2", &buf) > 0) {
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use setting AutoRunUserJob2: %s\n", __FUNCTION__, buf);
+			(*rr)->userjobs |= (atoi(buf) == 1 ? 1 : 0 ) << 1;
+		}
+		if (cmyth_mysql_get_setting(db, "AutoRunUserJob3", &buf) > 0) {
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use setting AutoRunUserJob3: %s\n", __FUNCTION__, buf);
+			(*rr)->userjobs |= (atoi(buf) == 1 ? 1 : 0 ) << 2;
+		}
+		if (cmyth_mysql_get_setting(db, "AutoRunUserJob4", &buf) > 0) {
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use setting AutoRunUserJob4: %s\n", __FUNCTION__, buf);
+			(*rr)->userjobs |= (atoi(buf) == 1 ? 1 : 0 ) << 3;
+		}
+		if (cmyth_mysql_get_setting(db, "AutoTranscode", &buf) > 0) {
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use setting AutoTranscode: %s\n", __FUNCTION__, buf);
+			(*rr)->autotranscode = atoi(buf);
+		}
+		if (cmyth_mysql_get_setting(db, "DefaultTranscoder", &buf) > 0) {
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use setting DefaultTranscoder: %s\n", __FUNCTION__, buf);
+			(*rr)->transcoder = atol(buf);
+		}
+		if (cmyth_mysql_get_setting(db, "AutoCommercialFlag", &buf) > 0) {
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use setting AutoCommercialFlag: %s\n", __FUNCTION__, buf);
+			(*rr)->autocommflag = atoi(buf);
+		}
+		if (cmyth_mysql_get_setting(db, "AutoExpireDefault", &buf) > 0) {
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use setting AutoExpireDefault: %s\n", __FUNCTION__, buf);
+			(*rr)->autoexpire = atoi(buf);
+		}
+		if (db->db_version >= 1278 && cmyth_mysql_get_setting(db, "AutoMetadataLookup", &buf) > 0) {
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: use setting AutoMetadataLookup: %s\n", __FUNCTION__, buf);
+			(*rr)->autometadata = atoi(buf);
+		}
+		ret = 1;
+	}
+	return ret;
 }
 
 int
@@ -1512,12 +1656,10 @@ cmyth_mysql_get_recorder_source_channum(cmyth_database_t db, char *channum, cmyt
 	int rows = 0;
 	cmyth_recorder_source_t *ret;
 	cmyth_mysql_query_t * query;
-	char* escchan;
 
 	if (cmyth_database_check_version(db) < 0)
 		return -1;
 
-	escchan = cmyth_mysql_escape_chars(db, channum);
 
 	//DB version change at mythtv/libs/libmythtv/dbcheck.cpp:1789
 	if (db->db_version < 1293)
@@ -1525,16 +1667,14 @@ cmyth_mysql_get_recorder_source_channum(cmyth_database_t db, char *channum, cmyt
 	else
 		query = cmyth_mysql_query_create(db, query_str2);
 
-	if (cmyth_mysql_query_param_str(query, escchan) < 0) {
+	if (cmyth_mysql_query_param_str(query, channum) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
-		ref_release(escchan);
 		return -1;
 	}
 
 	res = cmyth_mysql_query_result(query);
 	ref_release(query);
-	ref_release(escchan);
 	if (res == NULL) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
 		return -1;
@@ -1566,32 +1706,27 @@ cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_program_t
 {
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
-	const char *query_str = "SELECT program.chanid,UNIX_TIMESTAMP(CONVERT_TZ(program.starttime,?,'SYSTEM')),UNIX_TIMESTAMP(CONVERT_TZ(program.endtime,?,'SYSTEM')),program.title,program.description,program.subtitle,program.programid,program.seriesid,program.category,channel.channum,channel.callsign,channel.name,channel.sourceid FROM program INNER JOIN channel ON program.chanid=channel.chanid WHERE program.chanid = ? AND program.title LIKE ? AND program.starttime = ? AND program.manualid = 0 ORDER BY (channel.channum + 0), program.starttime ASC";
+	const char *query_str = "SELECT program.chanid,UNIX_TIMESTAMP(CONVERT_TZ(program.starttime,?,'SYSTEM')),UNIX_TIMESTAMP(CONVERT_TZ(program.endtime,?,'SYSTEM')),program.title,program.description,program.subtitle,program.programid,program.seriesid,program.category,program.category_type,channel.channum,channel.callsign,channel.name,channel.sourceid FROM program INNER JOIN channel ON program.chanid=channel.chanid WHERE program.chanid = ? AND program.title LIKE ? AND program.starttime = ? AND program.manualid = 0 ORDER BY (channel.channum + 0), program.starttime ASC";
 	int rows = 0;
 	cmyth_mysql_query_t * query;
-	char* esctitle;
 
 	if (cmyth_database_check_version(db) < 0)
 		return -1;
-
-	esctitle = cmyth_mysql_escape_chars(db, program_name);
 
 	query = cmyth_mysql_query_create(db, query_str);
 
 	if (cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
 			|| cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
 			|| cmyth_mysql_query_param_uint32(query, chanid) < 0
-			|| cmyth_mysql_query_param_str(query, esctitle) < 0
+			|| cmyth_mysql_query_param_str(query, program_name) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
-		ref_release(esctitle);
 		return -1;
 	}
 
 	res = cmyth_mysql_query_result(query);
 	ref_release(query);
-	ref_release(esctitle);
 
 	if (res == NULL) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
@@ -1610,10 +1745,11 @@ cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_program_t
 			sizeof_strncpy(prog->programid, row[6]);
 			sizeof_strncpy(prog->seriesid, row[7]);
 			sizeof_strncpy(prog->category, row[8]);
-			prog->channum = safe_atol(row[9]);
-			sizeof_strncpy(prog->callsign, row[10]);
-			sizeof_strncpy(prog->name, row[11]);
-			prog->sourceid = safe_atol(row[12]);
+			sizeof_strncpy(prog->category_type, row[9]);
+			prog->channum = safe_atol(row[10]);
+			sizeof_strncpy(prog->callsign, row[11]);
+			sizeof_strncpy(prog->name, row[12]);
+			prog->sourceid = safe_atol(row[13]);
 		}
 	}
 

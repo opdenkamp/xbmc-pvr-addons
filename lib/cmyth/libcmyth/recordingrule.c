@@ -65,6 +65,10 @@ cmyth_recordingrule_destroy(cmyth_recordingrule_t rr)
 		ref_release(rr->starttime);
 	if (rr->endtime)
 		ref_release(rr->endtime);
+	if (rr->profile)
+		ref_release(rr->profile);
+	if (rr->inetref)
+		ref_release(rr->inetref);
 }
 
 /*
@@ -239,6 +243,13 @@ cmyth_recordingrule_init(void)
 	cmyth_recordingrule_set_maxepisodes(rr, 0);
 	cmyth_recordingrule_set_maxnewest(rr, 0);
 	cmyth_recordingrule_set_transcoder(rr, 0);
+        cmyth_recordingrule_set_profile(rr, "Default");
+	cmyth_recordingrule_set_prefinput(rr, 0);
+	cmyth_recordingrule_set_autometadata(rr, 0);
+	cmyth_recordingrule_set_inetref(rr, "");
+	cmyth_recordingrule_set_season(rr, 0);
+	cmyth_recordingrule_set_episode(rr, 0);
+	cmyth_recordingrule_set_filter(rr, 0);
 	return rr;
 }
 
@@ -665,6 +676,115 @@ void
 cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, uint32_t transcoder)
 {
 	rr->transcoder = transcoder;
+}
+
+char *
+cmyth_recordingrule_profile(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return NULL;
+	}
+	return ref_hold(rr->profile);
+}
+
+void
+cmyth_recordingrule_set_profile(cmyth_recordingrule_t rr, char *profile)
+{
+	if (rr->profile)
+		ref_release(rr->profile);
+	rr->profile = ref_strdup(profile);
+}
+
+uint32_t
+cmyth_recordingrule_prefinput(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return 0;
+	}
+	return rr->prefinput;
+}
+
+void
+cmyth_recordingrule_set_prefinput(cmyth_recordingrule_t rr, uint32_t prefinput)
+{
+	rr->prefinput = prefinput;
+}
+
+uint8_t
+cmyth_recordingrule_autometadata(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return 0;
+	}
+	return rr->autometadata;
+}
+
+void
+cmyth_recordingrule_set_autometadata(cmyth_recordingrule_t rr, uint8_t autometadata)
+{
+	rr->autometadata = autometadata;
+}
+
+char *
+cmyth_recordingrule_inetref(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return NULL;
+	}
+	return ref_hold(rr->inetref);
+}
+
+void
+cmyth_recordingrule_set_inetref(cmyth_recordingrule_t rr, char *inetref)
+{
+	if (rr->inetref)
+		ref_release(rr->inetref);
+	rr->inetref = ref_strdup(inetref);
+}
+
+uint16_t
+cmyth_recordingrule_season(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return 0;
+	}
+	return rr->season;
+}
+
+void
+cmyth_recordingrule_set_season(cmyth_recordingrule_t rr, uint16_t season)
+{
+	rr->season = season;
+}
+
+uint16_t
+cmyth_recordingrule_episode(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return 0;
+	}
+	return rr->episode;
+}
+
+void
+cmyth_recordingrule_set_episode(cmyth_recordingrule_t rr, uint16_t episode)
+{
+	rr->episode = episode;
+}
+
+uint32_t
+cmyth_recordingrule_filter(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return 0;
+	}
+	return rr->filter;
+}
+
+void
+cmyth_recordingrule_set_filter(cmyth_recordingrule_t rr, uint32_t filter)
+{
+	rr->filter = filter;
 }
 
 /*

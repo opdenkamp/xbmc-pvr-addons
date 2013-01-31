@@ -1156,17 +1156,18 @@ extern int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err, cmyth_commbreakl
 
 typedef struct cmyth_program {
 	uint32_t chanid;
-	char callsign[30];
-	char name[84];
+	char callsign[21];
+	char name[65];
 	uint32_t sourceid;
-	char title[150];
-	char subtitle[150];
-	char description[280];
+	char title[129];
+	char subtitle[129];
+	char description[1921];
 	time_t starttime;
 	time_t endtime;
-	char programid[30];
-	char seriesid[24];
-	char category[84];
+	char programid[65];
+	char seriesid[65];
+	char category[65];
+	char category_type[65];
 	int8_t rec_status;
 	uint32_t channum;
 } cmyth_program_t;
@@ -1707,6 +1708,110 @@ extern uint32_t cmyth_recordingrule_transcoder(cmyth_recordingrule_t rr);
 extern void cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, uint32_t transcoder);
 
 /**
+ * Retrieves the 'profile' field of a recording rule structure.
+ * Before forgetting the reference to this string the caller
+ * must call ref_release().
+ * \param rr
+ * \return success: profile
+ * \return failure: NULL
+ */
+extern char *cmyth_recordingrule_profile(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'profile' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param profile
+ */
+extern void cmyth_recordingrule_set_profile(cmyth_recordingrule_t rr, char *profile);
+
+/**
+ * Retrieves the 'prefinput' field of a recording rule structure.
+ * \param rr
+ * \return success: prefinput
+ */
+extern uint32_t cmyth_recordingrule_prefinput(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'prefinput' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param prefinput
+ */
+extern void cmyth_recordingrule_set_prefinput(cmyth_recordingrule_t rr, uint32_t prefinput);
+
+/**
+ * Retrieves the 'autometadata' field of a recording rule structure.
+ * \param rr
+ * \return success: autometadata
+ */
+extern uint8_t cmyth_recordingrule_autometadata(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'autometadata' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param autometadata
+ */
+extern void cmyth_recordingrule_set_autometadata(cmyth_recordingrule_t rr, uint8_t autometadata);
+
+/**
+ * Retrieves the 'inetref' field of a recording rule structure.
+ * Before forgetting the reference to this string the caller
+ * must call ref_release().
+ * \param rr
+ * \return success: inetref
+ * \return failure: NULL
+ */
+extern char *cmyth_recordingrule_inetref(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'inetref' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param inetref
+ */
+extern void cmyth_recordingrule_set_inetref(cmyth_recordingrule_t rr, char *inetref);
+
+/**
+ * Retrieves the 'season' field of a recording rule structure.
+ * \param rr
+ * \return success: season
+ */
+extern uint16_t cmyth_recordingrule_season(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'season' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param season
+ */
+extern void cmyth_recordingrule_set_season(cmyth_recordingrule_t rr, uint16_t season);
+
+/**
+ * Retrieves the 'episode' field of a recording rule structure.
+ * \param rr
+ * \return success: episode
+ */
+extern uint16_t cmyth_recordingrule_episode(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'episode' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param episode
+ */
+extern void cmyth_recordingrule_set_episode(cmyth_recordingrule_t rr, uint16_t episode);
+
+/**
+ * Retrieves the 'filter' field of a recording rule structure.
+ * \param rr
+ * \return success: filter
+ */
+extern uint32_t cmyth_recordingrule_filter(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'filter' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param filter
+ */
+extern void cmyth_recordingrule_set_filter(cmyth_recordingrule_t rr, uint32_t filter);
+
+/**
  * Retrieve the recording rule structure found at index 'index' in the list
  * in 'rrl'.  Return the recording rule structure held.
  * Before forgetting the reference to this recording rule structure the
@@ -1761,6 +1866,19 @@ extern int cmyth_mysql_delete_recordingrule(cmyth_database_t db, uint32_t record
  * \return failure: -(errno)
  */
 extern int cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr);
+
+/**
+ * Initialize a new rule from database template.
+ * Before forgetting the reference to this recording rule structure
+ * the caller must call ref_release().
+ * \param db database
+ * \param category program category
+ * \param category_type program category type
+ * \param rr recording rule handle
+ * \return success: 0
+ * \return failure: -(errno)
+ */
+extern int cmyth_mysql_recordingrule_from_template(cmyth_database_t db, const char *category, const char *category_type, cmyth_recordingrule_t *rr);
 
 /*
  * -----------------------------------------------------------------

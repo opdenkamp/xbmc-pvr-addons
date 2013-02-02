@@ -6,7 +6,7 @@
 # The official name of this plugin.
 # This name will be used in the '-P...' option of VDR to load the plugin.
 # By default the main source file also carries this name.
-#
+
 PLUGIN = vnsiserver
 
 ### The version number of this plugin (taken from the main source file):
@@ -17,8 +17,9 @@ VERSION = $(shell grep 'static const char \*VERSION *=' vnsi.h | awk '{ print $$
 
 # Use package data if installed...otherwise assume we're under the VDR source directory:
 PKGCFG = $(if $(VDRDIR),$(shell pkg-config --variable=$(1) $(VDRDIR)/vdr.pc),$(shell pkg-config --variable=$(1) vdr || pkg-config --variable=$(1) ../../../vdr.pc))
-LIBDIR ?= $(DESTDIR)$(call PKGCFG,libdir)
-LOCDIR = $(DESTDIR)$(call PKGCFG,locdir)
+LIBDIR ?= $(call PKGCFG,libdir)
+LOCDIR = $(call PKGCFG,locdir)
+PLGCFG = $(call PKGCFG,plgcfg)
 #
 TMPDIR ?= /tmp
 
@@ -55,8 +56,12 @@ else
 endif
 
 export CXXFLAGS
-endif
+else
 
+### Allow user defined options to overwrite defaults:
+
+-include $(PLGCFG)
+endif
 
 ### The name of the distribution archive:
 
@@ -94,18 +99,19 @@ all: install-lib
 else
 all: $(SOFILE)
 endif
+#
 
 ### Implicit rules:
 
 %.o: %.c
-	$(CXX) $(CXXFLAGS) -c $(DEFINES) $(INCLUDES) $<
+	$(CXX) $(CXXFLAGS) -c $(DEFINES) $(INCLUDES) -o $@ $<
 
 ### Dependencies:
 
 MAKEDEP = $(CXX) -MM -MG
 DEPFILE = .dependencies
 $(DEPFILE): Makefile
-	@$(MAKEDEP) $(DEFINES) $(INCLUDES) $(OBJS:%.o=%.c) > $@
+	@$(MAKEDEP) $(CXXFLAGS) $(DEFINES) $(INCLUDES) $(OBJS:%.o=%.c) > $@
 
 -include $(DEPFILE)
 
@@ -114,20 +120,20 @@ $(DEPFILE): Makefile
 PODIR     = po
 I18Npo    = $(wildcard $(PODIR)/*.po)
 I18Nmo    = $(addsuffix .mo, $(foreach file, $(I18Npo), $(basename $(file))))
-I18Nmsgs  = $(addprefix $(LOCDIR)/, $(addsuffix /LC_MESSAGES/vdr-$(PLUGIN).mo, $(notdir $(foreach file, $(I18Npo), $(basename $(file))))))
+I18Nmsgs  = $(addprefix $(DESTDIR)$(LOCDIR)/, $(addsuffix /LC_MESSAGES/vdr-$(PLUGIN).mo, $(notdir $(foreach file, $(I18Npo), $(basename $(file))))))
 I18Npot   = $(PODIR)/$(PLUGIN).pot
 
 %.mo: %.po
 	msgfmt -c -o $@ $<
 
-$(I18Npot): $(wildcard *.cc)
+$(I18Npot): $(wildcard *.c)
 	xgettext -C -cTRANSLATORS --no-wrap --no-location -k -ktr -ktrNOOP --package-name=vdr-$(PLUGIN) --package-version=$(VERSION) --msgid-bugs-address='<see README>' -o $@ `ls $^`
 
 %.po: $(I18Npot)
 	msgmerge -U --no-wrap --no-location --backup=none -q -N $@ $<
 	@touch $@
 
-$(I18Nmsgs): $(LOCDIR)/%/LC_MESSAGES/vdr-$(PLUGIN).mo: $(PODIR)/%.mo
+$(I18Nmsgs): $(DESTDIR)$(LOCDIR)/%/LC_MESSAGES/vdr-$(PLUGIN).mo: $(PODIR)/%.mo
 	install -D -m644 $< $@
 
 .PHONY: i18n
@@ -141,7 +147,7 @@ $(SOFILE): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(OBJS) -o $@
 
 install-lib: $(SOFILE)
-	install -D $^ $(LIBDIR)/$^.$(APIVERSION)
+	install -D $^ $(DESTDIR)$(LIBDIR)/$^.$(APIVERSION)
 
 install: install-lib install-i18n
 
@@ -155,6 +161,6 @@ dist: $(I18Npo) clean
 
 clean:
 	@-rm -f $(PODIR)/*.mo $(PODIR)/*.pot
-	@-rm -f $(OBJS) $(DEPFILE) *.so *.so.* *.tgz core* *~
+	@-rm -f $(OBJS) $(DEPFILE) *.so *.tgz core* *~
 
 compile: $(SOFILE)

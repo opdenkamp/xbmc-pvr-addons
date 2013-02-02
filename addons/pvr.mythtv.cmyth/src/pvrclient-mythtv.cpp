@@ -198,6 +198,7 @@ bool PVRClientMythTV::Connect()
     XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300));
     return false;
   }
+  m_pEventHandler->RegisterObserver(this);
 
   // Create database connection
   m_db = MythDatabase(g_szDBHostname, g_szDBName, g_szDBUser, g_szDBPassword, g_iDBPort);

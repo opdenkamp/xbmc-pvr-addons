@@ -31,34 +31,29 @@ using namespace ADDON;
  * Default values are defined inside client.h
  * and exported to the other source files.
  */
-CStdString   g_szMythHostname         = DEFAULT_HOST;             ///< The Host name or IP of the mythtv server
-int          g_iMythPort              = DEFAULT_PORT;             ///< The mythtv Port (default is 6543)
-CStdString   g_szDBUser               = DEFAULT_DB_USER;          ///< The mythtv sql username (default is mythtv)
-CStdString   g_szDBPassword           = DEFAULT_DB_PASSWORD;      ///< The mythtv sql password (default is mythtv)
-CStdString   g_szDBName               = DEFAULT_DB_NAME;          ///< The mythtv sql database name (default is mythconverg)
-CStdString   g_szDBHostname           = DEFAULT_HOST;             ///< The mythtv sql database host name or IP of the database server (default is same as mythtv backend hostname)
-int          g_iDBPort                = DEFAULT_DB_PORT;          ///< The mythtv sql database port (default is 3306)
-bool         g_bExtraDebug            = DEFAULT_EXTRA_DEBUG;      ///< Output extensive debug information to the log
-bool         g_bLiveTV                = DEFAULT_LIVETV;           ///< LiveTV support (or recordings only)
-bool         g_bLiveTVPriority        = DEFAULT_LIVETV_PRIORITY;  ///< MythTV Backend setting to allow live TV to move scheduled shows
-int          g_iRecTemplateType       = DEFAULT_RECORD_TEMPLATE;  ///< Template type for new record (0=Internal, 1=MythTV)
-bool         g_bRecAutoMetadata       = true;
-bool         g_bRecAutoCommFlag       = false;
-bool         g_bRecAutoTranscode      = false;
-bool         g_bRecAutoRunJob1        = false;
-bool         g_bRecAutoRunJob2        = false;
-bool         g_bRecAutoRunJob3        = false;
-bool         g_bRecAutoRunJob4        = false;
-bool         g_bRecAutoExpire         = false;
-int          g_iRecTranscoder         = 0;
+CStdString   g_szMythHostname          = DEFAULT_HOST;                     ///< The Host name or IP of the mythtv server
+int          g_iMythPort               = DEFAULT_PORT;                     ///< The mythtv Port (default is 6543)
+CStdString   g_szDBUser                = DEFAULT_DB_USER;                  ///< The mythtv sql username (default is mythtv)
+CStdString   g_szDBPassword            = DEFAULT_DB_PASSWORD;              ///< The mythtv sql password (default is mythtv)
+CStdString   g_szDBName                = DEFAULT_DB_NAME;                  ///< The mythtv sql database name (default is mythconverg)
+CStdString   g_szDBHostname            = DEFAULT_HOST;                     ///< The mythtv sql database host name or IP of the database server (default is same as mythtv backend hostname)
+int          g_iDBPort                 = DEFAULT_DB_PORT;                  ///< The mythtv sql database port (default is 3306)
+bool         g_bExtraDebug             = DEFAULT_EXTRA_DEBUG;              ///< Output extensive debug information to the log
+bool         g_bLiveTV                 = DEFAULT_LIVETV;                   ///< LiveTV support (or recordings only)
+bool         g_bLiveTVPriority         = DEFAULT_LIVETV_PRIORITY;          ///< MythTV Backend setting to allow live TV to move scheduled shows
+int          g_iLiveTVConflictStrategy = DEFAULT_LIVETV_CONFLICT_STRATEGY; ///< Conflict resolving strategy (0=
+int          g_iRecTemplateType        = DEFAULT_RECORD_TEMPLATE;          ///< Template type for new record (0=Internal, 1=MythTV)
+bool         g_bRecAutoMetadata        = true;
+bool         g_bRecAutoCommFlag        = false;
+bool         g_bRecAutoTranscode       = false;
+bool         g_bRecAutoRunJob1         = false;
+bool         g_bRecAutoRunJob2         = false;
+bool         g_bRecAutoRunJob3         = false;
+bool         g_bRecAutoRunJob4         = false;
+bool         g_bRecAutoExpire          = false;
+int          g_iRecTranscoder          = 0;
 
 ///* Client member variables */
-bool         m_recordingFirstRead;
-char         m_noSignalStreamData[6 + 0xffff];
-long         m_noSignalStreamSize     = 0;
-long         m_noSignalStreamReadPos  = 0;
-bool         m_bPlayingNoSignal       = false;
-int          m_iCurrentChannel        = 1;
 ADDON_STATUS m_CurStatus              = ADDON_STATUS_UNKNOWN;
 bool         g_bCreated               = false;
 int          g_iClientID              = -1;
@@ -218,6 +213,14 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'livetv' setting, falling back to '%b' as default", DEFAULT_LIVETV);
     g_bLiveTV = DEFAULT_LIVETV;
+  }
+
+  /* Read settings "Record livetv_conflict_method" from settings.xml */
+  if (!XBMC->GetSetting("livetv_conflict_strategy", &g_iLiveTVConflictStrategy))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'livetv_conflict_method' setting, falling back to '%i' as default", DEFAULT_RECORD_TEMPLATE);
+    g_iLiveTVConflictStrategy = DEFAULT_LIVETV_CONFLICT_STRATEGY;
   }
 
   /* Read settings "Record template" from settings.xml */

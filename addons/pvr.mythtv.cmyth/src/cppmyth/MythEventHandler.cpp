@@ -66,6 +66,8 @@ public:
 
   virtual void* Process(void);
 
+  void HandleAskRecording(const CStdString &buffer, MythProgramInfo &programInfo);
+
   void HandleUpdateSignal(const CStdString &buffer);
 
   void SetRecordingEventListener(const CStdString &recordid, const MythFile &file);
@@ -80,6 +82,8 @@ public:
   unsigned short m_port;
 
   boost::shared_ptr<MythPointerThreadSafe<cmyth_conn_t> > m_conn_t;
+
+  MythEventObserver *m_observer;
 
   MythRecorder m_recorder;
   MythSignal m_signal;
@@ -98,6 +102,7 @@ MythEventHandler::MythEventHandlerPrivate::MythEventHandlerPrivate(const CStdStr
   , m_server(server)
   , m_port(port)
   , m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>())
+  , m_observer(NULL)
   , m_recorder(MythRecorder())
   , m_signal()
   , m_playback(false)
@@ -218,6 +223,12 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
           if (g_bExtraDebug)
             XBMC->Log(LOG_NOTICE, "%s: Event DONE_RECORDING: No recorder", __FUNCTION__);
         Unlock();
+      }
+
+      else if (myth_event == CMYTH_EVENT_ASK_RECORDING)
+      {
+        MythProgramInfo prog(proginfo);
+        HandleAskRecording(databuf, prog);
       }
 
       else if (myth_event == CMYTH_EVENT_SIGNAL)
@@ -355,6 +366,44 @@ void MythEventHandler::MythEventHandlerPrivate::SetRecordingEventListener(const 
   m_currentRecordID = recordIDBuffer;
 }
 
+void MythEventHandler::MythEventHandlerPrivate::HandleAskRecording(const CStdString &databuf, MythProgramInfo &programInfo)
+{
+  // ASK_RECORDING <card id> <time until> <has rec> <has later>[]:[]<program info>
+  // Example: ASK_RECORDING 9 29 0 1[]:[]<program>
+
+  // The scheduled recording will hang in MythTV if ASK_RECORDING is just ignored.
+  // - Stop recorder (and blocked for time until seconds)
+  // - Skip the recording by sending CANCEL_NEXT_RECORDING(true)
+
+  unsigned int cardid;
+  int timeuntil, hasrec, haslater;
+  if (sscanf(databuf.c_str(), "%d %d %d %d", &cardid, &timeuntil, &hasrec, &haslater) == 4)
+    XBMC->Log(LOG_NOTICE, "%s: Event ASK_RECORDING: rec=%d timeuntil=%d hasrec=%d haslater=%d", __FUNCTION__, cardid, timeuntil, hasrec, haslater);
+  else
+    XBMC->Log(LOG_ERROR, "%s: Incorrect ASK_RECORDING event: rec=%d timeuntil=%d hasrec=%d haslater=%d", __FUNCTION__, cardid, timeuntil, hasrec, haslater);
+
+  CStdString title;
+  if (!programInfo.IsNull())
+    title = programInfo.Title();
+  XBMC->Log(LOG_NOTICE, "%s: Event ASK_RECORDING: title=%s", __FUNCTION__, title.c_str());
+
+  if (timeuntil >= 0 && !m_recorder.IsNull() && m_recorder.ID() == cardid)
+  {
+    if (g_iLiveTVConflictStrategy == LIVETV_CONFLICT_STRATEGY_CANCELREC ||
+      (g_iLiveTVConflictStrategy == LIVETV_CONFLICT_STRATEGY_HASLATER && haslater))
+    {
+      XBMC->QueueNotification(QUEUE_WARNING, XBMC->GetLocalizedString(30307), title.c_str()); // Canceling conflicting recording: %s
+      m_recorder.CancelNextRecording(true);
+    }
+    else // LIVETV_CONFLICT_STRATEGY_STOPTV
+    {
+      XBMC->QueueNotification(QUEUE_WARNING, XBMC->GetLocalizedString(30308), title.c_str()); // Stopping Live TV due to conflicting recording: %s
+      if (m_observer)
+        m_observer->CloseLiveStream();
+    }
+  }
+}
+
 void MythEventHandler::MythEventHandlerPrivate::HandleUpdateSignal(const CStdString &buffer)
 {
   // SIGNAL <card id> On known multiplex... or <tuner status list>
@@ -448,15 +497,15 @@ void MythEventHandler::MythEventHandlerPrivate::RecordingListChange()
   PVR->TriggerRecordingUpdate();
 }
 
-MythEventHandler::MythEventHandler()
-  : m_imp()
-{
-}
-
 MythEventHandler::MythEventHandler(const CStdString &server, unsigned short port)
   : m_imp(new MythEventHandlerPrivate(server, port))
 {
   m_imp->CreateThread();
+}
+
+void MythEventHandler::RegisterObserver(MythEventObserver *observer)
+{
+  m_imp->m_observer = observer;
 }
 
 void MythEventHandler::PreventLiveChainUpdate()

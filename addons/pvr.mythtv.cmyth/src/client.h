@@ -36,16 +36,21 @@ extern "C" {
 #define strdup _strdup // # strdup is POSIX, _strdup should be used instead
 #endif
 
-#define DEFAULT_HOST            "127.0.0.1"
-#define DEFAULT_EXTRA_DEBUG     false
-#define DEFAULT_LIVETV_PRIORITY false
-#define DEFAULT_LIVETV          true
-#define DEFAULT_PORT            6543
-#define DEFAULT_DB_USER         "mythtv"
-#define DEFAULT_DB_PASSWORD     "mythtv"
-#define DEFAULT_DB_NAME         "mythconverg"
-#define DEFAULT_DB_PORT         3306
-#define DEFAULT_RECORD_TEMPLATE 1
+#define LIVETV_CONFLICT_STRATEGY_HASLATER  0
+#define LIVETV_CONFLICT_STRATEGY_STOPTV    1
+#define LIVETV_CONFLICT_STRATEGY_CANCELREC 2
+
+#define DEFAULT_HOST                       "127.0.0.1"
+#define DEFAULT_EXTRA_DEBUG                false
+#define DEFAULT_LIVETV_PRIORITY            true
+#define DEFAULT_LIVETV_CONFLICT_STRATEGY   LIVETV_CONFLICT_STRATEGY_HASLATER
+#define DEFAULT_LIVETV                     true
+#define DEFAULT_PORT                       6543
+#define DEFAULT_DB_USER                    "mythtv"
+#define DEFAULT_DB_PASSWORD                "mythtv"
+#define DEFAULT_DB_NAME                    "mythconverg"
+#define DEFAULT_DB_PORT                    3306
+#define DEFAULT_RECORD_TEMPLATE            1
 
 #define SUBTITLE_SEPARATOR " - "
 
@@ -59,23 +64,24 @@ extern "C" {
 #define SAFE_DELETE(p)       do { delete (p);     (p)=NULL; } while (0)
 #define SAFE_DELETE_ARRAY(p) do { delete[] (p);   (p)=NULL; } while (0)
 
-extern bool         g_bCreated;           ///< Shows that the Create function was successfully called
-extern int          g_iClientID;          ///< The PVR client ID used by XBMC for this driver
-extern CStdString   g_szUserPath;         ///< The Path to the user directory inside user profile
-extern CStdString   g_szClientPath;       ///< The Path where this driver is located
+extern bool         g_bCreated;                ///< Shows that the Create function was successfully called
+extern int          g_iClientID;               ///< The PVR client ID used by XBMC for this driver
+extern CStdString   g_szUserPath;              ///< The Path to the user directory inside user profile
+extern CStdString   g_szClientPath;            ///< The Path where this driver is located
 
 /* Client Settings */
-extern CStdString   g_szMythHostname;     ///< The Host name or IP of the mythtv server
-extern int          g_iMythPort;          ///< The mythtv Port (default is 6543)
-extern CStdString   g_szDBUser;           ///< The mythtv sql username (default is mythtv)
-extern CStdString   g_szDBPassword;       ///< The mythtv sql password (default is mythtv)
-extern CStdString   g_szDBName;           ///< The mythtv sql database name (default is mythconverg)
-extern CStdString   g_szDBHostname;       ///< The mythtv sql database host name or IP of the database server
-extern int          g_iDBPort;            ///< The mythtv sql database port (default is 3306)
-extern bool         g_bExtraDebug;        ///< Debug logging
-extern bool         g_bLiveTV;            ///< LiveTV support (or recordings only)
-extern bool         g_bLiveTVPriority;    ///< MythTV Backend setting to allow live TV to move scheduled shows
-extern int          g_iRecTemplateType;   ///< Template type for new record (0=Internal, 1=MythTV)
+extern CStdString   g_szMythHostname;          ///< The Host name or IP of the mythtv server
+extern int          g_iMythPort;               ///< The mythtv Port (default is 6543)
+extern CStdString   g_szDBUser;                ///< The mythtv sql username (default is mythtv)
+extern CStdString   g_szDBPassword;            ///< The mythtv sql password (default is mythtv)
+extern CStdString   g_szDBName;                ///< The mythtv sql database name (default is mythconverg)
+extern CStdString   g_szDBHostname;            ///< The mythtv sql database host name or IP of the database server
+extern int          g_iDBPort;                 ///< The mythtv sql database port (default is 3306)
+extern bool         g_bExtraDebug;             ///< Debug logging
+extern bool         g_bLiveTV;                 ///< LiveTV support (or recordings only)
+extern bool         g_bLiveTVPriority;         ///< MythTV Backend setting to allow live TV to move scheduled shows
+extern int          g_iLiveTVConflictStrategy; ///< Live TV conflict resolving strategy (0=Has later, 1=Stop TV, 2=Cancel recording)
+extern int          g_iRecTemplateType;        ///< Template type for new record (0=Internal, 1=MythTV)
 ///* Internal Record template */
 extern bool         g_bRecAutoMetadata;
 extern bool         g_bRecAutoCommFlag;

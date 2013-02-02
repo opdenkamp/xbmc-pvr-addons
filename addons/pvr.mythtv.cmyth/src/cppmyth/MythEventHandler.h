@@ -38,11 +38,18 @@ class MythProgramInfo;
 
 template <class T> class MythPointer;
 
+class MythEventObserver
+{
+public:
+  // Request to stop Live TV
+  virtual void CloseLiveStream() = 0;
+};
+
 class MythEventHandler
 {
 public:
-  MythEventHandler();
   MythEventHandler(const CStdString &server, unsigned short port);
+  void RegisterObserver(MythEventObserver *observer);
 
   void PreventLiveChainUpdate();
   void AllowLiveChainUpdate();

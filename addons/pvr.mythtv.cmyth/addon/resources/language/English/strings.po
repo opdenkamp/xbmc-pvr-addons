@@ -51,7 +51,7 @@ msgid "Allow Live TV to move scheduled shows"
 msgstr ""
 
 msgctxt "#30019"
-msgid "Basic"
+msgid "General"
 msgstr ""
 
 msgctxt "#30020"
@@ -71,43 +71,43 @@ msgid "Internal template"
 msgstr ""
 
 msgctxt "#30026"
-msgid "Auto metadata lookup"
+msgid "Automatically Look Up Metadata"
 msgstr ""
 
 msgctxt "#30027"
-msgid "Auto commercial flag"
+msgid "Commercial Flag new recordings"
 msgstr ""
 
 msgctxt "#30028"
-msgid "Auto transcode"
+msgid "Transcode new recordings"
 msgstr ""
 
 msgctxt "#30029"
-msgid "Auto run job #1"
+msgid "Run User Job #1"
 msgstr ""
 
 msgctxt "#30030"
-msgid "Auto run job #2"
+msgid "Run User Job #2"
 msgstr ""
 
 msgctxt "#30031"
-msgid "Auto run job #3"
+msgid "Run User Job #3"
 msgstr ""
 
 msgctxt "#30032"
-msgid "Auto run job #4"
+msgid "Run User Job #4"
 msgstr ""
 
 msgctxt "#30033"
-msgid "Default transcoder"
+msgid "Transcoder"
 msgstr ""
 
 msgctxt "#30034"
-msgid "Auto expire"
+msgid "Allow recordings to expire?"
 msgstr ""
 
 msgctxt "#30049"
-msgid "Record template"
+msgid "Recording template"
 msgstr ""
 
 # Systeminformation labels

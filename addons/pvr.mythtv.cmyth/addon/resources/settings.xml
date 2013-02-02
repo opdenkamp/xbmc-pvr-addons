@@ -14,10 +14,10 @@
   </category>
   <category label="30049">
     <setting id="rec_template_provider" type="enum" label="30020" lvalues="30021|30022" default="1" />
-    <setting id="separator1" label="30025" type="lsep" />
+    <setting id="rec_separator1" label="30025" type="lsep" />
     <setting id="rec_autometadata" type="bool" label="30026" enable="eq(-2,0)" default="true" />
-    <setting id="rec_autocommflag" type="bool" label="30027" enable="eq(-3,0)" default="false" />
-    <setting id="rec_autoexpire" type="bool" label="30034" enable="eq(-4,0)" default="false" />
+    <setting id="rec_autocommflag" type="bool" label="30027" enable="eq(-3,0)" default="true" />
+    <setting id="rec_autoexpire" type="bool" label="30034" enable="eq(-4,0)" default="true" />
     <setting id="rec_autotranscode" type="bool" label="30028" enable="eq(-5,0)" default="false" />
     <setting id="rec_transcoder" type="number" label="30033" enable="eq(-6,0)" default="0" />
     <setting id="rec_autorunjob1" type="bool" label="30029" enable="eq(-7,0)" default="false" />

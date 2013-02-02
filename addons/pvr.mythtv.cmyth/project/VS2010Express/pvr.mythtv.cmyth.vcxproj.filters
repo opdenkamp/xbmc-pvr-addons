@@ -90,13 +90,28 @@
     <Filter Include="addon">
       <UniqueIdentifier>{a9c2652d-c1dd-4836-a42d-bc5e6db7b5a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="addon\resources">
+      <UniqueIdentifier>{e4b481fe-5c99-4cea-a4f4-5301e96a480a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addon\resources\language">
+      <UniqueIdentifier>{f0aada70-0bcb-4b23-b953-1ca297413a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addon\resources\language\English">
+      <UniqueIdentifier>{3ba85d2f-45bc-4080-8895-55949f7f52a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\addon\addon.xml">
-      <Filter>addon</Filter>
-    </None>
     <None Include="..\..\addon\changelog.txt">
       <Filter>addon</Filter>
+    </None>
+    <None Include="..\..\addon\addon.xml.in">
+      <Filter>addon</Filter>
+    </None>
+    <None Include="..\..\addon\resources\settings.xml">
+      <Filter>addon\resources</Filter>
+    </None>
+    <None Include="..\..\addon\resources\language\English\strings.po">
+      <Filter>addon\resources\language\English</Filter>
     </None>
   </ItemGroup>
 </Project>

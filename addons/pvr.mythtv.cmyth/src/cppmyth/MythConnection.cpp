@@ -24,7 +24,7 @@
 #include "MythStorageGroupFile.h"
 #include "MythProgramInfo.h"
 #include "MythEventHandler.h"
-#include "MythTimer.h"
+#include "MythRecordingRule.h"
 #include "MythPointer.h"
 #include "../client.h"
 
@@ -102,16 +102,16 @@ bool MythConnection::IsNull() const
 void MythConnection::Lock()
 {
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "Lock %i", m_conn_t.get());
+    XBMC->Log(LOG_DEBUG, "Lock %u", m_conn_t.get());
   m_conn_t->Lock();
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "Lock acquired %i", m_conn_t.get());
+    XBMC->Log(LOG_DEBUG, "Lock acquired %u", m_conn_t.get());
 }
 
 void MythConnection::Unlock()
 {
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "Unlock %i", m_conn_t.get());
+    XBMC->Log(LOG_DEBUG, "Unlock %u", m_conn_t.get());
   m_conn_t->Unlock();
 }
 
@@ -121,7 +121,7 @@ bool MythConnection::IsConnected()
   bool connected = *m_conn_t != 0 && !cmyth_conn_hung(*m_conn_t);
   Unlock();
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s - %i", __FUNCTION__, connected);
+    XBMC->Log(LOG_DEBUG, "%s - %s", __FUNCTION__, (connected ? "true" : "false"));
   return connected;
 }
 
@@ -169,11 +169,11 @@ int MythConnection::GetProtocolVersion()
 bool MythConnection::GetDriveSpace(long long &total, long long &used)
 {
   int retval = 0;
-  CMYTH_CONN_CALL(retval, retval != 0, cmyth_conn_get_freespace(*m_conn_t, &total, &used));
-  return retval == 0;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_conn_get_freespace(*m_conn_t, (int64_t*)&total, (int64_t*)&used));
+  return retval >= 0;
 }
 
-CStdString MythConnection::GetSetting(const CStdString &hostname, const CStdString &setting)
+CStdString MythConnection::GetSettingOnHost(const CStdString &setting, const CStdString &hostname)
 {
   char *value = NULL;
   CMYTH_CONN_CALL_REF(value, value == NULL, cmyth_conn_get_setting(*m_conn_t, const_cast<char*>(hostname.c_str()), const_cast<char*>(setting.c_str())));
@@ -208,8 +208,8 @@ MythRecorder MythConnection::GetRecorder(int n)
 bool  MythConnection::DeleteRecording(MythProgramInfo &recording)
 {
   int retval = 0;
-  CMYTH_CONN_CALL(retval, retval != 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t));
-  return retval == 0;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t));
+  return retval >= 0;
 }
 
 ProgramInfoMap MythConnection::GetRecordedPrograms()
@@ -225,12 +225,42 @@ ProgramInfoMap MythConnection::GetRecordedPrograms()
     cmyth_proginfo_t cmprog = cmyth_proglist_get_item(proglist, i);
     MythProgramInfo prog = cmyth_proginfo_get_detail(*m_conn_t, cmprog);
     if (!prog.IsNull()) {
-      retval.insert(std::pair<CStdString, MythProgramInfo>(prog.StrUID().c_str(), prog));
+      retval.insert(std::pair<CStdString, MythProgramInfo>(prog.UID().c_str(), prog));
     }
   }
   ref_release(proglist);
 
   Unlock();
+
+  return retval;
+}
+
+MythProgramInfo MythConnection::GetRecordedProgram(const CStdString &basename)
+{
+  MythProgramInfo retval;
+  cmyth_proginfo_t prog = NULL;
+  if (!basename.IsEmpty())
+  {
+    CMYTH_CONN_CALL_REF(prog, prog == NULL, cmyth_proginfo_get_from_basename(*m_conn_t, const_cast<char*>(basename.c_str())));
+    if (prog) {
+      retval = MythProgramInfo(prog);
+    }
+  }
+
+  return retval;
+}
+
+MythProgramInfo MythConnection::GetRecordedProgram(int chanid, time_t recstartts)
+{
+  MythProgramInfo retval;
+  cmyth_proginfo_t prog = NULL;
+  if (chanid > 0 && recstartts > 0)
+  {
+    CMYTH_CONN_CALL_REF(prog, prog == NULL, cmyth_proginfo_get_from_timeslot(*m_conn_t, chanid, recstartts));
+    if (prog) {
+      retval = MythProgramInfo(prog);
+    }
+  }
 
   return retval;
 }
@@ -247,7 +277,7 @@ ProgramInfoMap MythConnection::GetPendingPrograms()
   {
     MythProgramInfo prog = cmyth_proglist_get_item(proglist, i);
     if (!prog.IsNull()) {
-      retval.insert(std::pair<CStdString, MythProgramInfo>(prog.StrUID().c_str(), prog));
+      retval.insert(std::pair<CStdString, MythProgramInfo>(prog.UID().c_str(), prog));
     }
   }
   ref_release(proglist);
@@ -270,7 +300,7 @@ ProgramInfoMap MythConnection::GetScheduledPrograms()
     cmyth_proginfo_t cmprog = cmyth_proglist_get_item(proglist, i);
     MythProgramInfo prog = cmyth_proginfo_get_detail(*m_conn_t, cmprog);
     if (!prog.IsNull()) {
-      retval.insert(std::pair<CStdString, MythProgramInfo>(prog.StrUID().c_str(), prog));
+      retval.insert(std::pair<CStdString, MythProgramInfo>(prog.UID().c_str(), prog));
     }
   }
   ref_release(proglist);
@@ -287,40 +317,18 @@ bool MythConnection::UpdateSchedules(int id)
   return retval >= 0;
 }
 
-void MythConnection::DefaultTimer(MythTimer &timer)
+bool MythConnection::StopRecording(const MythProgramInfo &recording)
 {
-  timer.SetAutoTranscode(atoi(GetSetting("NULL", "AutoTranscode").c_str()) > 0);
-  timer.SetUserJob(1, atoi(GetSetting("NULL", "AutoRunUserJob1").c_str()) > 0);
-  timer.SetUserJob(2, atoi(GetSetting("NULL", "AutoRunUserJob2").c_str()) > 0);
-  timer.SetUserJob(3, atoi(GetSetting("NULL", "AutoRunUserJob3").c_str()) > 0);
-  timer.SetUserJob(4, atoi(GetSetting("NULL", "AutoRunUserJob4").c_str()) > 0);
-  timer.SetAutoCommFlag(atoi(GetSetting("NULL", "AutoCommercialFlag").c_str()) > 0);
-  timer.SetAutoExpire(atoi(GetSetting("NULL", "AutoExpireDefault").c_str()) > 0);
-  timer.SetTranscoder(atoi(GetSetting("NULL", "DefaultTranscoder").c_str()));
-  timer.SetStartOffset(atoi(GetSetting("NULL", "DefaultStartOffset").c_str()));
-  timer.SetStartOffset(atoi(GetSetting("NULL", "DefaultEndOffset").c_str()));
+  int retval;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_stop_recording(*m_conn_t, *recording.m_proginfo_t));
+  return (retval >= 0);
 }
 
-StorageGroupFileList MythConnection::GetStorageGroupFileList(const CStdString &storageGroup)
+MythStorageGroupFile MythConnection::GetStorageGroupFile(const CStdString &storageGroup, const CStdString &filename)
 {
-  cmyth_storagegroup_filelist_t filelist = NULL;
-  CMYTH_CONN_CALL_REF(filelist, filelist == NULL, cmyth_storagegroup_get_filelist(*m_conn_t, const_cast<char*>(storageGroup.c_str()), const_cast<char*>(GetBackendHostname().c_str())));
-
-  Lock();
-
-  int len = cmyth_storagegroup_filelist_count(filelist);
-  StorageGroupFileList retval;
-  retval.reserve(len);
-  for (int i = 0; i < len; i++)
-  {
-    cmyth_storagegroup_file_t file = cmyth_storagegroup_filelist_get_item(filelist, i);
-    retval.push_back(MythStorageGroupFile(file));
-  }
-  ref_release(filelist);
-
-  Unlock();
-
-  return retval;
+  cmyth_storagegroup_file_t file = NULL;
+  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_storagegroup_get_fileinfo(*m_conn_t, const_cast<char*>(storageGroup.c_str()), const_cast<char*>(GetBackendHostname().c_str()), const_cast<char*>(filename.c_str())));
+  return MythStorageGroupFile(file);
 }
 
 MythFile MythConnection::ConnectFile(MythProgramInfo &recording)

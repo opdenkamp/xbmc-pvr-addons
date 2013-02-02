@@ -51,11 +51,11 @@ unsigned long long MythFile::Length()
 void MythFile::UpdateLength(unsigned long long length)
 {
   int retval = 0;
-  retval = cmyth_update_file_length(*m_file_t, length);
+  retval = cmyth_file_update_length(*m_file_t, length);
   (void)retval;
 }
 
-int MythFile::Read(void *buffer, unsigned long length)
+int MythFile::Read(void *buffer, unsigned int length)
 {
   int bytesRead;
   bytesRead = cmyth_file_read(*m_file_t, static_cast< char * >(buffer), length);

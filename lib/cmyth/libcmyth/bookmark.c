@@ -25,14 +25,13 @@
 #include <cmyth_local.h>
 
 
-long long cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
+int64_t cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
 {
 	char *buf;
-	unsigned int len = CMYTH_TIMESTAMP_LEN + CMYTH_LONGLONG_LEN + 18;
+	unsigned int len = CMYTH_TIMESTAMP_LEN + CMYTH_INT64_LEN + 18;
 	int err;
-	long long ret;
+	int64_t ret;
 	int count;
-	int64_t ll;
 	int r;
 	char start_ts_dt[CMYTH_TIMESTAMP_LEN + 1];
 	cmyth_datetime_to_string(start_ts_dt, prog->proginfo_rec_start_ts);
@@ -40,7 +39,7 @@ long long cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
 	if (!buf) {
 		return -ENOMEM;
 	}
-	sprintf(buf,"%s %ld %s","QUERY_BOOKMARK",prog->proginfo_chanId,
+	sprintf(buf,"%s %"PRIu32" %s","QUERY_BOOKMARK",prog->proginfo_chanId,
 		start_ts_dt);
 	pthread_mutex_lock(&mutex);
 	if ((err = cmyth_send_message(conn,buf)) < 0) {
@@ -58,7 +57,7 @@ long long cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
 		ret = count;
 		goto out;
 	}
-	if ((r=cmyth_rcv_int64(conn, &err, &ll, count)) < 0) {
+	if ((r=cmyth_rcv_int64(conn, &err, &ret, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			"%s: cmyth_rcv_int64() failed (%d)\n",
 			__FUNCTION__, r);
@@ -66,16 +65,15 @@ long long cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
 		goto out;
 	}
 
-	ret = ll;
    out:
 	pthread_mutex_unlock(&mutex);
 	return ret;
 }
-	
-int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookmark)
+
+int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, int64_t bookmark)
 {
 	char *buf;
-	unsigned int len = CMYTH_TIMESTAMP_LEN + CMYTH_LONGLONG_LEN * 2 + 18 + 2;
+	unsigned int len = CMYTH_TIMESTAMP_LEN + CMYTH_INT64_LEN * 2 + 18 + 2;
 	int ret;
 	char start_ts_dt[CMYTH_TIMESTAMP_LEN + 1];
 	cmyth_datetime_to_string(start_ts_dt, prog->proginfo_rec_start_ts);
@@ -89,11 +87,11 @@ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookm
 		 * hi and lo integers. Nevertheless the backend (at least up to 0.25) checks
 		 * the existence of the 4th parameter, so adding a 0.
 		 */
-		sprintf(buf, "SET_BOOKMARK %ld %s %"PRIu64" 0", prog->proginfo_chanId,
-				start_ts_dt, (int64_t)bookmark);
+		sprintf(buf, "SET_BOOKMARK %"PRIu32" %s %"PRId64" 0", prog->proginfo_chanId,
+				start_ts_dt, bookmark);
 	}
 	else {
-		sprintf(buf, "SET_BOOKMARK %ld %s %d %d", prog->proginfo_chanId,
+		sprintf(buf, "SET_BOOKMARK %"PRIu32" %s %"PRId32" %"PRId32, prog->proginfo_chanId,
 				start_ts_dt, (int32_t)(bookmark >> 32), (int32_t)(bookmark & 0xffffffff));
 	}
 	pthread_mutex_lock(&mutex);

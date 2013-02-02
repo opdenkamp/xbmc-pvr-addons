@@ -24,7 +24,16 @@
 #include <cmyth_local.h>
 
 cmyth_event_t
-cmyth_event_get(cmyth_conn_t conn, char * data, int len)
+cmyth_event_get(cmyth_conn_t conn, char * data, int32_t len)
+{
+	cmyth_proginfo_t proginfo = NULL;
+	cmyth_event_t event = cmyth_event_get_message(conn, data, len, &proginfo);
+	ref_release(proginfo);
+	return event;
+}
+
+cmyth_event_t
+cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_proginfo_t * prog)
 {
 	int count, err, consumed, i;
 	char tmp[1024];
@@ -68,9 +77,8 @@ cmyth_event_get(cmyth_conn_t conn, char * data, int len)
 			goto fail;
 		}
 		consumed = cmyth_rcv_proginfo(conn, &err, proginfo, count);
-		ref_release(proginfo);
-		proginfo = NULL;
 		count -= consumed;
+		*prog = proginfo;
 	} else if (strncmp(tmp, "RECORDING_LIST_CHANGE DELETE", 28) == 0) {
 		event = CMYTH_EVENT_RECORDING_LIST_CHANGE_DELETE;
 		strncpy(data, tmp + 29, len);
@@ -88,8 +96,8 @@ cmyth_event_get(cmyth_conn_t conn, char * data, int len)
 	} else if (strncmp(tmp, "LIVETV_CHAIN UPDATE", 19) == 0) {
 		event = CMYTH_EVENT_LIVETV_CHAIN_UPDATE;
 		strncpy(data, tmp + 20, len);
-	} else if (strncmp(tmp, "SIGNAL", 6) == 0) { 
-		int dstlen = len;
+	} else if (strncmp(tmp, "SIGNAL", 6) == 0) {
+		int32_t dstlen = len;
 		event = CMYTH_EVENT_SIGNAL;
 
 		/*Get Recorder ID */
@@ -99,15 +107,15 @@ cmyth_event_get(cmyth_conn_t conn, char * data, int len)
 
 		/* get slock, signal, seen_pat, matching_pat */
 		while (count > 0) {
-			/* get signalmonitorvalue name */ 
-			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count); 
-			count -= consumed; 
+			/* get signalmonitorvalue name */
+			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
+			count -= consumed;
 			/*strncat(data,tmp,dstlen-2);
 			strncat(data,"=",2);
 			dstlen -= consumed;*/
-			/* get signalmonitorvalue status */ 
-			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count); 
-			count -= consumed; 
+			/* get signalmonitorvalue status */
+			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
+			count -= consumed;
 			strncat(data,tmp,dstlen-2);
 			strncat(data,";",2);
 			dstlen -= consumed;
@@ -197,4 +205,3 @@ cmyth_event_select(cmyth_conn_t conn, struct timeval *timeout)
 
 	return ret;
 }
-

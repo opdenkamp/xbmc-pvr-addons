@@ -100,7 +100,7 @@ cmyth_input_create(void)
 cmyth_inputlist_t
 cmyth_get_free_inputlist(cmyth_recorder_t rec)
 {
-	unsigned int len = CMYTH_LONGLONG_LEN + 36;
+	unsigned int len = CMYTH_INT64_LEN + 36;
 	int err;
 	int count;
 	char *buf;
@@ -113,7 +113,7 @@ cmyth_get_free_inputlist(cmyth_recorder_t rec)
 		return inputlist;
 	}
 
-	sprintf(buf,"QUERY_RECORDER %d[]:[]GET_FREE_INPUTS", rec->rec_id);
+	sprintf(buf,"QUERY_RECORDER %"PRIu32"[]:[]GET_FREE_INPUTS", rec->rec_id);
 	pthread_mutex_lock(&mutex);
 	if ((err = cmyth_send_message(rec->rec_conn, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -148,13 +148,8 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 	int consumed;
 	int total = 0;
 	char *failed = NULL;
-	cmyth_input_t input;
-	char inputname[100];
-	unsigned long sourceid;
-	unsigned long inputid;
-	unsigned long cardid;
-	unsigned long multiplexid;
-	unsigned long livetvorder;
+	cmyth_input_t input = NULL;
+	char tmp_str[255];
 
 	if (count <= 0) {
 		*err = EINVAL;
@@ -162,64 +157,57 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 	}
 
 	while (count) {
-		consumed = cmyth_rcv_string(conn, err, inputname, sizeof(inputname)-1, count);
-		inputname[sizeof(inputname)-1] = 0;
+		input = cmyth_input_create();
+		consumed = cmyth_rcv_string(conn, err, tmp_str, sizeof(tmp_str), count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_string";
+			failed = "cmyth_rcv_string() inputname";
+			goto fail;
+		}
+		input->inputname = ref_strdup(tmp_str);
+
+		consumed = cmyth_rcv_uint32(conn, err, &input->sourceid, count);
+		count -= consumed;
+		total += consumed;
+		if (*err) {
+			failed = "cmyth_rcv_ulong() sourceid";
 			goto fail;
 		}
 
-		consumed = cmyth_rcv_ulong(conn, err, &sourceid, count);
+		consumed = cmyth_rcv_uint32(conn, err, &input->inputid, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_ulong";
+			failed = "cmyth_rcv_ulong() inputid";
 			goto fail;
 		}
 
-		consumed = cmyth_rcv_ulong(conn, err, &inputid, count);
+		consumed = cmyth_rcv_uint32(conn, err, &input->cardid, count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_ulong";
+			failed = "cmyth_rcv_ulong() cardid";
 			goto fail;
 		}
 
-		consumed = cmyth_rcv_ulong(conn, err, &cardid, count);
+		consumed = cmyth_rcv_uint32(conn, err, &input->multiplexid , count);
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_ulong";
-			goto fail;
-		}
-
-		consumed = cmyth_rcv_ulong(conn, err, &multiplexid, count);
-		count -= consumed;
-		total += consumed;
-		if (*err) {
-			failed = "cmyth_rcv_ulong";
+			failed = "cmyth_rcv_ulong() multiplexid";
 			goto fail;
 		}
 
 		if (conn->conn_version >= 71) {
-			consumed = cmyth_rcv_ulong(conn, err, &livetvorder, count);
+			consumed = cmyth_rcv_uint32(conn, err, &input->livetvorder, count);
 			count -= consumed;
 			total += consumed;
 			if (*err) {
-				failed = "cmyth_rcv_ulong";
+				failed = "cmyth_rcv_ulong() livetvorder";
 				goto fail;
 			}
 		}
-
-		input = cmyth_input_create();
-		input->inputname = ref_strdup(inputname);
-		input->sourceid = sourceid;
-		input->inputid = inputid;
-		input->cardid = cardid;
-		input->multiplexid = multiplexid;
-		input->livetvorder = livetvorder;
 
 		inputlist->input_list = realloc(inputlist->input_list,
 					(++inputlist->input_count) * sizeof(cmyth_input_t));
@@ -229,7 +217,8 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 	return total;
 
 	fail:
-	cmyth_dbg(CMYTH_DBG_ERROR, "%s: %s() failed (%d)\n",
+	ref_release(input);
+	cmyth_dbg(CMYTH_DBG_ERROR, "%s: %s failed (%d)\n",
 		__FUNCTION__, failed, *err);
 	return total;
 }

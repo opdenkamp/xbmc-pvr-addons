@@ -122,14 +122,15 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 		}
 	} else if (strncmp(tmp, "ASK_RECORDING", 13) == 0) {
 		event = CMYTH_EVENT_ASK_RECORDING;
+		strncpy(data, tmp + 14, len);
 		if (cmyth_conn_get_protocol_version(conn) < 37) {
 			/* receive 4 string - do nothing with them */
+			/* title, chanstr, chansign, channame */
 			for (i = 0; i < 4; i++) {
 				consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) -1, count);
 				count -= consumed;
 			}
 		} else {
-			/* receive a proginfo structure - do nothing with it (yet?)*/
 			proginfo = cmyth_proginfo_create();
 			if (!proginfo) {
 				cmyth_dbg(CMYTH_DBG_ERROR,
@@ -138,9 +139,8 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 				goto fail;
 			}
 			consumed = cmyth_rcv_proginfo(conn, &err, proginfo, count);
-			ref_release(proginfo);
-			proginfo = NULL;
 			count -= consumed;
+			*prog = proginfo;
 		}
 	} else if (strncmp(tmp, "CLEAR_SETTINGS_CACHE", 20) == 0) {
 		event = CMYTH_EVENT_CLEAR_SETTINGS_CACHE;

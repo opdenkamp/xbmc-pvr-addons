@@ -32,7 +32,7 @@
 
 /*
  * cmyth_timestamp_create(void)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -66,7 +66,7 @@ cmyth_timestamp_create(void)
 
 /*
  * cmyth_timestamp_from_string(char *str)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -83,22 +83,31 @@ cmyth_timestamp_create(void)
  * Failure: NULL
  */
 cmyth_timestamp_t
-cmyth_timestamp_from_string(char *str)
+cmyth_timestamp_from_string(const char *str)
 {
 	cmyth_timestamp_t ret;
 	unsigned int i;
 	int datetime = 1;
-	char *yyyy = &str[0];
-	char *MM = &str[5];
-	char *dd = &str[8];
-	char *hh = &str[11];
-	char *mm = &str[14];
-	char *ss = &str[17];
-	
+	char *yyyy;
+	char *MM;
+	char *dd;
+	char *hh;
+	char *mm;
+	char *ss;
+	char buf[CMYTH_TIMESTAMP_LEN + 1];
+
 	if (!str) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL string\n", __FUNCTION__);
 		return NULL;
 	}
+
+	strncpy(buf, str, sizeof(buf));
+	yyyy = buf;
+	MM = buf + 5;
+	dd = buf + 8;
+	hh = buf + 11;
+	mm = buf + 14;
+	ss = buf + 17;
 
 	ret = cmyth_timestamp_create();
 	if (!ret) {
@@ -106,44 +115,44 @@ cmyth_timestamp_from_string(char *str)
 			  __FUNCTION__);
 		return NULL;
 	}
-	if (strlen(str) != CMYTH_TIMESTAMP_LEN) {
+	if (strlen(buf) != CMYTH_TIMESTAMP_LEN) {
 		datetime = 0;
-		if (strlen(str) != CMYTH_DATESTAMP_LEN) {
+		if (strlen(buf) != CMYTH_DATESTAMP_LEN) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: string is not a timestamp '%s'\n",
-				  __FUNCTION__, str);
+				  __FUNCTION__, buf);
 			goto err;
 		}
 	}
 
 	if ((datetime == 1) &&
-	    ((str[4] != '-') || (str[7] != '-') || (str[10] != 'T') ||
-	     (str[13] != ':') || (str[16] != ':'))) {
+	    ((buf[4] != '-') || (buf[7] != '-') || (buf[10] != 'T') ||
+	     (buf[13] != ':') || (buf[16] != ':'))) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: string is badly formed '%s'\n",
-			  __FUNCTION__, str);
+			  __FUNCTION__, buf);
 		goto err;
 	}
 	if ((datetime == 0) &&
-	    ((str[4] != '-') || (str[7] != '-'))) {
+	    ((buf[4] != '-') || (buf[7] != '-'))) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: string is badly formed '%s'\n",
-			  __FUNCTION__, str);
+			  __FUNCTION__, buf);
 		goto err;
 	}
 
-	str[4] = '\0';
-	str[7] = '\0';
+	buf[4] = '\0';
+	buf[7] = '\0';
 	if (datetime) {
-		str[10] = '\0';
-		str[13] = '\0';
-		str[16] = '\0';
+		buf[10] = '\0';
+		buf[13] = '\0';
+		buf[16] = '\0';
 	}
 	for (i = 0;
 	     i < (datetime ? CMYTH_TIMESTAMP_LEN : CMYTH_DATESTAMP_LEN);
 	     ++i) {
-		if (str[i] && !isdigit(str[i])) {
+		if (buf[i] && !isdigit(buf[i])) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: expected numeral at '%s'[%d]\n",
-				  __FUNCTION__, str, i);
+				  __FUNCTION__, buf, i);
 			goto err;
 		}
 	}
@@ -151,13 +160,13 @@ cmyth_timestamp_from_string(char *str)
 	ret->timestamp_month = atoi(MM);
 	if (ret->timestamp_month > 12) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: month value too big'%s'\n",
-			  __FUNCTION__, str);
+			  __FUNCTION__, buf);
 		goto err;
 	}
 	ret->timestamp_day = atoi(dd);
 	if (ret->timestamp_day > 31) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: day value too big'%s'\n",
-			  __FUNCTION__, str);
+			  __FUNCTION__, buf);
 		goto err;
 	}
 
@@ -167,19 +176,19 @@ cmyth_timestamp_from_string(char *str)
 	ret->timestamp_hour = atoi(hh);
 	if (ret->timestamp_hour > 23) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: hour value too big'%s'\n",
-			  __FUNCTION__, str);
+			  __FUNCTION__, buf);
 		goto err;
 	}
 	ret->timestamp_minute = atoi(mm);
 	if (ret->timestamp_minute > 59) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: minute value too big'%s'\n",
-			  __FUNCTION__, str);
+			  __FUNCTION__, buf);
 		goto err;
 	}
 	ret->timestamp_second = atoi(ss);
 	if (ret->timestamp_second > 59) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: second value too big'%s'\n",
-			  __FUNCTION__, str);
+			  __FUNCTION__, buf);
 		goto err;
 	}
 	return ret;
@@ -212,7 +221,7 @@ cmyth_timestamp_from_tm(struct tm * tm_datetime)
 
 /*
  * cmyth_timestamp_from_unixtime(time_t l)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -236,14 +245,14 @@ cmyth_timestamp_from_unixtime(time_t l)
 
 /*
  * cmyth_timestamp_to_longlong( cmyth_timestamp_t ts)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
  *
  * Create a time_t value from the timestamp structure 'ts' and
  * return the result.
- * 
+ *
  *
  * Return Value:
  *
@@ -267,7 +276,7 @@ cmyth_timestamp_to_unixtime(cmyth_timestamp_t ts)
 
 /*
  * cmyth_timestamp_to_string(char *str, cmyth_timestamp_t ts)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -275,7 +284,7 @@ cmyth_timestamp_to_unixtime(cmyth_timestamp_t ts)
  * Create a string from the timestamp structure 'ts' and put it in the
  * user supplied buffer 'str'.  The size of 'str' must be
  * CMYTH_TIMESTAMP_LEN + 1 or this will overwrite beyond 'str'.
- * 
+ *
  *
  * Return Value:
  *
@@ -309,7 +318,7 @@ cmyth_timestamp_to_string(char *str, cmyth_timestamp_t ts)
 
 /*
  * cmyth_timestamp_to_isostring(char *str, cmyth_timestamp_t ts)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -317,7 +326,7 @@ cmyth_timestamp_to_string(char *str, cmyth_timestamp_t ts)
  * Create a string from the timestamp structure 'ts' and put it in the
  * user supplied buffer 'str'.  The size of 'str' must be
  * CMYTH_TIMESTAMP_LEN + 1 or this will overwrite beyond 'str'.
- * 
+ *
  *
  * Return Value:
  *
@@ -398,7 +407,7 @@ cmyth_timestamp_to_display_string(char *str, cmyth_timestamp_t ts,
 
 /*
  * cmyth_datetime_to_string(char *str, cmyth_timestamp_t ts)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -406,7 +415,7 @@ cmyth_timestamp_to_display_string(char *str, cmyth_timestamp_t ts,
  * Create a string from the timestamp structure 'ts' and put it in the
  * user supplied buffer 'str'.  The size of 'str' must be
  * CMYTH_DATETIME_LEN + 1 or this will overwrite beyond 'str'.
- * 
+ *
  *
  * Return Value:
  *
@@ -450,14 +459,14 @@ cmyth_datetime_to_string(char *str, cmyth_timestamp_t ts)
 
 /*
  * cmyth_timestamp_compare(cmyth_timestamp_t ts1, cmyth_timestamp_t ts2)
- * 
+ *
  * Scope: PUBLIC
  *
  * Description
  *
  * Compare ts1 to ts2 and indicate whether ts1 is less than, equal to
  * or greater than ts1.
- * 
+ *
  *
  * Return Value:
  *
@@ -495,7 +504,7 @@ cmyth_timestamp_compare(cmyth_timestamp_t ts1, cmyth_timestamp_t ts2)
 		return (ts1->timestamp_hour > ts2->timestamp_hour) ? 1 : -1;
 	}
 	if (ts1->timestamp_minute != ts2->timestamp_minute) {
-		return (ts1->timestamp_minute > ts2->timestamp_minute) 
+		return (ts1->timestamp_minute > ts2->timestamp_minute)
 			? 1
 			: -1;
 	}

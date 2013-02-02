@@ -28,8 +28,8 @@
 #include <cmyth_local.h>
 
 /*
- * cmyth_keyframe_create(void)
- * 
+ * cmyth_keyframe_create()
+ *
  * Scope: PUBLIC
  *
  * Description
@@ -59,40 +59,8 @@ cmyth_keyframe_create(void)
 }
 
 /*
- * cmyth_keyframe_fill(cmyth_keyframe_t kf,
- * 	               unsigned long keynum,
- *                     unsigned long long pos)
- * 
- * Scope: PUBLIC
+ * cmyth_keyframe_string()
  *
- * Description
- *
- * Fill out the contents of the recorder number structure 'rn' using
- * the values 'keynum' and 'pos'.
- *
- * Return Value:
- *
- * Success: 0
- *
- * Failure: -(ERRNO)
- */
-cmyth_keyframe_t
-cmyth_keyframe_fill(unsigned long keynum, unsigned long long pos)
-{
-	cmyth_keyframe_t ret = cmyth_keyframe_create();
-
-	if (!ret) {
-		return NULL;
-	}
-
-	ret->keyframe_number = keynum;
-	ret->keyframe_pos = pos;
-	return ret;
-}
-
-/*
- * cmyth_keyframe_string(cmyth_keyframe_t kf)
- * 
  * Scope: PUBLIC
  *
  * Description
@@ -117,9 +85,9 @@ cmyth_keyframe_string(cmyth_keyframe_t kf)
 	if (!kf) {
 		return NULL;
 	}
-	sprintf(pos, "%lld", (long long)kf->keyframe_pos);
+	sprintf(pos, "%"PRId64, kf->keyframe_pos);
 	len += strlen(pos);
-	sprintf(key, "%ld", kf->keyframe_number);
+	sprintf(key, "%"PRIu32, kf->keyframe_number);
 	len += strlen(key);
 	ret = malloc(len * sizeof(char));
 	if (!ret) {

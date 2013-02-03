@@ -22,31 +22,24 @@
  *
  */
 
-#ifndef VNSI_BITSTREAM_H
-#define VNSI_BITSTREAM_H
+#ifndef VNSI_DEMUXER_TELETEXT_H
+#define VNSI_DEMUXER_TELETEXT_H
 
-class cBitstream
+#include "parser.h"
+
+// --- cParserTeletext -------------------------------------------------
+
+class cParserTeletext : public cParser
 {
 private:
-  uint8_t *m_data;
-  int      m_offset;
-  int      m_len;
-  bool     m_error;
+  int64_t     m_lastDTS;
+  int64_t     m_lastPTS;
 
 public:
-  cBitstream(uint8_t *data, int bits);
+  cParserTeletext(int pID, cTSStream *stream);
+  virtual ~cParserTeletext();
 
-  void         setBitstream(uint8_t *data, int bits);
-  void         skipBits(int num);
-  unsigned int readBits(int num);
-  unsigned int showBits(int num);
-  unsigned int readBits1() { return readBits(1); }
-  unsigned int readGolombUE(int maxbits = 32);
-  signed int   readGolombSE();
-  unsigned int remainingBits();
-  void         putBits(int val, int num);
-  int          length() { return m_len; }
-  bool         isError() { return m_error; }
+  virtual void Parse(sStreamPacket *pkt);
 };
 
-#endif // VNSI_BITSTREAM_H
+#endif // VNSI_DEMUXER_TELETEXT_H

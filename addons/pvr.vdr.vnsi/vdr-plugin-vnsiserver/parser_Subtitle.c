@@ -26,20 +26,41 @@
 #include <assert.h>
 #include "config.h"
 
-#include "demuxer_DTS.h"
-#include "bitstream.h"
+#include "parser_Subtitle.h"
 
-cParserDTS::cParserDTS(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID)
- : cParser(streamer, pID)
+cParserSubtitle::cParserSubtitle(int pID, cTSStream *stream)
+ : cParser(pID, stream)
 {
-  m_demuxer                   = demuxer;
+  m_PesBufferInitialSize = 4000;
 }
 
-cParserDTS::~cParserDTS()
+cParserSubtitle::~cParserSubtitle()
 {
+
 }
 
-void cParserDTS::Parse(unsigned char *data, int size, bool pusi)
+void cParserSubtitle::Parse(sStreamPacket *pkt)
 {
+  int l = m_PesBufferPtr;
 
+  if (l >= m_PesPacketLength)
+  {
+    if (l < 2 || m_PesBuffer[0] != 0x20 || m_PesBuffer[1] != 0x00)
+    {
+      Reset();
+      return;
+    }
+
+    if(m_PesBuffer[m_PesPacketLength-1] == 0xff)
+    {
+      pkt->id       = m_pID;
+      pkt->data     = m_PesBuffer+2;
+      pkt->size     = m_PesPacketLength-2;
+      pkt->duration = 0;
+      pkt->dts      = m_curDTS;
+      pkt->pts      = m_curPTS;
+    }
+
+    m_PesBufferPtr = 0;
+  }
 }

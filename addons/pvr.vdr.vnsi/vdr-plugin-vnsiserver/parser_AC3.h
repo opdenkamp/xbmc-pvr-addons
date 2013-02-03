@@ -22,24 +22,33 @@
  *
  */
 
-#ifndef VNSI_DEMUXER_DTS_H
-#define VNSI_DEMUXER_DTS_H
+#ifndef VNSI_DEMUXER_AC3_H
+#define VNSI_DEMUXER_AC3_H
 
-#include "demuxer.h"
+#include "parser.h"
 
-// --- cParserDTS -------------------------------------------------
+// --- cParserAC3 -------------------------------------------------
 
-class cParserDTS : public cParser
+class cParserAC3 : public cParser
 {
 private:
-  cTSDemuxer *m_demuxer;
+  int         m_SampleRate;
+  int         m_Channels;
+  int         m_BitRate;
+  int         m_FrameSize;
+
+  int64_t     m_PTS;                /* pts of the current frame */
+  int64_t     m_DTS;                /* dts of the current frame */
+
+  int FindHeaders(uint8_t *buf, int buf_size);
 
 public:
-  cParserDTS(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
-  virtual ~cParserDTS();
+  cParserAC3(int pID, cTSStream *stream);
+  virtual ~cParserAC3();
 
-  virtual void Parse(unsigned char *data, int size, bool pusi);
+  virtual void Parse(sStreamPacket *pkt);
+  virtual void Reset();
 };
 
 
-#endif // VNSI_DEMUXER_DTS_H
+#endif // VNSI_DEMUXER_AC3_H

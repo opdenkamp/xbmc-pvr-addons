@@ -187,6 +187,9 @@ void cVNSIServer::Action(void)
   int timerState = -1;
   Timers.Modified(timerState);
 
+  // last update of epg
+  time_t epgUpdate = cSchedules::Modified();
+
   while (Running())
   {
     FD_ZERO(&fds);
@@ -253,6 +256,16 @@ void cVNSIServer::Action(void)
         {
          (*i)->TimerChange();
         }
+      }
+
+      // update epg
+      if((cSchedules::Modified() > epgUpdate + 10) || time(NULL) > epgUpdate + 300)
+      {
+        for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
+        {
+         (*i)->EpgChange();
+        }
+        epgUpdate = cSchedules::Modified();
       }
       continue;
     }

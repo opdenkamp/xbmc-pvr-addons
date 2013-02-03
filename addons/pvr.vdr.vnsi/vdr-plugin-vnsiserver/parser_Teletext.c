@@ -22,32 +22,42 @@
  *
  */
 
-#ifndef VNSI_DEMUXER_SUBTITLE_H
-#define VNSI_DEMUXER_SUBTITLE_H
+#include <stdlib.h>
+#include "config.h"
 
-#include "demuxer.h"
+#include "parser_Teletext.h"
 
-// --- cParserSubtitle -------------------------------------------------
-
-class cParserSubtitle : public cParser
+cParserTeletext::cParserTeletext(int pID, cTSStream *stream)
+ : cParser(pID, stream)
 {
-private:
-  bool        m_firstPUSIseen;
-  bool        m_PESStart;
-  uint8_t    *m_subtitleBuffer;
-  int         m_subtitleBufferSize;
-  int         m_subtitleBufferPtr;
-  int64_t     m_lastDTS;
-  int64_t     m_lastPTS;
-  int         m_lastLength;
-  int         m_curLength;
+  m_PesBufferInitialSize      = 4000;
+}
 
-public:
-  cParserSubtitle(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
-  virtual ~cParserSubtitle();
+cParserTeletext::~cParserTeletext()
+{
+}
 
-  virtual void Parse(unsigned char *data, int size, bool pusi);
-};
+void cParserTeletext::Parse(sStreamPacket *pkt)
+{
+  int l = m_PesBufferPtr;
+  if (l < 1)
+    return;
 
+  if (m_PesBuffer[0] < 0x10 || m_PesBuffer[0] > 0x1F)
+  {
+    Reset();
+    return;
+  }
 
-#endif // VNSI_DEMUXER_SUBTITLE_H
+  if (l >= m_PesPacketLength)
+  {
+    pkt->id       = m_pID;
+    pkt->data     = m_PesBuffer;
+    pkt->size     = m_PesPacketLength;
+    pkt->duration = 0;
+    pkt->dts      = m_curDTS;
+    pkt->pts      = m_curPTS;
+
+    m_PesBufferPtr = 0;
+  }
+}

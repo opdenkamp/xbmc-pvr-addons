@@ -25,7 +25,7 @@
 #ifndef VNSI_DEMUXER_AAC_H
 #define VNSI_DEMUXER_AAC_H
 
-#include "demuxer.h"
+#include "parser.h"
 #include "bitstream.h"
 
 // --- cParserAAC -------------------------------------------------
@@ -33,30 +33,29 @@
 class cParserAAC : public cParser
 {
 private:
-  cTSDemuxer *m_demuxer;
-  uint8_t    *m_streamBuffer;
-  int         m_streamBufferSize;
-  int         m_streamBufferDataSize;
-  int         m_streamParserPtr;
-  bool        m_firstPUSIseen;
+  int         m_SampleRate;
+  int         m_Channels;
+  int         m_BitRate;
+  int         m_FrameSize;
+
+  int64_t     m_PTS;                /* pts of the current frame */
+  int64_t     m_DTS;                /* dts of the current frame */
 
   bool        m_Configured;
   int         m_AudioMuxVersion_A;
   int         m_FrameLengthType;
-  int         m_SampleRateIndex;
-  int         m_ChannelConfig;
-  int         m_FrameDuration;
-  int         m_SampleRate;
 
-public:
-  cParserAAC(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
-  virtual ~cParserAAC();
-
-  virtual void Parse(unsigned char *data, int size, bool pusi);
-  void ParseLATMAudioMuxElement(uint8_t *data, int len);
+  int FindHeaders(uint8_t *buf, int buf_size);
+  bool ParseLATMAudioMuxElement(cBitstream *bs);
   void ReadStreamMuxConfig(cBitstream *bs);
   void ReadAudioSpecificConfig(cBitstream *bs);
   uint32_t LATMGetValue(cBitstream *bs) { return bs->readBits(bs->readBits(2) * 8); }
+
+public:
+  cParserAAC(int pID, cTSStream *stream);
+  virtual ~cParserAAC();
+  virtual void Parse(sStreamPacket *pkt);
+  virtual void Reset();
 };
 
 #endif // VNSI_DEMUXER_AAC_H

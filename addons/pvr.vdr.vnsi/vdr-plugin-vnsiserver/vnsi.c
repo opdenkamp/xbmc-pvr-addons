@@ -154,8 +154,11 @@ void cPluginVNSIServer::StoreSetup(const char *Name, int Value)
 {
   if (VNSIServer)
   {
-    VNSIServer->SetupStore(Name, Value);
-    Setup.Save();
+    if (VNSIServer->SetupParse(Name, itoa(Value)))
+    {
+      VNSIServer->SetupStore(Name, Value);
+      Setup.Save();
+    }
   }
 }
 

@@ -1695,6 +1695,8 @@ bool cPVRClientMediaPortal::OpenRecordedStream(const PVR_RECORDING &recording)
   {
     XBMC->Log(LOG_ERROR, "Recording playback not possible. Backend returned empty filename or stream URL for recording id %s", recording.strRecordingId );
     XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30052));
+    // Tell XBMC to re-read the list with recordings to remove deleted/non-existing recordings as a result of backend auto-deletion.
+    PVR->TriggerRecordingUpdate();
   }
 
   return false;

@@ -349,7 +349,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
 
     if (result < 0)
     {
-      XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - select failed");
+      XBMC->Log(LOG_DEBUG, "%s: select failed", __FUNCTION__);
       lines.push_back("ERROR: Select failed");
       code = 1; //error
       _sd = INVALID_SOCKET;
@@ -360,11 +360,11 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     {
       if (retries != 0)
       {
-         XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - timeout waiting for response, retrying... (%i)", retries);
+         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response, retrying... (%i)", __FUNCTION__, retries);
          retries--;
         continue;
       } else {
-         XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - timeout waiting for response. Failed after 10 retries.");
+         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response. Failed after 10 retries.", __FUNCTION__);
          lines.push_back("ERROR: Failed after 10 retries");
          code = 1; //error
         _sd = INVALID_SOCKET;
@@ -375,7 +375,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     result = recv(_sd, buffer, sizeof(buffer) - 1, 0);
     if (result < 0)
     {
-      XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - recv failed");
+      XBMC->Log(LOG_DEBUG, "%s: recv failed", __FUNCTION__);
       lines.push_back("ERROR: Recv failed");
       code = 1; //error
       _sd = INVALID_SOCKET;

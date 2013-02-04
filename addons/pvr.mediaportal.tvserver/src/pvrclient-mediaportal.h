@@ -43,7 +43,7 @@ public:
   static void* Process(void*);
 
   /* Server handling */
-  bool Connect();
+  ADDON_STATUS Connect();
   void Disconnect();
   bool IsUp();
 

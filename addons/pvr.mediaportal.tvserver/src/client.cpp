@@ -99,16 +99,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   /* Create connection to MediaPortal XBMC TV client */
   g_client       = new cPVRClientMediaPortal();
-  if (!g_client->Connect())
+
+  m_CurStatus = g_client->Connect();
+  if (m_CurStatus != ADDON_STATUS_OK)
   {
     SAFE_DELETE(g_client);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
-    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
-    return m_CurStatus;
   }
-
-  m_CurStatus = ADDON_STATUS_OK;
 
   return m_CurStatus;
 }

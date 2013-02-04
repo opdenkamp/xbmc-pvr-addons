@@ -86,7 +86,7 @@ string cPVRClientMediaPortal::SendCommand(string command)
     if ( !m_tcpclient->is_valid() )
     {
       // Connection lost, try to reconnect
-      if ( Connect() )
+      if ( Connect() == ADDON_STATUS_OK )
       {
         // Resend the command
         if (!m_tcpclient->send(command))
@@ -116,7 +116,7 @@ bool cPVRClientMediaPortal::SendCommand2(string command, int& code, vector<strin
     if ( !m_tcpclient->is_valid() )
     {
       // Connection lost, try to reconnect
-      if ( Connect() )
+      if ( Connect() == ADDON_STATUS_OK )
       {
         // Resend the command
         if (!m_tcpclient->send(command))
@@ -141,7 +141,7 @@ bool cPVRClientMediaPortal::SendCommand2(string command, int& code, vector<strin
   return true;
 }
 
-bool cPVRClientMediaPortal::Connect()
+ADDON_STATUS cPVRClientMediaPortal::Connect()
 {
   string result;
 
@@ -151,13 +151,13 @@ bool cPVRClientMediaPortal::Connect()
   if (!m_tcpclient->create())
   {
     XBMC->Log(LOG_ERROR, "Could not connect create socket");
-    return false;
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
   if (!m_tcpclient->connect(g_szHostname, (unsigned short) g_iPort))
   {
     XBMC->Log(LOG_ERROR, "Could not connect to MediaPortal TV Server backend");
-    return false;
+    return ADDON_STATUS_LOST_CONNECTION;
   }
 
   m_tcpclient->set_non_blocking(1);
@@ -166,53 +166,49 @@ bool cPVRClientMediaPortal::Connect()
   result = SendCommand("PVRclientXBMC:0-1\n");
 
   if (result.length() == 0)
-    return false;
+    return ADDON_STATUS_UNKNOWN;
 
   if(result.find("Unexpected protocol") != std::string::npos)
   {
     XBMC->Log(LOG_ERROR, "TVServer does not accept protocol: PVRclientXBMC:0-1");
-    return false;
+    return ADDON_STATUS_UNKNOWN;
+  }
+
+  vector<string> fields;
+  int major = 0, minor = 0, revision = 0;
+
+  // Check the version of the TVServerXBMC plugin:
+  Tokenize(result, fields, "|");
+  if(fields.size() < 2)
+  {
+    XBMC->Log(LOG_ERROR, "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!", TVSERVERXBMC_MIN_VERSION_STRING);
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30051), TVSERVERXBMC_MIN_VERSION_STRING);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
+
+  // Ok, this TVServerXBMC version answers with a version string
+  int count = sscanf(fields[1].c_str(), "%5d.%5d.%5d.%5d", &major, &minor, &revision, &g_iTVServerXBMCBuild);
+  if( count < 4 )
+  {
+    XBMC->Log(LOG_ERROR, "Could not parse the TVServerXBMC version string '%s'", fields[1].c_str());
+    return ADDON_STATUS_UNKNOWN;
+  }
+
+  // Check for the minimal requirement: 1.1.0.70
+  if( g_iTVServerXBMCBuild < TVSERVERXBMC_MIN_VERSION_BUILD ) //major < 1 || minor < 1 || revision < 0 || build < 70
+  {
+    XBMC->Log(LOG_ERROR, "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!", fields[1].c_str(), TVSERVERXBMC_MIN_VERSION_STRING);
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30050), fields[1].c_str(), TVSERVERXBMC_MIN_VERSION_STRING);
+    return ADDON_STATUS_PERMANENT_FAILURE;
   }
   else
   {
-    vector<string> fields;
-    int major = 0, minor = 0, revision = 0;
-
-    // Check the version of the TVServerXBMC plugin:
-    Tokenize(result, fields, "|");
-    if(fields.size() == 2)
-    {
-      // Ok, this TVServerXBMC version answers with a version string
-      int count = sscanf(fields[1].c_str(), "%5d.%5d.%5d.%5d", &major, &minor, &revision, &g_iTVServerXBMCBuild);
-      if( count < 4 )
-      {
-        XBMC->Log(LOG_ERROR, "Could not parse the TVServerXBMC version string '%s'", fields[1].c_str());
-        return false;
-      }
-
-      // Check for the minimal requirement: 1.1.0.70
-      if( g_iTVServerXBMCBuild < TVSERVERXBMC_MIN_VERSION_BUILD ) //major < 1 || minor < 1 || revision < 0 || build < 70
-      {
-        XBMC->Log(LOG_ERROR, "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!", fields[1].c_str(), TVSERVERXBMC_MIN_VERSION_STRING);
-        XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30050), fields[1].c_str(), TVSERVERXBMC_MIN_VERSION_STRING);
-        return false;
-      }
-      else
-      {
-        XBMC->Log(LOG_INFO, "Your TVServerXBMC version is '%s'", fields[1].c_str());
+    XBMC->Log(LOG_INFO, "Your TVServerXBMC version is '%s'", fields[1].c_str());
         
-        // Advice to upgrade:
-        if( g_iTVServerXBMCBuild < TVSERVERXBMC_RECOMMENDED_VERSION_BUILD )
-        {
-          XBMC->Log(LOG_INFO, "It is adviced to upgrade your TVServerXBMC version '%s' to '%s' or higher!", fields[1].c_str(), TVSERVERXBMC_RECOMMENDED_VERSION_STRING);
-        }
-      }
-    }
-    else
+    // Advice to upgrade:
+    if( g_iTVServerXBMCBuild < TVSERVERXBMC_RECOMMENDED_VERSION_BUILD )
     {
-      XBMC->Log(LOG_ERROR, "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!", TVSERVERXBMC_MIN_VERSION_STRING);
-      XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30051), TVSERVERXBMC_MIN_VERSION_STRING);
-      return false;
+      XBMC->Log(LOG_INFO, "It is adviced to upgrade your TVServerXBMC version '%s' to '%s' or higher!", fields[1].c_str(), TVSERVERXBMC_RECOMMENDED_VERSION_STRING);
     }
   }
 
@@ -227,7 +223,7 @@ bool cPVRClientMediaPortal::Connect()
   LoadGenreTable();
   LoadCardSettings();
 
-  return true;
+  return ADDON_STATUS_OK;
 }
 
 void cPVRClientMediaPortal::Disconnect()
@@ -267,7 +263,7 @@ bool cPVRClientMediaPortal::IsUp()
 {
   if(!m_tcpclient->is_valid())
   {
-    if(!Connect())
+    if( Connect() != ADDON_STATUS_OK )
     {
       XBMC->Log(LOG_DEBUG, "Backend not connected!");
       return false;

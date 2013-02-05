@@ -1311,10 +1311,11 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
           }
         }
       }
-
-      m_rec = MythRecorder();
-      m_pEventHandler->SetRecorder(m_rec);
     }
+
+    // Failed to open live stream (channel unavailable)
+    m_rec = MythRecorder();
+    m_pEventHandler->SetRecorder(m_rec);
 
     // Disable playback mode: Allow all
     m_pEventHandler->DisablePlayback();

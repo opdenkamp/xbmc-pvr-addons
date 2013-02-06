@@ -24,6 +24,11 @@
 
 #include <vdr/ringbuffer.h>
 #include <vdr/remux.h>
+#include <vdr/videodir.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 class cVideoBufferSimple : public cVideoBuffer
 {
@@ -96,42 +101,107 @@ int cVideoBufferSimple::Read(uint8_t **buf, unsigned int size)
 
 #define MARGIN 40000
 
-class cVideoBufferRAM : public cVideoBuffer
+class cVideoBufferTimeshift : public cVideoBuffer
 {
 friend class cVideoBuffer;
 public:
-  virtual void Put(uint8_t *buf, unsigned int size);
-  virtual int Read(uint8_t **buf, unsigned int size);
   virtual size_t GetPosMin();
   virtual size_t GetPosMax();
   virtual size_t GetPosCur();
   virtual void GetPositions(size_t *cur, size_t *min, size_t *max);
-  virtual void SetPos(size_t pos);
 
 protected:
-  cVideoBufferRAM();
-  virtual ~cVideoBufferRAM();
-  bool Init();
-  size_t Available();
-  uint8_t *m_Buffer;
-  uint8_t *m_BufferPtr;
-  size_t m_BufferSize;
-  size_t m_WritePtr;
-  size_t m_ReadPtr;
+  cVideoBufferTimeshift();
+  virtual bool Init() = 0;
+  off_t Available();
+  off_t m_BufferSize;
+  off_t m_WritePtr;
+  off_t m_ReadPtr;
   bool m_BufferFull;
   unsigned int m_Margin;
   unsigned int m_BytesConsumed;
   cMutex m_Mutex;
 };
 
-cVideoBufferRAM::cVideoBufferRAM()
+cVideoBufferTimeshift::cVideoBufferTimeshift()
 {
-  m_Buffer = 0;
   m_Margin = TS_SIZE*2;
   m_BufferFull = false;
   m_ReadPtr = 0;
   m_WritePtr = 0;
   m_BytesConsumed = 0;
+}
+
+size_t cVideoBufferTimeshift::GetPosMin()
+{
+  off_t ret;
+  if (!m_BufferFull)
+    return 0;
+
+  ret = m_WritePtr + MARGIN * 2;
+  if (ret >= m_BufferSize)
+    ret -= m_BufferSize;
+
+  return ret;
+}
+
+size_t cVideoBufferTimeshift::GetPosMax()
+{
+   size_t ret = m_WritePtr;
+   if (ret < GetPosMin())
+     ret += m_BufferSize;
+   return ret;
+}
+
+size_t cVideoBufferTimeshift::GetPosCur()
+{
+  size_t ret = m_ReadPtr;
+  if (ret < GetPosMin())
+    ret += m_BufferSize;
+  return ret;
+}
+
+void cVideoBufferTimeshift::GetPositions(size_t *cur, size_t *min, size_t *max)
+{
+  cMutexLock lock(&m_Mutex);
+
+  *cur = GetPosCur();
+  *min = GetPosMin();
+  *min = (*min > *cur) ? *cur : *min;
+  *max = GetPosMax();
+}
+
+off_t cVideoBufferTimeshift::Available()
+{
+  size_t ret;
+  if (m_ReadPtr <= m_WritePtr)
+    ret = m_WritePtr - m_ReadPtr;
+  else
+    ret = m_BufferSize - (m_ReadPtr - m_WritePtr);
+
+  return ret;
+}
+//-----------------------------------------------------------------------------
+
+class cVideoBufferRAM : public cVideoBufferTimeshift
+{
+friend class cVideoBuffer;
+public:
+  virtual void Put(uint8_t *buf, unsigned int size);
+  virtual int Read(uint8_t **buf, unsigned int size);
+  virtual void SetPos(size_t pos);
+
+protected:
+  cVideoBufferRAM();
+  virtual ~cVideoBufferRAM();
+  virtual bool Init();
+  uint8_t *m_Buffer;
+  uint8_t *m_BufferPtr;
+};
+
+cVideoBufferRAM::cVideoBufferRAM()
+{
+  m_Buffer = 0;
 }
 
 cVideoBufferRAM::~cVideoBufferRAM()
@@ -152,45 +222,6 @@ bool cVideoBufferRAM::Init()
     return true;
 }
 
-size_t cVideoBufferRAM::GetPosMin()
-{
-  size_t ret;
-  if (!m_BufferFull)
-    return 0;
-
-  ret = m_WritePtr + MARGIN * 2;
-  if (ret >= m_BufferSize)
-    ret -= m_BufferSize;
-
-  return ret;
-}
-
-size_t cVideoBufferRAM::GetPosMax()
-{
-   size_t ret = m_WritePtr;
-   if (ret < GetPosMin())
-     ret += m_BufferSize;
-   return ret;
-}
-
-size_t cVideoBufferRAM::GetPosCur()
-{
-  size_t ret = m_ReadPtr;
-  if (ret < GetPosMin())
-    ret += m_BufferSize;
-  return ret;
-}
-
-void cVideoBufferRAM::GetPositions(size_t *cur, size_t *min, size_t *max)
-{
-  cMutexLock lock(&m_Mutex);
-
-  *cur = GetPosCur();
-  *min = GetPosMin();
-  *min = (*min > *cur) ? *cur : *min;
-  *max = GetPosMax();
-}
-
 void cVideoBufferRAM::SetPos(size_t pos)
 {
   cMutexLock lock(&m_Mutex);
@@ -199,17 +230,6 @@ void cVideoBufferRAM::SetPos(size_t pos)
   if (m_ReadPtr >= m_BufferSize)
     m_ReadPtr -= m_BufferSize;
   m_BytesConsumed = 0;
-}
-
-size_t cVideoBufferRAM::Available()
-{
-  size_t ret;
-  if (m_ReadPtr <= m_WritePtr)
-    ret = m_WritePtr - m_ReadPtr;
-  else
-    ret = m_BufferSize - (m_ReadPtr - m_WritePtr);
-
-  return ret;
 }
 
 void cVideoBufferRAM::Put(uint8_t *buf, unsigned int size)
@@ -227,6 +247,7 @@ void cVideoBufferRAM::Put(uint8_t *buf, unsigned int size)
     int bytes = m_BufferSize - m_WritePtr;
     memcpy(m_BufferPtr+m_WritePtr, buf, bytes);
     size -= bytes;
+    buf += bytes;
     m_WritePtr = 0;
   }
 
@@ -291,6 +312,242 @@ int cVideoBufferRAM::Read(uint8_t **buf, unsigned int size)
 
 //-----------------------------------------------------------------------------
 
+#define CACHE_SIZE 4000
+
+class cVideoBufferFile : public cVideoBufferTimeshift
+{
+friend class cVideoBuffer;
+public:
+  virtual void Put(uint8_t *buf, unsigned int size);
+  virtual int Read(uint8_t **buf, unsigned int size);
+  virtual void SetPos(size_t pos);
+
+protected:
+  cVideoBufferFile(int clientID);
+  virtual ~cVideoBufferFile();
+  virtual bool Init();
+  int m_ClientID;
+  cString m_Filename;
+  int m_Fd;
+  bool m_UseCache;
+  uint8_t m_ReadCache[CACHE_SIZE];
+  unsigned int m_ReadCachePtr;
+  unsigned int m_ReadCacheSize;
+};
+
+cVideoBufferFile::cVideoBufferFile(int clientID)
+{
+  m_ClientID = clientID;
+  m_Fd = 0;
+  m_ReadCacheSize = 0;
+}
+
+cVideoBufferFile::~cVideoBufferFile()
+{
+  if (m_Fd)
+  {
+    close(m_Fd);
+    unlink(m_Filename);
+    m_Fd = 0;
+  }
+}
+
+bool cVideoBufferFile::Init()
+{
+  m_BufferSize = (size_t)TimeshiftBufferFileSize*1000*1000*1000;
+
+  m_Filename = cString::sprintf("%s/Timeshift-%d.vnsi", VideoDirectory, m_ClientID);
+  m_Fd = open(m_Filename, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
+  if (m_Fd == -1)
+  {
+    ERRORLOG("Could not open file: %s", (const char*)m_Filename);
+    return false;
+  }
+  m_WritePtr = lseek(m_Fd, m_BufferSize - 1, SEEK_SET);
+  if (m_WritePtr == -1)
+  {
+    ERRORLOG("(Init) Could not seek file: %s", (const char*)m_Filename);
+    return false;
+  }
+  char tmp = '0';
+  if (safe_write(m_Fd, &tmp, 1) < 0)
+  {
+    ERRORLOG("(Init) Could not write to file: %s", (const char*)m_Filename);
+    return false;
+  }
+
+  m_WritePtr = 200;
+  m_ReadPtr = 200;
+  m_ReadCacheSize = 0;
+  return true;
+}
+
+void cVideoBufferFile::SetPos(size_t pos)
+{
+  cMutexLock lock(&m_Mutex);
+
+  m_ReadPtr = pos;
+  if (m_ReadPtr >= m_BufferSize)
+    m_ReadPtr -= m_BufferSize;
+  m_BytesConsumed = 0;
+  m_ReadCacheSize = 0;
+}
+
+void cVideoBufferFile::Put(uint8_t *buf, unsigned int size)
+{
+  cMutexLock lock(&m_Mutex);
+
+  if (Available() + MARGIN >= m_BufferSize)
+  {
+    ERRORLOG("------------- skipping data");
+    return;
+  }
+
+  if ((m_BufferSize - m_WritePtr) <= size)
+  {
+    int bytes = m_BufferSize - m_WritePtr;
+
+    m_WritePtr = lseek(m_Fd, m_WritePtr, SEEK_SET);
+    if (m_WritePtr != m_WritePtr)
+    {
+      ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
+      return;
+    }
+    if (safe_write(m_Fd, buf, bytes) < 0)
+    {
+      ERRORLOG("Could not write to file: %s", (const char*)m_Filename);
+      return;
+    }
+    size -= bytes;
+    buf += bytes;
+    m_WritePtr = 0;
+  }
+
+  m_WritePtr = lseek(m_Fd, m_WritePtr, SEEK_SET);
+  if (m_WritePtr != m_WritePtr)
+  {
+    ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
+    return;
+  }
+  if (safe_write(m_Fd, buf, size) < 0)
+  {
+    ERRORLOG("Could not write to file: %s", (const char*)m_Filename);
+    return;
+  }
+  m_WritePtr += size;
+
+  if (!m_BufferFull)
+  {
+    if ((m_WritePtr + 2*MARGIN) > m_BufferSize)
+      m_BufferFull = true;
+  }
+}
+
+int cVideoBufferFile::Read(uint8_t **buf, unsigned int size)
+{
+  cMutexLock lock(&m_Mutex);
+
+  // move read pointer
+  if (m_BytesConsumed)
+  {
+    m_ReadPtr += m_BytesConsumed;
+    if (m_ReadPtr >= m_BufferSize)
+      m_ReadPtr -= m_BufferSize;
+    m_ReadCachePtr += m_BytesConsumed;
+  }
+  m_BytesConsumed = 0;
+
+  // check if we have anything to read
+  size_t readBytes;
+  if (m_ReadCacheSize && ((m_ReadCachePtr + m_Margin) <= m_ReadCacheSize))
+  {
+    readBytes = m_ReadCacheSize - m_ReadCachePtr;
+    *buf = m_ReadCache + m_ReadCachePtr;
+  }
+  else if ((readBytes = Available()) >= CACHE_SIZE)
+  {
+    m_ReadPtr = lseek(m_Fd, m_ReadPtr, SEEK_SET);
+    if (m_ReadPtr != m_ReadPtr)
+    {
+      ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
+      return 0;
+    }
+    if (m_ReadPtr + CACHE_SIZE <= m_BufferSize)
+    {
+      m_ReadCacheSize = safe_read(m_Fd, m_ReadCache, CACHE_SIZE);
+      if (m_ReadCacheSize < 0)
+      {
+        ERRORLOG("Could not read file: %s", (const char*)m_Filename);
+        return 0;
+      }
+      if (m_ReadCacheSize < m_Margin)
+      {
+        ERRORLOG("Could not read file (margin): %s", (const char*)m_Filename);
+        m_ReadCacheSize = 0;
+        return 0;
+      }
+      readBytes = m_ReadCacheSize;
+      *buf = m_ReadCache;
+      m_ReadCachePtr = 0;
+    }
+    else
+    {
+      m_ReadCacheSize = safe_read(m_Fd, m_ReadCache, m_BufferSize - m_ReadPtr);
+      if (m_ReadCacheSize != (m_BufferSize - m_ReadPtr))
+      {
+        ERRORLOG("Could not read file (end): %s", (const char*)m_Filename);
+        m_ReadCacheSize = 0;
+        return 0;
+      }
+      m_ReadPtr = lseek(m_Fd, 0, SEEK_SET);
+      if (m_ReadPtr != m_ReadPtr)
+      {
+        ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
+        return 0;
+      }
+      readBytes = safe_read(m_Fd, m_ReadCache + m_ReadCacheSize, CACHE_SIZE - m_ReadCacheSize);
+      if (readBytes < 0)
+      {
+        ERRORLOG("Could not read file (end): %s", (const char*)m_Filename);
+        m_ReadCacheSize = 0;
+        return 0;
+      }
+      m_ReadCacheSize += readBytes;
+      if (m_ReadCacheSize < m_Margin)
+      {
+        ERRORLOG("Could not read file (margin): %s", (const char*)m_Filename);
+        m_ReadCacheSize = 0;
+        return 0;
+      }
+      readBytes = m_ReadCacheSize;
+      *buf = m_ReadCache;
+      m_ReadCachePtr = 0;
+    }
+  }
+  else
+    return 0;
+
+  // Make sure we are looking at a TS packet
+  while (readBytes > TS_SIZE)
+  {
+    if ((*buf)[0] == TS_SYNC_BYTE && (*buf)[TS_SIZE] == TS_SYNC_BYTE)
+      break;
+    m_BytesConsumed++;
+    (*buf)++;
+    readBytes--;
+  }
+
+  if ((*buf)[0] != TS_SYNC_BYTE)
+  {
+    return 0;
+  }
+
+  m_BytesConsumed += TS_SIZE;
+  return TS_SIZE;
+}
+
+//-----------------------------------------------------------------------------
+
 cVideoBuffer::cVideoBuffer()
 {
 }
@@ -299,7 +556,7 @@ cVideoBuffer::~cVideoBuffer()
 {
 }
 
-cVideoBuffer* cVideoBuffer::Create()
+cVideoBuffer* cVideoBuffer::Create(int clientID)
 {
   // no time shift
   if (TimeshiftMode == 0)
@@ -311,6 +568,18 @@ cVideoBuffer* cVideoBuffer::Create()
   else if (TimeshiftMode == 1)
   {
     cVideoBufferRAM *buffer = new cVideoBufferRAM();
+    if (!buffer->Init())
+    {
+      delete buffer;
+      return NULL;
+    }
+    else
+      return buffer;
+  }
+  // buffer in file
+  else if (TimeshiftMode == 2)
+  {
+    cVideoBufferFile *buffer = new cVideoBufferFile(clientID);
     if (!buffer->Init())
     {
       delete buffer;

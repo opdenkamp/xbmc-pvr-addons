@@ -43,6 +43,7 @@
 #define CONFNAME_PMTTIMEOUT "PmtTimeout"
 #define CONFNAME_TIMESHIFT "Timeshift"
 #define CONFNAME_TIMESHIFTBUFFERSIZE "TimeshiftBufferSize"
+#define CONFNAME_TIMESHIFTBUFFERFILESIZE "TimeshiftBufferFileSize"
 
 /* OPCODE 1 - 19: VNSI network functions for general purpose */
 #define VNSI_LOGIN                 1

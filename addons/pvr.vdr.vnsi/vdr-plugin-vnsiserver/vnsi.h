@@ -33,6 +33,7 @@ static const char *DESCRIPTION    = "VDR-Network-Streaming-Interface (VNSI) Serv
 extern int PmtTimeout;
 extern int TimeshiftMode;
 extern int TimeshiftBufferSize;
+extern int TimeshiftBufferFileSize;
 
 class cPluginVNSIServer : public cPlugin {
 private:

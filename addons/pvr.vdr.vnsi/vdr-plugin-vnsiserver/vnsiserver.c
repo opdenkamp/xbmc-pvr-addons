@@ -39,6 +39,7 @@
 
 #include <vdr/plugin.h>
 #include <vdr/shutdown.h>
+#include <vdr/videodir.h>
 
 #include "vnsiserver.h"
 #include "vnsiclient.h"
@@ -189,6 +190,10 @@ void cVNSIServer::Action(void)
 
   // last update of epg
   time_t epgUpdate = cSchedules::Modified();
+
+  // delete old timeshift file
+  cString cmd = cString::sprintf("rm -f %s/*.vnsi", VideoDirectory);
+  int ret = system(cmd);
 
   while (Running())
   {

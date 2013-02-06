@@ -24,6 +24,7 @@
 int PmtTimeout = 5;
 int TimeshiftMode = 0;
 int TimeshiftBufferSize = 5;
+int TimeshiftBufferFileSize = 6;
 
 cMenuSetupVNSI::cMenuSetupVNSI(void)
 {
@@ -37,7 +38,10 @@ cMenuSetupVNSI::cMenuSetupVNSI(void)
   Add(new cMenuEditStraItem( tr("Time Shift Mode"), &newTimeshiftMode, 2, timeshiftModesTexts));
 
   newTimeshiftBufferSize = TimeshiftBufferSize;
-  Add(new cMenuEditIntItem( tr("Time Shift Buffersize (1-20) x 100MB"), &newTimeshiftBufferSize));
+  Add(new cMenuEditIntItem( tr("TS Buffersize (RAM) (1-20) x 100MB"), &newTimeshiftBufferSize));
+
+  newTimeshiftBufferFileSize = TimeshiftBufferFileSize;
+  Add(new cMenuEditIntItem( tr("TS Buffersize (File) (1-10) x 1GB"), &newTimeshiftBufferFileSize));
 }
 
 void cMenuSetupVNSI::Store(void)
@@ -53,4 +57,10 @@ void cMenuSetupVNSI::Store(void)
   else if (newTimeshiftBufferSize < 1)
     newTimeshiftBufferSize = 1;
   SetupStore(CONFNAME_TIMESHIFTBUFFERSIZE, TimeshiftBufferSize = newTimeshiftBufferSize);
+
+  if (newTimeshiftBufferFileSize > 10)
+    newTimeshiftBufferFileSize = 10;
+  else if (newTimeshiftBufferFileSize < 1)
+    newTimeshiftBufferFileSize = 1;
+  SetupStore(CONFNAME_TIMESHIFTBUFFERFILESIZE, TimeshiftBufferFileSize = newTimeshiftBufferFileSize);
 }

@@ -30,6 +30,7 @@ private:
   int newTimeshiftMode;
   const char *timeshiftModesTexts[3];
   int newTimeshiftBufferSize;
+  int newTimeshiftBufferFileSize;
 protected:
   virtual void Store(void);
 public:

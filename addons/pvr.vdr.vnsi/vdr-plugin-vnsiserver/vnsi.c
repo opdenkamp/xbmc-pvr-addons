@@ -127,6 +127,8 @@ bool cPluginVNSIServer::SetupParse(const char *Name, const char *Value)
     TimeshiftMode = atoi(Value);
   else if (!strcasecmp(Name, CONFNAME_TIMESHIFTBUFFERSIZE))
     TimeshiftBufferSize = atoi(Value);
+  else if (!strcasecmp(Name, CONFNAME_TIMESHIFTBUFFERFILESIZE))
+    TimeshiftBufferFileSize = atoi(Value);
   else
     return false;
   return true;

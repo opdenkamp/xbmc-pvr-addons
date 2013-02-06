@@ -179,7 +179,7 @@ void cVNSIClient::Action(void)
 
 bool cVNSIClient::StartChannelStreaming(const cChannel *channel, uint32_t timeout)
 {
-  m_Streamer    = new cLiveStreamer(timeout);
+  m_Streamer    = new cLiveStreamer(m_Id, timeout);
   m_isStreaming = m_Streamer->StreamChannel(channel, 50, &m_socket, m_resp);
   return m_isStreaming;
 }
@@ -657,6 +657,8 @@ bool cVNSIClient::process_GetSetup() /* OPCODE 8 */
     m_resp->add_U32(TimeshiftMode);
   else if (!strcasecmp(name, CONFNAME_TIMESHIFTBUFFERSIZE))
     m_resp->add_U32(TimeshiftBufferSize);
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFTBUFFERFILESIZE))
+    m_resp->add_U32(TimeshiftBufferFileSize);
 
   m_resp->finalise();
   m_socket.write(m_resp->getPtr(), m_resp->getLen());
@@ -681,6 +683,11 @@ bool cVNSIClient::process_StoreSetup() /* OPCODE 9 */
   {
     int value = m_req->extract_U32();
     cPluginVNSIServer::StoreSetup(CONFNAME_TIMESHIFTBUFFERSIZE, value);
+  }
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFTBUFFERFILESIZE))
+  {
+    int value = m_req->extract_U32();
+    cPluginVNSIServer::StoreSetup(CONFNAME_TIMESHIFTBUFFERFILESIZE, value);
   }
 
   m_resp->add_U32(VNSI_RET_OK);

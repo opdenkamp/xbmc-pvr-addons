@@ -58,6 +58,7 @@ private:
   void sendSignalInfo();
   void sendStreamStatus();
 
+  int               m_ClientID;
   const cChannel   *m_Channel;                      /*!> Channel to stream */
   cDevice          *m_Device;
   cxSocket         *m_Socket;                       /*!> The socket class to communicate with client */
@@ -81,7 +82,7 @@ protected:
   virtual void Action(void);
 
 public:
-  cLiveStreamer(uint32_t timeout = 0);
+  cLiveStreamer(int clientID, uint32_t timeout = 0);
   virtual ~cLiveStreamer();
 
   void Activate(bool On);

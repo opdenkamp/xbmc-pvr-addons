@@ -40,8 +40,9 @@
 
 // --- cLiveStreamer -------------------------------------------------
 
-cLiveStreamer::cLiveStreamer(uint32_t timeout)
+cLiveStreamer::cLiveStreamer(int clientID, uint32_t timeout)
  : cThread("cLiveStreamer stream processor")
+ , m_ClientID(clientID)
  , m_scanTimeout(timeout)
 {
   m_Channel         = NULL;
@@ -133,7 +134,7 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
     return false;
   }
 
-  m_VideoBuffer = cVideoBuffer::Create();
+  m_VideoBuffer = cVideoBuffer::Create(m_ClientID);
   m_Channel   = channel;
   m_Socket    = Socket;
   m_Device = cDevice::GetDevice(m_Channel, priority, true);

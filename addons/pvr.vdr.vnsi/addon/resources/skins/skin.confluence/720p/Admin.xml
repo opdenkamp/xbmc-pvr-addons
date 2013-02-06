@@ -185,6 +185,23 @@
             <label>$ADDON[pvr.vdr.vnsi 30105]</label>
             <onleft>10</onleft>
 			<onup>21</onup>
+			<ondown>23</ondown>
+        </control>
+        <control type="spincontrolex" id="23">
+            <description>Source Type</description>
+            <posx>10</posx>
+            <posy>150</posy>
+            <width>770</width>
+            <height>40</height>
+            <font>font13</font>
+            <textcolor>grey2</textcolor>
+            <focusedcolor>white</focusedcolor>
+            <texturefocus border="0,2,0,2">MenuItemFO.png</texturefocus>
+            <texturenofocus border="0,2,0,2">MenuItemNF.png</texturenofocus>
+            <aligny>center</aligny>
+            <label>$ADDON[pvr.vdr.vnsi 30106]</label>
+            <onleft>10</onleft>
+			<onup>22</onup>
         </control>
 	    </control>
       </control>

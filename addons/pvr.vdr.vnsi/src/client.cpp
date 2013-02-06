@@ -183,7 +183,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   PVR_MENUHOOK hook;
   hook.iHookId = 1;
   hook.category = PVR_MENUHOOK_SETTING;
-  hook.iLocalizedStringId = 30100;
+  hook.iLocalizedStringId = 30107;
   PVR->AddMenuHook(&hook);
 
   m_CurStatus = ADDON_STATUS_OK;

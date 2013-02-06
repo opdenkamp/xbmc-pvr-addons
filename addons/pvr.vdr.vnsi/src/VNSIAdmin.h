@@ -66,7 +66,8 @@ private:
   CAddonGUIWindow *m_window;
   CAddonGUIRenderingControl *m_renderControl;
   CAddonGUISpinControl *m_spinTimeshiftMode;
-  CAddonGUISpinControl *m_spinTimeshiftBuffer;
+  CAddonGUISpinControl *m_spinTimeshiftBufferRam;
+  CAddonGUISpinControl *m_spinTimeshiftBufferFile;
   bool m_bIsOsdControl;
   bool m_bIsOsdDirty;
   int m_width, m_height;

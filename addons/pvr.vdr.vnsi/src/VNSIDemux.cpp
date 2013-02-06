@@ -176,9 +176,7 @@ bool cVNSIDemux::SeekTime(int time, bool backwards, double *startpts)
 {
   cRequestPacket vrp;
 
-  XBMC->Log(LOG_NOTICE,"----------- seek pts1: %ld", time);
   int64_t seek_pts = (int64_t)time * 1000;
-  XBMC->Log(LOG_NOTICE,"----------- seek pts: %ld", seek_pts);
   if (startpts)
     *startpts = seek_pts;
 

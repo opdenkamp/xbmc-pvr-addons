@@ -32,11 +32,12 @@
 #include "D3DX9.h"
 #endif
 
-#define CONTROL_RENDER_ADDON             9
-#define CONTROL_MENU                    10
-#define CONTROL_OSD_BUTTON              13
-#define CONTROL_SPIN_TIMESHIFT_MODE     21
-#define CONTROL_SPIN_TIMESHIFT_BUFFER   22
+#define CONTROL_RENDER_ADDON                  9
+#define CONTROL_MENU                         10
+#define CONTROL_OSD_BUTTON                   13
+#define CONTROL_SPIN_TIMESHIFT_MODE          21
+#define CONTROL_SPIN_TIMESHIFT_BUFFER_RAM    22
+#define CONTROL_SPIN_TIMESHIFT_BUFFER_FILE   23
 
 #define ACTION_NONE                    0
 #define ACTION_MOVE_LEFT               1
@@ -688,7 +689,8 @@ bool cVNSIAdmin::Open(const std::string& hostname, int port, const char* name)
 
   GUI->Control_releaseRendering(m_renderControl);
   GUI->Control_releaseSpin(m_spinTimeshiftMode);
-  GUI->Control_releaseSpin(m_spinTimeshiftBuffer);
+  GUI->Control_releaseSpin(m_spinTimeshiftBufferRam);
+  GUI->Control_releaseSpin(m_spinTimeshiftBufferFile);
   GUI->Window_destroy(m_window);
   Close();
 
@@ -710,9 +712,9 @@ bool cVNSIAdmin::OnClick(int controlId)
     }
     return true;
   }
-  if (controlId == CONTROL_SPIN_TIMESHIFT_BUFFER)
+  else if (controlId == CONTROL_SPIN_TIMESHIFT_BUFFER_RAM)
   {
-    int value = m_spinTimeshiftBuffer->GetValue();
+    int value = m_spinTimeshiftBufferRam->GetValue();
     cRequestPacket vrp;
     if (!vrp.init(VNSI_STORESETUP) ||
         !vrp.add_String(CONFNAME_TIMESHIFTBUFFERSIZE) ||
@@ -720,6 +722,19 @@ bool cVNSIAdmin::OnClick(int controlId)
         ReadSuccess(&vrp))
     {
       XBMC->Log(LOG_ERROR, "%s - failed to set timeshift buffer", __FUNCTION__);
+    }
+    return true;
+  }
+  else if (controlId == CONTROL_SPIN_TIMESHIFT_BUFFER_FILE)
+  {
+    int value = m_spinTimeshiftBufferFile->GetValue();
+    cRequestPacket vrp;
+    if (!vrp.init(VNSI_STORESETUP) ||
+        !vrp.add_String(CONFNAME_TIMESHIFTBUFFERFILESIZE) ||
+        !vrp.add_U32(value) ||
+        ReadSuccess(&vrp))
+    {
+      XBMC->Log(LOG_ERROR, "%s - failed to set timeshift buffer file", __FUNCTION__);
     }
     return true;
   }
@@ -790,13 +805,13 @@ bool cVNSIAdmin::OnInit()
     delete resp;
   }
 
-  m_spinTimeshiftBuffer = GUI->Control_getSpin(m_window, CONTROL_SPIN_TIMESHIFT_BUFFER);
-  m_spinTimeshiftBuffer->Clear();
+  m_spinTimeshiftBufferRam = GUI->Control_getSpin(m_window, CONTROL_SPIN_TIMESHIFT_BUFFER_RAM);
+  m_spinTimeshiftBufferRam->Clear();
   char buffer[8];
   for (int i = 1; i <= 20; i++)
   {
     sprintf(buffer, "%d", i);
-    m_spinTimeshiftBuffer->AddLabel(buffer, i);
+    m_spinTimeshiftBufferRam->AddLabel(buffer, i);
   }
 
   {
@@ -813,10 +828,34 @@ bool cVNSIAdmin::OnInit()
       return false;
     }
     int mode = resp->extract_U32();
-    m_spinTimeshiftBuffer->SetValue(mode);
+    m_spinTimeshiftBufferRam->SetValue(mode);
     delete resp;
   }
+  m_spinTimeshiftBufferFile = GUI->Control_getSpin(m_window, CONTROL_SPIN_TIMESHIFT_BUFFER_FILE);
+  m_spinTimeshiftBufferFile->Clear();
+  for (int i = 1; i <= 10; i++)
+  {
+    sprintf(buffer, "%d", i);
+    m_spinTimeshiftBufferFile->AddLabel(buffer, i);
+  }
 
+  {
+    cRequestPacket vrp;
+    if (!vrp.init(VNSI_GETSETUP) || !vrp.add_String(CONFNAME_TIMESHIFTBUFFERFILESIZE))
+    {
+      XBMC->Log(LOG_ERROR, "%s - failed to get timeshift buffer (file) size", __FUNCTION__);
+      return false;
+    }
+    cResponsePacket *resp = ReadResult(&vrp);
+    if (!resp)
+    {
+      XBMC->Log(LOG_ERROR, "%s - failed to get timeshift buffer (file) size", __FUNCTION__);
+      return false;
+    }
+    int mode = resp->extract_U32();
+    m_spinTimeshiftBufferFile->SetValue(mode);
+    delete resp;
+  }
   return true;
 }
 

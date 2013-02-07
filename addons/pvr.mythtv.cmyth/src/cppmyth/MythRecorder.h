@@ -48,6 +48,7 @@ public:
   MythProgramInfo GetCurrentProgram();
 
   bool IsRecording();
+  bool CancelNextRecording(bool cancel);
   bool IsTunable(MythChannel &channel);
   bool CheckChannel(MythChannel &channel);
 

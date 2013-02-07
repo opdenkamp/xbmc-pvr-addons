@@ -53,11 +53,11 @@ private:
 
 typedef std::vector<RecordingRule> RecordingRuleList;
 
-class PVRClientMythTV
+class PVRClientMythTV : public MythEventObserver
 {
 public:
   PVRClientMythTV();
-  ~PVRClientMythTV();
+  virtual ~PVRClientMythTV();
 
   // Server
   bool Connect();

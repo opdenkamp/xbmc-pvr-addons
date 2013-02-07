@@ -468,7 +468,7 @@ int PVRClientMythTV::GetRecordingsAmount(void)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
   m_recordingsLock.Lock();
-  if (m_recordings.size() == 0)
+  if (m_recordings.empty())
     // Load recorings list
     res = FillRecordings();
   else
@@ -491,7 +491,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
   m_recordingsLock.Lock();
-  if (m_recordings.size() == 0)
+  if (m_recordings.empty())
     // Load recorings list
     FillRecordings();
   else
@@ -765,7 +765,6 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
 {
   // MythTV provides it's bookmarks as frame offsets whereas XBMC expects a time offset.
   // The frame offset is calculated by: frameOffset = bookmark * frameRate.
-  long long frameOffset = 0;
 
   if (g_bExtraDebug)
   {
@@ -780,7 +779,7 @@ PVR_ERROR PVRClientMythTV::SetRecordingLastPlayedPosition(const PVR_RECORDING &r
     if (it->second.Framterate() < 0)
       it->second.SetFramerate(m_db.GetRecordingFrameRate(it->second));
     // Calculate the frame offset
-    frameOffset = (long long)(lastplayedposition * it->second.Framterate() / 1000.0f);
+    long long frameOffset = (long long)(lastplayedposition * it->second.Framterate() / 1000.0f);
     if (frameOffset < 0) frameOffset = 0;
     if (g_bExtraDebug)
     {
@@ -879,13 +878,13 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
   RecordingRuleMap rules = m_db.GetRecordingRules();
   m_recordingRules.clear();
 
-  for (RecordingRuleMap::iterator it = rules.begin(); it != rules.end(); it++)
+  for (RecordingRuleMap::iterator it = rules.begin(); it != rules.end(); ++it)
     m_recordingRules.push_back(it->second);
 
   //Search for modifiers and add links to them
-  for (RecordingRuleList::iterator it = m_recordingRules.begin(); it != m_recordingRules.end(); it++)
+  for (RecordingRuleList::iterator it = m_recordingRules.begin(); it != m_recordingRules.end(); ++it)
     if (it->Type() == MythRecordingRule::DontRecord || it->Type() == MythRecordingRule::OverrideRecord)
-      for (RecordingRuleList::iterator it2 = m_recordingRules.begin(); it2 != m_recordingRules.end(); it2++)
+      for (RecordingRuleList::iterator it2 = m_recordingRules.begin(); it2 != m_recordingRules.end(); ++it2)
         if (it2->Type() != MythRecordingRule::DontRecord && it2->Type() != MythRecordingRule::OverrideRecord)
           if (it->SameTimeslot(*it2) && !it->GetParent())
           {
@@ -894,7 +893,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
           }
 
   ProgramInfoMap upcomingRecordings = m_con.GetPendingPrograms();
-  for (ProgramInfoMap::iterator it = upcomingRecordings.begin(); it != upcomingRecordings.end(); it++)
+  for (ProgramInfoMap::iterator it = upcomingRecordings.begin(); it != upcomingRecordings.end(); ++it)
   {
     // When deleting a timer from mythweb, it might happen that it's removed from database
     // but it's still present over mythprotocol. Skip those timers, because timers.at would crash.
@@ -1172,7 +1171,6 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
     if (oldTimer.iClientChannelUid != timer.iClientChannelUid ||
       oldTimer.endTime != timer.endTime ||
       oldTimer.startTime != timer.startTime ||
-      oldTimer.startTime != timer.startTime ||
       strcmp(oldTimer.strTitle, timer.strTitle) ||
       timer.bIsRepeating
       )
@@ -1402,7 +1400,7 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - chanID: %u", __FUNCTION__, channelinfo.iUniqueId);
 
-  bool retval = false;
+  bool retval;
 
   //Close current live stream for reopening
   //Keep playback mode enabled

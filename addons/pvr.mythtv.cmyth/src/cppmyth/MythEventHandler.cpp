@@ -412,7 +412,7 @@ void MythEventHandler::MythEventHandlerPrivate::HandleUpdateSignal(const CStdStr
 
   std::vector<std::string> tokenList;
   tokenize<std::vector<std::string> >(buffer, tokenList, ";");
-  for (std::vector<std::string>::iterator it = tokenList.begin(); it != tokenList.end(); it++)
+  for (std::vector<std::string>::iterator it = tokenList.begin(); it != tokenList.end(); ++it)
   {
     std::vector<std::string> tokenList2;
     tokenize< std::vector<std::string> >(*it, tokenList2, " ");

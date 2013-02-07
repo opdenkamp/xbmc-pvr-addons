@@ -127,7 +127,7 @@ bool MythConnection::IsConnected()
 
 bool MythConnection::TryReconnect()
 {
-  int retval = false;
+  int retval;
   Lock();
   retval = cmyth_conn_reconnect_ctrl(*m_conn_t);
   Unlock();

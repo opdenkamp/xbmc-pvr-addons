@@ -16,9 +16,10 @@ VERSION = $(shell grep 'static const char \*VERSION *=' vnsi.h | awk '{ print $$
 ### The directory environment:
 
 # Use package data if installed...otherwise assume we're under the VDR source directory:
-PKGCFG = $(if $(VDRDIR),$(shell pkg-config --variable=$(1) $(VDRDIR)/vdr.pc),$(shell pkg-config --variable=$(1) vdr || pkg-config --variable=$(1) ../../../vdr.pc))
-LIBDIR ?= $(DESTDIR)$(call PKGCFG,libdir)
-LOCDIR = $(DESTDIR)$(call PKGCFG,locdir)
+PKGCFG  = $(if $(VDRDIR),$(shell pkg-config --variable=$(1) $(VDRDIR)/vdr.pc),$(shell pkg-config --variable=$(1) vdr || pkg-config --variable=$(1) ../../../vdr.pc))
+LIBDIR ?= $(call PKGCFG,libdir)
+LOCDIR  = $(call PKGCFG,locdir)
+CFGDIR  = $(call PKGCFG,configdir)/plugins/$(PLUGIN)
 #
 TMPDIR ?= /tmp
 
@@ -113,7 +114,7 @@ $(DEPFILE): Makefile
 PODIR     = po
 I18Npo    = $(wildcard $(PODIR)/*.po)
 I18Nmo    = $(addsuffix .mo, $(foreach file, $(I18Npo), $(basename $(file))))
-I18Nmsgs  = $(addprefix $(LOCDIR)/, $(addsuffix /LC_MESSAGES/vdr-$(PLUGIN).mo, $(notdir $(foreach file, $(I18Npo), $(basename $(file))))))
+I18Nmsgs  = $(addprefix $(DESTDIR)$(LOCDIR)/, $(addsuffix /LC_MESSAGES/vdr-$(PLUGIN).mo, $(notdir $(foreach file, $(I18Npo), $(basename $(file))))))
 I18Npot   = $(PODIR)/$(PLUGIN).pot
 
 %.mo: %.po
@@ -126,7 +127,7 @@ $(I18Npot): $(wildcard *.cc)
 	msgmerge -U --no-wrap --no-location --backup=none -q -N $@ $<
 	@touch $@
 
-$(I18Nmsgs): $(LOCDIR)/%/LC_MESSAGES/vdr-$(PLUGIN).mo: $(PODIR)/%.mo
+$(I18Nmsgs): $(DESTDIR)$(LOCDIR)/%/LC_MESSAGES/vdr-$(PLUGIN).mo: $(PODIR)/%.mo
 	install -D -m644 $< $@
 
 .PHONY: i18n
@@ -140,9 +141,12 @@ $(SOFILE): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(OBJS) -o $@
 
 install-lib: $(SOFILE)
-	install -D $^ $(LIBDIR)/$^.$(APIVERSION)
+	install -D $^ $(DESTDIR)$(LIBDIR)/$^.$(APIVERSION)
 
-install: install-lib install-i18n
+install-conf:
+	test -f $(DESTDIR)$(CFGDIR)/allowed_hosts.conf || install -Dm644 $(PLUGIN)/allowed_hosts.conf $(DESTDIR)$(CFGDIR)/allowed_hosts.conf
+
+install: install-lib install-i18n install-conf
 
 dist: $(I18Npo) clean
 	@-rm -rf $(TMPDIR)/$(ARCHIVE)

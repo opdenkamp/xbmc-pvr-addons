@@ -36,16 +36,11 @@
 #pragma warning(disable:4267)
 #pragma warning(disable:4996)
 
-//#define pthread_mutex_lock(a)
-//#define pthread_mutex_unlock(a)
 #define pthread_mutex_lock(a) EnterCriticalSection(a)
 #define pthread_mutex_unlock(a) LeaveCriticalSection(a)
-//#define PTHREAD_MUTEX_INITIALIZER NULL;
 #define PTHREAD_MUTEX_INITIALIZER InitializeCriticalSection(&mutex);
-//typedef void* pthread_mutex_t;
 typedef CRITICAL_SECTION pthread_mutex_t;
 extern pthread_mutex_t mutex;
-//#define mutex __cmyth_mutex
 
 #define SHUT_RDWR SD_BOTH
 

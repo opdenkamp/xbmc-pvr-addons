@@ -47,11 +47,6 @@ typedef CRITICAL_SECTION pthread_mutex_t;
 extern pthread_mutex_t mutex;
 //#define mutex __cmyth_mutex
 
-#undef ECANCELED
-#undef ETIMEDOUT
-
-#define ECANCELED -1
-#define ETIMEDOUT -1
 #define SHUT_RDWR SD_BOTH
 
 typedef SOCKET cmyth_socket_t;

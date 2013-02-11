@@ -90,7 +90,7 @@ public:
 
   CStdString GetArtworkPath(const CStdString &remoteFilename, FileType fileType);
   CStdString GetChannelIconPath(const CStdString &remoteFilename);
-  CStdString GetPreviewIconPath(const CStdString &remoteFilename);
+  CStdString GetPreviewIconPath(const CStdString &remoteFilename, const CStdString &recordingGroup);
 
   void Suspend();
   void Resume();

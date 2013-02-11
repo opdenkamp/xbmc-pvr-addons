@@ -88,7 +88,7 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   return localFilename;
 }
 
-CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
+CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename, const CStdString &recordingGroup)
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s: preview icon: %s", __FUNCTION__, remoteFilename.c_str());
@@ -98,21 +98,28 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
   if (it != m_preview.end())
     return it->second;
 
+  // Check file exists in storage group
+  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(recordingGroup, remoteFilename);
+
   // Determine local filename
-  CStdString localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
-  if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
-
-  if (!XBMC->FileExists(localFilename, true))
+  CStdString localFilename;
+  if (!sgfile.IsNull())
   {
-    Lock();
-    FileOps::JobItem job(localFilename, remoteFilename, "Default");
-    m_jobQueue.push_back(job);
-    m_queueContent.Signal();
-    Unlock();
-  }
+    CStdString localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
+    if (g_bExtraDebug)
+      XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
 
-  m_preview[remoteFilename] = localFilename;
+    if (!XBMC->FileExists(localFilename, true))
+    {
+      Lock();
+      FileOps::JobItem job(localFilename, remoteFilename, "Default");
+      m_jobQueue.push_back(job);
+      m_queueContent.Signal();
+      Unlock();
+    }
+
+    m_preview[remoteFilename] = localFilename;
+  }
   return localFilename;
 }
 

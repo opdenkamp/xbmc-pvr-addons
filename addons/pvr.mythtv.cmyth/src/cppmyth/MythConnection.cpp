@@ -222,8 +222,7 @@ ProgramInfoMap MythConnection::GetRecordedPrograms()
   int len = cmyth_proglist_get_count(proglist);
   for (int i = 0; i < len; i++)
   {
-    cmyth_proginfo_t cmprog = cmyth_proglist_get_item(proglist, i);
-    MythProgramInfo prog = cmyth_proginfo_get_detail(*m_conn_t, cmprog);
+    MythProgramInfo prog = cmyth_proglist_get_item(proglist, i);
     if (!prog.IsNull()) {
       retval.insert(std::pair<CStdString, MythProgramInfo>(prog.UID().c_str(), prog));
     }
@@ -297,8 +296,7 @@ ProgramInfoMap MythConnection::GetScheduledPrograms()
   int len = cmyth_proglist_get_count(proglist);
   for (int i = 0; i < len; i++)
   {
-    cmyth_proginfo_t cmprog = cmyth_proglist_get_item(proglist, i);
-    MythProgramInfo prog = cmyth_proginfo_get_detail(*m_conn_t, cmprog);
+    MythProgramInfo prog = cmyth_proglist_get_item(proglist, i);
     if (!prog.IsNull()) {
       retval.insert(std::pair<CStdString, MythProgramInfo>(prog.UID().c_str(), prog));
     }

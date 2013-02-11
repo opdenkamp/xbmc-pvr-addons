@@ -534,7 +534,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       if (!it->second.Coverart().IsEmpty())
         strIconPath = GetArtWork(FileOps::FileTypeCoverart, it->second.Coverart());
       else
-        strIconPath = m_fileOps->GetPreviewIconPath(it->second.IconPath());
+        strIconPath = m_fileOps->GetPreviewIconPath(it->second.IconPath(), it->second.RecordingGroup());
 
       CStdString strFanartPath;
       if (!it->second.Fanart().IsEmpty())

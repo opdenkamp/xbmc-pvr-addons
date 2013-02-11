@@ -24,11 +24,17 @@
 
 MythProgramInfo::MythProgramInfo()
   : m_proginfo_t()
+  , m_framerate(-1)
+  , m_coverart("")
+  , m_fanart("")
 {
 }
 
 MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
   : m_proginfo_t(new MythPointer<cmyth_proginfo_t>())
+  , m_framerate(-1)
+  , m_coverart("")
+  , m_fanart("")
 {
   *m_proginfo_t = cmyth_proginfo;
 }
@@ -40,24 +46,13 @@ bool MythProgramInfo::IsNull() const
   return *m_proginfo_t == NULL;
 }
 
-CStdString MythProgramInfo::StrUID()
+CStdString MythProgramInfo::UID()
 {
-  // Creates unique IDs from ChannelID, RecordID and StartTime like "100_200_2011-12-10T12:00:00"
-  char buf[40] = "";
-  sprintf(buf, "%d_%ld_", ChannelID(), RecordID());
-  time_t starttime = RecordingStartTime();
-  strftime(buf + strlen(buf), 20, "%Y-%m-%dT%H:%M:%S", localtime(&starttime));
+  // Creates unique IDs from ChannelID, StartTime and RecordID like "100_2011-12-10T12:00:00_247"
+  char buf[50] = "";
+  MythTimestamp time(RecordingStartTime());
+  sprintf(buf, "%u_%s_%u", ChannelID(), time.String().c_str(), RecordID());
   return CStdString(buf);
-}
-
-long long MythProgramInfo::UID()
-{
-  long long retval = RecordingStartTime();
-  retval <<= 32;
-  retval += ChannelID();
-  if (retval > 0)
-    retval = -retval;
-  return retval;
 }
 
 CStdString MythProgramInfo::ProgramID()
@@ -68,18 +63,11 @@ CStdString MythProgramInfo::ProgramID()
   return retval;
 }
 
-CStdString MythProgramInfo::Title(bool subtitleEncoded)
+CStdString MythProgramInfo::Title()
 {
   char* title = cmyth_proginfo_title(*m_proginfo_t);
   CStdString retval(title);
   ref_release(title);
-
-  if (subtitleEncoded)
-  {
-    CStdString subtitle = Subtitle();
-    if (!subtitle.empty())
-      retval.Format("%s - %s", retval, subtitle);
-  }
   return retval;
 }
 
@@ -91,7 +79,7 @@ CStdString MythProgramInfo::Subtitle()
   return retval;
 }
 
-CStdString MythProgramInfo::Path()
+CStdString MythProgramInfo::BaseName()
 {
   char* path = cmyth_proginfo_pathname(*m_proginfo_t);
   CStdString retval(path);
@@ -149,7 +137,28 @@ bool MythProgramInfo::IsDeletePending()
   return (recording_flags & 0x00000080) != 0; // FL_DELETEPENDING
 }
 
-int MythProgramInfo::ChannelID()
+bool MythProgramInfo::HasBookmark()
+{
+  unsigned long recording_flags = cmyth_proginfo_flags(*m_proginfo_t);
+  return (recording_flags & 0x00000010) != 0; // FL_BOOKMARK
+}
+
+bool MythProgramInfo::IsVisible()
+{
+  // Filter out recording of special storage groups (like LiveTV or Deleted)
+
+  // When  deleting a recording, it might not be deleted immediately but marked as 'pending delete'.
+  // Depending on the protocol version the recording is moved to the group Deleted or
+  // the 'delete pending' flag is set
+  if (RecordingGroup() == "LiveTV" || RecordingGroup() == "Deleted" || IsDeletePending())
+  {
+    return false;
+  }
+
+  return true;
+}
+
+unsigned int MythProgramInfo::ChannelID()
 {
   return cmyth_proginfo_chan_id(*m_proginfo_t);
 }
@@ -175,7 +184,7 @@ CStdString MythProgramInfo::RecordingGroup()
   return retval;
 }
 
-unsigned long MythProgramInfo::RecordID()
+unsigned int MythProgramInfo::RecordID()
 {
   return cmyth_proginfo_recordid(*m_proginfo_t);
 }
@@ -197,4 +206,29 @@ time_t MythProgramInfo::RecordingEndTime()
 int MythProgramInfo::Priority()
 {
   return cmyth_proginfo_priority(*m_proginfo_t); // Might want to use recpriority2 instead
+}
+
+void MythProgramInfo::SetFramerate(const long long framerate)
+{
+  m_framerate = framerate;
+}
+
+long long MythProgramInfo::Framterate() const
+{
+  return m_framerate;
+}
+
+CStdString MythProgramInfo::IconPath()
+{
+  return (BaseName() + ".png");
+}
+
+CStdString MythProgramInfo::Coverart() const
+{
+  return m_coverart;
+}
+
+CStdString MythProgramInfo::Fanart() const
+{
+  return m_fanart;
 }

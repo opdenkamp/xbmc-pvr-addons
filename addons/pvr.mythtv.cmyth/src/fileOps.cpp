@@ -73,7 +73,7 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   // Determine filename
   CStdString localFilename = m_localBasePath + "channels" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
+    XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
 
   if (!XBMC->FileExists(localFilename, true))
   {
@@ -88,7 +88,7 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   return localFilename;
 }
 
-CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
+CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename, const CStdString &recordingGroup)
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s: preview icon: %s", __FUNCTION__, remoteFilename.c_str());
@@ -98,84 +98,60 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
   if (it != m_preview.end())
     return it->second;
 
-  // Determine local filename
-  CStdString localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
-  if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG,"%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
-
-  if (!XBMC->FileExists(localFilename, true))
-  {
-    Lock();
-    FileOps::JobItem job(localFilename, remoteFilename, "Default");
-    m_jobQueue.push_back(job);
-    m_queueContent.Signal();
-    Unlock();
-  }
-
-  m_preview[remoteFilename] = localFilename;
-  return localFilename;
-}
-
-CStdString FileOps::GetArtworkPath(const CStdString &title, FileType fileType)
-{
-  // Update storage group filelist only once every 30s
-  std::time_t now = 0;
-
-  // Update the list of files in a storage group if the filelist is empty
-  // or the validity timeout has been reached (30s)
-  if (m_StorageGroupFileList.find(fileType) == m_StorageGroupFileList.end() ||
-    std::difftime(now, m_StorageGroupFileListLastUpdated[fileType]) > 30)
-  {
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG, "%s Getting storage group file list for type: %s (%s - %s)", __FUNCTION__, GetFolderNameByFileType(fileType), std::asctime(std::localtime(&now)), std::asctime(std::localtime(&m_StorageGroupFileListLastUpdated[fileType])));
-
-    m_StorageGroupFileList[fileType] = m_con.GetStorageGroupFileList(GetFolderNameByFileType(fileType));
-    m_StorageGroupFileListLastUpdated[fileType] = now;
-
-    // Clean the file lists of unwanted files
-    StorageGroupFileList::iterator it = m_StorageGroupFileList[fileType].begin();
-    while (it != m_StorageGroupFileList[fileType].end())
-    {
-      if (g_bExtraDebug)
-        XBMC->Log(LOG_DEBUG, "%s %s - %s", __FUNCTION__, GetFolderNameByFileType(fileType), it->Filename().c_str());
-
-      // Check file extension, if it's not an image, remove the file from storage group
-      size_t extensionPos = it->Filename().find_last_of('.');
-      CStdString extension = it->Filename().substr(extensionPos + 1);
-      if (extension != "jpg" && extension != "png" && extension != "bmp")
-      {
-        it = m_StorageGroupFileList[fileType].erase(it);
-        continue;
-      }
-
-      ++it;
-    }
-  }
-
-  // Search in the storage group file list
-  StorageGroupFileList::iterator it;
-  for (it = m_StorageGroupFileList[fileType].begin(); it != m_StorageGroupFileList[fileType].end(); ++it)
-  {
-    if (it->Filename().Left(title.GetLength()) == title)
-      break;
-  }
-  if (it == m_StorageGroupFileList[fileType].end())
-  {
-    return ""; // Not found
-  }
+  // Check file exists in storage group
+  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(recordingGroup, remoteFilename);
 
   // Determine local filename
   CStdString localFilename;
-  localFilename.Format("%u_%s", it->LastModified(), it->Filename());
-  localFilename = m_localBasePath + GetFolderNameByFileType(fileType) + PATH_SEPARATOR_CHAR + localFilename.c_str();
-
-  if (!XBMC->FileExists(localFilename, true))
+  if (!sgfile.IsNull())
   {
-    Lock();
-    FileOps::JobItem job(localFilename, it->Filename(), GetFolderNameByFileType(fileType));
-    m_jobQueue.push_back(job);
-    m_queueContent.Signal();
-    Unlock();
+    CStdString localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
+    if (g_bExtraDebug)
+      XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
+
+    if (!XBMC->FileExists(localFilename, true))
+    {
+      Lock();
+      FileOps::JobItem job(localFilename, remoteFilename, "Default");
+      m_jobQueue.push_back(job);
+      m_queueContent.Signal();
+      Unlock();
+    }
+
+    m_preview[remoteFilename] = localFilename;
+  }
+  return localFilename;
+}
+
+CStdString FileOps::GetArtworkPath(const CStdString &remoteFilename, FileType fileType)
+{
+  if (g_bExtraDebug)
+    XBMC->Log(LOG_DEBUG, "%s: filename: %s, fileType: %s", __FUNCTION__, remoteFilename.c_str(), GetFolderNameByFileType(fileType));
+
+  // Check local directory
+  std::pair<FileType, CStdString> key = std::make_pair(fileType, remoteFilename);
+  std::map<std::pair<FileType, CStdString>, CStdString>::iterator iter = m_artworks.find(key);
+  if (iter != m_artworks.end())
+    return iter->second;
+
+  // Check file exists in storage group
+  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(GetFolderNameByFileType(fileType), remoteFilename);
+
+  // Determine local filename
+  CStdString localFilename;
+  if (!sgfile.IsNull())
+  {
+    localFilename = m_localBasePath + GetFolderNameByFileType(fileType) + PATH_SEPARATOR_CHAR + remoteFilename.c_str();
+
+    if (!XBMC->FileExists(localFilename, true))
+    {
+      Lock();
+        FileOps::JobItem job(localFilename, remoteFilename, GetFolderNameByFileType(fileType));
+        m_jobQueue.push_back(job);
+        m_queueContent.Signal();
+      Unlock();
+    }
+    m_artworks[key] = localFilename;
   }
 
   return localFilename;
@@ -227,8 +203,9 @@ void* FileOps::Process()
       if (g_bExtraDebug)
         XBMC->Log(LOG_DEBUG,"%s Job fetched: local: %s, remote: %s, storagegroup: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
 
+      // Connect to the file and cache it to the local addon cache
       MythFile file = m_con.ConnectPath(job.m_remoteFilename, job.m_storageGroup);
-      if (file.Length() > 0)
+      if (!file.IsNull() && file.Length() > 0)
       {
         if (CacheFile(job.m_localFilename.c_str(), file))
         {
@@ -246,11 +223,28 @@ void* FileOps::Process()
       }
       else
       {
-        // File was empty (this happens usually for new recordings where the preview image hasn't been generated)
-        XBMC->Log(LOG_DEBUG, "%s File is empty, delayed recache: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
-        jobQueueDelayed.push_back(job);
-      }
+        // Failed to open file for reading. Unfortunately it cannot be determined if this is a permanent or a temporary problem (new recording's preview hasn't been generated yet).
+        // Increase the error count and retry to cache the file a few times
+        if (file.IsNull())
+        {
+          XBMC->Log(LOG_ERROR, "%s Failed to read file: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
+          job.m_errorCount += 1;
+        }
 
+        // File was empty (this happens usually for new recordings where the preview image hasn't been generated yet)
+        // This is not an error, always try to recache the file
+        else if (file.Length() == 0)
+        {
+          XBMC->Log(LOG_DEBUG, "%s File is empty: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
+        }
+
+        // Recache the file if it hasn't exceeded the maximum number of allowed attempts
+        if (job.m_errorCount <= c_maximumAttemptsOnReadError)
+        {
+          XBMC->Log(LOG_DEBUG, "%s Delayed recache file: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
+          jobQueueDelayed.push_back(job);
+        }
+      }
     }
 
     // Try to recache the currently empty files
@@ -312,7 +306,6 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
 
   unsigned long long totalLength = source.Length();
   unsigned long long totalRead = 0;
-  unsigned long long totalWrite = 0;
 
   const long buffersize = 32768;
   char* buffer = new char[buffersize];
@@ -334,12 +327,11 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
 
       bytes_read -= bytes_written;
       p += bytes_written;
-      totalWrite += bytes_written;
     }
   }
 
   XBMC->CloseFile(file);
-  delete buffer;
+  delete[] buffer;
 
   if (totalRead < totalLength)
   {

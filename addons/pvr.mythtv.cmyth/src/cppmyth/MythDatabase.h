@@ -31,7 +31,7 @@ extern "C" {
 };
 
 class MythChannel;
-class MythTimer;
+class MythRecordingRule;
 class MythProgramInfo;
 
 template <class T> class MythPointerThreadSafe;
@@ -39,12 +39,13 @@ template <class T> class MythPointerThreadSafe;
 typedef cmyth_program_t MythProgram;
 typedef std::vector<MythProgram> ProgramList;
 
-typedef std::map<int, MythChannel> ChannelMap;
-typedef std::pair<CStdString, std::vector<int> > MythChannelGroup;
+typedef std::map<int, MythChannel> ChannelIdMap;
+typedef std::multimap<CStdString, MythChannel> ChannelNumberMap;
 typedef std::map<CStdString, std::vector<int> > ChannelGroupMap;
 
-typedef std::map<int, std::vector<int> > SourceMap;
-typedef std::map<int, MythTimer> TimerMap;
+typedef std::vector<std::pair<unsigned int, unsigned int> > RecorderSourceList;
+
+typedef std::map<int, MythRecordingRule> RecordingRuleMap;
 
 // TODO: Rework MythRecordingProfile
 class MythRecordingProfile : public CStdString
@@ -59,28 +60,39 @@ class MythDatabase
 {
 public:
   MythDatabase();
-  MythDatabase(const CStdString &server, const CStdString &database, const CStdString &user, const CStdString &password);
+  MythDatabase(const CStdString &server, const CStdString &database, const CStdString &user, const CStdString &password, unsigned short port);
 
   bool IsNull() const;
 
   bool TestConnection(CStdString *msg);
 
+  int GetSchemaVersion();
+
+  CStdString GetSetting(const CStdString &setting);
+
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* pprogram);
-  ProgramList GetGuide(time_t starttime, time_t endtime);
+  ProgramList GetGuide(int channelid, time_t starttime, time_t endtime);
 
-  ChannelMap GetChannels();
+  ChannelIdMap GetChannels();
   ChannelGroupMap GetChannelGroups();
-  SourceMap GetSources();
 
-  TimerMap GetTimers();
-  int AddTimer(const MythTimer &timer);
-  bool UpdateTimer(const MythTimer &timer);
-  bool DeleteTimer(int recordid);
+  RecorderSourceList GetLiveTVRecorderSourceList(const CStdString &channum);
+
+  RecordingRuleMap GetRecordingRules();
+  bool AddRecordingRule(const MythRecordingRule &rule);
+  bool UpdateRecordingRule(const MythRecordingRule &rule);
+  bool DeleteRecordingRule(unsigned int recordid);
+  MythRecordingRule LoadRecordingRuleTemplate(const CStdString &category, const CStdString &category_type);
 
   RecordingProfileList GetRecordingProfiles();
 
-  int SetWatchedStatus(const MythProgramInfo &recording, bool watched);
+  bool SetWatchedStatus(const MythProgramInfo &recording, bool watched);
   long long GetBookmarkMark(const MythProgramInfo &recording, long long bk, int mode);
+
+  long long GetRecordingMarkup(const MythProgramInfo &recording, int type);
+  long long GetRecordingFrameRate(const MythProgramInfo &recording);
+
+  bool FillRecordingArtwork(MythProgramInfo &recording);
 
 private:
   boost::shared_ptr<MythPointerThreadSafe<cmyth_database_t> > m_database_t;

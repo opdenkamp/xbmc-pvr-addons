@@ -22,44 +22,32 @@
  *
  */
 
-#ifndef VNSI_DEMUXER_AC3_H
-#define VNSI_DEMUXER_AC3_H
+#ifndef VNSI_DEMUXER_MPEGAUDIO_H
+#define VNSI_DEMUXER_MPEGAUDIO_H
 
-#include "demuxer.h"
+#include "parser.h"
 
-// --- cParserAC3 -------------------------------------------------
+// --- cParserMPEG2Audio -------------------------------------------------
 
-class cParserAC3 : public cParser
+class cParserMPEG2Audio : public cParser
 {
 private:
-  cTSDemuxer *m_demuxer;
-  bool        m_firstPUSIseen;
-  bool        m_PESStart;
   int         m_SampleRate;
   int         m_Channels;
   int         m_BitRate;
-
-  int64_t     m_PTS;                /* pts of the current frame */
-  int64_t     m_DTS;                /* dts of the current frame */
-  int64_t     m_NextDTS;
-
   int         m_FrameSize;
-  bool        m_HeaderFound;
 
-#define AC3_MAX_CODED_FRAME_SIZE 1920*2
-  uint8_t     m_AC3Buffer[AC3_MAX_CODED_FRAME_SIZE];    /* input buffer */
-  int         m_AC3BufferSize;
-  int         m_AC3BufferPtr;
+  int64_t     m_PTS;
+  int64_t     m_DTS;
 
-  int FindHeaders(uint8_t **poutbuf, int *poutbuf_size,
-                  uint8_t *buf, int buf_size);
+  int FindHeaders(uint8_t *buf, int buf_size);
 
 public:
-  cParserAC3(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
-  virtual ~cParserAC3();
+  cParserMPEG2Audio(int pID, cTSStream *stream);
+  virtual ~cParserMPEG2Audio();
 
-  virtual void Parse(unsigned char *data, int size, bool pusi);
+  virtual void Parse(sStreamPacket *pkt);
 };
 
 
-#endif // VNSI_DEMUXER_AC3_H
+#endif // VNSI_DEMUXER_MPEGAUDIO_H

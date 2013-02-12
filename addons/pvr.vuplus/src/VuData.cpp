@@ -898,7 +898,7 @@ bool Vu::LoadChannels(CStdString strServiceReference, CStdString strGroupName)
 
     strTmp2.Format("%s", strIcon.c_str());
 
-    std::replace(strIcon.begin(), strIcon.end(), ':','_');
+    std::replace(strIcon.begin(), strIcon.end(), ':', '_');
     strIcon = g_strIconPath.c_str() + strIcon + ".png";
 
     newChannel.strIconPath = strIcon;
@@ -910,6 +910,13 @@ bool Vu::LoadChannels(CStdString strServiceReference, CStdString strGroupName)
 
     strTmp.Format("http://%s%s:%d/%s", strTmp.c_str(), g_strHostname, g_iPortStream, strTmp2.c_str());
     newChannel.strStreamURL = strTmp;
+
+    if (g_bOnlinePicons == true)
+    {
+      std::replace(strTmp2.begin(), strTmp2.end(), ':', '_');
+      strTmp.Format("%spicon/%s.png", m_strURL.c_str(), strTmp2.c_str());
+      newChannel.strIconPath = strTmp;
+    }
 
     m_channels.push_back(newChannel);
     XBMC->Log(LOG_INFO, "%s Loaded channel: %s, Icon: %s", __FUNCTION__, newChannel.strChannelName.c_str(), newChannel.strIconPath.c_str());
@@ -1159,6 +1166,16 @@ int Vu::GetChannelNumber(CStdString strServiceReference)
       return i+1;
   }
   return -1;
+}
+
+CStdString Vu::GetChannelIconPath(CStdString strChannelName)  
+{
+  for (unsigned int i = 0;i<m_channels.size();  i++) 
+  {
+    if (!strChannelName.compare(m_channels[i].strChannelName))
+      return m_channels[i].strIconPath;
+  }
+  return "";
 }
 
 PVR_ERROR Vu::GetTimers(ADDON_HANDLE handle)
@@ -1457,19 +1474,70 @@ PVR_ERROR Vu::GetRecordings(ADDON_HANDLE handle)
 
   for (unsigned int i=0; i<m_locations.size(); i++)
   {
-    if (!GetRecordingFromLocation(handle, m_locations[i]))
+    if (!GetRecordingFromLocation(m_locations[i]))
     {
       XBMC->Log(LOG_ERROR, "%s Error fetching lists for folder: '%s'", __FUNCTION__, m_locations[i].c_str());
-      return PVR_ERROR_SERVER_ERROR;
     }
   }
+
+  TransferRecordings(handle);
 
   RestoreLastPlayedPositions();
 
   return PVR_ERROR_NO_ERROR;
 }
 
-bool Vu::GetRecordingFromLocation(ADDON_HANDLE handle, CStdString strRecordingFolder)
+bool Vu::IsInRecordingFolder(CStdString strRecordingFolder)
+{
+  int iMatches = 0;
+  for (unsigned int i = 0; i < m_recordings.size(); i++)
+  {
+    if (strRecordingFolder.compare(m_recordings.at(i).strTitle) == 0)
+    {
+      iMatches++;
+      XBMC->Log(LOG_DEBUG, "%s Found Recording title '%s' in recordings vector!", __FUNCTION__, strRecordingFolder.c_str());
+      if (iMatches > 1)
+      {
+        XBMC->Log(LOG_DEBUG, "%s Found Recording title twice '%s' in recordings vector!", __FUNCTION__, strRecordingFolder.c_str());
+        return true;    
+      }
+    }
+  }
+
+  return false;
+}
+
+void Vu::TransferRecordings(ADDON_HANDLE handle)
+{
+  for (unsigned int i=0; i<m_recordings.size(); i++)
+  {
+    CStdString strTmp;
+    VuRecording &recording = m_recordings.at(i);
+    PVR_RECORDING tag;
+    memset(&tag, 0, sizeof(PVR_RECORDING));
+    strncpy(tag.strRecordingId, recording.strRecordingId.c_str(), sizeof(tag.strRecordingId));
+    strncpy(tag.strTitle, recording.strTitle.c_str(), sizeof(tag.strTitle));
+    strncpy(tag.strStreamURL, recording.strStreamURL.c_str(), sizeof(tag.strStreamURL));
+    strncpy(tag.strPlotOutline, recording.strPlotOutline.c_str(), sizeof(tag.strPlotOutline));
+    strncpy(tag.strPlot, recording.strPlot.c_str(), sizeof(tag.strPlot));
+    strncpy(tag.strChannelName, recording.strChannelName.c_str(), sizeof(tag.strChannelName));
+    strncpy(tag.strIconPath, recording.strIconPath.c_str(), sizeof(tag.strIconPath));
+
+    if(IsInRecordingFolder(recording.strTitle))
+      strTmp.Format("/%s/", recording.strTitle.c_str());
+    else
+      strTmp.Format("/");
+
+    recording.strDirectory = strTmp;
+    strncpy(tag.strDirectory, recording.strDirectory.c_str(), sizeof(tag.strDirectory));
+    tag.recordingTime     = recording.startTime;
+    tag.iDuration         = recording.iDuration;
+
+    PVR->TransferRecordingEntry(handle, &tag);
+  }
+}
+
+bool Vu::GetRecordingFromLocation(CStdString strRecordingFolder)
 {
   CStdString url;
 
@@ -1535,6 +1603,8 @@ bool Vu::GetRecordingFromLocation(ADDON_HANDLE handle, CStdString strRecordingFo
     if (XMLUtils::GetString(pNode, "e2servicename", strTmp))
       recording.strChannelName = strTmp;
 
+    recording.strIconPath = GetChannelIconPath(strTmp.c_str());
+
     if (XMLUtils::GetInt(pNode, "e2time", iTmp)) 
       recording.startTime = iTmp;
 
@@ -1552,27 +1622,12 @@ bool Vu::GetRecordingFromLocation(ADDON_HANDLE handle, CStdString strRecordingFo
       recording.strStreamURL = strTmp;
     }
 
-
-    PVR_RECORDING tag;
-    memset(&tag, 0, sizeof(PVR_RECORDING));
-    strncpy(tag.strRecordingId, recording.strRecordingId.c_str(), sizeof(tag.strRecordingId));
-    strncpy(tag.strTitle, recording.strTitle.c_str(), sizeof(tag.strTitle));
-    strncpy(tag.strStreamURL, recording.strStreamURL.c_str(), sizeof(tag.strStreamURL));
-    strncpy(tag.strPlotOutline, recording.strPlotOutline.c_str(), sizeof(tag.strPlotOutline));
-    strncpy(tag.strPlot, recording.strPlot.c_str(), sizeof(tag.strPlot));
-    strncpy(tag.strChannelName, recording.strChannelName.c_str(), sizeof(tag.strChannelName));
-    tag.recordingTime     = recording.startTime;
-    tag.iDuration         = recording.iDuration;
-    strncpy(tag.strDirectory, "/", sizeof(tag.strDirectory));   // unused
-
-    PVR->TransferRecordingEntry(handle, &tag);
-
     m_iNumRecordings++; 
     iNumRecording++;
 
     m_recordings.push_back(recording);
 
-    XBMC->Log(LOG_DEBUG, "%s loaded Recording entry '%s', start '%d', length '%d'", __FUNCTION__, tag.strTitle, recording.startTime, recording.iDuration);
+    XBMC->Log(LOG_DEBUG, "%s loaded Recording entry '%s', start '%d', length '%d'", __FUNCTION__, recording.strTitle.c_str(), recording.startTime, recording.iDuration);
   }
 
   XBMC->Log(LOG_INFO, "%s Loaded %u Recording Entries from folder '%s'", __FUNCTION__, iNumRecording, strRecordingFolder.c_str());

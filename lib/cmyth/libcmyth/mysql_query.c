@@ -23,10 +23,9 @@
 #include <stdio.h>
 #include <cmyth_local.h>
 
-#define CMYTH_ULONG_STRLEN ((sizeof(long)*3)+1)
-#define CMYTH_LONG_STRLEN (CMYTH_ULONG_STRLEN+1)
+#define CMYTH_UINT32_STRLEN ((sizeof(uint32_t)*3)+1)
+#define CMYTH_INT32_STRLEN (CMYTH_UINT32_STRLEN+1)
 #define CMYTH_INT64_STRLEN 24
-#define CMYTH_UINT64_STRLEN 24
 
 /**
  * Hold in-progress query
@@ -70,7 +69,7 @@ query_destroy(void *p)
  * 			parameters, this is NOT copied and must therefore
  * 			remain valid for the life of the query.
  */
-cmyth_mysql_query_t * 
+cmyth_mysql_query_t *
 cmyth_mysql_query_create(cmyth_database_t db, const char * query_string)
 {
     cmyth_mysql_query_t * out;
@@ -113,7 +112,7 @@ query_buffer_check_len(cmyth_mysql_query_t *query, int len)
 	/* Increase buffer size by len or out->source_len, whichever
 	 * is bigger
 	 */
-	if(query->source_len > len) 
+	if(query->source_len > len)
 	    query->buf_size += query->source_len;
 	else
 	    query->buf_size += len;
@@ -186,18 +185,18 @@ query_begin_next_param(cmyth_mysql_query_t *query)
 }
 
 static inline int
-query_buffer_add_long(cmyth_mysql_query_t * query, long param)
+query_buffer_add_int32(cmyth_mysql_query_t * query, int32_t param)
 {
-    char buf[CMYTH_LONG_STRLEN];
-    sprintf(buf,"%ld",param);
+    char buf[CMYTH_INT32_STRLEN];
+    sprintf(buf,"%"PRId32,param);
     return query_buffer_add_str(query,buf);
 }
 
 static inline int
-query_buffer_add_ulong(cmyth_mysql_query_t * query, long param)
+query_buffer_add_uint32(cmyth_mysql_query_t * query, uint32_t param)
 {
-    char buf[CMYTH_ULONG_STRLEN];
-    sprintf(buf,"%lu",param);
+    char buf[CMYTH_UINT32_STRLEN];
+    sprintf(buf,"%"PRIu32,param);
     return query_buffer_add_str(query,buf);
 }
 
@@ -209,42 +208,34 @@ static inline int
   return query_buffer_add_str(query,buf);
 }
 
-static inline int
-  query_buffer_add_uint64(cmyth_mysql_query_t * query, uint64_t param)
-{
-  char buf[CMYTH_UINT64_STRLEN];
-  sprintf(buf,"%"PRIu64,param);
-  return query_buffer_add_str(query,buf);
-}
-
 /**
- * Add a long integer parameter
+ * Add a int32_t integer parameter
  * \param query the query object
  * \param param the integer to add
  */
 int
-cmyth_mysql_query_param_long(cmyth_mysql_query_t * query,long param)
+cmyth_mysql_query_param_int32(cmyth_mysql_query_t * query, int32_t param)
 {
     int ret;
     ret = query_begin_next_param(query);
     if(ret < 0)
 	return ret;
-    return query_buffer_add_long(query,param);
+    return query_buffer_add_int32(query,param);
 }
 
 /**
- * Add an unsigned long integer parameter
+ * Add an uint32_t integer parameter
  * \param query the query object
  * \param param the integer to add
  */
 int
-cmyth_mysql_query_param_ulong(cmyth_mysql_query_t * query,unsigned long param)
+cmyth_mysql_query_param_uint32(cmyth_mysql_query_t * query, uint32_t param)
 {
     int ret;
     ret = query_begin_next_param(query);
     if(ret < 0)
 	return ret;
-    return query_buffer_add_ulong(query,param);
+    return query_buffer_add_uint32(query,param);
 }
 
 /**
@@ -253,7 +244,7 @@ cmyth_mysql_query_param_ulong(cmyth_mysql_query_t * query,unsigned long param)
  * \param param the integer to add
  */
 int
-cmyth_mysql_query_param_int64(cmyth_mysql_query_t * query,int64_t param)
+cmyth_mysql_query_param_int64(cmyth_mysql_query_t * query, int64_t param)
 {
     int ret;
     ret = query_begin_next_param(query);
@@ -263,29 +254,14 @@ cmyth_mysql_query_param_int64(cmyth_mysql_query_t * query,int64_t param)
 }
 
 /**
- * Add a uint64_t parameter
- * \param query the query object
- * \param param the integer to add
- */
-int
-cmyth_mysql_query_param_uint64(cmyth_mysql_query_t * query,uint64_t param)
-{
-    int ret;
-    ret = query_begin_next_param(query);
-    if(ret < 0)
-	return ret;
-    return query_buffer_add_uint64(query,param);
-}
-
-/**
  * Add an integer parameter
  * \param query the query object
  * \param param the integer to add
  */
 int
-cmyth_mysql_query_param_int(cmyth_mysql_query_t * query,int param)
+cmyth_mysql_query_param_int(cmyth_mysql_query_t * query, int param)
 {
-    return cmyth_mysql_query_param_long(query,(long)param);
+    return cmyth_mysql_query_param_int32(query,(int32_t)param);
 }
 
 /**
@@ -294,9 +270,9 @@ cmyth_mysql_query_param_int(cmyth_mysql_query_t * query,int param)
  * \param param the integer to add
  */
 int
-cmyth_mysql_query_param_uint(cmyth_mysql_query_t * query,int param)
+cmyth_mysql_query_param_uint(cmyth_mysql_query_t * query, unsigned int param)
 {
-    return cmyth_mysql_query_param_ulong(query,(unsigned long)param);
+    return cmyth_mysql_query_param_uint32(query,(uint32_t)param);
 }
 
 /**
@@ -318,7 +294,7 @@ cmyth_mysql_query_param_unixtime(cmyth_mysql_query_t * query, time_t param, int 
         ret = query_buffer_add_str(query, "FROM_UNIXTIME(");
     if(ret < 0)
 	return ret;
-    ret = query_buffer_add_long(query,(long)param);
+    ret = query_buffer_add_int32(query,(int32_t)param);
     if(ret < 0)
 	return ret;
     if (tz_utc == 1)

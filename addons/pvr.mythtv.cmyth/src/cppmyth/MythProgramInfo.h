@@ -19,6 +19,8 @@
  *
  */
 
+#include "MythTimestamp.h"
+
 #include "platform/util/StdString.h"
 
 #include <boost/shared_ptr.hpp>
@@ -41,12 +43,11 @@ public:
 
   bool IsNull() const;
 
-  CStdString StrUID();
-  long long UID();
+  CStdString UID();
   CStdString ProgramID();
-  CStdString Title(bool subtitleEncoded);
+  CStdString Title();
   CStdString Subtitle();
-  CStdString Path();
+  CStdString BaseName();
   CStdString Description();
   int Duration();
   CStdString Category();
@@ -54,17 +55,33 @@ public:
   time_t EndTime();
   bool IsWatched();
   bool IsDeletePending();
+  bool HasBookmark();
+  bool IsVisible();
 
-  int ChannelID();
+  unsigned int ChannelID();
   CStdString ChannelName();
 
   RecordStatus Status();
   CStdString RecordingGroup();
-  unsigned long RecordID();
+  unsigned int RecordID();
   time_t RecordingStartTime();
   time_t RecordingEndTime();
   int Priority();
 
+  void SetFramerate(const long long framerate);
+  long long Framterate() const;
+
+  CStdString IconPath();
+  CStdString Coverart() const;
+  CStdString Fanart() const;
+
 private:
   boost::shared_ptr<MythPointer<cmyth_proginfo_t> > m_proginfo_t;
+
+  // Cached PVR attributes
+  long long m_framerate;
+
+  // Artworks
+  CStdString m_coverart;
+  CStdString m_fanart;
 };

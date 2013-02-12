@@ -44,6 +44,10 @@ extern "C" {
 #define DEFAULT_DB_USER         "mythtv"
 #define DEFAULT_DB_PASSWORD     "mythtv"
 #define DEFAULT_DB_NAME         "mythconverg"
+#define DEFAULT_DB_PORT         3306
+#define DEFAULT_RECORD_TEMPLATE 1
+
+#define SUBTITLE_SEPARATOR " - "
 
 /*!
  * @brief PVR macros for string exchange
@@ -61,14 +65,27 @@ extern CStdString   g_szUserPath;         ///< The Path to the user directory in
 extern CStdString   g_szClientPath;       ///< The Path where this driver is located
 
 /* Client Settings */
-extern CStdString   g_szHostname;         ///< The Host name or IP of the mythtv server
+extern CStdString   g_szMythHostname;     ///< The Host name or IP of the mythtv server
 extern int          g_iMythPort;          ///< The mythtv Port (default is 6543)
-extern CStdString   g_szMythDBuser;       ///< The mythtv sql username (default is mythtv)
-extern CStdString   g_szMythDBpassword;   ///< The mythtv sql password (default is mythtv)
-extern CStdString   g_szMythDBname;       ///< The mythtv sql database name (default is mythconverg)
+extern CStdString   g_szDBUser;           ///< The mythtv sql username (default is mythtv)
+extern CStdString   g_szDBPassword;       ///< The mythtv sql password (default is mythtv)
+extern CStdString   g_szDBName;           ///< The mythtv sql database name (default is mythconverg)
+extern CStdString   g_szDBHostname;       ///< The mythtv sql database host name or IP of the database server
+extern int          g_iDBPort;            ///< The mythtv sql database port (default is 3306)
 extern bool         g_bExtraDebug;        ///< Debug logging
 extern bool         g_bLiveTV;            ///< LiveTV support (or recordings only)
 extern bool         g_bLiveTVPriority;    ///< MythTV Backend setting to allow live TV to move scheduled shows
+extern int          g_iRecTemplateType;   ///< Template type for new record (0=Internal, 1=MythTV)
+///* Internal Record template */
+extern bool         g_bRecAutoMetadata;
+extern bool         g_bRecAutoCommFlag;
+extern bool         g_bRecAutoTranscode;
+extern bool         g_bRecAutoRunJob1;
+extern bool         g_bRecAutoRunJob2;
+extern bool         g_bRecAutoRunJob3;
+extern bool         g_bRecAutoRunJob4;
+extern bool         g_bRecAutoExpire;
+extern int          g_iRecTranscoder;
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr   *PVR;

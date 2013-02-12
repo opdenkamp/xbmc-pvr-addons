@@ -39,7 +39,7 @@ public:
 
   CStdString Filename();
   unsigned long long Size();
-  unsigned long LastModified();
+  time_t LastModified();
 
 private:
   boost::shared_ptr<MythPointer<cmyth_storagegroup_file_t> > m_storagegroup_file_t;

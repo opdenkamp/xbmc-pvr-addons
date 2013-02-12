@@ -33,7 +33,7 @@ public:
   int  Signal() const;              /*!< @brief (optional) signal strength */
   long BER() const;                 /*!< @brief (optional) bit error rate */
   long UNC() const;                 /*!< @brief (optional) uncorrected blocks */
-  int  ID() const;                  /*!< @brief (optional) Recorder ID */
+  unsigned int ID() const;          /*!< @brief (optional) Recorder ID */
 
 private:
   CStdString m_AdapterStatus; /*!< @brief (optional) status of the adapter that's being used */
@@ -41,5 +41,5 @@ private:
   int  m_Signal;              /*!< @brief (optional) signal strength */
   long m_BER;                 /*!< @brief (optional) bit error rate */
   long m_UNC;                 /*!< @brief (optional) uncorrected blocks */
-  int  m_ID;                  /*!< @brief (optional) Recorder ID */
+  unsigned int m_ID;          /*!< @brief (optional) Recorder ID */
 };

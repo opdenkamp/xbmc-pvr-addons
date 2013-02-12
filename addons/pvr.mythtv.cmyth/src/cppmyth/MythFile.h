@@ -38,7 +38,7 @@ public:
   unsigned long long Length();
   void UpdateLength(unsigned long long length);
 
-  int Read(void *buffer, unsigned long length);
+  int Read(void *buffer, unsigned int length);
   long long Seek(long long offset, int whence);
   unsigned long long Position();
 

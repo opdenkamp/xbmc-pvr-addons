@@ -27,20 +27,30 @@
 using namespace std;
 using namespace ADDON;
 
-#define SEEK_POSSIBLE 0x10 // Flag used to check if protocol allows seeks
-
 /* User adjustable settings are saved here.
  * Default values are defined inside client.h
  * and exported to the other source files.
  */
-CStdString   g_szHostname             = DEFAULT_HOST;             ///< The Host name or IP of the mythtv server
+CStdString   g_szMythHostname         = DEFAULT_HOST;             ///< The Host name or IP of the mythtv server
 int          g_iMythPort              = DEFAULT_PORT;             ///< The mythtv Port (default is 6543)
-CStdString   g_szMythDBuser           = DEFAULT_DB_USER;          ///< The mythtv sql username (default is mythtv)
-CStdString   g_szMythDBpassword       = DEFAULT_DB_PASSWORD;      ///< The mythtv sql password (default is mythtv)
-CStdString   g_szMythDBname           = DEFAULT_DB_NAME;          ///< The mythtv sql database name (default is mythconverg)
+CStdString   g_szDBUser               = DEFAULT_DB_USER;          ///< The mythtv sql username (default is mythtv)
+CStdString   g_szDBPassword           = DEFAULT_DB_PASSWORD;      ///< The mythtv sql password (default is mythtv)
+CStdString   g_szDBName               = DEFAULT_DB_NAME;          ///< The mythtv sql database name (default is mythconverg)
+CStdString   g_szDBHostname           = DEFAULT_HOST;             ///< The mythtv sql database host name or IP of the database server (default is same as mythtv backend hostname)
+int          g_iDBPort                = DEFAULT_DB_PORT;          ///< The mythtv sql database port (default is 3306)
 bool         g_bExtraDebug            = DEFAULT_EXTRA_DEBUG;      ///< Output extensive debug information to the log
 bool         g_bLiveTV                = DEFAULT_LIVETV;           ///< LiveTV support (or recordings only)
 bool         g_bLiveTVPriority        = DEFAULT_LIVETV_PRIORITY;  ///< MythTV Backend setting to allow live TV to move scheduled shows
+int          g_iRecTemplateType       = DEFAULT_RECORD_TEMPLATE;  ///< Template type for new record (0=Internal, 1=MythTV)
+bool         g_bRecAutoMetadata       = true;
+bool         g_bRecAutoCommFlag       = false;
+bool         g_bRecAutoTranscode      = false;
+bool         g_bRecAutoRunJob1        = false;
+bool         g_bRecAutoRunJob2        = false;
+bool         g_bRecAutoRunJob3        = false;
+bool         g_bRecAutoRunJob4        = false;
+bool         g_bRecAutoExpire         = false;
+int          g_iRecTranscoder         = 0;
 
 ///* Client member variables */
 bool         m_recordingFirstRead;
@@ -80,8 +90,10 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
 
   XBMC->Log(LOG_DEBUG, "Creating MythTV cmyth PVR-Client");
 
+  XBMC->Log(LOG_DEBUG, "Addon compiled with XBMC_PVR_API_VERSION: %s and XBMC_PVR_MIN_API_VERSION: %s", GetPVRAPIVersion(), GetMininumPVRAPIVersion());
+
   XBMC->Log(LOG_DEBUG, "Register handle @ libXBMC_addon...done");
-  
+
   XBMC->Log(LOG_DEBUG, "Checking props...");
   if (!props)
   {
@@ -121,12 +133,12 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
 
   /* Read setting "host" from settings.xml */
   if (XBMC->GetSetting("host", buffer))
-    g_szHostname = buffer;
+    g_szMythHostname = buffer;
   else
   {
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'host' setting, falling back to '%s' as default", DEFAULT_HOST);
-    g_szHostname = DEFAULT_HOST;
+    g_szMythHostname = DEFAULT_HOST;
   }
   buffer[0] = 0;
 
@@ -134,7 +146,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   if (!XBMC->GetSetting("port", &g_iMythPort))
   {
     /* If setting is unknown fallback to defaults */
-    XBMC->Log(LOG_ERROR, "Couldn't get 'port' setting, falling back to '%i' as default", DEFAULT_PORT);
+    XBMC->Log(LOG_ERROR, "Couldn't get 'port' setting, falling back to '%d' as default", DEFAULT_PORT);
     g_iMythPort = DEFAULT_PORT;
   }
 
@@ -148,36 +160,57 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
 
   /* Read setting "db_username" from settings.xml */
   if (XBMC->GetSetting("db_user", buffer))
-    g_szMythDBuser = buffer;
+    g_szDBUser = buffer;
   else
   {
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'db_user' setting, falling back to '%s' as default", DEFAULT_DB_USER);
-    g_szMythDBuser = DEFAULT_DB_USER;
+    g_szDBUser = DEFAULT_DB_USER;
   }
   buffer[0] = 0;
 
   /* Read setting "db_password" from settings.xml */
   if (XBMC->GetSetting("db_password", buffer))
-    g_szMythDBpassword = buffer;
+    g_szDBPassword = buffer;
   else
   {
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'db_password' setting, falling back to '%s' as default", DEFAULT_DB_PASSWORD);
-    g_szMythDBpassword = DEFAULT_DB_PASSWORD;
+    g_szDBPassword = DEFAULT_DB_PASSWORD;
   }
   buffer[0] = 0;
-  
+
   /* Read setting "db_name" from settings.xml */
   if (XBMC->GetSetting("db_name", buffer))
-    g_szMythDBname = buffer;
+    g_szDBName = buffer;
   else
   {
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'db_name' setting, falling back to '%s' as default", DEFAULT_DB_NAME);
-    g_szMythDBname = DEFAULT_DB_NAME;
+    g_szDBName = DEFAULT_DB_NAME;
   }
   buffer[0] = 0;
+
+  /* Read hidden setting "db_host" from settings.xml */
+  if (XBMC->GetSetting("db_host", buffer))
+    if (strlen(buffer) > 0)
+      g_szDBHostname = buffer;
+    else
+      g_szDBHostname = g_szMythHostname;
+  else
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'db_host' setting, falling back to '%s' as default", g_szMythHostname.c_str());
+    g_szDBHostname = g_szMythHostname;
+  }
+  buffer[0] = 0;
+
+  /* Read hidden setting "db_port" from settings.xml */
+  if (!XBMC->GetSetting("db_port", &g_iDBPort) || g_iDBPort == 0)
+  {
+    /* If setting is unknown fallback to defaults */
+    g_iDBPort = DEFAULT_DB_PORT;
+  }
 
   /* Read setting "LiveTV" from settings.xml */
   if (!XBMC->GetSetting("livetv", &g_bLiveTV))
@@ -185,6 +218,36 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'livetv' setting, falling back to '%b' as default", DEFAULT_LIVETV);
     g_bLiveTV = DEFAULT_LIVETV;
+  }
+
+  /* Read settings "Record template" from settings.xml */
+  if (!XBMC->GetSetting("rec_template_provider", &g_iRecTemplateType))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'rec_template_provider' setting, falling back to '%i' as default", DEFAULT_RECORD_TEMPLATE);
+    g_iRecTemplateType = DEFAULT_RECORD_TEMPLATE;
+  }
+  /* Get internal template settings when selected (0) */
+  if (g_iRecTemplateType == 0)
+  {
+    if (!XBMC->GetSetting("rec_autometadata", &g_bRecAutoMetadata))
+      g_bRecAutoMetadata = true;
+    if (!XBMC->GetSetting("rec_autocommflag", &g_bRecAutoCommFlag))
+      g_bRecAutoCommFlag = false;
+    if (!XBMC->GetSetting("rec_autotranscode", &g_bRecAutoTranscode))
+      g_bRecAutoTranscode = false;
+    if (!XBMC->GetSetting("rec_autorunjob1", &g_bRecAutoRunJob1))
+      g_bRecAutoRunJob1 = false;
+    if (!XBMC->GetSetting("rec_autorunjob2", &g_bRecAutoRunJob2))
+      g_bRecAutoRunJob2 = false;
+    if (!XBMC->GetSetting("rec_autorunjob3", &g_bRecAutoRunJob3))
+      g_bRecAutoRunJob3 = false;
+    if (!XBMC->GetSetting("rec_autorunjob4", &g_bRecAutoRunJob4))
+      g_bRecAutoRunJob4 = false;
+    if (!XBMC->GetSetting("rec_autoexpire", &g_bRecAutoExpire))
+      g_bRecAutoExpire = false;
+    if (!XBMC->GetSetting("rec_transcoder", &g_iRecTranscoder))
+      g_iRecTranscoder = 0;
   }
 
   free (buffer);
@@ -271,14 +334,14 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   string str = settingName;
   if (!g_bCreated)
     return ADDON_STATUS_OK;
-  
+
   if (str == "host")
   {
     string tmp_sHostname;
-    XBMC->Log(LOG_INFO, "Changed Setting 'host' from %s to %s", g_szHostname.c_str(), (const char*)settingValue);
-    tmp_sHostname = g_szHostname;
-    g_szHostname = (const char*)settingValue;
-    if (tmp_sHostname != g_szHostname)
+    XBMC->Log(LOG_INFO, "Changed Setting 'host' from %s to %s", g_szMythHostname.c_str(), (const char*)settingValue);
+    tmp_sHostname = g_szMythHostname;
+    g_szMythHostname = (const char*)settingValue;
+    if (tmp_sHostname != g_szMythHostname)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "port")
@@ -292,29 +355,29 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   }
   else if (str == "db_user")
   {
-    string tmp_sMythDBuser;
-    XBMC->Log(LOG_INFO, "Changed Setting 'db_user' from %s to %s", g_szMythDBuser.c_str(), (const char*)settingValue);
-    tmp_sMythDBuser = g_szMythDBuser;
-    g_szMythDBuser = (const char*)settingValue;
-    if (tmp_sMythDBuser != g_szMythDBuser)
+    string tmp_sDBUser;
+    XBMC->Log(LOG_INFO, "Changed Setting 'db_user' from %s to %s", g_szDBUser.c_str(), (const char*)settingValue);
+    tmp_sDBUser = g_szDBUser;
+    g_szDBUser = (const char*)settingValue;
+    if (tmp_sDBUser != g_szDBUser)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "db_password")
   {
-    string tmp_sMythDBpassword;
-    XBMC->Log(LOG_INFO, "Changed Setting 'db_password' from %s to %s", g_szMythDBpassword.c_str(), (const char*)settingValue);
-    tmp_sMythDBpassword = g_szMythDBpassword;
-    g_szMythDBpassword = (const char*)settingValue;
-    if (tmp_sMythDBpassword != g_szMythDBpassword)
+    string tmp_sDBPassword;
+    XBMC->Log(LOG_INFO, "Changed Setting 'db_password' from %s to %s", g_szDBPassword.c_str(), (const char*)settingValue);
+    tmp_sDBPassword = g_szDBPassword;
+    g_szDBPassword = (const char*)settingValue;
+    if (tmp_sDBPassword != g_szDBPassword)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "db_name")
   {
-    string tmp_sMythDBname;
-    XBMC->Log(LOG_INFO, "Changed Setting 'db_name' from %s to %s", g_szMythDBname.c_str(), (const char*)settingValue);
-    tmp_sMythDBname = g_szMythDBname;
-    g_szMythDBname = (const char*)settingValue;
-    if (tmp_sMythDBname != g_szMythDBname)
+    string tmp_sDBName;
+    XBMC->Log(LOG_INFO, "Changed Setting 'db_name' from %s to %s", g_szDBName.c_str(), (const char*)settingValue);
+    tmp_sDBName = g_szDBName;
+    g_szDBName = (const char*)settingValue;
+    if (tmp_sDBName != g_szDBName)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "extradebug")
@@ -659,7 +722,7 @@ int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
   int dataread = g_client->ReadLiveStream(pBuffer, iBufferSize);
   if (dataread < 0)
   {
-    XBMC->Log(LOG_ERROR,"%s: Failed to read liveStream. Errorcode: %i!", __FUNCTION__, dataread);
+    XBMC->Log(LOG_ERROR,"%s: Failed to read liveStream. Errorcode: %d!", __FUNCTION__, dataread);
   }
   return dataread;
 }
@@ -677,12 +740,7 @@ bool SwitchChannel(const PVR_CHANNEL &channelinfo)
   if (g_client == NULL)
     return false;
 
-  if (g_client->SwitchChannel(channelinfo))
-    return true;
-  else
-    XBMC->QueueNotification(QUEUE_WARNING, "Failed to change channel. No free tuners?");
-
-  return false;
+  return g_client->SwitchChannel(channelinfo);
 }
 
 PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
@@ -708,7 +766,7 @@ bool CanSeekStream(void)
   return true;
 }
 
-long long SeekLiveStream(long long iPosition, int iWhence) 
+long long SeekLiveStream(long long iPosition, int iWhence)
 {
   if (g_client == NULL)
     return -1;
@@ -716,7 +774,7 @@ long long SeekLiveStream(long long iPosition, int iWhence)
   return g_client->SeekLiveStream(iPosition,iWhence);
 }
 
-long long PositionLiveStream(void) 
+long long PositionLiveStream(void)
 {
   if (g_client == NULL)
     return -1;
@@ -724,7 +782,7 @@ long long PositionLiveStream(void)
   return g_client->SeekLiveStream(0,SEEK_CUR);
 }
 
-long long LengthLiveStream(void) 
+long long LengthLiveStream(void)
 {
   if (g_client == NULL)
     return -1;

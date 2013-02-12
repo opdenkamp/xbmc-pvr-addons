@@ -79,6 +79,15 @@
     <ClCompile Include="..\librefmem\debug_refmem.c">
       <Filter>refmem</Filter>
     </ClCompile>
+    <ClCompile Include="..\libcmyth\channel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libcmyth\recordingrule.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libcmyth\storagegroup.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\cmyth\cmyth.h">
@@ -93,8 +102,5 @@
     <ClInclude Include="..\librefmem\refmem_local.h">
       <Filter>refmem</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="libcmyth.def" />
   </ItemGroup>
 </Project>

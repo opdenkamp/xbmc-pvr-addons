@@ -42,8 +42,8 @@ static inline char * safe_strncpy(char *dest,const char *src,size_t n)
 
 #define sizeof_strncpy(dest,src) (safe_strncpy(dest,src,sizeof(dest)))
 
-#define safe_atol(str) (((str) == NULL)? (long)0: atol(str))
-#define safe_atoll(str) (((str) == NULL)? (long long)0: atoll(str))
+#define safe_atol(str) (((str) == NULL)? (int32_t)0: atol(str))
+#define safe_atoll(str) (((str) == NULL)? (int64_t)0: atoll(str))
 #define safe_atoi(str) (((str) == NULL)? (int)0: atoi(str))
 
 #endif /* __CMYTH_STRING_H */

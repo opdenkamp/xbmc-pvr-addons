@@ -450,7 +450,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = false;
   pCapabilities->bSupportsChannelScan        = false;
-  pCapabilities->bSupportsRecordingPlayCount = true;
+  pCapabilities->bSupportsRecordingPlayCount = (g_iTVServerXBMCBuild < 117) ? false : true;
   pCapabilities->bSupportsLastPlayedPosition = false;
   pCapabilities->bSupportsRecordingFolders   = false; // Don't show the timer directory field. This does not influence the displaying directories in the recordings list.
 

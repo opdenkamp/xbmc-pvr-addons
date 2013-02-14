@@ -4,3 +4,11 @@ VDR Plugin 'vnsiserver' Revision History
 2010-03-23: Version 0.0.1
 
 - Initial revision.
+
+2013-02-03: Version 0.9.1
+
+- most parts of the plugin rewritten
+- revised parsers
+- proper handling of PMT changes
+- suffix plugin with version of protocol: vnsiserver3
+- this version is compatible with XBMC 12.0

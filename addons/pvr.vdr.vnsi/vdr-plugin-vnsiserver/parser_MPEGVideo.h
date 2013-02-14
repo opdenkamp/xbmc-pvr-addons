@@ -26,7 +26,7 @@
 #define VNSI_DEMUXER_MPEGVIDEO_H
 
 #include <deque>
-#include "demuxer.h"
+#include "parser.h"
 
 class cBitstream;
 
@@ -35,34 +35,28 @@ class cBitstream;
 class cParserMPEG2Video : public cParser
 {
 private:
-  std::deque<sStreamPacket*> m_DurationQueue;
-  std::deque<sStreamPacket*> m_PTSQueue;
-
-  cTSDemuxer     *m_demuxer;
-  uint8_t        *m_pictureBuffer;
-  int             m_pictureBufferSize;
-  int             m_pictureBufferPtr;
-  int             m_FrameDuration;
-  uint32_t        m_StartCond;
   uint32_t        m_StartCode;
-  int             m_StartCodeOffset;
-  sStreamPacket  *m_StreamPacket;
+  bool            m_NeedIFrame;
+  bool            m_NeedSPS;
+  int             m_FrameDuration;
   int             m_vbvDelay;       /* -1 if CBR */
   int             m_vbvSize;        /* Video buffer size (in bytes) */
   int             m_Width;
   int             m_Height;
+  float           m_Dar;
+  int64_t         m_DTS;
+  int64_t         m_PTS;
 
-  bool Parse_MPEG2Video(size_t len, uint32_t next_startcode, int sc_offset);
-  bool Parse_MPEG2Video_SeqStart(cBitstream *bs);
-  bool Parse_MPEG2Video_PicStart(int *frametype, cBitstream *bs);
-  void Parse_ComputePTS(sStreamPacket* pkt);
-  void Parse_ComputeDuration(sStreamPacket* pkt);
+  int Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &complete);
+  bool Parse_MPEG2Video_SeqStart(uint8_t *buf);
+  bool Parse_MPEG2Video_PicStart(uint8_t *buf);
 
 public:
-  cParserMPEG2Video(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
+  cParserMPEG2Video(int pID, cTSStream *stream);
   virtual ~cParserMPEG2Video();
 
-  virtual void Parse(unsigned char *data, int size, bool pusi);
+  virtual void Parse(sStreamPacket *pkt);
+  virtual void Reset();
 };
 
 #endif // VNSI_DEMUXER_MPEGVIDEO_H

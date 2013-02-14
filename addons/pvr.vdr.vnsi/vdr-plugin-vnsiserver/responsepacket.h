@@ -41,8 +41,10 @@ public:
   bool initScan(uint32_t opCode);
   bool initStatus(uint32_t opCode);
   bool initStream(uint32_t opCode, uint32_t streamID, uint32_t duration, int64_t pts, int64_t dts);
+  bool initOsd(uint32_t opCode, int32_t wnd, int32_t color, int32_t x0, int32_t y0, int32_t x1, int32_t y1);
   void finalise();
   void finaliseStream();
+  void finaliseOSD();
   bool copyin(const uint8_t* src, uint32_t len);
   uint8_t* reserve(uint32_t len);
   bool unreserve(uint32_t len);
@@ -57,6 +59,7 @@ public:
   uint8_t* getPtr() { return buffer; }
   uint32_t getLen() { return bufUsed; }
   uint32_t getStreamHeaderLength() { return headerLengthStream; } ;
+  uint32_t getOSDHeaderLength() { return headerLengthOSD; } ;
   void     setLen(uint32_t len) { bufUsed = len; }
 
 private:
@@ -71,6 +74,8 @@ private:
   const static uint32_t userDataLenPos        = 8;
   const static uint32_t headerLengthStream    = 36;
   const static uint32_t userDataLenPosStream  = 32;
+  const static uint32_t headerLengthOSD       = 36;
+  const static uint32_t userDataLenPosOSD     = 32;
 };
 
 #endif // VNSI_RESPONSEPACKET_H

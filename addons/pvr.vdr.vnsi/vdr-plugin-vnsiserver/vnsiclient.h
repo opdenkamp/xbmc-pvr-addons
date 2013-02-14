@@ -44,6 +44,7 @@ class cRequestPacket;
 class cResponsePacket;
 class cRecPlayer;
 class cCmdControl;
+class cVnsiOsdProvider;
 
 class cVNSIClient : public cThread
                   , public cStatus
@@ -64,6 +65,8 @@ private:
   uint32_t         m_protocolVersion;
   cMutex           m_msgLock;
   static cMutex    m_timerLock;
+  cVnsiOsdProvider *m_Osd;
+  std::map<int, time_t> m_epgUpdate;
 
 protected:
 
@@ -83,6 +86,7 @@ public:
   void ChannelChange();
   void RecordingsChange();
   void TimerChange();
+  void EpgChange();
 
   unsigned int GetID() { return m_Id; }
 
@@ -163,6 +167,9 @@ private:
   static cResponsePacket *m_processSCAN_Response;
   static cxSocket *m_processSCAN_Socket;
 
+  bool processOSD_Connect();
+  bool processOSD_Disconnect();
+  bool processOSD_Hitkey();
 };
 
 #endif // VNSI_CLIENT_H

@@ -22,31 +22,21 @@
  *
  */
 
-#ifndef VNSI_BITSTREAM_H
-#define VNSI_BITSTREAM_H
+#ifndef VNSI_DEMUXER_SUBTITLE_H
+#define VNSI_DEMUXER_SUBTITLE_H
 
-class cBitstream
+#include "parser.h"
+
+// --- cParserSubtitle -------------------------------------------------
+
+class cParserSubtitle : public cParser
 {
-private:
-  uint8_t *m_data;
-  int      m_offset;
-  int      m_len;
-  bool     m_error;
-
 public:
-  cBitstream(uint8_t *data, int bits);
+  cParserSubtitle(int pID, cTSStream *stream);
+  virtual ~cParserSubtitle();
 
-  void         setBitstream(uint8_t *data, int bits);
-  void         skipBits(int num);
-  unsigned int readBits(int num);
-  unsigned int showBits(int num);
-  unsigned int readBits1() { return readBits(1); }
-  unsigned int readGolombUE(int maxbits = 32);
-  signed int   readGolombSE();
-  unsigned int remainingBits();
-  void         putBits(int val, int num);
-  int          length() { return m_len; }
-  bool         isError() { return m_error; }
+  virtual void Parse(sStreamPacket *pkt);
 };
 
-#endif // VNSI_BITSTREAM_H
+
+#endif // VNSI_DEMUXER_SUBTITLE_H

@@ -160,7 +160,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     SAFE_DELETE(g_client);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
-    m_CurStatus = ADDON_STATUS_PERMANENT_FAILURE;
+    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
   }
   else
   {
@@ -186,14 +186,8 @@ void ADDON_Destroy()
     g_bCreated = false;
   }
 
-  if (PVR)
-  {
-    SAFE_DELETE(PVR);
-  }
-  if (XBMC)
-  {
-    SAFE_DELETE(XBMC);
-  }
+  SAFE_DELETE(PVR);
+  SAFE_DELETE(XBMC);
 
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }

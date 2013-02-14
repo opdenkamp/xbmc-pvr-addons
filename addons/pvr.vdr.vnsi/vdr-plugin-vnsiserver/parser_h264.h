@@ -25,7 +25,7 @@
 #ifndef VNSI_DEMUXER_H264_H
 #define VNSI_DEMUXER_H264_H
 
-#include "demuxer.h"
+#include "parser.h"
 
 class cBitstream;
 
@@ -36,16 +36,38 @@ class cParserH264 : public cParser
 private:
   typedef struct h264_private
   {
-    struct
+    struct SPS
     {
       int frame_duration;
       int cbpsize;
+      int pic_order_cnt_type;
+      int frame_mbs_only_flag;
+      int log2_max_frame_num;
+      int log2_max_pic_order_cnt_lsb;
+      int delta_pic_order_always_zero_flag;
     } sps[256];
 
-    struct
+    struct PPS
     {
       int sps;
+      int pic_order_present_flag;
     } pps[256];
+
+    struct VCL_NAL
+    {
+      int frame_num; // slice
+      int pic_parameter_set_id; // slice
+      int field_pic_flag; // slice
+      int bottom_field_flag; // slice
+      int delta_pic_order_cnt_bottom; // slice
+      int delta_pic_order_cnt_0; // slice
+      int delta_pic_order_cnt_1; // slice
+      int pic_order_cnt_lsb; // slice
+      int idr_pic_id; // slice
+      int nal_unit_type;
+      int nal_ref_idc; // start code
+      int pic_order_cnt_type; // sps
+    } vcl_nal;
 
   } h264_private_t;
 
@@ -64,34 +86,35 @@ private:
     NAL_END_SEQ = 0x0A  // End of Sequence
   };
 
-  cTSDemuxer     *m_demuxer;
-  uint8_t        *m_pictureBuffer;
-  int             m_pictureBufferSize;
-  int             m_pictureBufferPtr;
-  uint32_t        m_StartCond;
   uint32_t        m_StartCode;
-  int             m_StartCodeOffset;
+  bool            m_NeedIFrame;
+  bool            m_NeedSPS;
+  bool            m_NeedPPS;
   int             m_Width;
   int             m_Height;
+  int             m_FPS;
+  int             m_FpsScale;
   mpeg_rational_t m_PixelAspect;
-  int64_t         m_PrevDTS;
   int             m_FrameDuration;
-  sStreamPacket   m_StreamPacket;
   h264_private    m_streamData;
   int             m_vbvDelay;       /* -1 if CBR */
   int             m_vbvSize;        /* Video buffer size (in bytes) */
-  bool            m_firstIFrame;
+  int64_t         m_DTS;
+  int64_t         m_PTS;
 
-  bool Parse_H264(size_t len, uint32_t next_startcode, int sc_offset);
+
+  int Parse_H264(uint32_t startcode, int buf_ptr, bool &complete);
   bool Parse_PPS(uint8_t *buf, int len);
-  bool Parse_SLH(uint8_t *buf, int len, int *pkttype);
+  bool Parse_SLH(uint8_t *buf, int len, h264_private::VCL_NAL &vcl);
   bool Parse_SPS(uint8_t *buf, int len);
+  bool IsFirstVclNal(h264_private::VCL_NAL &vcl);
 
 public:
-  cParserH264(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
+  cParserH264(int pID, cTSStream *stream);
   virtual ~cParserH264();
 
-  virtual void Parse(unsigned char *data, int size, bool pusi);
+  virtual void Parse(sStreamPacket *pkt);
+  virtual void Reset();
 };
 
 

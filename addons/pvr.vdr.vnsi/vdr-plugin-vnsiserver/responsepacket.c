@@ -147,6 +147,37 @@ bool cResponsePacket::initStream(uint32_t opCode, uint32_t streamID, uint32_t du
   return true;
 }
 
+bool cResponsePacket::initOsd(uint32_t opCode, int32_t wnd, int32_t color, int32_t x0, int32_t y0, int32_t x1, int32_t y1)
+{
+  initBuffers();
+
+  uint32_t ul;
+  int32_t l;
+
+  ul =  htonl(VNSI_CHANNEL_OSD);               // stream OSD
+  memcpy(&buffer[0], &ul, sizeof(uint32_t));
+  ul = htonl(opCode);                          // OSD operation code
+  memcpy(&buffer[4], &ul, sizeof(uint32_t));
+  l = htonl(wnd);                              // Window
+  memcpy(&buffer[8], &l, sizeof(int32_t));
+  l = htonl(color);                            // Color
+  memcpy(&buffer[12], &l, sizeof(int32_t));
+  l = htonl(x0);                               // x0
+  memcpy(&buffer[16], &l, sizeof(int32_t));
+  l = htonl(y0);                               // y0
+  memcpy(&buffer[20], &l, sizeof(int32_t));
+  l = htonl(x1);                               // x1
+  memcpy(&buffer[24], &l, sizeof(int32_t));
+  l = htonl(y1);                               // y1
+  memcpy(&buffer[28], &l, sizeof(int32_t));
+  ul = 0;
+  memcpy(&buffer[userDataLenPosOSD], &ul, sizeof(uint32_t));
+
+  bufUsed = headerLengthOSD;
+
+  return true;
+}
+
 void cResponsePacket::finalise()
 {
   uint32_t ul = htonl(bufUsed - headerLength);
@@ -159,6 +190,11 @@ void cResponsePacket::finaliseStream()
   memcpy(&buffer[userDataLenPosStream], &ul, sizeof(uint32_t));
 }
 
+void cResponsePacket::finaliseOSD()
+{
+  uint32_t ul = htonl(bufUsed - headerLengthOSD);
+  memcpy(&buffer[userDataLenPosOSD], &ul, sizeof(uint32_t));
+}
 
 bool cResponsePacket::copyin(const uint8_t* src, uint32_t len)
 {

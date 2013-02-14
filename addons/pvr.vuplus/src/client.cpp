@@ -53,6 +53,7 @@ bool        g_bCheckForChannelUpdates = true;
 bool        g_bOnlyCurrentLocation    = false;
 bool        g_bSetPowerstate          = false;
 bool        g_bOnlyOneGroup           = false;
+bool        g_bOnlinePicons           = true;
 std::string g_strOneGroup             = "";
 std::string g_szClientPath            = "";
 std::string g_strChannelDataPath      = "/tmp/";
@@ -103,6 +104,10 @@ void ADDON_ReadSettings(void)
   /* read setting "webport" from settings.xml */
   if (!XBMC->GetSetting("webport", &g_iPortWeb))
     g_iPortWeb = DEFAULT_WEB_PORT;
+  
+  /* read setting "onlinepicons" from settings.xml */
+  if (!XBMC->GetSetting("onlinepicons", &g_bOnlinePicons))
+    g_bOnlinePicons = true;
   
   /* read setting "onlycurrent" from settings.xml */
   if (!XBMC->GetSetting("onlycurrent", &g_bOnlyCurrentLocation))
@@ -340,17 +345,16 @@ const char* GetMininumPVRAPIVersion(void)
 
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
-  //pCapabilities->bSupportsChannelSettings = false;
-  //pCapabilities->bSupportsTimeshift       = false;
-  pCapabilities->bSupportsEPG             = true;
-  pCapabilities->bSupportsTV              = true;
-  pCapabilities->bSupportsRadio           = true;
-  pCapabilities->bSupportsRecordings      = true;
-  pCapabilities->bSupportsTimers          = true;
-  pCapabilities->bSupportsChannelGroups   = true;
-  pCapabilities->bSupportsChannelScan     = false;
-  pCapabilities->bHandlesInputStream      = true;
-  pCapabilities->bHandlesDemuxing         = false;
+  pCapabilities->bSupportsEPG                = true;
+  pCapabilities->bSupportsTV                 = true;
+  pCapabilities->bSupportsRadio              = true;
+  pCapabilities->bSupportsRecordings         = true;
+  pCapabilities->bSupportsRecordingFolders   = true;
+  pCapabilities->bSupportsTimers             = true;
+  pCapabilities->bSupportsChannelGroups      = true;
+  pCapabilities->bSupportsChannelScan        = false;
+  pCapabilities->bHandlesInputStream         = true;
+  pCapabilities->bHandlesDemuxing            = false;
   pCapabilities->bSupportsLastPlayedPosition = true;
 
   return PVR_ERROR_NO_ERROR;

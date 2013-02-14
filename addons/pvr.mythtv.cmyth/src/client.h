@@ -36,6 +36,9 @@ extern "C" {
 #define strdup _strdup // # strdup is POSIX, _strdup should be used instead
 #endif
 
+#define TCP_RCV_BUF_SIZE                   128000 // Inherited from MythTV's MythSocket class
+#define RCV_BUF_SIZE                       TCP_RCV_BUF_SIZE
+
 #define LIVETV_CONFLICT_STRATEGY_HASLATER  0
 #define LIVETV_CONFLICT_STRATEGY_STOPTV    1
 #define LIVETV_CONFLICT_STRATEGY_CANCELREC 2

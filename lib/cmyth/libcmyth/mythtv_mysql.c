@@ -219,7 +219,7 @@ cmyth_db_check_connection(cmyth_database_t db)
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_init() failed, insufficient memory?\n", __FUNCTION__);
 			return -1;
 		}
-		if (NULL == mysql_real_connect(db->mysql, db->db_host, db->db_user, db->db_pass, db->db_name, db->db_port, NULL, 0)) {
+		if (NULL == mysql_real_connect(db->mysql, db->db_host, db->db_user, db->db_pass, db->db_name, db->db_port, NULL, CLIENT_FOUND_ROWS)) {
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_connect() failed: %s\n", __FUNCTION__, mysql_error(db->mysql));
 			cmyth_database_close(db);
 			mysql_close(db->mysql);
@@ -956,7 +956,7 @@ cmyth_mysql_testdb_connection(cmyth_database_t db, char **message)
 			*message = buf;
 			return -1;
 		}
-		if (NULL == mysql_real_connect(db->mysql, db->db_host, db->db_user, db->db_pass, db->db_name, db->db_port, NULL, 0)) {
+		if (NULL == mysql_real_connect(db->mysql, db->db_host, db->db_user, db->db_pass, db->db_name, db->db_port, NULL, CLIENT_FOUND_ROWS)) {
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_connect() failed: %s\n", __FUNCTION__, mysql_error(db->mysql));
 			snprintf(buf, 1000, "%s", mysql_error(db->mysql));
 			*message = buf;

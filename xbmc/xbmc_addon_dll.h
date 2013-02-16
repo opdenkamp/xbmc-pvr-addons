@@ -2,7 +2,7 @@
 #define __XBMC_ADDON_DLL_H__
 
 /*
- *      Copyright (C) 2005-2012 Team XBMC
+ *      Copyright (C) 2005-2013 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -46,6 +46,7 @@ extern "C" {
   unsigned int __declspec(dllexport) ADDON_GetSettings(ADDON_StructSetting ***sSet);
   ADDON_STATUS __declspec(dllexport) ADDON_SetSetting(const char *settingName, const void *settingValue);
   void         __declspec(dllexport) ADDON_FreeSettings();
+  void         __declspec(dllexport) ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data);
 
 #ifdef __cplusplus
 };

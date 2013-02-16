@@ -82,7 +82,6 @@ public:
   }
 
   static const int c_timeoutProcess              = 10;       // Wake the thread every 10s
-  static const int c_timeoutCacheCleaning        = 60*60*24; // Clean the cache every 24h
   static const int c_maximumAttemptsOnReadError  = 3;        // Retry when reading file failed
 
   FileOps(MythConnection &mythConnection);

@@ -177,7 +177,6 @@ void* FileOps::Process()
 {
   XBMC->Log(LOG_DEBUG, "%s FileOps Thread Started", __FUNCTION__);
 
-  std::time_t lastRunCacheClean = std::time(NULL);
   std::list<FileOps::JobItem> jobQueueDelayed;
 
   while (!IsStopped())
@@ -245,14 +244,6 @@ void* FileOps::Process()
     m_jobQueue.insert(m_jobQueue.end(), jobQueueDelayed.begin(), jobQueueDelayed.end());
     jobQueueDelayed.clear();
     Unlock();
-
-    // Clean the cache from time to time
-    std::time_t now = std::time(NULL);
-    if (std::difftime(now, lastRunCacheClean) > (double)c_timeoutCacheCleaning)
-    {
-      CleanCache();
-      lastRunCacheClean = now;
-    }
   }
 
   XBMC->Log(LOG_DEBUG, "%s FileOps Thread Stopped", __FUNCTION__);
@@ -353,7 +344,6 @@ void FileOps::CleanCache()
     if (!directory.IsEmpty())
       directories.push_back(m_localBasePath + directory);
   }
-  directories.push_back(m_localBasePath + "channels");
   directories.push_back(m_localBasePath + "preview");
   std::vector<CStdString>::const_iterator it2;
   for (it2 = directories.begin(); it2 != directories.end(); ++it2)

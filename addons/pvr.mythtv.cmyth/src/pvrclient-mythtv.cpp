@@ -251,6 +251,22 @@ bool PVRClientMythTV::GetDriveSpace(long long *iTotal, long long *iUsed)
   return m_con.GetDriveSpace(*iTotal, *iUsed);
 }
 
+void PVRClientMythTV::OnSleep()
+{
+  if (m_pEventHandler)
+    m_pEventHandler->Suspend();
+  if (m_fileOps)
+    m_fileOps->Suspend();
+}
+
+void PVRClientMythTV::OnWake()
+{
+  if (m_pEventHandler)
+    m_pEventHandler->Resume();
+  if (m_fileOps)
+    m_fileOps->Resume();
+}
+
 PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
   if (g_bExtraDebug)

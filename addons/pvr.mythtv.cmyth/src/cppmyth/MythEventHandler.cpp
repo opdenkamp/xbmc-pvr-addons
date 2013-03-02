@@ -109,7 +109,7 @@ MythEventHandler::MythEventHandlerPrivate::MythEventHandlerPrivate(const CStdStr
   , m_hang(false)
   , m_recordingChangeEventList()
 {
-  *m_conn_t = cmyth_conn_connect_event(const_cast<char*>(m_server.c_str()), port, 64 * 1024, 16 * 1024);
+  *m_conn_t = cmyth_conn_connect_event(const_cast<char*>(m_server.c_str()), port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
 }
 
 MythEventHandler::MythEventHandlerPrivate::~MythEventHandlerPrivate()
@@ -460,7 +460,7 @@ void MythEventHandler::MythEventHandlerPrivate::RetryConnect()
     usleep(999999);
     ref_release(*m_conn_t);
     *m_conn_t = NULL;
-    *m_conn_t = cmyth_conn_connect_event(const_cast<char*>(m_server.c_str()), m_port, 64 * 1024, 16 * 1024);
+    *m_conn_t = cmyth_conn_connect_event(const_cast<char*>(m_server.c_str()), m_port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
 
     if (*m_conn_t == NULL)
       XBMC->Log(LOG_NOTICE, "%s - Could not connect client to event socket", __FUNCTION__);

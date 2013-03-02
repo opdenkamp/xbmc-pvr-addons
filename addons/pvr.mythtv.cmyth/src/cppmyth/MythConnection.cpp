@@ -77,7 +77,7 @@ MythConnection::MythConnection(const CStdString &server, unsigned short port)
   , m_port(port)
   , m_pEventHandler(NULL)
 {
-  cmyth_conn_t connection = cmyth_conn_connect_ctrl(const_cast<char*>(server.c_str()), port, 64 * 1024, 16 * 1024);
+  cmyth_conn_t connection = cmyth_conn_connect_ctrl(const_cast<char*>(server.c_str()), port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
   *m_conn_t = connection;
 }
 
@@ -334,7 +334,7 @@ MythFile MythConnection::ConnectFile(MythProgramInfo &recording)
   // When file is not NULL doesn't need to mean there is no more connection,
   // so always check after calling cmyth_conn_connect_file if still connected to control socket.
   cmyth_file_t file = NULL;
-  CMYTH_CONN_CALL_REF(file, true, cmyth_conn_connect_file(*recording.m_proginfo_t, *m_conn_t, 64 * 1024, 16 * 1024));
+  CMYTH_CONN_CALL_REF(file, true, cmyth_conn_connect_file(*recording.m_proginfo_t, *m_conn_t, RCV_BUF_DATA_SIZE, TCP_RCV_BUF_DATA_SIZE));
   MythFile retval = MythFile(file, *this);
   return retval;
 }
@@ -342,7 +342,7 @@ MythFile MythConnection::ConnectFile(MythProgramInfo &recording)
 MythFile MythConnection::ConnectPath(const CStdString &filename, const CStdString &storageGroup)
 {
   cmyth_file_t file = NULL;
-  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_conn_connect_path(const_cast<char*>(filename.c_str()), *m_conn_t, 64 * 1024, 64 * 1024, const_cast<char*>(storageGroup.c_str())));
+  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_conn_connect_path(const_cast<char*>(filename.c_str()), *m_conn_t, RCV_BUF_DATA_SIZE, TCP_RCV_BUF_DATA_SIZE, const_cast<char*>(storageGroup.c_str())));
   return MythFile(file, *this);
 }
 

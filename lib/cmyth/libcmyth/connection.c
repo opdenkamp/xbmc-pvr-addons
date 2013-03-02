@@ -235,13 +235,12 @@ cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
 
 	temp = tcp_rcvbuf;
 	size = sizeof(temp);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: setting socket option SO_RCVBUF to %d", __FUNCTION__, tcp_rcvbuf);
 	setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, size);
 	if(getsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, &size)) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: could not get rcvbuf from socket(%d)\n",
 			  __FUNCTION__, errno);
-		temp = tcp_rcvbuf;
 	}
-	tcp_rcvbuf = temp;
 
 	if (getnameinfo(addr->ai_addr, addr->ai_addrlen, namebuf, sizeof(namebuf), portbuf, sizeof(portbuf), NI_NUMERICHOST)) {
 		strcpy(namebuf, "[unknown]");
@@ -353,13 +352,12 @@ cmyth_reconnect_addr(cmyth_conn_t conn, struct addrinfo* addr)
 
 	temp = conn->conn_tcp_rcvbuf;
 	size = sizeof(temp);
+	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: setting socket option SO_RCVBUF to %d", __FUNCTION__, conn->conn_tcp_rcvbuf);
 	setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, size);
 	if (getsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, &size)) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: could not get rcvbuf from socket(%d)\n",
 			  __FUNCTION__, errno);
-		temp = conn->conn_tcp_rcvbuf;
 	}
-	conn->conn_tcp_rcvbuf = temp;
 
 	if (getnameinfo(addr->ai_addr, addr->ai_addrlen, namebuf, sizeof(namebuf), portbuf, sizeof(portbuf), NI_NUMERICHOST)) {
 		strcpy(namebuf, "[unknown]");

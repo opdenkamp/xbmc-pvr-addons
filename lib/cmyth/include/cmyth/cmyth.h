@@ -630,7 +630,7 @@ extern cmyth_recorder_t cmyth_spawn_live_tv(cmyth_recorder_t rec,
 				char ** err, char * channame);
 
 extern cmyth_recorder_t cmyth_livetv_chain_setup(cmyth_recorder_t old_rec,
-				int32_t tcp_rcvbuf,
+				uint32_t buflen, int32_t tcp_rcvbuf,
 				void (*prog_update_callback)(cmyth_proginfo_t));
 
 extern int32_t cmyth_livetv_get_block(cmyth_recorder_t rec, char *buf,

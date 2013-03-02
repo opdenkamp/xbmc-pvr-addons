@@ -98,6 +98,7 @@ struct cmyth_livetv_chain {
 	char **chain_urls;
 	cmyth_file_t *chain_files; /* File pointers for the urls */
 	volatile int8_t livetv_watch; /* JLB: Manage program breaks */
+	int32_t livetv_buflen;
 	int32_t livetv_tcp_rcvbuf;
 	int32_t livetv_block_len;
 };

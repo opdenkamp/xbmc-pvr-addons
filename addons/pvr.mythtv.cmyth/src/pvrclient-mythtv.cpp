@@ -1389,7 +1389,10 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
             m_pEventHandler->SetRecorder(m_rec);
 
             if (m_rec.SpawnLiveTV((*channelByNumberIt).second))
+            {
+              XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
               return true;
+            }
           }
         }
       }
@@ -1407,18 +1410,13 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
 
     XBMC->Log(LOG_ERROR,"%s - Failed to open live stream", __FUNCTION__);
     XBMC->QueueNotification(QUEUE_WARNING, XBMC->GetLocalizedString(30305)); // Channel unavailable
-
-    return false;
   }
   else
   {
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG,"%s - Done", __FUNCTION__);
-
-    return true;
+    XBMC->Log(LOG_ERROR, "%s - Live stream is already opened. recorder: %lu", __FUNCTION__, m_rec.ID());
   }
+  return false;
 }
-
 
 void PVRClientMythTV::CloseLiveStream()
 {

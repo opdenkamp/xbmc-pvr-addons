@@ -1131,7 +1131,7 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, int64_t offset, int8_t whence)
 		whence = WHENCE_SET;
 	}
 
-	if (fp && cur >=0)
+	if (cur >=0 && cur < rec->rec_livetv_chain->chain_ct && fp)
 	{
 		if ((ret = cmyth_file_seek(fp, offset, whence)) >= 0) {
 			cur -= rec->rec_livetv_chain->chain_current;

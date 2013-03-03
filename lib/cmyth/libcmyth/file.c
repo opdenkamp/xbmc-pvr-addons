@@ -484,11 +484,24 @@ cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 	if (file == NULL)
 		return -EINVAL;
 
-	if ((offset == 0) && (whence == WHENCE_CUR))
-		return file->file_pos;
-
-	if ((offset == file->file_pos) && (whence == WHENCE_SET))
-		return file->file_pos;
+	if (whence == WHENCE_CUR) {
+		if (offset == 0)
+			return file->file_pos;
+		ret = file->file_pos + offset;
+		if (ret < 0 || ret > file->file_length)
+			goto inv;
+	}
+	if (whence == WHENCE_SET) {
+		if (offset == file->file_pos)
+			return file->file_pos;
+		if (offset < 0 || offset > file->file_length)
+			goto inv;
+	}
+	if (whence == WHENCE_END) {
+		ret = file->file_length - offset;
+		if (ret < 0 || ret > file->file_length)
+			goto inv;
+	}
 
 	pthread_mutex_lock(&mutex);
 
@@ -561,6 +574,11 @@ cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 	pthread_mutex_unlock(&mutex);
 
 	return ret;
+
+inv:
+	cmyth_dbg(CMYTH_DBG_ERROR, "%s: seek out of range: file: %"PRIu32" pos: %"PRId64" length: %"PRId64" whence: %"PRId8" offset: %"PRId64,
+		__FUNCTION__, file->file_id, file->file_pos, file->file_length, whence, offset);
+	return -1;
 }
 
 /*

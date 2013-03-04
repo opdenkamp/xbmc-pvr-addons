@@ -474,7 +474,7 @@ cmyth_file_request_block(cmyth_file_t file, int32_t len)
 int64_t
 cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 {
-	char msg[128];
+	char msg[4096];
 	int err;
 	int count;
 	int64_t c;

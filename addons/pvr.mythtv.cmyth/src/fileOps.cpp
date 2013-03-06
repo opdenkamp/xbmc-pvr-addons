@@ -88,7 +88,7 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   return localFilename;
 }
 
-CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
+CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename, const CStdString &recordingGroup)
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s: preview icon: %s", __FUNCTION__, remoteFilename.c_str());
@@ -98,21 +98,28 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename)
   if (it != m_preview.end())
     return it->second;
 
+  // Check file exists in storage group
+  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(recordingGroup, remoteFilename);
+
   // Determine local filename
-  CStdString localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
-  if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
-
-  if (!XBMC->FileExists(localFilename, true))
+  CStdString localFilename;
+  if (!sgfile.IsNull())
   {
-    Lock();
-    FileOps::JobItem job(localFilename, remoteFilename, "Default");
-    m_jobQueue.push_back(job);
-    m_queueContent.Signal();
-    Unlock();
-  }
+    localFilename = m_localBasePath + "preview" + PATH_SEPARATOR_CHAR + GetFileName(remoteFilename, '/');
+    if (g_bExtraDebug)
+      XBMC->Log(LOG_DEBUG, "%s: determined localFilename: %s", __FUNCTION__, localFilename.c_str());
 
-  m_preview[remoteFilename] = localFilename;
+    if (!XBMC->FileExists(localFilename, true))
+    {
+      Lock();
+      FileOps::JobItem job(localFilename, remoteFilename, "Default");
+      m_jobQueue.push_back(job);
+      m_queueContent.Signal();
+      Unlock();
+    }
+
+    m_preview[remoteFilename] = localFilename;
+  }
   return localFilename;
 }
 
@@ -177,7 +184,6 @@ void* FileOps::Process()
 {
   XBMC->Log(LOG_DEBUG, "%s FileOps Thread Started", __FUNCTION__);
 
-  std::time_t lastRunCacheClean = std::time(NULL);
   std::list<FileOps::JobItem> jobQueueDelayed;
 
   while (!IsStopped())
@@ -245,14 +251,6 @@ void* FileOps::Process()
     m_jobQueue.insert(m_jobQueue.end(), jobQueueDelayed.begin(), jobQueueDelayed.end());
     jobQueueDelayed.clear();
     Unlock();
-
-    // Clean the cache from time to time
-    std::time_t now = std::time(NULL);
-    if (std::difftime(now, lastRunCacheClean) > (double)c_timeoutCacheCleaning)
-    {
-      CleanCache();
-      lastRunCacheClean = now;
-    }
   }
 
   XBMC->Log(LOG_DEBUG, "%s FileOps Thread Stopped", __FUNCTION__);
@@ -299,7 +297,6 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
 
   unsigned long long totalLength = source.Length();
   unsigned long long totalRead = 0;
-  unsigned long long totalWrite = 0;
 
   const long buffersize = 32768;
   char* buffer = new char[buffersize];
@@ -321,12 +318,11 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
 
       bytes_read -= bytes_written;
       p += bytes_written;
-      totalWrite += bytes_written;
     }
   }
 
   XBMC->CloseFile(file);
-  delete buffer;
+  delete[] buffer;
 
   if (totalRead < totalLength)
   {
@@ -355,7 +351,6 @@ void FileOps::CleanCache()
     if (!directory.IsEmpty())
       directories.push_back(m_localBasePath + directory);
   }
-  directories.push_back(m_localBasePath + "channels");
   directories.push_back(m_localBasePath + "preview");
   std::vector<CStdString>::const_iterator it2;
   for (it2 = directories.begin(); it2 != directories.end(); ++it2)

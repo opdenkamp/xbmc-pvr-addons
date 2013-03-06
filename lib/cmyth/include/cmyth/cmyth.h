@@ -500,7 +500,13 @@ extern int cmyth_recorder_stop_playing(cmyth_recorder_t rec);
 
 extern int cmyth_recorder_frontend_ready(cmyth_recorder_t rec);
 
-extern int cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec);
+/**
+ * Cancel the next pending recording.
+ * \param rec recorder handle
+ * \return success: 0
+ * \return failure: -(errno)
+ */
+extern int cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec, int cancel);
 
 /**
  * Request that the recorder stop transmitting data.

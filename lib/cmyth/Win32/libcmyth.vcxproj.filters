@@ -102,5 +102,8 @@
     <ClInclude Include="..\librefmem\refmem_local.h">
       <Filter>refmem</Filter>
     </ClInclude>
+    <ClInclude Include="..\libcmyth\cmyth_msc.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

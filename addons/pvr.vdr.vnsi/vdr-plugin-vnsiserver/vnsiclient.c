@@ -25,6 +25,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <map>
 
 #include <vdr/recording.h>
 #include <vdr/channels.h>
@@ -38,9 +39,10 @@
 #include "vnsicommand.h"
 #include "recordingscache.h"
 #include "vnsiclient.h"
-#include "receiver.h"
+#include "streamer.h"
 #include "vnsiserver.h"
 #include "recplayer.h"
+#include "vnsiosd.h"
 #include "requestpacket.h"
 #include "responsepacket.h"
 #include "hash.h"
@@ -76,9 +78,9 @@ cVNSIClient::cVNSIClient(int fd, unsigned int id, const char *ClientAdr)
   m_resp                    = NULL;
   m_processSCAN_Response    = NULL;
   m_processSCAN_Socket      = NULL;
+  m_Osd                     = NULL;
 
-
-  m_socket.set_handle(fd);
+  m_socket.SetHandle(fd);
 
   Start();
 }
@@ -94,7 +96,6 @@ cVNSIClient::~cVNSIClient()
 
 void cVNSIClient::Action(void)
 {
-  uint32_t kaTimeStamp;
   uint32_t channelID;
   uint32_t requestID;
   uint32_t opcode;
@@ -156,23 +157,6 @@ void cVNSIClient::Action(void)
 
       processRequest(req);
     }
-    else if (channelID == 3)
-    {
-      if (!m_socket.read((uint8_t*)&kaTimeStamp, sizeof(uint32_t), 1000)) break;
-      kaTimeStamp = ntohl(kaTimeStamp);
-
-      uint8_t buffer[8];
-      uint32_t ul;
-      ul = htonl(3); // KA CHANNEL
-      memcpy(&buffer[0], &ul, sizeof(uint32_t));
-      ul = htonl(kaTimeStamp);
-      memcpy(&buffer[4], &ul, sizeof(uint32_t));
-      if (!m_socket.write(buffer, 8))
-      {
-        ERRORLOG("Could not send back KA reply");
-        break;
-      }
-    }
     else
     {
       ERRORLOG("Incoming channel number unknown");
@@ -183,6 +167,13 @@ void cVNSIClient::Action(void)
   /* If thread is ended due to closed connection delete a
      possible running stream here */
   StopChannelStreaming();
+
+  // Shutdown OSD
+  if (m_Osd)
+  {
+    delete m_Osd;
+    m_Osd = NULL;
+  }
 }
 
 bool cVNSIClient::StartChannelStreaming(const cChannel *channel, uint32_t timeout)
@@ -262,6 +253,52 @@ void cVNSIClient::RecordingsChange()
   resp->finalise();
   m_socket.write(resp->getPtr(), resp->getLen());
   delete resp;
+}
+
+void cVNSIClient::EpgChange()
+{
+  cMutexLock lock(&m_msgLock);
+
+  if (!m_StatusInterfaceEnabled)
+    return;
+
+  cSchedulesLock MutexLock;
+  const cSchedules *schedules = cSchedules::Schedules(MutexLock);
+  if (!schedules)
+    return;
+
+  std::map<int, time_t>::iterator it;
+  for (const cSchedule *schedule = schedules->First(); schedule; schedule = schedules->Next(schedule))
+  {
+    cEvent *lastEvent =  schedule->Events()->Last();
+    if (!lastEvent)
+      continue;
+
+    uint32_t channelId = CreateStringHash(schedule->ChannelID().ToString());
+    it = m_epgUpdate.find(channelId);
+    if (it == m_epgUpdate.end())
+    {
+      continue;
+    }
+
+    if (it->second >= lastEvent->StartTime())
+      continue;
+
+    cResponsePacket *resp = new cResponsePacket();
+    if (!resp->initStatus(VNSI_STATUS_EPGCHANGE))
+    {
+      delete resp;
+      return;
+    }
+    resp->add_U32(channelId);
+    resp->finalise();
+    m_socket.write(resp->getPtr(), resp->getLen());
+    delete resp;
+
+    const cChannel *channel = FindChannelByUID(channelId);
+    if (channel)
+      INFOLOG("Trigger EPG update for channel %s", channel->Name());
+  }
 }
 
 void cVNSIClient::Recording(const cDevice *Device, const char *Name, const char *FileName, bool On)
@@ -505,6 +542,19 @@ bool cVNSIClient::processRequest(cRequestPacket* req)
 
     case VNSI_SCAN_STOP:
       result = processSCAN_Stop();
+      break;
+
+    /** OPCODE 160 - 179: VNSI network functions for OSD */
+    case VNSI_OSD_CONNECT:
+      result = processOSD_Connect();
+      break;
+
+    case VNSI_OSD_DISCONNECT:
+      result = processOSD_Disconnect();
+      break;
+
+    case VNSI_OSD_HITKEY:
+      result = processOSD_Hitkey();
       break;
   }
 
@@ -1532,6 +1582,7 @@ bool cVNSIClient::processEPG_GetForChannel() /* OPCODE 120 */
 
   cSchedulesLock MutexLock;
   const cSchedules *Schedules = cSchedules::Schedules(MutexLock);
+  m_epgUpdate[channelUID] = 0;
   if (!Schedules)
   {
     m_resp->add_U32(0);
@@ -1623,6 +1674,11 @@ bool cVNSIClient::processEPG_GetForChannel() /* OPCODE 120 */
   m_resp->finalise();
   m_socket.write(m_resp->getPtr(), m_resp->getLen());
 
+  cEvent *lastEvent =  Schedule->Events()->Last();
+  if (lastEvent)
+  {
+    m_epgUpdate[channelUID] = lastEvent->StartTime();
+  }
   DEBUGLOG("written schedules packet");
 
   return true;
@@ -1880,4 +1936,39 @@ void cVNSIClient::processSCAN_SetStatus(int status)
   resp->finalise();
   m_processSCAN_Socket->write(resp->getPtr(), resp->getLen());
   delete resp;
+}
+
+bool cVNSIClient::processOSD_Connect() /* OPCODE 160 */
+{
+  m_Osd = new cVnsiOsdProvider(&m_socket);
+  int osdWidth, osdHeight;
+  double aspect;
+  cDevice::PrimaryDevice()->GetOsdSize(osdWidth, osdHeight, aspect);
+  m_resp->add_U32(osdWidth);
+  m_resp->add_U32(osdHeight);
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+
+  m_Osd = new cVnsiOsdProvider(&m_socket);
+  return true;
+}
+
+bool cVNSIClient::processOSD_Disconnect() /* OPCODE 161 */
+{
+  if (m_Osd)
+  {
+    delete m_Osd;
+    m_Osd = NULL;
+  }
+  return true;
+}
+
+bool cVNSIClient::processOSD_Hitkey() /* OPCODE 162 */
+{
+  if (m_Osd)
+  {
+    unsigned int key = m_req->extract_U32();
+    cVnsiOsdProvider::SendKey(key);
+  }
+  return true;
 }

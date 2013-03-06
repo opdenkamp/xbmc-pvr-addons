@@ -31,6 +31,7 @@ private:
   uint8_t *m_data;
   int      m_offset;
   int      m_len;
+  bool     m_error;
 
 public:
   cBitstream(uint8_t *data, int bits);
@@ -45,6 +46,7 @@ public:
   unsigned int remainingBits();
   void         putBits(int val, int num);
   int          length() { return m_len; }
+  bool         isError() { return m_error; }
 };
 
 #endif // VNSI_BITSTREAM_H

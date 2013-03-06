@@ -44,10 +44,11 @@ public:
   void Lock();
   void Unlock();
 
-  int ID();
+  unsigned int ID();
   MythProgramInfo GetCurrentProgram();
 
   bool IsRecording();
+  bool CancelNextRecording(bool cancel);
   bool IsTunable(MythChannel &channel);
   bool CheckChannel(MythChannel &channel);
 
@@ -56,7 +57,7 @@ public:
   bool LiveTVWatch(const CStdString &msg);
   bool LiveTVDoneRecording(const CStdString &msg);
   bool LiveTVChainUpdate(const CStdString &chainid);
-  int ReadLiveTV(void *buffer, unsigned long length);
+  int ReadLiveTV(void *buffer, unsigned int length);
   long long LiveTVSeek(long long offset, int whence);
   long long LiveTVDuration();
 

@@ -86,21 +86,17 @@ long MultiFileReader::OpenFile()
   XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file opened return code %d.", hr);
   m_lastZapPosition = 0;
 
-  int64_t fileLength = m_TSBufferFile.GetFileSize();
   int retryCount = 0;
 
-  if (fileLength == 0) do
+  while ((m_TSBufferFile.GetFileSize() == 0) && (retryCount < 50))
   {
     retryCount++;
-    XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file has zero length, closing, waiting 100 ms and re-opening. Try %d.", retryCount);
-    (void) m_TSBufferFile.CloseFile();
+    XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file has zero length, closing, waiting 100 ms and re-opening. Attempt: %d.", retryCount);
+    m_TSBufferFile.CloseFile();
     usleep(100000);
     hr = m_TSBufferFile.OpenFile();
     XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file opened return code %d.", hr);
-
-    fileLength = m_TSBufferFile.GetFileSize();
-  } while (retryCount < 50);
-
+  }
 
   if (RefreshTSBufferFile() == S_FALSE)
   {
@@ -324,7 +320,7 @@ long MultiFileReader::RefreshTSBufferFile()
     int64_t fileLength = m_TSBufferFile.GetFileSize();
 
     // Min file length is Header ( int64_t + int32_t + int32_t ) + filelist ( > 0 ) + Footer ( int32_t + int32_t )
-    int64_t minimumlength = (int64_t)(sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved) + sizeof(wchar_t) + sizeof(filesAdded2) + sizeof(filesRemoved2));
+    int64_t minimumlength = (int64_t)(sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved) + sizeof(Wchar_t) + sizeof(filesAdded2) + sizeof(filesRemoved2));
     if (fileLength <= minimumlength)
     {
       if (m_bDebugOutput)

@@ -148,6 +148,8 @@ struct VuRecording
   std::string strPlot;
   std::string strPlotOutline;
   std::string strChannelName;
+  std::string strDirectory;
+  std::string strIconPath;
 };
  
 class Vu  : public PLATFORM::CThread
@@ -185,6 +187,7 @@ private:
   bool RestoreLastPlayedPositions();
   CStdString GetHttpXML(CStdString& url);
   int GetChannelNumber(CStdString strServiceReference);
+  CStdString GetChannelIconPath(CStdString strChannelName);
   bool SendSimpleCommand(const CStdString& strCommandURL, CStdString& strResult, bool bIgnoreResult = false);
   CStdString GetGroupServiceReference(CStdString strGroupName);
   bool LoadChannels(CStdString strServerReference, CStdString strGroupName);
@@ -203,6 +206,8 @@ private:
   bool CheckForChannelUpdate();
   std::string& Escape(std::string &s, std::string from, std::string to);
   CStdString URLEncodeInline(const CStdString& sSrc);
+  bool IsInRecordingFolder(CStdString);
+  void TransferRecordings(ADDON_HANDLE handle);
 
 protected:
   virtual void *Process(void);
@@ -225,7 +230,7 @@ public:
   int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
   PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
   PVR_ERROR DeleteTimer(const PVR_TIMER &timer);
-  bool GetRecordingFromLocation(ADDON_HANDLE handle, CStdString strRecordingFolder);
+  bool GetRecordingFromLocation(CStdString strRecordingFolder);
   unsigned int GetRecordingsAmount();
   PVR_ERROR    GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR    DeleteRecording(const PVR_RECORDING &recinfo);

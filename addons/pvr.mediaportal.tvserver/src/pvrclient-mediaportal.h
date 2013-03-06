@@ -32,7 +32,7 @@
 /* Use a forward declaration here. Including RTSPClient.h via TSReader.h at this point gives compile errors */
 class CTsReader;
 
-class cPVRClientMediaPortal
+class cPVRClientMediaPortal: public PLATFORM::PreventCopy
 {
 public:
   /* Class interface */
@@ -108,7 +108,8 @@ protected:
 
 private:
   bool GetChannel(unsigned int number, PVR_CHANNEL &channeldata);
-  bool LoadGenreXML(const std::string &filename);
+  void LoadGenreTable(void);
+  void LoadCardSettings(void);
 
   int                     m_iCurrentChannel;
   int                     m_iCurrentCard;
@@ -126,11 +127,6 @@ private:
   PLATFORM::CMutex        m_mutex;
   int64_t                 m_iLastRecordingUpdate;
   CTsReader*              m_tsreader;
-
-  char                    m_noSignalStreamData[ 6 + 0xffff ];
-  long                    m_noSignalStreamSize;
-  long                    m_noSignalStreamReadPos;
-  bool                    m_bPlayingNoSignal;
 
   void Close();
 

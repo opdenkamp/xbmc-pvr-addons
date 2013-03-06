@@ -20,7 +20,10 @@ libcmyth_la_SOURCES = bookmark.c \
                      socket.c \
                      timestamp.c \
                      debug.c \
-                     utf8tolatin1.c
+                     utf8tolatin1.c \
+                     recordingrule.c \
+                     channel.c \
+                     storagegroup.c
 
 INCLUDES=-I../include/ $(MYSQL_INCLUDES)
 

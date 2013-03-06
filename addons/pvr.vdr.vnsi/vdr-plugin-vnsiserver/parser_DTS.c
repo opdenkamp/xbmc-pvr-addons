@@ -22,29 +22,23 @@
  *
  */
 
-#ifndef VNSI_DEMUXER_TELETEXT_H
-#define VNSI_DEMUXER_TELETEXT_H
+#include <stdlib.h>
+#include <assert.h>
+#include "config.h"
 
-#include "demuxer.h"
+#include "parser_DTS.h"
+#include "bitstream.h"
 
-// --- cParserTeletext -------------------------------------------------
-
-class cParserTeletext : public cParser
+cParserDTS::cParserDTS(int pID, cTSStream *stream)
+ : cParser(pID, stream)
 {
-private:
-  bool        m_firstPUSIseen;
-  bool        m_PESStart;
-  uint8_t    *m_teletextBuffer;
-  int         m_teletextBufferSize;
-  int         m_teletextBufferPtr;
-  int64_t     m_lastDTS;
-  int64_t     m_lastPTS;
+}
 
-public:
-  cParserTeletext(cTSDemuxer *demuxer, cLiveStreamer *streamer, int pID);
-  virtual ~cParserTeletext();
+cParserDTS::~cParserDTS()
+{
+}
 
-  virtual void Parse(unsigned char *data, int size, bool pusi);
-};
+void cParserDTS::Parse(sStreamPacket *pkt)
+{
 
-#endif // VNSI_DEMUXER_TELETEXT_H
+}

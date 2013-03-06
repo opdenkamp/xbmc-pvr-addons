@@ -21,11 +21,12 @@
 
 #include <sys/types.h>
 #include <string.h>
+#include <stdint.h>
 #include "refmem/refmem.h"
 
 char* cmyth_utf8tolatin1(char* s)
 {
-	unsigned long ucs4;
+	uint32_t ucs4;
 	int c, state, octets;
 	char *out, *t;
 

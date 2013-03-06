@@ -21,6 +21,8 @@
 
 #include "platform/util/StdString.h"
 
+#include <ctime>
+
 #include <boost/shared_ptr.hpp>
 
 extern "C" {
@@ -30,16 +32,24 @@ extern "C" {
 class MythRecorder;
 class MythSignal;
 class MythFile;
+class MythProgramInfo;
+
+#include "MythProgramInfo.h"
 
 template <class T> class MythPointer;
 
-class MythEventHandler 
+class MythEventObserver
 {
 public:
-  MythEventHandler();
-  MythEventHandler(const CStdString &server, unsigned short port);
+  // Request to stop Live TV
+  virtual void CloseLiveStream() = 0;
+};
 
-  bool TryReconnect();
+class MythEventHandler
+{
+public:
+  MythEventHandler(const CStdString &server, unsigned short port);
+  void RegisterObserver(MythEventObserver *observer);
 
   void PreventLiveChainUpdate();
   void AllowLiveChainUpdate();
@@ -51,9 +61,63 @@ public:
   void EnablePlayback();
   void DisablePlayback();
   bool IsPlaybackActive() const;
+  bool IsListening() const;
+
+  //Recordings change events
+  enum RecordingChangeType
+  {
+    CHANGE_ALL = 0,
+    CHANGE_ADD = 1,
+    CHANGE_UPDATE,
+    CHANGE_DELETE
+  };
+
+  class RecordingChangeEvent
+  {
+  public:
+    RecordingChangeEvent(RecordingChangeType type, unsigned int chanid, char *recstartts)
+      : m_type(type)
+      , m_channelID(chanid)
+      , m_recordStartTimeSlot(0)
+    {
+      if (recstartts) {
+        MythTimestamp time(recstartts, false);
+        m_recordStartTimeSlot = time.UnixTime();
+      }
+    }
+
+    RecordingChangeEvent(RecordingChangeType type, const MythProgramInfo &prog)
+      : m_type(type)
+      , m_channelID(0)
+      , m_recordStartTimeSlot(0)
+      , m_prog(prog)
+    {
+    }
+
+    RecordingChangeEvent(RecordingChangeType type)
+      : m_type(type)
+      , m_channelID(0)
+      , m_recordStartTimeSlot(0)
+    {
+    }
+
+    RecordingChangeType Type() const { return m_type; }
+    unsigned int ChannelID() const { return m_channelID; };
+    time_t RecordingStartTimeslot() const { return m_recordStartTimeSlot; }
+    MythProgramInfo Program() const { return m_prog; }
+
+  private:
+    RecordingChangeType m_type;
+    unsigned int m_channelID;     // ADD and DELETE
+    time_t m_recordStartTimeSlot; // ADD and DELETE
+    MythProgramInfo m_prog;       // UPDATE
+  };
+
+  bool HasRecordingChangeEvent() const;
+  RecordingChangeEvent NextRecordingChangeEvent();
+  void ClearRecordingChangeEvents();
 
 private:
   class MythEventHandlerPrivate; // Needs to be within MythEventHandler to inherit friend permissions
   boost::shared_ptr<MythEventHandlerPrivate> m_imp; // Private Implementation
-  int m_retryCount;
 };

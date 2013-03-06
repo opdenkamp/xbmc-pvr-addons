@@ -316,6 +316,26 @@ void ADDON_Destroy()
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }
 
+void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data)
+{
+  (void)data;
+  XBMC->Log(LOG_INFO, "Received announcement: %s, %s, %s", flag, sender, message);
+
+  if (g_client == NULL)
+    return;
+
+  if (strcmp("xbmc", sender) == 0)
+  {
+    if (strcmp("System", flag) == 0)
+    {
+      if (strcmp("OnSleep", message) == 0)
+        g_client->OnSleep();
+      else if (strcmp("OnWake", message) == 0)
+        g_client->OnWake();
+    }
+  }
+}
+
 ADDON_STATUS ADDON_GetStatus()
 {
   return m_CurStatus;

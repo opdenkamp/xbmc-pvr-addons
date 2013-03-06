@@ -26,6 +26,7 @@
 #include "platform/util/StdString.h"
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
+#include "libXBMC_gui.h"
 
 enum eStreamingMethod
 {

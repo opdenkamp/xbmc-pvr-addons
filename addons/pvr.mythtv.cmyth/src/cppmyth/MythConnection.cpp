@@ -359,3 +359,41 @@ long long MythConnection::GetBookmark(MythProgramInfo &recording)
   CMYTH_CONN_CALL(bookmark, bookmark < 0, cmyth_get_bookmark(*m_conn_t, *recording.m_proginfo_t));
   return bookmark;
 }
+
+Edl MythConnection::GetCommbreakList(MythProgramInfo &recording)
+{
+  Edl retval;
+  cmyth_commbreaklist_t list = NULL;
+  CMYTH_CONN_CALL(list, list == NULL, cmyth_get_commbreaklist(*m_conn_t, *recording.m_proginfo_t));
+  if (!list)
+    return retval;
+
+  retval.reserve(list->commbreak_count);
+  for (int i = 0; i < list->commbreak_count; ++i)
+  {
+    cmyth_commbreak commbreak = *list->commbreak_list[i];
+    retval.push_back(commbreak);
+  }
+
+  ref_release(list);
+  return retval;
+}
+
+Edl MythConnection::GetCutList(MythProgramInfo &recording)
+{
+  Edl retval;
+  cmyth_commbreaklist_t list = NULL;
+  CMYTH_CONN_CALL(list, list == NULL, cmyth_get_cutlist(*m_conn_t, *recording.m_proginfo_t));
+  if (!list)
+    return retval;
+
+  retval.reserve(list->commbreak_count);
+  for (int i = 0; i < list->commbreak_count; ++i)
+  {
+    cmyth_commbreak commbreak = *list->commbreak_list[i];
+    retval.push_back(commbreak);
+  }
+
+  ref_release(list);
+  return retval;
+}

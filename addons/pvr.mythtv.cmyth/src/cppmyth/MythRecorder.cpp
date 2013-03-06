@@ -91,6 +91,15 @@ bool MythRecorder::IsRecording()
   return retval == 1;
 }
 
+bool MythRecorder::CancelNextRecording(bool cancel)
+{
+  int retval = 0;
+  Lock();
+  retval = cmyth_recorder_cancel_next_recording(*m_recorder_t, cancel ? 1 : 0);
+  Unlock();
+  return retval == 1;
+}
+
 bool MythRecorder::IsTunable(MythChannel &channel)
 {
   Lock();

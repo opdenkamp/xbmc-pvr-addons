@@ -436,8 +436,9 @@ cmyth_recorder_frontend_ready(cmyth_recorder_t rec)
  *
  * Description
  *
- * Request that the recorder 'rec' cancel its next scheduled
- * recording.
+ * Request that the recorder 'rec' cancels its next scheduled recording.
+ * This is used as response to ASK_RECORDING when the user does not want
+ * to allow the recorder to be taken for a pending recording.
  *
  * Return Value:
  *
@@ -446,9 +447,37 @@ cmyth_recorder_frontend_ready(cmyth_recorder_t rec)
  * Failure: -(ERRNO)
  */
 int
-cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec)
+cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec, int cancel)
 {
-	return -ENOSYS;
+	int err;
+	int ret = -1;
+	char msg[256];
+
+	if (!rec) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n", __FUNCTION__);
+		return -ENOSYS;
+	}
+
+	pthread_mutex_lock(&mutex);
+
+	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]CANCEL_NEXT_RECORDING[]:[]%"PRIu32 ,rec->rec_id, cancel == 1);
+
+	if ((err = cmyth_send_message(rec->rec_conn, msg)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message() failed (%d)\n", __FUNCTION__, err);
+		goto fail;
+	}
+
+	if ((err = cmyth_rcv_okay(rec->rec_conn)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed (%d)\n", __FUNCTION__, err);
+		goto fail;
+	}
+
+	ret = 0;
+
+fail:
+	pthread_mutex_unlock(&mutex);
+
+	return ret;
 }
 
 /*

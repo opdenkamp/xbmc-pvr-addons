@@ -316,6 +316,26 @@ void ADDON_Destroy()
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }
 
+void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data)
+{
+  (void)data;
+  XBMC->Log(LOG_INFO, "Received announcement: %s, %s, %s", flag, sender, message);
+
+  if (g_client == NULL)
+    return;
+
+  if (strcmp("xbmc", sender) == 0)
+  {
+    if (strcmp("System", flag) == 0)
+    {
+      if (strcmp("OnSleep", message) == 0)
+        g_client->OnSleep();
+      else if (strcmp("OnWake", message) == 0)
+        g_client->OnWake();
+    }
+  }
+}
+
 ADDON_STATUS ADDON_GetStatus()
 {
   return m_CurStatus;
@@ -441,6 +461,18 @@ const char* GetMininumPVRAPIVersion(void)
   return strMinApiVersion;
 }
 
+const char* GetGUIAPIVersion(void)
+{
+  static const char *strGuiApiVersion = XBMC_GUI_API_VERSION;
+  return strGuiApiVersion;
+}
+
+const char* GetMininumGUIAPIVersion(void)
+{
+  static const char *strMinGuiApiVersion = XBMC_GUI_MIN_API_VERSION;
+  return strMinGuiApiVersion;
+}
+
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
 {
   if (g_client != NULL)
@@ -460,6 +492,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
     pCapabilities->bSupportsRecordings           = true;
     pCapabilities->bSupportsRecordingPlayCount   = true;
     pCapabilities->bSupportsLastPlayedPosition   = true;
+    pCapabilities->bSupportsRecordingEdl         = true;
     return PVR_ERROR_NO_ERROR;
   }
   else
@@ -651,6 +684,14 @@ int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
     return PVR_ERROR_SERVER_ERROR;
 
   return g_client->GetRecordingLastPlayedPosition(recording);
+}
+
+PVR_ERROR GetRecordingEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entries[], int *size)
+{
+  if (g_client == NULL)
+    return PVR_ERROR_SERVER_ERROR;
+
+  return g_client->GetRecordingEdl(recording, entries, size);
 }
 
 

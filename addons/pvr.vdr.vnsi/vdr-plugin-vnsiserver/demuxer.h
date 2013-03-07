@@ -59,6 +59,7 @@ public:
   void Close();
   bool SeekTime(int64_t time);
   uint32_t GetSerial() { return m_MuxPacketSerial; }
+  void SetSerial(uint32_t serial) { m_MuxPacketSerial = serial; }
 
 protected:
   bool EnsureParsers();

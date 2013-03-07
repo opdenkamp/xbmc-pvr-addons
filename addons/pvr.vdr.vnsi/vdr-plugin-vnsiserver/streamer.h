@@ -77,9 +77,12 @@ private:
   cVNSIDemuxer      m_Demuxer;
   cVideoBuffer     *m_VideoBuffer;
   cVideoInput       m_VideoInput;
+  int               m_Priority;
 
 protected:
   virtual void Action(void);
+  bool Open(int serial = -1);
+  void Close();
 
 public:
   cLiveStreamer(int clientID, uint32_t timeout = 0);

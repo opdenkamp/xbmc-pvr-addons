@@ -53,6 +53,7 @@ cLiveStreamer::cLiveStreamer(int clientID, uint32_t timeout)
   m_startup         = true;
   m_SignalLost      = false;
   m_IFrameSeen      = false;
+  m_VideoBuffer     = NULL;
 
   memset(&m_FrontendInfo, 0, sizeof(m_FrontendInfo));
 
@@ -65,18 +66,82 @@ cLiveStreamer::~cLiveStreamer()
   DEBUGLOG("Started to delete live streamer");
 
   Cancel(5);
+  Close();
 
+  DEBUGLOG("Finished to delete live streamer");
+}
+
+bool cLiveStreamer::Open(int serial)
+{
+  Close();
+
+  bool recording = false;
+  if (serial == -1)
+  {
+    cTimer *activeTimer = Timers.GetNextActiveTimer();
+
+    if (activeTimer &&
+        activeTimer->Recording() &&
+        activeTimer->Channel() == m_Channel)
+    {
+      Recordings.Load();
+      cRecording matchRec(activeTimer, activeTimer->Event());
+      cRecording *rec;
+      {
+        cThreadLock RecordingsLock(&Recordings);
+        rec = Recordings.GetByName(matchRec.FileName());
+        if (!rec)
+        {
+          return false;
+        }
+      }
+      m_VideoBuffer = cVideoBuffer::Create(rec);
+      recording = true;
+    }
+  }
+  if (!recording)
+  {
+    m_VideoBuffer = cVideoBuffer::Create(m_ClientID);
+  }
+
+  if (!m_VideoBuffer)
+    return false;
+
+  if (!recording)
+  {
+    if (m_Channel && ((m_Channel->Source() >> 24) == 'V'))
+      m_IsMPEGPS = true;
+
+    if (!m_VideoInput.Open(m_Channel, m_Priority, m_VideoBuffer))
+    {
+      ERRORLOG("Can't switch to channel %i - %s", m_Channel->Number(), m_Channel->Name());
+      return false;
+    }
+  }
+
+  m_Demuxer.Open(*m_Channel, m_VideoBuffer);
+  if (serial >= 0)
+    m_Demuxer.SetSerial(serial);
+
+  return true;
+}
+
+void cLiveStreamer::Close(void)
+{
+  INFOLOG("LiveStreamer::Close - close");
   m_VideoInput.Close();
   m_Demuxer.Close();
-  delete m_VideoBuffer;
+  if (m_VideoBuffer)
+  {
+    delete m_VideoBuffer;
+    m_VideoBuffer = NULL;
+  }
 
   if (m_Frontend >= 0)
   {
     close(m_Frontend);
     m_Frontend = -1;
   }
-
-  DEBUGLOG("Finished to delete live streamer");
 }
 
 void cLiveStreamer::Action(void)
@@ -110,7 +175,7 @@ void cLiveStreamer::Action(void)
         sendSignalInfo();
       }
     }
-    else if (ret < 0)
+    else if (ret == -1)
     {
       // no data
       usleep(10000);
@@ -122,7 +187,13 @@ void cLiveStreamer::Action(void)
         m_SignalLost = true;
       }
     }
+    else if (ret == -2)
+    {
+      if (!Open(m_Demuxer.GetSerial()))
+        break;
+    }
   }
+  Close();
   INFOLOG("exit streamer thread");
 }
 
@@ -134,32 +205,23 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
     return false;
   }
 
-  m_VideoBuffer = cVideoBuffer::Create(m_ClientID);
   m_Channel   = channel;
+  m_Priority  = priority;
   m_Socket    = Socket;
   m_Device = cDevice::GetDevice(m_Channel, priority, true);
 
-  if (m_Channel && ((m_Channel->Source() >> 24) == 'V')) m_IsMPEGPS = true;
+  if (!Open())
+    return false;
 
-  if (m_VideoInput.Open(channel, priority, m_VideoBuffer))
-  {
-    m_Demuxer.Open(*m_Channel, m_VideoBuffer);
+  // Send the OK response here, that it is before the Stream end message
+  resp->add_U32(VNSI_RET_OK);
+  resp->finalise();
+  m_Socket->write(resp->getPtr(), resp->getLen());
 
-    // Send the OK response here, that it is before the Stream end message
-    resp->add_U32(VNSI_RET_OK);
-    resp->finalise();
-    m_Socket->write(resp->getPtr(), resp->getLen());
+  Activate(true);
 
-    Activate(true);
-
-    INFOLOG("Successfully switched to channel %i - %s", m_Channel->Number(), m_Channel->Name());
-    return true;
-  }
-  else
-  {
-    ERRORLOG("Can't switch to channel %i - %s", m_Channel->Number(), m_Channel->Name());
-  }
-  return false;
+  INFOLOG("Successfully switched to channel %i - %s", m_Channel->Number(), m_Channel->Name());
+  return true;
 }
 
 inline void cLiveStreamer::Activate(bool On)

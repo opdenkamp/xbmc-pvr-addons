@@ -34,11 +34,12 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-cRecPlayer::cRecPlayer(cRecording* rec)
+cRecPlayer::cRecPlayer(cRecording* rec, bool inProgress)
 {
   m_file          = -1;
   m_fileOpen      = -1;
   m_recordingFilename = strdup(rec->FileName());
+  m_inProgress = inProgress;
 
   // FIXME find out max file path / name lengths
 #if VDRVERSNUM < 10703
@@ -93,6 +94,39 @@ void cRecPlayer::scan()
   m_totalFrames = m_indexFile->Last();
   INFOLOG("total frames: %u", m_totalFrames);
 }
+
+void cRecPlayer::reScan()
+{
+  struct stat s;
+
+  m_totalLength = 0;
+
+  for(int i = 0; ; i++) // i think we only need one possible loop
+  {
+    fileNameFromIndex(i);
+
+    if(stat(m_fileName, &s) == -1) {
+      break;
+    }
+
+    cSegment* segment;
+    if (m_segments.Size() < i+1)
+    {
+      cSegment* segment = new cSegment();
+      m_segments.Append(segment);
+      segment->start = m_totalLength;
+    }
+    else
+      segment = m_segments[i];
+
+    segment->end = segment->start + s.st_size;
+
+    m_totalLength += s.st_size;
+  }
+
+  m_totalFrames = m_indexFile->Last();
+}
+
 
 cRecPlayer::~cRecPlayer()
 {
@@ -199,8 +233,11 @@ int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
     return 0;
   }
 
-  // Tell linux not to bother keeping the data in the FS cache
-  posix_fadvise(m_file, filePosition, bytes_read, POSIX_FADV_DONTNEED);
+  if (!m_inProgress)
+  {
+    // Tell linux not to bother keeping the data in the FS cache
+    posix_fadvise(m_file, filePosition, bytes_read, POSIX_FADV_DONTNEED);
+  }
 
   // divide and conquer
   if(bytes_read < amount) {

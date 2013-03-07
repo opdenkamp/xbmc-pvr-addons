@@ -22,12 +22,17 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <vdr/tools.h>
+
+class cRecording;
 
 class cVideoBuffer
 {
 public:
   virtual ~cVideoBuffer();
   static cVideoBuffer* Create(int clientID);
+  static cVideoBuffer* Create(cString filename);
+  static cVideoBuffer* Create(cRecording *rec);
   virtual void Put(uint8_t *buf, unsigned int size) = 0;
   virtual int Read(uint8_t **buf, unsigned int size) = 0;
   virtual size_t GetPosMin() { return 0; };

@@ -21,10 +21,12 @@
 #include "videobuffer.h"
 #include "config.h"
 #include "vnsi.h"
+#include "recplayer.h"
 
 #include <vdr/ringbuffer.h>
 #include <vdr/remux.h>
 #include <vdr/videodir.h>
+#include <vdr/recording.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -113,7 +115,7 @@ public:
 protected:
   cVideoBufferTimeshift();
   virtual bool Init() = 0;
-  off_t Available();
+  virtual off_t Available();
   off_t m_BufferSize;
   off_t m_WritePtr;
   off_t m_ReadPtr;
@@ -323,6 +325,7 @@ public:
   virtual void SetPos(size_t pos);
 
 protected:
+  cVideoBufferFile();
   cVideoBufferFile(int clientID);
   virtual ~cVideoBufferFile();
   virtual bool Init();
@@ -334,6 +337,11 @@ protected:
   unsigned int m_ReadCachePtr;
   unsigned int m_ReadCacheSize;
 };
+
+cVideoBufferFile::cVideoBufferFile()
+{
+
+}
 
 cVideoBufferFile::cVideoBufferFile(int clientID)
 {
@@ -376,8 +384,8 @@ bool cVideoBufferFile::Init()
     return false;
   }
 
-  m_WritePtr = 200;
-  m_ReadPtr = 200;
+  m_WritePtr = 0;
+  m_ReadPtr = 0;
   m_ReadCacheSize = 0;
   return true;
 }
@@ -548,6 +556,270 @@ int cVideoBufferFile::Read(uint8_t **buf, unsigned int size)
 
 //-----------------------------------------------------------------------------
 
+class cVideoBufferRecording : public cVideoBufferFile
+{
+friend class cVideoBuffer;
+public:
+  virtual size_t GetPosMax();
+  virtual void Put(uint8_t *buf, unsigned int size);
+  virtual int Read(uint8_t **buf, unsigned int size);
+  int ReadBlock(uint8_t **buf, unsigned int size);
+
+protected:
+  cVideoBufferRecording(cRecording *rec);
+  virtual ~cVideoBufferRecording();
+  virtual bool Init();
+  virtual off_t Available();
+  off_t GetPosEnd();
+  cRecPlayer *m_RecPlayer;
+  cRecording *m_Recording;
+  cTimeMs m_Timer;
+  bool m_CheckEof;
+};
+
+cVideoBufferRecording::cVideoBufferRecording(cRecording *rec)
+{
+  m_Recording = rec;
+  m_ReadCacheSize = 0;
+}
+
+cVideoBufferRecording::~cVideoBufferRecording()
+{
+  INFOLOG("delete cVideoBufferRecording");
+  if (m_RecPlayer)
+    delete m_RecPlayer;
+}
+
+size_t cVideoBufferRecording::GetPosMax()
+{
+  m_RecPlayer->reScan();
+  m_WritePtr = m_RecPlayer->getLengthBytes();
+  return cVideoBufferTimeshift::GetPosMax();
+}
+
+void cVideoBufferRecording::Put(uint8_t *buf, unsigned int size)
+{
+
+}
+
+bool cVideoBufferRecording::Init()
+{
+  m_RecPlayer = new cRecPlayer(m_Recording);
+  if (!m_RecPlayer)
+    return false;
+
+  m_WritePtr = 0;
+  m_ReadPtr = 0;
+  m_ReadCacheSize = 0;
+  m_CheckEof = false;
+  return true;
+}
+
+off_t cVideoBufferRecording::Available()
+{
+  m_RecPlayer->reScan();
+  m_BufferSize = m_WritePtr = m_RecPlayer->getLengthBytes();
+  // INFOLOG("--------- length: %ld", m_BufferSize);
+  return cVideoBufferTimeshift::Available();
+}
+
+int cVideoBufferRecording::ReadBlock(uint8_t **buf, unsigned int size)
+{
+  // move read pointer
+  if (m_BytesConsumed)
+  {
+    m_ReadPtr += m_BytesConsumed;
+    if (m_ReadPtr >= m_BufferSize)
+    {
+      m_ReadPtr -= m_BufferSize;
+      ERRORLOG("cVideoBufferRecording::ReadBlock - unknown error");
+    }
+    m_ReadCachePtr += m_BytesConsumed;
+  }
+  m_BytesConsumed = 0;
+
+  // check if we have anything to read
+  size_t readBytes;
+  if (m_ReadCacheSize && ((m_ReadCachePtr + m_Margin) <= m_ReadCacheSize))
+  {
+    readBytes = m_ReadCacheSize - m_ReadCachePtr;
+    *buf = m_ReadCache + m_ReadCachePtr;
+  }
+  else if ((readBytes = Available()) >= CACHE_SIZE)
+  {
+    if (m_ReadPtr + CACHE_SIZE <= m_BufferSize)
+    {
+      m_ReadCacheSize = m_RecPlayer->getBlock(m_ReadCache, m_ReadPtr, CACHE_SIZE);
+      if (m_ReadCacheSize != CACHE_SIZE)
+      {
+        ERRORLOG("Could not read file, size:  %d", m_ReadCacheSize);
+        m_ReadCacheSize = 0;
+        return 0;
+      }
+      readBytes = m_ReadCacheSize;
+      *buf = m_ReadCache;
+      m_ReadCachePtr = 0;
+      // INFOLOG("---------- read: %d", readBytes);
+    }
+    else
+    {
+      ERRORLOG("cVideoBufferRecording::ReadBlock - unknown error");
+      return 0;
+    }
+  }
+  else
+    return 0;
+
+  // Make sure we are looking at a TS packet
+  while (readBytes > TS_SIZE)
+  {
+    if ((*buf)[0] == TS_SYNC_BYTE && (*buf)[TS_SIZE] == TS_SYNC_BYTE)
+      break;
+    m_BytesConsumed++;
+    (*buf)++;
+    readBytes--;
+    INFOLOG("------------ skip byte");
+  }
+
+  if ((*buf)[0] != TS_SYNC_BYTE)
+  {
+    INFOLOG("------------ marker 11");
+    return 0;
+  }
+
+  m_BytesConsumed += TS_SIZE;
+  return TS_SIZE;
+}
+
+int cVideoBufferRecording::Read(uint8_t **buf, unsigned int size)
+{
+  cMutexLock lock(&m_Mutex);
+
+  int count = ReadBlock(buf, size);
+
+  // check for end of file
+  if (count != TS_SIZE)
+  {
+    if (m_CheckEof && m_Timer.TimedOut())
+    {
+      INFOLOG("Recoding - end of file");
+      return -2;
+    }
+    else if (!m_CheckEof)
+    {
+      m_CheckEof = true;
+      m_Timer.Set(3000);
+    }
+  }
+  else
+    m_CheckEof = false;
+
+  return count;
+}
+
+//-----------------------------------------------------------------------------
+
+class cVideoBufferTest : public cVideoBufferFile
+{
+friend class cVideoBuffer;
+public:
+  virtual size_t GetPosMax();
+  virtual void Put(uint8_t *buf, unsigned int size);
+  virtual int Read(uint8_t **buf, unsigned int size);
+
+protected:
+  cVideoBufferTest(cString filename);
+  virtual ~cVideoBufferTest();
+  virtual bool Init();
+  virtual off_t Available();
+  off_t GetPosEnd();
+  cTimeMs m_Timer;
+  bool m_CheckEof;
+};
+
+cVideoBufferTest::cVideoBufferTest(cString filename)
+{
+  m_Filename = filename;
+  m_Fd = 0;
+  m_ReadCacheSize = 0;
+}
+
+cVideoBufferTest::~cVideoBufferTest()
+{
+  if (m_Fd)
+  {
+    close(m_Fd);
+    m_Fd = 0;
+  }
+}
+
+size_t cVideoBufferTest::GetPosMax()
+{
+  m_WritePtr = GetPosEnd();
+  return cVideoBufferTimeshift::GetPosMax();
+}
+
+off_t cVideoBufferTest::GetPosEnd()
+{
+  off_t cur = lseek(m_Fd, 0, SEEK_CUR);
+  off_t end = lseek(m_Fd, 0, SEEK_END);
+  lseek(m_Fd, cur, SEEK_SET);
+  return end;
+}
+
+void cVideoBufferTest::Put(uint8_t *buf, unsigned int size)
+{
+
+}
+
+bool cVideoBufferTest::Init()
+{
+  m_Fd = open(m_Filename, O_RDONLY);
+  if (m_Fd == -1)
+  {
+    ERRORLOG("Could not open file: %s", (const char*)m_Filename);
+    return false;
+  }
+
+  m_WritePtr = 0;
+  m_ReadPtr = 0;
+  m_ReadCacheSize = 0;
+  m_CheckEof = false;
+  return true;
+}
+
+off_t cVideoBufferTest::Available()
+{
+  m_BufferSize = m_WritePtr = GetPosEnd();
+  return cVideoBufferTimeshift::Available();
+}
+
+int cVideoBufferTest::Read(uint8_t **buf, unsigned int size)
+{
+  int count = cVideoBufferFile::Read(buf, size);
+
+  // check for end of file
+  if (count != TS_SIZE)
+  {
+    if (m_CheckEof && m_Timer.TimedOut())
+    {
+      INFOLOG("Recoding - end of file");
+      return -2;
+    }
+    else if (!m_CheckEof)
+    {
+      m_CheckEof = true;
+      m_Timer.Set(1000);
+    }
+  }
+  else
+    m_CheckEof = false;
+
+  return count;
+}
+
+//-----------------------------------------------------------------------------
+
 cVideoBuffer::cVideoBuffer()
 {
 }
@@ -590,4 +862,30 @@ cVideoBuffer* cVideoBuffer::Create(int clientID)
   }
   else
     return NULL;
+}
+
+cVideoBuffer* cVideoBuffer::Create(cString filename)
+{
+  INFOLOG("Open recording: %s", (const char*)filename);
+  cVideoBufferTest *buffer = new cVideoBufferTest(filename);
+  if (!buffer->Init())
+  {
+    delete buffer;
+    return NULL;
+  }
+  else
+    return buffer;
+}
+
+cVideoBuffer* cVideoBuffer::Create(cRecording *rec)
+{
+  INFOLOG("Open recording: %s", rec->FileName());
+  cVideoBufferRecording *buffer = new cVideoBufferRecording(rec);
+  if (!buffer->Init())
+  {
+    delete buffer;
+    return NULL;
+  }
+  else
+    return buffer;
 }

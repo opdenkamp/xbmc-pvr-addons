@@ -86,7 +86,10 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
 
   // read TS Packet from buffer
   len = m_VideoBuffer->Read(&buf, TS_SIZE);
-  if (len != TS_SIZE)
+  // eof
+  if (len == -2)
+    return -2;
+  else if (len != TS_SIZE)
     return -1;
 
   int ts_pid = TsPid(buf);

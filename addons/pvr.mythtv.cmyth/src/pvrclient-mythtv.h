@@ -149,6 +149,7 @@ private:
   void EventUpdateRecordings();
   void ForceUpdateRecording(ProgramInfoMap::iterator it);
   int FillRecordings();
+  int GetRecordingLastPlayedPosition(MythProgramInfo &programInfo);
 
   // Timers
   RecordingRuleList m_recordingRules;

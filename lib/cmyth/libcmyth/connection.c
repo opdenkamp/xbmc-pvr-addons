@@ -33,31 +33,6 @@
 static char * cmyth_conn_get_setting_unlocked(cmyth_conn_t conn, const char* hostname, const char* setting);
 static int cmyth_conn_set_setting_unlocked(cmyth_conn_t conn, const char* hostname, const char* setting, const char* value);
 
-#ifdef _MSC_VER
-CRITICAL_SECTION mutex;
-
-BOOL APIENTRY DllMain(HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
-{
-	switch( ul_reason_for_call )
-	{
-	case DLL_PROCESS_ATTACH:
-		InitializeCriticalSection(&mutex);
-		break;
-	/*case DLL_THREAD_ATTACH:
-		...
-	case DLL_THREAD_DETACH:
-		...*/
-	case DLL_PROCESS_DETACH:
-		DeleteCriticalSection(&mutex);
-		break;
-	}
-	return TRUE;
-}
-
-#else
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif
-
 typedef struct {
 	unsigned int version;
 	char token[14]; // up to 13 chars used in v74 + the terminating NULL character
@@ -106,7 +81,7 @@ cmyth_conn_done(cmyth_conn_t conn)
 		return;
 	}
 	if (!conn->conn_hang && conn->conn_ann != ANN_NONE) {
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&conn->conn_mutex);
 
 		/*
 		 * Try to shut down the connection.  Can't do much
@@ -118,7 +93,7 @@ cmyth_conn_done(cmyth_conn_t conn)
 				  __FUNCTION__, err);
 		}
 
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&conn->conn_mutex);
 	}
 }
 
@@ -146,6 +121,7 @@ cmyth_conn_destroy(cmyth_conn_t conn)
 	{
 		free( conn->server );
 	}
+	pthread_mutex_destroy(&conn->conn_mutex);
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s }\n", __FUNCTION__);
 }
 
@@ -186,6 +162,7 @@ cmyth_conn_create(void)
 	ret->server = NULL;
 	ret->port = 0;
 	ret->conn_ann = ANN_NONE;
+	pthread_mutex_init(&ret->conn_mutex, NULL);
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s }\n", __FUNCTION__);
 	return ret;
 }
@@ -1390,7 +1367,7 @@ cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int32_t id)
 		return NULL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);
 
 	if ((rec=cmyth_recorder_create()) == NULL)
 		goto fail;
@@ -1436,7 +1413,7 @@ cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int32_t id)
 					conn->conn_tcp_rcvbuf) < 0)
 		goto fail;
 
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 
 	return rec;
 
@@ -1444,7 +1421,7 @@ cmyth_conn_get_recorder_from_num(cmyth_conn_t conn, int32_t id)
 	if (rec)
 		ref_release(rec);
 
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 
 	return NULL;
 }
@@ -1483,7 +1460,7 @@ cmyth_conn_get_free_recorder(cmyth_conn_t conn)
 		return NULL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);
 
 	if ((rec=cmyth_recorder_create()) == NULL)
 		goto fail;
@@ -1534,7 +1511,7 @@ cmyth_conn_get_free_recorder(cmyth_conn_t conn)
 					conn->conn_tcp_rcvbuf) < 0)
 		goto fail;
 
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 
 	return rec;
 
@@ -1542,7 +1519,7 @@ cmyth_conn_get_free_recorder(cmyth_conn_t conn)
 	if (rec)
 		ref_release(rec);
 
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 
 	return NULL;
 }
@@ -1563,7 +1540,7 @@ cmyth_conn_get_freespace(cmyth_conn_t control,
 	if ((total == NULL) || (used == NULL))
 		return -EINVAL;
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&control->conn_mutex);
 
 	if (control->conn_version >= 32)
 		{ snprintf(msg, sizeof(msg), "QUERY_FREE_SPACE_SUMMARY"); }
@@ -1633,7 +1610,7 @@ cmyth_conn_get_freespace(cmyth_conn_t control,
 		}
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&control->conn_mutex);
 
 	return ret;
 }
@@ -1675,7 +1652,7 @@ cmyth_conn_get_free_recorder_count(cmyth_conn_t conn)
 		return -1;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "GET_FREE_RECORDER_COUNT");
 	if ((err = cmyth_send_message(conn, msg)) < 0) {
@@ -1704,7 +1681,7 @@ cmyth_conn_get_free_recorder_count(cmyth_conn_t conn)
 	ret = (int)c;
 
     err:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 
 	return ret;
 }
@@ -1715,7 +1692,7 @@ cmyth_conn_get_backend_hostname(cmyth_conn_t conn)
 	int count, err;
 	char* result = NULL;
 
-  pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);
 	if(conn->conn_version < 17) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support QUERY_HOSTNAME\n",
 			  __FUNCTION__);
@@ -1758,7 +1735,7 @@ cmyth_conn_get_backend_hostname(cmyth_conn_t conn)
 		buffer[sizeof(buffer)-1] = 0;
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: odd left over data %s\n", __FUNCTION__, buffer);
 	}
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 
 	if(!strcmp("-1",result))  {
 		cmyth_dbg(CMYTH_DBG_PROTO, "%s: Failed to retrieve backend hostname.\n",
@@ -1768,7 +1745,7 @@ cmyth_conn_get_backend_hostname(cmyth_conn_t conn)
 	return result;
 
 err:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 	if(result)
 		ref_release(result);
 
@@ -1853,9 +1830,9 @@ cmyth_conn_get_setting(cmyth_conn_t conn, const char* hostname, const char* sett
 {
 	char* result = NULL;
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);
 	result = cmyth_conn_get_setting_unlocked(conn, hostname, setting);
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 
 	return result;
 }
@@ -1900,9 +1877,9 @@ int cmyth_conn_set_setting(cmyth_conn_t conn,
 {
 	int result;
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);
 	result = cmyth_conn_set_setting_unlocked(conn, hostname, setting, value);
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 
 	return result;
 }
@@ -1970,7 +1947,7 @@ cmyth_conn_reschedule_recordings(cmyth_conn_t conn, uint32_t recordid)
 		}
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);
 
 	if ((err = cmyth_send_message(conn, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1987,6 +1964,6 @@ cmyth_conn_reschedule_recordings(cmyth_conn_t conn, uint32_t recordid)
 	}
 
 out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 	return err;
 }

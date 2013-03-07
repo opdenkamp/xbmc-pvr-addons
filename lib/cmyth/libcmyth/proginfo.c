@@ -581,7 +581,7 @@ cmyth_proginfo_delete_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 	sprintf(buf, "DELETE_RECORDING 0[]:[]%s", proginfo);
 	free(proginfo);
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&control->conn_mutex);
 
 	if ((err = cmyth_send_message(control, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -601,7 +601,7 @@ cmyth_proginfo_delete_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 	}
 
 	out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&control->conn_mutex);
 	free(buf);
 
 	return ret;
@@ -663,7 +663,7 @@ cmyth_proginfo_forget_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 	sprintf(buf, "FORGET_RECORDING 0[]:[]%s", proginfo);
 	free(proginfo);
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&control->conn_mutex);
 
 	if ((err = cmyth_send_message(control, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -683,7 +683,7 @@ cmyth_proginfo_forget_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 	}
 
 	out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&control->conn_mutex);
 	free(buf);
 
 	return ret;
@@ -745,7 +745,7 @@ cmyth_proginfo_stop_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 	sprintf(buf, "STOP_RECORDING 0[]:[]%s", proginfo);
 	free(proginfo);
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&control->conn_mutex);
 
 	if ((err = cmyth_send_message(control, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -765,7 +765,7 @@ cmyth_proginfo_stop_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 	}
 
 	out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&control->conn_mutex);
 	free(buf);
 
 	return ret;
@@ -1477,7 +1477,7 @@ cmyth_proginfo_fill(cmyth_conn_t control, cmyth_proginfo_t prog)
 	sprintf(buf, "FILL_PROGRAM_INFO cmyth[]:[]0[]:[]%s", proginfo);
 	free(proginfo);
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&control->conn_mutex);
 
 	length = prog->proginfo_Length;
 
@@ -1518,7 +1518,7 @@ cmyth_proginfo_fill(cmyth_conn_t control, cmyth_proginfo_t prog)
 	}
 
 	out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&control->conn_mutex);
 	free(buf);
 
 	return ret;
@@ -1730,7 +1730,7 @@ cmyth_get_delete_list(cmyth_conn_t conn, char * msg, cmyth_proglist_t prog)
                 cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n", __FUNCTION__);
                 return -1;
         }
-        pthread_mutex_lock(&mutex);
+        pthread_mutex_lock(&conn->conn_mutex);
         if ((err = cmyth_send_message(conn, msg)) < 0) {
                 fprintf (stderr, "ERROR %d \n",err);
                 cmyth_dbg(CMYTH_DBG_ERROR,
@@ -1740,7 +1740,7 @@ cmyth_get_delete_list(cmyth_conn_t conn, char * msg, cmyth_proglist_t prog)
         count = cmyth_rcv_length(conn);
         cmyth_rcv_proglist(conn, &err, prog, count);
         prog_count=cmyth_proglist_get_count(prog);
-        pthread_mutex_unlock(&mutex);
+        pthread_mutex_unlock(&conn->conn_mutex);
         return prog_count;
 }
 
@@ -1766,7 +1766,7 @@ cmyth_proginfo_get_from_basename(cmyth_conn_t control, const char* basename)
 	 * to enumerating all recordings
 	 */
 	if(control->conn_version >= 32 && strchr(basename, ' ') == NULL) {
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&control->conn_mutex);
 
 		snprintf(msg, sizeof(msg), "QUERY_RECORDING BASENAME %s",
 			 basename);
@@ -1807,10 +1807,10 @@ cmyth_proginfo_get_from_basename(cmyth_conn_t control, const char* basename)
 			goto out;
 		}
 
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&control->conn_mutex);
 		return prog;
 		out:
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&control->conn_mutex);
 		if(prog)
 			ref_release(prog);
 		return NULL;
@@ -1879,7 +1879,7 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, time_t r
 		ts->timestamp_second);
 
 	if(control->conn_version >= 32) {
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&control->conn_mutex);
 
 		snprintf(msg, sizeof(msg), "QUERY_RECORDING TIMESLOT %"PRIu32" %s",
 			chanid, time);
@@ -1920,10 +1920,10 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, time_t r
 			goto out;
 		}
 
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&control->conn_mutex);
 		return prog;
 		out:
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&control->conn_mutex);
 		if(prog)
 			ref_release(prog);
 		return NULL;

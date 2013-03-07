@@ -40,10 +40,6 @@
 
 #if defined(_MSC_VER)
 #include "cmyth_msc.h"
-//#define PTHREAD_MUTEX_INITIALIZER NULL;
-#define PTHREAD_MUTEX_INITIALIZER InitializeCriticalSection(&mutex);
-//typedef void* pthread_mutex_t;
-typedef CRITICAL_SECTION pthread_mutex_t;
 #else
 #include <unistd.h>
 #include <sys/types.h>
@@ -57,9 +53,6 @@ typedef CRITICAL_SECTION pthread_mutex_t;
 typedef int cmyth_socket_t;
 #define closesocket(fd) close(fd)
 #endif /* _MSC_VER */
-
-#define mutex __cmyth_mutex
-extern pthread_mutex_t mutex;
 
 /*
  * Some useful constants
@@ -91,6 +84,7 @@ struct cmyth_conn {
 	char *           server;         /**< hostname of server */
 	uint16_t         port;           /**< port of server */
 	cmyth_conn_ann_t conn_ann;       /**< connection announcement */
+	pthread_mutex_t  conn_mutex;
 };
 
 /* Sergio: Added to support new livetv protocol */
@@ -255,6 +249,7 @@ struct cmyth_proginfo {
 struct cmyth_proglist {
 	cmyth_proginfo_t *proglist_list;
 	int proglist_count;
+	pthread_mutex_t proglist_mutex;
 };
 
 /*

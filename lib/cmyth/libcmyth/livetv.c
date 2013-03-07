@@ -820,7 +820,7 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 	if (dir == 0)
 		return 1;
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	ret = 0;
 
@@ -841,9 +841,9 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 				  "%s: wait until livetv_watch is OFF\n",
 				  __FUNCTION__);
 			for (i = 0; i < 4; i++) {
-				pthread_mutex_unlock(&mutex);
+				pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 				usleep(500000);
-				pthread_mutex_lock(&mutex);
+				pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 				if (rec->rec_livetv_chain->livetv_watch == 0)
 					break;
 			}
@@ -873,7 +873,7 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 
 	out:
 
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }

@@ -62,6 +62,7 @@ cmyth_proglist_destroy(cmyth_proglist_t pl)
 	if (pl->proglist_list) {
 		free(pl->proglist_list);
 	}
+	pthread_mutex_destroy(&pl->proglist_mutex);
 }
 
 /*
@@ -93,6 +94,7 @@ cmyth_proglist_create(void)
 
 	ret->proglist_list = NULL;
 	ret->proglist_count = 0;
+	pthread_mutex_init(&ret->proglist_mutex, NULL);
 	return ret;
 }
 
@@ -154,7 +156,7 @@ cmyth_proglist_delete_item(cmyth_proglist_t pl, cmyth_proginfo_t prog)
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&pl->proglist_mutex);
 
 	for (i=0; i<pl->proglist_count; i++) {
 		if (cmyth_proginfo_compare(prog, pl->proglist_list[i]) == 0) {
@@ -170,7 +172,7 @@ cmyth_proglist_delete_item(cmyth_proglist_t pl, cmyth_proginfo_t prog)
 	}
 
  out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&pl->proglist_mutex);
 
 	return ret;
 }
@@ -237,7 +239,7 @@ cmyth_proglist_get_list(cmyth_conn_t conn,
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);
 
 	if ((err = cmyth_send_message(conn, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -282,7 +284,7 @@ cmyth_proglist_get_list(cmyth_conn_t conn,
 	ret = 0;
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 
 	return ret;
 }

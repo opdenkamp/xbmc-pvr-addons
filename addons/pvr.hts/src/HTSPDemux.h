@@ -24,6 +24,7 @@
 #include "client.h"
 #include "HTSPConnection.h"
 #include "platform/util/buffer.h"
+#include "platform/threads/mutex.h"
 
 class CHTSPDemux : public CHTSPConnectionCallback
 {
@@ -49,6 +50,8 @@ private:
   void ParseSubscriptionStart (htsmsg_t *m);
   void ParseSubscriptionStop  (htsmsg_t *m);
   void ParseSubscriptionStatus(htsmsg_t *m);
+  void ParseSubscriptionSkip  (htsmsg_t *m);
+  void ParseSubscriptionSpeed (htsmsg_t *m);
   bool SendSubscribe  (int subscription, int channel);
   bool SendUnsubscribe(int subscription);
   bool SendSpeed      (int subscription, int speed);
@@ -56,6 +59,7 @@ private:
   void ParseMuxPacket(htsmsg_t *m);
   bool ParseQueueStatus(htsmsg_t* msg);
   bool ParseSignalStatus(htsmsg_t* msg);
+  bool ParseTimeshiftStatus(htsmsg_t* msg);
   bool ParseSourceInfo(htsmsg_t* msg);
 
   CHTSPConnection*                     m_session;
@@ -72,4 +76,6 @@ private:
   std::map<int, unsigned int>          m_StreamIndex;
   PLATFORM::SyncedBuffer<DemuxPacket*> m_demuxPacketBuffer;
   bool                                 m_bIsOpen;
+  PLATFORM::CEvent*                    m_seekEvent;
+  double                               m_seekTime;
 };

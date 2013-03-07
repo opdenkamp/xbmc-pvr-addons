@@ -23,6 +23,7 @@
 #include "platform/util/StdString.h"
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
+#include "libXBMC_gui.h"
 
 #define DEFAULT_HOST  "127.0.0.1"
 #define DEFAULT_PORT  80

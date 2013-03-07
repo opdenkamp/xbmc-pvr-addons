@@ -285,6 +285,10 @@ void ADDON_FreeSettings()
 
 }
 
+void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data)
+{
+}
+
 /***********************************************************
  * PVR Client AddOn specific public library functions
  ***********************************************************/
@@ -299,6 +303,18 @@ const char* GetMininumPVRAPIVersion(void)
 {
   static const char *strMinApiVersion = XBMC_PVR_MIN_API_VERSION;
   return strMinApiVersion;
+}
+
+const char* GetGUIAPIVersion(void)
+{
+  static const char *strGuiApiVersion = XBMC_GUI_API_VERSION;
+  return strGuiApiVersion;
+}
+
+const char* GetMininumGUIAPIVersion(void)
+{
+  static const char *strMinGuiApiVersion = XBMC_GUI_MIN_API_VERSION;
+  return strMinGuiApiVersion;
 }
 
 //-- GetAddonCapabilities -----------------------------------------------------
@@ -627,6 +643,7 @@ DemuxPacket* DemuxRead(void) { return NULL; }
 void DemuxAbort(void) {}
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
+PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 bool SeekTime(int,bool,double*) { return false; }
 void SetSpeed(int) {};

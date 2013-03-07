@@ -138,6 +138,12 @@ if test "$use_external_ffmpeg" = "yes"; then
 fi
 AC_SUBST(FFMPEG_INCLUDES)
 
+AC_CHECK_LIB([GL],[main],have_gl=yes, have_gl=no)  
+if test "$have_gl" = "yes"; then
+  AC_DEFINE([HAVE_GL],[1],["Define to 1 if we have gl"])
+fi
+echo "GL: $have_gl"
+
 ### End external Libraries 
 
 ### Build addons with dependencies

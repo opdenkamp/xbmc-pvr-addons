@@ -508,6 +508,29 @@ void MythEventHandler::RegisterObserver(MythEventObserver *observer)
   m_imp->m_observer = observer;
 }
 
+void MythEventHandler::Suspend()
+{
+  if (m_imp->IsRunning())
+  {
+    m_imp->StopThread();
+    // We must close the connection to be able to restart properly.
+    // On resume the thread will retry to connect by RetryConnect().
+    // So all recordings will be reloaded after restoring the connection.
+    m_imp->m_hang = true;
+    ref_release(*(m_imp->m_conn_t));
+    *(m_imp->m_conn_t) = NULL;
+  }
+}
+
+void MythEventHandler::Resume()
+{
+  if (m_imp->IsStopped())
+  {
+    m_imp->Clear();
+    m_imp->CreateThread();
+  }
+}
+
 void MythEventHandler::PreventLiveChainUpdate()
 {
   m_imp->Lock();

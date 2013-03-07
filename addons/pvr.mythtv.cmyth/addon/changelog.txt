@@ -1,3 +1,6 @@
+v1.7.9
+- Bump after PVR API version bump
+
 v1.6.9
 - Added Live TV vs. recording conflict handling
 - Fixed recovering from backend connection loss on Windows

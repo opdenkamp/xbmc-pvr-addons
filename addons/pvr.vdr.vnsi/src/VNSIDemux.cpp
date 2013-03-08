@@ -227,7 +227,10 @@ bool cVNSIDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
   delete resp;
 
   cRequestPacket vrp2;
-  if (!vrp2.init(VNSI_CHANNELSTREAM_OPEN) || !vrp2.add_U32(channelinfo.iUniqueId) || !ReadSuccess(&vrp2))
+  if (!vrp2.init(VNSI_CHANNELSTREAM_OPEN) ||
+      !vrp2.add_U32(channelinfo.iUniqueId) ||
+      !vrp2.add_S32(g_iPriority) ||
+      !ReadSuccess(&vrp2))
   {
     XBMC->Log(LOG_ERROR, "%s - failed to set channel", __FUNCTION__);
     return false;

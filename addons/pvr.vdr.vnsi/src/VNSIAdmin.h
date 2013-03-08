@@ -64,7 +64,9 @@ protected:
 private:
 
   CAddonGUIWindow *m_window;
+#if defined(XBMC_GUI_API_VERSION)
   CAddonGUIRenderingControl *m_renderControl;
+#endif
   CAddonGUISpinControl *m_spinTimeshiftMode;
   CAddonGUISpinControl *m_spinTimeshiftBufferRam;
   CAddonGUISpinControl *m_spinTimeshiftBufferFile;

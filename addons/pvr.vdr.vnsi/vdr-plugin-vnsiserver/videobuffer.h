@@ -34,13 +34,18 @@ public:
   static cVideoBuffer* Create(cString filename);
   static cVideoBuffer* Create(cRecording *rec);
   virtual void Put(uint8_t *buf, unsigned int size) = 0;
-  virtual int Read(uint8_t **buf, unsigned int size) = 0;
+  virtual int ReadBlock(uint8_t **buf, unsigned int size) = 0;
   virtual size_t GetPosMin() { return 0; };
   virtual size_t GetPosMax() { return 0; };
   virtual size_t GetPosCur() { return 0; };
   virtual void GetPositions(size_t *cur, size_t *min,size_t *max) {};
   virtual void SetPos(size_t pos) {};
   virtual void SetCache(bool on) {};
+  int Read(uint8_t **buf, unsigned int size);
+  void AttachInput(bool attach);
 protected:
   cVideoBuffer();
+  cTimeMs m_Timer;
+  bool m_CheckEof;
+  bool m_InputAttached;
 };

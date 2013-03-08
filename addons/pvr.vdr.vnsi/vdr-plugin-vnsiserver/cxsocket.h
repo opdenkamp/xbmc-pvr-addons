@@ -46,6 +46,7 @@ class cxSocket
   ~cxSocket();
   void SetHandle(int h);
   void close(void);
+  void Shutdown(void);
   void LockWrite();
   void UnlockWrite();
   ssize_t read(void *buffer, size_t size, int timeout_ms = -1);

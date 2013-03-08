@@ -75,6 +75,10 @@ bool cLiveStreamer::Open(int serial)
 {
   Close();
 
+  m_Device = cDevice::GetDevice(m_Channel, m_Priority, true, true);
+  if (!m_Device)
+    return false;
+
   bool recording = false;
   if (serial == -1)
   {
@@ -190,10 +194,12 @@ void cLiveStreamer::Action(void)
     else if (ret == -2)
     {
       if (!Open(m_Demuxer.GetSerial()))
+      {
+        m_Socket->Shutdown();
         break;
+      }
     }
   }
-  Close();
   INFOLOG("exit streamer thread");
 }
 
@@ -208,7 +214,6 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
   m_Channel   = channel;
   m_Priority  = priority;
   m_Socket    = Socket;
-  m_Device = cDevice::GetDevice(m_Channel, priority, true);
 
   if (!Open())
     return false;

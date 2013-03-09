@@ -55,7 +55,7 @@ void cParserSubtitle::Parse(sStreamPacket *pkt)
     {
       pkt->id       = m_pID;
       pkt->data     = m_PesBuffer+2;
-      pkt->size     = m_PesPacketLength-2;
+      pkt->size     = m_PesPacketLength-3;
       pkt->duration = 0;
       pkt->dts      = m_curDTS;
       pkt->pts      = m_curPTS;

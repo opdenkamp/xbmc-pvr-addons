@@ -456,15 +456,15 @@ PVR_ERROR cVNSIData::AddTimer(const PVR_TIMER &timerinfo)
     }
   }
 
-  if(strlen(timerinfo.strTitle) > 0) {
-    path += timerinfo.strTitle;
-  }
-
   // replace directory separators
   for(std::size_t i=0; i<path.size(); i++) {
     if(path[i] == '/' || path[i] == '\\') {
       path[i] = '~';
     }
+  }
+
+  if(strlen(timerinfo.strTitle) > 0) {
+    path += timerinfo.strTitle;
   }
 
   if(path.empty()) {

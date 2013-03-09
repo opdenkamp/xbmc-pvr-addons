@@ -1,3 +1,6 @@
+v1.7.10
+- Get last played position for recordings from the server
+
 v1.7.9
 - Provide EDLs if available (commercial skip data cut lists)
   Currently only works for videos with constant frame

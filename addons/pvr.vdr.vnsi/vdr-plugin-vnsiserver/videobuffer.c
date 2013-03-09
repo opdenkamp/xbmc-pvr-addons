@@ -572,6 +572,7 @@ protected:
   off_t GetPosEnd();
   cRecPlayer *m_RecPlayer;
   cRecording *m_Recording;
+  cTimeMs m_ScanTimer;
 };
 
 cVideoBufferRecording::cVideoBufferRecording(cRecording *rec)
@@ -609,14 +610,18 @@ bool cVideoBufferRecording::Init()
   m_ReadPtr = 0;
   m_ReadCacheSize = 0;
   m_InputAttached = false;
+  m_ScanTimer.Set(0);
   return true;
 }
 
 off_t cVideoBufferRecording::Available()
 {
-  m_RecPlayer->reScan();
+  if (m_ScanTimer.TimedOut())
+  {
+    m_RecPlayer->reScan();
+    m_ScanTimer.Set(1000);
+  }
   m_BufferSize = m_WritePtr = m_RecPlayer->getLengthBytes();
-  // INFOLOG("--------- length: %ld", m_BufferSize);
   return cVideoBufferTimeshift::Available();
 }
 

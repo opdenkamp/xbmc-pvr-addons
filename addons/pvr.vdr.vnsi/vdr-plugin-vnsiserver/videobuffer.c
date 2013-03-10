@@ -314,12 +314,11 @@ int cVideoBufferRAM::ReadBlock(uint8_t **buf, unsigned int size)
 
 //-----------------------------------------------------------------------------
 
-#define CACHE_SIZE 4000
-
 class cVideoBufferFile : public cVideoBufferTimeshift
 {
 friend class cVideoBuffer;
 public:
+  virtual size_t GetPosMax();
   virtual void Put(uint8_t *buf, unsigned int size);
   virtual int ReadBlock(uint8_t **buf, unsigned int size);
   virtual void SetPos(size_t pos);
@@ -332,10 +331,10 @@ protected:
   int m_ClientID;
   cString m_Filename;
   int m_Fd;
-  bool m_UseCache;
-  uint8_t m_ReadCache[CACHE_SIZE];
+  uint8_t *m_ReadCache;
   unsigned int m_ReadCachePtr;
   unsigned int m_ReadCacheSize;
+  unsigned int m_ReadCacheMaxSize;
 };
 
 cVideoBufferFile::cVideoBufferFile()
@@ -348,6 +347,7 @@ cVideoBufferFile::cVideoBufferFile(int clientID)
   m_ClientID = clientID;
   m_Fd = 0;
   m_ReadCacheSize = 0;
+  m_ReadCache = 0;
 }
 
 cVideoBufferFile::~cVideoBufferFile()
@@ -358,10 +358,19 @@ cVideoBufferFile::~cVideoBufferFile()
     unlink(m_Filename);
     m_Fd = 0;
   }
+  if (m_ReadCache)
+    free(m_ReadCache);
 }
 
 bool cVideoBufferFile::Init()
 {
+  m_ReadCache = 0;
+  m_ReadCacheMaxSize = 32000;
+
+  m_ReadCache = (uint8_t*)malloc(m_ReadCacheMaxSize);
+  if (!m_ReadCache)
+    return false;
+
   m_BufferSize = (size_t)TimeshiftBufferFileSize*1000*1000*1000;
 
   m_Filename = cString::sprintf("%s/Timeshift-%d.vnsi", VideoDirectory, m_ClientID);
@@ -399,6 +408,16 @@ void cVideoBufferFile::SetPos(size_t pos)
     m_ReadPtr -= m_BufferSize;
   m_BytesConsumed = 0;
   m_ReadCacheSize = 0;
+}
+
+size_t cVideoBufferFile::GetPosMax()
+{
+  size_t posMax = cVideoBufferTimeshift::GetPosMax();
+  if (posMax >= m_ReadCacheMaxSize)
+    posMax -= m_ReadCacheMaxSize;
+  else
+    posMax = 0;
+  return posMax;
 }
 
 void cVideoBufferFile::Put(uint8_t *buf, unsigned int size)
@@ -472,7 +491,7 @@ int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
     readBytes = m_ReadCacheSize - m_ReadCachePtr;
     *buf = m_ReadCache + m_ReadCachePtr;
   }
-  else if ((readBytes = Available()) >= CACHE_SIZE)
+  else if ((readBytes = Available()) >= m_ReadCacheMaxSize)
   {
     m_ReadPtr = lseek(m_Fd, m_ReadPtr, SEEK_SET);
     if (m_ReadPtr != m_ReadPtr)
@@ -480,9 +499,9 @@ int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
       ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
       return 0;
     }
-    if (m_ReadPtr + CACHE_SIZE <= m_BufferSize)
+    if (m_ReadPtr + m_ReadCacheMaxSize <= m_BufferSize)
     {
-      m_ReadCacheSize = safe_read(m_Fd, m_ReadCache, CACHE_SIZE);
+      m_ReadCacheSize = safe_read(m_Fd, m_ReadCache, m_ReadCacheMaxSize);
       if (m_ReadCacheSize < 0)
       {
         ERRORLOG("Could not read file: %s", (const char*)m_Filename);
@@ -513,7 +532,7 @@ int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
         ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
         return 0;
       }
-      readBytes = safe_read(m_Fd, m_ReadCache + m_ReadCacheSize, CACHE_SIZE - m_ReadCacheSize);
+      readBytes = safe_read(m_Fd, m_ReadCache + m_ReadCacheSize, m_ReadCacheMaxSize - m_ReadCacheSize);
       if (readBytes < 0)
       {
         ERRORLOG("Could not read file (end): %s", (const char*)m_Filename);
@@ -579,6 +598,7 @@ cVideoBufferRecording::cVideoBufferRecording(cRecording *rec)
 {
   m_Recording = rec;
   m_ReadCacheSize = 0;
+  m_ReadCache = 0;
 }
 
 cVideoBufferRecording::~cVideoBufferRecording()
@@ -592,7 +612,7 @@ size_t cVideoBufferRecording::GetPosMax()
 {
   m_RecPlayer->reScan();
   m_WritePtr = m_RecPlayer->getLengthBytes();
-  return cVideoBufferTimeshift::GetPosMax();
+  return cVideoBufferFile::GetPosMax();
 }
 
 void cVideoBufferRecording::Put(uint8_t *buf, unsigned int size)
@@ -602,6 +622,12 @@ void cVideoBufferRecording::Put(uint8_t *buf, unsigned int size)
 
 bool cVideoBufferRecording::Init()
 {
+  m_ReadCacheMaxSize = 32000;
+
+  m_ReadCache = (uint8_t*)malloc(m_ReadCacheMaxSize);
+  if (!m_ReadCache)
+    return false;
+
   m_RecPlayer = new cRecPlayer(m_Recording, true);
   if (!m_RecPlayer)
     return false;
@@ -649,12 +675,12 @@ int cVideoBufferRecording::ReadBlock(uint8_t **buf, unsigned int size)
     readBytes = m_ReadCacheSize - m_ReadCachePtr;
     *buf = m_ReadCache + m_ReadCachePtr;
   }
-  else if ((readBytes = Available()) >= CACHE_SIZE)
+  else if ((readBytes = Available()) >= m_ReadCacheMaxSize)
   {
-    if (m_ReadPtr + CACHE_SIZE <= m_BufferSize)
+    if (m_ReadPtr + m_ReadCacheMaxSize <= m_BufferSize)
     {
-      m_ReadCacheSize = m_RecPlayer->getBlock(m_ReadCache, m_ReadPtr, CACHE_SIZE);
-      if (m_ReadCacheSize != CACHE_SIZE)
+      m_ReadCacheSize = m_RecPlayer->getBlock(m_ReadCache, m_ReadPtr, m_ReadCacheMaxSize);
+      if (m_ReadCacheSize != m_ReadCacheMaxSize)
       {
         ERRORLOG("Could not read file, size:  %d", m_ReadCacheSize);
         m_ReadCacheSize = 0;

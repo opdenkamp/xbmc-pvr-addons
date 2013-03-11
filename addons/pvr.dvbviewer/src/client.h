@@ -24,11 +24,22 @@
 #include "libXBMC_pvr.h"
 #include "libXBMC_gui.h"
 
+#ifndef UNUSED
+#if defined(__GNUC__)
+# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#elif defined(__LCLINT__)
+# define UNUSED(x) /*@unused@*/ x
+#else
+# define UNUSED(x) x
+#endif
+#endif
+
 #define DEFAULT_HOST             "127.0.0.1"
 #define DEFAULT_CONNECT_TIMEOUT  30
 #define DEFAULT_WEB_PORT         8089
 #define DEFAULT_STREAM_PORT      7522
 #define DEFAULT_RECORDING_PORT   8090
+#define DEFAULT_TSBUFFERPATH     "special://userdata/addon_data/pvr.dvbviewer/tsbuffer"
 
 extern bool                      m_bCreated;
 extern std::string               g_strHostname;
@@ -39,6 +50,8 @@ extern std::string               g_strUsername;
 extern std::string               g_strPassword;
 extern bool                      g_bUseFavourites;
 extern std::string               g_strFavouritesPath;
+extern bool                      g_bUseTimeshift;
+extern std::string               g_strTimeshiftBufferPath;
 //extern int                       g_iClientId;
 extern ADDON::CHelper_libXBMC_addon *   XBMC;
 extern CHelper_libXBMC_pvr *     PVR;

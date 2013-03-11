@@ -1,3 +1,7 @@
+1.7.6
+
+[added] Timeshift support.
+
 1.7.5
 
 [updated] Bump after PVR API version bump

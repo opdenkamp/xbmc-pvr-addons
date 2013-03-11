@@ -45,6 +45,8 @@ std::string g_strUsername             = "";
 std::string g_strPassword             = "";
 bool        g_bUseFavourites          = false;
 std::string g_strFavouritesPath       = "";
+bool        g_bUseTimeshift           = false;
+std::string g_strTimeshiftBufferPath  = DEFAULT_TSBUFFERPATH;
 
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
@@ -100,6 +102,14 @@ void ADDON_ReadSettings(void)
   else
     g_strFavouritesPath = "";
 
+  if (!XBMC->GetSetting("usetimeshift", &g_bUseTimeshift))
+    g_bUseTimeshift = false;
+
+  if (XBMC->GetSetting("timeshiftpath", buffer))
+    g_strTimeshiftBufferPath = buffer;
+  else
+    g_strTimeshiftBufferPath = DEFAULT_TSBUFFERPATH;
+
   free (buffer);
 }
 
@@ -108,7 +118,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   if (!hdl || !props)
     return ADDON_STATUS_UNKNOWN;
 
-  PVR_PROPERTIES* pvrprops = (PVR_PROPERTIES*)props;
+  //PVR_PROPERTIES* pvrprops = (PVR_PROPERTIES*)props;
 
   XBMC = new CHelper_libXBMC_addon;
   if (!XBMC->RegisterMe(hdl))
@@ -170,7 +180,7 @@ bool ADDON_HasSettings()
   return true;
 }
 
-unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet)
+unsigned int ADDON_GetSettings(ADDON_StructSetting ***UNUSED(sSet))
 {
   return 0;
 }
@@ -237,6 +247,20 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       return ADDON_STATUS_NEED_RESTART;
     }
   }
+  else if (str == "usetimeshift")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'usetimeshift' from %u to %u", g_bUseTimeshift, *(int*) settingValue);
+    g_bUseTimeshift = *(bool*) settingValue;
+    return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (str == "timeshiftpath")
+  {
+    string tmp_sTimeshiftBufferPath = g_strTimeshiftBufferPath;
+    XBMC->Log(LOG_INFO, "Changed Setting 'timeshiftpath' from %s to %s", g_strTimeshiftBufferPath.c_str(), (const char*) settingValue);
+    g_strTimeshiftBufferPath = (const char*) settingValue;
+    if (tmp_sTimeshiftBufferPath != g_strTimeshiftBufferPath)
+      return ADDON_STATUS_NEED_RESTART;
+  }
   return ADDON_STATUS_OK;
 }
 
@@ -283,7 +307,6 @@ const char* GetMininumGUIAPIVersion(void)
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
   //pCapabilities->bSupportsChannelSettings = false;
-  //pCapabilities->bSupportsTimeshift       = false;
   pCapabilities->bSupportsEPG             = true;
   pCapabilities->bSupportsTV              = true;
   pCapabilities->bSupportsRadio           = true;
@@ -321,7 +344,7 @@ const char *GetConnectionString(void)
   return strConnectionString.c_str();
 }
 
-PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
+PVR_ERROR GetDriveSpace(long long *UNUSED(iTotal), long long *UNUSED(iUsed))
 {
   return PVR_ERROR_SERVER_ERROR;
 }
@@ -374,7 +397,7 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
   return DvbData->DeleteRecording(recording);
 }
 
-PVR_ERROR RenameRecording(const PVR_RECORDING &recording)
+PVR_ERROR RenameRecording(const PVR_RECORDING &UNUSED(recording))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -403,7 +426,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer)
   return DvbData->AddTimer(timer);
 }
 
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool UNUSED(bForceDelete))
 {
   if (!DvbData || !DvbData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
@@ -479,11 +502,54 @@ bool OpenLiveStream(const PVR_CHANNEL &channel)
 }
 
 const char * GetLiveStreamURL(const PVR_CHANNEL &channel) 
-{ 
+{
   if (!DvbData || !DvbData->IsConnected())
     return "";
 
   return DvbData->GetLiveStreamURL(channel);
+}
+
+bool CanPauseStream(void)
+{
+  if (!DvbData || !DvbData->IsConnected())
+    return false;
+  XBMC->Log(LOG_INFO, "usetimeshift= %d", g_bUseTimeshift);
+  return g_bUseTimeshift;
+}
+
+bool CanSeekStream(void)
+{
+  if (!DvbData || !DvbData->IsConnected())
+    return false;
+  return g_bUseTimeshift;
+}
+
+int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
+{
+  if (!DvbData || !DvbData->IsConnected())
+    return 0;
+  return DvbData->ReadLiveStream(pBuffer, iBufferSize);
+}
+
+long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */)
+{
+  if (!DvbData || !DvbData->IsConnected())
+    return -1;
+  return DvbData->SeekLiveStream(iPosition, iWhence);
+}
+
+long long PositionLiveStream(void)
+{
+  if (!DvbData || !DvbData->IsConnected())
+    return -1;
+  return DvbData->PositionLiveStream();
+}
+
+long long LengthLiveStream(void)
+{
+  if (!DvbData || !DvbData->IsConnected())
+    return 0;
+  return DvbData->LengthLiveStream();
 }
 
 PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
@@ -492,36 +558,30 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 }
 
 /** UNUSED API FUNCTIONS */
-PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties) { return PVR_ERROR_NOT_IMPLEMENTED; } 
+PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* UNUSED(pProperties)) { return PVR_ERROR_NOT_IMPLEMENTED; } 
 void DemuxAbort(void) { return; }
 DemuxPacket* DemuxRead(void) { return NULL; }
 PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR RenameChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-bool OpenRecordedStream(const PVR_RECORDING &recording) { return false; }
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &UNUSED(menuhook)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DeleteChannel(const PVR_CHANNEL &UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR RenameChannel(const PVR_CHANNEL &UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR MoveChannel(const PVR_CHANNEL &UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DialogAddChannel(const PVR_CHANNEL &UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+bool OpenRecordedStream(const PVR_RECORDING &UNUSED(recording)) { return false; }
 void CloseRecordedStream(void) {}
-int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0; }
-long long SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */) { return 0; }
-long long PositionRecordedStream(void) { return -1; }
-long long LengthRecordedStream(void) { return 0; }
+int ReadRecordedStream(unsigned char *UNUSED(pBuffer), unsigned int UNUSED(iBufferSize)) { return 0; }
+long long SeekRecordedStream(long long UNUSED(iPosition), int UNUSED(iWhence) /* = SEEK_SET */) { return 0; }
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
-int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0; }
-long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */) { return -1; }
-long long PositionLiveStream(void) { return -1; }
-long long LengthLiveStream(void) { return -1; }
-PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
+long long PositionRecordedStream(void) { return -1; }
+long long LengthRecordedStream(void) { return -1; }
+PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &UNUSED(recording), int UNUSED(count)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &UNUSED(recording), int UNUSED(lastplayedposition)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &UNUSED(recording)) { return -1; }
 PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 unsigned int GetChannelSwitchDelay(void) { return 0; }
-void PauseStream(bool bPaused) {}
-bool CanPauseStream(void) { return false; }
-bool CanSeekStream(void) { return false; }
-bool SeekTime(int,bool,double*) { return false; }
+void PauseStream(bool UNUSED(bPaused)) {}
+bool SeekTime(int, bool, double*) { return false; }
 void SetSpeed(int) {};
 }

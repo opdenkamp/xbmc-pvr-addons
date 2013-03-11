@@ -88,7 +88,7 @@ void Dvb::TimerUpdates()
   }
 }
 
-Dvb::Dvb() 
+Dvb::Dvb()
 {
   m_bIsConnected = false;
   m_strServerName = "DVBViewer";
@@ -118,6 +118,7 @@ Dvb::Dvb()
   m_iUpdateTimer = 0;
   m_bUpdateTimers = false;
   m_bUpdateEPG = false;
+  m_tsBuffer = NULL;
 }
 
 bool Dvb::Open()
@@ -426,16 +427,18 @@ PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
       xbmcChannel.iUniqueId         = channel.iUniqueId;
       xbmcChannel.bIsRadio          = channel.bRadio;
       xbmcChannel.iChannelNumber    = channel.iChannelNumber;
+      xbmcChannel.iEncryptionSystem = channel.Encrypted;
+      xbmcChannel.bIsHidden         = false;
       strncpy(xbmcChannel.strChannelName, channel.strChannelName.c_str(), sizeof(xbmcChannel.strChannelName));
       strncpy(xbmcChannel.strInputFormat, "", sizeof(xbmcChannel.strInputFormat)); // unused
-
-      CStdString strStream;
-      strStream.Format("pvr://stream/tv/%i.ts", channel.iUniqueId);
-      strncpy(xbmcChannel.strStreamURL, strStream.c_str(), sizeof(xbmcChannel.strStreamURL)); //channel.strStreamURL.c_str();
-      xbmcChannel.iEncryptionSystem = channel.Encrypted;
-      
       strncpy(xbmcChannel.strIconPath, channel.strIconPath.c_str(), sizeof(xbmcChannel.strIconPath));
-      xbmcChannel.bIsHidden         = false;
+
+      if (!g_bUseTimeshift)
+      {
+        CStdString strStream;
+        strStream.Format("pvr://stream/tv/%i.ts", channel.iUniqueId);
+        strncpy(xbmcChannel.strStreamURL, strStream.c_str(), sizeof(xbmcChannel.strStreamURL)); //channel.strStreamURL.c_str();
+      }
 
       PVR->TransferChannelEntry(handle, &xbmcChannel);
     }
@@ -453,6 +456,8 @@ Dvb::~Dvb()
   m_recordings.clear();
   m_groups.clear();
   m_bIsConnected = false;
+  if (m_tsBuffer)
+    SAFE_DELETE(m_tsBuffer);
 }
 
 int Dvb::ParseDateTime(CStdString strDate, bool iDateFormat)
@@ -1081,7 +1086,8 @@ PVR_ERROR Dvb::GetChannelGroups(ADDON_HANDLE handle)
 }
 
 
-unsigned int Dvb::GetNumChannelGroups() {
+unsigned int Dvb::GetNumChannelGroups()
+{
   return m_iNumChannelGroups;
 }
 
@@ -1115,7 +1121,7 @@ int Dvb::GetCurrentClientChannel(void)
   return m_iCurrentChannel;
 }
 
-const char* Dvb::GetLiveStreamURL(const PVR_CHANNEL &channelinfo)
+const char * Dvb::GetLiveStreamURL(const PVR_CHANNEL &channelinfo)
 {
   SwitchChannel(channelinfo);
 
@@ -1129,12 +1135,21 @@ bool Dvb::OpenLiveStream(const PVR_CHANNEL &channelinfo)
   if ((int)channelinfo.iUniqueId == m_iCurrentChannel)
     return true;
 
-  return SwitchChannel(channelinfo);
+  if (!g_bUseTimeshift)
+    return SwitchChannel(channelinfo);
+
+  if (m_tsBuffer)
+    SAFE_DELETE(m_tsBuffer);
+  XBMC->Log(LOG_INFO, "%s ts buffer starts url=%s", __FUNCTION__, GetLiveStreamURL(channelinfo));
+  m_tsBuffer = new TimeshiftBuffer(GetLiveStreamURL(channelinfo), g_strTimeshiftBufferPath);
+  return m_tsBuffer->IsValid();
 }
 
 void Dvb::CloseLiveStream(void) 
 {
   m_iCurrentChannel = -1;
+  if (m_tsBuffer)
+    SAFE_DELETE(m_tsBuffer);
 }
 
 bool Dvb::SwitchChannel(const PVR_CHANNEL &channel)
@@ -1142,6 +1157,34 @@ bool Dvb::SwitchChannel(const PVR_CHANNEL &channel)
   m_iCurrentChannel = channel.iUniqueId;
   m_bUpdateEPG = true;
   return true;
+}
+
+int Dvb::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
+{
+  if (!m_tsBuffer)
+    return 0;
+  return m_tsBuffer->ReadData(pBuffer, iBufferSize);
+}
+
+long long Dvb::SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */)
+{
+  if (!m_tsBuffer)
+    return 0;
+  return m_tsBuffer->Seek(iPosition, iWhence);
+}
+
+long long Dvb::PositionLiveStream(void)
+{
+  if (!m_tsBuffer)
+    return 0;
+  return m_tsBuffer->Position();
+}
+
+long long Dvb::LengthLiveStream(void)
+{
+  if (!m_tsBuffer)
+    return 0;
+  return m_tsBuffer->Length();
 }
 
 bool Dvb::GetDeviceInfo()

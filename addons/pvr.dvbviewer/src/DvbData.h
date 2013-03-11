@@ -3,6 +3,7 @@
 #include "platform/util/StdString.h"
 #include "xmlParser.h"
 #include "client.h"
+#include "TimeshiftBuffer.h"
 #include "platform/threads/threads.h"
 
 #define CHANNELDAT_HEADER_SIZE       (7)
@@ -217,6 +218,7 @@ private:
   std::vector<DvbRecording> m_recordings;
   std::vector<DvbChannelGroup> m_groups;
   std::vector<std::string> m_locations;
+  TimeshiftBuffer *m_tsBuffer;
 
   unsigned int m_iClientIndexCounter;
 
@@ -279,5 +281,9 @@ public:
   bool SwitchChannel(const PVR_CHANNEL &channel);
   bool Open();
   void Action();
+  int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize);
+  long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */);
+  long long PositionLiveStream(void);
+  long long LengthLiveStream(void);
 };
 

@@ -8,4 +8,6 @@
     <setting id="pass" type="text" label="30005" option="hidden" default="" />
     <setting label="30006" type="bool" id="usefavourites" default="false"/>    
     <setting id="favouritespath" type="file" label="30007" default="" />    
+    <setting id="usetimeshift"  type="bool" label="30100" default="false" />
+    <setting id="timeshiftpath" type="text" label="30101" enabled="eq(-1,0)" default="special://userdata/addon_data/pvr.dvbviewer/tsbuffer" />
 </settings>

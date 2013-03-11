@@ -5,6 +5,7 @@ TimeshiftBuffer::TimeshiftBuffer(std::string streampath, std::string bufferpath)
   : m_bufferPath(bufferpath)
 {
   m_streamHandle = XBMC->OpenFile(streampath.c_str(), 0);
+  m_bufferPath += "/tsbuffer.ts";
   m_filebufferWriteHandle = XBMC->OpenFileForWrite(m_bufferPath.c_str(), true);
   Sleep(100);
   m_filebufferReadHandle = XBMC->OpenFile(m_bufferPath.c_str(), 0);

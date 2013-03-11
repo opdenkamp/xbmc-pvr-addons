@@ -57,8 +57,7 @@ extern "C" {
 void ADDON_ReadSettings(void)
 {
   /* read setting "host" from settings.xml */
-  char * buffer;
-  buffer = (char*) malloc (1024);
+  char *buffer = (char *)malloc(1024);
   buffer[0] = 0; /* Set the end of string */
 
   if (XBMC->GetSetting("host", buffer))
@@ -73,17 +72,17 @@ void ADDON_ReadSettings(void)
   else
     g_strUsername = "";
   buffer[0] = 0; /* Set the end of string */
-  
+
   /* read setting "pass" from settings.xml */
   if (XBMC->GetSetting("pass", buffer))
     g_strPassword = buffer;
   else
     g_strPassword = "";
-  
+
   /* read setting "streamport" from settings.xml */
   if (!XBMC->GetSetting("streamport", &g_iPortStream))
     g_iPortStream = DEFAULT_STREAM_PORT;
-  
+
   /* read setting "webport" from settings.xml */
   if (!XBMC->GetSetting("webport", &g_iPortWeb))
     g_iPortWeb = DEFAULT_WEB_PORT;

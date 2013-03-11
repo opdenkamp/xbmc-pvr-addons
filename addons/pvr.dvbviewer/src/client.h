@@ -39,7 +39,7 @@
 #define DEFAULT_WEB_PORT         8089
 #define DEFAULT_STREAM_PORT      7522
 #define DEFAULT_RECORDING_PORT   8090
-#define DEFAULT_TSBUFFERPATH     "special://userdata/addon_data/pvr.dvbviewer/tsbuffer"
+#define DEFAULT_TSBUFFERPATH     "special://userdata/addon_data/pvr.dvbviewer"
 
 extern bool                      m_bCreated;
 extern std::string               g_strHostname;

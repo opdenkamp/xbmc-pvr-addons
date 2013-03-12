@@ -311,7 +311,8 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 
 const char *GetBackendName(void)
 {
-  static const char *strBackendName = DvbData ? DvbData->GetServerName() : "unknown";
+  static const char *strBackendName = DvbData ? DvbData->GetServerName().c_str()
+    : "unknown";
   return strBackendName;
 }
 
@@ -450,7 +451,7 @@ int GetChannelGroupsAmount(void)
   if (!DvbData || !DvbData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return DvbData->GetNumChannelGroups();
+  return DvbData->GetChannelGroupsAmount();
 }
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
@@ -488,12 +489,12 @@ bool OpenLiveStream(const PVR_CHANNEL &channel)
   return DvbData->OpenLiveStream(channel);
 }
 
-const char * GetLiveStreamURL(const PVR_CHANNEL &channel)
+const char *GetLiveStreamURL(const PVR_CHANNEL &channel)
 {
   if (!DvbData || !DvbData->IsConnected())
     return "";
 
-  return DvbData->GetLiveStreamURL(channel);
+  return DvbData->GetLiveStreamURL(channel).c_str();
 }
 
 bool CanPauseStream(void)

@@ -49,7 +49,7 @@ void *TimeshiftBuffer::Process()
   while (m_shifting)
   {
     bytesRead = XBMC->ReadFile(m_streamHandle, buffer, sizeof(buffer));
-    XBMC->WriteFile(m_filebufferWriteHandle,buffer,bytesRead);
+    XBMC->WriteFile(m_filebufferWriteHandle, buffer, bytesRead);
   }
   XBMC->Log(LOG_DEBUG, "TimeShiftProcess:: thread stopped");
   return NULL;
@@ -58,7 +58,7 @@ void *TimeshiftBuffer::Process()
 long long TimeshiftBuffer::Seek(long long iPosition, int iWhence)
 {
   if (m_filebufferReadHandle)
-    return XBMC->SeekFile(m_filebufferReadHandle,iPosition,iWhence);
+    return XBMC->SeekFile(m_filebufferReadHandle, iPosition, iWhence);
   return 0;
 }
 
@@ -82,14 +82,14 @@ int TimeshiftBuffer::ReadData(unsigned char *pBuffer, unsigned int iBufferSize)
   unsigned int totalTimeWaited = 0;
   if (m_filebufferReadHandle)
   {
-    unsigned int read = XBMC->ReadFile(m_filebufferReadHandle, pBuffer,iBufferSize);
+    unsigned int read = XBMC->ReadFile(m_filebufferReadHandle, pBuffer, iBufferSize);
     totalReadBytes += read;
 
     while (read < iBufferSize && totalTimeWaited < BUFFER_READ_TIMEOUT)
     {
       Sleep(BUFFER_READ_WAITTIME);
       totalTimeWaited += BUFFER_READ_WAITTIME;
-      read = XBMC->ReadFile(m_filebufferReadHandle, pBuffer,iBufferSize - totalReadBytes);
+      read = XBMC->ReadFile(m_filebufferReadHandle, pBuffer, iBufferSize - totalReadBytes);
       totalReadBytes += read;
     }
 

@@ -1608,7 +1608,14 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)
     // Enable playback mode: Keep quiet on connection
     m_pEventHandler->EnablePlayback();
 
-    m_file = m_con.ConnectFile(it->second);
+    // Currently we only request the stream from the master backend.
+    // Future implementations could request the stream from slaves if not available on the master.
+
+    // Create dedicated control connection for file playback; smart pointer deletes it when file gets deleted.
+    MythConnection fileControlConnection(g_szMythHostname, g_iMythPort);
+    if (!fileControlConnection.IsNull())
+      m_file = fileControlConnection.ConnectFile(it->second);
+
     m_pEventHandler->SetRecordingListener(recording.strRecordingId, m_file);
 
     // Resume fileOps

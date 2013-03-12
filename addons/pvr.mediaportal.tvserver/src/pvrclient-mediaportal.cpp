@@ -941,7 +941,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
       tag.iGenreType     = recording.GenreType();
       tag.iGenreSubType  = recording.GenreSubType();
       tag.iPlayCount     = recording.TimesWatched();
-      tag.iLastPlayedPosition = recording.LastPlayedPosition();
+      //tag.iLastPlayedPosition = recording.LastPlayedPosition();
 
       strDirectory = recording.Directory();
       if (strDirectory.length() > 0)

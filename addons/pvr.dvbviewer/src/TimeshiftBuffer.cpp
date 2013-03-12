@@ -1,14 +1,17 @@
 #include "TimeshiftBuffer.h"
 #include "client.h"
+#include "platform/util/util.h"
 
-TimeshiftBuffer::TimeshiftBuffer(std::string streampath, std::string bufferpath)
+using namespace ADDON;
+
+TimeshiftBuffer::TimeshiftBuffer(CStdString streampath, CStdString bufferpath)
   : m_bufferPath(bufferpath)
 {
-  m_streamHandle = XBMC->OpenFile(streampath.c_str(), 0);
+  m_streamHandle = XBMC->OpenFile(streampath, 0);
   m_bufferPath += "/tsbuffer.ts";
-  m_filebufferWriteHandle = XBMC->OpenFileForWrite(m_bufferPath.c_str(), true);
+  m_filebufferWriteHandle = XBMC->OpenFileForWrite(m_bufferPath, true);
   Sleep(100);
-  m_filebufferReadHandle = XBMC->OpenFile(m_bufferPath.c_str(), 0);
+  m_filebufferReadHandle = XBMC->OpenFile(m_bufferPath, 0);
   m_shifting = true;
   CreateThread();
 }

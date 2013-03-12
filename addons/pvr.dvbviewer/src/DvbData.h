@@ -1,9 +1,12 @@
-#pragma once 
+#pragma once
 
-#include "platform/util/StdString.h"
-#include "xmlParser.h"
+#ifndef PVR_DVBVIEWER_DVBDATA_H
+#define PVR_DVBVIEWER_DVBDATA_H
+
 #include "client.h"
 #include "TimeshiftBuffer.h"
+#include "xmlParser.h"
+#include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 
 #define CHANNELDAT_HEADER_SIZE       (7)
@@ -15,7 +18,7 @@
 #define RECORDING_THUMB_POS          (143)
 #define MAX_RECORDING_THUMBS         (20)
 #define RS_MIN_VERSION               (21)
-    
+
 struct ChannelsDat
 {
   byte TunerType;
@@ -61,88 +64,100 @@ struct ChannelsDat
 
 typedef enum DVB_UPDATE_STATE
 {
-    DVB_UPDATE_STATE_NONE,
-    DVB_UPDATE_STATE_FOUND,
-    DVB_UPDATE_STATE_UPDATED,
-    DVB_UPDATE_STATE_NEW
+  DVB_UPDATE_STATE_NONE,
+  DVB_UPDATE_STATE_FOUND,
+  DVB_UPDATE_STATE_UPDATED,
+  DVB_UPDATE_STATE_NEW
 } DVB_UPDATE_STATE;
 
-struct DvbChannelGroup {
-  std::string strGroupName;
+class DvbChannelGroup
+{
+private:
+  CStdString strGroupName;
   int iGroupState;
 
-  DvbChannelGroup() 
-  { 
-    iGroupState = DVB_UPDATE_STATE_NEW;
+public:
+  DvbChannelGroup(const CStdString& groupName = "")
+    : strGroupName(groupName), iGroupState(DVB_UPDATE_STATE_NEW)
+  {}
+
+  void setName(const CStdString& groupName)
+  {
+    strGroupName = groupName;
+  }
+
+  const CStdString& getName()
+  {
+    return strGroupName;
   }
 
   bool operator==(const DvbChannelGroup &right) const
   {
-    return (! strGroupName.compare(right.strGroupName));
+    return (strGroupName == right.strGroupName);
   }
-
 };
 
-struct DvbChannel
+class DvbChannel
 {
+public:
   bool bRadio;
   int iUniqueId;
   int iChannelNumber;
   int iChannelId;
   uint64_t llEpgId;
   byte Encrypted;
-  std::string strGroupName;
-  std::string strChannelName;
-  std::string strStreamURL;
-  std::string strIconPath;
+  DvbChannelGroup group;
+  CStdString strChannelName;
+  CStdString strStreamURL;
+  CStdString strIconPath;
   int iChannelState;
 
   DvbChannel()
   {
     iChannelState = DVB_UPDATE_STATE_NEW;
   }
-  
+
   bool operator==(const DvbChannel &right) const
   {
     bool bChanged = true;
-    bChanged = bChanged && (bRadio == right.bRadio); 
-    bChanged = bChanged && (iUniqueId == right.iUniqueId); 
-    bChanged = bChanged && (iChannelNumber == right.iChannelNumber); 
-    bChanged = bChanged && (! strGroupName.compare(right.strGroupName));
-    bChanged = bChanged && (! strChannelName.compare(right.strChannelName));
-    bChanged = bChanged && (! strStreamURL.compare(right.strStreamURL));
-    bChanged = bChanged && (! strIconPath.compare(right.strIconPath));
+    bChanged = bChanged && (bRadio == right.bRadio);
+    bChanged = bChanged && (iUniqueId == right.iUniqueId);
+    bChanged = bChanged && (iChannelNumber == right.iChannelNumber);
+    bChanged = bChanged && (group == right.group);
+    bChanged = bChanged && (strChannelName == right.strChannelName);
+    bChanged = bChanged && (strStreamURL == right.strStreamURL);
+    bChanged = bChanged && (strIconPath == right.strIconPath);
 
     return bChanged;
   }
-
 };
 
-struct DvbEPGEntry 
+struct DvbEPGEntry
 {
   int iEventId;
-  std::string strTitle;
+  CStdString strTitle;
   int iChannelId;
   time_t startTime;
   time_t endTime;
-  std::string strPlotOutline;
-  std::string strPlot;
+  CStdString strPlotOutline;
+  CStdString strPlot;
 };
 
-struct DvbTimer
+class DvbTimer
 {
-  std::string strTitle;
-  std::string strPlot;
+public:
+  CStdString strTitle;
+  CStdString strPlot;
   int iChannelId;
   time_t startTime;
   time_t endTime;
-  bool bRepeating; 
+  bool bRepeating;
   int iWeekdays;
   int iEpgID;
   int iTimerID;
   int iPriority;
   int iFirstDay;
-  PVR_TIMER_STATE state; 
+  PVR_TIMER_STATE state;
   int iUpdateState;
   unsigned int iClientIndex;
 
@@ -150,32 +165,27 @@ struct DvbTimer
   {
     iUpdateState = DVB_UPDATE_STATE_NEW;
   }
-  
+
   bool like(const DvbTimer &right) const
   {
     bool bChanged = true;
-    bChanged = bChanged && (startTime == right.startTime); 
-    bChanged = bChanged && (endTime == right.endTime); 
-    bChanged = bChanged && (iChannelId == right.iChannelId); 
-    bChanged = bChanged && (bRepeating == right.bRepeating); 
-    bChanged = bChanged && (iWeekdays == right.iWeekdays); 
-    bChanged = bChanged && (iEpgID == right.iEpgID); 
+    bChanged = bChanged && (startTime == right.startTime);
+    bChanged = bChanged && (endTime == right.endTime);
+    bChanged = bChanged && (iChannelId == right.iChannelId);
+    bChanged = bChanged && (bRepeating == right.bRepeating);
+    bChanged = bChanged && (iWeekdays == right.iWeekdays);
+    bChanged = bChanged && (iEpgID == right.iEpgID);
 
     return bChanged;
   }
-  
+
   bool operator==(const DvbTimer &right) const
   {
     bool bChanged = true;
-    bChanged = bChanged && (startTime == right.startTime); 
-    bChanged = bChanged && (endTime == right.endTime); 
-    bChanged = bChanged && (iChannelId == right.iChannelId); 
-    bChanged = bChanged && (bRepeating == right.bRepeating); 
-    bChanged = bChanged && (iWeekdays == right.iWeekdays); 
-    bChanged = bChanged && (iEpgID == right.iEpgID); 
-    bChanged = bChanged && (state == right.state); 
-    bChanged = bChanged && (! strTitle.compare(right.strTitle));
-    bChanged = bChanged && (! strPlot.compare(right.strPlot));
+    bChanged = bChanged && like(right);
+    bChanged = bChanged && (state == right.state);
+    bChanged = bChanged && (strTitle == right.strTitle);
+    bChanged = bChanged && (strPlot == right.strPlot);
 
     return bChanged;
   }
@@ -183,32 +193,29 @@ struct DvbTimer
 
 struct DvbRecording
 {
-  std::string strRecordingId;
+  CStdString strRecordingId;
   time_t startTime;
   int iDuration;
-  std::string strTitle;
-  std::string strStreamURL;
-  std::string strPlot;
-  std::string strPlotOutline;
-  std::string strChannelName;
-  std::string strThumbnailPath;
+  CStdString strTitle;
+  CStdString strStreamURL;
+  CStdString strPlot;
+  CStdString strPlotOutline;
+  CStdString strChannelName;
+  CStdString strThumbnailPath;
 };
- 
-class Dvb  : public PLATFORM::CThread
+
+class Dvb : public PLATFORM::CThread
 {
 private:
-
   // members
-  std::string m_strDVBViewerVersion;
+  CStdString m_strDVBViewerVersion;
   bool  m_bIsConnected;
-  std::string m_strServerName;
-  std::string m_strURL;
-  std::string m_strURLStream;
-  std::string m_strURLRecording;
-  std::string m_strEPGLanguage;
+  CStdString m_strServerName;
+  CStdString m_strURL;
+  CStdString m_strURLStream;
+  CStdString m_strURLRecording;
+  CStdString m_strEPGLanguage;
   int m_iTimezone;
-  int m_iNumRecordings;
-  int m_iNumChannelGroups;
   int m_iCurrentChannel;
   unsigned int m_iUpdateTimer;
   bool m_bUpdateTimers;
@@ -217,17 +224,15 @@ private:
   std::vector<DvbTimer> m_timers;
   std::vector<DvbRecording> m_recordings;
   std::vector<DvbChannelGroup> m_groups;
-  std::vector<std::string> m_locations;
+  std::vector<CStdString> m_locations;
   TimeshiftBuffer *m_tsBuffer;
 
   unsigned int m_iClientIndexCounter;
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;
- 
 
   // functions
-
   CStdString GetHttpXML(CStdString& url);
   int GetChannelNumber(CStdString strChannelId);
   CStdString URLEncodeInline(const CStdString& strData);
@@ -248,7 +253,6 @@ private:
   void RemoveNullChars(CStdString &String);
   bool GetDeviceInfo();
 
-
 protected:
   virtual void *Process(void);
 
@@ -256,8 +260,8 @@ public:
   Dvb(void);
   ~Dvb();
 
-  const char * GetServerName();
-  bool IsConnected(); 
+  const char *GetServerName();
+  bool IsConnected();
   int GetChannelsAmount(void);
   PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
   int ParseDateTime(CStdString strDate, bool iDateFormat = true);
@@ -287,3 +291,4 @@ public:
   long long LengthLiveStream(void);
 };
 
+#endif

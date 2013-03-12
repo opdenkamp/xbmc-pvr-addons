@@ -1,11 +1,10 @@
 #pragma once
 
-#include "libXBMC_addon.h"
+#ifndef PVR_DVBVIEWER_TIMESHIFTBUFFER_H
+#define PVR_DVBVIEWER_TIMESHIFTBUFFER_H
+
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
-#include "platform/util/util.h"
-
-using namespace ADDON;
 
 #define STREAM_READ_BUFFER_SIZE   8192
 #define BUFFER_READ_TIMEOUT       10000
@@ -14,7 +13,7 @@ using namespace ADDON;
 class TimeshiftBuffer : public PLATFORM::CThread
 {
 public:
-  TimeshiftBuffer(std::string streampath, std::string bufferpath);
+  TimeshiftBuffer(CStdString streampath, CStdString bufferpath);
   ~TimeshiftBuffer(void);
   int ReadData(unsigned char *pBuffer, unsigned int iBufferSize);
   bool IsValid();
@@ -26,10 +25,11 @@ public:
 private:
   virtual void *Process(void);
 
-  std::string m_bufferPath;
+  CStdString m_bufferPath;
   void *m_streamHandle;
   void *m_filebufferReadHandle;
   void *m_filebufferWriteHandle;
   bool m_shifting;
 };
 
+#endif

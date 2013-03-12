@@ -20,19 +20,29 @@
  *
  */
 
+#ifndef PVR_DVBVIEWER_CLIENT_H
+#define PVR_DVBVIEWER_CLIENT_H
+
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
 #include "libXBMC_gui.h"
+#include "platform/util/StdString.h"
 
-#ifndef UNUSED
+#ifndef _UNUSED
 #if defined(__GNUC__)
-# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+# define _UNUSED(x) UNUSED_ ## x __attribute__((unused))
 #elif defined(__LCLINT__)
-# define UNUSED(x) /*@unused@*/ x
+# define _UNUSED(x) /*@unused@*/ x
 #else
-# define UNUSED(x) x
+# define _UNUSED(x) x
 #endif
 #endif
+
+/*!
+ * @brief PVR macros for string exchange
+ */
+#define PVR_STRCPY(dest, source) do { strncpy(dest, source, sizeof(dest)-1); dest[sizeof(dest)-1] = '\0'; } while(0)
+#define PVR_STRCLR(dest) memset(dest, 0, sizeof(dest))
 
 #define DEFAULT_HOST             "127.0.0.1"
 #define DEFAULT_CONNECT_TIMEOUT  30
@@ -41,17 +51,17 @@
 #define DEFAULT_RECORDING_PORT   8090
 #define DEFAULT_TSBUFFERPATH     "special://userdata/addon_data/pvr.dvbviewer"
 
-extern bool                      m_bCreated;
-extern std::string               g_strHostname;
-extern int                       g_iPortStream;
-extern int                       g_iPortWeb;
-extern int                       g_iPortRecording;
-extern std::string               g_strUsername;
-extern std::string               g_strPassword;
-extern bool                      g_bUseFavourites;
-extern std::string               g_strFavouritesPath;
-extern bool                      g_bUseTimeshift;
-extern std::string               g_strTimeshiftBufferPath;
-//extern int                       g_iClientId;
-extern ADDON::CHelper_libXBMC_addon *   XBMC;
-extern CHelper_libXBMC_pvr *     PVR;
+extern CStdString    g_strHostname;
+extern int           g_iPortStream;
+extern int           g_iPortWeb;
+extern int           g_iPortRecording;
+extern CStdString    g_strUsername;
+extern CStdString    g_strPassword;
+extern bool          g_bUseFavourites;
+extern CStdString    g_strFavouritesPath;
+extern bool          g_bUseTimeshift;
+extern CStdString    g_strTimeshiftBufferPath;
+extern ADDON::CHelper_libXBMC_addon *XBMC;
+extern CHelper_libXBMC_pvr *PVR;
+
+#endif

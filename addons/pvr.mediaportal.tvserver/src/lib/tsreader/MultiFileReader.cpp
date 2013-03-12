@@ -312,7 +312,7 @@ long MultiFileReader::RefreshTSBufferFile()
     int64_t minimumlength = (int64_t)(sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved) + sizeof(Wchar_t) + sizeof(filesAdded2) + sizeof(filesRemoved2));
     if (fileLength <= minimumlength)
     {
-      TSDEBUG(LOG_DEBUG, "%s: TSBufferFile too short. Minimum length %ld, current length %ld", __FUNCTION__, minimumlength, fileLength);
+      XBMC->Log(LOG_DEBUG, "%s: TSBufferFile too short. Minimum length %ld, current length %ld", __FUNCTION__, minimumlength, fileLength);
       return S_FALSE;
     }
 
@@ -509,8 +509,7 @@ long MultiFileReader::RefreshTSBufferFile()
     {
       std::string pFilename = *itFilenames;
 
-
-      TSDEBUG(LOG_DEBUG, "MultiFileReader: Adding file %s (%" PRId64 ")\n", pFilename.c_str(), nextStartPosition);
+      XBMC->Log(LOG_DEBUG, "MultiFileReader: Adding file %s (%" PRId64 ")\n", pFilename.c_str(), nextStartPosition);
 
       file = new MultiFileReaderFile();
       file->filename = pFilename;

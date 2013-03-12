@@ -31,6 +31,7 @@
 #include "client.h" //for XBMC->Log
 #include "MultiFileReader.h"
 #include "utils.h"
+#include "TSDebug.h"
 #include "platform/util/timeutils.h"
 #ifdef LIVE555
 #include "MemoryReader.h"
@@ -63,13 +64,10 @@ CTsReader::CTsReader()
 
 CTsReader::~CTsReader(void)
 {
-  if (m_fileReader)
-    delete m_fileReader;
+  SAFE_DELETE(m_fileReader);
 #ifdef LIVE555
-  if (m_buffer)
-    delete m_buffer;
-  if (m_rtspClient)
-    delete m_rtspClient;
+  SAFE_DELETE(m_buffer);
+  SAFE_DELETE(m_rtspClient);
 #endif
 }
 
@@ -152,22 +150,6 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
   SMBPrefix += "@";
   CIFSName.Replace("//", SMBPrefix.c_str());
   sFileName = CIFSName;
-
-  //size_t found = string::npos;
-
-  //// Extract filename:
-  //found = CIFSname.find_last_of("\\");
-
-  //if (found != string::npos)
-  //{
-  //  CIFSname.erase(0, found + 1);
-  //  CIFSname.insert(0, m_basePath.c_str());
-  //  CIFSname.erase(0, 6); // Remove smb://
-  //}
-  //CIFSname.insert(0, SMBPrefix.c_str());
-
-  //XBMC->Log(LOG_INFO, "CTsReader:TranslatePath %s -> %s", pszFileName, CIFSname.c_str());
-  //return CIFSname;
 #endif
 
   if (bFound)
@@ -228,31 +210,28 @@ long CTsReader::Open(const char* pszFileName)
   XBMC->Log(LOG_NOTICE, "CTsReader::Open(%s)", pszFileName);
 
   m_fileName = pszFileName;
-  char url[MAX_PATH];
-  strncpy(url, m_fileName.c_str(), MAX_PATH-1);
-  url[MAX_PATH-1]='\0'; // make sure that we always have a 0-terminated string
+
+  if (m_State != State_Stopped)
+    Close();
 
   // check file type
-  int length = strlen(url);
+  int length = m_fileName.length();
 
-  if ((length > 7) && (strnicmp(url, "rtsp://",7) == 0))
+  if ((length > 7) && (strnicmp(m_fileName.c_str(), "rtsp://",7) == 0))
   {
     // rtsp:// stream
     // open stream
-    XBMC->Log(LOG_DEBUG, "open rtsp: %s", url);
+    XBMC->Log(LOG_DEBUG, "open rtsp: %s", m_fileName.c_str());
 #ifdef LIVE555
     //strcpy(m_rtspClient.m_outFileName, "e:\\temp\\rtsptest.ts");
-    if (m_buffer)
-      delete m_buffer;
-    if (m_rtspClient)
-      delete m_rtspClient;
     m_buffer = new CMemoryBuffer();
     m_rtspClient = new CRTSPClient();
     m_rtspClient->Initialize(m_buffer);
 
-    if ( !m_rtspClient->OpenStream(url))
+    if ( !m_rtspClient->OpenStream(m_fileName.c_str()) )
     {
       SAFE_DELETE(m_rtspClient);
+      SAFE_DELETE(m_buffer);
       return E_FAIL;
     }
 
@@ -261,7 +240,7 @@ long CTsReader::Open(const char* pszFileName)
     m_bLiveTv = true;
 
     // are we playing a recording via RTSP
-    if (strstr(url, "/stream") == NULL)
+    if (m_fileName.find_first_of("/stream") == string::npos )
     {
       // yes, then we're not timeshifting
       m_bTimeShifting = false;
@@ -273,14 +252,14 @@ long CTsReader::Open(const char* pszFileName)
     m_fileReader = new CMemoryReader(*m_buffer);
     m_State = State_Running;
 #else
-    XBMC->Log(LOG_ERROR, "Failed to open %s. PVR client is compiled without LIVE555 RTSP support.", url);
-    XBMC->QueueNotification(QUEUE_ERROR, "PVR client has no RTSP support: %s", url);
+    XBMC->Log(LOG_ERROR, "Failed to open %s. PVR client is compiled without LIVE555 RTSP support.", m_fileName.c_str());
+    XBMC->QueueNotification(QUEUE_ERROR, "PVR client has no RTSP support: %s", m_fileName.c_str());
     return E_FAIL;
 #endif //LIVE555
   }
   else
   {
-    if ((length < 9) || (strnicmp(&url[length-9], ".tsbuffer", 9) != 0))
+    if ((length < 9) || (strnicmp(&m_fileName.c_str()[length-9], ".tsbuffer", 9) != 0))
     {
       // local .ts file
       m_bTimeShifting = false;
@@ -298,18 +277,18 @@ long CTsReader::Open(const char* pszFileName)
     }
 
     // Translate path (e.g. Local filepath to smb://user:pass@share)
-    m_fileName = TranslatePath(url);
+    m_fileName = TranslatePath(m_fileName.c_str());
 
     if (m_fileName.empty())
       return S_FALSE;
 
     // open file
     m_fileReader->SetFileName(m_fileName.c_str());
-    //m_fileReader->SetDebugOutput(true);
+
     long retval = m_fileReader->OpenFile();
     if (retval != S_OK)
     {
-      XBMC->Log(LOG_ERROR, "Failed to open file '%s' as '%s'", url, m_fileName.c_str());
+      XBMC->Log(LOG_ERROR, "Failed to open file '%s' as '%s'", pszFileName, m_fileName.c_str());
       return retval;
     }
 
@@ -323,11 +302,7 @@ long CTsReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned 
 {
   if (m_fileReader)
   {
-    long ret;
-
-    ret = m_fileReader->Read(pbData, lDataLength, dwReadBytes);
-
-    return ret;
+    return m_fileReader->Read(pbData, lDataLength, dwReadBytes);
   }
 
   dwReadBytes = 0;
@@ -456,6 +431,7 @@ long CTsReader::Pause()
         m_rtspClient->Continue();
         XBMC->Log(LOG_DEBUG, "CTsReader::Pause() rtsp running"); // at position: %f", (m_seekTime.Millisecs() / 1000.0f));
     }
+    m_State = State_Running;
 #endif //LIVE555
   }
 

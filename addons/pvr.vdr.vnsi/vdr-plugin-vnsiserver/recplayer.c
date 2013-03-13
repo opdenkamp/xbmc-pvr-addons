@@ -189,8 +189,8 @@ uint32_t cRecPlayer::getLengthFrames()
 int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
 {
   // dont let the block be larger than 256 kb
-  if (amount > 256*1024)
-    amount = 256*1024;
+  if (amount > 512*1024)
+    amount = 512*1024;
 
   if ((uint64_t)amount > m_totalLength)
     amount = m_totalLength;
@@ -237,11 +237,6 @@ int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
   {
     // Tell linux not to bother keeping the data in the FS cache
     posix_fadvise(m_file, filePosition, bytes_read, POSIX_FADV_DONTNEED);
-  }
-
-  // divide and conquer
-  if(bytes_read < amount) {
-    bytes_read += getBlock(&buffer[bytes_read], position + bytes_read, amount - bytes_read);
   }
 
   return bytes_read;

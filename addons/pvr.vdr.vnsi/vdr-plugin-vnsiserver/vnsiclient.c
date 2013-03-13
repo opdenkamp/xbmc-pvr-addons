@@ -177,9 +177,9 @@ void cVNSIClient::Action(void)
   }
 }
 
-bool cVNSIClient::StartChannelStreaming(const cChannel *channel, int32_t priority, uint32_t timeout)
+bool cVNSIClient::StartChannelStreaming(const cChannel *channel, int32_t priority, uint8_t timeshift, uint32_t timeout)
 {
-  m_Streamer    = new cLiveStreamer(m_Id, timeout);
+  m_Streamer    = new cLiveStreamer(m_Id, timeshift, timeout);
   m_isStreaming = m_Streamer->StreamChannel(channel, priority, &m_socket, m_resp);
   return m_isStreaming;
 }
@@ -702,6 +702,7 @@ bool cVNSIClient::processChannelStream_Open() /* OPCODE 20 */
 {
   uint32_t uid = m_req->extract_U32();
   int32_t priority = m_req->extract_S32();
+  uint8_t timeshift = m_req->extract_U8();
   uint32_t timeout = m_req->extract_U32();
 
   if(timeout == 0)
@@ -727,7 +728,7 @@ bool cVNSIClient::processChannelStream_Open() /* OPCODE 20 */
   }
   else
   {
-    if (StartChannelStreaming(channel, priority, timeout))
+    if (StartChannelStreaming(channel, priority, timeshift, timeout))
     {
       INFOLOG("Started streaming of channel %s (timeout %i seconds)", channel->Name(), timeout);
       // return here without sending the response

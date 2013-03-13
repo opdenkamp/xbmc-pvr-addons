@@ -57,6 +57,7 @@ private:
   void sendStreamChange();
   void sendSignalInfo();
   void sendStreamStatus();
+  void sendBufferStatus();
 
   int               m_ClientID;
   const cChannel   *m_Channel;                      /*!> Channel to stream */
@@ -78,6 +79,7 @@ private:
   cVideoBuffer     *m_VideoBuffer;
   cVideoInput       m_VideoInput;
   int               m_Priority;
+  uint8_t           m_Timeshift;
 
 protected:
   virtual void Action(void);
@@ -85,7 +87,7 @@ protected:
   void Close();
 
 public:
-  cLiveStreamer(int clientID, uint32_t timeout = 0);
+  cLiveStreamer(int clientID, uint8_t timeshift, uint32_t timeout = 0);
   virtual ~cLiveStreamer();
 
   void Activate(bool On);

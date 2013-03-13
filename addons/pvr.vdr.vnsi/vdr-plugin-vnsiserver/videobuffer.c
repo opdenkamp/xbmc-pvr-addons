@@ -111,6 +111,7 @@ public:
   virtual size_t GetPosMax();
   virtual size_t GetPosCur();
   virtual void GetPositions(size_t *cur, size_t *min, size_t *max);
+  virtual bool HasBuffer() { return true; };
 
 protected:
   cVideoBufferTimeshift();
@@ -813,10 +814,10 @@ cVideoBuffer::~cVideoBuffer()
 {
 }
 
-cVideoBuffer* cVideoBuffer::Create(int clientID)
+cVideoBuffer* cVideoBuffer::Create(int clientID, uint8_t timeshift)
 {
   // no time shift
-  if (TimeshiftMode == 0)
+  if (TimeshiftMode == 0 || timeshift == 0)
   {
     cVideoBufferSimple *buffer = new cVideoBufferSimple();
     return buffer;

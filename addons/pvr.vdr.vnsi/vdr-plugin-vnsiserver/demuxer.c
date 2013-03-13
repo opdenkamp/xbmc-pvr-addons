@@ -143,6 +143,9 @@ bool cVNSIDemuxer::SeekTime(int64_t time)
   int64_t ts, ts_min, ts_max, last_ts;
   int no_change;
 
+  if (!m_VideoBuffer->HasBuffer())
+    return false;
+
   cMutexLock lock(&m_Mutex);
 
 //  INFOLOG("----- seek to time: %ld", time);
@@ -293,6 +296,11 @@ bool cVNSIDemuxer::SeekTime(int64_t time)
   m_WaitIFrame = true;
   m_MuxPacketSerial++;
   return true;
+}
+
+void cVNSIDemuxer::BufferStatus(bool &timeshift, int &start, int &current, int &end)
+{
+  timeshift = m_VideoBuffer->HasBuffer();
 }
 
 cTSStream *cVNSIDemuxer::GetFirstStream()

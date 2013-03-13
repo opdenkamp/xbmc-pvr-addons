@@ -30,7 +30,7 @@ class cVideoBuffer
 {
 public:
   virtual ~cVideoBuffer();
-  static cVideoBuffer* Create(int clientID);
+  static cVideoBuffer* Create(int clientID, uint8_t timeshift);
   static cVideoBuffer* Create(cString filename);
   static cVideoBuffer* Create(cRecording *rec);
   virtual void Put(uint8_t *buf, unsigned int size) = 0;
@@ -41,6 +41,7 @@ public:
   virtual void GetPositions(size_t *cur, size_t *min,size_t *max) {};
   virtual void SetPos(size_t pos) {};
   virtual void SetCache(bool on) {};
+  virtual bool HasBuffer() { return false; };
   int Read(uint8_t **buf, unsigned int size);
   void AttachInput(bool attach);
 protected:

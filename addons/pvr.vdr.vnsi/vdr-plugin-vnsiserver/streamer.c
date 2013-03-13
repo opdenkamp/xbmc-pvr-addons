@@ -40,7 +40,7 @@
 
 // --- cLiveStreamer -------------------------------------------------
 
-cLiveStreamer::cLiveStreamer(int clientID, uint32_t timeout)
+cLiveStreamer::cLiveStreamer(int clientID, uint8_t timeshift, uint32_t timeout)
  : cThread("cLiveStreamer stream processor")
  , m_ClientID(clientID)
  , m_scanTimeout(timeout)
@@ -54,6 +54,7 @@ cLiveStreamer::cLiveStreamer(int clientID, uint32_t timeout)
   m_SignalLost      = false;
   m_IFrameSeen      = false;
   m_VideoBuffer     = NULL;
+  m_Timeshift       = timeshift;
 
   memset(&m_FrontendInfo, 0, sizeof(m_FrontendInfo));
 
@@ -105,7 +106,7 @@ bool cLiveStreamer::Open(int serial)
   }
   if (!recording)
   {
-    m_VideoBuffer = cVideoBuffer::Create(m_ClientID);
+    m_VideoBuffer = cVideoBuffer::Create(m_ClientID, m_Timeshift);
   }
 
   if (!m_VideoBuffer)
@@ -154,6 +155,7 @@ void cLiveStreamer::Action(void)
   sStreamPacket pkt;
   bool requestStreamChange = false;
   cTimeMs last_info(1000);
+  cTimeMs bufferStatsTimer(1000);
 
   while (Running())
   {
@@ -177,6 +179,13 @@ void cLiveStreamer::Action(void)
       {
         last_info.Set(0);
         sendSignalInfo();
+      }
+
+      // send buffer stats
+      if(bufferStatsTimer.TimedOut())
+      {
+        sendBufferStatus();
+        bufferStatsTimer.Set(1000);
       }
     }
     else if (ret == -1)
@@ -546,6 +555,27 @@ void cLiveStreamer::sendStreamStatus()
     return;
   }
   resp->add_String("No Signal");
+  resp->finaliseStream();
+  m_Socket->write(resp->getPtr(), resp->getLen());
+  delete resp;
+}
+
+void cLiveStreamer::sendBufferStatus()
+{
+  cResponsePacket *resp = new cResponsePacket();
+  if (!resp->initStream(VNSI_STREAM_BUFFERSTATS, 0, 0, 0, 0, 0))
+  {
+    ERRORLOG("stream response packet init fail");
+    delete resp;
+    return;
+  }
+  int32_t start, current, end;
+  bool timeshift;
+  m_Demuxer.BufferStatus(timeshift, start, current, end);
+  resp->add_U8(timeshift);
+  resp->add_S32(start);
+  resp->add_S32(current);
+  resp->add_S32(end);
   resp->finaliseStream();
   m_Socket->write(resp->getPtr(), resp->getLen());
   delete resp;

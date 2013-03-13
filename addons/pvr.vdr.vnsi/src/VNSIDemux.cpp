@@ -167,6 +167,10 @@ DemuxPacket* cVNSIDemux::Read()
       XBMC->Log(LOG_DEBUG, "stream id %i not found", resp->getStreamID());
     }
   }
+  else if (resp->getOpCodeID() == VNSI_STREAM_BUFFERSTATS)
+  {
+    m_bTimeshift = resp->extract_U8();
+  }
 
   delete resp;
   return PVR->AllocateDemuxPacket(0);
@@ -230,6 +234,7 @@ bool cVNSIDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
   if (!vrp2.init(VNSI_CHANNELSTREAM_OPEN) ||
       !vrp2.add_U32(channelinfo.iUniqueId) ||
       !vrp2.add_S32(g_iPriority) ||
+      !vrp2.add_U8(1) ||
       !ReadSuccess(&vrp2))
   {
     XBMC->Log(LOG_ERROR, "%s - failed to set channel", __FUNCTION__);

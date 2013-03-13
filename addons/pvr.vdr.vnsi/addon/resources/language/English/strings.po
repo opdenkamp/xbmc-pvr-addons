@@ -207,6 +207,10 @@ msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr ""
 
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr ""
+
 msgctxt "#30100"
 msgid "VDR OSD"
 msgstr ""

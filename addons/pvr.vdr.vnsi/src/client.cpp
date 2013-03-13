@@ -48,6 +48,7 @@ bool          g_bHandleMessages         = DEFAULT_HANDLE_MSG;   ///< Send VDR's 
 int           g_iConnectTimeout         = DEFAULT_TIMEOUT;      ///< The Socket connection timeout
 int           g_iPriority               = DEFAULT_PRIORITY;     ///< The Priority this client have in response to other clients
 bool          g_bAutoChannelGroups      = DEFAULT_AUTOGROUPS;
+int           g_iTimeshift              = 1;
 
 CHelper_libXBMC_addon *XBMC   = NULL;
 CHelper_libXBMC_gui   *GUI    = NULL;
@@ -124,6 +125,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'priority' setting, falling back to %i as default", DEFAULT_PRIORITY);
     g_iPriority = DEFAULT_PRIORITY;
+  }
+
+  /* Read setting "timeshift" from settings.xml */
+  if (!XBMC->GetSetting("timeshift", &g_iTimeshift))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'timeshift' setting, falling back to %i as default", 1);
+    g_iTimeshift = 1;
   }
 
   /* Read setting "convertchar" from settings.xml */
@@ -252,6 +261,11 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   else if (str == "priority")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'priority' from %u to %u", g_iPriority, *(int*) settingValue);
+    g_iPriority = *(int*) settingValue;
+  }
+  else if (str == "timeshift")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'timeshift' from %u to %u", g_iTimeshift, *(int*) settingValue);
     g_iPriority = *(int*) settingValue;
   }
   else if (str == "convertchar")

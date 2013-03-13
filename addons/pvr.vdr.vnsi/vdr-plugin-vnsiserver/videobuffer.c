@@ -175,6 +175,8 @@ void cVideoBufferTimeshift::GetPositions(size_t *cur, size_t *min, size_t *max)
 
 off_t cVideoBufferTimeshift::Available()
 {
+  cMutexLock lock(&m_Mutex);
+
   size_t ret;
   if (m_ReadPtr <= m_WritePtr)
     ret = m_WritePtr - m_ReadPtr;
@@ -236,8 +238,6 @@ void cVideoBufferRAM::SetPos(size_t pos)
 
 void cVideoBufferRAM::Put(uint8_t *buf, unsigned int size)
 {
-  cMutexLock lock(&m_Mutex);
-
   if (Available() + MARGIN >= m_BufferSize)
   {
     ERRORLOG("------------- skipping data");
@@ -250,12 +250,15 @@ void cVideoBufferRAM::Put(uint8_t *buf, unsigned int size)
     memcpy(m_BufferPtr+m_WritePtr, buf, bytes);
     size -= bytes;
     buf += bytes;
+    cMutexLock lock(&m_Mutex);
     m_WritePtr = 0;
   }
 
   memcpy(m_BufferPtr+m_WritePtr, buf, size);
-  m_WritePtr += size;
 
+  cMutexLock lock(&m_Mutex);
+
+  m_WritePtr += size;
   if (!m_BufferFull)
   {
     if ((m_WritePtr + 2*MARGIN) > m_BufferSize)
@@ -265,11 +268,10 @@ void cVideoBufferRAM::Put(uint8_t *buf, unsigned int size)
 
 int cVideoBufferRAM::ReadBlock(uint8_t **buf, unsigned int size)
 {
-  cMutexLock lock(&m_Mutex);
-
   // move read pointer
   if (m_BytesConsumed)
   {
+    cMutexLock lock(&m_Mutex);
     m_ReadPtr += m_BytesConsumed;
     if (m_ReadPtr >= m_BufferSize)
       m_ReadPtr -= m_BufferSize;
@@ -328,6 +330,7 @@ protected:
   cVideoBufferFile(int clientID);
   virtual ~cVideoBufferFile();
   virtual bool Init();
+  virtual int ReadBytes(uint8_t *buf, off_t pos, unsigned int size);
   int m_ClientID;
   cString m_Filename;
   int m_Fd;
@@ -422,8 +425,6 @@ size_t cVideoBufferFile::GetPosMax()
 
 void cVideoBufferFile::Put(uint8_t *buf, unsigned int size)
 {
-  cMutexLock lock(&m_Mutex);
-
   if (Available() + MARGIN >= m_BufferSize)
   {
     ERRORLOG("------------- skipping data");
@@ -434,35 +435,44 @@ void cVideoBufferFile::Put(uint8_t *buf, unsigned int size)
   {
     int bytes = m_BufferSize - m_WritePtr;
 
-    m_WritePtr = lseek(m_Fd, m_WritePtr, SEEK_SET);
-    if (m_WritePtr != m_WritePtr)
+    int p = 0;
+    off_t ptr = m_WritePtr;
+    while(bytes > 0)
     {
-      ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
-      return;
+      p = pwrite(m_Fd, buf, bytes, ptr);
+      if (p < 0)
+      {
+        ERRORLOG("Could not write to file: %s", (const char*)m_Filename);
+        return;
+      }
+      size -= p;
+      bytes -= p;
+      buf += p;
+      ptr += p;
     }
-    if (safe_write(m_Fd, buf, bytes) < 0)
+    cMutexLock lock(&m_Mutex);
+    m_WritePtr = 0;
+  }
+
+  off_t ptr = m_WritePtr;
+  int bytes = size;
+  int p;
+  while(bytes > 0)
+  {
+    p = pwrite(m_Fd, buf, bytes, ptr);
+    if (p < 0)
     {
       ERRORLOG("Could not write to file: %s", (const char*)m_Filename);
       return;
     }
-    size -= bytes;
-    buf += bytes;
-    m_WritePtr = 0;
+    bytes -= p;
+    buf += p;
+    ptr += p;
   }
 
-  m_WritePtr = lseek(m_Fd, m_WritePtr, SEEK_SET);
-  if (m_WritePtr != m_WritePtr)
-  {
-    ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
-    return;
-  }
-  if (safe_write(m_Fd, buf, size) < 0)
-  {
-    ERRORLOG("Could not write to file: %s", (const char*)m_Filename);
-    return;
-  }
+  cMutexLock lock(&m_Mutex);
+
   m_WritePtr += size;
-
   if (!m_BufferFull)
   {
     if ((m_WritePtr + 2*MARGIN) > m_BufferSize)
@@ -470,13 +480,26 @@ void cVideoBufferFile::Put(uint8_t *buf, unsigned int size)
   }
 }
 
+int cVideoBufferFile::ReadBytes(uint8_t *buf, off_t pos, unsigned int size)
+{
+  int p;
+  for (;;)
+  {
+    p = pread(m_Fd, buf, size, pos);
+    if (p < 0 && errno == EINTR)
+    {
+      continue;
+    }
+    return p;
+  }
+}
+
 int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
 {
-  cMutexLock lock(&m_Mutex);
-
   // move read pointer
   if (m_BytesConsumed)
   {
+    cMutexLock lock(&m_Mutex);
     m_ReadPtr += m_BytesConsumed;
     if (m_ReadPtr >= m_BufferSize)
       m_ReadPtr -= m_BufferSize;
@@ -493,15 +516,9 @@ int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
   }
   else if ((readBytes = Available()) >= m_ReadCacheMaxSize)
   {
-    m_ReadPtr = lseek(m_Fd, m_ReadPtr, SEEK_SET);
-    if (m_ReadPtr != m_ReadPtr)
-    {
-      ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
-      return 0;
-    }
     if (m_ReadPtr + m_ReadCacheMaxSize <= m_BufferSize)
     {
-      m_ReadCacheSize = safe_read(m_Fd, m_ReadCache, m_ReadCacheMaxSize);
+      m_ReadCacheSize = ReadBytes(m_ReadCache, m_ReadPtr, m_ReadCacheMaxSize);
       if (m_ReadCacheSize < 0)
       {
         ERRORLOG("Could not read file: %s", (const char*)m_Filename);
@@ -519,20 +536,14 @@ int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
     }
     else
     {
-      m_ReadCacheSize = safe_read(m_Fd, m_ReadCache, m_BufferSize - m_ReadPtr);
-      if (m_ReadCacheSize != (m_BufferSize - m_ReadPtr))
+      m_ReadCacheSize = ReadBytes(m_ReadCache, m_ReadPtr, m_BufferSize - m_ReadPtr);
+      if ((m_ReadCacheSize < m_Margin) && (m_ReadCacheSize != (m_BufferSize - m_ReadPtr)))
       {
         ERRORLOG("Could not read file (end): %s", (const char*)m_Filename);
         m_ReadCacheSize = 0;
         return 0;
       }
-      m_ReadPtr = lseek(m_Fd, 0, SEEK_SET);
-      if (m_ReadPtr != m_ReadPtr)
-      {
-        ERRORLOG("Could not seek file: %s", (const char*)m_Filename);
-        return 0;
-      }
-      readBytes = safe_read(m_Fd, m_ReadCache + m_ReadCacheSize, m_ReadCacheMaxSize - m_ReadCacheSize);
+      readBytes = ReadBytes(m_ReadCache + m_ReadCacheSize, 0, m_ReadCacheMaxSize - m_ReadCacheSize);
       if (readBytes < 0)
       {
         ERRORLOG("Could not read file (end): %s", (const char*)m_Filename);
@@ -653,8 +664,6 @@ off_t cVideoBufferRecording::Available()
 
 int cVideoBufferRecording::ReadBlock(uint8_t **buf, unsigned int size)
 {
-  cMutexLock lock(&m_Mutex);
-
   // move read pointer
   if (m_BytesConsumed)
   {
@@ -707,12 +716,10 @@ int cVideoBufferRecording::ReadBlock(uint8_t **buf, unsigned int size)
     m_BytesConsumed++;
     (*buf)++;
     readBytes--;
-    INFOLOG("------------ skip byte");
   }
 
   if ((*buf)[0] != TS_SYNC_BYTE)
   {
-    INFOLOG("------------ marker 11");
     return 0;
   }
 

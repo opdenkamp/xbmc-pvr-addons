@@ -44,6 +44,7 @@
 #define CONFNAME_TIMESHIFT "Timeshift"
 #define CONFNAME_TIMESHIFTBUFFERSIZE "TimeshiftBufferSize"
 #define CONFNAME_TIMESHIFTBUFFERFILESIZE "TimeshiftBufferFileSize"
+#define CONFNAME_TIMESHIFTBUFFERDIR "TimeshiftBufferDir"
 
 /* OPCODE 1 - 19: VNSI network functions for general purpose */
 #define VNSI_LOGIN                 1

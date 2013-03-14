@@ -31,6 +31,7 @@ private:
   const char *timeshiftModesTexts[3];
   int newTimeshiftBufferSize;
   int newTimeshiftBufferFileSize;
+  char newTimeshiftBufferDir[PATH_MAX];
 protected:
   virtual void Store(void);
 public:

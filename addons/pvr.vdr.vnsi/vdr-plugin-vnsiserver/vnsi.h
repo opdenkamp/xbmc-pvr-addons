@@ -34,6 +34,7 @@ extern int PmtTimeout;
 extern int TimeshiftMode;
 extern int TimeshiftBufferSize;
 extern int TimeshiftBufferFileSize;
+extern char TimeshiftBufferDir[PATH_MAX];
 
 class cPluginVNSIServer : public cPlugin {
 private:

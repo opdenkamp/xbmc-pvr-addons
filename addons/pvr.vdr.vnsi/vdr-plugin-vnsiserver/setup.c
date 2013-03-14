@@ -25,6 +25,7 @@ int PmtTimeout = 5;
 int TimeshiftMode = 0;
 int TimeshiftBufferSize = 5;
 int TimeshiftBufferFileSize = 6;
+char TimeshiftBufferDir[PATH_MAX] = "\0";
 
 cMenuSetupVNSI::cMenuSetupVNSI(void)
 {
@@ -35,13 +36,16 @@ cMenuSetupVNSI::cMenuSetupVNSI(void)
   timeshiftModesTexts[1] = tr("RAM");
   timeshiftModesTexts[2] = tr("File");
   newTimeshiftMode = TimeshiftMode;
-  Add(new cMenuEditStraItem( tr("Time Shift Mode"), &newTimeshiftMode, 2, timeshiftModesTexts));
+  Add(new cMenuEditStraItem( tr("Time Shift Mode"), &newTimeshiftMode, 3, timeshiftModesTexts));
 
   newTimeshiftBufferSize = TimeshiftBufferSize;
   Add(new cMenuEditIntItem( tr("TS Buffersize (RAM) (1-20) x 100MB"), &newTimeshiftBufferSize));
 
   newTimeshiftBufferFileSize = TimeshiftBufferFileSize;
   Add(new cMenuEditIntItem( tr("TS Buffersize (File) (1-10) x 1GB"), &newTimeshiftBufferFileSize));
+
+  strn0cpy(newTimeshiftBufferDir, TimeshiftBufferDir, sizeof(newTimeshiftBufferDir));
+  Add(new cMenuEditStrItem(tr("TS Buffer Directory"), newTimeshiftBufferDir, sizeof(newTimeshiftBufferDir)));
 }
 
 void cMenuSetupVNSI::Store(void)
@@ -63,4 +67,6 @@ void cMenuSetupVNSI::Store(void)
   else if (newTimeshiftBufferFileSize < 1)
     newTimeshiftBufferFileSize = 1;
   SetupStore(CONFNAME_TIMESHIFTBUFFERFILESIZE, TimeshiftBufferFileSize = newTimeshiftBufferFileSize);
+
+  SetupStore(CONFNAME_TIMESHIFTBUFFERDIR, strn0cpy(TimeshiftBufferDir, newTimeshiftBufferDir, sizeof(TimeshiftBufferDir)));
 }

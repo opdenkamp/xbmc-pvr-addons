@@ -36,11 +36,13 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
+#include <sys/stat.h>
 
 #include <vdr/plugin.h>
 #include <vdr/shutdown.h>
 #include <vdr/videodir.h>
 
+#include "vnsi.h"
 #include "vnsiserver.h"
 #include "vnsiclient.h"
 
@@ -198,7 +200,19 @@ void cVNSIServer::Action(void)
   time_t epgUpdate = cSchedules::Modified();
 
   // delete old timeshift file
-  cString cmd = cString::sprintf("rm -f %s/*.vnsi", VideoDirectory);
+  cString cmd;
+  struct stat sb;
+  if ((*TimeshiftBufferDir) && stat(TimeshiftBufferDir, &sb) == 0 && S_ISDIR(sb.st_mode))
+  {
+    if (TimeshiftBufferDir[strlen(TimeshiftBufferDir)-1] == '/')
+      cmd = cString::sprintf("rm -f %s*.vnsi", TimeshiftBufferDir);
+    else
+      cmd = cString::sprintf("rm -f %s/*.vnsi", TimeshiftBufferDir);
+  }
+  else
+  {
+    cmd = cString::sprintf("rm -f %s/*.vnsi", VideoDirectory);
+  }
   int ret = system(cmd);
 
   while (Running())

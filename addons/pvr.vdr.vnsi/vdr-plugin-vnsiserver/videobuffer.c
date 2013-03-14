@@ -377,7 +377,17 @@ bool cVideoBufferFile::Init()
 
   m_BufferSize = (size_t)TimeshiftBufferFileSize*1000*1000*1000;
 
-  m_Filename = cString::sprintf("%s/Timeshift-%d.vnsi", VideoDirectory, m_ClientID);
+  struct stat sb;
+  if ((*TimeshiftBufferDir) && stat(TimeshiftBufferDir, &sb) == 0 && S_ISDIR(sb.st_mode))
+  {
+    if (TimeshiftBufferDir[strlen(TimeshiftBufferDir)-1] == '/')
+      m_Filename = cString::sprintf("%sTimeshift-%d.vnsi", TimeshiftBufferDir, m_ClientID);
+    else
+      m_Filename = cString::sprintf("%s/Timeshift-%d.vnsi", TimeshiftBufferDir, m_ClientID);
+  }
+  else
+    m_Filename = cString::sprintf("%s/Timeshift-%d.vnsi", VideoDirectory, m_ClientID);
+
   m_Fd = open(m_Filename, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
   if (m_Fd == -1)
   {

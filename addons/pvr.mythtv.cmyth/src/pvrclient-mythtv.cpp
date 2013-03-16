@@ -1635,6 +1635,7 @@ void PVRClientMythTV::CloseRecordedStream()
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
   m_file = MythFile();
+  m_pEventHandler->SetRecordingListener("", m_file);
 
   m_pEventHandler->DisablePlayback();
 

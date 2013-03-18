@@ -56,14 +56,14 @@ void cMenuSetupVNSI::Store(void)
 
   SetupStore(CONFNAME_TIMESHIFT, TimeshiftMode = newTimeshiftMode);
 
-  if (newTimeshiftBufferSize > 20)
-    newTimeshiftBufferSize = 20;
+  if (newTimeshiftBufferSize > 40)
+    newTimeshiftBufferSize = 40;
   else if (newTimeshiftBufferSize < 1)
     newTimeshiftBufferSize = 1;
   SetupStore(CONFNAME_TIMESHIFTBUFFERSIZE, TimeshiftBufferSize = newTimeshiftBufferSize);
 
-  if (newTimeshiftBufferFileSize > 10)
-    newTimeshiftBufferFileSize = 10;
+  if (newTimeshiftBufferFileSize > 20)
+    newTimeshiftBufferFileSize = 20;
   else if (newTimeshiftBufferFileSize < 1)
     newTimeshiftBufferFileSize = 1;
   SetupStore(CONFNAME_TIMESHIFTBUFFERFILESIZE, TimeshiftBufferFileSize = newTimeshiftBufferFileSize);

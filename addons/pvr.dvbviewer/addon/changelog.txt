@@ -1,6 +1,7 @@
-1.7.5
+1.7.0
 
-[updated] Bump after PVR API version bump
+[updated] DVBViewer Recording Service handling 1.24.0.6
+[added] RTSP streaming option
 
 1.6.5
 

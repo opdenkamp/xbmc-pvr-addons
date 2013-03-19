@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
+# Addon version: 1.7.0
 # Addon Provider: jdembski, A600
 msgid ""
 msgstr ""
@@ -44,11 +44,15 @@ msgid "Password"
 msgstr ""
 
 msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
+msgid "Use favorites instead of channel list"
 msgstr ""
 
 msgctxt "#30007"
-msgid "Select the favourites.xml file"
+msgid "Select local favourites.xml file"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Use RTSP for Live TV"
 msgstr ""
 
 #empty strings from id 30008 to 30499
@@ -59,5 +63,5 @@ msgid "Can't connect to the Recording Service"
 msgstr ""
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
+msgid "Recording Service version %s or higher required"
 msgstr ""

@@ -51,7 +51,6 @@ Dvb *DvbData                = NULL;
 
 extern "C"
 {
-
 void ADDON_ReadSettings(void)
 {
   char buffer[1024];
@@ -260,7 +259,8 @@ void ADDON_FreeSettings()
 {
 }
 
-void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data)
+void ADDON_Announce(const char *_UNUSED(flag), const char *_UNUSED(sender),
+    const char *_UNUSED(message), const void *_UNUSED(data))
 {
 }
 

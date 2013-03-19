@@ -974,15 +974,17 @@ void Dvb::TimerUpdates()
   }
 
   unsigned int iRemoved = 0;
-  for (DvbTimers_t::iterator it = m_timers.begin(); it != m_timers.end(); ++it)
+  for (DvbTimers_t::iterator it = m_timers.begin(); it != m_timers.end();)
   {
     if (it->iUpdateState == DVB_UPDATE_STATE_NONE)
     {
       XBMC->Log(LOG_DEBUG, "%s Removed timer: '%s', ClientIndex: %u",
           __FUNCTION__, it->strTitle.c_str(), it->iClientIndex);
-      m_timers.erase(it--);
+      it = m_timers.erase(it);
       ++iRemoved;
     }
+    else
+      ++it;
   }
 
   unsigned int iNew = 0;

@@ -2,6 +2,7 @@
 
 [added] Basic timeshift support.
 [added] Use channel names from favourites. This allows easy channelname changes.
+[fixed] Use 64 bit channel ids. Fall back to 32 bit if favourites.xml still contain the old ones.
 [fixed] Replace "/"-character by " " in channel logo url
 [updated] A lot of code cleanup
 

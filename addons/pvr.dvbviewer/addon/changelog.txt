@@ -1,3 +1,7 @@
+1.7.7
+
+[fixed] fix possible crash during timer updates
+
 1.7.6
 
 [added] Basic timeshift support.

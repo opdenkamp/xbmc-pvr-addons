@@ -1,5 +1,6 @@
 #pragma once 
 
+#include <deque>
 #include "platform/util/StdString.h"
 #include "xmlParser.h"
 #include "client.h"
@@ -13,7 +14,8 @@
 #define DELPHI_DATE                  (25569)
 #define RECORDING_THUMB_POS          (143)
 #define MAX_RECORDING_THUMBS         (20)
-#define RS_MIN_VERSION               (21)
+#define RS_MIN_VERSION               (1 << 24 | 25 << 16 | 0 << 8 | 0)
+#define cRS_MIN_VERSION              "1.25.0.0"
     
 struct ChannelsDat
 {
@@ -87,14 +89,14 @@ struct DvbChannel
   bool bRadio;
   int iUniqueId;
   int iChannelNumber;
-  int iChannelId;
+  uint64_t iChannelId;
   uint64_t llEpgId;
   byte Encrypted;
   std::string strGroupName;
   std::string strChannelName;
   std::string strStreamURL;
   std::string strIconPath;
-  int iChannelState;
+  int iChannelState;  
 
   DvbChannel()
   {
@@ -121,7 +123,6 @@ struct DvbEPGEntry
 {
   int iEventId;
   std::string strTitle;
-  int iChannelId;
   time_t startTime;
   time_t endTime;
   std::string strPlotOutline;
@@ -182,11 +183,13 @@ struct DvbTimer
 
 struct DvbRecording
 {
+  bool bStillAvailable;
   std::string strRecordingId;
   time_t startTime;
   int iDuration;
   std::string strTitle;
   std::string strStreamURL;
+  std::string strDirectory;
   std::string strPlot;
   std::string strPlotOutline;
   std::string strChannelName;
@@ -203,20 +206,18 @@ private:
   std::string m_strServerName;
   std::string m_strURL;
   std::string m_strURLStream;
-  std::string m_strURLRecording;
   std::string m_strEPGLanguage;
   int m_iTimezone;
-  int m_iNumRecordings;
   int m_iNumChannelGroups;
   int m_iCurrentChannel;
   unsigned int m_iUpdateTimer;
   bool m_bUpdateTimers;
   bool m_bUpdateEPG;
-  std::vector<DvbChannel> m_channels;
-  std::vector<DvbTimer> m_timers;
-  std::vector<DvbRecording> m_recordings;
-  std::vector<DvbChannelGroup> m_groups;
-  std::vector<std::string> m_locations;
+  std::deque<DvbChannel> m_channels;
+  std::deque<DvbTimer> m_timers;
+  std::deque<DvbRecording> m_recordings;
+  std::deque<DvbChannelGroup> m_groups;
+  std::deque<std::string> m_locations;
 
   unsigned int m_iClientIndexCounter;
 
@@ -230,19 +231,18 @@ private:
   int GetChannelNumber(CStdString strChannelId);
   CStdString URLEncodeInline(const CStdString& strData);
   void SendSimpleCommand(const CStdString& strCommandURL);
+  DvbChannel ExtractChannelData(CStdString gName, XMLNode& xTmpChannel, int channel_pos);
   bool LoadChannels();
-  std::vector<DvbTimer> LoadTimers();
+  std::deque<DvbTimer> LoadTimers();
   void TimerUpdates();
   void GenerateTimer(const PVR_TIMER &timer, bool bNewtimer = true);
   int GetTimerID(const PVR_TIMER &timer);
 
   // helper functions
   static bool GetInt(XMLNode xRootNode, const char* strTag, int& iIntValue);
-  static bool GetBoolean(XMLNode xRootNode, const char* strTag, bool& bBoolValue);
   static bool GetString(XMLNode xRootNode, const char* strTag, CStdString& strStringValue);
-  bool GetStringLng(XMLNode xRootNode, const char* strTag, CStdString& strStringValue);
-  void GetPreferredLanguage();
   void GetTimeZone();
+  int GetRecCount();
   void RemoveNullChars(CStdString &String);
   bool GetDeviceInfo();
 
@@ -267,6 +267,7 @@ public:
   PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
   PVR_ERROR DeleteTimer(const PVR_TIMER &timer);
   unsigned int GetRecordingsAmount();
+  void SetRecordingTag(PVR_RECORDING& tag, DvbRecording& recording);
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recinfo);
   unsigned int GetNumChannelGroups(void);

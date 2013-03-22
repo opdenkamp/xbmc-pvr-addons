@@ -60,7 +60,7 @@ cmyth_timestamp_create(void)
 	ret->timestamp_hour = 0;
 	ret->timestamp_minute = 0;
 	ret->timestamp_second = 0;
-	ret->timestamp_isdst = 0;
+	ret->timestamp_isdst = -1;
 	return ret;
 }
 

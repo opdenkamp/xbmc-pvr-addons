@@ -39,11 +39,10 @@ ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
 std::string g_strHostname             = DEFAULT_HOST;
 int         g_iConnectTimeout         = DEFAULT_CONNECT_TIMEOUT;
 int         g_iPortWeb                = DEFAULT_WEB_PORT;
-int         g_iPortStream             = DEFAULT_STREAM_PORT;
-int         g_iPortRecording          = DEFAULT_RECORDING_PORT;
 std::string g_strUsername             = "";
 std::string g_strPassword             = "";
 bool        g_bUseFavourites          = false;
+bool        g_bUseRTSP                = false;
 std::string g_strFavouritesPath       = "";
 
 CHelper_libXBMC_addon *XBMC           = NULL;
@@ -78,21 +77,17 @@ void ADDON_ReadSettings(void)
   else
     g_strPassword = "";
   
-  /* read setting "streamport" from settings.xml */
-  if (!XBMC->GetSetting("streamport", &g_iPortStream))
-    g_iPortStream = DEFAULT_STREAM_PORT;
-  
   /* read setting "webport" from settings.xml */
   if (!XBMC->GetSetting("webport", &g_iPortWeb))
     g_iPortWeb = DEFAULT_WEB_PORT;
 
-  /* read setting "recordingport" from settings.xml */
-  if (!XBMC->GetSetting("recordingport", &g_iPortRecording))
-    g_iPortRecording = DEFAULT_RECORDING_PORT;
-
   /* read setting "usefavourites" from settings.xml */
   if (!XBMC->GetSetting("usefavourites", &g_bUseFavourites))
     g_bUseFavourites = false;
+
+  /* read setting "useRTSP" from settings.xml */
+  if (!XBMC->GetSetting("usertsp", &g_bUseRTSP))
+    g_bUseRTSP = false;
 
   /* read setting "favouritespath" from settings.xml */
   if (XBMC->GetSetting("favouritespath", buffer))
@@ -207,16 +202,6 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       return ADDON_STATUS_NEED_RESTART;
     }
   }
-  else if (str == "streamport")
-  {
-    int iNewValue = *(int*) settingValue + 1;
-    if (g_iPortStream != iNewValue)
-    {
-      XBMC->Log(LOG_INFO, "%s - Changed Setting 'streamport' from %u to %u", __FUNCTION__, g_iPortStream, iNewValue);
-      g_iPortStream = iNewValue;
-      return ADDON_STATUS_NEED_RESTART;
-    }
-  }
   else if (str == "webport")
   {
     int iNewValue = *(int*) settingValue + 1;
@@ -224,16 +209,6 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     {
       XBMC->Log(LOG_INFO, "%s - Changed Setting 'webport' from %u to %u", __FUNCTION__, g_iPortWeb, iNewValue);
       g_iPortWeb = iNewValue;
-      return ADDON_STATUS_NEED_RESTART;
-    }
-  }
-  else if (str == "recordingport")
-  {
-    int iNewValue = *(int*) settingValue + 1;
-    if (g_iPortRecording != iNewValue)
-    {
-      XBMC->Log(LOG_INFO, "%s - Changed Setting 'recordingport' from %u to %u", __FUNCTION__, g_iPortRecording, iNewValue);
-      g_iPortRecording = iNewValue;
       return ADDON_STATUS_NEED_RESTART;
     }
   }

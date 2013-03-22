@@ -1,3 +1,8 @@
+1.7.6
+
+[added] DVBViewer Recording Service interface 1.25.0.0
+[reworked] A lot of code to speed up addon
+
 1.7.5
 
 [updated] Bump after PVR API version bump

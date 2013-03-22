@@ -622,7 +622,7 @@ void PVRClientMythTV::EventUpdateRecordings()
           }
         }
         else
-          XBMC->Log(LOG_ERROR, "%s - Add recording failed for %u %ld", __FUNCTION__, event.ChannelID(), event.RecordingStartTimeslot());
+          XBMC->Log(LOG_ERROR, "%s - Add recording failed for %u %s", __FUNCTION__, event.ChannelID(), event.RecordingStartTimeslot().NumString().c_str());
         break;
       }
       case MythEventHandler::CHANGE_UPDATE:

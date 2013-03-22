@@ -249,13 +249,13 @@ MythProgramInfo MythConnection::GetRecordedProgram(const CStdString &basename)
   return retval;
 }
 
-MythProgramInfo MythConnection::GetRecordedProgram(int chanid, time_t recstartts)
+MythProgramInfo MythConnection::GetRecordedProgram(int chanid, const MythTimestamp &recstartts)
 {
   MythProgramInfo retval;
   cmyth_proginfo_t prog = NULL;
-  if (chanid > 0 && recstartts > 0)
+  if (chanid > 0 && !recstartts.IsNull())
   {
-    CMYTH_CONN_CALL_REF(prog, prog == NULL, cmyth_proginfo_get_from_timeslot(*m_conn_t, chanid, recstartts));
+    CMYTH_CONN_CALL_REF(prog, prog == NULL, cmyth_proginfo_get_from_timeslot(*m_conn_t, chanid, *recstartts.m_timestamp_t));
     if (prog) {
       retval = MythProgramInfo(prog);
     }

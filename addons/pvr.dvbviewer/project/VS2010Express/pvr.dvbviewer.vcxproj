@@ -92,7 +92,7 @@
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\DvbData.h" />
     <ClInclude Include="..\..\src\xmlParser.h" />
-    <ClInclude Include="..\..\src\TimeshiftBuffer.h.h" />
+    <ClInclude Include="..\..\src\TimeshiftBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">

@@ -1846,14 +1846,13 @@ cmyth_proginfo_get_from_basename(cmyth_conn_t control, const char* basename)
 }
 
 cmyth_proginfo_t
-cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, time_t recstartts)
+cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, const cmyth_timestamp_t recstartts)
 {
 	int err = 0;
 	int count, i;
 	char msg[4096];
 	cmyth_proginfo_t prog = NULL;
 	cmyth_proglist_t list = NULL;
-	cmyth_timestamp_t ts;
 	char time[15];
 
 	if (!control) {
@@ -1862,21 +1861,11 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, time_t r
 		return NULL;
 	}
 
-	ts = cmyth_timestamp_from_unixtime(recstartts);
-	if (!ts) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: timestamp NULL\n",
-			  __FUNCTION__);
+	if ((err = cmyth_timestamp_to_numstring(time, recstartts)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_timestamp_to_numstring() failed (%d)\n",
+			  __FUNCTION__, err);
 		return NULL;
 	}
-
-	sprintf(time,
-		"%4.4ld%2.2ld%2.2ld%2.2ld%2.2ld%2.2ld",
-		ts->timestamp_year,
-		ts->timestamp_month,
-		ts->timestamp_day,
-		ts->timestamp_hour,
-		ts->timestamp_minute,
-		ts->timestamp_second);
 
 	if(control->conn_version >= 32) {
 		pthread_mutex_lock(&control->conn_mutex);
@@ -1944,7 +1933,7 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, time_t r
 					  __FUNCTION__);
 				continue;
 			}
-			if (cmyth_timestamp_compare(prog->proginfo_rec_start_ts, ts) != 0 ||
+			if (cmyth_timestamp_compare(prog->proginfo_rec_start_ts, recstartts) != 0 ||
 					prog->proginfo_chanId != chanid) {
 				ref_release(prog);
 				prog = NULL;

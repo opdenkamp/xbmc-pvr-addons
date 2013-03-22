@@ -730,7 +730,7 @@ extern int cmyth_timestamp_to_display_string(char *str, cmyth_timestamp_t ts,
 
 extern int cmyth_datetime_to_string(char *str, cmyth_timestamp_t ts);
 
-extern cmyth_timestamp_t cmyth_datetime_from_string(char *str);
+extern int cmyth_timestamp_to_numstring(char *str, cmyth_timestamp_t ts);
 
 extern int cmyth_timestamp_compare(cmyth_timestamp_t ts1,
 				   cmyth_timestamp_t ts2);
@@ -837,7 +837,7 @@ extern cmyth_proginfo_t cmyth_proginfo_get_from_basename(cmyth_conn_t control,
  */
 extern cmyth_proginfo_t cmyth_proginfo_get_from_timeslot(cmyth_conn_t control,
 					   uint32_t chanid,
-					   time_t recstartts);
+					   cmyth_timestamp_t recstartts);
 
 /**
  * Retrieve the title of a program.

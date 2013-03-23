@@ -837,7 +837,7 @@ extern cmyth_proginfo_t cmyth_proginfo_get_from_basename(cmyth_conn_t control,
  */
 extern cmyth_proginfo_t cmyth_proginfo_get_from_timeslot(cmyth_conn_t control,
 					   uint32_t chanid,
-					   cmyth_timestamp_t recstartts);
+					   const cmyth_timestamp_t recstartts);
 
 /**
  * Retrieve the title of a program.

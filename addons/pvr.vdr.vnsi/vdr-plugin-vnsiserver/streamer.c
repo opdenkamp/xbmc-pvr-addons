@@ -76,7 +76,12 @@ bool cLiveStreamer::Open(int serial)
 {
   Close();
 
+#if APIVERSNUM >= 10725
   m_Device = cDevice::GetDevice(m_Channel, m_Priority, true, true);
+#else
+  m_Device = cDevice::GetDevice(m_Channel, m_Priority, true);
+#endif
+
   if (!m_Device)
     return false;
 

@@ -50,6 +50,8 @@ void cVNSIDemuxer::Open(const cChannel &channel, cVideoBuffer *videoBuffer)
   else
     m_WaitIFrame = false;
 
+  m_FirstFrameDTS = 0;
+
   cParser::m_Wrap = false;
   cParser::m_NoOfWraps = 0;
   cParser::m_ConfirmCount = 0;
@@ -128,7 +130,15 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
   {
     if (stream->ProcessTSPacket(buf, packet, NULL, m_WaitIFrame))
     {
-      m_WaitIFrame = false;
+      if (m_WaitIFrame)
+      {
+        m_FirstFrameDTS = packet->dts;
+        m_WaitIFrame = false;
+      }
+
+      if (packet->dts < m_FirstFrameDTS)
+        return 0;
+
       packet->serial = m_MuxPacketSerial;
       return 1;
     }

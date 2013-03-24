@@ -770,6 +770,19 @@ bool Dvb::LoadChannels()
     DvbChannel favChannel;
     DvbChannelGroup favGroup("");
 
+    /* example data:
+     * <settings>
+     *    <section name="0">
+     *      <entry name="Header">Group 1</entry>
+     *      <entry name="0">1234567890123456789|Channel 1</entry>
+     *      <entry name="1">1234567890123456789|Channel 2</entry>
+     *    </section>
+     *   <section name="1">
+     *     <entry name="Header">1234567890123456789|Channel 3</entry>
+     *    </section>
+     *    ...
+     *  </settings>
+     */
     for (int i = 0; i < m; ++i)
     {
       XMLNode xTmp = xNode.getChildNode("section", i);
@@ -777,7 +790,8 @@ bool Dvb::LoadChannels()
       for (int j = 0; j < n; ++j)
       {
         XMLNode xEntry = xTmp.getChildNode("entry", j);
-        if (CStdString(xEntry.getAttribute("name")) == "Header")
+        /* name="Header" doesn't indicate a group alone. see example above */
+        if (CStdString(xEntry.getAttribute("name")) == "Header" && n > 1)
         {
           /* it's a group */
           char *strGroupNameUtf8 = XBMC->UnknownToUTF8(xEntry.getText());

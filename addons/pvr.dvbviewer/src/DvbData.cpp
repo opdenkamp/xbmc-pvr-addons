@@ -879,14 +879,12 @@ DvbTimers_t Dvb::LoadTimers()
       continue;
     timer.state = PVR_TIMER_STATE_SCHEDULED;
 
-    CStdString DateTime;
-    DateTime = xTmp.getAttribute("Date");
+    CStdString DateTime = xTmp.getAttribute("Date");
     DateTime.append(xTmp.getAttribute("Start"));
     timer.startTime = ParseDateTime(DateTime, false);
     timer.endTime = timer.startTime + atoi(xTmp.getAttribute("Dur"))*60;
 
-    CStdString Weekdays;
-    Weekdays = xTmp.getAttribute("Days");
+    CStdString Weekdays = xTmp.getAttribute("Days");
     timer.iWeekdays = 0;
     for (unsigned int j = 0; j < Weekdays.size(); ++j)
     {
@@ -1103,7 +1101,8 @@ bool Dvb::GetXMLValue(const XMLNode& node, const char* tag, CStdString& value,
   for (int i = 0; localize && i < node.nChildNode(tag); ++i)
   {
     xNode = node.getChildNode(tag, i);
-    if (xNode.getAttribute("lng") == m_strEPGLanguage)
+    const char *lang = xNode.getAttribute("lng");
+    if (lang && lang == m_strEPGLanguage)
     {
       found = true;
       break;

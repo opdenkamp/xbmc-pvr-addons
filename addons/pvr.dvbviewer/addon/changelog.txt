@@ -1,3 +1,7 @@
+1.7.8
+
+[fixed] fix crash with Recording Service 1.25.0
+
 1.7.7
 
 [fixed] fix possible crash during timer updates

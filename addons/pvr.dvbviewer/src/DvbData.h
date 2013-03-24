@@ -247,7 +247,6 @@ private:
   bool GetStringLng(XMLNode xRootNode, const char* strTag, CStdString& strStringValue);
   void GetPreferredLanguage();
   void GetTimeZone();
-  void RemoveNullChars(CStdString &String);
   bool GetDeviceInfo();
 
 

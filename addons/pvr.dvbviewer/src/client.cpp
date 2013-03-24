@@ -42,8 +42,8 @@ int         g_iPortWeb                = DEFAULT_WEB_PORT;
 std::string g_strUsername             = "";
 std::string g_strPassword             = "";
 bool        g_bUseFavourites          = false;
-bool        g_bUseRTSP                = false;
 std::string g_strFavouritesPath       = "";
+bool        g_bUseRTSP                = false;
 
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
@@ -85,15 +85,15 @@ void ADDON_ReadSettings(void)
   if (!XBMC->GetSetting("usefavourites", &g_bUseFavourites))
     g_bUseFavourites = false;
 
-  /* read setting "useRTSP" from settings.xml */
-  if (!XBMC->GetSetting("usertsp", &g_bUseRTSP))
-    g_bUseRTSP = false;
-
   /* read setting "favouritespath" from settings.xml */
   if (XBMC->GetSetting("favouritespath", buffer))
     g_strFavouritesPath = buffer;
   else
     g_strFavouritesPath = "";
+
+  /* read setting "useRTSP" from settings.xml */
+  if (!XBMC->GetSetting("usertsp", &g_bUseRTSP))
+    g_bUseRTSP = false;
 
   free (buffer);
 }

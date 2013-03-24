@@ -1,4 +1,4 @@
-﻿# XBMC Media Center language file
+# XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
 # Addon version: 1.7.6

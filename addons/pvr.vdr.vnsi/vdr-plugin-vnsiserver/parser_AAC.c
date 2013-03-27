@@ -34,7 +34,6 @@ static int aac_sample_rates[16] =
 cParserAAC::cParserAAC(int pID, cTSStream *stream)
  : cParser(pID, stream)
 {
-  m_firstPUSIseen             = false;
   m_Configured                = false;
   m_FrameLengthType           = 0;
   m_PTS                       = 0;

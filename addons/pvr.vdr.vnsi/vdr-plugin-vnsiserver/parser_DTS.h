@@ -30,7 +30,7 @@ class cParserDTS : public cParser
 private:
 
 public:
-  cParserDTS(int pID, cTSStream *stream);
+  cParserDTS(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParserDTS();
 
   virtual void Parse(sStreamPacket *pkt);

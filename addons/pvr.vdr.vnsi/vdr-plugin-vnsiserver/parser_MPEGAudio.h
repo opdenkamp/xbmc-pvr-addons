@@ -39,7 +39,7 @@ private:
   int FindHeaders(uint8_t *buf, int buf_size);
 
 public:
-  cParserMPEG2Audio(int pID, cTSStream *stream);
+  cParserMPEG2Audio(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParserMPEG2Audio();
 
   virtual void Parse(sStreamPacket *pkt);

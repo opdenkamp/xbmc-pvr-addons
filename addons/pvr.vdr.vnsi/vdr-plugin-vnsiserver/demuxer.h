@@ -81,4 +81,5 @@ protected:
   cVideoBuffer *m_VideoBuffer;
   cMutex m_Mutex;
   uint32_t m_MuxPacketSerial;
+  sPtsWrap m_PtsWrap;
 };

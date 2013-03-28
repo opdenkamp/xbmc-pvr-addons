@@ -124,13 +124,20 @@ struct sStreamPacket
   uint32_t  serial;
 };
 
+struct sPtsWrap
+{
+  bool m_Wrap;
+  int m_NoOfWraps;
+  int m_ConfirmCount;
+};
+
 class cTSStream;
 
 class cParser
 {
 friend class cTSStream;
 public:
-  cParser(int pID, cTSStream *stream);
+  cParser(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParser();
 
   bool AddPESPacket(uint8_t *data, int size);
@@ -140,10 +147,6 @@ public:
   int ParsePESHeader(uint8_t *buf, size_t len);
   virtual void Reset();
   bool IsVideo() {return m_IsVideo; }
-
-  static bool m_Wrap;
-  static int m_NoOfWraps;
-  static int m_ConfirmCount;
 
 protected:
   virtual bool IsValidStartCode(uint8_t *buf, int size);
@@ -170,6 +173,8 @@ protected:
 
   cTSStream  *m_Stream;
   bool        m_IsVideo;
+  sPtsWrap   *m_PtsWrap;
+  bool        m_ObservePtsWraps;
 };
 
 
@@ -203,7 +208,7 @@ private:
   uint16_t              m_ancillaryPageId;
 
 public:
-  cTSStream(eStreamType type, int pid);
+  cTSStream(eStreamType type, int pid, sPtsWrap *ptsWrap);
   virtual ~cTSStream();
 
   bool ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, int64_t *dts, bool iframe);

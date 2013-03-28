@@ -106,7 +106,7 @@ private:
   bool IsFirstVclNal(h264_private::VCL_NAL &vcl);
 
 public:
-  cParserH264(int pID, cTSStream *stream);
+  cParserH264(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParserH264();
 
   virtual void Parse(sStreamPacket *pkt);

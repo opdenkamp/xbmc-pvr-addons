@@ -32,7 +32,7 @@ private:
   int64_t     m_lastPTS;
 
 public:
-  cParserTeletext(int pID, cTSStream *stream);
+  cParserTeletext(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParserTeletext();
 
   virtual void Parse(sStreamPacket *pkt);

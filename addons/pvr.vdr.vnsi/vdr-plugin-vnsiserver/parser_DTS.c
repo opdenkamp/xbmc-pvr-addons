@@ -25,8 +25,8 @@
 #include "parser_DTS.h"
 #include "bitstream.h"
 
-cParserDTS::cParserDTS(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserDTS::cParserDTS(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
 }
 

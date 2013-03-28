@@ -105,8 +105,8 @@ typedef enum {
   EAC3_FRAME_TYPE_RESERVED
 } EAC3FrameType;
 
-cParserAC3::cParserAC3(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserAC3::cParserAC3(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_PTS                       = 0;
   m_DTS                       = 0;

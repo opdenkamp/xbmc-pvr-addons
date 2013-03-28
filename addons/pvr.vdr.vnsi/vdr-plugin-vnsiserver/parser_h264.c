@@ -45,8 +45,8 @@ static const int h264_lev2cpbsize[][2] =
   {-1, -1},
 };
 
-cParserH264::cParserH264(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserH264::cParserH264(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_Height            = 0;
   m_Width             = 0;

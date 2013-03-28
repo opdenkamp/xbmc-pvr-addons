@@ -39,7 +39,7 @@ private:
   int FindHeaders(uint8_t *buf, int buf_size);
 
 public:
-  cParserAC3(int pID, cTSStream *stream);
+  cParserAC3(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParserAC3();
 
   virtual void Parse(sStreamPacket *pkt);

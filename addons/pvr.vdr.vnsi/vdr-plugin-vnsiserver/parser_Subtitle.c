@@ -24,8 +24,8 @@
 
 #include "parser_Subtitle.h"
 
-cParserSubtitle::cParserSubtitle(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserSubtitle::cParserSubtitle(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_PesBufferInitialSize = 4000;
 }

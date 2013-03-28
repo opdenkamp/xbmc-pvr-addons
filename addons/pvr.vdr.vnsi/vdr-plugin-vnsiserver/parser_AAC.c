@@ -31,8 +31,8 @@ static int aac_sample_rates[16] =
 };
 
 
-cParserAAC::cParserAAC(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserAAC::cParserAAC(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_Configured                = false;
   m_FrameLengthType           = 0;

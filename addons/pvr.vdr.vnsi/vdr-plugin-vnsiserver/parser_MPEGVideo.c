@@ -48,8 +48,8 @@ const unsigned int mpeg2video_framedurations[16] = {
   1500,
 };
 
-cParserMPEG2Video::cParserMPEG2Video(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserMPEG2Video::cParserMPEG2Video(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_FrameDuration     = 0;
   m_vbvDelay          = -1;

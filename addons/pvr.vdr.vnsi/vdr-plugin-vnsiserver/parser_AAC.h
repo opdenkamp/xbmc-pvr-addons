@@ -48,7 +48,7 @@ private:
   uint32_t LATMGetValue(cBitstream *bs) { return bs->readBits(bs->readBits(2) * 8); }
 
 public:
-  cParserAAC(int pID, cTSStream *stream);
+  cParserAAC(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParserAAC();
   virtual void Parse(sStreamPacket *pkt);
   virtual void Reset();

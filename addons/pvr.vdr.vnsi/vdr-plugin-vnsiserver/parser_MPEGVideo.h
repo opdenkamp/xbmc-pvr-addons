@@ -48,7 +48,7 @@ private:
   bool Parse_MPEG2Video_PicStart(uint8_t *buf);
 
 public:
-  cParserMPEG2Video(int pID, cTSStream *stream);
+  cParserMPEG2Video(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParserMPEG2Video();
 
   virtual void Parse(sStreamPacket *pkt);

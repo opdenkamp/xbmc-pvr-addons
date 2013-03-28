@@ -42,12 +42,8 @@
 
 // --- cParser -------------------------------------------------
 
-bool cParser::m_Wrap = false;
-int cParser::m_NoOfWraps = 0;
-int cParser::m_ConfirmCount = 0;
-
-cParser::cParser(int pID, cTSStream *stream)
- : m_pID(pID)
+cParser::cParser(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : m_pID(pID), m_PtsWrap(ptsWrap), m_ObservePtsWraps(observePtsWraps)
 {
   m_PesBuffer = NULL;
   m_Stream = stream;
@@ -107,34 +103,37 @@ int cParser::ParsePESHeader(uint8_t *buf, size_t len)
     pts |= ((int64_t)(buf[13] & 0xFE)) >>  1 ;
 
     int64_t bit32and31 = pts >> 31;
-    if ((bit32and31 == 3) && !m_Wrap)
+    if (m_ObservePtsWraps)
     {
-      m_ConfirmCount++;
-      if (m_ConfirmCount >= 2)
+      if ((bit32and31 == 3) && !m_PtsWrap->m_Wrap)
       {
-        m_Wrap = true;
+        m_PtsWrap->m_ConfirmCount++;
+        if (m_PtsWrap->m_ConfirmCount >= 2)
+        {
+          m_PtsWrap->m_Wrap = true;
+        }
       }
-    }
-    else if ((bit32and31 == 1) && m_Wrap)
-    {
-      m_ConfirmCount++;
-      if (m_ConfirmCount >= 2)
+      else if ((bit32and31 == 1) && m_PtsWrap->m_Wrap)
       {
-        m_Wrap = false;
-        m_NoOfWraps++;
+        m_PtsWrap->m_ConfirmCount++;
+        if (m_PtsWrap->m_ConfirmCount >= 2)
+        {
+          m_PtsWrap->m_Wrap = false;
+          m_PtsWrap->m_NoOfWraps++;
+        }
       }
+      else
+        m_PtsWrap->m_ConfirmCount = 0;
     }
-    else
-      m_ConfirmCount = 0;
 
     m_curPTS = pts;
-    if (m_Wrap && !(bit32and31))
+    if (m_PtsWrap->m_Wrap && !(bit32and31))
     {
       m_curPTS += 1LL<<33;
     }
-    if (m_NoOfWraps)
+    if (m_PtsWrap->m_NoOfWraps)
     {
-      m_curPTS += ((int64_t)m_NoOfWraps<<33);
+      m_curPTS += ((int64_t)m_PtsWrap->m_NoOfWraps<<33);
     }
   }
   else
@@ -153,13 +152,13 @@ int cParser::ParsePESHeader(uint8_t *buf, size_t len)
     dts |=  (int64_t)( buf[17]          <<  7 );
     dts |=  (int64_t)((buf[18] & 0xFE)  >>  1 );
     m_curDTS = dts;
-    if (m_Wrap && !(m_curDTS >> 31))
+    if (m_PtsWrap->m_Wrap && !(m_curDTS >> 31))
     {
       m_curDTS += 1LL<<33;
     }
-    if (m_NoOfWraps)
+    if (m_PtsWrap->m_NoOfWraps)
     {
-      m_curDTS += ((int64_t)m_NoOfWraps<<33);
+      m_curDTS += ((int64_t)m_PtsWrap->m_NoOfWraps<<33);
     }
   }
   else
@@ -394,7 +393,7 @@ inline bool cParser::IsValidStartCode(uint8_t *buf, int size)
 
 // --- cTSStream ----------------------------------------------------
 
-cTSStream::cTSStream(eStreamType type, int pid)
+cTSStream::cTSStream(eStreamType type, int pid, sPtsWrap *ptsWrap)
   : m_streamType(type)
   , m_pID(pid)
 {
@@ -414,25 +413,25 @@ cTSStream::cTSStream(eStreamType type, int pid)
   m_IsStreamChange  = false;
 
   if (m_streamType == stMPEG2VIDEO)
-    m_pesParser = new cParserMPEG2Video(m_pID, this);
+    m_pesParser = new cParserMPEG2Video(m_pID, this, ptsWrap, true);
   else if (m_streamType == stH264)
-    m_pesParser = new cParserH264(m_pID, this);
+    m_pesParser = new cParserH264(m_pID, this, ptsWrap, true);
   else if (m_streamType == stMPEG2AUDIO)
-    m_pesParser = new cParserMPEG2Audio(m_pID, this);
+    m_pesParser = new cParserMPEG2Audio(m_pID, this, ptsWrap, true);
   else if (m_streamType == stAACADTS)
-    m_pesParser = new cParserAAC(m_pID, this);
+    m_pesParser = new cParserAAC(m_pID, this, ptsWrap, true);
   else if (m_streamType == stAACLATM)
-    m_pesParser = new cParserAAC(m_pID, this);
+    m_pesParser = new cParserAAC(m_pID, this, ptsWrap, true);
   else if (m_streamType == stAC3)
-    m_pesParser = new cParserAC3(m_pID, this);
+    m_pesParser = new cParserAC3(m_pID, this, ptsWrap, true);
   else if (m_streamType == stEAC3)
-    m_pesParser = new cParserAC3(m_pID, this);
+    m_pesParser = new cParserAC3(m_pID, this, ptsWrap, true);
   else if (m_streamType == stDTS)
-    m_pesParser = new cParserDTS(m_pID, this);
+    m_pesParser = new cParserDTS(m_pID, this, ptsWrap, true);
   else if (m_streamType == stTELETEXT)
-    m_pesParser = new cParserTeletext(m_pID, this);
+    m_pesParser = new cParserTeletext(m_pID, this, ptsWrap, false);
   else if (m_streamType == stDVBSUB)
-    m_pesParser = new cParserSubtitle(m_pID, this);
+    m_pesParser = new cParserSubtitle(m_pID, this, ptsWrap, false);
   else
   {
     ERRORLOG("Unrecognised type %i inside stream %i", m_streamType, m_pID);

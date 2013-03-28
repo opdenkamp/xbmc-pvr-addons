@@ -52,9 +52,9 @@ void cVNSIDemuxer::Open(const cChannel &channel, cVideoBuffer *videoBuffer)
 
   m_FirstFrameDTS = 0;
 
-  cParser::m_Wrap = false;
-  cParser::m_NoOfWraps = 0;
-  cParser::m_ConfirmCount = 0;
+  m_PtsWrap.m_Wrap = false;
+  m_PtsWrap.m_NoOfWraps = 0;
+  m_PtsWrap.m_ConfirmCount = 0;
   m_MuxPacketSerial = 0;
 }
 
@@ -392,40 +392,40 @@ bool cVNSIDemuxer::EnsureParsers()
 
     if (it->type == stH264)
     {
-      stream = new cTSStream(stH264, it->pID);
+      stream = new cTSStream(stH264, it->pID, &m_PtsWrap);
     }
     else if (it->type == stMPEG2VIDEO)
     {
-      stream = new cTSStream(stMPEG2VIDEO, it->pID);
+      stream = new cTSStream(stMPEG2VIDEO, it->pID, &m_PtsWrap);
     }
     else if (it->type == stMPEG2AUDIO)
     {
-      stream = new cTSStream(stMPEG2AUDIO, it->pID);
+      stream = new cTSStream(stMPEG2AUDIO, it->pID, &m_PtsWrap);
       stream->SetLanguage(it->language);
     }
     else if (it->type == stAACADTS)
     {
-      stream = new cTSStream(stAACADTS, it->pID);
+      stream = new cTSStream(stAACADTS, it->pID, &m_PtsWrap);
       stream->SetLanguage(it->language);
     }
     else if (it->type == stAACLATM)
     {
-      stream = new cTSStream(stAACLATM, it->pID);
+      stream = new cTSStream(stAACLATM, it->pID, &m_PtsWrap);
       stream->SetLanguage(it->language);
     }
     else if (it->type == stAC3)
     {
-      stream = new cTSStream(stAC3, it->pID);
+      stream = new cTSStream(stAC3, it->pID, &m_PtsWrap);
       stream->SetLanguage(it->language);
     }
     else if (it->type == stEAC3)
     {
-      stream = new cTSStream(stEAC3, it->pID);
+      stream = new cTSStream(stEAC3, it->pID, &m_PtsWrap);
       stream->SetLanguage(it->language);
     }
     else if (it->type == stDVBSUB)
     {
-      stream = new cTSStream(stDVBSUB, it->pID);
+      stream = new cTSStream(stDVBSUB, it->pID, &m_PtsWrap);
       stream->SetLanguage(it->language);
 #if APIVERSNUM >= 10709
       stream->SetSubtitlingDescriptor(it->subtitlingType, it->compositionPageId, it->ancillaryPageId);
@@ -433,7 +433,7 @@ bool cVNSIDemuxer::EnsureParsers()
     }
     else if (it->type == stTELETEXT)
     {
-      stream = new cTSStream(stTELETEXT, it->pID);
+      stream = new cTSStream(stTELETEXT, it->pID, &m_PtsWrap);
     }
     else
       continue;

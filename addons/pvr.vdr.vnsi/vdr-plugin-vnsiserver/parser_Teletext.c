@@ -23,8 +23,8 @@
 
 #include "parser_Teletext.h"
 
-cParserTeletext::cParserTeletext(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserTeletext::cParserTeletext(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_PesBufferInitialSize      = 4000;
 }

@@ -40,8 +40,8 @@ const uint16_t BitrateTable[2][3][15] =
   }
 };
 
-cParserMPEG2Audio::cParserMPEG2Audio(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserMPEG2Audio::cParserMPEG2Audio(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_PTS                       = 0;
   m_DTS                       = 0;

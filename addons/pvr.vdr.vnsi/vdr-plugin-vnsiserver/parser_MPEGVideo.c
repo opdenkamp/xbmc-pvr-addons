@@ -79,6 +79,13 @@ void cParserMPEG2Video::Parse(sStreamPacket *pkt)
   {
     if ((startcode & 0xffffff00) == 0x00000100)
     {
+      if (m_SetTime)
+      {
+        m_AuPrevDTS = m_AuDTS;
+        m_AuDTS = m_curDTS;
+        m_AuPTS = m_curPTS;
+        m_SetTime = false;
+      }
       if (Parse_MPEG2Video(startcode, p, frameComplete) < 0)
       {
         break;
@@ -101,14 +108,13 @@ void cParserMPEG2Video::Parse(sStreamPacket *pkt)
       pkt->data     = m_PesBuffer;
       pkt->dts      = m_DTS;
       pkt->pts      = m_PTS;
-      pkt->duration = m_curDTS - m_prevDTS;
+      pkt->duration = m_FrameDuration;
       pkt->streamChange = streamChange;
     }
     m_StartCode = 0xffffffff;
+    m_SetTime = true;
     m_PesParserPtr = 0;
     m_FoundFrame = false;
-    m_PTS = m_curPTS;
-    m_DTS = m_curDTS;
   }
 }
 
@@ -118,7 +124,7 @@ void cParserMPEG2Video::Reset()
   m_StartCode = 0xffffffff;
   m_NeedIFrame = true;
   m_NeedSPS = true;
-  m_DTS = DVD_NOPTS_VALUE;
+  m_SetTime = true;
 }
 
 int cParserMPEG2Video::Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &complete)
@@ -146,12 +152,20 @@ int cParserMPEG2Video::Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &c
     if (!Parse_MPEG2Video_PicStart(buf))
       return 0;
 
-    // if this is the first frame we see, set timestamp
-    if (m_DTS == DVD_NOPTS_VALUE)
+    if (m_AuPrevDTS == m_AuDTS)
     {
-      m_PTS = m_curPTS;
-      m_DTS = m_curDTS;
+      m_DTS = m_AuDTS + m_PicNumber*m_FrameDuration;
+      m_PTS = m_AuPTS + (m_TemporalReference-m_TrLastTime)*m_FrameDuration;
     }
+    else
+    {
+      m_PTS = m_AuPTS;
+      m_DTS = m_AuDTS;
+      m_PicNumber = 0;
+      m_TrLastTime = m_TemporalReference;
+    }
+
+    m_PicNumber++;
     m_FoundFrame = true;
     break;
   }
@@ -233,7 +247,7 @@ bool cParserMPEG2Video::Parse_MPEG2Video_PicStart(uint8_t *buf)
 {
   cBitstream bs(buf, 4 * 8);
 
-  bs.skipBits(10); /* temporal reference */
+  m_TemporalReference = bs.readBits(10); /* temporal reference */
 
   int pct = bs.readBits(3);
   if (pct < PKT_I_FRAME || pct > PKT_B_FRAME)

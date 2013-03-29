@@ -42,6 +42,11 @@ private:
   float           m_Dar;
   int64_t         m_DTS;
   int64_t         m_PTS;
+  bool            m_SetTime;
+  int64_t         m_AuDTS, m_AuPTS, m_AuPrevDTS;
+  int             m_TemporalReference;
+  int             m_TrLastTime;
+  int             m_PicNumber;
 
   int Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &complete);
   bool Parse_MPEG2Video_SeqStart(uint8_t *buf);

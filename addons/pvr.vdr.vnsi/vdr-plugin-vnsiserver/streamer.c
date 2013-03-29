@@ -86,7 +86,12 @@ bool cLiveStreamer::Open(int serial)
     return false;
 
   bool recording = false;
-  if (serial == -1)
+  if (0) // test harness
+  {
+    recording = true;
+    m_VideoBuffer = cVideoBuffer::Create("/home/xbmc/test.ts");
+  }
+  else if (serial == -1)
   {
     cTimer *activeTimer = Timers.GetNextActiveTimer();
 

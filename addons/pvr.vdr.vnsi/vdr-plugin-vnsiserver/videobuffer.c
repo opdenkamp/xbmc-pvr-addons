@@ -537,7 +537,7 @@ int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
       }
       if (m_ReadCacheSize < m_Margin)
       {
-        ERRORLOG("Could not read file (margin): %s", (const char*)m_Filename);
+        ERRORLOG("Could not read file (margin): %s , read: %d", (const char*)m_Filename, m_ReadCacheSize);
         m_ReadCacheSize = 0;
         return 0;
       }
@@ -792,6 +792,13 @@ void cVideoBufferTest::Put(uint8_t *buf, unsigned int size)
 
 bool cVideoBufferTest::Init()
 {
+  m_ReadCache = 0;
+  m_ReadCacheMaxSize = 8000;
+
+  m_ReadCache = (uint8_t*)malloc(m_ReadCacheMaxSize);
+  if (!m_ReadCache)
+    return false;
+
   m_Fd = open(m_Filename, O_RDONLY);
   if (m_Fd == -1)
   {

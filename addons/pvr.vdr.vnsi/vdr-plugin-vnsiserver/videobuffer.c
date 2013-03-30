@@ -700,7 +700,7 @@ int cVideoBufferRecording::ReadBlock(uint8_t **buf, unsigned int size)
     if (m_ReadPtr + m_ReadCacheMaxSize <= m_BufferSize)
     {
       m_ReadCacheSize = m_RecPlayer->getBlock(m_ReadCache, m_ReadPtr, m_ReadCacheMaxSize);
-      if (m_ReadCacheSize != m_ReadCacheMaxSize)
+      if (m_ReadCacheSize < 0)
       {
         ERRORLOG("Could not read file, size:  %d", m_ReadCacheSize);
         m_ReadCacheSize = 0;

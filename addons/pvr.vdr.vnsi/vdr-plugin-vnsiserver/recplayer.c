@@ -229,6 +229,10 @@ int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
   // try to read the block
   int bytes_read = read(m_file, buffer, amount);
 
+  // we may got stuck at end of segment
+  if ((bytes_read == 0) && (position < m_totalLength))
+    bytes_read += getBlock(buffer, position+1 , amount);
+
   if(bytes_read <= 0) {
     return 0;
   }

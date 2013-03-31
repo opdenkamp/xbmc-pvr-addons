@@ -42,7 +42,6 @@ private:
   float           m_Dar;
   int64_t         m_DTS;
   int64_t         m_PTS;
-  bool            m_SetTime;
   int64_t         m_AuDTS, m_AuPTS, m_AuPrevDTS;
   int             m_TemporalReference;
   int             m_TrLastTime;

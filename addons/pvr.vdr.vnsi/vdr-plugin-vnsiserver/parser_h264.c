@@ -81,12 +81,6 @@ void cParserH264::Parse(sStreamPacket *pkt)
   {
     if ((startcode & 0xffffff00) == 0x00000100)
     {
-      if (m_SetTime)
-      {
-        m_AuDTS = m_curDTS;
-        m_AuPTS = m_curPTS;
-        m_SetTime = false;
-      }
       if (Parse_H264(startcode, p, frameComplete) < 0)
       {
         break;
@@ -123,7 +117,6 @@ void cParserH264::Parse(sStreamPacket *pkt)
     m_StartCode = 0xffffffff;
     m_PesParserPtr = 0;
     m_FoundFrame = false;
-    m_SetTime = true;
   }
 }
 
@@ -134,7 +127,6 @@ void cParserH264::Reset()
   m_NeedIFrame = true;
   m_NeedSPS = true;
   m_NeedPPS = true;
-  m_SetTime = true;
 }
 
 int cParserH264::Parse_H264(uint32_t startcode, int buf_ptr, bool &complete)
@@ -169,13 +161,22 @@ int cParserH264::Parse_H264(uint32_t startcode, int buf_ptr, bool &complete)
       return -1;
     }
 
+    if (!m_FoundFrame)
+    {
+      if (buf_ptr - 4 >= m_PesTimePos)
+      {
+        m_DTS = m_curDTS;
+        m_PTS = m_curPTS;
+      }
+      else
+      {
+        m_DTS = m_prevDTS;
+        m_PTS = m_prevPTS;
+      }
+    }
+
     m_streamData.vcl_nal = vcl;
-
-    m_PTS = m_AuPTS;
-    m_DTS = m_AuDTS;
-
     m_FoundFrame = true;
-
     break;
   }
 

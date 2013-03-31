@@ -126,7 +126,9 @@ int cParser::ParsePESHeader(uint8_t *buf, size_t len)
         m_PtsWrap->m_ConfirmCount = 0;
     }
 
+    m_prevPTS = m_curPTS;
     m_curPTS = pts;
+    m_PesTimePos = m_PesBufferPtr;
     if (m_PtsWrap->m_Wrap && !(bit32and31))
     {
       m_curPTS += 1LL<<33;
@@ -340,6 +342,7 @@ bool cParser::AddPESPacket(uint8_t *data, int size)
   {
     memmove(m_PesBuffer, m_PesBuffer+m_PesNextFramePtr, m_PesBufferPtr-m_PesNextFramePtr);
     m_PesBufferPtr = m_PesBufferPtr-m_PesNextFramePtr;
+    m_PesTimePos -= m_PesNextFramePtr;
     m_PesNextFramePtr = 0;
   }
 

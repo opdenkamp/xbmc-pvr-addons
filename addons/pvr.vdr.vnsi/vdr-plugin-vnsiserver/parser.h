@@ -160,12 +160,14 @@ protected:
   size_t      m_PesBufferInitialSize;
   size_t      m_PesParserPtr;
   size_t      m_PesNextFramePtr;
+  int         m_PesTimePos;
 
   bool        m_FoundFrame;
 
   int         m_pID;
   int64_t     m_curPTS;
   int64_t     m_curDTS;
+  int64_t     m_prevPTS;
   int64_t     m_prevDTS;
 
   bool        m_IsPusi;

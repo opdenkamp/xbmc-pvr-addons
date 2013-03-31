@@ -79,13 +79,6 @@ void cParserMPEG2Video::Parse(sStreamPacket *pkt)
   {
     if ((startcode & 0xffffff00) == 0x00000100)
     {
-      if (m_SetTime)
-      {
-        m_AuPrevDTS = m_AuDTS;
-        m_AuDTS = m_curDTS;
-        m_AuPTS = m_curPTS;
-        m_SetTime = false;
-      }
       if (Parse_MPEG2Video(startcode, p, frameComplete) < 0)
       {
         break;
@@ -112,7 +105,6 @@ void cParserMPEG2Video::Parse(sStreamPacket *pkt)
       pkt->streamChange = streamChange;
     }
     m_StartCode = 0xffffffff;
-    m_SetTime = true;
     m_PesParserPtr = 0;
     m_FoundFrame = false;
   }
@@ -124,7 +116,6 @@ void cParserMPEG2Video::Reset()
   m_StartCode = 0xffffffff;
   m_NeedIFrame = true;
   m_NeedSPS = true;
-  m_SetTime = true;
 }
 
 int cParserMPEG2Video::Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &complete)
@@ -152,6 +143,21 @@ int cParserMPEG2Video::Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &c
     if (!Parse_MPEG2Video_PicStart(buf))
       return 0;
 
+    if (!m_FoundFrame)
+    {
+      m_AuPrevDTS = m_AuDTS;
+      if (buf_ptr - 4 >= m_PesTimePos)
+      {
+
+        m_AuDTS = m_curDTS;
+        m_AuPTS = m_curPTS;
+      }
+      else
+      {
+        m_AuDTS = m_prevDTS;
+        m_AuPTS = m_prevPTS;
+      }
+    }
     if (m_AuPrevDTS == m_AuDTS)
     {
       m_DTS = m_AuDTS + m_PicNumber*m_FrameDuration;

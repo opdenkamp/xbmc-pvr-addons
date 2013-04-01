@@ -171,6 +171,9 @@ int cParser::ParsePESHeader(uint8_t *buf, size_t len)
 
 int cParser::ParsePacketHeader(uint8_t *data)
 {
+  if (TsIsScrambled(data))
+    return -1;
+
   if (TsPayloadStart(data))
   {
     m_IsPusi = true;
@@ -234,6 +237,11 @@ bool cParser::AddPESPacket(uint8_t *data, int size)
       {
         hdr_len = 9;
         bytesNeeded = hdr_len-m_PesHeaderPtr;
+        if ((m_PesHeader[6] & 0x30))
+        {
+          Reset();
+          return false;
+        }
         if (size < bytesNeeded)
         {
           memcpy(m_PesHeader+m_PesHeaderPtr, data, size);
@@ -281,6 +289,11 @@ bool cParser::AddPESPacket(uint8_t *data, int size)
     {
       if (PesIsVideoPacket(data) || PesIsAudioPacket(data))
       {
+        if ((data[6] & 0x30))
+        {
+          Reset();
+          return false;
+        }
         if (size < 9)
         {
           memcpy(m_PesHeader+m_PesHeaderPtr, data, size);

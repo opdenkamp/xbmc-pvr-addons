@@ -463,6 +463,24 @@ void cVNSIDemuxer::SetChannelStreams(const cChannel *channel)
     AddStreamInfo(newStream);
   }
 
+  const int *DPids = channel->Dpids();
+  for ( ; *DPids; DPids++)
+  {
+    int index = 0;
+    if (!FindStream(*DPids))
+    {
+      newStream.pID = *DPids;
+      newStream.type = stAC3;
+#if APIVERSNUM >= 10715
+      if (channel->Dtype(index) == SI::EnhancedAC3DescriptorTag)
+        newStream.type = stEAC3;
+#endif
+      newStream.SetLanguage(channel->Dlang(index));
+      AddStreamInfo(newStream);
+    }
+    index++;
+  }
+
   const int *APids = channel->Apids();
   for ( ; *APids; APids++)
   {
@@ -478,24 +496,6 @@ void cVNSIDemuxer::SetChannelStreams(const cChannel *channel)
         newStream.type = stAACLATM;
 #endif
       newStream.SetLanguage(channel->Alang(index));
-      AddStreamInfo(newStream);
-    }
-    index++;
-  }
-
-  const int *DPids = channel->Dpids();
-  for ( ; *DPids; DPids++)
-  {
-    int index = 0;
-    if (!FindStream(*DPids))
-    {
-      newStream.pID = *DPids;
-      newStream.type = stAC3;
-#if APIVERSNUM >= 10715
-      if (channel->Dtype(index) == SI::EnhancedAC3DescriptorTag)
-        newStream.type = stEAC3;
-#endif
-      newStream.SetLanguage(channel->Dlang(index));
       AddStreamInfo(newStream);
     }
     index++;

@@ -334,9 +334,9 @@ bool cParser::AddPESPacket(uint8_t *data, int size)
 
   if (m_PesBufferPtr + size >= m_PesBufferSize)
   {
-    if (m_PesBufferPtr + size >= 500000)
+    if (m_PesBufferPtr + size >= 1000000)
     {
-      ERRORLOG("cParser::AddPESPacket - max buffer size reached");
+      ERRORLOG("cParser::AddPESPacket - max buffer size reached, pid: %d", m_pID);
       Reset();
       return false;
     }

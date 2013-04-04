@@ -58,7 +58,7 @@ cParserH264::cParserH264(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool obs
   m_PixelAspect.den   = 1;
   m_PixelAspect.num   = 0;
   memset(&m_streamData, 0, sizeof(m_streamData));
-  m_PesBufferInitialSize      = 80000;
+  m_PesBufferInitialSize      = 240000;
 
   m_IsVideo = true;
   Reset();

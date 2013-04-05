@@ -85,11 +85,13 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\DvbData.cpp" />
+    <ClCompile Include="..\..\src\Socket.cpp" />
     <ClCompile Include="..\..\src\xmlParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\DvbData.h" />
+    <ClInclude Include="..\..\src\Socket.h" />
     <ClInclude Include="..\..\src\xmlParser.h" />
   </ItemGroup>
   <ItemGroup>

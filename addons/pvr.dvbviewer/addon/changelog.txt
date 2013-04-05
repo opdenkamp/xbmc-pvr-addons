@@ -1,3 +1,7 @@
+1.7.7
+
+[changed] Removed polling of timer and recordings, these are now event triggered by a broadcast
+
 1.7.6
 
 [added] DVBViewer Recording Service interface 1.25.0.0

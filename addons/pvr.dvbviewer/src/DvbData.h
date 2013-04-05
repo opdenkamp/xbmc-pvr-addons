@@ -5,6 +5,7 @@
 #include "xmlParser.h"
 #include "client.h"
 #include "platform/threads/threads.h"
+#include "Socket.h"
 
 #define CHANNELDAT_HEADER_SIZE       (7)
 #define ENCRYPTED_FLAG               (1 << 0)
@@ -16,7 +17,7 @@
 #define MAX_RECORDING_THUMBS         (20)
 #define RS_MIN_VERSION               (1 << 24 | 25 << 16 | 0 << 8 | 0)
 #define cRS_MIN_VERSION              "1.25.0.0"
-    
+  
 struct ChannelsDat
 {
   byte TunerType;
@@ -212,9 +213,7 @@ private:
   int m_iNumRecordings;
   int m_iNumChannelGroups;
   int m_iCurrentChannel;
-  unsigned int m_iUpdateTimer;
-  bool m_bUpdateTimers;
-  bool m_bUpdateEPG;
+  unsigned int m_iUpdateEPG;
   std::deque<DvbChannel> m_channels;
   std::deque<DvbTimer> m_timers;
   std::deque<DvbRecording> m_recordings;
@@ -225,6 +224,7 @@ private:
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;
+  Socket *m_udpbroadcast;
  
 
   // functions

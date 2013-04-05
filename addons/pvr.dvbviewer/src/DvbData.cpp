@@ -1,6 +1,7 @@
 #include "DvbData.h"
 
 #include "client.h" 
+#include "platform/util/util.h"
 
 using namespace ADDON;
 using namespace PLATFORM;
@@ -108,10 +109,6 @@ Dvb::Dvb()
   m_iNumChannelGroups = 0;
   m_iCurrentChannel = -1;
   m_iClientIndexCounter = 1;
-
-  m_iUpdateTimer = 0;
-  m_bUpdateTimers = false;
-  m_bUpdateEPG = false;
 }
 
 bool Dvb::Open()
@@ -143,35 +140,48 @@ bool Dvb::Open()
 
 void  *Dvb::Process()
 {
+  std::string udprec;
+  m_iUpdateEPG = 0;
+
   XBMC->Log(LOG_DEBUG, "%s - starting", __FUNCTION__);
+
+  m_udpbroadcast = new Socket(af_inet, pf_inet, sock_dgram, udp);
+  if (m_udpbroadcast->create())
+  {
+    m_udpbroadcast->setHostname("255.255.255.255");
+    m_udpbroadcast->bind(g_iPortBroadcast);
+    m_udpbroadcast->set_non_blocking(true);
+  }
 
   while(!IsStopped())
   {
     Sleep(1000);
-    m_iUpdateTimer++;
+    m_iUpdateEPG++;
 
-    if (m_bUpdateEPG)
+    if (m_iUpdateEPG > 60)
     {
-      Sleep(8000); /* Sleep enough time to let the recording service grab the EPG data */
+      m_iUpdateEPG = 0;
       PVR->TriggerEpgUpdate(m_iCurrentChannel);
-      m_bUpdateEPG = false;
     }
-
-    if ((m_iUpdateTimer > 60) || m_bUpdateTimers)
+    else if (m_udpbroadcast->is_valid())
     {
-      m_iUpdateTimer = 0;
- 
-      // Trigger Timer and Recording updates acording to the addon settings
-      CLockObject lock(m_mutex);
-      XBMC->Log(LOG_INFO, "%s Perform Updates!", __FUNCTION__);
-
-      if (m_bUpdateTimers)
-      {
-        Sleep(500);
-        m_bUpdateTimers = false;
+      if (m_udpbroadcast->receive(udprec) > 0)
+      { 
+        if (!strcmp(udprec.c_str(), "DVBVUPDATE TMR"))
+        {
+          XBMC->Log(LOG_DEBUG, "%s - Broadcast received, update timers", __FUNCTION__);
+          TimerUpdates();
+        }
+        else if (!strcmp(udprec.c_str(), "DVBVUPDATE REC"))
+        {
+          XBMC->Log(LOG_DEBUG, "%s - Broadcast received, update recordings", __FUNCTION__);
+          PVR->TriggerRecordingUpdate();
+        }
+        else
+        {
+          XBMC->Log(LOG_DEBUG, "%s - Unknown UDP Broadcast received: %s", __FUNCTION__, udprec.c_str());
+        }
       }
-      TimerUpdates();
-      PVR->TriggerRecordingUpdate();
     }
   }
 
@@ -490,6 +500,11 @@ Dvb::~Dvb()
 {
 	StopThread();
 
+  if (m_udpbroadcast->is_valid())
+    m_udpbroadcast->close();
+
+  SAFE_DELETE(m_udpbroadcast);
+
 	m_channels.clear();  
 	m_timers.clear();
 	m_recordings.clear();
@@ -803,7 +818,6 @@ void Dvb::GenerateTimer(const PVR_TIMER &timer, bool bNewTimer)
   }
 
 	SendSimpleCommand(strTmp);
-	m_bUpdateTimers = true;
 }
 
 PVR_ERROR Dvb::AddTimer(const PVR_TIMER &timer)
@@ -829,8 +843,6 @@ PVR_ERROR Dvb::DeleteTimer(const PVR_TIMER &timer)
   if (timer.state == PVR_TIMER_STATE_RECORDING)
     PVR->TriggerRecordingUpdate();
   
-  m_bUpdateTimers = true;
-
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -851,8 +863,6 @@ void Dvb::SetRecordingTag(PVR_RECORDING& tag, DvbRecording& recording)
 
 PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 {
-  //m_recordings.clear();
-
 	CStdString url;
 	url.Format("%s%s", m_strURL.c_str(), "api/recordings.html?images=1&nofilename=1");
 
@@ -1195,7 +1205,6 @@ void Dvb::CloseLiveStream(void)
 bool Dvb::SwitchChannel(const PVR_CHANNEL &channel)
 {
   m_iCurrentChannel = channel.iUniqueId;
-  m_bUpdateEPG = true;
   return true;
 }
 

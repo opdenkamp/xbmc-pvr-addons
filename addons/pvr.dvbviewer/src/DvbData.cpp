@@ -6,93 +6,6 @@
 using namespace ADDON;
 using namespace PLATFORM;
 
-void Dvb::TimerUpdates()
-{
-	std::deque<DvbTimer> newtimer = LoadTimers();
-
-	std::deque<DvbTimer>::iterator iter;
-	for (iter = m_timers.begin(); iter != m_timers.end(); iter++)
-    (*iter).iUpdateState = DVB_UPDATE_STATE_NONE;
-
-	unsigned int iUpdated=0;
-	unsigned int iUnchanged=0; 
-
-	if (m_timers.size()>0) // No need to doo an empty outer loop.
-  {
-  	std::deque<DvbTimer>::iterator iternewtimer;
-  	for (iternewtimer = newtimer.begin(); iternewtimer != newtimer.end(); iternewtimer++)
-    {
-    	std::deque<DvbTimer>::iterator iter;
-    	for (iter = m_timers.begin(); iter != m_timers.end(); iter++) 
-      {
-      	if ((*iter).like((*iternewtimer)))
-        {
-        	if((*iter) == (*iternewtimer))
-          {
-            (*iter).iUpdateState = DVB_UPDATE_STATE_FOUND;
-            (*iternewtimer).iUpdateState = DVB_UPDATE_STATE_FOUND;
-          	iUnchanged++;
-          }
-        	else
-          {
-            (*iternewtimer).iUpdateState = DVB_UPDATE_STATE_UPDATED;
-            (*iter).iUpdateState = DVB_UPDATE_STATE_UPDATED;
-            (*iter).strTitle = (*iternewtimer).strTitle;
-            (*iter).strPlot = (*iternewtimer).strPlot;
-            (*iter).iChannelId = (*iternewtimer).iChannelId;
-            (*iter).startTime = (*iternewtimer).startTime;
-            (*iter).endTime = (*iternewtimer).endTime;
-            (*iter).bRepeating = (*iternewtimer).bRepeating;
-            (*iter).iWeekdays = (*iternewtimer).iWeekdays;
-            (*iter).iEpgID = (*iternewtimer).iEpgID;
-            (*iter).iTimerID = (*iternewtimer).iTimerID;
-            (*iter).iPriority = (*iternewtimer).iPriority;
-            (*iter).iFirstDay = (*iternewtimer).iFirstDay;
-            (*iter).state = (*iternewtimer).state;
-
-          	iUpdated++;
-          }
-        }
-      }
-    }
-  }
-
-	unsigned int iRemoved = 0;
-	iter = m_timers.begin();
-	while (iter != m_timers.end())
-  {
-  	if ((*iter).iUpdateState == DVB_UPDATE_STATE_NONE)
-    {
-    	XBMC->Log(LOG_INFO, "%s Removed timer: '%s', ClientIndex: '%d'", __FUNCTION__, (*iter).strTitle.c_str(), (*iter).iClientIndex);
-    	iter = m_timers.erase(iter);
-    	iRemoved++;
-    }
-  	else
-    	iter++;
-  }
-	unsigned int iNew=0;
-
-	for (iter = newtimer.begin(); iter != newtimer.end(); iter++) 
-  { 
-  	if((*iter).iUpdateState == DVB_UPDATE_STATE_NEW)
-    {  
-      (*iter).iClientIndex = m_iClientIndexCounter;
-    	XBMC->Log(LOG_INFO, "%s New timer: '%s', ClientIndex: '%d'", __FUNCTION__, (*iter).strTitle.c_str(), m_iClientIndexCounter);
-    	m_timers.push_back((*iter));
-    	m_iClientIndexCounter++;
-    	iNew++;
-    } 
-  }
-
-	XBMC->Log(LOG_INFO, "%s No of timers: removed [%d], untouched [%d], updated '%d', new '%d'", __FUNCTION__, iRemoved, iUnchanged, iUpdated, iNew); 
-
-	if (iRemoved != 0 || iUpdated != 0 || iNew != 0) 
-  {
-  	XBMC->Log(LOG_INFO, "%s Changes in timerlist detected, trigger an update!", __FUNCTION__);
-  	PVR->TriggerTimerUpdate();
-  }
-}
-
 Dvb::Dvb() 
 {
   m_bIsConnected = false;
@@ -130,7 +43,7 @@ bool Dvb::Open()
   //GetPreferredLanguage(); // see GetTimeZone()
 	GetTimeZone();
 
-	TimerUpdates();
+	PVR->TriggerTimerUpdate();
 
 	XBMC->Log(LOG_INFO, "%s Starting separate client update thread...", __FUNCTION__);
 	CreateThread();
@@ -170,7 +83,7 @@ void  *Dvb::Process()
         if (!strcmp(udprec.c_str(), "DVBVUPDATE TMR"))
         {
           XBMC->Log(LOG_DEBUG, "%s - Broadcast received, update timers", __FUNCTION__);
-          TimerUpdates();
+          PVR->TriggerTimerUpdate();
         }
         else if (!strcmp(udprec.c_str(), "DVBVUPDATE REC"))
         {
@@ -650,7 +563,8 @@ int Dvb::GetChannelNumber(CStdString strChannelId)
 PVR_ERROR Dvb::GetTimers(ADDON_HANDLE handle)
 {
 	XBMC->Log(LOG_INFO, "%s - timers available '%d'", __FUNCTION__, m_timers.size());
-  
+	LoadTimers();
+
 	std::deque<DvbTimer>::iterator iter;
 	for (iter = m_timers.begin(); iter != m_timers.end(); iter++)
   {
@@ -681,10 +595,12 @@ PVR_ERROR Dvb::GetTimers(ADDON_HANDLE handle)
 	return PVR_ERROR_NO_ERROR;
 }
 
-std::deque<DvbTimer> Dvb::LoadTimers()
+void Dvb::LoadTimers()
 {
 	CStdString url; 
 	url.Format("%s%s", m_strURL.c_str(), "api/timerlist.html?utf8");
+
+	m_timers.clear();
 
 	CStdString strXML;
 	strXML = GetHttpXML(url);
@@ -692,11 +608,9 @@ std::deque<DvbTimer> Dvb::LoadTimers()
 	XMLResults xe;
 	XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
 
-	std::deque<DvbTimer> timers;
-
 	if(xe.error != 0)  {
   	XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
-  	return timers;
+  	return;
   }
 
 	XMLNode xNode = xMainNode.getChildNode("Timers");
@@ -717,6 +631,8 @@ std::deque<DvbTimer> Dvb::LoadTimers()
   	DvbTimer timer;
 
   	timer.strTitle = strTmp;
+  	timer.iClientIndex = m_iClientIndexCounter;
+  	m_iClientIndexCounter++;
   	timer.iChannelId = GetChannelNumber(xTmp.getChildNode("Channel").getAttribute("ID"));
   	timer.state = PVR_TIMER_STATE_SCHEDULED;
 
@@ -759,13 +675,13 @@ std::deque<DvbTimer> Dvb::LoadTimers()
   	if (GetInt(xTmp, "ID", iTmp))
     	timer.iTimerID = iTmp;
 
-  	timers.push_back(timer);
+  	m_timers.push_back(timer);
 
   	XBMC->Log(LOG_INFO, "%s fetched Timer entry '%s', begin '%d', end '%d'", __FUNCTION__, timer.strTitle.c_str(), timer.startTime, timer.endTime);
   }
 
-	XBMC->Log(LOG_INFO, "%s fetched %u Timer Entries", __FUNCTION__, timers.size());
-	return timers; 
+	XBMC->Log(LOG_INFO, "%s fetched %u Timer Entries", __FUNCTION__, m_timers.size());
+	return; 
 }
 
 int Dvb::GetTimerID(const PVR_TIMER &timer)

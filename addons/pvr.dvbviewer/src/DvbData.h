@@ -147,40 +147,6 @@ struct DvbTimer
   PVR_TIMER_STATE state; 
   int iUpdateState;
   unsigned int iClientIndex;
-
-  DvbTimer()
-  {
-    iUpdateState = DVB_UPDATE_STATE_NEW;
-  }
-  
-  bool like(const DvbTimer &right) const
-  {
-    bool bChanged = true;
-    bChanged = bChanged && (startTime == right.startTime); 
-    bChanged = bChanged && (endTime == right.endTime); 
-    bChanged = bChanged && (iChannelId == right.iChannelId); 
-    bChanged = bChanged && (bRepeating == right.bRepeating); 
-    bChanged = bChanged && (iWeekdays == right.iWeekdays); 
-    bChanged = bChanged && (iEpgID == right.iEpgID); 
-
-    return bChanged;
-  }
-  
-  bool operator==(const DvbTimer &right) const
-  {
-    bool bChanged = true;
-    bChanged = bChanged && (startTime == right.startTime); 
-    bChanged = bChanged && (endTime == right.endTime); 
-    bChanged = bChanged && (iChannelId == right.iChannelId); 
-    bChanged = bChanged && (bRepeating == right.bRepeating); 
-    bChanged = bChanged && (iWeekdays == right.iWeekdays); 
-    bChanged = bChanged && (iEpgID == right.iEpgID); 
-    bChanged = bChanged && (state == right.state); 
-    bChanged = bChanged && (! strTitle.compare(right.strTitle));
-    bChanged = bChanged && (! strPlot.compare(right.strPlot));
-
-    return bChanged;
-  }
 };
 
 struct DvbRecording
@@ -235,8 +201,7 @@ private:
   void SendSimpleCommand(const CStdString& strCommandURL);
   DvbChannel ExtractChannelData(CStdString gName, XMLNode& xTmpChannel, int channel_pos);
   bool LoadChannels();
-  std::deque<DvbTimer> LoadTimers();
-  void TimerUpdates();
+  void LoadTimers();
   void GenerateTimer(const PVR_TIMER &timer, bool bNewtimer = true);
   int GetTimerID(const PVR_TIMER &timer);
 

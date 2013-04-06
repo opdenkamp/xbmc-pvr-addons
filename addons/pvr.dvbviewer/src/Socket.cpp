@@ -80,18 +80,18 @@ bool Socket::setHostname ( const std::string& host )
 
 bool Socket::read_ready()
 {
-	fd_set fdset; 
+  fd_set fdset; 
 
-	FD_ZERO(&fdset); 
-	FD_SET(_sd, &fdset);
+  FD_ZERO(&fdset); 
+  FD_SET(_sd, &fdset);
 
-	struct timeval tv; 
+  struct timeval tv; 
     tv.tv_sec = 1; 
 
-	int retVal = select(_sd+1, &fdset, NULL, NULL, &tv); 
-	if (retVal > 0)
-		return true;
-	return false;
+  int retVal = select(_sd+1, &fdset, NULL, NULL, &tv); 
+  if (retVal > 0)
+    return true;
+  return false;
 }
 
 
@@ -443,8 +443,8 @@ int Socket::receive ( char* data, const unsigned int buffersize, const unsigned 
 
     receivedsize += status;
 
-	if (receivedsize >= minpacketsize)
-		break;
+  if (receivedsize >= minpacketsize)
+    break;
   }
 
   return receivedsize;

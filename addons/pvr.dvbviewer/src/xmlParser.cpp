@@ -372,7 +372,7 @@ char myIsTextWideChar(const void *b, int len) { return FALSE; }
            int     xmltoi(XMLCSTR t,int     v){ if (t) return (int)wcstol(t,NULL,10); return v; }
            long    xmltol(XMLCSTR t,long    v){ if (t) return wcstol(t,NULL,10); return v; }
         #endif
-		double  xmltof(XMLCSTR t,double  v){ if (t&&(*t)) swscanf(t, L"%lf", &v); /*v=_wtof(t);*/ return v; }
+    double  xmltof(XMLCSTR t,double  v){ if (t&&(*t)) swscanf(t, L"%lf", &v); /*v=_wtof(t);*/ return v; }
     #endif
 #else
     char    xmltob(XMLCSTR t,char    v){ if (t&&(*t)) return (char)atoi(t); return v; }
@@ -602,14 +602,14 @@ XMLError XMLNode::writeToFile(XMLCSTR filename, const char *encoding, char nForm
     unsigned char h[2]={ 0xFF, 0xFE };
     if (!fwrite(h,2,1,f)) 
     {
-    	fclose(f);
-    	return eXMLErrorCannotWriteFile;
+      fclose(f);
+      return eXMLErrorCannotWriteFile;
     }
     if ((!isDeclaration())&&((d->lpszName)||(!getChildNode().isDeclaration())))
     {
         if (!fwrite(L"<?xml version=\"1.0\" encoding=\"utf-16\"?>\n",sizeof(wchar_t)*40,1,f))
         {
-        	fclose(f);
+          fclose(f);
             return eXMLErrorCannotWriteFile;
         }
     }
@@ -622,7 +622,7 @@ XMLError XMLNode::writeToFile(XMLCSTR filename, const char *encoding, char nForm
             unsigned char h[3]={0xEF,0xBB,0xBF}; 
             if (!fwrite(h,3,1,f)) 
             {
-            	fclose(f);
+              fclose(f);
                 return eXMLErrorCannotWriteFile;
             }
             encoding="utf-8";
@@ -631,7 +631,7 @@ XMLError XMLNode::writeToFile(XMLCSTR filename, const char *encoding, char nForm
         if (!encoding) encoding="ISO-8859-1";
         if (fprintf(f,"<?xml version=\"1.0\" encoding=\"%s\"?>\n",encoding)<0) 
         {
-        	fclose(f);
+          fclose(f);
             return eXMLErrorCannotWriteFile;
         }
     } else
@@ -641,7 +641,7 @@ XMLError XMLNode::writeToFile(XMLCSTR filename, const char *encoding, char nForm
             unsigned char h[3]={0xEF,0xBB,0xBF}; 
             if (!fwrite(h,3,1,f)) 
             {
-            	fclose(f);
+              fclose(f);
                 return eXMLErrorCannotWriteFile;
             }
         }
@@ -657,7 +657,7 @@ XMLError XMLNode::writeToFile(XMLCSTR filename, const char *encoding, char nForm
     }
     if (fclose(f)!=0) 
     {
-   	    free(t);
+         free(t);
         return eXMLErrorCannotWriteFile;
     }
     free(t);
@@ -742,10 +742,10 @@ XMLSTR ToXMLStringTool::toXML(XMLCSTR source)
 {
     if (!source)
     {
-		if (buflen<1) { buflen=1; buf=(XMLSTR)malloc(sizeof(XMLCHAR)); }
-		*buf=0;
-		return buf;
-	}
+    if (buflen<1) { buflen=1; buf=(XMLSTR)malloc(sizeof(XMLCHAR)); }
+    *buf=0;
+    return buf;
+  }
     int l=lengthXMLString(source)+1;
     if (l>buflen) { freeBuffer(); buflen=l; buf=(XMLSTR)malloc(l*sizeof(XMLCHAR)); }
     return toXMLUnSafe(buf,source);
@@ -964,50 +964,50 @@ static NextToken GetNextToken(XML *pXML, int *pcbToken, enum XMLTokenTypeTag *pT
         // Check for tag start and tag end
         case _CXML('<'):
 
-			{
-				// First check whether the token is in the clear tag list (meaning it
-				// does not need formatting).
-				ALLXMLClearTag *ctag=XMLClearTags;
-				do
-				{
-				   if (!xstrncmp(ctag->lpszOpen, result.pStr, ctag->openTagLen))
-				   {
-						result.pClr=ctag;
-						pXML->nIndex+=ctag->openTagLen-1;
-						*pType=eTokenClear;
-						return result;
-					}
-					ctag++;
-				} while(ctag->lpszOpen);
+      {
+        // First check whether the token is in the clear tag list (meaning it
+        // does not need formatting).
+        ALLXMLClearTag *ctag=XMLClearTags;
+        do
+        {
+           if (!xstrncmp(ctag->lpszOpen, result.pStr, ctag->openTagLen))
+           {
+            result.pClr=ctag;
+            pXML->nIndex+=ctag->openTagLen-1;
+            *pType=eTokenClear;
+            return result;
+          }
+          ctag++;
+        } while(ctag->lpszOpen);
 
-				// Peek at the next character to see if we have an end tag '</',
-				// or an xml declaration '<?'
-				chTemp = pXML->lpXML[pXML->nIndex];
+        // Peek at the next character to see if we have an end tag '</',
+        // or an xml declaration '<?'
+        chTemp = pXML->lpXML[pXML->nIndex];
 
-				// If we have a tag end...
-				if (chTemp == _CXML('/'))
-				{
-					// Set the type and ensure we point at the next character
-					getNextChar(pXML);
-					*pType = eTokenTagEnd;
-				}
+        // If we have a tag end...
+        if (chTemp == _CXML('/'))
+        {
+          // Set the type and ensure we point at the next character
+          getNextChar(pXML);
+          *pType = eTokenTagEnd;
+        }
 
-				// If we have an XML declaration tag
-				else if (chTemp == _CXML('?'))
-				{
+        // If we have an XML declaration tag
+        else if (chTemp == _CXML('?'))
+        {
 
-					// Set the type and ensure we point at the next character
-					getNextChar(pXML);
-					*pType = eTokenDeclaration;
-				}
+          // Set the type and ensure we point at the next character
+          getNextChar(pXML);
+          *pType = eTokenDeclaration;
+        }
 
-				// Otherwise we must have a start tag
-				else
-				{
-					*pType = eTokenTagStart;
-				}
-				break;
-			}
+        // Otherwise we must have a start tag
+        else
+        {
+          *pType = eTokenTagStart;
+        }
+        break;
+      }
 
         // Check to see if we have a short hand type end tag ('/>').
         case _CXML('/'):
@@ -1833,7 +1833,7 @@ XMLNode XMLNode::parseFile(XMLCSTR filename, XMLCSTR tag, XMLResults *pResults)
             XMLSTR b2=myMultiByteToWideChar((const char*)(buf+headerSz),ce);
             if (!b2)
             {
-            	// todo: unable to convert
+              // todo: unable to convert
             }
             free(buf); buf=(unsigned char*)b2; headerSz=0;
         } else

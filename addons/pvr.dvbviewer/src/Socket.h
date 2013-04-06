@@ -280,7 +280,7 @@ class Socket
 
     bool is_valid() const;
 
-	bool read_ready();
+  bool read_ready();
 
   private:
 

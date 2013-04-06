@@ -174,7 +174,7 @@ private:
   std::string m_strURL;
   std::string m_strURLStream;
   std::string m_strURLRecording;
-  std::string m_strEPGLanguage;
+  CStdString m_strEPGLanguage;
   int m_iTimezone;
   int m_iNumRecordings;
   int m_iNumChannelGroups;
@@ -210,7 +210,6 @@ private:
   static bool GetBoolean(XMLNode xRootNode, const char* strTag, bool& bBoolValue);
   static bool GetString(XMLNode xRootNode, const char* strTag, CStdString& strStringValue);
   bool GetStringLng(XMLNode xRootNode, const char* strTag, CStdString& strStringValue);
-  void GetPreferredLanguage();
   void GetTimeZone();
   bool GetDeviceInfo();
 

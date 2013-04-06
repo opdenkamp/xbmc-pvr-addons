@@ -786,9 +786,6 @@ PVR_ERROR Dvb::DeleteTimer(const PVR_TIMER &timer)
   strTmp.Format("api/timerdelete.html?id=%d", GetTimerID(timer));
   SendSimpleCommand(strTmp);
 
-  if (timer.state == PVR_TIMER_STATE_RECORDING)
-    PVR->TriggerRecordingUpdate();
-  
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -931,8 +928,6 @@ PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING &recinfo)
   CStdString strTmp;
   strTmp.Format("rec_list.html?aktion=delete_rec&recid=%s", recinfo.strRecordingId);
   SendSimpleCommand(strTmp);
-
-  PVR->TriggerRecordingUpdate();
 
   return PVR_ERROR_NO_ERROR;
 }

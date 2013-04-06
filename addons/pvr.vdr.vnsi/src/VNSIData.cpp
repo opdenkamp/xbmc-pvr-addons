@@ -818,7 +818,7 @@ void *cVNSIData::Process()
         char* str1      = vresp->extract_String();
         char* str2      = vresp->extract_String();
 
-        PVR->Recording(str1, str2, on!=0?true:false);
+//        PVR->Recording(str1, str2, on!=0?true:false);
         PVR->TriggerTimerUpdate();
 
         delete[] str1;

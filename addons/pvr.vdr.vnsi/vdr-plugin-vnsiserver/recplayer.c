@@ -152,7 +152,7 @@ bool cRecPlayer::openFile(int index)
   fileNameFromIndex(index);
   INFOLOG("openFile called for index %i string:%s", index, m_fileName);
 
-  m_file = open(m_fileName, O_RDONLY | O_NOATIME);
+  m_file = open(m_fileName, O_RDONLY);
   if (m_file == -1)
   {
     INFOLOG("file failed to open");

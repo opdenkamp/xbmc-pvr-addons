@@ -186,7 +186,6 @@ bool PVRClientMythTV::Connect()
   if (!m_con.IsConnected())
   {
     XBMC->Log(LOG_ERROR,"Failed to connect to MythTV backend on %s:%d", g_szMythHostname.c_str(), g_iMythPort);
-    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300));
     return false;
   }
 

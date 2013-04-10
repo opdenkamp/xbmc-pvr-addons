@@ -772,10 +772,8 @@ cmyth_conn_connect_ctrl(char *server, uint16_t port, uint32_t buflen,
  *
  * Description:
  *
- * Create a connection for use as a control connection within the
- * MythTV protocol.  Return a pointer to the newly created connection.
- * The connection is returned held, and may be released using
- * ref_release().
+ * Reconnect connection for use as a control connection within the
+ * MythTV protocol.
  *
  * Return Value:
  *
@@ -801,6 +799,24 @@ cmyth_conn_reconnect_ctrl(cmyth_conn_t control)
 	return ret;
 }
 
+/*
+ * cmyth_conn_connect_event()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Create a connection for use as a event connection within the
+ * MythTV protocol.  Return a pointer to the newly created connection.
+ * The connection is returned held, and may be released using
+ * ref_release().
+ *
+ * Return Value:
+ *
+ * Success: Non-NULL cmyth_conn_t (this is a pointer type)
+ *
+ * Failure: NULL cmyth_conn_t
+ */
 cmyth_conn_t
 cmyth_conn_connect_event(char *server, uint16_t port, uint32_t buflen,
 			 int32_t tcp_rcvbuf)
@@ -815,6 +831,22 @@ cmyth_conn_connect_event(char *server, uint16_t port, uint32_t buflen,
 	return ret;
 }
 
+/*
+ * cmyth_conn_reconnect_event()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Reconnect connection for use as a event connection within the
+ * MythTV protocol.
+ *
+ * Return Value:
+ *
+ * Success: 1
+ *
+ * Failure: 0
+ */
 int
 cmyth_conn_reconnect_event(cmyth_conn_t conn)
 {
@@ -826,6 +858,138 @@ cmyth_conn_reconnect_event(cmyth_conn_t conn)
 	else
 		ret = 0;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done re-connecting event channel connection ret = %d\n",
+		  __FUNCTION__, ret);
+	return ret;
+}
+
+/*
+ * cmyth_conn_connect_monitor()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Create a connection for use as a monitor connection within the
+ * MythTV protocol.  Return a pointer to the newly created connection.
+ * The connection is returned held, and may be released using
+ * ref_release().
+ *
+ * Return Value:
+ *
+ * Success: Non-NULL cmyth_conn_t (this is a pointer type)
+ *
+ * Failure: NULL cmyth_conn_t
+ */
+cmyth_conn_t
+cmyth_conn_connect_monitor(char *server, uint16_t port, uint32_t buflen,
+			int32_t tcp_rcvbuf)
+{
+	cmyth_conn_t ret;
+
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting monitor connection\n",
+		  __FUNCTION__);
+	ret = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 0, ANN_MONITOR);
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done connecting monitor connection ret = %p\n",
+		  __FUNCTION__, ret);
+	return ret;
+}
+
+/*
+ * cmyth_conn_reconnect_monitor()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Reconnect connection for use as a monitor connection within the
+ * MythTV protocol.
+ *
+ * Return Value:
+ *
+ * Success: 1
+ *
+ * Failure: 0
+ */
+int
+cmyth_conn_reconnect_monitor(cmyth_conn_t control)
+{
+	int ret;
+
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: reconnecting monitor connection\n",
+		  __FUNCTION__);
+	if (control)
+		ret = cmyth_conn_reconnect(control, 0, ANN_MONITOR);
+	else
+		ret = 0;
+	if (ret)
+		control->conn_hang = 0;
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done reconnecting monitor connection ret = %d\n",
+		  __FUNCTION__, ret);
+	return ret;
+}
+
+/*
+ * cmyth_conn_connect_playback()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Create a connection for use as a playback connection within the
+ * MythTV protocol.  Return a pointer to the newly created connection.
+ * The connection is returned held, and may be released using
+ * ref_release().
+ *
+ * Return Value:
+ *
+ * Success: Non-NULL cmyth_conn_t (this is a pointer type)
+ *
+ * Failure: NULL cmyth_conn_t
+ */
+cmyth_conn_t
+cmyth_conn_connect_playback(char *server, uint16_t port, uint32_t buflen,
+			int32_t tcp_rcvbuf)
+{
+	cmyth_conn_t ret;
+
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting playback connection\n",
+		  __FUNCTION__);
+	ret = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 0, ANN_PLAYBACK);
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done connecting playback connection ret = %p\n",
+		  __FUNCTION__, ret);
+	return ret;
+}
+
+/*
+ * cmyth_conn_reconnect_playback()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Reconnect connection for use as a playback connection within the
+ * MythTV protocol.
+ *
+ * Return Value:
+ *
+ * Success: 1
+ *
+ * Failure: 0
+ */
+int
+cmyth_conn_reconnect_playback(cmyth_conn_t control)
+{
+	int ret;
+
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: reconnecting playback connection\n",
+		  __FUNCTION__);
+	if (control)
+		ret = cmyth_conn_reconnect(control, 0, ANN_PLAYBACK);
+	else
+		ret = 0;
+	if (ret)
+		control->conn_hang = 0;
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done reconnecting playback connection ret = %d\n",
 		  __FUNCTION__, ret);
 	return ret;
 }
@@ -1219,7 +1383,7 @@ cmyth_conn_connect_recorder(cmyth_recorder_t rec, uint32_t buflen,
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting recorder control\n",
 		  __FUNCTION__);
-	conn = cmyth_conn_connect_ctrl(server, port, buflen, tcp_rcvbuf);
+	conn = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 0, ANN_PLAYBACK);
 	cmyth_dbg(CMYTH_DBG_PROTO,
 		  "%s: done connecting recorder control, conn = %p\n",
 		  __FUNCTION__, conn);

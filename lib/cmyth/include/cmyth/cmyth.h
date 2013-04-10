@@ -262,6 +262,46 @@ extern cmyth_conn_t cmyth_conn_connect_event(char *server,
 extern int cmyth_conn_reconnect_event(cmyth_conn_t conn);
 
 /**
+ * Create a monitor connection to a backend.
+ * \param server server hostname or ip address
+ * \param port port number to connect on
+ * \param buflen buffer size for the connection to use
+ * \param tcp_rcvbuf if non-zero, the TCP receive buffer size for the socket
+ * \return control handle
+ */
+extern cmyth_conn_t cmyth_conn_connect_monitor(char *server,
+					    uint16_t port,
+					    uint32_t buflen, int32_t tcp_rcvbuf);
+
+/**
+ * Reconnect monitor connection to a backend.
+ * \param control control handle
+ * \return success: 1
+ * \return failure: 0
+ */
+extern int cmyth_conn_reconnect_monitor(cmyth_conn_t control);
+
+/**
+ * Create a playback connection to a backend.
+ * \param server server hostname or ip address
+ * \param port port number to connect on
+ * \param buflen buffer size for the connection to use
+ * \param tcp_rcvbuf if non-zero, the TCP receive buffer size for the socket
+ * \return control handle
+ */
+extern cmyth_conn_t cmyth_conn_connect_playback(char *server,
+					    uint16_t port,
+					    uint32_t buflen, int32_t tcp_rcvbuf);
+
+/**
+ * Reconnect playback connection to a backend.
+ * \param control control handle
+ * \return success: 1
+ * \return failure: 0
+ */
+extern int cmyth_conn_reconnect_playback(cmyth_conn_t control);
+
+/**
  * Create a file connection to a backend for reading a recording.
  * \param prog program handle
  * \param control control handle

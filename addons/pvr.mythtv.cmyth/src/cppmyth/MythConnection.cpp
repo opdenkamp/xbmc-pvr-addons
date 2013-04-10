@@ -67,17 +67,23 @@ MythConnection::MythConnection()
   : m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>())
   , m_server("")
   , m_port(0)
+  , m_playback(false)
   , m_pEventHandler(NULL)
 {
 }
 
-MythConnection::MythConnection(const CStdString &server, unsigned short port)
+MythConnection::MythConnection(const CStdString &server, unsigned short port, bool playback)
   : m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>)
   , m_server(server)
   , m_port(port)
+  , m_playback(playback)
   , m_pEventHandler(NULL)
 {
-  cmyth_conn_t connection = cmyth_conn_connect_ctrl(const_cast<char*>(server.c_str()), port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
+  cmyth_conn_t connection;
+  if (m_playback)
+    connection = cmyth_conn_connect_playback(const_cast<char*>(server.c_str()), port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
+  else
+    connection = cmyth_conn_connect_monitor(const_cast<char*>(server.c_str()), port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
   *m_conn_t = connection;
 }
 
@@ -129,7 +135,10 @@ bool MythConnection::TryReconnect()
 {
   int retval;
   Lock();
-  retval = cmyth_conn_reconnect_ctrl(*m_conn_t);
+  if (m_playback)
+    retval = cmyth_conn_reconnect_playback(*m_conn_t);
+  else
+    retval = cmyth_conn_reconnect_monitor(*m_conn_t);
   Unlock();
   if (retval == 0)
     XBMC->Log(LOG_DEBUG, "%s - Unable to reconnect", __FUNCTION__);

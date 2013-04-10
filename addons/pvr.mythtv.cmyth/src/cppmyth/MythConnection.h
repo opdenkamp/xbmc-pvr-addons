@@ -49,7 +49,7 @@ class MythConnection
 {
 public:
   MythConnection();
-  MythConnection(const CStdString &server, unsigned short port);
+  MythConnection(const CStdString &server, unsigned short port, bool playback);
 
   MythEventHandler *CreateEventHandler();
 
@@ -101,6 +101,7 @@ private:
   boost::shared_ptr<MythPointerThreadSafe<cmyth_conn_t> > m_conn_t;
   CStdString m_server;
   unsigned short m_port;
+  bool m_playback;
 
   MythEventHandler *m_pEventHandler;
 };

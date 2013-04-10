@@ -182,7 +182,7 @@ bool PVRClientMythTV::Connect()
   cmyth_set_dbg_msgcallback(Log);
 
   // Create MythTV connection
-  m_con = MythConnection(g_szMythHostname, g_iMythPort);
+  m_con = MythConnection(g_szMythHostname, g_iMythPort, false);
   if (!m_con.IsConnected())
   {
     XBMC->Log(LOG_ERROR,"Failed to connect to MythTV backend on %s:%d", g_szMythHostname.c_str(), g_iMythPort);
@@ -1611,7 +1611,7 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)
     // Future implementations could request the stream from slaves if not available on the master.
 
     // Create dedicated control connection for file playback; smart pointer deletes it when file gets deleted.
-    MythConnection fileControlConnection(g_szMythHostname, g_iMythPort);
+    MythConnection fileControlConnection(g_szMythHostname, g_iMythPort, true);
     if (!fileControlConnection.IsNull())
       m_file = fileControlConnection.ConnectFile(it->second);
 

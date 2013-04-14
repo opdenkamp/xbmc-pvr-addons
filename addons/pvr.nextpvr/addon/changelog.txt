@@ -1,5 +1,9 @@
-v1.6.4
+v1.6.5
+- reducing logging during live tv and playback of recordings
+- now explicitly telling backend when live tv viewing ends, rather than relying on detection of the socket closing. This solves a problem some users were having with live tv buffer files left on the disk.
+- fixed broken genre
 
+v1.6.4
 - small change to improve the performance of radio channels
 
 v1.6.3

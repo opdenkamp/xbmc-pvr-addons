@@ -256,6 +256,11 @@ bool cParser::AddPESPacket(uint8_t *data, int size)
           size -= bytesNeeded;
         }
         hdr_len = PesHeaderLength(m_PesHeader);
+        if (hdr_len > PES_HEADER_LENGTH)
+        {
+          Reset();
+          return false;
+        }
       }
       bytesNeeded = hdr_len-m_PesHeaderPtr;
       if (size < bytesNeeded)
@@ -301,6 +306,11 @@ bool cParser::AddPESPacket(uint8_t *data, int size)
           return false;
         }
         hdr_len = PesHeaderLength(data);
+        if (hdr_len > PES_HEADER_LENGTH)
+        {
+          Reset();
+          return false;
+        }
       }
       if (size < hdr_len)
       {

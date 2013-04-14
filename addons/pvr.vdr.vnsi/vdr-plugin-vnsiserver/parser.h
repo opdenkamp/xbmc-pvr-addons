@@ -133,6 +133,8 @@ struct sPtsWrap
 
 class cTSStream;
 
+#define PES_HEADER_LENGTH 128
+
 class cParser
 {
 friend class cTSStream;
@@ -151,7 +153,7 @@ public:
 protected:
   virtual bool IsValidStartCode(uint8_t *buf, int size);
 
-  uint8_t     m_PesHeader[64];
+  uint8_t     m_PesHeader[PES_HEADER_LENGTH];
   int         m_PesHeaderPtr;
   int         m_PesPacketLength;
   uint8_t    *m_PesBuffer;

@@ -364,13 +364,16 @@ PVR_ERROR cPVRClientNextPVR::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
         broadcast.strPlot             = description;
         broadcast.strIconPath         = "";
 
-        char genre[128];
-        genre[0] = '\0';
-        if (pListingNode->FirstChildElement("genre") != NULL && pListingNode->FirstChildElement("genre")->FirstChild() != NULL)
+        // genre type
+        if (pListingNode->FirstChildElement("genre_type") != NULL && pListingNode->FirstChildElement("genre_type")->FirstChild() != NULL)
         {
-          broadcast.iGenreType          = EPG_GENRE_USE_STRING;
-          PVR_STRCPY(genre, pListingNode->FirstChildElement("genre")->FirstChild()->Value());
-          broadcast.strGenreDescription = genre;
+          broadcast.iGenreType  = atoi(pListingNode->FirstChildElement("genre_type")->FirstChild()->Value());
+        }
+        
+        // genre subtype
+        if (pListingNode->FirstChildElement("genre_subtype") != NULL && pListingNode->FirstChildElement("genre_subtype")->FirstChild() != NULL)
+        {
+          broadcast.iGenreSubType  = atoi(pListingNode->FirstChildElement("genre_subtype")->FirstChild()->Value());
         }
 
         broadcast.bNotify             = false;
@@ -952,22 +955,32 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
   XBMC->Log(LOG_DEBUG, "OpenLiveStream(%d:%s) (oid=%d)", channelinfo.iChannelNumber, channelinfo.strChannelName, channelinfo.iUniqueId);
   if (strstr(channelinfo.strStreamURL, "live?channel") == NULL)
   {
+    if (m_pLiveShiftSource != NULL)
+    {
+      XBMC->Log(LOG_DEBUG, "OpenLiveStream() informing NextPVR of existing channel stream closing");
+
+      char request[512];
+      sprintf(request, "/service?method=channel.stop");
+      CStdString response;
+      DoRequest(request, response);
+
+      m_pLiveShiftSource->Close();
+      delete m_pLiveShiftSource;
+      m_pLiveShiftSource = NULL;
+    }
+
     if (!m_streamingclient->create())
     {
       XBMC->Log(LOG_ERROR, "Could not connect create streaming socket");
       return false;
     }
 
+    m_incomingStreamBuffer.Clear();
+
     if (!m_streamingclient->connect(g_szHostname, g_iPort))
     {
       XBMC->Log(LOG_ERROR, "Could not connect to NextPVR backend for streaming");
       return false;
-    }
-
-    if (m_pLiveShiftSource != NULL)
-    {
-      delete m_pLiveShiftSource;
-      m_pLiveShiftSource = NULL;
     }
   
     char line[256];
@@ -1042,8 +1055,6 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
 int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-  XBMC->Log(LOG_DEBUG, "ReadLiveStream");
-
   int read = iBufferSize;
 
   if (m_supportsLiveTimeshift && m_pLiveShiftSource != NULL)
@@ -1057,7 +1068,6 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
 
     static int total = 0;
     total += rc;
-    XBMC->Log(LOG_DEBUG, "ReadLiveStream read %d bytes. (total %d)", rc, total);
 
     return rc;
   }
@@ -1080,7 +1090,6 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
         int read = m_streamingclient->receive((char *)buf, sizeof buf, 0);
         if (read > 0)
         {
-          XBMC->Log(LOG_DEBUG, "ReadLiveStream() added %d bytes to buffer. (now at %d bytes)", read, m_incomingStreamBuffer.getMaxReadSize());
           // write it to incoming ring buffer
           m_incomingStreamBuffer.WriteData((char *)buf, read);
         }
@@ -1133,12 +1142,21 @@ void cPVRClientNextPVR::CloseLiveStream(void)
 
   if (m_pLiveShiftSource)
   {
+    XBMC->Log(LOG_DEBUG, "Telling backend of live session closure");
+
+    char request[512];
+    sprintf(request, "/service?method=channel.stop");
+    CStdString response;
+    DoRequest(request, response);
+    
+    m_pLiveShiftSource->Close();
     delete m_pLiveShiftSource;
     m_pLiveShiftSource = NULL;
   }
 
   // Socket no longer required. Server will clean up when socket is closed.
-  m_streamingclient->close();
+  m_streamingclient->close(); 
+  XBMC->Log(LOG_DEBUG, "CloseLiveStream@exit");
 }
 
 
@@ -1343,7 +1361,6 @@ void cPVRClientNextPVR::CloseRecordedStream(void)
 int cPVRClientNextPVR::ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
   PLATFORM::CLockObject lock(m_mutex);
-  XBMC->Log(LOG_DEBUG, "ReadRecordedStream(%d bytes from offset %d)", iBufferSize, (int)m_currentRecordingPosition);
 
   // do we have enough data to fill this buffer? 
   unsigned char buf[188*100];
@@ -1361,7 +1378,6 @@ int cPVRClientNextPVR::ReadRecordedStream(unsigned char *pBuffer, unsigned int i
   // read from buffer to return for XBMC
   m_incomingStreamBuffer.ReadData((char *)pBuffer, iBufferSize);
   m_currentRecordingPosition += iBufferSize;
-  XBMC->Log(LOG_DEBUG, "ReadRecordedStream return %d bytes", iBufferSize);
   return iBufferSize;
 }
 

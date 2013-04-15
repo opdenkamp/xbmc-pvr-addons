@@ -1,6 +1,6 @@
 1.7.8
 
-[changed] Removed some wore polling
+[changed] Removed some more polling
 [changed] Timer update function
 
 1.7.7

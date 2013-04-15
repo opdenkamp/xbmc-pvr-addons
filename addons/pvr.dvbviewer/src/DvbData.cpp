@@ -1188,21 +1188,8 @@ bool Dvb::GetDeviceInfo()
 
 PVR_ERROR Dvb::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 {
-  CStdString strXML, url;
-  url.Format("%s%s",  m_strURL.c_str(), "status.html?aktion=status"); 
-  strXML = GetHttpXML(url);
-  unsigned int iSignalStartPos, iSignalEndPos;
-  iSignalEndPos = strXML.find("%</th>");
-
-  unsigned int iAdapterStartPos, iAdapterEndPos;
-  iAdapterStartPos = strXML.rfind("3\">", iSignalEndPos) + 3;
-  iAdapterEndPos = strXML.find("<", iAdapterStartPos);
-  strncpy(signalStatus.strAdapterName, strXML.substr(iAdapterStartPos, iAdapterEndPos - iAdapterStartPos).c_str(), sizeof(signalStatus.strAdapterName));
-
-  iSignalStartPos = strXML.find_last_of(">", iSignalEndPos) + 1;
-  if (iSignalEndPos < strXML.size())
-    signalStatus.iSignal = (int)(atoi(strXML.substr(iSignalStartPos, iSignalEndPos - iSignalStartPos).c_str()) * 655.35);
-  strncpy(signalStatus.strAdapterStatus, "OK", sizeof(signalStatus.strAdapterStatus));
+  snprintf(signalStatus.strAdapterName, sizeof(signalStatus.strAdapterName), "DVBViewer Recording Service");
+  snprintf(signalStatus.strAdapterStatus, sizeof(signalStatus.strAdapterStatus), "OK");
 
   return PVR_ERROR_NO_ERROR;
 }

@@ -347,6 +347,10 @@ PVR_ERROR cPVRClientNextPVR::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
         {
           PVR_STRCPY(description, pListingNode->FirstChildElement("description")->FirstChild()->Value());
         }
+        else
+        {
+          description[0] = '\0';
+        }
 
         char start[32];
         strncpy(start, pListingNode->FirstChildElement("start")->FirstChild()->Value(), sizeof start);

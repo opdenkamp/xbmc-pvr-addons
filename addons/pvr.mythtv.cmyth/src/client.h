@@ -38,7 +38,7 @@ extern "C" {
 
 #define TCP_RCV_BUF_CONTROL_SIZE           128000 // Inherited from MythTV's MythSocket class
 #define RCV_BUF_CONTROL_SIZE               32000  // Buffer size to parse backend response from control connection
-#define TCP_RCV_BUF_DATA_SIZE              128000 // Inherited from MythTV's MythSocket class
+#define TCP_RCV_BUF_DATA_SIZE              65536  // TCP buffer for video stream (best performance)
 #define RCV_BUF_DATA_SIZE                  64     // Buffer size to parse backend response from data control connection
 #define RCV_BUF_IMAGE_SIZE                 32000  // Buffer size to download artworks
 

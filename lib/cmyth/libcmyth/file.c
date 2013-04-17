@@ -51,7 +51,7 @@ cmyth_file_destroy(cmyth_file_t file)
 		return;
 	}
 	if (file->file_control) {
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&file->file_control->conn_mutex);
 
 		/*
 		 * Try to shut down the file transfer.  Can't do much
@@ -74,7 +74,7 @@ cmyth_file_destroy(cmyth_file_t file)
 			goto fail;
 		}
 	    fail:
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&file->file_control->conn_mutex);
 		ref_release(file->file_control);
 	}
 	if (file->closed_callback) {
@@ -409,7 +409,7 @@ cmyth_file_request_block(cmyth_file_t file, int32_t len)
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&file->file_control->conn_mutex);
 
 	if(len > file->file_data->conn_tcp_rcvbuf)
 		len = file->file_data->conn_tcp_rcvbuf;
@@ -445,7 +445,7 @@ cmyth_file_request_block(cmyth_file_t file, int32_t len)
 	ret = c;
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&file->file_control->conn_mutex);
 
 	return ret;
 }
@@ -474,7 +474,7 @@ cmyth_file_request_block(cmyth_file_t file, int32_t len)
 int64_t
 cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 {
-	char msg[128];
+	char msg[4096];
 	int err;
 	int count;
 	int64_t c;
@@ -484,13 +484,26 @@ cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 	if (file == NULL)
 		return -EINVAL;
 
-	if ((offset == 0) && (whence == WHENCE_CUR))
-		return file->file_pos;
+	if (whence == WHENCE_CUR) {
+		if (offset == 0)
+			return file->file_pos;
+		ret = file->file_pos + offset;
+		if (ret < 0 || ret > file->file_length)
+			goto inv;
+	}
+	if (whence == WHENCE_SET) {
+		if (offset == file->file_pos)
+			return file->file_pos;
+		if (offset < 0 || offset > file->file_length)
+			goto inv;
+	}
+	if (whence == WHENCE_END) {
+		ret = file->file_length - offset;
+		if (ret < 0 || ret > file->file_length)
+			goto inv;
+	}
 
-	if ((offset == file->file_pos) && (whence == WHENCE_SET))
-		return file->file_pos;
-
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&file->file_control->conn_mutex);
 
 	ret = 0;
 	while(file->file_pos < file->file_req) {
@@ -558,9 +571,14 @@ cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 	ret = file->file_pos;
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&file->file_control->conn_mutex);
 
 	return ret;
+
+inv:
+	cmyth_dbg(CMYTH_DBG_ERROR, "%s: seek out of range: file: %"PRIu32" pos: %"PRId64" length: %"PRId64" whence: %"PRId8" offset: %"PRId64,
+		__FUNCTION__, file->file_id, file->file_pos, file->file_length, whence, offset);
+	return -1;
 }
 
 /*
@@ -600,7 +618,7 @@ int32_t cmyth_file_read(cmyth_file_t file, char *buf, int32_t len)
 	if(len > file->file_data->conn_tcp_rcvbuf)
 		len = file->file_data->conn_tcp_rcvbuf;
 
-	pthread_mutex_lock (&mutex);
+	pthread_mutex_lock (&file->file_control->conn_mutex);
 
 	/* make sure we have outstanding requests that fill the buffer that was called with */
 	/* this way we should be able to saturate the network connection better */
@@ -745,7 +763,7 @@ int32_t cmyth_file_read(cmyth_file_t file, char *buf, int32_t len)
 
 	ret = (int32_t)(cur - buf);
 out:
-	pthread_mutex_unlock (&mutex);
+	pthread_mutex_unlock (&file->file_control->conn_mutex);
 	return ret;
 }
 
@@ -780,7 +798,7 @@ int cmyth_file_is_open(cmyth_file_t file)
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock (&mutex);
+	pthread_mutex_lock(&file->file_control->conn_mutex);
 
 	snprintf (msg, sizeof (msg),
 	    "QUERY_FILETRANSFER %"PRIu32"[]:[]IS_OPEN",
@@ -812,7 +830,7 @@ int cmyth_file_is_open(cmyth_file_t file)
 	if (ret == 0)
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: file transfer socket is closed\n", __FUNCTION__);
 out:
-	pthread_mutex_unlock (&mutex);
+	pthread_mutex_unlock(&file->file_control->conn_mutex);
 	return ret;
 }
 
@@ -845,7 +863,7 @@ cmyth_file_set_timeout(cmyth_file_t file, int32_t fast)
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock (&mutex);
+	pthread_mutex_lock(&file->file_control->conn_mutex);
 
 	snprintf(msg, sizeof(msg),
 		 "QUERY_FILETRANSFER %"PRIu32"[]:[]SET_TIMEOUT[]:[]%"PRId32,
@@ -866,7 +884,7 @@ cmyth_file_set_timeout(cmyth_file_t file, int32_t fast)
 	ret = 0;
 
 out:
-	pthread_mutex_unlock (&mutex);
+	pthread_mutex_unlock(&file->file_control->conn_mutex);
 	return ret;
 }
 

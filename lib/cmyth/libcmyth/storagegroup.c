@@ -175,7 +175,7 @@ cmyth_storagegroup_get_filelist(cmyth_conn_t control,char *storagegroup, char *h
 		return 0;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&control->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "QUERY_SG_GETFILELIST[]:[]%s[]:[]%s[]:[][]:[]1", hostname, storagegroup);
 
@@ -246,7 +246,7 @@ cmyth_storagegroup_get_filelist(cmyth_conn_t control,char *storagegroup, char *h
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: results= %d\n", __FUNCTION__, res);
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&control->conn_mutex);
 	return ret;
 }
 
@@ -284,7 +284,7 @@ cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *storagegroup, char *
 		return 0;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&control->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "QUERY_SG_FILEQUERY[]:[]%s[]:[]%s[]:[]%s", hostname, storagegroup, filename);
 
@@ -343,7 +343,7 @@ cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *storagegroup, char *
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: filename: %s\n", __FUNCTION__, ret->filename);
 
 out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&control->conn_mutex);
 	return ret;
 }
 

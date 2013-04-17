@@ -1,3 +1,10 @@
+v1.6.10
+- Fixed crash when setting up Live TV (in rare cases)
+- Fixed issue with not updated recording list (Daylight Saving Time)
+- Fixed issue with empty recording list (caused by '[' character)
+- Fixed playback of recordings made by a slave backend
+- Removed 'Failed to connect to MythTV Backend' notification
+
 v1.6.9
 - Added Live TV vs. recording conflict handling
 - Fixed recovering from backend connection loss on Windows

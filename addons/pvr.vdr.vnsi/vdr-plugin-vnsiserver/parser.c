@@ -186,11 +186,14 @@ int cParser::ParsePacketHeader(uint8_t *data)
   int  bytes = TS_SIZE - TsPayloadOffset(data);
 
   if(bytes < 0 || bytes > TS_SIZE)
+  {
+    m_Error = ERROR_PES_GENERAL;
     return -1;
+  }
 
   if (TsError(data))
   {
-    ERRORLOG("transport error");
+    m_Error = ERROR_PES_GENERAL;
     return -1;
   }
 
@@ -490,7 +493,9 @@ int cTSStream::ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, bool iframe)
     return false;
 
   int payloadSize = m_pesParser->ParsePacketHeader(data);
-  if (payloadSize <= 0)
+  if (payloadSize == 0)
+    return 1;
+  else if (payloadSize < 0)
   {
     return -m_pesParser->GetError();
   }

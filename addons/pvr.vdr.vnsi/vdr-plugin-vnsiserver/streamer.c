@@ -204,7 +204,6 @@ void cLiveStreamer::Action(void)
       usleep(10000);
       if(m_last_tick.Elapsed() >= (uint64_t)(m_scanTimeout*1000))
       {
-        INFOLOG("No Signal");
         sendStreamStatus();
         m_last_tick.Set(0);
         m_SignalLost = true;
@@ -564,7 +563,28 @@ void cLiveStreamer::sendStreamStatus()
     delete resp;
     return;
   }
-  resp->add_String("No Signal");
+  uint16_t error = m_Demuxer.GetError();
+  if (error & ERROR_PES_SCRAMBLE)
+  {
+    INFOLOG("Channel: scrambled %d", error);
+    resp->add_String(cString::sprintf("Channel: scrambled (%d)", error));
+  }
+  else if (error & ERROR_PES_STARTCODE)
+  {
+    INFOLOG("Channel: startcode %d", error);
+    resp->add_String(cString::sprintf("Channel: encrypted? (%d)", error));
+  }
+  else if (error & ERROR_DEMUX_NODATA)
+  {
+    INFOLOG("Channel: no data %d", error);
+    resp->add_String(cString::sprintf("Channel: no data"));
+  }
+  else
+  {
+    INFOLOG("Channel: unknown error %d", error);
+    resp->add_String(cString::sprintf("Channel: unknown error (%d)", error));
+  }
+
   resp->finaliseStream();
   m_Socket->write(resp->getPtr(), resp->getLen());
   delete resp;

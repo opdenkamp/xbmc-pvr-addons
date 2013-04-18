@@ -61,6 +61,7 @@ public:
   uint32_t GetSerial() { return m_MuxPacketSerial; }
   void SetSerial(uint32_t serial) { m_MuxPacketSerial = serial; }
   void BufferStatus(bool &timeshift, int &start, int &current, int &end);
+  uint16_t GetError();
 
 protected:
   bool EnsureParsers();
@@ -82,4 +83,5 @@ protected:
   cMutex m_Mutex;
   uint32_t m_MuxPacketSerial;
   sPtsWrap m_PtsWrap;
+  uint16_t m_Error;
 };

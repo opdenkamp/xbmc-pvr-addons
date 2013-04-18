@@ -69,7 +69,7 @@ void cParser::Reset()
   m_FoundFrame = false;
   m_PesPacketLength = 0;
   m_PesHeaderPtr = 0;
-  m_IsError = true;
+  m_Error = ERROR_PES_GENERAL;
 }
 /*
  * Extract DTS and PTS and update current values in stream
@@ -172,12 +172,15 @@ int cParser::ParsePESHeader(uint8_t *buf, size_t len)
 int cParser::ParsePacketHeader(uint8_t *data)
 {
   if (TsIsScrambled(data))
+  {
+    m_Error = ERROR_PES_SCRAMBLE;
     return -1;
+  }
 
   if (TsPayloadStart(data))
   {
     m_IsPusi = true;
-    m_IsError = false;
+    m_Error = 0;
   }
 
   int  bytes = TS_SIZE - TsPayloadOffset(data);
@@ -198,7 +201,7 @@ int cParser::ParsePacketHeader(uint8_t *data)
   }
 
   /* drop broken PES packets */
-  if (m_IsError)
+  if (m_Error)
   {
     return -1;
   }
@@ -231,17 +234,13 @@ bool cParser::AddPESPacket(uint8_t *data, int size)
       if (!IsValidStartCode(m_PesHeader, hdr_len))
       {
         Reset();
+        m_Error |= ERROR_PES_STARTCODE;
         return false;
       }
       if (PesIsVideoPacket(m_PesHeader) || PesIsAudioPacket(m_PesHeader))
       {
         hdr_len = 9;
         bytesNeeded = hdr_len-m_PesHeaderPtr;
-        if ((m_PesHeader[6] & 0x30))
-        {
-          Reset();
-          return false;
-        }
         if (size < bytesNeeded)
         {
           memcpy(m_PesHeader+m_PesHeaderPtr, data, size);
@@ -254,6 +253,12 @@ bool cParser::AddPESPacket(uint8_t *data, int size)
           m_PesHeaderPtr += bytesNeeded;
           data += bytesNeeded;
           size -= bytesNeeded;
+        }
+        if ((m_PesHeader[6] & 0x30))
+        {
+          Reset();
+          m_Error |= ERROR_PES_SCRAMBLE;
+          return false;
         }
         hdr_len = PesHeaderLength(m_PesHeader);
         if (hdr_len > PES_HEADER_LENGTH)
@@ -288,21 +293,23 @@ bool cParser::AddPESPacket(uint8_t *data, int size)
     else if (!IsValidStartCode(data, size))
     {
       Reset();
+      m_Error |= ERROR_PES_STARTCODE;
       return false;
     }
     else
     {
       if (PesIsVideoPacket(data) || PesIsAudioPacket(data))
       {
-        if ((data[6] & 0x30))
-        {
-          Reset();
-          return false;
-        }
         if (size < 9)
         {
           memcpy(m_PesHeader+m_PesHeaderPtr, data, size);
           m_PesHeaderPtr += size;
+          return false;
+        }
+        if ((data[6] & 0x30))
+        {
+          Reset();
+          m_Error |= ERROR_PES_STARTCODE;
           return false;
         }
         hdr_len = PesHeaderLength(data);
@@ -474,7 +481,7 @@ cTSStream::~cTSStream()
   }
 }
 
-bool cTSStream::ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, int64_t *dts, bool iframe)
+int cTSStream::ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, bool iframe)
 {
   if (!data)
     return false;
@@ -484,20 +491,18 @@ bool cTSStream::ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, int64_t *dts,
 
   int payloadSize = m_pesParser->ParsePacketHeader(data);
   if (payloadSize <= 0)
-    return false;
+  {
+    return -m_pesParser->GetError();
+  }
 
   if (!m_pesParser->AddPESPacket(data+TS_SIZE-payloadSize, payloadSize))
-    return false;
-  if (dts)
   {
-    if (m_pesParser->m_curDTS == DVD_NOPTS_VALUE)
-      return false;
-    *dts = m_pesParser->m_curDTS;
-    return true;
+    return -m_pesParser->GetError();
   }
+
   m_pesParser->Parse(pkt);
   if (iframe && !m_pesParser->IsVideo())
-    return false;
+    return 1;
 
   if (pkt->data)
   {
@@ -511,10 +516,10 @@ bool cTSStream::ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, int64_t *dts,
     pkt->dts      = Rescale(dts, DVD_TIME_BASE, 90000);
     pkt->pts      = Rescale(pts, DVD_TIME_BASE, 90000);
     pkt->duration = Rescale(pkt->duration, DVD_TIME_BASE, 90000);
-    return true;
+    return 0;
   }
 
-  return false;
+  return 1;
 }
 
 bool cTSStream::ReadTime(uint8_t *data, int64_t *dts)

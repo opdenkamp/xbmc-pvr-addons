@@ -56,6 +56,7 @@ void cVNSIDemuxer::Open(const cChannel &channel, cVideoBuffer *videoBuffer)
   m_PtsWrap.m_NoOfWraps = 0;
   m_PtsWrap.m_ConfirmCount = 0;
   m_MuxPacketSerial = 0;
+  m_Error = ERROR_DEMUX_NODATA;
 }
 
 void cVNSIDemuxer::Close()
@@ -94,6 +95,8 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
   else if (len != TS_SIZE)
     return -1;
 
+  m_Error &= ~ERROR_DEMUX_NODATA;
+
   int ts_pid = TsPid(buf);
 
   // parse PAT/PMT
@@ -128,7 +131,8 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
   }
   else if (stream = FindStream(ts_pid))
   {
-    if (stream->ProcessTSPacket(buf, packet, NULL, m_WaitIFrame))
+    int error = stream->ProcessTSPacket(buf, packet, m_WaitIFrame);
+    if (error == 0)
     {
       if (m_WaitIFrame)
       {
@@ -141,6 +145,10 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
 
       packet->serial = m_MuxPacketSerial;
       return 1;
+    }
+    else if (error < 0)
+    {
+      m_Error |= abs(error);
     }
   }
 
@@ -604,3 +612,11 @@ bool cVNSIDemuxer::GetTimeAtPos(size_t *pos, int64_t *time)
   }
   return false;
 }
+
+uint16_t cVNSIDemuxer::GetError()
+{
+  uint16_t ret = m_Error;
+  m_Error = ERROR_DEMUX_NODATA;
+  return ret;
+}
+

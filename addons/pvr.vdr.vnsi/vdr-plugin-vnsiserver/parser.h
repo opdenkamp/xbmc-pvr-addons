@@ -149,6 +149,7 @@ public:
   int ParsePESHeader(uint8_t *buf, size_t len);
   virtual void Reset();
   bool IsVideo() {return m_IsVideo; }
+  uint16_t GetError() { return m_Error; }
 
 protected:
   virtual bool IsValidStartCode(uint8_t *buf, int size);
@@ -173,7 +174,7 @@ protected:
   int64_t     m_prevDTS;
 
   bool        m_IsPusi;
-  bool        m_IsError;
+  uint16_t    m_Error;
 
   cTSStream  *m_Stream;
   bool        m_IsVideo;
@@ -215,7 +216,7 @@ public:
   cTSStream(eStreamType type, int pid, sPtsWrap *ptsWrap);
   virtual ~cTSStream();
 
-  bool ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, int64_t *dts, bool iframe);
+  int ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, bool iframe);
   bool ReadTime(uint8_t *data, int64_t *dts);
   void ResetParser();
 

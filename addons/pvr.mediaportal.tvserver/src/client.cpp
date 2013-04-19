@@ -38,8 +38,8 @@ bool             g_bRadioEnabled        = DEFAULT_RADIO;                 ///< Se
 bool             g_bHandleMessages      = DEFAULT_HANDLE_MSG;            ///< Send VDR's OSD status messages to XBMC OSD
 bool             g_bResolveRTSPHostname = DEFAULT_RESOLVE_RTSP_HOSTNAME; ///< Resolve the server hostname in the rtsp URLs to an IP at the TV Server side (default: false)
 bool             g_bReadGenre           = DEFAULT_READ_GENRE;            ///< Read the genre strings from MediaPortal and translate them into XBMC DVB genre id's (only English)
-std::string      g_szTVGroup            = DEFAULT_TVGROUP;               ///< Import only TV channels from this TV Server TV group
-std::string      g_szRadioGroup         = DEFAULT_RADIOGROUP;            ///< Import only radio channels from this TV Server radio group
+CStdString       g_szTVGroup            = DEFAULT_TVGROUP;               ///< Import only TV channels from this TV Server TV group
+CStdString       g_szRadioGroup         = DEFAULT_RADIOGROUP;            ///< Import only radio channels from this TV Server radio group
 std::string      g_szSMBusername        = DEFAULT_SMBUSERNAME;           ///< Windows user account used to access share
 std::string      g_szSMBpassword        = DEFAULT_SMBPASSWORD;           ///< Windows user password used to access share
                                                                          ///< Leave empty to use current user when running on Windows
@@ -212,14 +212,16 @@ void ADDON_ReadSettings(void)
     XBMC->Log(LOG_ERROR, "Couldn't get 'tvgroup' setting, falling back to '' as default");
   } else {
     g_szTVGroup = buffer;
+    g_szTVGroup.Replace(";","|");
   }
 
   if (!XBMC->GetSetting("radiogroup", &buffer))
   {
     /* If setting is unknown fallback to defaults */
-    XBMC->Log(LOG_ERROR, "Couldn't get 'tvgroup' setting, falling back to '' as default");
+    XBMC->Log(LOG_ERROR, "Couldn't get 'radiogroup' setting, falling back to '' as default");
   } else {
     g_szRadioGroup = buffer;
+    g_szRadioGroup.Replace(";","|");
   }
 
   if (!XBMC->GetSetting("streamingmethod", &g_eStreamingMethod))

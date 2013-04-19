@@ -47,8 +47,8 @@ int g_iTVServerXBMCBuild = 0;
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.0.90"
 #define TVSERVERXBMC_MIN_VERSION_BUILD          90
-#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.121"
-#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  121
+#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.122 or 1.3.0.122"
+#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  122
 
 /************************************************************/
 /** Class interface */
@@ -542,9 +542,11 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
   vector<string>  lines;
   CStdString      command;
+  char*           baseCommand;
   int             code;
   PVR_CHANNEL     tag;
   CStdString      stream;
+  CStdString      groups;
 
   if (!IsUp())
     return PVR_ERROR_SERVER_ERROR;
@@ -557,30 +559,37 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
       return PVR_ERROR_NO_ERROR;
     }
 
+    baseCommand = "ListRadioChannels";
     if (g_szRadioGroup.empty())
     {
       XBMC->Log(LOG_DEBUG, "GetChannels(radio) all channels");
-      command = "ListRadioChannels\n";
     }
     else
     {
-      XBMC->Log(LOG_DEBUG, "GetChannels(radio) for radio group: '%s'", g_szRadioGroup.c_str());
-      command.Format("ListRadioChannels:%s\n", uri::encode(uri::PATH_TRAITS, g_szRadioGroup).c_str());
+      XBMC->Log(LOG_DEBUG, "GetChannels(radio) for radio group(s): '%s'", g_szRadioGroup.c_str());
+      groups = uri::encode(uri::PATH_TRAITS, g_szRadioGroup);
+      groups.Replace("%7C","|");
     }
   }
   else
   {
+    baseCommand = "ListTVChannels";
     if (g_szTVGroup.empty())
     {
       XBMC->Log(LOG_DEBUG, "GetChannels(tv) all channels");
-      command = "ListTVChannels\n";
     }
     else
     {
-      XBMC->Log(LOG_DEBUG, "GetChannels(tv) for TV group: '%s'", g_szTVGroup.c_str());
-      command.Format("ListTVChannels:%s\n", uri::encode(uri::PATH_TRAITS, g_szTVGroup).c_str());
+      XBMC->Log(LOG_DEBUG, "GetChannels(tv) for TV group(s): '%s'", g_szTVGroup.c_str());
+      groups = uri::encode(uri::PATH_TRAITS, g_szTVGroup);
+      groups.Replace("%7C","|");
     }
   }
+
+  if (groups.empty())
+    command.Format("%s\n", baseCommand);
+  else
+    command.Format("%s:%s\n", baseCommand, groups.c_str());
 
   if( !SendCommand2(command, code, lines) )
     return PVR_ERROR_SERVER_ERROR;
@@ -726,6 +735,7 @@ int cPVRClientMediaPortal::GetChannelGroupsAmount(void)
 PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
   vector<string>  lines;
+  CStdString filters;
   int code;
   PVR_CHANNEL_GROUP tag;
 
@@ -734,31 +744,21 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRad
 
   if(bRadio)
   {
-    if (g_bRadioEnabled)
-    {
-      XBMC->Log(LOG_DEBUG, "GetChannelGroups for radio");
-      if (!SendCommand2("ListRadioGroups\n", code, lines))
-        return PVR_ERROR_SERVER_ERROR;
-    }
-    else
+    if (!g_bRadioEnabled)
     {
       XBMC->Log(LOG_DEBUG, "Skipping GetChannelGroups for radio. Radio support is disabled.");
       return PVR_ERROR_NO_ERROR;
     }
 
-    if (!g_szRadioGroup.empty())
-    {
-      XBMC->Log(LOG_DEBUG, "Skipping GetChannelGroups for radio due to setting: Import only Radio channels from group '%s'.", g_szRadioGroup.c_str());
-      return PVR_ERROR_NO_ERROR;
-    }
+    filters = g_szRadioGroup;
+
+    XBMC->Log(LOG_DEBUG, "GetChannelGroups for radio");
+    if (!SendCommand2("ListRadioGroups\n", code, lines))
+      return PVR_ERROR_SERVER_ERROR;
   }
   else
   {
-    if (!g_szTVGroup.empty())
-    {
-      XBMC->Log(LOG_DEBUG, "Skipping GetChannelGroups for TV due to setting: Import only TV channels from group '%s'.", g_szTVGroup.c_str());
-      return PVR_ERROR_NO_ERROR;
-    }
+    filters = g_szTVGroup;
 
     XBMC->Log(LOG_DEBUG, "GetChannelGroups for TV");
     if (!SendCommand2("ListGroups\n", code, lines))
@@ -785,6 +785,15 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroups(ADDON_HANDLE handle, bool bRad
     }
     else
     {
+      if (!filters.empty())
+      {
+        if (filters.Find(data.c_str()) == string::npos)
+        {
+          // Skip this backend group. It is not in our filter list
+          continue;
+        }
+      }
+
       tag.bIsRadio = bRadio;
       PVR_STRCPY(tag.strGroupName, data.c_str());
       XBMC->Log(LOG_DEBUG, "Adding %s group: %s", ((bRadio) ? "radio" : "tv"), tag.strGroupName);

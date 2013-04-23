@@ -1,8 +1,8 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon version: 1.7.6
+# Addon Provider: jdembski, A600, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "DVBViewer Recording Service IP Address"
-msgstr "DVBViewer Aufnahme Service IP Addresse"
+msgstr "DVBViewer Recording Service IP Addresse"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
@@ -42,17 +42,21 @@ msgid "Password"
 msgstr "Passwort"
 
 msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Lade Kanäle aus favourites.xml an Stelle von channels.dat"
+msgid "Use favorites instead of channel list"
+msgstr "Benutze Favoriten anstatt Kanalliste"
 
 msgctxt "#30007"
-msgid "Select the favourites.xml file"
-msgstr "Wähle die favourites.xml Datei"
+msgid "Use RTSP for Live TV"
+msgstr "Benutze RTSP für Live TV"
+
+msgctxt "#30008"
+msgid "Select local favourites.xml file"
+msgstr "Wähle lokale favourites.xml Datei"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
 msgstr "Kann keine Verbindung mit dem Aufnahme Service herstellen."
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "Aufnhame Service Version 1.%d oder höher erforderlich"
+msgid "Recording Service version %s or higher required"
+msgstr "Recording Service Version %s oder höher erforderlich"

@@ -58,27 +58,27 @@
  *
  * \subsection debugwin Debugging under WINDOWS
  *
- * 	Inside Visual C++, the "debug versions" of the memory allocation functions are
- * 	very slow: Do not forget to compile in "release mode" to get maximum speed.
- * 	When I had to debug a software that was using the XMLParser Library, it was usually
- * 	a nightmare because the library was sooOOOoooo slow in debug mode (because of the
+ *   Inside Visual C++, the "debug versions" of the memory allocation functions are
+ *   very slow: Do not forget to compile in "release mode" to get maximum speed.
+ *   When I had to debug a software that was using the XMLParser Library, it was usually
+ *   a nightmare because the library was sooOOOoooo slow in debug mode (because of the
  *  slow memory allocations in Debug mode). To solve this
- * 	problem, during all the debugging session, I am now using a very fast DLL version of the
- * 	XMLParser Library (the DLL is compiled in release mode). Using the DLL version of
- * 	the XMLParser Library allows me to have lightening XML parsing speed even in debug!
- * 	Other than that, the DLL version is useless: In the release version of my tool,
- * 	I always use the normal, ".cpp"-based, XMLParser Library (I simply include the
+ *   problem, during all the debugging session, I am now using a very fast DLL version of the
+ *   XMLParser Library (the DLL is compiled in release mode). Using the DLL version of
+ *   the XMLParser Library allows me to have lightening XML parsing speed even in debug!
+ *   Other than that, the DLL version is useless: In the release version of my tool,
+ *   I always use the normal, ".cpp"-based, XMLParser Library (I simply include the
  * <a href="../../xmlParser.cpp">xmlParser.cpp</a> and
  * <a href="../../xmlParser.h">xmlParser.h</a> files into the project).
  *
- * 	The file <a href="../../XMLNodeAutoexp.txt">XMLNodeAutoexp.txt</a> contains some
+ *   The file <a href="../../XMLNodeAutoexp.txt">XMLNodeAutoexp.txt</a> contains some
  * "tweaks" that improve substancially the display of the content of the XMLNode objects
  * inside the Visual Studio Debugger. Believe me, once you have seen inside the debugger
  * the "smooth" display of the XMLNode objects, you cannot live without it anymore!
  *
  * \subsection debuglinux Debugging under LINUX/UNIX
  *
- * 	The speed of the debug version of the XMLParser library is tolerable so no extra
+ *   The speed of the debug version of the XMLParser library is tolerable so no extra
  * work.has been done.
  *
  ****************************************************************************/

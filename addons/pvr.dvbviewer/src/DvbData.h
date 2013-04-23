@@ -1,9 +1,11 @@
 #pragma once 
 
+#include <deque>
 #include "platform/util/StdString.h"
 #include "xmlParser.h"
 #include "client.h"
 #include "platform/threads/threads.h"
+#include "Socket.h"
 
 #define CHANNELDAT_HEADER_SIZE       (7)
 #define ENCRYPTED_FLAG               (1 << 0)
@@ -13,8 +15,9 @@
 #define DELPHI_DATE                  (25569)
 #define RECORDING_THUMB_POS          (143)
 #define MAX_RECORDING_THUMBS         (20)
-#define RS_MIN_VERSION               (21)
-    
+#define RS_MIN_VERSION               (1 << 24 | 25 << 16 | 0 << 8 | 0)
+#define cRS_MIN_VERSION              "1.25.0.0"
+  
 struct ChannelsDat
 {
   byte TunerType;
@@ -87,7 +90,7 @@ struct DvbChannel
   bool bRadio;
   int iUniqueId;
   int iChannelNumber;
-  int iChannelId;
+  uint64_t iChannelId;
   uint64_t llEpgId;
   byte Encrypted;
   std::string strGroupName;
@@ -144,44 +147,11 @@ struct DvbTimer
   PVR_TIMER_STATE state; 
   int iUpdateState;
   unsigned int iClientIndex;
-
-  DvbTimer()
-  {
-    iUpdateState = DVB_UPDATE_STATE_NEW;
-  }
-  
-  bool like(const DvbTimer &right) const
-  {
-    bool bChanged = true;
-    bChanged = bChanged && (startTime == right.startTime); 
-    bChanged = bChanged && (endTime == right.endTime); 
-    bChanged = bChanged && (iChannelId == right.iChannelId); 
-    bChanged = bChanged && (bRepeating == right.bRepeating); 
-    bChanged = bChanged && (iWeekdays == right.iWeekdays); 
-    bChanged = bChanged && (iEpgID == right.iEpgID); 
-
-    return bChanged;
-  }
-  
-  bool operator==(const DvbTimer &right) const
-  {
-    bool bChanged = true;
-    bChanged = bChanged && (startTime == right.startTime); 
-    bChanged = bChanged && (endTime == right.endTime); 
-    bChanged = bChanged && (iChannelId == right.iChannelId); 
-    bChanged = bChanged && (bRepeating == right.bRepeating); 
-    bChanged = bChanged && (iWeekdays == right.iWeekdays); 
-    bChanged = bChanged && (iEpgID == right.iEpgID); 
-    bChanged = bChanged && (state == right.state); 
-    bChanged = bChanged && (! strTitle.compare(right.strTitle));
-    bChanged = bChanged && (! strPlot.compare(right.strPlot));
-
-    return bChanged;
-  }
 };
 
 struct DvbRecording
 {
+  bool bStillAvailable;
   std::string strRecordingId;
   time_t startTime;
   int iDuration;
@@ -204,24 +174,23 @@ private:
   std::string m_strURL;
   std::string m_strURLStream;
   std::string m_strURLRecording;
-  std::string m_strEPGLanguage;
+  CStdString m_strEPGLanguage;
   int m_iTimezone;
   int m_iNumRecordings;
   int m_iNumChannelGroups;
   int m_iCurrentChannel;
-  unsigned int m_iUpdateTimer;
-  bool m_bUpdateTimers;
-  bool m_bUpdateEPG;
-  std::vector<DvbChannel> m_channels;
-  std::vector<DvbTimer> m_timers;
-  std::vector<DvbRecording> m_recordings;
-  std::vector<DvbChannelGroup> m_groups;
-  std::vector<std::string> m_locations;
+  unsigned int m_iUpdateEPG;
+  std::deque<DvbChannel> m_channels;
+  std::deque<DvbTimer> m_timers;
+  std::deque<DvbRecording> m_recordings;
+  std::deque<DvbChannelGroup> m_groups;
+  std::deque<std::string> m_locations;
 
   unsigned int m_iClientIndexCounter;
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;
+  Socket *m_udpbroadcast;
  
 
   // functions
@@ -230,9 +199,9 @@ private:
   int GetChannelNumber(CStdString strChannelId);
   CStdString URLEncodeInline(const CStdString& strData);
   void SendSimpleCommand(const CStdString& strCommandURL);
+  DvbChannel ExtractChannelData(CStdString gName, XMLNode& xTmpChannel, int channel_pos);
   bool LoadChannels();
-  std::vector<DvbTimer> LoadTimers();
-  void TimerUpdates();
+  void LoadTimers();
   void GenerateTimer(const PVR_TIMER &timer, bool bNewtimer = true);
   int GetTimerID(const PVR_TIMER &timer);
 
@@ -241,9 +210,7 @@ private:
   static bool GetBoolean(XMLNode xRootNode, const char* strTag, bool& bBoolValue);
   static bool GetString(XMLNode xRootNode, const char* strTag, CStdString& strStringValue);
   bool GetStringLng(XMLNode xRootNode, const char* strTag, CStdString& strStringValue);
-  void GetPreferredLanguage();
   void GetTimeZone();
-  void RemoveNullChars(CStdString &String);
   bool GetDeviceInfo();
 
 
@@ -267,6 +234,7 @@ public:
   PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
   PVR_ERROR DeleteTimer(const PVR_TIMER &timer);
   unsigned int GetRecordingsAmount();
+  void SetRecordingTag(PVR_RECORDING& tag, DvbRecording& recording);
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recinfo);
   unsigned int GetNumChannelGroups(void);

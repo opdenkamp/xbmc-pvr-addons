@@ -27,18 +27,17 @@
 #define DEFAULT_HOST             "127.0.0.1"
 #define DEFAULT_CONNECT_TIMEOUT  30
 #define DEFAULT_WEB_PORT         8089
-#define DEFAULT_STREAM_PORT      7522
-#define DEFAULT_RECORDING_PORT   8090
+#define DEFAULT_BROADCAST_PORT   1901
 
 extern bool                      m_bCreated;
 extern std::string               g_strHostname;
-extern int                       g_iPortStream;
 extern int                       g_iPortWeb;
-extern int                       g_iPortRecording;
+extern int                       g_iPortBroadcast;
 extern std::string               g_strUsername;
 extern std::string               g_strPassword;
 extern bool                      g_bUseFavourites;
 extern std::string               g_strFavouritesPath;
+extern bool                      g_bUseRTSP;
 //extern int                       g_iClientId;
 extern ADDON::CHelper_libXBMC_addon *   XBMC;
 extern CHelper_libXBMC_pvr *     PVR;

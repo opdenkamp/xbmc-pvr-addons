@@ -46,12 +46,12 @@ msgid "Use favorites instead of channel list"
 msgstr "Benutze Favoriten anstatt Kanalliste"
 
 msgctxt "#30007"
-msgid "Select local favourites.xml file"
-msgstr "Wähle lokale favourites.xml Datei"
-
-msgctxt "#30008"
 msgid "Use RTSP for Live TV"
 msgstr "Benutze RTSP für Live TV"
+
+msgctxt "#30008"
+msgid "Select local favourites.xml file"
+msgstr "Wähle lokale favourites.xml Datei"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"

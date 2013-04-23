@@ -48,11 +48,11 @@ msgid "Use favorites instead of channel list"
 msgstr ""
 
 msgctxt "#30007"
-msgid "Select the favourites.xml file"
+msgid "Use RTSP for Live TV"
 msgstr ""
 
 msgctxt "#30008"
-msgid "Use RTSP for Live TV"
+msgid "Select local favourites.xml file"
 msgstr ""
 
 #empty strings from id 30009 to 30499

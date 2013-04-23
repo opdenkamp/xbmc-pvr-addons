@@ -5,6 +5,6 @@
     <setting id="user" type="text" label="30004" default="" />
     <setting id="pass" type="text" label="30005" option="hidden" default="" />
     <setting label="30006" type="bool" id="usefavourites" default="false"/>
-    <setting label="30008" type="bool" id="usertsp" default="false" />     
-    <setting id="favouritespath" type="file" label="30007" default="" />    
+    <setting label="30007" type="bool" id="usertsp" default="false" />     
+    <setting id="favouritespath" type="file" label="30008" default="" />    
 </settings>

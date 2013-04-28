@@ -107,10 +107,10 @@ class cVideoBufferTimeshift : public cVideoBuffer
 {
 friend class cVideoBuffer;
 public:
-  virtual size_t GetPosMin();
-  virtual size_t GetPosMax();
-  virtual size_t GetPosCur();
-  virtual void GetPositions(size_t *cur, size_t *min, size_t *max);
+  virtual off_t GetPosMin();
+  virtual off_t GetPosMax();
+  virtual off_t GetPosCur();
+  virtual void GetPositions(off_t *cur, off_t *min, off_t *max);
   virtual bool HasBuffer() { return true; };
 
 protected:
@@ -135,7 +135,7 @@ cVideoBufferTimeshift::cVideoBufferTimeshift()
   m_BytesConsumed = 0;
 }
 
-size_t cVideoBufferTimeshift::GetPosMin()
+off_t cVideoBufferTimeshift::GetPosMin()
 {
   off_t ret;
   if (!m_BufferFull)
@@ -148,23 +148,23 @@ size_t cVideoBufferTimeshift::GetPosMin()
   return ret;
 }
 
-size_t cVideoBufferTimeshift::GetPosMax()
+off_t cVideoBufferTimeshift::GetPosMax()
 {
-   size_t ret = m_WritePtr;
+   off_t ret = m_WritePtr;
    if (ret < GetPosMin())
      ret += m_BufferSize;
    return ret;
 }
 
-size_t cVideoBufferTimeshift::GetPosCur()
+off_t cVideoBufferTimeshift::GetPosCur()
 {
-  size_t ret = m_ReadPtr;
+  off_t ret = m_ReadPtr;
   if (ret < GetPosMin())
     ret += m_BufferSize;
   return ret;
 }
 
-void cVideoBufferTimeshift::GetPositions(size_t *cur, size_t *min, size_t *max)
+void cVideoBufferTimeshift::GetPositions(off_t *cur, off_t *min, off_t *max)
 {
   cMutexLock lock(&m_Mutex);
 
@@ -178,7 +178,7 @@ off_t cVideoBufferTimeshift::Available()
 {
   cMutexLock lock(&m_Mutex);
 
-  size_t ret;
+  off_t ret;
   if (m_ReadPtr <= m_WritePtr)
     ret = m_WritePtr - m_ReadPtr;
   else
@@ -194,7 +194,7 @@ friend class cVideoBuffer;
 public:
   virtual void Put(uint8_t *buf, unsigned int size);
   virtual int ReadBlock(uint8_t **buf, unsigned int size);
-  virtual void SetPos(size_t pos);
+  virtual void SetPos(off_t pos);
 
 protected:
   cVideoBufferRAM();
@@ -217,7 +217,7 @@ cVideoBufferRAM::~cVideoBufferRAM()
 
 bool cVideoBufferRAM::Init()
 {
-  m_BufferSize = (size_t)TimeshiftBufferSize*100*1000*1000;
+  m_BufferSize = (off_t)TimeshiftBufferSize*100*1000*1000;
   INFOLOG("allocated timeshift buffer with size: %ld", m_BufferSize);
   m_Buffer = (uint8_t*)malloc(m_BufferSize + m_Margin);
   m_BufferPtr = m_Buffer + m_Margin;
@@ -227,7 +227,7 @@ bool cVideoBufferRAM::Init()
     return true;
 }
 
-void cVideoBufferRAM::SetPos(size_t pos)
+void cVideoBufferRAM::SetPos(off_t pos)
 {
   cMutexLock lock(&m_Mutex);
 
@@ -280,7 +280,7 @@ int cVideoBufferRAM::ReadBlock(uint8_t **buf, unsigned int size)
   m_BytesConsumed = 0;
 
   // check if we have anything to read
-  size_t readBytes = Available();
+  off_t readBytes = Available();
   if (readBytes < m_Margin)
   {
     return 0;
@@ -321,10 +321,10 @@ class cVideoBufferFile : public cVideoBufferTimeshift
 {
 friend class cVideoBuffer;
 public:
-  virtual size_t GetPosMax();
+  virtual off_t GetPosMax();
   virtual void Put(uint8_t *buf, unsigned int size);
   virtual int ReadBlock(uint8_t **buf, unsigned int size);
-  virtual void SetPos(size_t pos);
+  virtual void SetPos(off_t pos);
 
 protected:
   cVideoBufferFile();
@@ -375,7 +375,7 @@ bool cVideoBufferFile::Init()
   if (!m_ReadCache)
     return false;
 
-  m_BufferSize = (size_t)TimeshiftBufferFileSize*1000*1000*1000;
+  m_BufferSize = (off_t)TimeshiftBufferFileSize*1000*1000*1000;
 
   struct stat sb;
   if ((*TimeshiftBufferDir) && stat(TimeshiftBufferDir, &sb) == 0 && S_ISDIR(sb.st_mode))
@@ -413,7 +413,7 @@ bool cVideoBufferFile::Init()
   return true;
 }
 
-void cVideoBufferFile::SetPos(size_t pos)
+void cVideoBufferFile::SetPos(off_t pos)
 {
   cMutexLock lock(&m_Mutex);
 
@@ -424,9 +424,9 @@ void cVideoBufferFile::SetPos(size_t pos)
   m_ReadCacheSize = 0;
 }
 
-size_t cVideoBufferFile::GetPosMax()
+off_t cVideoBufferFile::GetPosMax()
 {
-  size_t posMax = cVideoBufferTimeshift::GetPosMax();
+  off_t posMax = cVideoBufferTimeshift::GetPosMax();
   if (posMax >= m_ReadCacheMaxSize)
     posMax -= m_ReadCacheMaxSize;
   else
@@ -519,7 +519,7 @@ int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
   m_BytesConsumed = 0;
 
   // check if we have anything to read
-  size_t readBytes;
+  off_t readBytes;
   if (m_ReadCacheSize && ((m_ReadCachePtr + m_Margin) <= m_ReadCacheSize))
   {
     readBytes = m_ReadCacheSize - m_ReadCachePtr;
@@ -601,7 +601,7 @@ class cVideoBufferRecording : public cVideoBufferFile
 {
 friend class cVideoBuffer;
 public:
-  virtual size_t GetPosMax();
+  virtual off_t GetPosMax();
   virtual void Put(uint8_t *buf, unsigned int size);
   virtual int ReadBlock(uint8_t **buf, unsigned int size);
 
@@ -630,7 +630,7 @@ cVideoBufferRecording::~cVideoBufferRecording()
     delete m_RecPlayer;
 }
 
-size_t cVideoBufferRecording::GetPosMax()
+off_t cVideoBufferRecording::GetPosMax()
 {
   m_RecPlayer->reScan();
   m_WritePtr = m_RecPlayer->getLengthBytes();
@@ -689,7 +689,7 @@ int cVideoBufferRecording::ReadBlock(uint8_t **buf, unsigned int size)
   m_BytesConsumed = 0;
 
   // check if we have anything to read
-  size_t readBytes;
+  off_t readBytes;
   if (m_ReadCacheSize && ((m_ReadCachePtr + m_Margin) <= m_ReadCacheSize))
   {
     readBytes = m_ReadCacheSize - m_ReadCachePtr;
@@ -744,7 +744,7 @@ class cVideoBufferTest : public cVideoBufferFile
 {
 friend class cVideoBuffer;
 public:
-  virtual size_t GetPosMax();
+  virtual off_t GetPosMax();
   virtual void Put(uint8_t *buf, unsigned int size);
 
 protected:
@@ -771,7 +771,7 @@ cVideoBufferTest::~cVideoBufferTest()
   }
 }
 
-size_t cVideoBufferTest::GetPosMax()
+off_t cVideoBufferTest::GetPosMax()
 {
   m_WritePtr = GetPosEnd();
   return cVideoBufferTimeshift::GetPosMax();

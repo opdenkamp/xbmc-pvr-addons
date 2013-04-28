@@ -70,7 +70,7 @@ protected:
   void SetChannelPids(cChannel *channel, cPatPmtParser *patPmtParser);
   cTSStream *FindStream(int Pid);
   void AddStreamInfo(sStreamInfo &stream);
-  bool GetTimeAtPos(size_t *pos, int64_t *time);
+  bool GetTimeAtPos(off_t *pos, int64_t *time);
   std::list<cTSStream*> m_Streams;
   std::list<cTSStream*>::iterator m_StreamsIterator;
   std::list<sStreamInfo> m_StreamInfos;

@@ -157,7 +157,7 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
 
 bool cVNSIDemuxer::SeekTime(int64_t time)
 {
-  size_t pos, pos_min, pos_max, pos_limit, start_pos;
+  off_t pos, pos_min, pos_max, pos_limit, start_pos;
   int64_t ts, ts_min, ts_max, last_ts;
   int no_change;
 
@@ -591,7 +591,7 @@ void cVNSIDemuxer::SetChannelPids(cChannel *channel, cPatPmtParser *patPmtParser
                    Tpid);
 }
 
-bool cVNSIDemuxer::GetTimeAtPos(size_t *pos, int64_t *time)
+bool cVNSIDemuxer::GetTimeAtPos(off_t *pos, int64_t *time)
 {
   uint8_t *buf;
   int len;

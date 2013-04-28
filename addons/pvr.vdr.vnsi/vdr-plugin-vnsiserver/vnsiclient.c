@@ -1557,7 +1557,7 @@ bool cVNSIClient::processRECORDINGS_Rename() /* OPCODE 103 */
 
     // replace spaces in newtitle
     strreplace(newtitle, ' ', '_');
-    char* filename_new = new char[512];
+    char* filename_new = new char[1024];
     strncpy(filename_new, filename_old, 512);
     sep = strrchr(filename_new, '/');
     if(sep != NULL) {

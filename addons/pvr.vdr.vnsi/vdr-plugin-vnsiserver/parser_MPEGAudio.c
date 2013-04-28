@@ -109,6 +109,7 @@ int cParserMPEG2Audio::FindHeaders(uint8_t *buf, int buf_size)
     int layer = bs.readBits(2);
     if (layer == 0)
       return 0;
+    layer = 4 - layer;
 
     bs.skipBits(1); // protetion bit
     int bitrate_index = bs.readBits(4);

@@ -127,6 +127,7 @@ void cParserH264::Reset()
   m_NeedIFrame = true;
   m_NeedSPS = true;
   m_NeedPPS = true;
+  memset(&m_streamData, 0, sizeof(m_streamData));
 }
 
 int cParserH264::Parse_H264(uint32_t startcode, int buf_ptr, bool &complete)

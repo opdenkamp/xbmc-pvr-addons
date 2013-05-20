@@ -1226,6 +1226,7 @@ extern int cmyth_mysql_get_recgroups(cmyth_database_t, cmyth_recgroups_t **);
 
 extern int cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **prog, time_t starttime, char *program_name);
 extern int cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  time_t starttime, char *program_name);
+extern int cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_program_t *prog, uint32_t chanid);
 extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_program_t *prog, time_t starttime, char *program_name, uint32_t chanid);
 extern int cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, uint32_t chanid, time_t starttime, time_t endtime);
 extern int cmyth_mysql_testdb_connection(cmyth_database_t db,char **message);

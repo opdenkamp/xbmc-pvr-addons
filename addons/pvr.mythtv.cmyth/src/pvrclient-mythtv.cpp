@@ -1155,7 +1155,12 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
 void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule)
 {
   MythProgram program;
-  bool programFound = m_db.FindProgram(timer.startTime, timer.iClientChannelUid, "%", &program);
+  bool programFound;
+
+  if (timer.startTime == 0)
+    programFound = m_db.FindCurrentProgram(timer.iClientChannelUid, &program);
+  else
+    programFound = m_db.FindProgram(timer.startTime, timer.iClientChannelUid, "%", &program);
 
   // Load rule template from selected provider
   switch (g_iRecTemplateType)
@@ -1195,11 +1200,20 @@ void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordin
     }
   }
 
+  // Set end time to EPG end if found, otherwise set to the timer end time
+  if (programFound)
+    rule.SetEndTime(program.endtime);
+  else
+    rule.SetEndTime(timer.endTime);
+
   // If we have an entry in the EPG for the timer, we use it to set title and subtitle from it
   // PVR_TIMER has no subtitle thus might send it encoded within the title.
   if (programFound)
   {
-    rule.SetSearchType(MythRecordingRule::NoSearch);
+    if(timer.startTime == 0)
+      rule.SetSearchType(MythRecordingRule::ManualSearch);
+    else
+      rule.SetSearchType(MythRecordingRule::NoSearch);
     rule.SetTitle(program.title);
     rule.SetSubtitle(program.subtitle);
     rule.SetCategory(program.category);
@@ -1214,7 +1228,6 @@ void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordin
   rule.SetDescription(timer.strSummary);
   rule.SetChannelID(timer.iClientChannelUid);
   rule.SetStartTime((timer.startTime == 0 ? time(NULL) : timer.startTime));
-  rule.SetEndTime(timer.endTime);
   rule.SetInactive(timer.state == PVR_TIMER_STATE_ABORTED || timer.state ==  PVR_TIMER_STATE_CANCELLED);
 
   ChannelIdMap::iterator channelIt = m_channelsById.find(timer.iClientChannelUid);

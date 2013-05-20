@@ -94,6 +94,13 @@ bool MythDatabase::FindProgram(time_t starttime, int channelid, const CStdString
   return retval > 0;
 }
 
+bool MythDatabase::FindCurrentProgram(int channelid, MythProgram* program)
+{
+  int retval = 0;
+  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_get_prog_finder_chan(*m_database_t, program, channelid));
+  return retval > 0;
+}
+
 ProgramList MythDatabase::GetGuide(int channelid, time_t starttime, time_t endtime)
 {
   MythProgram *programs = 0;

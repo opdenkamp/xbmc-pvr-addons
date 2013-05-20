@@ -71,6 +71,7 @@ public:
   CStdString GetSetting(const CStdString &setting);
 
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* pprogram);
+  bool FindCurrentProgram(int channelid, MythProgram* pprogram);
   ProgramList GetGuide(int channelid, time_t starttime, time_t endtime);
 
   ChannelIdMap GetChannels();

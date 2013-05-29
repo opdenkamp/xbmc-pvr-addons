@@ -215,6 +215,10 @@ int cParser::ParsePacketHeader(uint8_t *data)
 bool cParser::AddPESPacket(uint8_t *data, int size)
 {
   // check for beginning of a PES packet
+  if (m_IsPusi && m_IsVideo && !IsValidStartCode(data, 4))
+  {
+    m_IsPusi = false;
+  }
   if (m_IsPusi)
   {
     int hdr_len = 6;

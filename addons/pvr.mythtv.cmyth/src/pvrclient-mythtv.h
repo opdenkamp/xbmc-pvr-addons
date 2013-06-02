@@ -114,7 +114,7 @@ public:
   long long LengthRecordedStream();
 
   // Menu hook
-  PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook);
+  PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item);
 
   // Backend settings
   bool GetLiveTVPriority();

@@ -1692,9 +1692,10 @@ long long PVRClientMythTV::LengthRecordedStream()
   return retval;
 }
 
-PVR_ERROR PVRClientMythTV::CallMenuHook(const PVR_MENUHOOK &menuhook)
+PVR_ERROR PVRClientMythTV::CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
 {
   (void)menuhook;
+  (void)item;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 

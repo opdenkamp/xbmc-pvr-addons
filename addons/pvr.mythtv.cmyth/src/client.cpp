@@ -767,6 +767,7 @@ int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
   if (dataread < 0)
   {
     XBMC->Log(LOG_ERROR,"%s: Failed to read liveStream. Errorcode: %d!", __FUNCTION__, dataread);
+    dataread = 0;
   }
   return dataread;
 }

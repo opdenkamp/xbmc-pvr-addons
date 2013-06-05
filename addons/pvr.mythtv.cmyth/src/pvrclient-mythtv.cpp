@@ -274,30 +274,40 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
 
   if (!channel.bIsHidden)
   {
-    ProgramList EPG = m_db.GetGuide(channel.iUniqueId, iStart, iEnd);
+    EPGInfoList EPG = m_db.GetGuide(channel.iUniqueId, iStart, iEnd);
 
     // Transfer EPG for the given channel
-    for (ProgramList::iterator it = EPG.begin(); it != EPG.end(); ++it)
+    for (EPGInfoList::iterator it = EPG.begin(); it != EPG.end(); ++it)
     {
       EPG_TAG tag;
       memset(&tag, 0, sizeof(EPG_TAG));
 
-      tag.iUniqueBroadcastId = (it->starttime << 16) + (it->channum & 0xFFFF);
-      tag.iChannelNumber = it->channum;
-      tag.startTime = it->starttime;
-      tag.endTime = it->endtime;
+      // EPG_TAG expects strings as char* and not as copies (like the other PVR types).
+      // Therefore we have to make sure that we don't pass invalid (freed) memory to TransferEpgEntry.
+      // In particular we have to use local variables and must not pass returned CStdString values directly.
+      CStdString title;
+      CStdString subtitle;
+      CStdString description;
+      CStdString category;
 
-      CStdString title = it->title;
-      CStdString subtitle = it->subtitle;
+      tag.iUniqueBroadcastId = (it->StartTime() << 16) + (it->ChannelNumberInt() & 0xFFFF);
+      tag.iChannelNumber = it->ChannelNumberInt();
+      tag.startTime = it->StartTime();
+      tag.endTime = it->EndTime();
+
+      title = it->Title();
+      subtitle = it->Subtitle();
       if (!subtitle.IsEmpty())
-	title += SUBTITLE_SEPARATOR + subtitle;
+        title += SUBTITLE_SEPARATOR + subtitle;
       tag.strTitle = title;
-      tag.strPlot = it->description;
+      description = it->Description();
+      tag.strPlot = description;
 
-      int genre = m_categories.Category(it->category);
+      int genre = m_categories.Category(it->Category());
       tag.iGenreSubType = genre & 0x0F;
       tag.iGenreType = genre & 0xF0;
-      tag.strGenreDescription = it->category;
+      category = it->Category();
+      tag.strGenreDescription = category;
 
       // Unimplemented
       tag.strEpisodeName = "";
@@ -1011,10 +1021,12 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
 
     if (title.IsEmpty())
     {
-      MythProgram epgProgram;
-      bool hasEpgProgram = m_db.FindProgram(tag.startTime, tag.iClientChannelUid, "%", &epgProgram);
-      if (hasEpgProgram)
-        title = epgProgram.title;
+      MythEPGInfo epgInfo;
+      bool hasEpgInfo = m_db.FindProgram(tag.startTime, tag.iClientChannelUid, "%", epgInfo);
+      if (hasEpgInfo)
+      {
+        title = epgInfo.Title();
+      }
     }
     PVR_STRCPY(tag.strTitle, title);
 
@@ -1154,20 +1166,20 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
 
 void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule)
 {
-  MythProgram program;
-  bool programFound;
+  MythEPGInfo epgInfo;
+  bool epgFound;
 
   if (timer.startTime == 0)
-    programFound = m_db.FindCurrentProgram(timer.iClientChannelUid, &program);
+    epgFound = m_db.FindCurrentProgram(timer.iClientChannelUid, epgInfo);
   else
-    programFound = m_db.FindProgram(timer.startTime, timer.iClientChannelUid, "%", &program);
+    epgFound = m_db.FindProgram(timer.startTime, timer.iClientChannelUid, "%", epgInfo);
 
   // Load rule template from selected provider
   switch (g_iRecTemplateType)
   {
   case 1: // Template provider is 'MythTV', then load the template from backend.
-    if (programFound)
-      rule = m_db.LoadRecordingRuleTemplate(program.category, program.category_type);
+    if (epgFound)
+      rule = m_db.LoadRecordingRuleTemplate(epgInfo.Category(), epgInfo.CategoryType());
     else
       rule = m_db.LoadRecordingRuleTemplate("", "");
     break;
@@ -1189,10 +1201,10 @@ void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordin
   rule.SetPriority(timer.iPriority);
 
   // Category override
-  if (programFound)
+  if (epgFound)
   {
     CStdString overTimeCategory = m_db.GetSetting("OverTimeCategory");
-    if (!overTimeCategory.IsEmpty() && (overTimeCategory.Equals(program.category) || overTimeCategory.Equals(program.category_type)))
+    if (!overTimeCategory.IsEmpty() && (overTimeCategory.Equals(epgInfo.Category()) || overTimeCategory.Equals(epgInfo.CategoryType())))
     {
       CStdString categoryOverTime = m_db.GetSetting("CategoryOverTime");
       XBMC->Log(LOG_DEBUG, "Overriding end offset for category %s: +%s", overTimeCategory.c_str(), categoryOverTime.c_str());
@@ -1201,22 +1213,22 @@ void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordin
   }
 
   // Set end time to EPG end if found, otherwise set to the timer end time
-  if (programFound)
-    rule.SetEndTime(program.endtime);
+  if (epgFound)
+    rule.SetEndTime(epgInfo.EndTime());
   else
     rule.SetEndTime(timer.endTime);
 
   // If we have an entry in the EPG for the timer, we use it to set title and subtitle from it
   // PVR_TIMER has no subtitle thus might send it encoded within the title.
-  if (programFound)
+  if (epgFound)
   {
     if(timer.startTime == 0)
       rule.SetSearchType(MythRecordingRule::ManualSearch);
     else
       rule.SetSearchType(MythRecordingRule::NoSearch);
-    rule.SetTitle(program.title);
-    rule.SetSubtitle(program.subtitle);
-    rule.SetCategory(program.category);
+    rule.SetTitle(epgInfo.Title());
+    rule.SetSubtitle(epgInfo.Subtitle());
+    rule.SetCategory(epgInfo.Category());
   }
   else
   {
@@ -1294,7 +1306,15 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
 
     CStdString title = timer.strTitle;
     if (createNewRule)
-      rule.SetSearchType(m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, NULL) ? MythRecordingRule::NoSearch : MythRecordingRule::ManualSearch);
+    {
+      MythEPGInfo epgInfo;
+      if (m_db.FindProgram(timer.startTime, timer.iClientChannelUid, title, epgInfo))
+      {
+        rule.SetSearchType(MythRecordingRule::NoSearch);
+      }
+      else
+        rule.SetSearchType(MythRecordingRule::ManualSearch);
+    }
     if (createNewOverrideRule && oldRule.SearchType() == MythRecordingRule::ManualSearch)
       rule.SetSearchType(MythRecordingRule::ManualSearch);
 

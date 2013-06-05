@@ -31,13 +31,13 @@ extern "C" {
 };
 
 class MythChannel;
+class MythEPGInfo;
 class MythRecordingRule;
 class MythProgramInfo;
 
 template <class T> class MythPointerThreadSafe;
 
-typedef cmyth_program_t MythProgram;
-typedef std::vector<MythProgram> ProgramList;
+typedef std::vector<MythEPGInfo> EPGInfoList;
 
 typedef std::map<int, MythChannel> ChannelIdMap;
 typedef std::multimap<CStdString, MythChannel> ChannelNumberMap;
@@ -70,9 +70,9 @@ public:
 
   CStdString GetSetting(const CStdString &setting);
 
-  bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythProgram* pprogram);
-  bool FindCurrentProgram(int channelid, MythProgram* pprogram);
-  ProgramList GetGuide(int channelid, time_t starttime, time_t endtime);
+  bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythEPGInfo &epgInfo);
+  bool FindCurrentProgram(int channelid, MythEPGInfo &epgInfo);
+  EPGInfoList GetGuide(int channelid, time_t starttime, time_t endtime);
 
   ChannelIdMap GetChannels();
   ChannelGroupMap GetChannelGroups();

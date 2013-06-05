@@ -16,6 +16,7 @@
     <ClCompile Include="..\..\src\cppmyth\MythChannel.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythConnection.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythDatabase.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythEPGInfo.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythEventHandler.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythFile.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythProgramInfo.cpp" />
@@ -34,6 +35,7 @@
     <ClInclude Include="..\..\src\cppmyth\MythChannel.h" />
     <ClInclude Include="..\..\src\cppmyth\MythConnection.h" />
     <ClInclude Include="..\..\src\cppmyth\MythDatabase.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythEPGInfo.h" />
     <ClInclude Include="..\..\src\cppmyth\MythEventHandler.h" />
     <ClInclude Include="..\..\src\cppmyth\MythFile.h" />
     <ClInclude Include="..\..\src\cppmyth\MythPointer.h" />

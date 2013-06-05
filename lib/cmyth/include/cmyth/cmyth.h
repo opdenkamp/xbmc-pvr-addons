@@ -1199,41 +1199,15 @@ extern int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err, cmyth_commbreakl
  * mysql info
  */
 
-
-typedef struct cmyth_program {
-	uint32_t chanid;
-	char callsign[21];
-	char name[65];
-	uint32_t sourceid;
-	char title[129];
-	char subtitle[129];
-	char description[1921];
-	time_t starttime;
-	time_t endtime;
-	char programid[65];
-	char seriesid[65];
-	char category[65];
-	char category_type[65];
-	int8_t rec_status;
-	uint32_t channum;
-} cmyth_program_t;
-
 typedef struct cmyth_recgrougs {
 	char recgroups[33];
 } cmyth_recgroups_t;
 
 extern int cmyth_mysql_get_recgroups(cmyth_database_t, cmyth_recgroups_t **);
 
-extern int cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **prog, time_t starttime, char *program_name);
-extern int cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  time_t starttime, char *program_name);
-extern int cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_program_t *prog, uint32_t chanid);
-extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_program_t *prog, time_t starttime, char *program_name, uint32_t chanid);
-extern int cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, uint32_t chanid, time_t starttime, time_t endtime);
 extern int cmyth_mysql_testdb_connection(cmyth_database_t db,char **message);
 extern char *cmyth_mysql_escape_chars(cmyth_database_t db, char * string);
 extern int cmyth_mysql_get_commbreak_list(cmyth_database_t db, uint32_t chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, uint32_t conn_version);
-
-extern int cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_program_t **prog);
 
 extern int cmyth_get_delete_list(cmyth_conn_t, char *, cmyth_proglist_t);
 
@@ -2320,5 +2294,43 @@ extern int64_t cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_pr
  * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_recording_artwork(cmyth_database_t db, cmyth_proginfo_t prog, char **coverart, char **fanart, char **banner);
+
+/*
+ * -----------------------------------------------------------------
+ * EPG info
+ * -----------------------------------------------------------------
+ */
+
+struct cmyth_epginfo;
+
+typedef struct cmyth_epginfo *cmyth_epginfo_t;
+
+struct cmyth_epginfolist;
+typedef struct cmyth_epginfolist *cmyth_epginfolist_t;
+
+extern cmyth_epginfo_t cmyth_epginfolist_get_item(cmyth_epginfolist_t el, int index);
+extern int cmyth_epginfolist_get_count(cmyth_epginfolist_t el);
+extern uint32_t cmyth_epginfo_chanid(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_callsign(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_channame(cmyth_epginfo_t e);
+extern uint32_t cmyth_epginfo_sourceid(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_title(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_subtitle(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_description(cmyth_epginfo_t e);
+extern time_t cmyth_epginfo_starttime(cmyth_epginfo_t e);
+extern time_t cmyth_epginfo_endtime(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_programid(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_seriesid(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_category(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_category_type(cmyth_epginfo_t e);
+extern uint32_t cmyth_epginfo_channum(cmyth_epginfo_t e);
+
+extern int cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_epginfolist_t *epglist, time_t starttime, char *program_name);
+extern int cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_epginfolist_t *epglist,  time_t starttime, char *program_name);
+extern int cmyth_mysql_get_prog_finder_time2(cmyth_database_t db, cmyth_epginfolist_t *epglist,  time_t starttime, char *program_name);
+extern int cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_epginfo_t *epg, uint32_t chanid);
+extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_epginfo_t *epg, time_t starttime, char *program_name, uint32_t chanid);
+extern int cmyth_mysql_get_guide(cmyth_database_t db, cmyth_epginfolist_t *epglist, uint32_t chanid, time_t starttime, time_t endtime);
+extern int cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_epginfolist_t *epglist);
 
 #endif /* __CMYTH_H */

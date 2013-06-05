@@ -509,4 +509,35 @@ extern cmyth_storagegroup_file_t cmyth_storagegroup_file_create(void);
 #define cmyth_storagegroup_filelist_create __cmyth_storagegroup_filelist_create
 extern cmyth_storagegroup_filelist_t cmyth_storagegroup_filelist_create(void);
 
+/*
+ * From epginfo.c
+ */
+struct cmyth_epginfo {
+	uint32_t chanid;
+	char* callsign;
+	char* channame;
+	uint32_t sourceid;
+	char* title;
+	char* subtitle;
+	char* description;
+	time_t starttime;
+	time_t endtime;
+	char* programid;
+	char* seriesid;
+	char* category;
+	char* category_type;
+	uint32_t channum;
+};
+
+struct cmyth_epginfolist {
+	cmyth_epginfo_t *epginfolist_list;
+	int epginfolist_count;
+};
+
+#define cmyth_epginfo_create __cmyth_epginfo_create
+extern cmyth_epginfo_t cmyth_epginfo_create(void);
+
+#define cmyth_epginfolist_create __cmyth_epginfolist_create
+extern cmyth_epginfolist_t cmyth_epginfolist_create(void);
+
 #endif /* __CMYTH_LOCAL_H */

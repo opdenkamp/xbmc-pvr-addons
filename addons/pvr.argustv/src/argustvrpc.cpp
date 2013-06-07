@@ -31,6 +31,7 @@
 #include "utils.h"
 #include "argustvrpc.h"
 #include "platform/threads/mutex.h"
+#include "platform/util/StdString.h"
 
 using namespace ADDON;
 
@@ -1138,10 +1139,12 @@ namespace ArgusTV
 
     time_t now = time(NULL);
     std::string modifiedtime = TimeTToWCFDate(mktime(localtime(&now)));
+    CStdString modifiedtitle = title;
+    modifiedtitle.Replace("\"", "\\\"");
     char arguments[1024];
     snprintf( arguments, sizeof(arguments),
       "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"%s\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,\"Rules\":[{\"Arguments\":[\"%s\"],\"Type\":\"TitleEquals\"},{\"Arguments\":[\"%i-%02i-%02iT00:00:00\"],\"Type\":\"OnDate\"},{\"Arguments\":[\"%02i:%02i:%02i\"],\"Type\":\"AroundTime\"},{\"Arguments\":[\"%s\"],\"Type\":\"Channels\"}],\"ScheduleId\":\"00000000-0000-0000-0000-000000000000\",\"SchedulePriority\":0,\"ScheduleType\":82,\"Version\":0}",
-      lifetimeToKeepUntilMode(lifetime), lifetimeToKeepUntilValue(lifetime), modifiedtime.c_str(), title.c_str(), postrecordseconds, prerecordseconds, title.c_str(),
+      lifetimeToKeepUntilMode(lifetime), lifetimeToKeepUntilValue(lifetime), modifiedtime.c_str(), modifiedtitle.c_str(), postrecordseconds, prerecordseconds, modifiedtitle.c_str(),
       tm_start.tm_year + 1900, tm_start.tm_mon + 1, tm_start.tm_mday,
       tm_start.tm_hour, tm_start.tm_min, tm_start.tm_sec,
       channelid.c_str());

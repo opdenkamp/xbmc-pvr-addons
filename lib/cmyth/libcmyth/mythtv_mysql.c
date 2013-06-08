@@ -841,7 +841,7 @@ cmyth_mysql_query_commbreak_count(cmyth_database_t db, int32_t chanid, time_t st
 }
 
 int
-cmyth_mysql_get_commbreak_list(cmyth_database_t db, uint32_t chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, uint32_t conn_version)
+cmyth_mysql_query_commbreak_list(cmyth_database_t db, uint32_t chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, uint32_t conn_version)
 {
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
@@ -1132,7 +1132,7 @@ cmyth_mysql_is_radio(cmyth_database_t db, uint32_t chanid)
 	if ((row = mysql_fetch_row(res))) {
 		retval = safe_atoi(row[0]);
 	} else {
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s, Channum %ld not found\n", __FUNCTION__, chanid);
+		cmyth_dbg(CMYTH_DBG_DEBUG, "%s, Channum %"PRIu32" not found\n", __FUNCTION__, chanid);
 		retval = 0;
 	}
 	mysql_free_result(res);

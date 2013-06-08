@@ -1113,6 +1113,16 @@ extern char *cmyth_proginfo_chanicon(cmyth_proginfo_t prog);
  */
 extern uint16_t cmyth_proginfo_year(cmyth_proginfo_t prog);
 
+/**
+ * Retrieve the watched status for this program info
+ * \param db database connection
+ * \param prog proginfo handle
+ * \param watchedStat returned status
+ * \return success: 1 = program found, 0 = program not found
+ * \return failure: -(errno)
+ */
+extern int cmyth_mysql_set_watched_status(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat);
+
 /*
  * -----------------------------------------------------------------
  * Program List Operations
@@ -1179,9 +1189,9 @@ extern int cmyth_file_set_timeout(cmyth_file_t file, int32_t fast);
 extern cmyth_freespace_t cmyth_freespace_create(void);
 
 /*
- * -------
+ * -----------------------------------------------------------------
  * Bookmark,Commercial Skip Operations
- * -------
+ * -----------------------------------------------------------------
  */
 extern int64_t cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern int64_t cmyth_mysql_get_bookmark_offset(cmyth_database_t db, uint32_t chanid, int64_t mark, time_t starttime, int mode);
@@ -1196,7 +1206,9 @@ extern cmyth_commbreaklist_t cmyth_get_cutlist(cmyth_conn_t conn, cmyth_proginfo
 extern int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err, cmyth_commbreaklist_t breaklist, int count);
 
 /*
- * mysql info
+ * -----------------------------------------------------------------
+ * Recording Groups Operations
+ * -----------------------------------------------------------------
  */
 
 typedef struct cmyth_recgrougs {
@@ -1205,14 +1217,13 @@ typedef struct cmyth_recgrougs {
 
 extern int cmyth_mysql_get_recgroups(cmyth_database_t, cmyth_recgroups_t **);
 
+/*
+ * -----------------------------------------------------------------
+ * mysql info
+ * -----------------------------------------------------------------
+ */
+
 extern int cmyth_mysql_testdb_connection(cmyth_database_t db,char **message);
-extern char *cmyth_mysql_escape_chars(cmyth_database_t db, char * string);
-extern int cmyth_mysql_get_commbreak_list(cmyth_database_t db, uint32_t chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, uint32_t conn_version);
-
-extern int cmyth_get_delete_list(cmyth_conn_t, char *, cmyth_proglist_t);
-
-extern int cmyth_mysql_set_watched_status(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat);
-
 
 /*
  * -----------------------------------------------------------------

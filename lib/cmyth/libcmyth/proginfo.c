@@ -1719,31 +1719,6 @@ cmyth_proginfo_chanicon(cmyth_proginfo_t prog)
 	return ref_hold(prog->proginfo_chanicon);
 }
 
-int
-cmyth_get_delete_list(cmyth_conn_t conn, char * msg, cmyth_proglist_t prog)
-{
-        int err=0;
-        int count;
-        int prog_count=0;
-
-        if (!conn) {
-                cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n", __FUNCTION__);
-                return -1;
-        }
-        pthread_mutex_lock(&conn->conn_mutex);
-        if ((err = cmyth_send_message(conn, msg)) < 0) {
-                fprintf (stderr, "ERROR %d \n",err);
-                cmyth_dbg(CMYTH_DBG_ERROR,
-                        "%s: cmyth_send_message() failed (%d)\n",__FUNCTION__,err);
-                return err;
-        }
-        count = cmyth_rcv_length(conn);
-        cmyth_rcv_proglist(conn, &err, prog, count);
-        prog_count=cmyth_proglist_get_count(prog);
-        pthread_mutex_unlock(&conn->conn_mutex);
-        return prog_count;
-}
-
 cmyth_proginfo_t
 cmyth_proginfo_get_from_basename(cmyth_conn_t control, const char* basename)
 {

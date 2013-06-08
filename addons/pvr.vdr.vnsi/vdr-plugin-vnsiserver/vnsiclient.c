@@ -35,6 +35,7 @@
 #include <vdr/menu.h>
 #include <vdr/device.h>
 
+#include "vnsi.h"
 #include "config.h"
 #include "vnsicommand.h"
 #include "recordingscache.h"
@@ -176,10 +177,10 @@ void cVNSIClient::Action(void)
   }
 }
 
-bool cVNSIClient::StartChannelStreaming(const cChannel *channel, uint32_t timeout)
+bool cVNSIClient::StartChannelStreaming(const cChannel *channel, int32_t priority, uint8_t timeshift, uint32_t timeout)
 {
-  m_Streamer    = new cLiveStreamer(timeout);
-  m_isStreaming = m_Streamer->StreamChannel(channel, 50, &m_socket, m_resp);
+  m_Streamer    = new cLiveStreamer(m_Id, timeshift, timeout);
+  m_isStreaming = m_Streamer->StreamChannel(channel, priority, &m_socket, m_resp);
   return m_isStreaming;
 }
 
@@ -411,6 +412,13 @@ bool cVNSIClient::processRequest(cRequestPacket* req)
       result = process_Ping();
       break;
 
+    case VNSI_GETSETUP:
+      result = process_GetSetup();
+      break;
+
+    case VNSI_STORESETUP:
+      result = process_StoreSetup();
+      break;
 
     /** OPCODE 20 - 39: VNSI network functions for live streaming */
     case VNSI_CHANNELSTREAM_OPEN:
@@ -421,6 +429,9 @@ bool cVNSIClient::processRequest(cRequestPacket* req)
       result = processChannelStream_Close();
       break;
 
+    case VNSI_CHANNELSTREAM_SEEK:
+      result = processChannelStream_Seek();
+      break;
 
     /** OPCODE 40 - 59: VNSI network functions for recording streaming */
     case VNSI_RECSTREAM_OPEN:
@@ -637,12 +648,61 @@ bool cVNSIClient::process_Ping() /* OPCODE 7 */
   return true;
 }
 
+bool cVNSIClient::process_GetSetup() /* OPCODE 8 */
+{
+  char* name = m_req->extract_String();
+  if (!strcasecmp(name, CONFNAME_PMTTIMEOUT))
+    m_resp->add_U32(PmtTimeout);
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFT))
+    m_resp->add_U32(TimeshiftMode);
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFTBUFFERSIZE))
+    m_resp->add_U32(TimeshiftBufferSize);
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFTBUFFERFILESIZE))
+    m_resp->add_U32(TimeshiftBufferFileSize);
+
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+  return true;
+}
+
+bool cVNSIClient::process_StoreSetup() /* OPCODE 9 */
+{
+  char* name = m_req->extract_String();
+
+  if (!strcasecmp(name, CONFNAME_PMTTIMEOUT))
+  {
+    int value = m_req->extract_U32();
+    cPluginVNSIServer::StoreSetup(CONFNAME_PMTTIMEOUT, value);
+  }
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFT))
+  {
+    int value = m_req->extract_U32();
+    cPluginVNSIServer::StoreSetup(CONFNAME_TIMESHIFT, value);
+  }
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFTBUFFERSIZE))
+  {
+    int value = m_req->extract_U32();
+    cPluginVNSIServer::StoreSetup(CONFNAME_TIMESHIFTBUFFERSIZE, value);
+  }
+  else if (!strcasecmp(name, CONFNAME_TIMESHIFTBUFFERFILESIZE))
+  {
+    int value = m_req->extract_U32();
+    cPluginVNSIServer::StoreSetup(CONFNAME_TIMESHIFTBUFFERFILESIZE, value);
+  }
+
+  m_resp->add_U32(VNSI_RET_OK);
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+  return true;
+}
 
 /** OPCODE 20 - 39: VNSI network functions for live streaming */
 
 bool cVNSIClient::processChannelStream_Open() /* OPCODE 20 */
 {
   uint32_t uid = m_req->extract_U32();
+  int32_t priority = m_req->extract_S32();
+  uint8_t timeshift = m_req->extract_U8();
   uint32_t timeout = m_req->extract_U32();
 
   if(timeout == 0)
@@ -668,7 +728,7 @@ bool cVNSIClient::processChannelStream_Open() /* OPCODE 20 */
   }
   else
   {
-    if (StartChannelStreaming(channel, timeout))
+    if (StartChannelStreaming(channel, priority, timeshift, timeout))
     {
       INFOLOG("Started streaming of channel %s (timeout %i seconds)", channel->Name(), timeout);
       // return here without sending the response
@@ -694,6 +754,25 @@ bool cVNSIClient::processChannelStream_Close() /* OPCODE 21 */
   return true;
 }
 
+bool cVNSIClient::processChannelStream_Seek() /* OPCODE 22 */
+{
+  uint32_t serial = 0;
+  if (m_isStreaming && m_Streamer)
+  {
+    int64_t time = m_req->extract_S64();
+    if (m_Streamer->SeekTime(time, serial))
+      m_resp->add_U32(VNSI_RET_OK);
+    else
+      m_resp->add_U32(VNSI_RET_ERROR);
+  }
+  else
+    m_resp->add_U32(VNSI_RET_ERROR);
+
+  m_resp->add_U32(serial);
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+  return true;
+}
 
 /** OPCODE 40 - 59: VNSI network functions for recording streaming */
 
@@ -1349,6 +1428,7 @@ bool cVNSIClient::processRECORDINGS_GetCount() /* OPCODE 101 */
 bool cVNSIClient::processRECORDINGS_GetList() /* OPCODE 102 */
 {
   cMutexLock lock(&m_timerLock);
+  cThreadLock RecordingsLock(&Recordings);
 
   for (cRecording *recording = Recordings.First(); recording; recording = Recordings.Next(recording))
   {
@@ -1477,7 +1557,7 @@ bool cVNSIClient::processRECORDINGS_Rename() /* OPCODE 103 */
 
     // replace spaces in newtitle
     strreplace(newtitle, ' ', '_');
-    char* filename_new = new char[512];
+    char* filename_new = new char[1024];
     strncpy(filename_new, filename_old, 512);
     sep = strrchr(filename_new, '/');
     if(sep != NULL) {

@@ -57,13 +57,20 @@ public:
   cTSStream *GetNextStream();
   void Open(const cChannel &channel, cVideoBuffer *videoBuffer);
   void Close();
+  bool SeekTime(int64_t time);
+  uint32_t GetSerial() { return m_MuxPacketSerial; }
+  void SetSerial(uint32_t serial) { m_MuxPacketSerial = serial; }
+  void BufferStatus(bool &timeshift, int &start, int &current, int &end);
+  uint16_t GetError();
 
 protected:
   bool EnsureParsers();
+  void ResetParsers();
   void SetChannelStreams(const cChannel *channel);
   void SetChannelPids(cChannel *channel, cPatPmtParser *patPmtParser);
   cTSStream *FindStream(int Pid);
   void AddStreamInfo(sStreamInfo &stream);
+  bool GetTimeAtPos(off_t *pos, int64_t *time);
   std::list<cTSStream*> m_Streams;
   std::list<cTSStream*>::iterator m_StreamsIterator;
   std::list<sStreamInfo> m_StreamInfos;
@@ -71,5 +78,10 @@ protected:
   cPatPmtParser m_PatPmtParser;
   int m_OldPmtVersion;
   bool m_WaitIFrame;
+  int64_t m_FirstFrameDTS;
   cVideoBuffer *m_VideoBuffer;
+  cMutex m_Mutex;
+  uint32_t m_MuxPacketSerial;
+  sPtsWrap m_PtsWrap;
+  uint16_t m_Error;
 };

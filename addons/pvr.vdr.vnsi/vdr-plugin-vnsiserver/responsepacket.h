@@ -40,7 +40,7 @@ public:
   bool init(uint32_t requestID);
   bool initScan(uint32_t opCode);
   bool initStatus(uint32_t opCode);
-  bool initStream(uint32_t opCode, uint32_t streamID, uint32_t duration, int64_t pts, int64_t dts);
+  bool initStream(uint32_t opCode, uint32_t streamID, uint32_t duration, int64_t pts, int64_t dts, uint32_t serial);
   bool initOsd(uint32_t opCode, int32_t wnd, int32_t color, int32_t x0, int32_t y0, int32_t x1, int32_t y1);
   void finalise();
   void finaliseStream();
@@ -72,8 +72,8 @@ private:
 
   const static uint32_t headerLength          = 12;
   const static uint32_t userDataLenPos        = 8;
-  const static uint32_t headerLengthStream    = 36;
-  const static uint32_t userDataLenPosStream  = 32;
+  const static uint32_t headerLengthStream    = 40;
+  const static uint32_t userDataLenPosStream  = 36;
   const static uint32_t headerLengthOSD       = 36;
   const static uint32_t userDataLenPosOSD     = 32;
 };

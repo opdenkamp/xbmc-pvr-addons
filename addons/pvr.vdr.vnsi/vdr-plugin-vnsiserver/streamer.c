@@ -40,8 +40,9 @@
 
 // --- cLiveStreamer -------------------------------------------------
 
-cLiveStreamer::cLiveStreamer(uint32_t timeout)
+cLiveStreamer::cLiveStreamer(int clientID, uint8_t timeshift, uint32_t timeout)
  : cThread("cLiveStreamer stream processor")
+ , m_ClientID(clientID)
  , m_scanTimeout(timeout)
 {
   m_Channel         = NULL;
@@ -52,6 +53,8 @@ cLiveStreamer::cLiveStreamer(uint32_t timeout)
   m_startup         = true;
   m_SignalLost      = false;
   m_IFrameSeen      = false;
+  m_VideoBuffer     = NULL;
+  m_Timeshift       = timeshift;
 
   memset(&m_FrontendInfo, 0, sizeof(m_FrontendInfo));
 
@@ -64,18 +67,96 @@ cLiveStreamer::~cLiveStreamer()
   DEBUGLOG("Started to delete live streamer");
 
   Cancel(5);
+  Close();
 
+  DEBUGLOG("Finished to delete live streamer");
+}
+
+bool cLiveStreamer::Open(int serial)
+{
+  Close();
+
+#if APIVERSNUM >= 10725
+  m_Device = cDevice::GetDevice(m_Channel, m_Priority, true, true);
+#else
+  m_Device = cDevice::GetDevice(m_Channel, m_Priority, true);
+#endif
+
+  if (!m_Device)
+    return false;
+
+  bool recording = false;
+  if (0) // test harness
+  {
+    recording = true;
+    m_VideoBuffer = cVideoBuffer::Create("/home/xbmc/test.ts");
+  }
+  else if (serial == -1)
+  {
+    cTimer *activeTimer = Timers.GetNextActiveTimer();
+
+    if (activeTimer &&
+        activeTimer->Recording() &&
+        activeTimer->Channel() == m_Channel)
+    {
+      Recordings.Load();
+      cRecording matchRec(activeTimer, activeTimer->Event());
+      cRecording *rec;
+      {
+        cThreadLock RecordingsLock(&Recordings);
+        rec = Recordings.GetByName(matchRec.FileName());
+        if (!rec)
+        {
+          return false;
+        }
+      }
+      m_VideoBuffer = cVideoBuffer::Create(rec);
+      recording = true;
+    }
+  }
+  if (!recording)
+  {
+    m_VideoBuffer = cVideoBuffer::Create(m_ClientID, m_Timeshift);
+  }
+
+  if (!m_VideoBuffer)
+    return false;
+
+  if (!recording)
+  {
+    if (m_Channel && ((m_Channel->Source() >> 24) == 'V'))
+      m_IsMPEGPS = true;
+
+    if (!m_VideoInput.Open(m_Channel, m_Priority, m_VideoBuffer))
+    {
+      ERRORLOG("Can't switch to channel %i - %s", m_Channel->Number(), m_Channel->Name());
+      return false;
+    }
+  }
+
+  m_Demuxer.Open(*m_Channel, m_VideoBuffer);
+  if (serial >= 0)
+    m_Demuxer.SetSerial(serial);
+
+  return true;
+}
+
+void cLiveStreamer::Close(void)
+{
+  INFOLOG("LiveStreamer::Close - close");
   m_VideoInput.Close();
   m_Demuxer.Close();
-  delete m_VideoBuffer;
+  if (m_VideoBuffer)
+  {
+    delete m_VideoBuffer;
+    m_VideoBuffer = NULL;
+  }
 
   if (m_Frontend >= 0)
   {
     close(m_Frontend);
     m_Frontend = -1;
   }
-
-  DEBUGLOG("Finished to delete live streamer");
 }
 
 void cLiveStreamer::Action(void)
@@ -84,6 +165,7 @@ void cLiveStreamer::Action(void)
   sStreamPacket pkt;
   bool requestStreamChange = false;
   cTimeMs last_info(1000);
+  cTimeMs bufferStatsTimer(1000);
 
   while (Running())
   {
@@ -108,16 +190,31 @@ void cLiveStreamer::Action(void)
         last_info.Set(0);
         sendSignalInfo();
       }
+
+      // send buffer stats
+      if(bufferStatsTimer.TimedOut())
+      {
+        sendBufferStatus();
+        bufferStatsTimer.Set(1000);
+      }
     }
-    else
+    else if (ret == -1)
     {
       // no data
+      usleep(10000);
       if(m_last_tick.Elapsed() >= (uint64_t)(m_scanTimeout*1000))
       {
-        INFOLOG("No Signal");
         sendStreamStatus();
         m_last_tick.Set(0);
         m_SignalLost = true;
+      }
+    }
+    else if (ret == -2)
+    {
+      if (!Open(m_Demuxer.GetSerial()))
+      {
+        m_Socket->Shutdown();
+        break;
       }
     }
   }
@@ -132,32 +229,22 @@ bool cLiveStreamer::StreamChannel(const cChannel *channel, int priority, cxSocke
     return false;
   }
 
-  m_VideoBuffer = cVideoBuffer::Create();
   m_Channel   = channel;
+  m_Priority  = priority;
   m_Socket    = Socket;
-  m_Device = cDevice::GetDevice(m_Channel, priority, true);
 
-  if (m_Channel && ((m_Channel->Source() >> 24) == 'V')) m_IsMPEGPS = true;
+  if (!Open())
+    return false;
 
-  if (m_VideoInput.Open(channel, priority, m_VideoBuffer))
-  {
-    m_Demuxer.Open(*m_Channel, m_VideoBuffer);
+  // Send the OK response here, that it is before the Stream end message
+  resp->add_U32(VNSI_RET_OK);
+  resp->finalise();
+  m_Socket->write(resp->getPtr(), resp->getLen());
 
-    // Send the OK response here, that it is before the Stream end message
-    resp->add_U32(VNSI_RET_OK);
-    resp->finalise();
-    m_Socket->write(resp->getPtr(), resp->getLen());
+  Activate(true);
 
-    Activate(true);
-
-    INFOLOG("Successfully switched to channel %i - %s", m_Channel->Number(), m_Channel->Name());
-    return true;
-  }
-  else
-  {
-    ERRORLOG("Can't switch to channel %i - %s", m_Channel->Number(), m_Channel->Name());
-  }
-  return false;
+  INFOLOG("Successfully switched to channel %i - %s", m_Channel->Number(), m_Channel->Name());
+  return true;
 }
 
 inline void cLiveStreamer::Activate(bool On)
@@ -182,7 +269,7 @@ void cLiveStreamer::sendStreamPacket(sStreamPacket *pkt)
   if(pkt->size == 0)
     return;
 
-  if (!m_streamHeader.initStream(VNSI_STREAM_MUXPKT, pkt->id, pkt->duration, pkt->pts, pkt->dts))
+  if (!m_streamHeader.initStream(VNSI_STREAM_MUXPKT, pkt->id, pkt->duration, pkt->pts, pkt->dts, pkt->serial))
   {
     ERRORLOG("stream response packet init fail");
     return;
@@ -202,7 +289,7 @@ void cLiveStreamer::sendStreamPacket(sStreamPacket *pkt)
 void cLiveStreamer::sendStreamChange()
 {
   cResponsePacket *resp = new cResponsePacket();
-  if (!resp->initStream(VNSI_STREAM_CHANGE, 0, 0, 0, 0))
+  if (!resp->initStream(VNSI_STREAM_CHANGE, 0, 0, 0, 0, 0))
   {
     ERRORLOG("stream response packet init fail");
     delete resp;
@@ -329,7 +416,7 @@ void cLiveStreamer::sendSignalInfo()
   if (m_Frontend == -2)
   {
     cResponsePacket *resp = new cResponsePacket();
-    if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0))
+    if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0, 0))
     {
       ERRORLOG("stream response packet init fail");
       delete resp;
@@ -377,7 +464,7 @@ void cLiveStreamer::sendSignalInfo()
     if (m_Frontend >= 0)
     {
       cResponsePacket *resp = new cResponsePacket();
-      if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0))
+      if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0, 0))
       {
         ERRORLOG("stream response packet init fail");
         delete resp;
@@ -417,7 +504,7 @@ void cLiveStreamer::sendSignalInfo()
     if (m_Frontend >= 0)
     {
       cResponsePacket *resp = new cResponsePacket();
-      if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0))
+      if (!resp->initStream(VNSI_STREAM_SIGNALINFO, 0, 0, 0, 0, 0))
       {
         ERRORLOG("stream response packet init fail");
         delete resp;
@@ -470,14 +557,63 @@ void cLiveStreamer::sendSignalInfo()
 void cLiveStreamer::sendStreamStatus()
 {
   cResponsePacket *resp = new cResponsePacket();
-  if (!resp->initStream(VNSI_STREAM_STATUS, 0, 0, 0, 0))
+  if (!resp->initStream(VNSI_STREAM_STATUS, 0, 0, 0, 0, 0))
   {
     ERRORLOG("stream response packet init fail");
     delete resp;
     return;
   }
-  resp->add_String("No Signal");
+  uint16_t error = m_Demuxer.GetError();
+  if (error & ERROR_PES_SCRAMBLE)
+  {
+    INFOLOG("Channel: scrambled %d", error);
+    resp->add_String(cString::sprintf("Channel: scrambled (%d)", error));
+  }
+  else if (error & ERROR_PES_STARTCODE)
+  {
+    INFOLOG("Channel: startcode %d", error);
+    resp->add_String(cString::sprintf("Channel: encrypted? (%d)", error));
+  }
+  else if (error & ERROR_DEMUX_NODATA)
+  {
+    INFOLOG("Channel: no data %d", error);
+    resp->add_String(cString::sprintf("Channel: no data"));
+  }
+  else
+  {
+    INFOLOG("Channel: unknown error %d", error);
+    resp->add_String(cString::sprintf("Channel: unknown error (%d)", error));
+  }
+
   resp->finaliseStream();
   m_Socket->write(resp->getPtr(), resp->getLen());
   delete resp;
+}
+
+void cLiveStreamer::sendBufferStatus()
+{
+  cResponsePacket *resp = new cResponsePacket();
+  if (!resp->initStream(VNSI_STREAM_BUFFERSTATS, 0, 0, 0, 0, 0))
+  {
+    ERRORLOG("stream response packet init fail");
+    delete resp;
+    return;
+  }
+  int32_t start, current, end;
+  bool timeshift;
+  m_Demuxer.BufferStatus(timeshift, start, current, end);
+  resp->add_U8(timeshift);
+  resp->add_S32(start);
+  resp->add_S32(current);
+  resp->add_S32(end);
+  resp->finaliseStream();
+  m_Socket->write(resp->getPtr(), resp->getLen());
+  delete resp;
+}
+
+bool cLiveStreamer::SeekTime(int64_t time, uint32_t &serial)
+{
+  bool ret = m_Demuxer.SeekTime(time);
+  serial = m_Demuxer.GetSerial();
+  return ret;
 }

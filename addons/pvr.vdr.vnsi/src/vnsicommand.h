@@ -23,27 +23,36 @@
 #define VNSI_COMMAND_H
 
 /** Current VNSI Protocol Version number */
-#define VNSIPROTOCOLVERSION      3
-
+#define VNSI_PROTOCOLVERSION 4
 
 /** Packet types */
 #define VNSI_CHANNEL_REQUEST_RESPONSE 1
 #define VNSI_CHANNEL_STREAM           2
+#define VNSI_CHANNEL_KEEPALIVE        3
+#define VNSI_CHANNEL_NETLOG           4
 #define VNSI_CHANNEL_STATUS           5
 #define VNSI_CHANNEL_SCAN             6
-
+#define VNSI_CHANNEL_OSD              7
 
 /** Response packets operation codes */
+
+#define CONFNAME_PMTTIMEOUT "PmtTimeout"
+#define CONFNAME_TIMESHIFT "Timeshift"
+#define CONFNAME_TIMESHIFTBUFFERSIZE "TimeshiftBufferSize"
+#define CONFNAME_TIMESHIFTBUFFERFILESIZE "TimeshiftBufferFileSize"
 
 /* OPCODE 1 - 19: VNSI network functions for general purpose */
 #define VNSI_LOGIN                 1
 #define VNSI_GETTIME               2
 #define VNSI_ENABLESTATUSINTERFACE 3
 #define VNSI_PING                  7
+#define VNSI_GETSETUP              8
+#define VNSI_STORESETUP            9
 
 /* OPCODE 20 - 39: VNSI network functions for live streaming */
-#define VNSI_CHANNELSTREAM_OPEN    20
-#define VNSI_CHANNELSTREAM_CLOSE   21
+#define VNSI_CHANNELSTREAM_OPEN     20
+#define VNSI_CHANNELSTREAM_CLOSE    21
+#define VNSI_CHANNELSTREAM_SEEK     22
 
 /* OPCODE 40 - 59: VNSI network functions for recording streaming */
 #define VNSI_RECSTREAM_OPEN        40
@@ -85,6 +94,10 @@
 #define VNSI_SCAN_START            143
 #define VNSI_SCAN_STOP             144
 
+/* OPCODE 160 - 179: VNSI network functions for channel scanning */
+#define VNSI_OSD_CONNECT           160
+#define VNSI_OSD_DISCONNECT        161
+#define VNSI_OSD_HITKEY            162
 
 /** Stream packet types (server -> client) */
 #define VNSI_STREAM_CHANGE       1
@@ -93,6 +106,7 @@
 #define VNSI_STREAM_MUXPKT       4
 #define VNSI_STREAM_SIGNALINFO   5
 #define VNSI_STREAM_CONTENTINFO  6
+#define VNSI_STREAM_BUFFERSTATS  7
 
 /** Scan packet types (server -> client) */
 #define VNSI_SCANNER_PERCENTAGE  1
@@ -103,12 +117,21 @@
 #define VNSI_SCANNER_FINISHED    6
 #define VNSI_SCANNER_STATUS      7
 
+/** OSD packet types (server -> client) */
+#define VNSI_OSD_MOVEWINDOW      1
+#define VNSI_OSD_CLEAR           2
+#define VNSI_OSD_OPEN            3
+#define VNSI_OSD_CLOSE           4
+#define VNSI_OSD_SETPALETTE      5
+#define VNSI_OSD_SETBLOCK        6
+
 /** Status packet types (server -> client) */
 #define VNSI_STATUS_TIMERCHANGE      1
 #define VNSI_STATUS_RECORDING        2
 #define VNSI_STATUS_MESSAGE          3
 #define VNSI_STATUS_CHANNELCHANGE    4
 #define VNSI_STATUS_RECORDINGSCHANGE 5
+#define VNSI_STATUS_EPGCHANGE        6
 
 /** Packet return codes */
 #define VNSI_RET_OK              0

@@ -105,7 +105,7 @@ bool cVNSISession::Login()
   {
     cRequestPacket vrp;
     if (!vrp.init(VNSI_LOGIN))                  throw "Can't init cRequestPacket";
-    if (!vrp.add_U32(VNSIPROTOCOLVERSION))      throw "Can't add protocol version to RequestPacket";
+    if (!vrp.add_U32(VNSI_PROTOCOLVERSION))     throw "Can't add protocol version to RequestPacket";
     if (!vrp.add_U8(false))                     throw "Can't add netlog flag";
     if (!m_name.empty())
     {
@@ -131,7 +131,7 @@ bool cVNSISession::Login()
     m_version   = ServerVersion;
     m_protocol  = (int)protocol;
 
-    if (m_protocol != VNSIPROTOCOLVERSION)     throw "Protocol versions do not match";
+    if (m_protocol != VNSI_PROTOCOLVERSION)     throw "Protocol versions do not match";
 
     if (m_name.empty())
       XBMC->Log(LOG_NOTICE, "Logged in at '%lu+%i' to '%s' Version: '%s' with protocol version '%d'",
@@ -180,6 +180,8 @@ cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int 
     if (!readData(vresp->getHeader(), vresp->getStreamHeaderLength(), iDatapacketTimeout))
     {
       delete vresp;
+      XBMC->Log(LOG_ERROR, "%s - lost sync on channel stream packet", __FUNCTION__);
+      SignalConnectionLost();
       return NULL;
     }
     vresp->extractStreamHeader();
@@ -196,6 +198,8 @@ cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int 
         {
           PVR->FreeDemuxPacket(p);
           delete vresp;
+          XBMC->Log(LOG_ERROR, "%s - lost sync on channel stream mux packet", __FUNCTION__);
+          SignalConnectionLost();
           return NULL;
         }
       }
@@ -208,10 +212,42 @@ cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int 
       {
         free(userData);
         delete vresp;
+        XBMC->Log(LOG_ERROR, "%s - lost sync on channel stream (other) packet", __FUNCTION__);
+        SignalConnectionLost();
         return NULL;
       }
     }
     vresp->setStream(userData, userDataLength);
+  }
+  else if (channelID == VNSI_CHANNEL_OSD)
+  {
+    vresp = new cResponsePacket();
+
+    if (!readData(vresp->getHeader(), vresp->getOSDHeaderLength(), iDatapacketTimeout))
+    {
+      XBMC->Log(LOG_ERROR, "%s - lost sync on osd packet", __FUNCTION__);
+      SignalConnectionLost();
+      return NULL;
+    }
+    vresp->extractOSDHeader();
+    userDataLength = vresp->getUserDataLength();
+
+    if (userDataLength > 5000000) return NULL; // how big can these packets get?
+    userData = NULL;
+    if (userDataLength > 0)
+    {
+      userData = (uint8_t*)malloc(userDataLength);
+      if (!userData) return NULL;
+      if (!readData(userData, userDataLength, iDatapacketTimeout))
+      {
+        free(userData);
+        delete vresp;
+        XBMC->Log(LOG_ERROR, "%s - lost sync on additional osd packet", __FUNCTION__);
+        SignalConnectionLost();
+        return NULL;
+      }
+    }
+    vresp->setOSD(userData, userDataLength);
   }
   else
   {
@@ -220,6 +256,8 @@ cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int 
     if (!readData(vresp->getHeader(), vresp->getHeaderLength(), iDatapacketTimeout))
     {
       delete vresp;
+      XBMC->Log(LOG_ERROR, "%s - lost sync on response packet", __FUNCTION__);
+      SignalConnectionLost();
       return NULL;
     }
     vresp->extractHeader();
@@ -235,6 +273,8 @@ cResponsePacket* cVNSISession::ReadMessage(int iInitialTimeout /*= 10000*/, int 
       {
         free(userData);
         delete vresp;
+        XBMC->Log(LOG_ERROR, "%s - lost sync on additional response packet", __FUNCTION__);
+        SignalConnectionLost();
         return NULL;
       }
     }

@@ -63,6 +63,14 @@ void cxSocket::close() {
   }
 }
 
+void cxSocket::Shutdown()
+{
+  if(m_fd >= 0)
+  {
+    ::shutdown(m_fd, SHUT_RD);
+  }
+}
+
 void cxSocket::LockWrite()
 {
   m_MutexWrite.Lock();

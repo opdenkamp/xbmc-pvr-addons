@@ -43,6 +43,7 @@ protected:
   void PmtChange(int pidChange);
   cChannel *PmtChannel();
   void Receive(uchar *data, int length);
+  void Attach(bool on);
   cDevice          *m_Device;
   cLivePatFilter   *m_PatFilter;
   cLiveReceiver    *m_Receiver;

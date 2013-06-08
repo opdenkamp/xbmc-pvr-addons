@@ -206,3 +206,39 @@ msgstr ""
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr ""
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr ""
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr ""
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr ""
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr ""
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr ""
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr ""
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr ""
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr ""

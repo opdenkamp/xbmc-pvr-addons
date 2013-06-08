@@ -32,6 +32,8 @@ template <class T> class MythPointer;
 class MythTimestamp
 {
 public:
+  friend class MythConnection;
+
   MythTimestamp();
   MythTimestamp(cmyth_timestamp_t cmyth_timestamp);
   MythTimestamp(CStdString time, bool datetime);
@@ -50,6 +52,7 @@ public:
   CStdString String();
   CStdString IsoString();
   CStdString DisplayString(bool use12hClock);
+  CStdString NumString();
 
 private:
   boost::shared_ptr<MythPointer<cmyth_timestamp_t> > m_timestamp_t;

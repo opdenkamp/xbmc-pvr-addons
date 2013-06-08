@@ -35,6 +35,7 @@ class MythProgramInfo;
 class MythEventHandler;
 class MythRecordingRule;
 class MythStorageGroupFile;
+class MythTimestamp;
 
 template <class T> class MythPointer;
 template <class T> class MythPointerThreadSafe;
@@ -72,7 +73,7 @@ public:
   bool DeleteRecording(MythProgramInfo &recording);
   ProgramInfoMap GetRecordedPrograms();
   MythProgramInfo GetRecordedProgram(const CStdString &basename);
-  MythProgramInfo GetRecordedProgram(int chanid, time_t recstartts);
+  MythProgramInfo GetRecordedProgram(int chanid, const MythTimestamp &recstartts);
 
   // Timers
   ProgramInfoMap GetPendingPrograms();

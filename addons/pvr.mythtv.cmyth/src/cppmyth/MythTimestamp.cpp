@@ -94,3 +94,10 @@ CStdString MythTimestamp::DisplayString(bool use12hClock)
   bool succeded=cmyth_timestamp_to_display_string(time, *m_timestamp_t, use12hClock) == 0;
   return succeded ? CStdString(time) : CStdString("");
 }
+
+CStdString MythTimestamp::NumString()
+{
+  char time[15];
+  bool succeded = cmyth_timestamp_to_numstring(time, *m_timestamp_t) == 0;
+  return succeded ? CStdString(time) : CStdString("");
+}

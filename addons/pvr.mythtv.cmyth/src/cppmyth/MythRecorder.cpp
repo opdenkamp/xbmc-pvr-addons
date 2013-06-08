@@ -159,7 +159,7 @@ bool MythRecorder::SpawnLiveTV(MythChannel &channel)
   // Check channel
   *m_liveChainUpdated = 0;
   cmyth_recorder_t recorder = NULL;
-  recorder = cmyth_spawn_live_tv(*m_recorder_t, 64*1024, 64*1024, MythRecorder::prog_update_callback, &pErr, const_cast<char*>(channel.Number().c_str()));
+  recorder = cmyth_spawn_live_tv(*m_recorder_t, RCV_BUF_DATA_SIZE, TCP_RCV_BUF_DATA_SIZE, MythRecorder::prog_update_callback, &pErr, const_cast<char*>(channel.Number().c_str()));
 
   if (recorder && pErr == NULL) {
     *m_recorder_t = recorder;

@@ -114,7 +114,7 @@ cmyth_get_free_inputlist(cmyth_recorder_t rec)
 	}
 
 	sprintf(buf,"QUERY_RECORDER %"PRIu32"[]:[]GET_FREE_INPUTS", rec->rec_id);
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 	if ((err = cmyth_send_message(rec->rec_conn, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			"%s: cmyth_send_message() failed (%d)\n",
@@ -138,7 +138,7 @@ cmyth_get_free_inputlist(cmyth_recorder_t rec)
 	}
 
 	out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 	return inputlist;
 }
 

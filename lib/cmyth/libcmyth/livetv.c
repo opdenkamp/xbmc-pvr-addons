@@ -121,6 +121,7 @@ cmyth_livetv_chain_create(char * chainid)
 	ret->chain_files = NULL;
 	ret->progs = NULL;
 	ret->livetv_watch = 0; /* JLB: Manage program breaks */
+	ret->livetv_buflen = 0;
 	ret->livetv_tcp_rcvbuf = 0;
 	ret->livetv_block_len = 0;
 	ref_set_destroy(ret, (ref_destroy_t)cmyth_livetv_chain_destroy);
@@ -443,7 +444,7 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid)
 		*/
 
 		if (cmyth_livetv_chain_has_url(rec, url) == -1) {
-			ft = cmyth_conn_connect_file(loc_prog, rec->rec_conn, 4096, rec->rec_livetv_chain->livetv_tcp_rcvbuf);
+			ft = cmyth_conn_connect_file(loc_prog, rec->rec_conn, rec->rec_livetv_chain->livetv_buflen, rec->rec_livetv_chain->livetv_tcp_rcvbuf);
 			if (!ft) {
 				cmyth_dbg(CMYTH_DBG_ERROR,
 					  "%s: cmyth_conn_connect_file(%s) failed\n",
@@ -663,7 +664,7 @@ cmyth_livetv_done_recording(cmyth_recorder_t rec, char * msg)
  *					caller needs to do this on a failure.
  */
 cmyth_recorder_t
-cmyth_livetv_chain_setup(cmyth_recorder_t rec, int32_t tcp_rcvbuf,
+cmyth_livetv_chain_setup(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvbuf,
 			 void (*prog_update_callback)(cmyth_proginfo_t))
 {
 
@@ -703,6 +704,7 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, int32_t tcp_rcvbuf,
 	}
 
 	/* JLB: Set tcp receive buffer for the chain files */
+	new_rec->rec_livetv_chain->livetv_buflen = buflen;
 	new_rec->rec_livetv_chain->livetv_tcp_rcvbuf = tcp_rcvbuf;
 	/* JLB: Manage program breaks. Switch OFF watch signal */
 	new_rec->rec_livetv_chain->livetv_watch = 0;
@@ -713,7 +715,7 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, int32_t tcp_rcvbuf,
 				loc_prog->proginfo_pathname);
 
 	if(cmyth_livetv_chain_has_url(new_rec, url) == -1) {
-		ft = cmyth_conn_connect_file(loc_prog, new_rec->rec_conn, 4096, new_rec->rec_livetv_chain->livetv_tcp_rcvbuf);
+		ft = cmyth_conn_connect_file(loc_prog, new_rec->rec_conn, new_rec->rec_livetv_chain->livetv_buflen, new_rec->rec_livetv_chain->livetv_tcp_rcvbuf);
 		if (!ft) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: cmyth_conn_connect_file(%s) failed\n",
@@ -736,7 +738,7 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, int32_t tcp_rcvbuf,
 			}
 			else {
 				/* now switch to the valid program */
-				cmyth_livetv_chain_switch(new_rec, 0);
+				cmyth_livetv_chain_switch_last(new_rec);
 				new_rec->rec_livetv_chain->chain_switch_on_create = 0;
 			}
 		}
@@ -820,7 +822,7 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 	if (dir == 0)
 		return 1;
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	ret = 0;
 
@@ -841,9 +843,9 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 				  "%s: wait until livetv_watch is OFF\n",
 				  __FUNCTION__);
 			for (i = 0; i < 4; i++) {
-				pthread_mutex_unlock(&mutex);
+				pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 				usleep(500000);
-				pthread_mutex_lock(&mutex);
+				pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 				if (rec->rec_livetv_chain->livetv_watch == 0)
 					break;
 			}
@@ -873,7 +875,7 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 
 	out:
 
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -1131,7 +1133,7 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, int64_t offset, int8_t whence)
 		whence = WHENCE_SET;
 	}
 
-	if (fp && cur >=0)
+	if (cur >=0 && cur < rec->rec_livetv_chain->chain_ct && fp)
 	{
 		if ((ret = cmyth_file_seek(fp, offset, whence)) >= 0) {
 			cur -= rec->rec_livetv_chain->chain_current;
@@ -1302,7 +1304,7 @@ cmyth_spawn_live_tv(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvbuf,
 				break;
 		}
 
-		if ((rtrn = cmyth_livetv_chain_setup(rec, tcp_rcvbuf,
+		if ((rtrn = cmyth_livetv_chain_setup(rec, buflen, tcp_rcvbuf,
 							prog_update_callback)) == NULL) {
 			*err = "Failed to setup livetv.";
 			goto err;

@@ -186,7 +186,6 @@ bool PVRClientMythTV::Connect()
   if (!m_con.IsConnected())
   {
     XBMC->Log(LOG_ERROR,"Failed to connect to MythTV backend on %s:%d", g_szMythHostname.c_str(), g_iMythPort);
-    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30300));
     return false;
   }
 
@@ -622,7 +621,7 @@ void PVRClientMythTV::EventUpdateRecordings()
           }
         }
         else
-          XBMC->Log(LOG_ERROR, "%s - Add recording failed for %u %ld", __FUNCTION__, event.ChannelID(), event.RecordingStartTimeslot());
+          XBMC->Log(LOG_ERROR, "%s - Add recording failed for %u %s", __FUNCTION__, event.ChannelID(), event.RecordingStartTimeslot().NumString().c_str());
         break;
       }
       case MythEventHandler::CHANGE_UPDATE:
@@ -1389,7 +1388,10 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
             m_pEventHandler->SetRecorder(m_rec);
 
             if (m_rec.SpawnLiveTV((*channelByNumberIt).second))
+            {
+              XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
               return true;
+            }
           }
         }
       }
@@ -1407,18 +1409,13 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
 
     XBMC->Log(LOG_ERROR,"%s - Failed to open live stream", __FUNCTION__);
     XBMC->QueueNotification(QUEUE_WARNING, XBMC->GetLocalizedString(30305)); // Channel unavailable
-
-    return false;
   }
   else
   {
-    if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG,"%s - Done", __FUNCTION__);
-
-    return true;
+    XBMC->Log(LOG_ERROR, "%s - Live stream is already opened. recorder: %lu", __FUNCTION__, m_rec.ID());
   }
+  return false;
 }
-
 
 void PVRClientMythTV::CloseLiveStream()
 {
@@ -1610,7 +1607,14 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)
     // Enable playback mode: Keep quiet on connection
     m_pEventHandler->EnablePlayback();
 
-    m_file = m_con.ConnectFile(it->second);
+    // Currently we only request the stream from the master backend.
+    // Future implementations could request the stream from slaves if not available on the master.
+
+    // Create dedicated control connection for file playback; smart pointer deletes it when file gets deleted.
+    MythConnection fileControlConnection(g_szMythHostname, g_iMythPort);
+    if (!fileControlConnection.IsNull())
+      m_file = fileControlConnection.ConnectFile(it->second);
+
     m_pEventHandler->SetRecordingListener(recording.strRecordingId, m_file);
 
     // Resume fileOps
@@ -1637,6 +1641,7 @@ void PVRClientMythTV::CloseRecordedStream()
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
   m_file = MythFile();
+  m_pEventHandler->SetRecordingListener("", m_file);
 
   m_pEventHandler->DisablePlayback();
 

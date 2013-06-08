@@ -40,10 +40,6 @@
 
 #if defined(_MSC_VER)
 #include "cmyth_msc.h"
-//#define PTHREAD_MUTEX_INITIALIZER NULL;
-#define PTHREAD_MUTEX_INITIALIZER InitializeCriticalSection(&mutex);
-//typedef void* pthread_mutex_t;
-typedef CRITICAL_SECTION pthread_mutex_t;
 #else
 #include <unistd.h>
 #include <sys/types.h>
@@ -58,9 +54,6 @@ typedef int cmyth_socket_t;
 #define closesocket(fd) close(fd)
 #endif /* _MSC_VER */
 
-#define mutex __cmyth_mutex
-extern pthread_mutex_t mutex;
-
 /*
  * Some useful constants
  */
@@ -69,6 +62,7 @@ extern pthread_mutex_t mutex;
 #define CMYTH_INT16_LEN (sizeof("-65536") - 1)
 #define CMYTH_INT8_LEN (sizeof("-256") - 1)
 #define CMYTH_TIMESTAMP_LEN (sizeof("YYYY-MM-DDTHH:MM:SS") - 1)
+#define CMYTH_TIMESTAMP_NUMERIC_LEN (sizeof("YYYYMMDDHHMMSS") - 1)
 #define CMYTH_DATESTAMP_LEN (sizeof("YYYY-MM-DD") - 1)
 #define CMYTH_UTC_LEN (sizeof("1240120680") - 1)
 #define CMYTH_COMMBREAK_START 4
@@ -91,6 +85,7 @@ struct cmyth_conn {
 	char *           server;         /**< hostname of server */
 	uint16_t         port;           /**< port of server */
 	cmyth_conn_ann_t conn_ann;       /**< connection announcement */
+	pthread_mutex_t  conn_mutex;
 };
 
 /* Sergio: Added to support new livetv protocol */
@@ -104,6 +99,7 @@ struct cmyth_livetv_chain {
 	char **chain_urls;
 	cmyth_file_t *chain_files; /* File pointers for the urls */
 	volatile int8_t livetv_watch; /* JLB: Manage program breaks */
+	int32_t livetv_buflen;
 	int32_t livetv_tcp_rcvbuf;
 	int32_t livetv_block_len;
 };
@@ -255,6 +251,7 @@ struct cmyth_proginfo {
 struct cmyth_proglist {
 	cmyth_proginfo_t *proglist_list;
 	int proglist_count;
+	pthread_mutex_t proglist_mutex;
 };
 
 /*

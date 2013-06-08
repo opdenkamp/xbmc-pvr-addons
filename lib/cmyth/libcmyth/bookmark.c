@@ -41,7 +41,7 @@ int64_t cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
 	}
 	sprintf(buf,"%s %"PRIu32" %s","QUERY_BOOKMARK",prog->proginfo_chanId,
 		start_ts_dt);
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);;
 	if ((err = cmyth_send_message(conn,buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			"%s: cmyth_send_message() failed (%d)\n",
@@ -66,7 +66,7 @@ int64_t cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
 	}
 
    out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 	return ret;
 }
 
@@ -94,7 +94,7 @@ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, int64_t bookmar
 		sprintf(buf, "SET_BOOKMARK %"PRIu32" %s %"PRId32" %"PRId32, prog->proginfo_chanId,
 				start_ts_dt, (int32_t)(bookmark >> 32), (int32_t)(bookmark & 0xffffffff));
 	}
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&conn->conn_mutex);;
 	if ((ret = cmyth_send_message(conn,buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			"%s: cmyth_send_message() failed (%d)\n",
@@ -106,6 +106,6 @@ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, int64_t bookmar
 			  __FUNCTION__);
 	}
    out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&conn->conn_mutex);
 	return ret;
 }

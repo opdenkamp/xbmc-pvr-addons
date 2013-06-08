@@ -180,7 +180,7 @@ cmyth_recorder_is_recording(cmyth_recorder_t rec)
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]IS_RECORDING",
 		 rec->rec_id);
@@ -205,7 +205,7 @@ cmyth_recorder_is_recording(cmyth_recorder_t rec)
 	ret = c;
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -242,7 +242,7 @@ cmyth_recorder_get_framerate(cmyth_recorder_t rec,
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_FRAMERATE",
 		 rec->rec_id);
@@ -269,7 +269,7 @@ cmyth_recorder_get_framerate(cmyth_recorder_t rec,
 	ret = 0;
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -458,7 +458,7 @@ cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec, int cancel)
 		return -ENOSYS;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]CANCEL_NEXT_RECORDING[]:[]%"PRIu32 ,rec->rec_id, cancel == 1);
 
@@ -475,7 +475,7 @@ cmyth_recorder_cancel_next_recording(cmyth_recorder_t rec, int cancel)
 	ret = 0;
 
 fail:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -511,7 +511,7 @@ cmyth_recorder_pause(cmyth_recorder_t rec)
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	sprintf(Buffer, "QUERY_RECORDER %"PRIu32"[]:[]PAUSE", rec->rec_id);
 	if ((ret=cmyth_send_message(rec->rec_conn, Buffer)) < 0) {
@@ -530,7 +530,7 @@ cmyth_recorder_pause(cmyth_recorder_t rec)
 	ret = 0;
 
     err:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -624,7 +624,7 @@ cmyth_recorder_change_channel(cmyth_recorder_t rec,
 		return -ENOSYS;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg),
 		 "QUERY_RECORDER %"PRIu32"[]:[]CHANGE_CHANNEL[]:[]%d",
@@ -658,7 +658,7 @@ cmyth_recorder_change_channel(cmyth_recorder_t rec,
 	ret = 0;
 
     fail:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -697,7 +697,7 @@ cmyth_recorder_set_channel(cmyth_recorder_t rec, char *channame)
 		return -ENOSYS;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg),
 		 "QUERY_RECORDER %"PRIu32"[]:[]SET_CHANNEL[]:[]%s",
@@ -731,7 +731,7 @@ cmyth_recorder_set_channel(cmyth_recorder_t rec, char *channame)
 	ret = 0;
 
     fail:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -889,7 +889,7 @@ cmyth_recorder_check_channel(cmyth_recorder_t rec,
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg),
 		 "QUERY_RECORDER %"PRIu32"[]:[]CHECK_CHANNEL[]:[]%s",
@@ -910,7 +910,7 @@ cmyth_recorder_check_channel(cmyth_recorder_t rec,
 	ret = 1;
 
     fail:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -976,7 +976,7 @@ cmyth_recorder_get_program_info(cmyth_recorder_t rec)
 			  __FUNCTION__);
 		goto out;
 	}
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	if(rec->rec_conn->conn_version >= 26)
 		snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_CURRENT_RECORDING",
@@ -1010,7 +1010,7 @@ cmyth_recorder_get_program_info(cmyth_recorder_t rec)
 	}
 
   out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return proginfo;
 }
@@ -1106,7 +1106,7 @@ cmyth_recorder_get_next_program_info(cmyth_recorder_t rec,
 
 	control = rec->rec_conn;
 
-        pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	t = time(NULL);
 	tm = localtime(&t);
@@ -1192,7 +1192,7 @@ cmyth_recorder_get_next_program_info(cmyth_recorder_t rec,
 	ret = 0;
 
     out:
-        pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
         return ret;
 }
@@ -1351,7 +1351,7 @@ cmyth_recorder_spawn_livetv(cmyth_recorder_t rec)
 		return -ENOSYS;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]SPAWN_LIVETV",
 		 rec->rec_id);
@@ -1373,7 +1373,7 @@ cmyth_recorder_spawn_livetv(cmyth_recorder_t rec)
 	ret = 0;
 
     fail:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -1395,7 +1395,7 @@ cmyth_recorder_spawn_chain_livetv(cmyth_recorder_t rec, char* channame)
 		return -ENOSYS;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 
 	/* Get our own IP address */
@@ -1436,7 +1436,7 @@ cmyth_recorder_spawn_chain_livetv(cmyth_recorder_t rec, char* channame)
 	ret = 0;
 
     fail:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -1454,7 +1454,7 @@ cmyth_recorder_stop_livetv(cmyth_recorder_t rec)
 		return -ENOSYS;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]STOP_LIVETV",
 		 rec->rec_id);
@@ -1476,7 +1476,7 @@ cmyth_recorder_stop_livetv(cmyth_recorder_t rec)
 	ret = 0;
 
     fail:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -1497,7 +1497,7 @@ cmyth_recorder_done_ringbuf(cmyth_recorder_t rec)
 	if(rec->rec_conn->conn_version >= 26)
 		return 0;
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]DONE_RINGBUF",
 		 rec->rec_id);
@@ -1519,7 +1519,7 @@ cmyth_recorder_done_ringbuf(cmyth_recorder_t rec)
 	ret = 0;
 
     fail:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }

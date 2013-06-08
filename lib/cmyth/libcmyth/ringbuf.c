@@ -145,7 +145,7 @@ cmyth_ringbuf_setup(cmyth_recorder_t rec)
 
 	control = rec->rec_conn;
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg),
 		 "QUERY_RECORDER %"PRIu32"[]:[]SETUP_RING_BUFFER[]:[]0",
@@ -237,7 +237,7 @@ cmyth_ringbuf_setup(cmyth_recorder_t rec)
 	new_rec->rec_ring->ringbuf_fill = fill;
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return new_rec;
 }
@@ -344,7 +344,7 @@ cmyth_ringbuf_request_block(cmyth_recorder_t rec, int32_t len)
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	if(len > rec->rec_ring->conn_data->conn_tcp_rcvbuf)
 		len = rec->rec_ring->conn_data->conn_tcp_rcvbuf;
@@ -374,7 +374,7 @@ cmyth_ringbuf_request_block(cmyth_recorder_t rec, int32_t len)
 	ret = c;
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }
@@ -410,7 +410,7 @@ int32_t cmyth_ringbuf_read(cmyth_recorder_t rec, char *buf, int32_t len)
 		return -EINVAL;
 	}
 
-	pthread_mutex_lock (&mutex);
+	pthread_mutex_lock (&rec->rec_conn->conn_mutex);
 
 	if(len > rec->rec_ring->conn_data->conn_tcp_rcvbuf)
 		len = rec->rec_ring->conn_data->conn_tcp_rcvbuf;
@@ -507,7 +507,7 @@ int32_t cmyth_ringbuf_read(cmyth_recorder_t rec, char *buf, int32_t len)
 
 	ret = (int32_t)(cur - buf);
 out:
-	pthread_mutex_unlock (&mutex);
+	pthread_mutex_unlock (&rec->rec_conn->conn_mutex);
 	return ret;
 }
 
@@ -550,7 +550,7 @@ cmyth_ringbuf_seek(cmyth_recorder_t rec,
 	if ((offset == 0) && (whence == WHENCE_CUR))
 		return ring->file_pos;
 
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg),
 		 "QUERY_RECORDER %"PRIu32"[]:[]SEEK_RINGBUF[]:[]%"PRId32"[]:[]%"PRId32"[]:[]%"PRId8"[]:[]%"PRId32"[]:[]%"PRId32,
@@ -593,7 +593,7 @@ cmyth_ringbuf_seek(cmyth_recorder_t rec,
 	ret = ring->file_pos;
 
     out:
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 
 	return ret;
 }

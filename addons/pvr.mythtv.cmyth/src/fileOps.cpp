@@ -298,7 +298,7 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
   unsigned long long totalLength = source.Length();
   unsigned long long totalRead = 0;
 
-  const long buffersize = 32768;
+  const long buffersize = RCV_BUF_IMAGE_SIZE;
   char* buffer = new char[buffersize];
 
   while (totalRead < totalLength)

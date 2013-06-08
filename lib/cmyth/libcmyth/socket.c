@@ -369,6 +369,17 @@ cmyth_rcv_string(cmyth_conn_t conn, int *err, char *buf, int buflen, int count)
 			}
 		}
 
+		if (sep_start && conn->conn_buf[conn->conn_pos] != (unsigned char)*state) {
+			/*
+			 * Reset separator in case the current character does not match
+			 * the expected part of the separator. This needs to take place
+			 * before checking if the current character starts a new separator.
+			 * (To resolve issues with strings that look like [[]:[])
+			 */
+			sep_start = NULL;
+			state = separator;
+		}
+
 		if (conn->conn_buf[conn->conn_pos] == (unsigned char)*state) {
 			/*
 			 * We matched the next (possibly first) step
@@ -378,13 +389,6 @@ cmyth_rcv_string(cmyth_conn_t conn, int *err, char *buf, int buflen, int count)
 				sep_start = &buf[placed];
 			}
 			++state;
-		} else {
-			/*
-			 * No match with separator, reset the state to the
-			 * beginning.
-			 */
-			sep_start = NULL;
-			state = separator;
 		}
 
 		if (placed < buflen) {

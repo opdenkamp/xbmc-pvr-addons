@@ -24,7 +24,7 @@
 
 MythProgramInfo::MythProgramInfo()
   : m_proginfo_t()
-  , m_framerate(-1)
+  , m_frameRate(-1)
   , m_coverart("")
   , m_fanart("")
 {
@@ -32,7 +32,7 @@ MythProgramInfo::MythProgramInfo()
 
 MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
   : m_proginfo_t(new MythPointer<cmyth_proginfo_t>())
-  , m_framerate(-1)
+  , m_frameRate(-1)
   , m_coverart("")
   , m_fanart("")
 {
@@ -208,14 +208,14 @@ int MythProgramInfo::Priority()
   return cmyth_proginfo_priority(*m_proginfo_t); // Might want to use recpriority2 instead
 }
 
-void MythProgramInfo::SetFramerate(const long long framerate)
+void MythProgramInfo::SetFrameRate(const long long frameRate)
 {
-  m_framerate = framerate;
+  m_frameRate = frameRate;
 }
 
-long long MythProgramInfo::Framterate() const
+long long MythProgramInfo::FrameRate() const
 {
-  return m_framerate;
+  return m_frameRate;
 }
 
 CStdString MythProgramInfo::IconPath()

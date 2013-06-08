@@ -75,21 +75,16 @@ public:
   class RecordingChangeEvent
   {
   public:
-    RecordingChangeEvent(RecordingChangeType type, unsigned int chanid, char *recstartts)
+    RecordingChangeEvent(RecordingChangeType type, unsigned int chanid, const CStdString &recstartts)
       : m_type(type)
       , m_channelID(chanid)
-      , m_recordStartTimeSlot(0)
     {
-      if (recstartts) {
-        MythTimestamp time(recstartts, false);
-        m_recordStartTimeSlot = time.UnixTime();
-      }
+      m_recordingStartTimeSlot = MythTimestamp(recstartts, false);
     }
 
     RecordingChangeEvent(RecordingChangeType type, const MythProgramInfo &prog)
       : m_type(type)
       , m_channelID(0)
-      , m_recordStartTimeSlot(0)
       , m_prog(prog)
     {
     }
@@ -97,20 +92,19 @@ public:
     RecordingChangeEvent(RecordingChangeType type)
       : m_type(type)
       , m_channelID(0)
-      , m_recordStartTimeSlot(0)
     {
     }
 
     RecordingChangeType Type() const { return m_type; }
     unsigned int ChannelID() const { return m_channelID; };
-    time_t RecordingStartTimeslot() const { return m_recordStartTimeSlot; }
+    MythTimestamp RecordingStartTimeslot() const { return m_recordingStartTimeSlot; }
     MythProgramInfo Program() const { return m_prog; }
 
   private:
     RecordingChangeType m_type;
-    unsigned int m_channelID;     // ADD and DELETE
-    time_t m_recordStartTimeSlot; // ADD and DELETE
-    MythProgramInfo m_prog;       // UPDATE
+    unsigned int m_channelID;               // ADD and DELETE
+    MythTimestamp m_recordingStartTimeSlot; // ADD and DELETE
+    MythProgramInfo m_prog;                 // UPDATE
   };
 
   bool HasRecordingChangeEvent() const;

@@ -1,3 +1,7 @@
+1.8.9
+
+[updated] sync with PVR API v1.8.0
+
 1.7.9
 
 [fixed] loading favourites without groups/folders

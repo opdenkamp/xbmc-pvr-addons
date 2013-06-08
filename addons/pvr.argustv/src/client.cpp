@@ -388,9 +388,10 @@ PVR_ERROR DialogChannelScan()
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
 {
   NOTUSED(menuhook);
+  NOTUSED(item);
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 

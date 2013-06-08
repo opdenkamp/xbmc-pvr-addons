@@ -7,7 +7,7 @@ ifeq ($(USE_BUILDROOT),1)
 	export CFLAGS+=-isystem$(SYSROOT)/usr/include -isystem$(SYSROOT)/opt/vc/include -isystem$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads -isystem$(PREFIX)/include -isystem$(PREFIX)/usr/include/mysql --sysroot=$(SYSROOT)
 	export CXXFLAGS=$(CFLAGS) --sysroot=$(SYSROOT)
 	export CPPFLAGS=$(CFLAGS) --sysroot=$(SYSROOT)
-	export LDFLAGS=-L$(SYSROOT)/opt/vc/lib -L$(XBMCPREFIX)/lib
+	export LDFLAGS=-Wl,-rpath-link,${SYSROOT}/opt/vc/lib -L$(SYSROOT)/opt/vc/lib -L$(XBMCPREFIX)/lib
 	export LD=$(TOOLCHAIN)/bin/$(HOST)-ld 
 	export CC=$(TOOLCHAIN)/bin/$(HOST)-gcc 
 	export CXX=$(TOOLCHAIN)/bin/$(HOST)-g++ 

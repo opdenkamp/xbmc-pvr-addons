@@ -1,0 +1,2 @@
+; filename                       mirror
+zlib-vc100-1.2.5-lib.tar.bz2     http://mirrors.xbmc.org/build-deps/win32/

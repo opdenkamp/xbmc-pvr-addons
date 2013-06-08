@@ -34,6 +34,7 @@ class cRequestPacket
     bool add_U32(uint32_t ul);
     bool add_S32(int32_t l);
     bool add_U64(uint64_t ull);
+    bool add_S64(int64_t ll);
 
     uint8_t* getPtr() { return buffer; }
     uint32_t getLen() { return bufUsed; }

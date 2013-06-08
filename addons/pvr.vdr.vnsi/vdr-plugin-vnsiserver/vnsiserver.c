@@ -36,10 +36,13 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
+#include <sys/stat.h>
 
 #include <vdr/plugin.h>
 #include <vdr/shutdown.h>
+#include <vdr/videodir.h>
 
+#include "vnsi.h"
 #include "vnsiserver.h"
 #include "vnsiclient.h"
 
@@ -179,6 +182,12 @@ void cVNSIServer::Action(void)
   fd_set fds;
   struct timeval tv;
 
+  // initial time for channels change
+  struct timespec channelsUpdate;
+  channelsUpdate.tv_sec = 0;
+  channelsUpdate.tv_nsec = 0;
+  cTimeMs chanTimer(0);
+
   // get initial state of the recordings
   int recState = -1;
   Recordings.StateChanged(recState);
@@ -189,6 +198,22 @@ void cVNSIServer::Action(void)
 
   // last update of epg
   time_t epgUpdate = cSchedules::Modified();
+
+  // delete old timeshift file
+  cString cmd;
+  struct stat sb;
+  if ((*TimeshiftBufferDir) && stat(TimeshiftBufferDir, &sb) == 0 && S_ISDIR(sb.st_mode))
+  {
+    if (TimeshiftBufferDir[strlen(TimeshiftBufferDir)-1] == '/')
+      cmd = cString::sprintf("rm -f %s*.vnsi", TimeshiftBufferDir);
+    else
+      cmd = cString::sprintf("rm -f %s/*.vnsi", TimeshiftBufferDir);
+  }
+  else
+  {
+    cmd = cString::sprintf("rm -f %s/*.vnsi", VideoDirectory);
+  }
+  int ret = system(cmd);
 
   while (Running())
   {
@@ -221,16 +246,21 @@ void cVNSIServer::Action(void)
       }
 
       // trigger clients to reload the modified channel list
-      if(m_clients.size() > 0)
+      if(m_clients.size() > 0 && chanTimer.TimedOut())
       {
-        Channels.Lock(false);
-        if(Channels.Modified() != 0)
+        struct stat s;
+        if(stat(Channels.FileName(), &s) != -1)
         {
-          INFOLOG("Requesting clients to reload channel list");
-          for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
-            (*i)->ChannelChange();
+          if ((s.st_mtim.tv_sec != channelsUpdate.tv_sec) &&
+              (s.st_mtim.tv_nsec != channelsUpdate.tv_nsec))
+          {
+            INFOLOG("Requesting clients to reload channel list");
+            for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
+              (*i)->ChannelChange();
+            channelsUpdate = s.st_mtim;
+          }
         }
-        Channels.Unlock();
+        chanTimer.Set(5000);
       }
 
       // reset inactivity timeout as long as there are clients connected

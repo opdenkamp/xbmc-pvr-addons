@@ -1,8 +1,5 @@
 /*
- *      vdr-plugin-vnsi - XBMC server plugin for VDR
- *
- *      Copyright (C) 2010 Alwin Esch (Team XBMC)
- *
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -16,9 +13,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -102,7 +98,6 @@ private:
   int64_t         m_DTS;
   int64_t         m_PTS;
 
-
   int Parse_H264(uint32_t startcode, int buf_ptr, bool &complete);
   bool Parse_PPS(uint8_t *buf, int len);
   bool Parse_SLH(uint8_t *buf, int len, h264_private::VCL_NAL &vcl);
@@ -110,7 +105,7 @@ private:
   bool IsFirstVclNal(h264_private::VCL_NAL &vcl);
 
 public:
-  cParserH264(int pID, cTSStream *stream);
+  cParserH264(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParserH264();
 
   virtual void Parse(sStreamPacket *pkt);

@@ -1,8 +1,5 @@
 /*
- *      vdr-plugin-vnsi - XBMC server plugin for VDR
- *
- *      Copyright (C) 2010 Alwin Esch (Team XBMC)
- *
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -16,9 +13,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -77,87 +73,10 @@ inline bool PesIsPS1Packet(const uchar *p)
   return ((p)[3] == PRIVATE_STREAM1 || (p)[3] == PRIVATE_STREAM3 );
 }
 
-inline bool PesIsPaddingPacket(const uchar *p)
-{
-  return ((p)[3] == PADDING_STREAM);
-}
-
 inline bool PesIsAudioPacket(const uchar *p)
 {
   return (PesIsMPEGAudioPacket(p) || PesIsPS1Packet(p));
 }
-
-#if APIVERSNUM < 10701
-
-#define TS_ERROR              0x80
-#define TS_PAYLOAD_START      0x40
-#define TS_TRANSPORT_PRIORITY 0x20
-#define TS_PID_MASK_HI        0x1F
-#define TS_SCRAMBLING_CONTROL 0xC0
-#define TS_ADAPT_FIELD_EXISTS 0x20
-#define TS_PAYLOAD_EXISTS     0x10
-#define TS_CONT_CNT_MASK      0x0F
-#define TS_ADAPT_DISCONT      0x80
-#define TS_ADAPT_RANDOM_ACC   0x40 // would be perfect for detecting independent frames, but unfortunately not used by all broadcasters
-#define TS_ADAPT_ELEM_PRIO    0x20
-#define TS_ADAPT_PCR          0x10
-#define TS_ADAPT_OPCR         0x08
-#define TS_ADAPT_SPLICING     0x04
-#define TS_ADAPT_TP_PRIVATE   0x02
-#define TS_ADAPT_EXTENSION    0x01
-
-inline bool TsHasPayload(const uchar *p)
-{
-  return p[3] & TS_PAYLOAD_EXISTS;
-}
-
-inline bool TsHasAdaptationField(const uchar *p)
-{
-  return p[3] & TS_ADAPT_FIELD_EXISTS;
-}
-
-inline bool TsPayloadStart(const uchar *p)
-{
-  return p[1] & TS_PAYLOAD_START;
-}
-
-inline bool TsError(const uchar *p)
-{
-  return p[1] & TS_ERROR;
-}
-
-inline int TsPid(const uchar *p)
-{
-  return (p[1] & TS_PID_MASK_HI) * 256 + p[2];
-}
-
-inline bool TsIsScrambled(const uchar *p)
-{
-  return p[3] & TS_SCRAMBLING_CONTROL;
-}
-
-inline int TsPayloadOffset(const uchar *p)
-{
-  return (p[3] & TS_ADAPT_FIELD_EXISTS) ? p[4] + 5 : 4;
-}
-
-inline int TsGetPayload(const uchar **p)
-{
-  int o = TsPayloadOffset(*p);
-  *p += o;
-  return TS_SIZE - o;
-}
-
-inline int TsContinuityCounter(const uchar *p)
-{
-  return p[3] & TS_CONT_CNT_MASK;
-}
-
-inline int TsGetAdaptationField(const uchar *p)
-{
-  return TsHasAdaptationField(p) ? p[5] : 0x00;
-}
-#endif
 
 enum eStreamContent
 {
@@ -202,27 +121,41 @@ struct sStreamPacket
   int       size;
   bool      streamChange;
   bool      pmtChange;
+  uint32_t  serial;
+};
+
+struct sPtsWrap
+{
+  bool m_Wrap;
+  int m_NoOfWraps;
+  int m_ConfirmCount;
 };
 
 class cTSStream;
 
+#define PES_HEADER_LENGTH 128
+
 class cParser
 {
+friend class cTSStream;
 public:
-  cParser(int pID, cTSStream *stream);
+  cParser(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps);
   virtual ~cParser();
 
   bool AddPESPacket(uint8_t *data, int size);
   virtual void Parse(sStreamPacket *pkt) = 0;
-  void ClearFrame() {m_PesBufferPtr = 0;}
+//  void ClearFrame() {m_PesBufferPtr = 0;}
   int ParsePacketHeader(uint8_t *data);
   int ParsePESHeader(uint8_t *buf, size_t len);
   virtual void Reset();
   bool IsVideo() {return m_IsVideo; }
+  uint16_t GetError() { return m_Error; }
 
 protected:
   virtual bool IsValidStartCode(uint8_t *buf, int size);
 
+  uint8_t     m_PesHeader[PES_HEADER_LENGTH];
+  int         m_PesHeaderPtr;
   int         m_PesPacketLength;
   uint8_t    *m_PesBuffer;
   int         m_PesBufferSize;
@@ -230,20 +163,23 @@ protected:
   size_t      m_PesBufferInitialSize;
   size_t      m_PesParserPtr;
   size_t      m_PesNextFramePtr;
+  int         m_PesTimePos;
 
   bool        m_FoundFrame;
 
   int         m_pID;
   int64_t     m_curPTS;
   int64_t     m_curDTS;
+  int64_t     m_prevPTS;
   int64_t     m_prevDTS;
 
   bool        m_IsPusi;
-  bool        m_firstPUSIseen;
-  bool        m_IsError;
+  uint16_t    m_Error;
 
   cTSStream  *m_Stream;
   bool        m_IsVideo;
+  sPtsWrap   *m_PtsWrap;
+  bool        m_ObservePtsWraps;
 };
 
 
@@ -277,10 +213,12 @@ private:
   uint16_t              m_ancillaryPageId;
 
 public:
-  cTSStream(eStreamType type, int pid);
+  cTSStream(eStreamType type, int pid, sPtsWrap *ptsWrap);
   virtual ~cTSStream();
 
-  bool ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, bool iframe);
+  int ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, bool iframe);
+  bool ReadTime(uint8_t *data, int64_t *dts);
+  void ResetParser();
 
   void SetLanguage(const char *language);
   const char *GetLanguage() { return m_language; }
@@ -302,7 +240,7 @@ public:
   uint16_t CompositionPageId() const { return m_compositionPageId; }
   uint16_t AncillaryPageId() const { return m_ancillaryPageId; }
 
-  int64_t Rescale(int64_t a);
+  static int64_t Rescale(int64_t a, int64_t b, int64_t c);
 };
 
 #endif // VNSI_DEMUXER_H

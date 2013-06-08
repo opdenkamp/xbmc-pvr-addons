@@ -102,6 +102,16 @@ uint64_t cRequestPacket::extract_U64()
   return ull;
 }
 
+int64_t cRequestPacket::extract_S64()
+{
+  if ((packetPos + sizeof(int64_t)) > userDataLength) return 0;
+  int64_t ll;
+  memcpy(&ll, &userData[packetPos], sizeof(int64_t));
+  ll = __be64_to_cpu(ll);
+  packetPos += sizeof(int64_t);
+  return ll;
+}
+
 double cRequestPacket::extract_Double()
 {
   if ((packetPos + sizeof(uint64_t)) > userDataLength) return 0;

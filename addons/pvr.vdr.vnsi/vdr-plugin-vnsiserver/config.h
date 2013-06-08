@@ -64,6 +64,12 @@
 #define FOLDERDELIMCHAR '~'
 #endif
 
+// Error flags
+#define ERROR_PES_GENERAL   0x01
+#define ERROR_PES_SCRAMBLE  0x02
+#define ERROR_PES_STARTCODE 0x04
+#define ERROR_DEMUX_NODATA  0x10
+
 class cVNSIServerConfig
 {
 public:

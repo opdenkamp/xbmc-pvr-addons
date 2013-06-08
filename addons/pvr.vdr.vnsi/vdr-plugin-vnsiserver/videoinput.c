@@ -67,6 +67,7 @@ void cLiveReceiver::Receive(uchar *Data, int Length)
 
 inline void cLiveReceiver::Activate(bool On)
 {
+  m_VideoInput->Attach(On);
   DEBUGLOG("activate live receiver: %d", On);
 }
 
@@ -518,6 +519,11 @@ inline void cVideoInput::Receive(uchar *data, int length)
      m_PmtChange = false;
   }
   m_VideoBuffer->Put(data, length);
+}
+
+inline void cVideoInput::Attach(bool on)
+{
+  m_VideoBuffer->AttachInput(on);
 }
 
 void cVideoInput::Action()

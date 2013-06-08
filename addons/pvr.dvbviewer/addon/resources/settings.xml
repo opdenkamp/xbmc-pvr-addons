@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-    <setting id="host" type="text" label="30000" default="127.0.0.1" />
-    <setting id="webport" type="number" label="30001" default="8089" />
-    <setting id="streamport" type="number" label="30002" default="7522" />    
-    <setting id="recordingport" type="number" label="30003" default="8090" />
-    <setting id="user" type="text" label="30004" default="" />
-    <setting id="pass" type="text" label="30005" option="hidden" default="" />
-    <setting label="30006" type="bool" id="usefavourites" default="false"/>    
-    <setting id="favouritespath" type="file" label="30007" default="" />    
+    <setting label="30000" id="host"           type="text"   default="127.0.0.1" />
+    <setting label="30001" id="webport"        type="number" default="8089" option="int" />
+    <setting label="30002" id="streamport"     type="number" default="7522" option="int" />
+    <setting label="30003" id="recordingport"  type="number" default="8090" option="int" />
+    <setting label="30004" id="user"           type="text"   default="" />
+    <setting label="30005" id="pass"           type="text"   default="" option="hidden" />
+    <setting label="30006" id="usefavourites"  type="bool"   default="false"/>
+    <setting label="30007" id="favouritespath" type="file"   default="" enable="eq(-1,true)" />
+
+    <setting id="sep1" type="sep" />
+    <setting label="30100" id="usetimeshift"  type="bool"   default="false" />
+    <setting label="30101" id="timeshiftpath" type="folder" default="special://userdata/addon_data/pvr.dvbviewer" option="writeable" enable="eq(-1,true)" />
 </settings>

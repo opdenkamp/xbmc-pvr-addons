@@ -845,11 +845,13 @@ extern int cmyth_proginfo_check_recording(cmyth_conn_t control,
  * Delete a program.
  * \param control backend control handle
  * \param prog proginfo handle
+ * \param force force deletion
+ * \param forget allow to record the recording
  * \return success: 0
  * \return failure: -(errno)
  */
 extern int cmyth_proginfo_delete_recording(cmyth_conn_t control,
-					   cmyth_proginfo_t prog);
+					   cmyth_proginfo_t prog, uint8_t force, uint8_t forget);
 
 /**
  * Delete a program such that it may be recorded again.

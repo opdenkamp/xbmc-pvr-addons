@@ -182,10 +182,19 @@ if test "$build_addons_with_dependencies" = "yes"; then
     AC_DEFINE([HAVE_BOOST],[1],["Define to 1 if we have the `boost' headers"])
   fi
   echo "Boost: $use_boost"
+
+  AC_CHECK_LIB([z],[inflate], use_zlib=yes, use_zlib=no)
+  if test "$use_zlib" = "yes"; then
+    AC_DEFINE([HAVE_ZLIB],[1],["Define to 1 if we have the zlib library"])
+    ZLIB_LIBS='-lz'
+    AC_SUBST(ZLIB_LIBS)
+  fi
+  echo "Zlib: $use_zlib"
 fi
 
 ### Addons with dependencies
 AM_CONDITIONAL([ADDON_MYTHTV], [test "$build_addons_with_dependencies" = "yes" -a "$use_mysql" = "yes" -a "$use_boost" = "yes"])
+AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addons_with_dependencies" = "yes" -a "$use_zlib" = "yes"])
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then
@@ -287,6 +296,7 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.vuplus/Makefile \
                  addons/pvr.vdr.vnsi/Makefile \
                  addons/pvr.mythtv.cmyth/Makefile \
+                 addons/pvr.iptvsimple/Makefile \
                  addons/pvr.argustv/addon/addon.xml
                  addons/pvr.demo/addon/addon.xml
                  addons/pvr.dvbviewer/addon/addon.xml
@@ -296,6 +306,7 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.nextpvr/addon/addon.xml
                  addons/pvr.njoy/addon/addon.xml
                  addons/pvr.vdr.vnsi/addon/addon.xml
-                 addons/pvr.vuplus/addon/addon.xml])
+                 addons/pvr.vuplus/addon/addon.xml
+                 addons/pvr.iptvsimple/addon/addon.xml])
 
 AC_OUTPUT

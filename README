@@ -30,6 +30,8 @@ List of addons with dependencies:
 - MythTV addon:
     Build dependencies:   libmysqlclient, boost (headers)
     Runtime dependencies: libmysqlclient
+- IPTV Simple addon:
+    Build dependencies:   zlib
 
 =============================
            Windows

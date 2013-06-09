@@ -217,7 +217,14 @@ MythRecorder MythConnection::GetRecorder(int n)
 bool  MythConnection::DeleteRecording(MythProgramInfo &recording)
 {
   int retval = 0;
-  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t));
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t, 0, 0));
+  return retval >= 0;
+}
+
+bool  MythConnection::DeleteAndForgetRecording(MythProgramInfo &recording)
+{
+  int retval = 0;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t, 0, 1));
   return retval >= 0;
 }
 

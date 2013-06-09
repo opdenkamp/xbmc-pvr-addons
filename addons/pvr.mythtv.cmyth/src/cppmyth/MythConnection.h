@@ -74,6 +74,7 @@ public:
 
   // Recordings
   bool DeleteRecording(MythProgramInfo &recording);
+  bool DeleteAndForgetRecording(MythProgramInfo &recording);
   ProgramInfoMap GetRecordedPrograms();
   MythProgramInfo GetRecordedProgram(const CStdString &basename);
   MythProgramInfo GetRecordedProgram(int chanid, const MythTimestamp &recstartts);

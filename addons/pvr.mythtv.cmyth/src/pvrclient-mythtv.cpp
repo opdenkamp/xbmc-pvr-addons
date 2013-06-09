@@ -757,6 +757,33 @@ PVR_ERROR PVRClientMythTV::DeleteRecording(const PVR_RECORDING &recording)
   return PVR_ERROR_FAILED;
 }
 
+PVR_ERROR PVRClientMythTV::DeleteAndForgetRecording(const PVR_RECORDING &recording)
+{
+  XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
+
+  CLockObject lock(m_recordingsLock);
+
+  ProgramInfoMap::iterator it = m_recordings.find(recording.strRecordingId);
+  if (it != m_recordings.end())
+  {
+    bool ret = m_con.DeleteAndForgetRecording(it->second);
+    if (ret)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Deleted and forget recording %s", __FUNCTION__, recording.strRecordingId);
+      return PVR_ERROR_NO_ERROR;
+    }
+    else
+    {
+      XBMC->Log(LOG_ERROR, "%s - Failed to delete recording %s", __FUNCTION__, recording.strRecordingId);
+    }
+  }
+  else
+  {
+    XBMC->Log(LOG_ERROR, "%s - Recording %s does not exist", __FUNCTION__, recording.strRecordingId);
+  }
+  return PVR_ERROR_FAILED;
+}
+
 PVR_ERROR PVRClientMythTV::SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
 {
   XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);

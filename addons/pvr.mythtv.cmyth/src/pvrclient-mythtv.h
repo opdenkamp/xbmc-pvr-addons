@@ -84,6 +84,7 @@ public:
   int GetRecordingsAmount(void);
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
+  PVR_ERROR DeleteAndForgetRecording(const PVR_RECORDING &recording);
   PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
   PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
   int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);

@@ -4,7 +4,7 @@
   <category label="30018">
     <setting id="host" type="text" label="30000" default="127.0.0.1" />
     <setting id="onlinepicons" type="bool" default="true" label="30027" />
-    <setting id="iconpath" type="folder" label="30008" enable="e1(-1, false)" default="" />
+    <setting id="iconpath" type="folder" label="30008" enable="eq(-1,false)" default="" />
     <setting id="updateint" type="number" label="30010" default="2" />
   </category>
 

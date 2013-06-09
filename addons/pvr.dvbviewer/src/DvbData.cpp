@@ -1,136 +1,87 @@
 #include "DvbData.h"
-
-#include "client.h" 
+#include "client.h"
+#include "platform/util/util.h"
+#include <inttypes.h>
+#include <iterator>
+#include <sstream>
+#include <algorithm>
 
 using namespace ADDON;
 using namespace PLATFORM;
 
-void Dvb::TimerUpdates()
+template <class ContainerT>
+void tokenize(const CStdString& str, ContainerT& tokens,
+    const CStdString& delimiters = " ", const bool trimEmpty = false)
 {
-  std::vector<DvbTimer> newtimer = LoadTimers();
-
-  for (unsigned int i=0; i<m_timers.size(); i++)
+  CStdString::size_type pos, lastPos = 0;
+  while (true)
   {
-    m_timers[i].iUpdateState = DVB_UPDATE_STATE_NONE;
-  }
-  
-  unsigned int iUpdated=0;
-  unsigned int iUnchanged=0; 
-
-  for (unsigned int j=0;j<newtimer.size(); j++) {
-    for (unsigned int i=0; i<m_timers.size(); i++) 
+    pos = str.find_first_of(delimiters, lastPos);
+    if (pos == CStdString::npos)
     {
-      if (m_timers[i].like(newtimer[j]))
-      {
-        if(m_timers[i] == newtimer[j])
-        {
-          m_timers[i].iUpdateState = DVB_UPDATE_STATE_FOUND;
-          newtimer[j].iUpdateState = DVB_UPDATE_STATE_FOUND;
-          iUnchanged++;
-        }
-        else
-        {
-          newtimer[j].iUpdateState = DVB_UPDATE_STATE_UPDATED;
-          m_timers[i].iUpdateState = DVB_UPDATE_STATE_UPDATED;
-          m_timers[i].strTitle = newtimer[j].strTitle;
-          m_timers[i].strPlot = newtimer[j].strPlot;
-          m_timers[i].iChannelId = newtimer[j].iChannelId;
-          m_timers[i].startTime = newtimer[j].startTime;
-          m_timers[i].endTime = newtimer[j].endTime;
-          m_timers[i].bRepeating = newtimer[j].bRepeating;
-          m_timers[i].iWeekdays = newtimer[j].iWeekdays;
-          m_timers[i].iEpgID = newtimer[j].iEpgID;
-          m_timers[i].iTimerID = newtimer[j].iTimerID;
-          m_timers[i].iPriority = newtimer[j].iPriority;
-          m_timers[i].iFirstDay = newtimer[j].iFirstDay;
-          m_timers[i].state = newtimer[j].state;
+      pos = str.length();
 
-          iUpdated++;
-
-        }
-      }
+      if (pos != lastPos || !trimEmpty)
+        tokens.push_back(typename ContainerT::value_type(str.data() + lastPos, pos - lastPos));
+      break;
     }
-  }
-
-  unsigned int iRemoved = 0;
-
-  for (unsigned int i=0; i<m_timers.size(); i++)
-  {
-    if (m_timers.at(i).iUpdateState == DVB_UPDATE_STATE_NONE)
+    else
     {
-      XBMC->Log(LOG_INFO, "%s Removed timer: '%s', ClientIndex: '%d'", __FUNCTION__, m_timers.at(i).strTitle.c_str(), m_timers.at(i).iClientIndex);
-      m_timers.erase(m_timers.begin()+i);
-      i=0;
-      iRemoved++;
+      if (pos != lastPos || !trimEmpty)
+        tokens.push_back(typename ContainerT::value_type(str.data() + lastPos, pos - lastPos));
     }
+    lastPos = pos + 1;
   }
-  unsigned int iNew=0;
+};
 
-  for (unsigned int i=0; i<newtimer.size();i++)
-  { 
-    if(newtimer.at(i).iUpdateState == DVB_UPDATE_STATE_NEW)
-    {  
-      DvbTimer &timer = newtimer.at(i);
-      timer.iClientIndex = m_iClientIndexCounter;
-      XBMC->Log(LOG_INFO, "%s New timer: '%s', ClientIndex: '%d'", __FUNCTION__, timer.strTitle.c_str(), m_iClientIndexCounter);
-      m_timers.push_back(timer);
-      m_iClientIndexCounter++;
-      iNew++;
-    } 
-  }
- 
-  XBMC->Log(LOG_INFO, "%s No of timers: removed [%d], untouched [%d], updated '%d', new '%d'", __FUNCTION__, iRemoved, iUnchanged, iUpdated, iNew); 
 
-  if (iRemoved != 0 || iUpdated != 0 || iNew != 0) 
-  {
-    XBMC->Log(LOG_INFO, "%s Changes in timerlist detected, trigger an update!", __FUNCTION__);
-    PVR->TriggerTimerUpdate();
-  }
-}
-
-Dvb::Dvb() 
+Dvb::Dvb()
 {
   m_bIsConnected = false;
   m_strServerName = "DVBViewer";
-  CStdString strURL = "", strURLStream = "", strURLRecording = "";
+  CStdString strAuth("");
 
   // simply add user@pass in front of the URL if username/password is set
-  if ((g_strUsername.length() > 0) && (g_strPassword.length() > 0))
-    strURL.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
-  strURL.Format("http://%s%s:%u/", strURL.c_str(), g_strHostname.c_str(), g_iPortWeb);
-  m_strURL = strURL.c_str();
+  if (!g_strUsername.empty() && !g_strPassword.empty())
+    strAuth.Format("%s:%s@", g_strUsername, g_strPassword);
 
-  if ((g_strUsername.length() > 0) && (g_strPassword.length() > 0))
-    strURLRecording.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
-  strURLRecording.Format("http://%s%s:%u/", strURLRecording.c_str(), g_strHostname.c_str(), g_iPortRecording);
-  m_strURLRecording = strURLRecording.c_str();
+  m_strURL.Format("http://%s%s:%u/", strAuth, g_strHostname, g_iPortWeb);
+  m_strURLRecording.Format("http://%s%s:%u/", strAuth, g_strHostname, g_iPortRecording);
+  m_strURLStream.Format("http://%s%s:%u/", strAuth, g_strHostname, g_iPortStream);
 
-  if ((g_strUsername.length() > 0) && (g_strPassword.length() > 0))
-    strURLStream.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
-  strURLStream.Format("http://%s%s:%u/", strURLStream.c_str(), g_strHostname.c_str(), g_iPortStream);
-  m_strURLStream = strURLStream.c_str();
-
-  m_iNumRecordings = 0;
-  m_iNumChannelGroups = 0;
-  m_iCurrentChannel = -1;
+  m_iCurrentChannel     = 0;
   m_iClientIndexCounter = 1;
 
-  m_iUpdateTimer = 0;
+  m_iUpdateTimer  = 0;
   m_bUpdateTimers = false;
-  m_bUpdateEPG = false;
+  m_bUpdateEPG    = false;
+  m_tsBuffer      = NULL;
+}
+
+Dvb::~Dvb()
+{
+  StopThread();
+
+  m_channels.clear();
+  m_timers.clear();
+  m_recordings.clear();
+  m_groups.clear();
+  m_bIsConnected = false;
+  if (m_tsBuffer)
+    SAFE_DELETE(m_tsBuffer);
+}
+
+
+CStdString Dvb::GetServerName()
+{
+  return m_strServerName;
 }
 
 bool Dvb::Open()
 {
   CLockObject lock(m_mutex);
 
-  XBMC->Log(LOG_NOTICE, "%s - DVBViewer Addon Configuration options", __FUNCTION__);
-  XBMC->Log(LOG_NOTICE, "%s - Hostname: '%s'", __FUNCTION__, g_strHostname.c_str());
-  XBMC->Log(LOG_NOTICE, "%s - WebPort: '%d'", __FUNCTION__, g_iPortWeb);
-  XBMC->Log(LOG_NOTICE, "%s - StreamPort: '%d'", __FUNCTION__, g_iPortStream);
-  
   m_bIsConnected = GetDeviceInfo();
-
   if (!m_bIsConnected)
     return false;
 
@@ -142,390 +93,129 @@ bool Dvb::Open()
 
   TimerUpdates();
 
-  XBMC->Log(LOG_INFO, "%s Starting separate client update thread...", __FUNCTION__);
+  XBMC->Log(LOG_INFO, "Starting separate client update thread...");
   CreateThread();
-  
-  return IsRunning(); 
+
+  return IsRunning();
 }
 
-void  *Dvb::Process()
-{
-  XBMC->Log(LOG_DEBUG, "%s - starting", __FUNCTION__);
-
-  while(!IsStopped())
-  {
-    Sleep(1000);
-    m_iUpdateTimer++;
-
-    if (m_bUpdateEPG)
-    {
-      Sleep(8000); /* Sleep enough time to let the recording service grab the EPG data */
-      PVR->TriggerEpgUpdate(m_iCurrentChannel);
-      m_bUpdateEPG = false;
-    }
-
-    if ((m_iUpdateTimer > 60) || m_bUpdateTimers)
-    {
-      m_iUpdateTimer = 0;
- 
-      // Trigger Timer and Recording updates acording to the addon settings
-      CLockObject lock(m_mutex);
-      XBMC->Log(LOG_INFO, "%s Perform Updates!", __FUNCTION__);
-
-      if (m_bUpdateTimers)
-      {
-        Sleep(500);
-        m_bUpdateTimers = false;
-      }
-      TimerUpdates();
-      PVR->TriggerRecordingUpdate();
-    }
-  }
-
-  CLockObject lock(m_mutex);
-  m_started.Broadcast();
-  //XBMC->Log(LOG_DEBUG, "%s - exiting", __FUNCTION__);
-
-  return NULL;
-}
-
-bool Dvb::LoadChannels() 
-{
-  ChannelsDat *channel;
-  int num_channels, channel_pos = 0;
-
-  m_groups.clear();
-  m_iNumChannelGroups = 0;
-
-  CStdString url;
-  url.Format("%sapi/getchannelsdat.html", m_strURL.c_str()); 
-  CStdString strBIN;
-  strBIN = GetHttpXML(url);
-  if (strBIN.IsEmpty())
-  {
-    XBMC->Log(LOG_ERROR, "%s Unable to load channels.dat", __FUNCTION__);
-    return false;
-  }
-  strBIN.erase(0, CHANNELDAT_HEADER_SIZE);
-  channel = (ChannelsDat*)strBIN.data();
-  num_channels = strBIN.size() / sizeof(ChannelsDat);
-
-  std::vector<DvbChannel> channelsdat;
-  std::vector<DvbChannelGroup> groupsdat;
-  DvbChannel datChannel;
-  DvbChannelGroup datGroup;
-  char channel_group[26] = "";
-
-  for (int i=0; i<num_channels; i++)
-  {
-    if (i)
-      channel++;
-
-    if (channel->Flags & ADDITIONAL_AUDIO_TRACK_FLAG)
-    {
-      if (!g_bUseFavourites || !(channel->Flags & VIDEO_FLAG))
-        continue;
-    }
-    else
-      channel_pos++;
-
-    char channel_group_dat[26] = "";
-    strncpy(channel_group_dat, channel->Category, channel->Category_len);
-    if (strcmp(channel_group, channel_group_dat))
-    {
-      memset(channel_group, 0, sizeof(channel_group));
-      strncpy(channel_group, channel_group_dat, channel->Category_len);
-      char* strGroupNameUtf8 = XBMC->UnknownToUTF8(channel_group);
-      datGroup.strGroupName = strGroupNameUtf8;
-      groupsdat.push_back(datGroup);
-      m_iNumChannelGroups++;
-      XBMC->FreeString(strGroupNameUtf8);
-    }
-
-    /* EPGChannelID = (TunerType + 1)*2^48 + NID*2^32 + TID*2^16 + SID */
-    datChannel.llEpgId = ((uint64_t)(channel->TunerType + 1) << 48) + ((uint64_t)channel->OriginalNetwork_ID << 32) + ((uint64_t)channel->TransportStream_ID << 16) + channel->Service_ID;
-    datChannel.Encrypted = channel->Flags & ENCRYPTED_FLAG;
-    /* ChannelID = (tunertype + 1) * 536870912 + APID * 65536 + SID */
-    datChannel.iChannelId = ((channel->TunerType + 1) << 29) + (channel->Audio_PID << 16) + channel->Service_ID;
-    datChannel.bRadio = (channel->Flags & VIDEO_FLAG) == 0;
-    datChannel.strGroupName = datGroup.strGroupName;
-    datChannel.iUniqueId = channelsdat.size() + 1;
-    datChannel.iChannelNumber = channelsdat.size() + 1;
-
-    char channel_name[26] = "";
-    CStdString strChannelName = strncpy(channel_name, channel->ChannelName, channel->ChannelName_len);
-    if (channel->ChannelName_len == 25)
-    {
-      if (channel->Root[channel->Root_len] > 0)
-      {
-        char channel_root[26] = "";
-        CStdString strRoot = strncpy(channel_root, channel->Root, 25);
-        if (channel->Root_len < 25)
-          strChannelName.append(strRoot.substr(channel->Root_len + 1, channel->Root[channel->Root_len]));
-        if (channel->Category[channel->Category_len] > 0)
-        {
-          char channel_category[26] = "";
-          CStdString strCategory = strncpy(channel_category, channel->Category, 25);
-          if (channel->Category_len < 25)
-            strChannelName.append(strCategory.substr(channel->Category_len + 1, channel->Category[channel->Category_len]));
-        }
-      }
-    }
-    char* strChannelNameUtf8 = XBMC->UnknownToUTF8(strChannelName.c_str());
-    datChannel.strChannelName = strChannelNameUtf8;
-    XBMC->FreeString(strChannelNameUtf8);
-  
-    CStdString strTmp;
-    strTmp.Format("%supnp/channelstream/%d.ts", m_strURLStream.c_str(), channel_pos - 1);
-    datChannel.strStreamURL = strTmp;
-
-    strTmp.Format("%sLogos/%s.png", m_strURL.c_str(), URLEncodeInline(datChannel.strChannelName.c_str())); 
-    datChannel.strIconPath = strTmp;
-
-    channelsdat.push_back(datChannel);
-  }
-
-  if (g_bUseFavourites)
-  {
-    CStdString urlFav = g_strFavouritesPath;
-    if (!XBMC->FileExists(urlFav.c_str(), false))
-      urlFav.Format("%sapi/getfavourites.html", m_strURL.c_str());
-
-    CStdString strXML;
-    strXML = GetHttpXML(urlFav);
-
-    if(!strXML.size())
-    {
-      XBMC->Log(LOG_ERROR, "%s Unable to load favourites.xml.", __FUNCTION__);
-      return false;
-    }
-
-    RemoveNullChars(strXML);
-    XMLResults xe;
-    XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
-
-    if(xe.error != 0)  {
-      XBMC->Log(LOG_ERROR, "%s Unable to parse favourites.xml. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
-      return false;
-    }
-
-    XMLNode xNode = xMainNode.getChildNode("settings");
-    int m = xNode.nChildNode("section");
-
-    std::vector<DvbChannel> channelsfav;
-    std::vector<DvbChannelGroup> groupsfav;
-    DvbChannel favChannel;
-    DvbChannelGroup favGroup;
-
-    for (int i = 0; i<m; i++)
-    {
-      CStdString groupName;
-      XMLNode xTmp = xNode.getChildNode("section", i);
-      int n = xTmp.nChildNode("entry");
-      for (int j = 0; j<n; j++)
-      {
-        CStdString strTmp;
-        XMLNode xTmp2 = xTmp.getChildNode("entry", j);
-        strTmp = xTmp2.getText();
-        uint64_t llFavId;
-        if (sscanf(strTmp, "%lld|", &llFavId))
-        {
-          int iChannelId = llFavId & 0xFFFFFFFF;
-          if (n == 1)
-            groupName = "";
-          for (unsigned int i = 0; i<channelsdat.size(); i++)
-          {
-            if (channelsdat[i].iChannelId == iChannelId)
-            {
-              favChannel.llEpgId = channelsdat[i].llEpgId;
-              favChannel.Encrypted = channelsdat[i].Encrypted;
-              favChannel.iChannelId = channelsdat[i].iChannelId;
-              favChannel.bRadio = channelsdat[i].bRadio;
-              favChannel.strGroupName = groupName;
-              favChannel.iUniqueId = channelsfav.size()+1;
-              favChannel.iChannelNumber = channelsfav.size()+1;
-              favChannel.strChannelName = channelsdat[i].strChannelName;
-              favChannel.strStreamURL = channelsdat[i].strStreamURL;
-              favChannel.strIconPath = channelsdat[i].strIconPath;
-              channelsfav.push_back(favChannel);
-              break;
-            }
-          }
-        }
-        else
-        {
-          groupName = strTmp;
-          char* strGroupNameUtf8 = XBMC->UnknownToUTF8(groupName.c_str());
-          favGroup.strGroupName = strGroupNameUtf8;
-          groupsfav.push_back(favGroup);
-          XBMC->FreeString(strGroupNameUtf8);
-        }
-      }
-    }
-    m_channels = channelsfav;
-    m_groups = groupsfav;
-  }
-  else
-  {
-    m_channels = channelsdat;
-    m_groups = groupsdat;
-  }
-
-  XBMC->Log(LOG_INFO, "%s Loaded %d Channelsgroups", __FUNCTION__, m_iNumChannelGroups);
-  return true;
-}
-
-bool Dvb::IsConnected() 
+bool Dvb::IsConnected()
 {
   return m_bIsConnected;
 }
 
-CStdString Dvb::GetHttpXML(CStdString& url)
+PVR_ERROR Dvb::SignalStatus(PVR_SIGNAL_STATUS& signalStatus)
 {
-  CStdString strResult;
-  void* fileHandle = XBMC->OpenFile(url.c_str(), 0);
-  if (fileHandle)
-  {
-    char buffer[1024];
-    while (int bytesRead = XBMC->ReadFile(fileHandle, buffer, 1024))
-      strResult.append(buffer, bytesRead);
-    XBMC->CloseFile(fileHandle);
-  }
-  return strResult;
+  CStdString strXML, url;
+  url.Format("%sstatus.html?aktion=status", m_strURL);
+  strXML = GetHttpXML(url);
+  unsigned int iSignalStartPos, iSignalEndPos;
+  iSignalEndPos = strXML.find("%</th>");
+
+  unsigned int iAdapterStartPos, iAdapterEndPos;
+  iAdapterStartPos = strXML.rfind("3\">", iSignalEndPos) + 3;
+  iAdapterEndPos = strXML.find("<", iAdapterStartPos);
+  PVR_STRCPY(signalStatus.strAdapterName, strXML.substr(iAdapterStartPos, iAdapterEndPos - iAdapterStartPos).c_str());
+
+  iSignalStartPos = strXML.find_last_of(">", iSignalEndPos) + 1;
+  if (iSignalEndPos < strXML.size())
+    signalStatus.iSignal = (int)(atoi(strXML.substr(iSignalStartPos, iSignalEndPos - iSignalStartPos).c_str()) * 655.35);
+  PVR_STRCPY(signalStatus.strAdapterStatus, "OK");
+
+  return PVR_ERROR_NO_ERROR;
 }
 
-const char * Dvb::GetServerName() 
+
+bool Dvb::SwitchChannel(const PVR_CHANNEL& channel)
 {
-  return m_strServerName.c_str();  
+  m_iCurrentChannel = channel.iUniqueId;
+  m_bUpdateEPG = true;
+  return true;
 }
 
-int Dvb::GetChannelsAmount()
+unsigned int Dvb::GetCurrentClientChannel(void)
 {
-  return m_channels.size();
-}
-
-int Dvb::GetTimersAmount()
-{
-  return m_timers.size();
-}
-
-unsigned int Dvb::GetRecordingsAmount() {
-  return m_iNumRecordings;
+  return m_iCurrentChannel;
 }
 
 PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
-  for (unsigned int iChannelPtr = 0; iChannelPtr < m_channels.size(); iChannelPtr++)
+  for (DvbChannels_t::iterator channel = m_channels.begin();
+      channel != m_channels.end(); ++channel)
   {
-    DvbChannel &channel = m_channels.at(iChannelPtr);
-    if (channel.bRadio == bRadio)
+    if (channel->bRadio != bRadio)
+      continue;
+
+    PVR_CHANNEL xbmcChannel;
+    memset(&xbmcChannel, 0, sizeof(PVR_CHANNEL));
+
+    xbmcChannel.iUniqueId         = channel->iUniqueId;
+    xbmcChannel.bIsRadio          = channel->bRadio;
+    xbmcChannel.iChannelNumber    = channel->iChannelNumber;
+    xbmcChannel.iEncryptionSystem = channel->Encrypted;
+    xbmcChannel.bIsHidden         = false;
+    PVR_STRCPY(xbmcChannel.strChannelName, channel->strChannelName.c_str());
+    PVR_STRCPY(xbmcChannel.strInputFormat, ""); // unused
+    PVR_STRCPY(xbmcChannel.strIconPath,    channel->strIconPath.c_str());
+
+    if (!g_bUseTimeshift)
     {
-      PVR_CHANNEL xbmcChannel;
-      memset(&xbmcChannel, 0, sizeof(PVR_CHANNEL));
-
-      xbmcChannel.iUniqueId         = channel.iUniqueId;
-      xbmcChannel.bIsRadio          = channel.bRadio;
-      xbmcChannel.iChannelNumber    = channel.iChannelNumber;
-      strncpy(xbmcChannel.strChannelName, channel.strChannelName.c_str(), sizeof(xbmcChannel.strChannelName));
-      strncpy(xbmcChannel.strInputFormat, "", sizeof(xbmcChannel.strInputFormat)); // unused
-
       CStdString strStream;
-      strStream.Format("pvr://stream/tv/%i.ts", channel.iUniqueId);
-      strncpy(xbmcChannel.strStreamURL, strStream.c_str(), sizeof(xbmcChannel.strStreamURL)); //channel.strStreamURL.c_str();
-      xbmcChannel.iEncryptionSystem = channel.Encrypted;
-      
-      strncpy(xbmcChannel.strIconPath, channel.strIconPath.c_str(), sizeof(xbmcChannel.strIconPath));
-      xbmcChannel.bIsHidden         = false;
-
-      PVR->TransferChannelEntry(handle, &xbmcChannel);
+      strStream.Format("pvr://stream/tv/%u.ts", channel->iUniqueId);
+      PVR_STRCPY(xbmcChannel.strStreamURL, strStream.c_str());
     }
+
+    PVR->TransferChannelEntry(handle, &xbmcChannel);
   }
 
   return PVR_ERROR_NO_ERROR;
 }
 
-Dvb::~Dvb() 
+PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channel, time_t iStart, time_t iEnd)
 {
-  StopThread();
-  
-  m_channels.clear();  
-  m_timers.clear();
-  m_recordings.clear();
-  m_groups.clear();
-  m_bIsConnected = false;
-}
-
-int Dvb::ParseDateTime(CStdString strDate, bool iDateFormat)
-{
-  struct tm timeinfo;
-
-  memset(&timeinfo, 0, sizeof(tm));
-  if (iDateFormat)
-    sscanf(strDate, "%04d%02d%02d%02d%02d%02d", &timeinfo.tm_year, &timeinfo.tm_mon, &timeinfo.tm_mday, &timeinfo.tm_hour, &timeinfo.tm_min, &timeinfo.tm_sec);
-  else
-    sscanf(strDate, "%02d.%02d.%04d%02d:%02d:%02d", &timeinfo.tm_mday, &timeinfo.tm_mon, &timeinfo.tm_year, &timeinfo.tm_hour, &timeinfo.tm_min, &timeinfo.tm_sec);
-  timeinfo.tm_mon  -= 1;
-  timeinfo.tm_year -= 1900;
-  timeinfo.tm_isdst = -1;
-
-  return mktime(&timeinfo);
-}
-
-PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
-{
-  DvbChannel &myChannel = m_channels.at(channel.iUniqueId-1);
+  DvbChannel &myChannel = m_channels[channel.iUniqueId - 1];
 
   CStdString url;
-  url.Format("%sapi/epg.html?lvl=2&channel=%lld&start=%f&end=%f",  m_strURL.c_str(), myChannel.llEpgId, iStart/86400.0 + DELPHI_DATE, iEnd/86400.0 + DELPHI_DATE); 
- 
-  CStdString strXML;
-  strXML = GetHttpXML(url);
+  url.Format("%sapi/epg.html?lvl=2&channel=%"PRIu64"&start=%f&end=%f", m_strURL,
+      myChannel.iEpgId, iStart/86400.0 + DELPHI_DATE, iEnd/86400.0 + DELPHI_DATE);
 
-  int iNumEPG = 0;
+  CStdString strXML(GetHttpXML(url));
 
   XMLResults xe;
-  XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
-
-  if(xe.error != 0)  {
-    XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
+  XMLNode xMainNode = XMLNode::parseString(strXML, NULL, &xe);
+  if (xe.error != 0)
+  {
+    XBMC->Log(LOG_ERROR, "Unable to parse EPG. Invalid XML. Error: %s", XMLNode::getError(xe.error));
     return PVR_ERROR_SERVER_ERROR;
   }
 
   XMLNode xNode = xMainNode.getChildNode("epg");
   int n = xNode.nChildNode("programme");
+  XBMC->Log(LOG_DEBUG, "%s Number of EPG entries for channel '%s': %d",
+    __FUNCTION__, channel.strChannelName, n);
 
-  XBMC->Log(LOG_INFO, "%s Number of elements: '%d'", __FUNCTION__, n);
-
-  for (int i = 0; i<n; i++)
+  unsigned iNumEPG = 0;
+  for (int i = 0; i < n; ++i)
   {
-    CStdString strTmp;
-    int iTmpStart;
-    int iTmpEnd;
+    DvbEPGEntry entry;
+    entry.iChannelUid = channel.iUniqueId;
 
     XMLNode xTmp = xNode.getChildNode("programme", i);
-    iTmpStart = ParseDateTime(xNode.getChildNode("programme", i).getAttribute("start"));
-    iTmpEnd = ParseDateTime(xNode.getChildNode("programme", i).getAttribute("stop"));
+    entry.startTime = ParseDateTime(xNode.getChildNode("programme", i).getAttribute("start"));
+    entry.endTime = ParseDateTime(xNode.getChildNode("programme", i).getAttribute("stop"));
 
-    if ((iEnd > 1) && (iEnd < iTmpEnd))
+    if (iEnd > 1 && iEnd < entry.endTime)
        continue;
-    
-    DvbEPGEntry entry;
-    entry.startTime = iTmpStart;
-    entry.endTime = iTmpEnd;
 
-    if (!GetInt(xTmp, "eventid", entry.iEventId))  
+    if (!GetXMLValue(xTmp, "eventid", entry.iEventId))
       continue;
 
-    entry.iChannelId = channel.iUniqueId;
-    
-    if(!GetStringLng(xTmp.getChildNode("titles"), "title", strTmp))
+    if(!GetXMLValue(xTmp.getChildNode("titles"), "title", entry.strTitle, true))
       continue;
 
-    entry.strTitle = strTmp;
-    
-    CStdString strTmp2;
-    GetStringLng(xTmp.getChildNode("descriptions"), "description", strTmp);
-    GetStringLng(xTmp.getChildNode("events"), "event", strTmp2);
+    CStdString strTmp, strTmp2;
+    GetXMLValue(xTmp.getChildNode("descriptions"), "description", strTmp, true);
+    GetXMLValue(xTmp.getChildNode("events"), "event", strTmp2, true);
     if (strTmp.size() > strTmp2.size())
       entry.strPlot = strTmp;
     else
@@ -542,8 +232,8 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel,
     broadcast.strPlotOutline      = entry.strPlotOutline.c_str();
     broadcast.strPlot             = entry.strPlot.c_str();
     broadcast.strIconPath         = ""; // unused
-    broadcast.iGenreType          = 0; // unused
-    broadcast.iGenreSubType       = 0; // unused
+    broadcast.iGenreType          = 0;  // unused
+    broadcast.iGenreSubType       = 0;  // unused
     broadcast.strGenreDescription = "";
     broadcast.firstAired          = 0;  // unused
     broadcast.iParentalRating     = 0;  // unused
@@ -556,355 +246,244 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel,
 
     PVR->TransferEpgEntry(handle, &broadcast);
 
-    iNumEPG++; 
+    ++iNumEPG;
 
-    XBMC->Log(LOG_INFO, "%s loaded EPG entry '%d:%s' channel '%d' start '%d' end '%d'", __FUNCTION__, broadcast.iUniqueBroadcastId, broadcast.strTitle, entry.iChannelId, entry.startTime, entry.endTime);
+    XBMC->Log(LOG_DEBUG, "%s loaded EPG entry '%u:%s': start=%u, end=%u",
+        __FUNCTION__, broadcast.iUniqueBroadcastId, broadcast.strTitle,
+        entry.startTime, entry.endTime);
   }
 
-  XBMC->Log(LOG_INFO, "%s Loaded %u EPG Entries for channel '%s'", __FUNCTION__, iNumEPG, channel.strChannelName);
+  XBMC->Log(LOG_INFO, "Loaded %u EPG entries for channel '%s'",
+      iNumEPG, channel.strChannelName);
   return PVR_ERROR_NO_ERROR;
 }
 
-int Dvb::GetChannelNumber(CStdString strChannelId)  
+unsigned int Dvb::GetChannelsAmount()
 {
-  int channel;
-  sscanf(strChannelId.c_str(), "%d|", &channel);
-  for (unsigned int i = 0;i<m_channels.size();  i++)
-  {
-    if (m_channels[i].iChannelId == channel)
-    return i+1;
-  }
-  return -1;
+  return m_channels.size();
 }
+
+
+PVR_ERROR Dvb::GetChannelGroups(ADDON_HANDLE handle)
+{
+  for (DvbChannelGroups_t::iterator group = m_groups.begin();
+      group != m_groups.end(); ++group)
+  {
+    PVR_CHANNEL_GROUP tag;
+    memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP));
+    tag.bIsRadio = false;
+    PVR_STRCPY(tag.strGroupName, group->getName().c_str());
+
+    PVR->TransferChannelGroup(handle, &tag);
+  }
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR Dvb::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP& group)
+{
+  CStdString groupName(group.strGroupName);
+  for (DvbChannels_t::iterator channel = m_channels.begin();
+      channel != m_channels.end(); ++channel)
+  {
+    if (channel->group == groupName)
+    {
+      PVR_CHANNEL_GROUP_MEMBER tag;
+      memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+      PVR_STRCPY(tag.strGroupName, group.strGroupName);
+      tag.iChannelUniqueId = channel->iUniqueId;
+      tag.iChannelNumber   = channel->iChannelNumber;
+
+      XBMC->Log(LOG_DEBUG, "%s add channel '%s' (%u) to group '%s'",
+          __FUNCTION__, channel->strChannelName.c_str(), channel->iUniqueId,
+          group.strGroupName);
+
+      PVR->TransferChannelGroupMember(handle, &tag);
+    }
+  }
+  return PVR_ERROR_NO_ERROR;
+}
+
+unsigned int Dvb::GetChannelGroupsAmount()
+{
+  return m_groups.size();
+}
+
 
 PVR_ERROR Dvb::GetTimers(ADDON_HANDLE handle)
 {
-  XBMC->Log(LOG_INFO, "%s - timers available '%d'", __FUNCTION__, m_timers.size());
-  for (unsigned int i=0; i<m_timers.size(); i++)
+  for (DvbTimers_t::iterator timer = m_timers.begin();
+      timer != m_timers.end(); ++timer)
   {
-    DvbTimer &timer = m_timers.at(i);
-    XBMC->Log(LOG_INFO, "%s - Transfer timer '%s', ClientIndex '%d'", __FUNCTION__, timer.strTitle.c_str(), timer.iClientIndex);
     PVR_TIMER tag;
     memset(&tag, 0, sizeof(PVR_TIMER));
-    tag.iClientChannelUid = timer.iChannelId;
-    tag.startTime         = timer.startTime;
-    tag.endTime           = timer.endTime;
-    strncpy(tag.strTitle, timer.strTitle.c_str(), sizeof(tag.strTitle));
-    strncpy(tag.strDirectory, "/", sizeof(tag.strDirectory));   // unused
-    strncpy(tag.strSummary, timer.strPlot.c_str(), sizeof(tag.strSummary));
-    tag.state             = timer.state;
-    tag.iPriority         = timer.iPriority;
+
+    tag.iClientChannelUid = timer->iChannelUid;
+    tag.startTime         = timer->startTime;
+    tag.endTime           = timer->endTime;
+    PVR_STRCPY(tag.strTitle,     timer->strTitle.c_str());
+    PVR_STRCPY(tag.strDirectory, "/");   // unused
+    PVR_STRCPY(tag.strSummary,   timer->strPlot.c_str());
+    tag.state             = timer->state;
+    tag.iPriority         = timer->iPriority;
     tag.iLifetime         = 0;     // unused
-    tag.bIsRepeating      = timer.bRepeating;
-    tag.firstDay          = timer.iFirstDay;
-    tag.iWeekdays         = timer.iWeekdays;
-    tag.iEpgUid           = timer.iEpgID;
+    tag.bIsRepeating      = timer->bRepeating;
+    tag.firstDay          = timer->iFirstDay;
+    tag.iWeekdays         = timer->iWeekdays;
+    tag.iEpgUid           = timer->iEpgId;
     tag.iMarginStart      = 0;     // unused
     tag.iMarginEnd        = 0;     // unused
     tag.iGenreType        = 0;     // unused
     tag.iGenreSubType     = 0;     // unused
-    tag.iClientIndex = timer.iClientIndex;
+    tag.iClientIndex      = timer->iClientIndex;
 
     PVR->TransferTimerEntry(handle, &tag);
   }
   return PVR_ERROR_NO_ERROR;
 }
 
-std::vector<DvbTimer> Dvb::LoadTimers()
-{
-  CStdString url; 
-  url.Format("%s%s", m_strURL.c_str(), "api/timerlist.html?utf8");
-
-  CStdString strXML;
-  strXML = GetHttpXML(url);
-  RemoveNullChars(strXML);
-
-  XMLResults xe;
-  XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
-  
-  std::vector<DvbTimer> timers;
-
-  if(xe.error != 0)  {
-    XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
-    return timers;
-  }
-
-  XMLNode xNode = xMainNode.getChildNode("Timers");
-  int n = xNode.nChildNode("Timer");
-
-  XBMC->Log(LOG_INFO, "%s Number of elements: '%d'", __FUNCTION__, n);
-  
-
-  while(n>0)
-  {
-    int i = n-1;
-    n--;
-    XMLNode xTmp = xNode.getChildNode("Timer", i);
-
-    CStdString strTmp;
-    int iTmp;
-    
-    if (GetString(xTmp, "Descr", strTmp)) 
-      XBMC->Log(LOG_DEBUG, "%s Processing timer '%s'", __FUNCTION__, strTmp.c_str());
- 
-    DvbTimer timer;
-    
-    timer.strTitle = strTmp;
-    timer.iChannelId = GetChannelNumber(xTmp.getChildNode("Channel").getAttribute("ID"));
-    timer.state = PVR_TIMER_STATE_SCHEDULED;
-
-    CStdString DateTime;
-    DateTime = xNode.getChildNode("timer", i).getAttribute("Date");
-    DateTime.append(xNode.getChildNode("timer", i).getAttribute("Start"));
-    timer.startTime = ParseDateTime(DateTime, false);
-    timer.endTime = timer.startTime + atoi(xNode.getChildNode("timer", i).getAttribute("Dur"))*60;
-
-    CStdString Weekdays;
-    Weekdays = xNode.getChildNode("timer", i).getAttribute("Days");
-    timer.iWeekdays = 0;
-    for (unsigned int i = 0; i<Weekdays.size(); i++)
-    {
-      if (Weekdays.data()[i] != '-')
-        timer.iWeekdays += (1 << i);
-    }
-
-    if (timer.iWeekdays != 0)
-      {
-        timer.iFirstDay = timer.startTime;
-        timer.bRepeating = true; 
-      }
-    else
-      timer.bRepeating = false;
-
-    timer.iPriority = atoi(xNode.getChildNode("Timer", i).getAttribute("Priority"));
-
-    if (xNode.getChildNode("Timer", i).getAttribute("EPGEventID"))
-      timer.iEpgID = atoi(xNode.getChildNode("Timer", i).getAttribute("EPGEventID"));
-
-    if (xNode.getChildNode("Timer", i).getAttribute("Enabled")[0] == '0')
-      timer.state = PVR_TIMER_STATE_CANCELLED;
-
-    if (GetInt(xTmp, "Recording", iTmp))
-    {
-      if (iTmp == -1) timer.state = PVR_TIMER_STATE_RECORDING;
-    }
-
-    if (GetInt(xTmp, "ID", iTmp))
-      timer.iTimerID = iTmp;
-
-    timers.push_back(timer);
-
-    XBMC->Log(LOG_INFO, "%s fetched Timer entry '%s', begin '%d', end '%d'", __FUNCTION__, timer.strTitle.c_str(), timer.startTime, timer.endTime);
-  }
-
-  XBMC->Log(LOG_INFO, "%s fetched %u Timer Entries", __FUNCTION__, timers.size());
-  return timers; 
-}
-
-int Dvb::GetTimerID(const PVR_TIMER &timer)
-{
-  unsigned int i=0;
-  while (i<m_timers.size())
-  {
-    if (m_timers.at(i).iClientIndex == timer.iClientIndex)
-      break;
-    else
-      i++;
-  }
-  DvbTimer &Timer = m_timers.at(i);
-  return Timer.iTimerID;
-}
-
-void Dvb::GenerateTimer(const PVR_TIMER &timer, bool bNewTimer)
-{
-  XBMC->Log(LOG_DEBUG, "%s - channelUid=%d title=%s epgid=%d", __FUNCTION__, timer.iClientChannelUid, timer.strTitle, timer.iEpgUid);
-
-  struct tm *timeinfo;
-  time_t startTime = timer.startTime, endTime = timer.endTime;
-  if (!startTime)
-    time(&startTime);
-  else
-  {
-    startTime -= timer.iMarginStart*60;
-    endTime += timer.iMarginEnd*60;
-  }
-
-  int dor = ((startTime + m_iTimezone*60) / DAY_SECS) + DELPHI_DATE;
-  timeinfo = localtime(&startTime);
-  int start = timeinfo->tm_hour*60 + timeinfo->tm_min;
-  timeinfo = localtime(&endTime);
-  int stop = timeinfo->tm_hour*60 + timeinfo->tm_min;
-
-  char strWeek[8] = "-------";
-  for (int i = 0; i<7; i++)
-  {
-    if (timer.iWeekdays & (1 << i)) strWeek[i] = 'T';
-  }
-
-  int iChannelId = m_channels.at(timer.iClientChannelUid-1).iChannelId;
-  CStdString strTmp;
-  if (bNewTimer)
-    strTmp.Format("api/timeradd.html?ch=%d&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255", iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
-  else
-  {
-    int enabled = 1;
-    if (timer.state == PVR_TIMER_STATE_CANCELLED)
-      enabled = 0;
-    strTmp.Format("api/timeredit.html?id=%d&ch=%d&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255", GetTimerID(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
-  }
-  
-  SendSimpleCommand(strTmp);
-  m_bUpdateTimers = true;
-}
-
-PVR_ERROR Dvb::AddTimer(const PVR_TIMER &timer)
+PVR_ERROR Dvb::AddTimer(const PVR_TIMER& timer)
 {
   GenerateTimer(timer);
-
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR Dvb::UpdateTimer(const PVR_TIMER &timer)
+PVR_ERROR Dvb::UpdateTimer(const PVR_TIMER& timer)
 {
   GenerateTimer(timer, false);
-
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR Dvb::DeleteTimer(const PVR_TIMER &timer) 
+PVR_ERROR Dvb::DeleteTimer(const PVR_TIMER& timer)
 {
   CStdString strTmp;
-  strTmp.Format("api/timerdelete.html?id=%d", GetTimerID(timer));
+  strTmp.Format("api/timerdelete.html?id=%d", GetTimerId(timer));
   SendSimpleCommand(strTmp);
 
   if (timer.state == PVR_TIMER_STATE_RECORDING)
     PVR->TriggerRecordingUpdate();
-  
-  m_bUpdateTimers = true;
 
+  m_bUpdateTimers = true;
   return PVR_ERROR_NO_ERROR;
 }
 
+unsigned int Dvb::GetTimersAmount()
+{
+  return m_timers.size();
+}
+
+
 PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 {
-  m_iNumRecordings = 0;
-  std::vector<DvbRecording> recthumbs;
-  recthumbs = m_recordings;
+  DvbRecordings_t old_recordings(m_recordings);
   m_recordings.clear();
 
   CStdString url;
-  url.Format("%s%s", m_strURL.c_str(), "api/recordings.html?utf8");
- 
-  CStdString strXML;
-  strXML = GetHttpXML(url);
+  url.Format("%sapi/recordings.html?utf8", m_strURL);
+
+  CStdString strXML(GetHttpXML(url));
   RemoveNullChars(strXML);
 
   XMLResults xe;
-  XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
-
-  if(xe.error != 0)  {
-    XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
+  XMLNode xMainNode = XMLNode::parseString(strXML, NULL, &xe);
+  if (xe.error != 0)
+  {
+    XBMC->Log(LOG_ERROR, "Unable to parse recordings. Invalid XML. Error: %s", XMLNode::getError(xe.error));
     return PVR_ERROR_SERVER_ERROR;
   }
 
   XMLNode xNode = xMainNode.getChildNode("recordings");
   int n = xNode.nChildNode("recording");
+  XBMC->Log(LOG_DEBUG, "%s Number of recording entries: %d", __FUNCTION__, n);
 
-  XBMC->Log(LOG_INFO, "%s Number of elements: '%d'", __FUNCTION__, n);
- 
-  int iNumRecording = 0;
-  static int iGetRecordingsCount = 0;
-  int j = n;
-
-  while(n>0)
+  unsigned int iNumRecording = 0, fetched = 0;
+  for (int i = 0; i < n; ++i)
   {
-    int i = n-1;
-    n--;
-    XMLNode xTmp = xNode.getChildNode("recording", i);
-    CStdString strTmp;
-
     DvbRecording recording;
-    if (xNode.getChildNode("recording", i).getAttribute("id"))
-      recording.strRecordingId = xNode.getChildNode("recording", i).getAttribute("id");
+    XMLNode xTmp = xNode.getChildNode("recording", n - i - 1);
 
-    if (GetString(xTmp, "title", strTmp))
+    if (xTmp.getAttribute("id"))
+      recording.strRecordingId = xTmp.getAttribute("id");
+
+    CStdString strTmp;
+    if (GetXMLValue(xTmp, "title", strTmp))
       recording.strTitle = strTmp;
-    
+
     CStdString strTmp2;
-    GetString(xTmp, "desc", strTmp);
-    GetString(xTmp, "info", strTmp2);
+    GetXMLValue(xTmp, "desc", strTmp);
+    GetXMLValue(xTmp, "info", strTmp2);
     if (strTmp.size() > strTmp2.size())
       recording.strPlot = strTmp;
     else
       recording.strPlot = strTmp2;
-    
-    if (GetString(xTmp, "channel", strTmp))
+
+    if (GetXMLValue(xTmp, "channel", strTmp))
       recording.strChannelName = strTmp;
 
-    strTmp.Format("%supnp/recordings/%d.ts", m_strURLRecording.c_str(), atoi(recording.strRecordingId.c_str()));
+    strTmp.Format("%supnp/recordings/%d.ts", m_strURLRecording, atoi(recording.strRecordingId.c_str()));
     recording.strStreamURL = strTmp;
 
-    recording.startTime = ParseDateTime(xNode.getChildNode("recording", i).getAttribute("start"));
+    recording.startTime = ParseDateTime(xTmp.getAttribute("start"));
 
     int hours, mins, secs;
-    sscanf(xNode.getChildNode("recording", i).getAttribute("duration"), "%02d%02d%02d", &hours, &mins, &secs);
+    sscanf(xTmp.getAttribute("duration"), "%02d%02d%02d", &hours, &mins, &secs);
     recording.iDuration = hours*60*60 + mins*60 + secs;
 
-    bool bGetThumbnails = true;
-    if ((iGetRecordingsCount == 0) && (j > MAX_RECORDING_THUMBS - 1))
-      bGetThumbnails = false;
-
-    for (unsigned int i=0; i<recthumbs.size(); i++)
+    bool bGetThumbnails = (fetched < MAX_RECORDING_THUMBS);
+    for (DvbRecordings_t::iterator old_rec = old_recordings.begin();
+        bGetThumbnails && old_rec != old_recordings.end(); ++old_rec)
     {
-      if ((recthumbs[i].strRecordingId == recording.strRecordingId) && (recthumbs[i].strThumbnailPath.size() > 20) && (recthumbs[i].strThumbnailPath.size() < 100))
+      if (old_rec->strRecordingId == recording.strRecordingId
+          && old_rec->strThumbnailPath.size() > 20
+          && old_rec->strThumbnailPath.size() < 100)
       {
-        recording.strThumbnailPath = recthumbs[i].strThumbnailPath;
+        recording.strThumbnailPath = old_rec->strThumbnailPath;
         bGetThumbnails = false;
         break;
       }
-    } 
+    }
 
     if (bGetThumbnails)
     {
-      url.Format("%sepg_details.html?aktion=epg_details&recID=%s", m_strURL.c_str(), recording.strRecordingId.c_str());
+      url.Format("%sepg_details.html?aktion=epg_details&recID=%s", m_strURL, recording.strRecordingId);
       CStdString strThumb;
       strThumb = GetHttpXML(url);
+      ++fetched;
 
       unsigned int iThumbnailPos;
       iThumbnailPos = strThumb.find_first_of('_', RECORDING_THUMB_POS);
-      strTmp.Format("%sthumbnails/video/%s_SM.jpg", m_strURL.c_str(), strThumb.substr(RECORDING_THUMB_POS, iThumbnailPos - RECORDING_THUMB_POS).c_str());
+      strTmp.Format("%sthumbnails/video/%s_SM.jpg", m_strURL, strThumb.substr(RECORDING_THUMB_POS, iThumbnailPos - RECORDING_THUMB_POS));
       recording.strThumbnailPath = strTmp;
     }
-   
+
     PVR_RECORDING tag;
     memset(&tag, 0, sizeof(PVR_RECORDING));
-    strncpy(tag.strRecordingId, recording.strRecordingId.c_str(), sizeof(tag.strRecordingId));
-    strncpy(tag.strTitle, recording.strTitle.c_str(), sizeof(tag.strTitle));
-    strncpy(tag.strStreamURL, recording.strStreamURL.c_str(), sizeof(tag.strStreamURL));
-    strncpy(tag.strPlotOutline, recording.strPlotOutline.c_str(), sizeof(tag.strPlotOutline));
-    strncpy(tag.strPlot, recording.strPlot.c_str(), sizeof(tag.strPlot));
-    strncpy(tag.strChannelName, recording.strChannelName.c_str(), sizeof(tag.strChannelName));
-    strncpy(tag.strThumbnailPath, recording.strThumbnailPath.c_str(), sizeof(tag.strThumbnailPath));
-    tag.recordingTime     = recording.startTime;
-    tag.iDuration         = recording.iDuration;
-    strncpy(tag.strDirectory, "/", sizeof(tag.strDirectory));   // unused
+    PVR_STRCPY(tag.strRecordingId,   recording.strRecordingId.c_str());
+    PVR_STRCPY(tag.strTitle,         recording.strTitle.c_str());
+    PVR_STRCPY(tag.strStreamURL,     recording.strStreamURL.c_str());
+    PVR_STRCPY(tag.strPlotOutline,   recording.strPlotOutline.c_str());
+    PVR_STRCPY(tag.strPlot,          recording.strPlot.c_str());
+    PVR_STRCPY(tag.strChannelName,   recording.strChannelName.c_str());
+    PVR_STRCPY(tag.strThumbnailPath, recording.strThumbnailPath.c_str());
+    tag.recordingTime = recording.startTime;
+    tag.iDuration     = recording.iDuration;
+    PVR_STRCPY(tag.strDirectory, "/"); // unused
 
     PVR->TransferRecordingEntry(handle, &tag);
 
-    m_iNumRecordings++;
-    iNumRecording++;
+    ++iNumRecording;
     m_recordings.push_back(recording);
 
-    XBMC->Log(LOG_INFO, "%s loaded Recording entry '%s', start '%d', length '%d'", __FUNCTION__, tag.strTitle, recording.startTime, recording.iDuration);
+    XBMC->Log(LOG_DEBUG, "%s loaded Recording entry '%s': start=%u, length=%u",
+        __FUNCTION__, tag.strTitle, recording.startTime, recording.iDuration);
   }
-  iGetRecordingsCount++;
 
-  XBMC->Log(LOG_INFO, "%s Loaded %u Recording Entries", __FUNCTION__, iNumRecording);
+  XBMC->Log(LOG_INFO, "Loaded %u Recording Entries", iNumRecording);
 
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING &recinfo) 
+PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
 {
   CStdString strTmp;
   strTmp.Format("rec_list.html?aktion=delete_rec&recid=%s", recinfo.strRecordingId);
@@ -915,23 +494,137 @@ PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING &recinfo)
   return PVR_ERROR_NO_ERROR;
 }
 
-void Dvb::SendSimpleCommand(const CStdString& strCommandURL)
+unsigned int Dvb::GetRecordingsAmount()
 {
-  CStdString url; 
-  url.Format("%s%s", m_strURL.c_str(), strCommandURL.c_str()); 
-  GetHttpXML(url);
+  return m_recordings.size();
+}
+
+
+bool Dvb::OpenLiveStream(const PVR_CHANNEL& channelinfo)
+{
+  XBMC->Log(LOG_DEBUG, "%s channel=%u", __FUNCTION__, channelinfo.iUniqueId);
+
+  if (channelinfo.iUniqueId == m_iCurrentChannel)
+    return true;
+
+  if (!g_bUseTimeshift)
+    return SwitchChannel(channelinfo);
+
+  if (m_tsBuffer)
+    SAFE_DELETE(m_tsBuffer);
+  XBMC->Log(LOG_INFO, "Timeshifting starts; url=%s",
+      GetLiveStreamURL(channelinfo).c_str());
+  m_tsBuffer = new TimeshiftBuffer(GetLiveStreamURL(channelinfo),
+      g_strTimeshiftBufferPath);
+  return m_tsBuffer->IsValid();
+}
+
+void Dvb::CloseLiveStream(void)
+{
+  m_iCurrentChannel = 0;
+  if (m_tsBuffer)
+    SAFE_DELETE(m_tsBuffer);
+}
+
+int Dvb::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
+{
+  if (!m_tsBuffer)
+    return 0;
+  return m_tsBuffer->ReadData(pBuffer, iBufferSize);
+}
+
+long long Dvb::SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */)
+{
+  if (!m_tsBuffer)
+    return 0;
+  return m_tsBuffer->Seek(iPosition, iWhence);
+}
+
+long long Dvb::PositionLiveStream(void)
+{
+  if (!m_tsBuffer)
+    return 0;
+  return m_tsBuffer->Position();
+}
+
+long long Dvb::LengthLiveStream(void)
+{
+  if (!m_tsBuffer)
+    return 0;
+  return m_tsBuffer->Length();
+}
+
+CStdString Dvb::GetLiveStreamURL(const PVR_CHANNEL& channelinfo)
+{
+  SwitchChannel(channelinfo);
+  return m_channels[channelinfo.iUniqueId - 1].strStreamURL;
+}
+
+
+void *Dvb::Process()
+{
+  XBMC->Log(LOG_DEBUG, "%s starting", __FUNCTION__);
+
+  while (!IsStopped())
+  {
+    Sleep(1000);
+    ++m_iUpdateTimer;
+
+    if (m_bUpdateEPG)
+    {
+      Sleep(8000); /* Sleep enough time to let the recording service grab the EPG data */
+      PVR->TriggerEpgUpdate(m_iCurrentChannel);
+      m_bUpdateEPG = false;
+    }
+
+    if (m_iUpdateTimer > 60 || m_bUpdateTimers)
+    {
+      m_iUpdateTimer = 0;
+
+      // Trigger Timer and Recording updates acording to the addon settings
+      CLockObject lock(m_mutex);
+      XBMC->Log(LOG_INFO, "Perform timer/recording updates!");
+
+      if (m_bUpdateTimers)
+      {
+        Sleep(500);
+        m_bUpdateTimers = false;
+      }
+      TimerUpdates();
+      PVR->TriggerRecordingUpdate();
+    }
+  }
+
+  CLockObject lock(m_mutex);
+  m_started.Broadcast();
+
+  return NULL;
+}
+
+
+CStdString Dvb::GetHttpXML(const CStdString& url)
+{
+  CStdString strResult;
+  void* fileHandle = XBMC->OpenFile(url, 0);
+  if (fileHandle)
+  {
+    char buffer[1024];
+    while (int bytesRead = XBMC->ReadFile(fileHandle, buffer, 1024))
+      strResult.append(buffer, bytesRead);
+    XBMC->CloseFile(fileHandle);
+  }
+  return strResult;
 }
 
 CStdString Dvb::URLEncodeInline(const CStdString& strData)
 {
   /* Copied from xbmc/URL.cpp */
-
   CStdString strResult;
 
   /* wonder what a good value is here is, depends on how often it occurs */
-  strResult.reserve( strData.length() * 2 );
+  strResult.reserve(strData.length() * 2);
 
-  for (int i = 0; i < (int)strData.size(); ++i)
+  for (unsigned int i = 0; i < strData.size(); ++i)
   {
     int kar = (unsigned char)strData[i];
     //if (kar == ' ') strResult += '+'; // obsolete
@@ -949,262 +642,640 @@ CStdString Dvb::URLEncodeInline(const CStdString& strData)
   return strResult;
 }
 
-bool Dvb::GetInt(XMLNode xRootNode, const char* strTag, int& iIntValue)
+void Dvb::SendSimpleCommand(const CStdString& strCommandURL)
 {
-  XMLNode xNode = xRootNode.getChildNode(strTag );
-  if (xNode.isEmpty())
-     return false;
-  iIntValue = atoi(xNode.getText());
+  CStdString url;
+  url.Format("%s%s", m_strURL, strCommandURL);
+  GetHttpXML(url);
+}
+
+bool Dvb::LoadChannels()
+{
+  m_groups.clear();
+
+  CStdString url;
+  url.Format("%sapi/getchannelsdat.html", m_strURL);
+  CStdString strBIN(GetHttpXML(url));
+  if (strBIN.IsEmpty())
+  {
+    XBMC->Log(LOG_ERROR, "Unable to load channels.dat");
+    return false;
+  }
+  ChannelsDat *channel = (ChannelsDat*)(strBIN.data() + CHANNELDAT_HEADER_SIZE);
+  int num_channels = strBIN.size() / sizeof(ChannelsDat);
+
+  DvbChannels_t channels;
+  DvbChannelGroups_t groups;
+  DvbChannelGroup channelGroup("");
+  int channel_pos = 0;
+
+  for (int i = 0; i < num_channels; ++i, channel++)
+  {
+    if (channel->Flags & ADDITIONAL_AUDIO_TRACK_FLAG)
+    {
+      /* skip audio only channels (e.g. AC3, other languages, etc..) */
+      if (!g_bUseFavourites || !(channel->Flags & VIDEO_FLAG))
+        continue;
+    }
+    else
+      ++channel_pos;
+
+    CStdString curGroup(channel->Category, channel->Category_len);
+    if (channelGroup.getName() != curGroup)
+    {
+      char *strGroupNameUtf8 = XBMC->UnknownToUTF8(curGroup);
+      channelGroup.setName(strGroupNameUtf8);
+      groups.push_back(channelGroup);
+      XBMC->FreeString(strGroupNameUtf8);
+    }
+
+    DvbChannel dvbChannel;
+    /* EPGChannelID = (TunerType + 1)*2^48 + NID*2^32 + TID*2^16 + SID */
+    dvbChannel.iEpgId = ((uint64_t)(channel->TunerType + 1) << 48)
+      + ((uint64_t)channel->OriginalNetwork_ID << 32)
+      + ((uint64_t)channel->TransportStream_ID << 16)
+      + channel->Service_ID;
+
+    /* 32bit ChannelID = (tunertype + 1) * 536870912 + APID * 65536 + SID */
+    //dvbChannel.iChannelId     = ((channel->TunerType + 1) << 29) + (channel->Audio_PID << 16) + channel->Service_ID;
+
+    /* 2 Bit: 0 = undefined, 1 = tv, 2 = radio */
+    short tv_radio = (channel->Flags & VIDEO_FLAG) ? 1
+      : (channel->Flags & AUDIO_FLAG) ? 2 : 0;
+    /* 64bit ChannelID = SID + APID*2^16 + (tunertyp + 1)*2^29 + TID*2^32 + (OrbitalPosition*10)*2^48 + TV/Radio-Flag*2^61  */
+    dvbChannel.iChannelId = ((uint64_t)tv_radio << 61)
+      + ((uint64_t)channel->OrbitalPos << 48)
+      + ((uint64_t)channel->TransportStream_ID << 32)
+      + (((uint64_t)channel->TunerType + 1) << 29)
+      + ((uint64_t)channel->Audio_PID << 16)
+      + channel->Service_ID;
+
+    dvbChannel.Encrypted      = channel->Flags & ENCRYPTED_FLAG;
+    dvbChannel.bRadio         = (channel->Flags & VIDEO_FLAG) == 0;
+    dvbChannel.group          = channelGroup;
+    dvbChannel.iUniqueId      = channels.size() + 1;
+    dvbChannel.iChannelNumber = channels.size() + 1;
+
+    CStdString strChannelName(channel->ChannelName, channel->ChannelName_len);
+    /* large channels names are distributed at the end of the root + category fields
+     * format of root/category: field_data|len of channel substring|channel substring
+     */
+    if (channel->ChannelName_len == 25)
+    {
+      if (channel->Root_len < 25)
+        strChannelName.append(channel->Root + channel->Root_len + 1, channel->Root[channel->Root_len]);
+      if (channel->Category_len < 25)
+        strChannelName.append(channel->Category + channel->Category_len + 1, channel->Category[channel->Category_len]);
+    }
+
+    dvbChannel.strChannelName = ConvertToUtf8(strChannelName);
+
+    CStdString strTmp;
+    strTmp.Format("%supnp/channelstream/%d.ts", m_strURLStream, channel_pos - 1);
+    dvbChannel.strStreamURL = strTmp;
+
+    strTmp.Format("%sLogos/%s.png", m_strURL, URLEncodeInline(dvbChannel.strChannelName));
+    dvbChannel.strIconPath = strTmp;
+
+    channels.push_back(dvbChannel);
+  }
+
+  if (g_bUseFavourites)
+  {
+    CStdString urlFav(g_strFavouritesPath);
+    if (!XBMC->FileExists(urlFav, false))
+      urlFav.Format("%sapi/getfavourites.html", m_strURL);
+
+    CStdString strXML(GetHttpXML(urlFav));
+    if (strXML.empty())
+    {
+      XBMC->Log(LOG_ERROR, "Unable to load favourites.xml.");
+      return false;
+    }
+    RemoveNullChars(strXML);
+
+    XMLResults xe;
+    XMLNode xMainNode = XMLNode::parseString(strXML, NULL, &xe);
+    if (xe.error != 0)
+    {
+      XBMC->Log(LOG_ERROR, "Unable to parse favourites.xml. Error: %s", XMLNode::getError(xe.error));
+      return false;
+    }
+
+    XMLNode xNode = xMainNode.getChildNode("settings");
+    int m = xNode.nChildNode("section");
+
+    DvbChannels_t channelsfav;
+    DvbChannelGroups_t groupsfav;
+    DvbChannel favChannel;
+    DvbChannelGroup favGroup("");
+
+    /* example data:
+     * <settings>
+     *    <section name="0">
+     *      <entry name="Header">Group 1</entry>
+     *      <entry name="0">1234567890123456789|Channel 1</entry>
+     *      <entry name="1">1234567890123456789|Channel 2</entry>
+     *    </section>
+     *   <section name="1">
+     *     <entry name="Header">1234567890123456789|Channel 3</entry>
+     *    </section>
+     *    ...
+     *  </settings>
+     */
+    for (int i = 0; i < m; ++i)
+    {
+      XMLNode xTmp = xNode.getChildNode("section", i);
+      int n = xTmp.nChildNode("entry");
+      for (int j = 0; j < n; ++j)
+      {
+        XMLNode xEntry = xTmp.getChildNode("entry", j);
+        /* name="Header" doesn't indicate a group alone. see example above */
+        if (CStdString(xEntry.getAttribute("name")) == "Header" && n > 1)
+        {
+          /* it's a group */
+          char *strGroupNameUtf8 = XBMC->UnknownToUTF8(xEntry.getText());
+          favGroup.setName(strGroupNameUtf8);
+          groupsfav.push_back(favGroup);
+          XBMC->FreeString(strGroupNameUtf8);
+        }
+        else
+        {
+          CStdString channelName;
+          uint64_t favChannelId = ParseChannelString(xEntry.getText(),
+              channelName);
+          if (favChannelId == 0)
+            continue;
+
+          for (DvbChannels_t::iterator channel = channels.begin();
+              channel != channels.end(); ++channel)
+          {
+            /* legacy support for old 32bit channel ids */
+            uint64_t channelId = (favChannelId > 0xFFFFFFFF) ? channel->iChannelId :
+              channel->iChannelId & 0xFFFFFFFF;
+            if (channelId == favChannelId)
+            {
+              favChannel.iEpgId         = channel->iEpgId;
+              favChannel.Encrypted      = channel->Encrypted;
+              favChannel.iChannelId     = channel->iChannelId;
+              favChannel.bRadio         = channel->bRadio;
+              favChannel.group          = favGroup;
+              favChannel.iUniqueId      = channelsfav.size() + 1;
+              favChannel.iChannelNumber = channelsfav.size() + 1;
+              favChannel.strChannelName = (!channelName.empty()) ? channelName
+                : channel->strChannelName;
+              favChannel.strStreamURL   = channel->strStreamURL;
+              favChannel.strIconPath    = channel->strIconPath;
+              channelsfav.push_back(favChannel);
+              break;
+            }
+          }
+        }
+      }
+    }
+    m_channels = channelsfav;
+    m_groups = groupsfav;
+  }
+  else
+  {
+    m_channels = channels;
+    m_groups = groups;
+  }
+
+  for (DvbChannels_t::iterator channel = m_channels.begin();
+      channel != m_channels.end(); ++channel)
+  {
+    CStdString name(channel->strChannelName), iconPath;
+    std::replace(name.begin(), name.end(), '/', ' ');
+    name.erase(name.find_last_not_of(".") + 1);
+    iconPath.Format("%sLogos/%s.png", m_strURL, URLEncodeInline(name));
+    channel->strIconPath = iconPath;
+  }
+
+  XBMC->Log(LOG_INFO, "Loaded %u channels in %u groups", m_channels.size(), m_groups.size());
   return true;
 }
 
-bool Dvb::GetBoolean(XMLNode xRootNode, const char* strTag, bool& bBoolValue)
+DvbTimers_t Dvb::LoadTimers()
 {
-  XMLNode xNode = xRootNode.getChildNode(strTag );
-  if (xNode.isEmpty()) 
-    return false;
+  DvbTimers_t timers;
 
-  CStdString strEnabled = xNode.getText();
+  CStdString url;
+  url.Format("%sapi/timerlist.html?utf8", m_strURL);
 
-  strEnabled.ToLower();
-  if (strEnabled == "off" || strEnabled == "no" || strEnabled == "disabled" || strEnabled == "false" || strEnabled == "0" )
-    bBoolValue = false;
+  CStdString strXML(GetHttpXML(url));
+  RemoveNullChars(strXML);
+
+  XMLResults xe;
+  XMLNode xMainNode = XMLNode::parseString(strXML, NULL, &xe);
+  if (xe.error != 0)
+  {
+    XBMC->Log(LOG_ERROR, "Unable to parse timers. Invalid XML. Error: %s", XMLNode::getError(xe.error));
+    return timers;
+  }
+
+  XMLNode xNode = xMainNode.getChildNode("Timers");
+  int n = xNode.nChildNode("Timer");
+  XBMC->Log(LOG_DEBUG, "%s Number of timer entries: %d", __FUNCTION__, n);
+
+  for (int i = 0; i < n; ++i)
+  {
+    XMLNode xTmp = xNode.getChildNode("Timer", n - i - 1);
+
+    CStdString strTmp;
+    if (GetXMLValue(xTmp, "Descr", strTmp))
+      XBMC->Log(LOG_DEBUG, "%s Processing timer '%s'", __FUNCTION__, strTmp.c_str());
+
+    DvbTimer timer;
+    timer.strTitle = strTmp;
+    timer.iChannelUid = GetChannelUid(xTmp.getChildNode("Channel").getAttribute("ID"));
+    if (timer.iChannelUid == 0)
+      continue;
+    timer.state = PVR_TIMER_STATE_SCHEDULED;
+
+    CStdString DateTime = xTmp.getAttribute("Date");
+    DateTime.append(xTmp.getAttribute("Start"));
+    timer.startTime = ParseDateTime(DateTime, false);
+    timer.endTime = timer.startTime + atoi(xTmp.getAttribute("Dur"))*60;
+
+    CStdString Weekdays = xTmp.getAttribute("Days");
+    timer.iWeekdays = 0;
+    for (unsigned int j = 0; j < Weekdays.size(); ++j)
+    {
+      if (Weekdays.data()[j] != '-')
+        timer.iWeekdays += (1 << j);
+    }
+
+    if (timer.iWeekdays != 0)
+    {
+      timer.iFirstDay = timer.startTime;
+      timer.bRepeating = true;
+    }
+    else
+      timer.bRepeating = false;
+
+    timer.iPriority = atoi(xTmp.getAttribute("Priority"));
+
+    if (xTmp.getAttribute("EPGEventID"))
+      timer.iEpgId = atoi(xTmp.getAttribute("EPGEventID"));
+
+    if (xTmp.getAttribute("Enabled")[0] == '0')
+      timer.state = PVR_TIMER_STATE_CANCELLED;
+
+    int iTmp;
+    if (GetXMLValue(xTmp, "Recording", iTmp))
+    {
+      if (iTmp == -1)
+        timer.state = PVR_TIMER_STATE_RECORDING;
+    }
+
+    if (GetXMLValue(xTmp, "ID", iTmp))
+      timer.iTimerId = iTmp;
+
+    timers.push_back(timer);
+
+    XBMC->Log(LOG_DEBUG, "%s loaded Timer entry '%s': start=%u, end=%u",
+        __FUNCTION__, timer.strTitle.c_str(), timer.startTime, timer.endTime);
+  }
+
+  XBMC->Log(LOG_INFO, "Loaded %u Timer entries", timers.size());
+  return timers;
+}
+
+void Dvb::TimerUpdates()
+{
+  for (DvbTimers_t::iterator timer = m_timers.begin();
+      timer != m_timers.end(); ++timer)
+    timer->iUpdateState = DVB_UPDATE_STATE_NONE;
+
+  DvbTimers_t newtimers = LoadTimers();
+  unsigned int iUpdated = 0;
+  unsigned int iUnchanged = 0;
+  for (DvbTimers_t::iterator newtimer = newtimers.begin();
+      newtimer != newtimers.end(); ++newtimer)
+  {
+    for (DvbTimers_t::iterator timer = m_timers.begin();
+        timer != m_timers.end(); ++timer)
+    {
+      if (!timer->like(*newtimer))
+        continue;
+
+      if (*timer == *newtimer)
+      {
+        timer->iUpdateState = newtimer->iUpdateState = DVB_UPDATE_STATE_FOUND;
+        ++iUnchanged;
+      }
+      else
+      {
+        timer->iUpdateState = newtimer->iUpdateState = DVB_UPDATE_STATE_UPDATED;
+        timer->strTitle     = newtimer->strTitle;
+        timer->strPlot      = newtimer->strPlot;
+        timer->iChannelUid  = newtimer->iChannelUid;
+        timer->startTime    = newtimer->startTime;
+        timer->endTime      = newtimer->endTime;
+        timer->bRepeating   = newtimer->bRepeating;
+        timer->iWeekdays    = newtimer->iWeekdays;
+        timer->iEpgId       = newtimer->iEpgId;
+        timer->iTimerId     = newtimer->iTimerId;
+        timer->iPriority    = newtimer->iPriority;
+        timer->iFirstDay    = newtimer->iFirstDay;
+        timer->state        = newtimer->state;
+        ++iUpdated;
+      }
+    }
+  }
+
+  unsigned int iRemoved = 0;
+  for (DvbTimers_t::iterator it = m_timers.begin(); it != m_timers.end();)
+  {
+    if (it->iUpdateState == DVB_UPDATE_STATE_NONE)
+    {
+      XBMC->Log(LOG_DEBUG, "%s Removed timer: '%s', ClientIndex: %u",
+          __FUNCTION__, it->strTitle.c_str(), it->iClientIndex);
+      it = m_timers.erase(it);
+      ++iRemoved;
+    }
+    else
+      ++it;
+  }
+
+  unsigned int iNew = 0;
+  for (DvbTimers_t::iterator it = newtimers.begin(); it != newtimers.end(); ++it)
+  {
+    if (it->iUpdateState == DVB_UPDATE_STATE_NEW)
+    {
+      it->iClientIndex = m_iClientIndexCounter;
+      XBMC->Log(LOG_DEBUG, "%s New timer: '%s', ClientIndex: %u",
+          __FUNCTION__, it->strTitle.c_str(), m_iClientIndexCounter);
+      m_timers.push_back(*it);
+      ++m_iClientIndexCounter;
+      ++iNew;
+    }
+  }
+
+  XBMC->Log(LOG_DEBUG, "%s Timers update: removed=%u, untouched=%u, updated=%u, new=%u",
+      __FUNCTION__, iRemoved, iUnchanged, iUpdated, iNew);
+
+  if (iRemoved || iUpdated || iNew)
+  {
+    XBMC->Log(LOG_INFO, "Changes in timerlist detected, triggering an update!");
+    PVR->TriggerTimerUpdate();
+  }
+}
+
+void Dvb::GenerateTimer(const PVR_TIMER& timer, bool bNewTimer)
+{
+  XBMC->Log(LOG_DEBUG, "%s iChannelUid=%u title='%s' epgid=%d",
+      __FUNCTION__, timer.iClientChannelUid, timer.strTitle, timer.iEpgUid);
+
+  struct tm *timeinfo;
+  time_t startTime = timer.startTime, endTime = timer.endTime;
+  if (!startTime)
+    time(&startTime);
   else
   {
-    bBoolValue = true;
-    if (strEnabled != "on" && strEnabled != "yes" && strEnabled != "enabled" && strEnabled != "true")
+    startTime -= timer.iMarginStart * 60;
+    endTime += timer.iMarginEnd * 60;
+  }
+
+  int dor = ((startTime + m_iTimezone * 60) / DAY_SECS) + DELPHI_DATE;
+  timeinfo = localtime(&startTime);
+  int start = timeinfo->tm_hour * 60 + timeinfo->tm_min;
+  timeinfo = localtime(&endTime);
+  int stop = timeinfo->tm_hour * 60 + timeinfo->tm_min;
+
+  char strWeek[8] = "-------";
+  for (int i = 0; i < 7; ++i)
+  {
+    if (timer.iWeekdays & (1 << i))
+      strWeek[i] = 'T';
+  }
+
+  uint64_t iChannelId = m_channels[timer.iClientChannelUid - 1].iChannelId;
+  CStdString strTmp;
+  if (bNewTimer)
+    strTmp.Format("api/timeradd.html?ch=%"PRIu64"&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
+        iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
+  else
+  {
+    int enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
+    strTmp.Format("api/timeredit.html?id=%d&ch=%"PRIu64"&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
+        GetTimerId(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
+  }
+
+  SendSimpleCommand(strTmp);
+  m_bUpdateTimers = true;
+}
+
+int Dvb::GetTimerId(const PVR_TIMER& timer)
+{
+  for (DvbTimers_t::iterator it = m_timers.begin(); it != m_timers.end(); ++it)
+  {
+    if (it->iClientIndex == timer.iClientIndex)
+      return it->iTimerId;
+  }
+  return 0;
+}
+
+
+bool Dvb::GetXMLValue(const XMLNode& node, const char* tag, int& value)
+{
+  XMLNode xNode(node.getChildNode(tag));
+  if (xNode.isEmpty())
+     return false;
+  value = atoi(xNode.getText());
+  return true;
+}
+
+bool Dvb::GetXMLValue(const XMLNode& node, const char* tag, bool& value)
+{
+  XMLNode xNode(node.getChildNode(tag));
+  if (xNode.isEmpty())
+    return false;
+
+  CStdString str(xNode.getText());
+  str.ToLower();
+  if (str == "off" || str == "no" || str == "disabled" || str == "false" || str == "0" )
+    value = false;
+  else
+  {
+    value = true;
+    if (str != "on" && str != "yes" && str != "enabled" && str != "true")
       return false; // invalid bool switch - it's probably some other string.
   }
   return true;
 }
 
-bool Dvb::GetString(XMLNode xRootNode, const char* strTag, CStdString& strStringValue)
-{
-  XMLNode xNode = xRootNode.getChildNode(strTag );
-  if (!xNode.isEmpty())
-  {
-    strStringValue = xNode.getText();
-    return true;
-  }
-  strStringValue.Empty();
-  return false;
-}
-
-bool Dvb::GetStringLng(XMLNode xRootNode, const char* strTag, CStdString& strStringValue)
+bool Dvb::GetXMLValue(const XMLNode& node, const char* tag, CStdString& value,
+    bool localize)
 {
   XMLNode xNode;
   bool found = false;
-  int n = xRootNode.nChildNode(strTag);
 
-  if (n > 1)
+  for (int i = 0; localize && i < node.nChildNode(tag); ++i)
   {
-    for (int i = 0; i<n; i++)
+    xNode = node.getChildNode(tag, i);
+    const char *lang = xNode.getAttribute("lng");
+    if (lang && lang == m_strEPGLanguage)
     {
-      xNode = xRootNode.getChildNode(strTag, i);
-      CStdString strTmp;
-      strTmp = xNode.getAttribute("lng");
-      if (strTmp == m_strEPGLanguage)
-      {
-        found = true;
-        break;
-      }
+      found = true;
+      break;
     }
   }
 
-  if (!found) xNode = xRootNode.getChildNode(strTag);
+  if (!found)
+    xNode = node.getChildNode(tag);
   if (!xNode.isEmpty())
   {
-    strStringValue = xNode.getText();
+    value = xNode.getText();
     return true;
   }
-  strStringValue.Empty();
+  value.Empty();
   return false;
 }
 
 void Dvb::GetPreferredLanguage()
 {
   CStdString strXML, url;
-  url.Format("%s%s",  m_strURL.c_str(), "config.html?aktion=config"); 
+  url.Format("%sconfig.html?aktion=config", m_strURL);
   strXML = GetHttpXML(url);
   unsigned int iLanguagePos = strXML.find("EPGLanguage");
   iLanguagePos = strXML.find(" selected>", iLanguagePos);
-  m_strEPGLanguage = strXML.substr(iLanguagePos-4, 3);
+  m_strEPGLanguage = strXML.substr(iLanguagePos - 4, 3);
 }
 
 void Dvb::GetTimeZone()
 {
-  CStdString url; 
-  url.Format("%s%s", m_strURL.c_str(), "api/status.html"); 
+  CStdString url;
+  url.Format("%sapi/status.html", m_strURL);
 
-  CStdString strXML;
-  strXML = GetHttpXML(url);
+  CStdString strXML(GetHttpXML(url));
 
   XMLResults xe;
-  XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
-  
-  if(xe.error != 0)  {
-    XBMC->Log(LOG_ERROR, "%s Unable to parse XML. Error: '%s' ", __FUNCTION__, XMLNode::getError(xe.error));
-  }
-  else {
+  XMLNode xMainNode = XMLNode::parseString(strXML, NULL, &xe);
+  if (xe.error != 0)
+    XBMC->Log(LOG_ERROR, "Unable to get recording service status. Invalid XML. Error: %s", XMLNode::getError(xe.error));
+  else
+  {
     XMLNode xNode = xMainNode.getChildNode("status");
-    GetInt(xNode, "timezone", m_iTimezone);
+    GetXMLValue(xNode, "timezone", m_iTimezone);
   }
 }
 
-void Dvb::RemoveNullChars(CStdString &String)
+void Dvb::RemoveNullChars(CStdString& str)
 {
   /* favourites.xml and timers.xml sometimes have null chars that screw the xml */
-  for (unsigned int i = 0; i<String.size()-1; i++)
-  {
-    if (String.data()[i] == '\0')
-    {
-      String.erase(i, 1);
-      i--;
-    }
-  }
-}
-
-PVR_ERROR Dvb::GetChannelGroups(ADDON_HANDLE handle)
-{
-  for(unsigned int iTagPtr = 0; iTagPtr < m_groups.size(); iTagPtr++)
-  {
-    PVR_CHANNEL_GROUP tag;
-    memset(&tag, 0 , sizeof(PVR_CHANNEL_GROUP));
-
-    tag.bIsRadio     = false;
-    strncpy(tag.strGroupName, m_groups[iTagPtr].strGroupName.c_str(), sizeof(tag.strGroupName));
-
-    PVR->TransferChannelGroup(handle, &tag);
-  }
-
-  return PVR_ERROR_NO_ERROR;
-}
-
-
-unsigned int Dvb::GetNumChannelGroups() {
-  return m_iNumChannelGroups;
-}
-
-PVR_ERROR Dvb::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
-{
-  XBMC->Log(LOG_DEBUG, "%s - group '%s'", __FUNCTION__, group.strGroupName);
-  CStdString strTmp = group.strGroupName;
-  for (unsigned int i = 0;i<m_channels.size();  i++) 
-  {
-    DvbChannel &myChannel = m_channels.at(i);
-    if (!strTmp.compare(myChannel.strGroupName)) 
-    {
-      PVR_CHANNEL_GROUP_MEMBER tag;
-      memset(&tag,0 , sizeof(PVR_CHANNEL_GROUP_MEMBER));
-
-      strncpy(tag.strGroupName, group.strGroupName, sizeof(tag.strGroupName));
-      tag.iChannelUniqueId = myChannel.iUniqueId;
-      tag.iChannelNumber   = myChannel.iChannelNumber;
-
-      XBMC->Log(LOG_DEBUG, "%s - add channel %s (%d) to group '%s' channel number %d",
-          __FUNCTION__, myChannel.strChannelName.c_str(), tag.iChannelUniqueId, group.strGroupName, myChannel.iChannelNumber);
-
-      PVR->TransferChannelGroupMember(handle, &tag);
-    }
-  }
-  return PVR_ERROR_NO_ERROR;
-}
-
-int Dvb::GetCurrentClientChannel(void) 
-{
-  return m_iCurrentChannel;
-}
-
-const char* Dvb::GetLiveStreamURL(const PVR_CHANNEL &channelinfo)
-{
-  SwitchChannel(channelinfo);
-
-  return m_channels.at(channelinfo.iUniqueId-1).strStreamURL.c_str();
-}
-
-bool Dvb::OpenLiveStream(const PVR_CHANNEL &channelinfo)
-{
-  XBMC->Log(LOG_INFO, "%s channel '%u'", __FUNCTION__, channelinfo.iUniqueId);
-
-  if ((int)channelinfo.iUniqueId == m_iCurrentChannel)
-    return true;
-
-  return SwitchChannel(channelinfo);
-}
-
-void Dvb::CloseLiveStream(void) 
-{
-  m_iCurrentChannel = -1;
-}
-
-bool Dvb::SwitchChannel(const PVR_CHANNEL &channel)
-{
-  m_iCurrentChannel = channel.iUniqueId;
-  m_bUpdateEPG = true;
-  return true;
+  str.erase(std::remove(str.begin(), str.end(), '\0'), str.end());
 }
 
 bool Dvb::GetDeviceInfo()
 {
-  CStdString url; 
-  url.Format("%s%s", m_strURL.c_str(), "api/version.html"); 
+  CStdString url;
+  url.Format("%sapi/version.html", m_strURL);
 
-  CStdString strXML;
-  strXML = GetHttpXML(url);
+  CStdString strXML(GetHttpXML(url));
 
   XMLResults xe;
-  XMLNode xMainNode = XMLNode::parseString(strXML.c_str(), NULL, &xe);
-  
-  if(xe.error != 0)
+  XMLNode xMainNode = XMLNode::parseString(strXML, NULL, &xe);
+  if (xe.error != 0)
   {
-    XBMC->Log(LOG_ERROR, "%s Can't connect to the Recording Service", __FUNCTION__);
+    XBMC->Log(LOG_ERROR, "Unable to connect to the recording service");
     XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30500));
     Sleep(10000);
     return false;
   }
 
-  XMLNode xNode = xMainNode.getChildNode("version");
-
-  CStdString strTmp;;
-
-  XBMC->Log(LOG_NOTICE, "%s - DeviceInfo", __FUNCTION__);
-
   // Get Version
+  XBMC->Log(LOG_NOTICE, "Fetching deviceInfo...");
+  XMLNode xNode = xMainNode.getChildNode("version");
   if (!xNode.getText()) {
-    XBMC->Log(LOG_ERROR, "%s Could not parse version from result!", __FUNCTION__);
+    XBMC->Log(LOG_ERROR, "Could not parse version from result!");
     return false;
   }
   m_strDVBViewerVersion = xNode.getText();
   CStdString strVersion = m_strDVBViewerVersion.substr(30, 2);
   if (atoi(strVersion) < RS_MIN_VERSION)
   {
-    XBMC->Log(LOG_ERROR, "%s - Recording Service version 1.%d or higher required", __FUNCTION__, RS_MIN_VERSION);
+    XBMC->Log(LOG_ERROR, "Recording Service version 1.%d or higher required", RS_MIN_VERSION);
     XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30501), RS_MIN_VERSION);
     Sleep(10000);
     return false;
   }
-  XBMC->Log(LOG_NOTICE, "%s - Version: %s", __FUNCTION__, m_strDVBViewerVersion.c_str());
+  XBMC->Log(LOG_NOTICE, "Version: %s", m_strDVBViewerVersion.c_str());
 
   return true;
 }
 
-PVR_ERROR Dvb::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
+time_t Dvb::ParseDateTime(const CStdString& date, bool iso8601)
 {
-  CStdString strXML, url;
-  url.Format("%s%s",  m_strURL.c_str(), "status.html?aktion=status"); 
-  strXML = GetHttpXML(url);
-  unsigned int iSignalStartPos, iSignalEndPos;
-  iSignalEndPos = strXML.find("%</th>");
+  struct tm timeinfo;
 
-  unsigned int iAdapterStartPos, iAdapterEndPos;
-  iAdapterStartPos = strXML.rfind("3\">", iSignalEndPos) + 3;
-  iAdapterEndPos = strXML.find("<", iAdapterStartPos);
-  strncpy(signalStatus.strAdapterName, strXML.substr(iAdapterStartPos, iAdapterEndPos - iAdapterStartPos).c_str(), sizeof(signalStatus.strAdapterName));
+  memset(&timeinfo, 0, sizeof(tm));
+  if (iso8601)
+    sscanf(date, "%04d%02d%02d%02d%02d%02d", &timeinfo.tm_year,
+        &timeinfo.tm_mon, &timeinfo.tm_mday, &timeinfo.tm_hour,
+        &timeinfo.tm_min, &timeinfo.tm_sec);
+  else
+    sscanf(date, "%02d.%02d.%04d%02d:%02d:%02d", &timeinfo.tm_mday,
+        &timeinfo.tm_mon, &timeinfo.tm_year, &timeinfo.tm_hour,
+        &timeinfo.tm_min, &timeinfo.tm_sec);
+  timeinfo.tm_mon  -= 1;
+  timeinfo.tm_year -= 1900;
+  timeinfo.tm_isdst = -1;
 
-  iSignalStartPos = strXML.find_last_of(">", iSignalEndPos) + 1;
-  if (iSignalEndPos < strXML.size())
-    signalStatus.iSignal = (int)(atoi(strXML.substr(iSignalStartPos, iSignalEndPos - iSignalStartPos).c_str()) * 655.35);
-  strncpy(signalStatus.strAdapterStatus, "OK", sizeof(signalStatus.strAdapterStatus));
+  return mktime(&timeinfo);
+}
 
-  return PVR_ERROR_NO_ERROR;
+uint64_t Dvb::ParseChannelString(const CStdString& str, CStdString& channelName)
+{
+  std::vector<CStdString> tokenlist;
+  tokenize<std::vector<CStdString> >(str, tokenlist, "|");
+  if (tokenlist.size() < 1)
+  {
+    XBMC->Log(LOG_ERROR, "Unable to parse channel string: %s", str.c_str());
+    return 0;
+  }
+
+  uint64_t channelId = 0;
+  std::istringstream ss(tokenlist[0]);
+  ss >> channelId;
+  if (ss.fail())
+  {
+    XBMC->Log(LOG_ERROR, "Unable to parse channel id: %s",
+        tokenlist[0].c_str());
+    return 0;
+  }
+
+  channelName.clear();
+  if (tokenlist.size() >= 2)
+    channelName = ConvertToUtf8(tokenlist[1]);
+  return channelId;
+}
+
+unsigned int Dvb::GetChannelUid(const CStdString& str)
+{
+  CStdString channelName;
+  uint64_t channelId = ParseChannelString(str, channelName);
+  if (channelId == 0)
+    return 0;
+  return GetChannelUid(channelId);
+}
+
+unsigned int Dvb::GetChannelUid(const uint64_t channelId)
+{
+  for (DvbChannels_t::iterator channel = m_channels.begin();
+      channel != m_channels.end(); ++channel)
+  {
+    if (channel->iChannelId == channelId)
+      return channel->iUniqueId;
+  }
+  return 0;
+}
+
+CStdString Dvb::ConvertToUtf8(const CStdString& src)
+{
+  char *tmp = XBMC->UnknownToUTF8(src);
+  CStdString dest(tmp);
+  XBMC->FreeString(tmp);
+  return dest;
 }

@@ -47,7 +47,7 @@ class cSegment
 class cRecPlayer
 {
 public:
-  cRecPlayer(cRecording* rec);
+  cRecPlayer(cRecording* rec, bool inProgress = false);
   ~cRecPlayer();
   uint64_t getLengthBytes();
   uint32_t getLengthFrames();
@@ -57,6 +57,7 @@ public:
   void closeFile();
 
   void scan();
+  void reScan();
   uint64_t positionFromFrameNumber(uint32_t frameNumber);
   uint32_t frameNumberFromPosition(uint64_t position);
   bool getNextIFrame(uint32_t frameNumber, uint32_t direction, uint64_t* rfilePosition, uint32_t* rframeNumber, uint32_t* rframeLength);
@@ -75,6 +76,7 @@ private:
   uint32_t    m_totalFrames;
   char       *m_recordingFilename;
   bool        m_pesrecording;
+  bool        m_inProgress;
 };
 
 #endif // VNSI_RECPLAYER_H

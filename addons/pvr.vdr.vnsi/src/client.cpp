@@ -25,6 +25,7 @@
 #include "VNSIRecording.h"
 #include "VNSIData.h"
 #include "VNSIChannelScan.h"
+#include "VNSIAdmin.h"
 #include "platform/util/util.h"
 
 #include <sstream>
@@ -47,6 +48,7 @@ bool          g_bHandleMessages         = DEFAULT_HANDLE_MSG;   ///< Send VDR's 
 int           g_iConnectTimeout         = DEFAULT_TIMEOUT;      ///< The Socket connection timeout
 int           g_iPriority               = DEFAULT_PRIORITY;     ///< The Priority this client have in response to other clients
 bool          g_bAutoChannelGroups      = DEFAULT_AUTOGROUPS;
+int           g_iTimeshift              = 1;
 
 CHelper_libXBMC_addon *XBMC   = NULL;
 CHelper_libXBMC_gui   *GUI    = NULL;
@@ -125,6 +127,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     g_iPriority = DEFAULT_PRIORITY;
   }
 
+  /* Read setting "timeshift" from settings.xml */
+  if (!XBMC->GetSetting("timeshift", &g_iTimeshift))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'timeshift' setting, falling back to %i as default", 1);
+    g_iTimeshift = 1;
+  }
+
   /* Read setting "convertchar" from settings.xml */
   if (!XBMC->GetSetting("convertchar", &g_bCharsetConv))
   {
@@ -178,6 +188,12 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
     return m_CurStatus;
   }
+
+  PVR_MENUHOOK hook;
+  hook.iHookId = 1;
+  hook.category = PVR_MENUHOOK_SETTING;
+  hook.iLocalizedStringId = 30107;
+  PVR->AddMenuHook(&hook);
 
   m_CurStatus = ADDON_STATUS_OK;
   return m_CurStatus;
@@ -245,6 +261,11 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   else if (str == "priority")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'priority' from %u to %u", g_iPriority, *(int*) settingValue);
+    g_iPriority = *(int*) settingValue;
+  }
+  else if (str == "timeshift")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'timeshift' from %u to %u", g_iTimeshift, *(int*) settingValue);
     g_iPriority = *(int*) settingValue;
   }
   else if (str == "convertchar")
@@ -589,6 +610,32 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 
 }
 
+bool CanPauseStream(void)
+{
+  bool ret = false;
+  if (VNSIDemuxer)
+    ret = VNSIDemuxer->IsTimeshift();
+  return ret;
+}
+
+bool CanSeekStream(void)
+{
+  bool ret = false;
+  if (VNSIDemuxer)
+    ret = VNSIDemuxer->IsTimeshift();
+  return ret;
+}
+
+bool SeekTime(int time, bool backwards, double *startpts)
+{
+  bool ret = false;
+  if (VNSIDemuxer)
+    ret = VNSIDemuxer->SeekTime(time, backwards, startpts);
+  return ret;
+}
+
+void SetSpeed(int) {};
+void PauseStream(bool bPaused) {}
 
 /*******************************************/
 /** PVR Recording Stream Functions        **/
@@ -646,8 +693,20 @@ long long LengthRecordedStream(void)
   return 0;
 }
 
+/*******************************************/
+/** PVR Menu Hook Functions               **/
+
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
+{
+  if (menuhook.iHookId == 1)
+  {
+    cVNSIAdmin osd;
+    osd.Open(g_szHostname, g_iPort);
+  }
+  return PVR_ERROR_NO_ERROR;
+}
+
 /** UNUSED API FUNCTIONS */
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
@@ -665,9 +724,5 @@ PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int las
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 unsigned int GetChannelSwitchDelay(void) { return 0; }
-void PauseStream(bool bPaused) {}
-bool CanPauseStream(void) { return false; }
-bool CanSeekStream(void) { return false; }
-bool SeekTime(int,bool,double*) { return false; }
-void SetSpeed(int) {};
+
 }

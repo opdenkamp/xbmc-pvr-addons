@@ -57,7 +57,9 @@ private:
   void sendStreamChange();
   void sendSignalInfo();
   void sendStreamStatus();
+  void sendBufferStatus();
 
+  int               m_ClientID;
   const cChannel   *m_Channel;                      /*!> Channel to stream */
   cDevice          *m_Device;
   cxSocket         *m_Socket;                       /*!> The socket class to communicate with client */
@@ -76,12 +78,16 @@ private:
   cVNSIDemuxer      m_Demuxer;
   cVideoBuffer     *m_VideoBuffer;
   cVideoInput       m_VideoInput;
+  int               m_Priority;
+  uint8_t           m_Timeshift;
 
 protected:
   virtual void Action(void);
+  bool Open(int serial = -1);
+  void Close();
 
 public:
-  cLiveStreamer(uint32_t timeout = 0);
+  cLiveStreamer(int clientID, uint8_t timeshift, uint32_t timeout = 0);
   virtual ~cLiveStreamer();
 
   void Activate(bool On);
@@ -90,6 +96,7 @@ public:
   bool IsStarting() { return m_startup; }
   bool IsAudioOnly() { return m_IsAudioOnly; }
   bool IsMPEGPS() { return m_IsMPEGPS; }
+  bool SeekTime(int64_t time, uint32_t &serial);
 };
 
 #endif  // VNSI_RECEIVER_H

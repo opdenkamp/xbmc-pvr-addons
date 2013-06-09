@@ -51,6 +51,14 @@ msgctxt "#30007"
 msgid "Select the favourites.xml file"
 msgstr ""
 
+msgctxt "#30100"
+msgid "Enable Timeshift"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Timeshift buffer path"
+msgstr ""
+
 #empty strings from id 30008 to 30499
 #notifications
 

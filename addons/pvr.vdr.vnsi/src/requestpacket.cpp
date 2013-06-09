@@ -153,6 +153,20 @@ bool cRequestPacket::add_U64(uint64_t ull)
   return true;
 }
 
+bool cRequestPacket::add_S64(int64_t ll)
+{
+  if (!checkExtend(sizeof(int64_t))) return false;
+  int64_t tmp = htonll(ll);
+  memcpy(&buffer[bufUsed], &tmp, sizeof(int64_t));
+  bufUsed += sizeof(int64_t);
+  if (!lengthSet)
+  {
+    uint32_t tmp = htonl(bufUsed - headerLength);
+    memcpy(&buffer[userDataLenPos], &tmp, sizeof(uint32_t));
+  }
+  return true;
+}
+
 bool cRequestPacket::checkExtend(uint32_t by)
 {
   if (lengthSet) return true;

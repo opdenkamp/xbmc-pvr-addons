@@ -456,15 +456,15 @@ PVR_ERROR cVNSIData::AddTimer(const PVR_TIMER &timerinfo)
     }
   }
 
-  if(strlen(timerinfo.strTitle) > 0) {
-    path += timerinfo.strTitle;
-  }
-
   // replace directory separators
   for(std::size_t i=0; i<path.size(); i++) {
     if(path[i] == '/' || path[i] == '\\') {
       path[i] = '~';
     }
+  }
+
+  if(strlen(timerinfo.strTitle) > 0) {
+    path += timerinfo.strTitle;
   }
 
   if(path.empty()) {
@@ -749,27 +749,8 @@ bool cVNSIData::OnResponsePacket(cResponsePacket* pkt)
   return false;
 }
 
-bool cVNSIData::SendPing()
-{
-  XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
-
-  cRequestPacket vrp;
-  if (!vrp.init(VNSI_PING))
-  {
-    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
-    return false;
-  }
-
-  cResponsePacket* vresp = cVNSISession::ReadResult(&vrp);
-  delete vresp;
-
-  return (vresp != NULL);
-}
-
 void *cVNSIData::Process()
 {
-  uint32_t lastPing = 0;
-
   cResponsePacket* vresp;
 
   while (!IsStopped())
@@ -788,21 +769,7 @@ void *cVNSIData::Process()
       continue;
     }
 
-    // check if the connection is still up
-    if (vresp == NULL)
-    {
-      if(time(NULL) - lastPing > 5)
-      {
-        lastPing = time(NULL);
-
-//        if(!SendPing())
-//          SignalConnectionLost();
-      }
-      continue;
-    }
-
     // CHANNEL_REQUEST_RESPONSE
-
     if (vresp->getChannelID() == VNSI_CHANNEL_REQUEST_RESPONSE)
     {
       CLockObject lock(m_mutex);
@@ -851,7 +818,7 @@ void *cVNSIData::Process()
         char* str1      = vresp->extract_String();
         char* str2      = vresp->extract_String();
 
-        PVR->Recording(str1, str2, on!=0?true:false);
+//        PVR->Recording(str1, str2, on!=0?true:false);
         PVR->TriggerTimerUpdate();
 
         delete[] str1;
@@ -871,6 +838,12 @@ void *cVNSIData::Process()
       {
         XBMC->Log(LOG_DEBUG, "Server requested recordings update");
         PVR->TriggerRecordingUpdate();
+      }
+      else if (vresp->getRequestID() == VNSI_STATUS_EPGCHANGE)
+      {
+        uint32_t channel     = vresp->extract_U32();
+        XBMC->Log(LOG_DEBUG, "Server requested Epg update for channel: %d", channel);
+        PVR->TriggerEpgUpdate(channel);
       }
 
       delete vresp;

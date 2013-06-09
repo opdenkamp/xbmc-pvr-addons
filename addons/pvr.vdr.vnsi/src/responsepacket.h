@@ -32,9 +32,11 @@ class cResponsePacket
     void setResponse(uint8_t* packet, uint32_t packetLength);
     void setStatus(uint8_t* packet, uint32_t packetLength);
     void setStream(uint8_t* packet, uint32_t packetLength);
+    void setOSD(uint8_t* packet, uint32_t packetLength);
 
     void extractHeader();
     void extractStreamHeader();
+    void extractOSDHeader();
 
     bool noResponse() { return (userData == NULL); };
     int  serverError();
@@ -47,6 +49,8 @@ class cResponsePacket
     uint32_t  getDuration()       { return duration; }
     int64_t   getDTS()            { return dts; }
     int64_t   getPTS()            { return pts; }
+    uint32_t  getMuxSerial()      { return muxSerial; }
+    void      getOSDData(uint32_t &wnd, uint32_t &color, uint32_t &x0, uint32_t &y0, uint32_t &x1, uint32_t &y1);
 
     uint32_t  getPacketPos()      { return packetPos; }
 
@@ -64,11 +68,12 @@ class cResponsePacket
     uint8_t* getUserData();
 
     uint8_t* getHeader() { return header; };
-    unsigned int getStreamHeaderLength() { return 32; };
+    unsigned int getStreamHeaderLength() { return 36; };
     unsigned int getHeaderLength() { return 8; };
+    unsigned int getOSDHeaderLength() { return 32; } ;
 
   private:
-    uint8_t  header[36];
+    uint8_t  header[40];
     uint8_t* userData;
     uint32_t userDataLength;
     uint32_t packetPos;
@@ -81,6 +86,11 @@ class cResponsePacket
     uint32_t duration;
     int64_t  dts;
     int64_t  pts;
+    uint32_t muxSerial;
+
+    int32_t osdWnd;
+    int32_t osdColor;
+    int32_t osdX0,osdY0,osdX1,osdY1;
 
     bool ownBlock;
 };

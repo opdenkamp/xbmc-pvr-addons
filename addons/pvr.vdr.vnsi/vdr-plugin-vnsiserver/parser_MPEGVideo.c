@@ -1,8 +1,5 @@
 /*
- *      vdr-plugin-vnsi - XBMC server plugin for VDR
- *
- *      Copyright (C) 2010 Alwin Esch (Team XBMC)
- *
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -16,9 +13,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -52,8 +48,8 @@ const unsigned int mpeg2video_framedurations[16] = {
   1500,
 };
 
-cParserMPEG2Video::cParserMPEG2Video(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserMPEG2Video::cParserMPEG2Video(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_FrameDuration     = 0;
   m_vbvDelay          = -1;
@@ -97,7 +93,7 @@ void cParserMPEG2Video::Parse(sStreamPacket *pkt)
   {
     if (!m_NeedSPS && !m_NeedIFrame)
     {
-      int fpsScale = m_Stream->Rescale(m_FrameDuration);
+      int fpsScale = m_Stream->Rescale(m_FrameDuration, DVD_TIME_BASE, 90000);
       bool streamChange = m_Stream->SetVideoInformation(fpsScale,DVD_TIME_BASE, m_Height, m_Width, m_Dar);
 
       pkt->id       = m_pID;
@@ -105,14 +101,12 @@ void cParserMPEG2Video::Parse(sStreamPacket *pkt)
       pkt->data     = m_PesBuffer;
       pkt->dts      = m_DTS;
       pkt->pts      = m_PTS;
-      pkt->duration = m_curDTS - m_prevDTS;
+      pkt->duration = m_FrameDuration;
       pkt->streamChange = streamChange;
     }
     m_StartCode = 0xffffffff;
     m_PesParserPtr = 0;
     m_FoundFrame = false;
-    m_PTS = m_curPTS;
-    m_DTS = m_curDTS;
   }
 }
 
@@ -122,7 +116,6 @@ void cParserMPEG2Video::Reset()
   m_StartCode = 0xffffffff;
   m_NeedIFrame = true;
   m_NeedSPS = true;
-  m_DTS = DVD_NOPTS_VALUE;
 }
 
 int cParserMPEG2Video::Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &complete)
@@ -150,12 +143,35 @@ int cParserMPEG2Video::Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &c
     if (!Parse_MPEG2Video_PicStart(buf))
       return 0;
 
-    // if this is the first frame we see, set timestamp
-    if (m_DTS == DVD_NOPTS_VALUE)
+    if (!m_FoundFrame)
     {
-      m_PTS = m_curPTS;
-      m_DTS = m_curDTS;
+      m_AuPrevDTS = m_AuDTS;
+      if (buf_ptr - 4 >= m_PesTimePos)
+      {
+
+        m_AuDTS = m_curDTS;
+        m_AuPTS = m_curPTS;
+      }
+      else
+      {
+        m_AuDTS = m_prevDTS;
+        m_AuPTS = m_prevPTS;
+      }
     }
+    if (m_AuPrevDTS == m_AuDTS)
+    {
+      m_DTS = m_AuDTS + m_PicNumber*m_FrameDuration;
+      m_PTS = m_AuPTS + (m_TemporalReference-m_TrLastTime)*m_FrameDuration;
+    }
+    else
+    {
+      m_PTS = m_AuPTS;
+      m_DTS = m_AuDTS;
+      m_PicNumber = 0;
+      m_TrLastTime = m_TemporalReference;
+    }
+
+    m_PicNumber++;
     m_FoundFrame = true;
     break;
   }
@@ -237,7 +253,7 @@ bool cParserMPEG2Video::Parse_MPEG2Video_PicStart(uint8_t *buf)
 {
   cBitstream bs(buf, 4 * 8);
 
-  bs.skipBits(10); /* temporal reference */
+  m_TemporalReference = bs.readBits(10); /* temporal reference */
 
   int pct = bs.readBits(3);
   if (pct < PKT_I_FRAME || pct > PKT_B_FRAME)

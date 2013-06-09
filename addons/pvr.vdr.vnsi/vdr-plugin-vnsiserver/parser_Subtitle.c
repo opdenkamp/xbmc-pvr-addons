@@ -1,8 +1,5 @@
 /*
- *      vdr-plugin-vnsi - XBMC server plugin for VDR
- *
- *      Copyright (C) 2010 Alwin Esch (Team XBMC)
- *
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -16,9 +13,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -28,8 +24,8 @@
 
 #include "parser_Subtitle.h"
 
-cParserSubtitle::cParserSubtitle(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserSubtitle::cParserSubtitle(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_PesBufferInitialSize = 4000;
 }
@@ -55,7 +51,7 @@ void cParserSubtitle::Parse(sStreamPacket *pkt)
     {
       pkt->id       = m_pID;
       pkt->data     = m_PesBuffer+2;
-      pkt->size     = m_PesPacketLength-2;
+      pkt->size     = m_PesPacketLength-3;
       pkt->duration = 0;
       pkt->dts      = m_curDTS;
       pkt->pts      = m_curPTS;

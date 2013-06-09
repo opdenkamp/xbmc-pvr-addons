@@ -28,7 +28,6 @@
 #include "client.h"
 #include "../../../lib/platform/sockets/tcp.h"
 
-
 cResponsePacket::cResponsePacket()
 {
   userDataLength  = 0;
@@ -53,6 +52,16 @@ cResponsePacket::~cResponsePacket()
   }
 }
 
+void cResponsePacket::getOSDData(uint32_t &wnd, uint32_t &color, uint32_t &x0, uint32_t &y0, uint32_t &x1, uint32_t &y1)
+{
+  wnd = osdWnd;
+  color = osdColor;
+  x0 = osdX0;
+  y0 = osdY0;
+  x1 = osdX1;
+  y1 = osdY1;
+}
+
 void cResponsePacket::setResponse(uint8_t* tuserData, uint32_t tuserDataLength)
 {
   channelID       = VNSI_CHANNEL_REQUEST_RESPONSE;
@@ -72,6 +81,15 @@ void cResponsePacket::setStatus(uint8_t* tuserData, uint32_t tuserDataLength)
 void cResponsePacket::setStream(uint8_t* tuserData, uint32_t tuserDataLength)
 {
   channelID       = VNSI_CHANNEL_STREAM;
+  // set pointer to user data
+  userData        = tuserData;
+  userDataLength  = tuserDataLength;
+  packetPos       = 0;
+}
+
+void cResponsePacket::setOSD(uint8_t* tuserData, uint32_t tuserDataLength)
+{
+  channelID       = VNSI_CHANNEL_OSD;
   // set pointer to user data
   userData        = tuserData;
   userDataLength  = tuserDataLength;
@@ -105,9 +123,30 @@ void cResponsePacket::extractStreamHeader()
   duration = extract_U32();
   pts      = extract_U64();
   dts      = extract_U64();
+  muxSerial= extract_U32();
+
   userDataLength = extract_U32();
 
   userData = NULL;
+}
+
+void cResponsePacket::extractOSDHeader()
+{
+  channelID = VNSI_CHANNEL_OSD;
+
+  // set data pointers to header first
+  userData = header;
+  userDataLength = sizeof(header);
+  packetPos = 0;
+
+  opcodeID = extract_U32();
+  osdWnd   = extract_S32();
+  osdColor = extract_S32();
+  osdX0    = extract_S32();
+  osdY0    = extract_S32();
+  osdX1    = extract_S32();
+  osdY1    = extract_S32();
+  userDataLength = extract_U32();
 }
 
 bool cResponsePacket::end()

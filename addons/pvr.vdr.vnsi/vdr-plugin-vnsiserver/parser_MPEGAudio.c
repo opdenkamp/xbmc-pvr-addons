@@ -1,8 +1,5 @@
 /*
- *      vdr-plugin-vnsi - XBMC server plugin for VDR
- *
- *      Copyright (C) 2010 Alwin Esch (Team XBMC)
- *
+ *      Copyright (C) 2005-2012 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -16,9 +13,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -44,8 +40,8 @@ const uint16_t BitrateTable[2][3][15] =
   }
 };
 
-cParserMPEG2Audio::cParserMPEG2Audio(int pID, cTSStream *stream)
- : cParser(pID, stream)
+cParserMPEG2Audio::cParserMPEG2Audio(int pID, cTSStream *stream, sPtsWrap *ptsWrap, bool observePtsWraps)
+ : cParser(pID, stream, ptsWrap, observePtsWraps)
 {
   m_PTS                       = 0;
   m_DTS                       = 0;
@@ -113,6 +109,7 @@ int cParserMPEG2Audio::FindHeaders(uint8_t *buf, int buf_size)
     int layer = bs.readBits(2);
     if (layer == 0)
       return 0;
+    layer = 4 - layer;
 
     bs.skipBits(1); // protetion bit
     int bitrate_index = bs.readBits(4);

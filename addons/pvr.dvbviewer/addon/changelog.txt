@@ -1,3 +1,27 @@
+1.8.9
+
+[updated] sync with PVR API v1.8.0
+
+1.7.9
+
+[fixed] loading favourites without groups/folders
+
+1.7.8
+
+[fixed] fix crash with Recording Service 1.25.0
+
+1.7.7
+
+[fixed] fix possible crash during timer updates
+
+1.7.6
+
+[added] Basic timeshift support.
+[added] Use channel names from favourites. This allows easy channelname changes.
+[fixed] Use 64 bit channel ids. Fall back to 32 bit if favourites.xml still contain the old ones.
+[fixed] Replace "/"-character by " " in channel logo url
+[updated] A lot of code cleanup
+
 1.7.5
 
 [updated] Bump after PVR API version bump

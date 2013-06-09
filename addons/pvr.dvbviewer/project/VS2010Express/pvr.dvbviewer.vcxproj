@@ -54,7 +54,7 @@
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;__STDC_FORMAT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -71,7 +71,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_WINSOCKAPI_;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;__STDC_FORMAT_MACROS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -86,11 +86,13 @@
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\DvbData.cpp" />
     <ClCompile Include="..\..\src\xmlParser.cpp" />
+    <ClCompile Include="..\..\src\TimeshiftBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\DvbData.h" />
     <ClInclude Include="..\..\src\xmlParser.h" />
+    <ClInclude Include="..\..\src\TimeshiftBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">

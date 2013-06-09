@@ -532,12 +532,12 @@ PVR_ERROR DialogChannelScan()
   return PVR_ERROR_FAILED;
 }
 
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
 {
   if (g_client == NULL)
     return PVR_ERROR_SERVER_ERROR;
 
-  return g_client->CallMenuHook(menuhook);
+  return g_client->CallMenuHook(menuhook, item);
 }
 
 /*******************************************/

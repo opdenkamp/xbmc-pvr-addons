@@ -144,6 +144,15 @@ if test "$have_gl" = "yes"; then
 fi
 echo "GL: $have_gl"
 
+AC_CHECK_LIB([GLESv2],[main],have_gles2=yes, have_gles2=no)
+if test "$have_gles2" = "yes"; then
+  AC_DEFINE([HAVE_GLES2],[1],["Define to 1 if we have gles2"])
+  AM_CONDITIONAL(HAVE_GLES2, true)
+else
+  AM_CONDITIONAL(HAVE_GLES2, false)
+fi
+echo "GLES2: $have_gles2"
+
 ### End external Libraries 
 
 ### Build addons with dependencies

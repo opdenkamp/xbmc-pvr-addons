@@ -1,0 +1,67 @@
+[B]Version 1.7.0[/B]
+Fixed: Recordings on DVBLINK 4.5.3
+Fixed: Closing socket file handles
+Added: Support for Android
+Changed: No longer show errors on failed to receive recordings / timers list. 
+
+[B]Version 1.6.2[/B]
+Fixed: Authentication issue on unix / linux based platforms
+Added: Refresh Timers and Recordings list every 30 seconds
+Changed: Timeshift buffer path now refers to a folder path
+Delete timeshift buffer when nolonger needed
+
+[B]Version 1.6.1[/B]
+Added: Timeshift support (Http only)
+Added: Information about backend diskspace (System->System Info->PVR Service) 
+Added: Option for enabling information notifications (Default:disabled)
+Updated language files
+General code style clean up to be more compliant with XBMC coding style
+
+[B]Version 1.6.0.11[/B]
+Removed wrong danish language from addon description
+
+[B]Version 1.6.0.10[/B]
+Fixed: Timer related crash when addon could not find program information for EPG based timers
+
+[B]Version 1.6.0.9[/B]
+Added: Better notification and logging of status / error information 
+
+[B]Version 1.6.0.8[/B]
+Fixed: Not all schedules shown
+Fixed: Not able to use username/password (Windows only)
+
+[B]Version 1.6.0.7[/B]
+Builds for all major os: windows,linux and osx
+Updated to XBMC Frodo Beta 2
+Updated to newest libdvblinkremote api
+Enabled editing of timers
+Updated version number to reflect other pvr addons
+Removed dependency on libcurl
+
+[B]0.0.6[/B]
+Fixed: Bug where addon did not show channels / EPG when using MCE Recorder
+
+[B]0.0.5[/B]
+Fixed: Bug where dvblink port from setting was not used
+
+[B]0.0.4[/B]
+Fixed: EPG data from when using MCE recorder
+Added: Preliminary (Have not been tested) support for transcoding
+Changed: Reordered settings
+
+[B]0.0.3[/B]
+Added: Fix for using channel handle instead of client id when stopping channels
+
+[B]0.0.2[/B]
+Added: Scheduling of recordings using EPG based timers
+Added: Enabled removal of timers
+Added: Listing of recordings (using DVBLink build in recorder)
+Added: Playback of recordings (using DVBLink build in recorder)
+Added: Enabled removal of recordings (using DVBLink build in recorder)
+Fixed: Memory several leaks
+Removed: Not yet implemented steaming and timeout options 
+
+[B]0.0.1[/B]
+Beta release
+Playback of live tv and radio using raw http
+Listing of EPG

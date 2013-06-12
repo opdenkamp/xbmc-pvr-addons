@@ -227,9 +227,9 @@ public:
   ~Dvb();
 
   CStdString GetServerName();
+  CStdString GetServerVersion();
   bool Open();
   bool IsConnected();
-  PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS& signalStatus);
 
   bool SwitchChannel(const PVR_CHANNEL& channel);
   unsigned int GetCurrentClientChannel(void);
@@ -290,9 +290,8 @@ private:
 
 private:
   // members
-  CStdString m_strDVBViewerVersion;
   bool m_bIsConnected;
-  CStdString m_strServerName;
+  unsigned int m_serverVersion;
   CStdString m_strURL;
   CStdString m_strURLStream;
   CStdString m_strURLRecording;

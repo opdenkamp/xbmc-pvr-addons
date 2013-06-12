@@ -36,9 +36,9 @@ void tokenize(const CStdString& str, ContainerT& tokens,
 
 
 Dvb::Dvb()
+  : m_serverVersion(0)
 {
   m_bIsConnected = false;
-  m_strServerName = "DVBViewer";
   CStdString strAuth("");
 
   // simply add user@pass in front of the URL if username/password is set
@@ -74,7 +74,19 @@ Dvb::~Dvb()
 
 CStdString Dvb::GetServerName()
 {
-  return m_strServerName;
+  // RS api doesn't provide a reliable way to extract the server name
+  return "DVBViewer";
+}
+
+CStdString Dvb::GetServerVersion()
+{
+  CStdString version;
+  version.Format("%u.%u.%u.%u",
+      m_serverVersion >> 24 & 0xFF,
+      m_serverVersion >> 16 & 0xFF,
+      m_serverVersion >> 8 & 0xFF,
+      m_serverVersion & 0xFF);
+  return version;
 }
 
 bool Dvb::Open()
@@ -103,28 +115,6 @@ bool Dvb::IsConnected()
 {
   return m_bIsConnected;
 }
-
-PVR_ERROR Dvb::SignalStatus(PVR_SIGNAL_STATUS& signalStatus)
-{
-  CStdString strXML, url;
-  url.Format("%sstatus.html?aktion=status", m_strURL);
-  strXML = GetHttpXML(url);
-  unsigned int iSignalStartPos, iSignalEndPos;
-  iSignalEndPos = strXML.find("%</th>");
-
-  unsigned int iAdapterStartPos, iAdapterEndPos;
-  iAdapterStartPos = strXML.rfind("3\">", iSignalEndPos) + 3;
-  iAdapterEndPos = strXML.find("<", iAdapterStartPos);
-  PVR_STRCPY(signalStatus.strAdapterName, strXML.substr(iAdapterStartPos, iAdapterEndPos - iAdapterStartPos).c_str());
-
-  iSignalStartPos = strXML.find_last_of(">", iSignalEndPos) + 1;
-  if (iSignalEndPos < strXML.size())
-    signalStatus.iSignal = (int)(atoi(strXML.substr(iSignalStartPos, iSignalEndPos - iSignalStartPos).c_str()) * 655.35);
-  PVR_STRCPY(signalStatus.strAdapterStatus, "OK");
-
-  return PVR_ERROR_NO_ERROR;
-}
-
 
 bool Dvb::SwitchChannel(const PVR_CHANNEL& channel)
 {
@@ -1194,8 +1184,15 @@ bool Dvb::GetDeviceInfo()
     return false;
   }
   XBMC->Log(LOG_NOTICE, "Version: %s", xNode.getText());
-  CStdString version = xNode.getAttribute("iver");
-  if (!version.length() || atoi(version) < RS_VERSION_NUM)
+
+  XMLCSTR strVersion = xNode.getAttribute("iver");
+  if (strVersion)
+  {
+    std::istringstream ss(strVersion);
+    ss >> m_serverVersion;
+  }
+
+  if (m_serverVersion < RS_VERSION_NUM)
   {
     XBMC->Log(LOG_ERROR, "Recording Service version %s or higher required", RS_VERSION_STR);
     XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30501), RS_VERSION_STR);

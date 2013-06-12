@@ -318,7 +318,8 @@ const char *GetBackendName(void)
 
 const char *GetBackendVersion(void)
 {
-  static const char *strBackendVersion = "UNKNOWN";
+  static const char *strBackendVersion = DvbData ? DvbData->GetServerVersion().c_str()
+    : "UNKNOWN";
   return strBackendVersion;
 }
 
@@ -541,7 +542,10 @@ long long LengthLiveStream(void)
 
 PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 {
-  return DvbData->SignalStatus(signalStatus);
+  // the RS api doesn't provide information about signal quality (yet)
+  strncpy(signalStatus.strAdapterName, "DVBViewer Recording Service", sizeof(signalStatus.strAdapterName));
+  strncpy(signalStatus.strAdapterStatus, "OK", sizeof(signalStatus.strAdapterStatus));
+  return PVR_ERROR_NO_ERROR;
 }
 
 /** UNUSED API FUNCTIONS */

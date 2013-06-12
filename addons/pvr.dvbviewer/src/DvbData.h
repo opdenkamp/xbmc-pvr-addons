@@ -268,7 +268,6 @@ private:
   // functions
   CStdString GetHttpXML(const CStdString& url);
   CStdString URLEncodeInline(const CStdString& strData);
-  void SendSimpleCommand(const CStdString& strCommandURL);
   bool LoadChannels();
   DvbTimers_t LoadTimers();
   void TimerUpdates();
@@ -287,6 +286,8 @@ private:
   uint64_t ParseChannelString(const CStdString& str, CStdString& channelName);
   unsigned int GetChannelUid(const CStdString& str);
   unsigned int GetChannelUid(const uint64_t channelId);
+  CStdString BuildURL(const CStdString& path, ...);
+  CStdString BuildExtURL(const CStdString& baseUrl, const CStdString& path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
 
 private:

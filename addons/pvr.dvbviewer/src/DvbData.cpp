@@ -39,15 +39,13 @@ void tokenize(const CStdString& str, ContainerT& tokens,
 Dvb::Dvb()
   : m_connected(false), m_backendVersion(0)
 {
-  CStdString strAuth("");
-
   // simply add user@pass in front of the URL if username/password is set
+  CStdString strAuth("");
   if (!g_strUsername.empty() && !g_strPassword.empty())
     strAuth.Format("%s:%s@", g_strUsername, g_strPassword);
-
   m_strURL.Format("http://%s%s:%u/", strAuth, g_strHostname, g_iPortWeb);
-  m_strURLRecording.Format("http://%s%s:%u/", strAuth, g_strHostname, g_iPortRecording);
-  m_strURLStream.Format("http://%s%s:%u/", strAuth, g_strHostname, g_iPortStream);
+  m_strURLRecording.Format("http://%s:%u/", g_strHostname, g_iPortRecording);
+  m_strURLStream.Format("http://%s:%u/", g_strHostname, g_iPortStream);
 
   m_iCurrentChannel     = 0;
   m_iClientIndexCounter = 1;
@@ -173,10 +171,8 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channel,
 {
   DvbChannel &myChannel = m_channels[channel.iUniqueId - 1];
 
-  CStdString url;
-  url.Format("%sapi/epg.html?lvl=2&channel=%"PRIu64"&start=%f&end=%f", m_strURL,
-      myChannel.iEpgId, iStart/86400.0 + DELPHI_DATE, iEnd/86400.0 + DELPHI_DATE);
-
+  CStdString url(BuildURL("api/epg.html?lvl=2&channel=%"PRIu64"&start=%f&end=%f",
+      myChannel.iEpgId, iStart/86400.0 + DELPHI_DATE, iEnd/86400.0 + DELPHI_DATE));
   CStdString strXML(GetHttpXML(url));
 
   XMLResults xe;
@@ -354,9 +350,7 @@ PVR_ERROR Dvb::UpdateTimer(const PVR_TIMER& timer)
 
 PVR_ERROR Dvb::DeleteTimer(const PVR_TIMER& timer)
 {
-  CStdString strTmp;
-  strTmp.Format("api/timerdelete.html?id=%d", GetTimerId(timer));
-  SendSimpleCommand(strTmp);
+  GetHttpXML(BuildURL("api/timerdelete.html?id=%d", GetTimerId(timer)));
 
   if (timer.state == PVR_TIMER_STATE_RECORDING)
     PVR->TriggerRecordingUpdate();
@@ -376,9 +370,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
   DvbRecordings_t old_recordings(m_recordings);
   m_recordings.clear();
 
-  CStdString url;
-  url.Format("%sapi/recordings.html?utf8", m_strURL);
-
+  CStdString url(BuildURL("api/recordings.html?utf8"));
   CStdString strXML(GetHttpXML(url));
   RemoveNullChars(strXML);
 
@@ -418,8 +410,8 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     if (GetXMLValue(xTmp, "channel", strTmp))
       recording.strChannelName = strTmp;
 
-    strTmp.Format("%supnp/recordings/%d.ts", m_strURLRecording, atoi(recording.strRecordingId.c_str()));
-    recording.strStreamURL = strTmp;
+    recording.strStreamURL = BuildExtURL(m_strURLRecording, "upnp/recordings/%d.ts",
+        atoi(recording.strRecordingId.c_str()));
 
     recording.startTime = ParseDateTime(xTmp.getAttribute("start"));
 
@@ -443,14 +435,13 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 
     if (bGetThumbnails)
     {
-      url.Format("%sepg_details.html?aktion=epg_details&recID=%s", m_strURL, recording.strRecordingId);
-      CStdString strThumb;
-      strThumb = GetHttpXML(url);
+      CStdString strThumb = GetHttpXML(BuildURL("epg_details.html?aktion=epg_details&recID=%s",
+            recording.strRecordingId.c_str()));
       ++fetched;
 
       unsigned int iThumbnailPos;
       iThumbnailPos = strThumb.find_first_of('_', RECORDING_THUMB_POS);
-      strTmp.Format("%sthumbnails/video/%s_SM.jpg", m_strURL, strThumb.substr(RECORDING_THUMB_POS, iThumbnailPos - RECORDING_THUMB_POS));
+      strTmp = BuildURL("thumbnails/video/%s_SM.jpg", strThumb.substr(RECORDING_THUMB_POS, iThumbnailPos - RECORDING_THUMB_POS).c_str());
       recording.strThumbnailPath = strTmp;
     }
 
@@ -483,9 +474,8 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 
 PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
 {
-  CStdString strTmp;
-  strTmp.Format("rec_list.html?aktion=delete_rec&recid=%s", recinfo.strRecordingId);
-  SendSimpleCommand(strTmp);
+  GetHttpXML(BuildURL("rec_list.html?aktion=delete_rec&recid=%s",
+        recinfo.strRecordingId));
 
   PVR->TriggerRecordingUpdate();
 
@@ -640,19 +630,11 @@ CStdString Dvb::URLEncodeInline(const CStdString& strData)
   return strResult;
 }
 
-void Dvb::SendSimpleCommand(const CStdString& strCommandURL)
-{
-  CStdString url;
-  url.Format("%s%s", m_strURL, strCommandURL);
-  GetHttpXML(url);
-}
-
 bool Dvb::LoadChannels()
 {
   m_groups.clear();
 
-  CStdString url;
-  url.Format("%sapi/getchannelsdat.html", m_strURL);
+  CStdString url(BuildURL("api/getchannelsdat.html"));
   CStdString strBIN(GetHttpXML(url));
   if (strBIN.IsEmpty())
   {
@@ -728,12 +710,8 @@ bool Dvb::LoadChannels()
 
     dvbChannel.strChannelName = ConvertToUtf8(strChannelName);
 
-    CStdString strTmp;
-    strTmp.Format("%supnp/channelstream/%d.ts", m_strURLStream, channel_pos - 1);
-    dvbChannel.strStreamURL = strTmp;
-
-    strTmp.Format("%sLogos/%s.png", m_strURL, URLEncodeInline(dvbChannel.strChannelName));
-    dvbChannel.strIconPath = strTmp;
+    dvbChannel.strStreamURL = BuildExtURL(m_strURLStream, "upnp/channelstream/%d.ts", channel_pos - 1);
+    dvbChannel.strIconPath = BuildURL("Logos/%s.png", URLEncodeInline(dvbChannel.strChannelName).c_str());
 
     channels.push_back(dvbChannel);
   }
@@ -742,7 +720,7 @@ bool Dvb::LoadChannels()
   {
     CStdString urlFav(g_strFavouritesPath);
     if (!XBMC->FileExists(urlFav, false))
-      urlFav.Format("%sapi/getfavourites.html", m_strURL);
+      urlFav = BuildURL("api/getfavourites.html");
 
     CStdString strXML(GetHttpXML(urlFav));
     if (strXML.empty())
@@ -843,11 +821,10 @@ bool Dvb::LoadChannels()
   for (DvbChannels_t::iterator channel = m_channels.begin();
       channel != m_channels.end(); ++channel)
   {
-    CStdString name(channel->strChannelName), iconPath;
+    CStdString name(channel->strChannelName);
     std::replace(name.begin(), name.end(), '/', ' ');
     name.erase(name.find_last_not_of(".") + 1);
-    iconPath.Format("%sLogos/%s.png", m_strURL, URLEncodeInline(name));
-    channel->strIconPath = iconPath;
+    channel->strIconPath = BuildURL("Logos/%s.png", URLEncodeInline(name).c_str());
   }
 
   XBMC->Log(LOG_INFO, "Loaded %u channels in %u groups", m_channels.size(), m_groups.size());
@@ -858,9 +835,7 @@ DvbTimers_t Dvb::LoadTimers()
 {
   DvbTimers_t timers;
 
-  CStdString url;
-  url.Format("%sapi/timerlist.html?utf8", m_strURL);
-
+  CStdString url(BuildURL("api/timerlist.html?utf8"));
   CStdString strXML(GetHttpXML(url));
   RemoveNullChars(strXML);
 
@@ -1061,7 +1036,7 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool bNewTimer)
         GetTimerId(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
   }
 
-  SendSimpleCommand(strTmp);
+  GetHttpXML(BuildURL(strTmp));
   m_bUpdateTimers = true;
 }
 
@@ -1140,9 +1115,7 @@ void Dvb::RemoveNullChars(CStdString& str)
 
 bool Dvb::CheckBackendVersion()
 {
-  CStdString url;
-  url.Format("%sapi/version.html", m_strURL);
-
+  CStdString url(BuildURL("api/version.html"));
   CStdString strXML(GetHttpXML(url));
 
   XMLResults xe;
@@ -1184,9 +1157,7 @@ bool Dvb::CheckBackendVersion()
 
 bool Dvb::UpdateBackendStatus(bool updateSettings)
 {
-  CStdString url;
-  url.Format("%sapi/status.html", m_strURL);
-
+  CStdString url(BuildURL("api/status.html"));
   CStdString strXML(GetHttpXML(url));
 
   XMLResults xe;
@@ -1295,6 +1266,33 @@ unsigned int Dvb::GetChannelUid(const uint64_t channelId)
       return channel->iUniqueId;
   }
   return 0;
+}
+
+CStdString Dvb::BuildURL(const CStdString& path, ...)
+{
+  CStdString url(m_strURL);
+  va_list argList;
+  va_start(argList, path);
+  url.AppendFormatV(path, argList);
+  va_end(argList);
+  return url;
+}
+
+CStdString Dvb::BuildExtURL(const CStdString& baseUrl, const CStdString& path, ...)
+{
+  CStdString url(baseUrl);
+  // simply add user@pass in front of the URL if username/password is set
+  if (!g_strUsername.empty() && !g_strPassword.empty())
+  {
+    CStdString strAuth("");
+    strAuth.Format("%s:%s@", g_strUsername, g_strPassword);
+    url.insert((url.Left(5).Equals("http:")) ? 7 : 8, strAuth);
+  }
+  va_list argList;
+  va_start(argList, path);
+  url.AppendFormatV(path, argList);
+  va_end(argList);
+  return url;
 }
 
 CStdString Dvb::ConvertToUtf8(const CStdString& src)

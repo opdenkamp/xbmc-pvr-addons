@@ -36,9 +36,8 @@ void tokenize(const CStdString& str, ContainerT& tokens,
 
 
 Dvb::Dvb()
-  : m_serverVersion(0)
+  : m_connected(false), m_serverVersion(0)
 {
-  m_bIsConnected = false;
   CStdString strAuth("");
 
   // simply add user@pass in front of the URL if username/password is set
@@ -66,7 +65,7 @@ Dvb::~Dvb()
   m_timers.clear();
   m_recordings.clear();
   m_groups.clear();
-  m_bIsConnected = false;
+  m_connected = false;
   if (m_tsBuffer)
     SAFE_DELETE(m_tsBuffer);
 }
@@ -93,8 +92,8 @@ bool Dvb::Open()
 {
   CLockObject lock(m_mutex);
 
-  m_bIsConnected = GetDeviceInfo();
-  if (!m_bIsConnected)
+  m_connected = GetBackendVersion();
+  if (!m_connected)
     return false;
 
   if (!LoadChannels())
@@ -113,7 +112,7 @@ bool Dvb::Open()
 
 bool Dvb::IsConnected()
 {
-  return m_bIsConnected;
+  return m_connected;
 }
 
 bool Dvb::SwitchChannel(const PVR_CHANNEL& channel)
@@ -1158,7 +1157,7 @@ void Dvb::RemoveNullChars(CStdString& str)
   str.erase(std::remove(str.begin(), str.end(), '\0'), str.end());
 }
 
-bool Dvb::GetDeviceInfo()
+bool Dvb::GetBackendVersion()
 {
   CStdString url;
   url.Format("%sapi/version.html", m_strURL);
@@ -1176,7 +1175,7 @@ bool Dvb::GetDeviceInfo()
   }
 
   // Get Version
-  XBMC->Log(LOG_NOTICE, "Fetching deviceInfo...");
+  XBMC->Log(LOG_NOTICE, "Checking backend version...");
   XMLNode xNode = xMainNode.getChildNode("version");
   if (xNode.isEmpty())
   {

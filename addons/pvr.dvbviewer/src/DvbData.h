@@ -281,7 +281,7 @@ private:
   void GetPreferredLanguage();
   void GetTimeZone();
   void RemoveNullChars(CStdString& str);
-  bool GetDeviceInfo();
+  bool GetBackendVersion();
   time_t ParseDateTime(const CStdString& strDate, bool iso8601 = true);
   uint64_t ParseChannelString(const CStdString& str, CStdString& channelName);
   unsigned int GetChannelUid(const CStdString& str);
@@ -290,7 +290,7 @@ private:
 
 private:
   // members
-  bool m_bIsConnected;
+  bool m_connected;
   unsigned int m_serverVersion;
   CStdString m_strURL;
   CStdString m_strURLStream;

@@ -294,7 +294,6 @@ const char* GetMininumGUIAPIVersion(void)
 
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
-  //pCapabilities->bSupportsChannelSettings = false;
   pCapabilities->bSupportsEPG             = true;
   pCapabilities->bSupportsTV              = true;
   pCapabilities->bSupportsRadio           = true;
@@ -483,7 +482,7 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
 void CloseLiveStream(void)
 {
   DvbData->CloseLiveStream();
-};
+}
 
 bool OpenLiveStream(const PVR_CHANNEL &channel)
 {

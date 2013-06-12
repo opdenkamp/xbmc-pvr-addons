@@ -19,7 +19,16 @@
 #define DELPHI_DATE                  (25569)
 #define RECORDING_THUMB_POS          (143)
 #define MAX_RECORDING_THUMBS         (20)
-#define RS_MIN_VERSION               (21)
+
+// minimum version required
+#define RS_VERSION_MAJOR   1
+#define RS_VERSION_MINOR   25
+#define RS_VERSION_PATCH1  0
+#define RS_VERSION_PATCH2  0
+#define RS_VERSION_NUM  (RS_VERSION_MAJOR << 24 | RS_VERSION_MINOR << 16 | \
+                          RS_VERSION_PATCH1 << 8 | RS_VERSION_PATCH2)
+#define RS_VERSION_STR  XSTR(RS_VERSION_MAJOR) "." XSTR(RS_VERSION_MINOR) \
+                          "." XSTR(RS_VERSION_PATCH1) "." XSTR(RS_VERSION_PATCH2)
 
 struct ChannelsDat
 {

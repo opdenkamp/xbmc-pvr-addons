@@ -1188,20 +1188,20 @@ bool Dvb::GetDeviceInfo()
   // Get Version
   XBMC->Log(LOG_NOTICE, "Fetching deviceInfo...");
   XMLNode xNode = xMainNode.getChildNode("version");
-  if (!xNode.getText()) {
+  if (xNode.isEmpty())
+  {
     XBMC->Log(LOG_ERROR, "Could not parse version from result!");
     return false;
   }
-  m_strDVBViewerVersion = xNode.getText();
-  CStdString strVersion = m_strDVBViewerVersion.substr(30, 2);
-  if (atoi(strVersion) < RS_MIN_VERSION)
+  XBMC->Log(LOG_NOTICE, "Version: %s", xNode.getText());
+  CStdString version = xNode.getAttribute("iver");
+  if (!version.length() || atoi(version) < RS_VERSION_NUM)
   {
-    XBMC->Log(LOG_ERROR, "Recording Service version 1.%d or higher required", RS_MIN_VERSION);
-    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30501), RS_MIN_VERSION);
+    XBMC->Log(LOG_ERROR, "Recording Service version %s or higher required", RS_VERSION_STR);
+    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30501), RS_VERSION_STR);
     Sleep(10000);
     return false;
   }
-  XBMC->Log(LOG_NOTICE, "Version: %s", m_strDVBViewerVersion.c_str());
 
   return true;
 }

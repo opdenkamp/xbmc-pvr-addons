@@ -38,6 +38,9 @@
 #endif
 #endif
 
+#define STR(x)  #x
+#define XSTR(x) STR(x)
+
 /*!
  * @brief PVR macros for string exchange
  */

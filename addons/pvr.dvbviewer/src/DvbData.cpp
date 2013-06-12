@@ -2,6 +2,7 @@
 #include "client.h"
 #include "platform/util/util.h"
 #include <inttypes.h>
+#include <set>
 #include <iterator>
 #include <sstream>
 #include <algorithm>
@@ -70,6 +71,32 @@ Dvb::~Dvb()
     SAFE_DELETE(m_tsBuffer);
 }
 
+bool Dvb::Open()
+{
+  CLockObject lock(m_mutex);
+
+  m_connected = CheckBackendVersion();
+  if (!m_connected)
+    return false;
+
+  if (!UpdateBackendStatus(true))
+    return false;
+
+  if (!LoadChannels())
+    return false;
+
+  TimerUpdates();
+
+  XBMC->Log(LOG_INFO, "Starting separate client update thread...");
+  CreateThread();
+
+  return IsRunning();
+}
+
+bool Dvb::IsConnected()
+{
+  return m_connected;
+}
 
 CStdString Dvb::GetBackendName()
 {
@@ -88,31 +115,13 @@ CStdString Dvb::GetBackendVersion()
   return version;
 }
 
-bool Dvb::Open()
+PVR_ERROR Dvb::GetDriveSpace(long long *total, long long *used)
 {
-  CLockObject lock(m_mutex);
-
-  m_connected = CheckBackendVersion();
-  if (!m_connected)
-    return false;
-
-  if (!LoadChannels())
-    return false;
-
-  GetPreferredLanguage();
-  GetTimeZone();
-
-  TimerUpdates();
-
-  XBMC->Log(LOG_INFO, "Starting separate client update thread...");
-  CreateThread();
-
-  return IsRunning();
-}
-
-bool Dvb::IsConnected()
-{
-  return m_connected;
+  if (!UpdateBackendStatus())
+    return PVR_ERROR_SERVER_ERROR;
+  *total = m_diskspace.total;
+  *used  = m_diskspace.used;
+  return PVR_ERROR_NO_ERROR;
 }
 
 bool Dvb::SwitchChannel(const PVR_CHANNEL& channel)
@@ -1027,7 +1036,7 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool bNewTimer)
     endTime += timer.iMarginEnd * 60;
   }
 
-  int dor = ((startTime + m_iTimezone * 60) / DAY_SECS) + DELPHI_DATE;
+  int dor = ((startTime + m_timezone * 60) / DAY_SECS) + DELPHI_DATE;
   timeinfo = localtime(&startTime);
   int start = timeinfo->tm_hour * 60 + timeinfo->tm_min;
   timeinfo = localtime(&endTime);
@@ -1105,7 +1114,7 @@ bool Dvb::GetXMLValue(const XMLNode& node, const char* tag, CStdString& value,
   {
     xNode = node.getChildNode(tag, i);
     const char *lang = xNode.getAttribute("lng");
-    if (lang && lang == m_strEPGLanguage)
+    if (lang && lang == m_epgLanguage)
     {
       found = true;
       break;
@@ -1121,34 +1130,6 @@ bool Dvb::GetXMLValue(const XMLNode& node, const char* tag, CStdString& value,
   }
   value.Empty();
   return false;
-}
-
-void Dvb::GetPreferredLanguage()
-{
-  CStdString strXML, url;
-  url.Format("%sconfig.html?aktion=config", m_strURL);
-  strXML = GetHttpXML(url);
-  unsigned int iLanguagePos = strXML.find("EPGLanguage");
-  iLanguagePos = strXML.find(" selected>", iLanguagePos);
-  m_strEPGLanguage = strXML.substr(iLanguagePos - 4, 3);
-}
-
-void Dvb::GetTimeZone()
-{
-  CStdString url;
-  url.Format("%sapi/status.html", m_strURL);
-
-  CStdString strXML(GetHttpXML(url));
-
-  XMLResults xe;
-  XMLNode xMainNode = XMLNode::parseString(strXML, NULL, &xe);
-  if (xe.error != 0)
-    XBMC->Log(LOG_ERROR, "Unable to get recording service status. Invalid XML. Error: %s", XMLNode::getError(xe.error));
-  else
-  {
-    XMLNode xNode = xMainNode.getChildNode("status");
-    GetXMLValue(xNode, "timezone", m_iTimezone);
-  }
 }
 
 void Dvb::RemoveNullChars(CStdString& str)
@@ -1198,6 +1179,55 @@ bool Dvb::CheckBackendVersion()
     return false;
   }
 
+  return true;
+}
+
+bool Dvb::UpdateBackendStatus(bool updateSettings)
+{
+  CStdString url;
+  url.Format("%sapi/status.html", m_strURL);
+
+  CStdString strXML(GetHttpXML(url));
+
+  XMLResults xe;
+  XMLNode xMainNode = XMLNode::parseString(strXML, NULL, &xe);
+  if (xe.error != 0)
+  {
+    XBMC->Log(LOG_ERROR, "Unable to get backend status. Invalid XML. Error: %s",
+        XMLNode::getError(xe.error));
+    return false;
+  }
+
+  XMLNode xNode = xMainNode.getChildNode("status");
+  if (updateSettings)
+  {
+    GetXMLValue(xNode, "timezone", m_timezone);
+    GetXMLValue(xNode, "epglang", m_epgLanguage);
+  }
+
+  // compute disk space. duplicates are detected by their identical values
+  typedef std::pair<long long, long long> Recfolder_t;
+  std::set<Recfolder_t> folders;
+  XMLNode recfolders = xNode.getChildNode("recfolders");
+  int n = recfolders.nChildNode("folder");
+  m_diskspace.total = m_diskspace.used = 0;
+  for (int i = 0; i < n; ++i)
+  {
+    XMLNode folder = recfolders.getChildNode("folder", i);
+
+    long long size = 0, free = 0;
+    std::istringstream ss(folder.getAttribute("size"));
+    ss >> size;
+    ss.clear();
+    ss.str(folder.getAttribute("free"));
+    ss >> free;
+
+    if (folders.insert(std::make_pair(size, free)).second)
+    {
+      m_diskspace.total += size / 1024;
+      m_diskspace.used += (size - free) / 1024;
+    }
+  }
   return true;
 }
 

@@ -226,10 +226,12 @@ public:
   Dvb(void);
   ~Dvb();
 
-  CStdString GetBackendName();
-  CStdString GetBackendVersion();
   bool Open();
   bool IsConnected();
+
+  CStdString GetBackendName();
+  CStdString GetBackendVersion();
+  PVR_ERROR GetDriveSpace(long long *total, long long *used);
 
   bool SwitchChannel(const PVR_CHANNEL& channel);
   unsigned int GetCurrentClientChannel(void);
@@ -278,10 +280,9 @@ private:
   bool GetXMLValue(const XMLNode& node, const char* tag, bool& value);
   bool GetXMLValue(const XMLNode& node, const char* tag, CStdString& value,
       bool localize = false);
-  void GetPreferredLanguage();
-  void GetTimeZone();
   void RemoveNullChars(CStdString& str);
   bool CheckBackendVersion();
+  bool UpdateBackendStatus(bool updateSettings = false);
   time_t ParseDateTime(const CStdString& strDate, bool iso8601 = true);
   uint64_t ParseChannelString(const CStdString& str, CStdString& channelName);
   unsigned int GetChannelUid(const CStdString& str);
@@ -292,11 +293,15 @@ private:
   // members
   bool m_connected;
   unsigned int m_backendVersion;
+
+  int m_timezone;
+  CStdString m_epgLanguage;
+  struct { long long total, used; } m_diskspace;
+  long long m_diskspaceUsed, m_diskspaceFree;
+
   CStdString m_strURL;
   CStdString m_strURLStream;
   CStdString m_strURLRecording;
-  CStdString m_strEPGLanguage;
-  int m_iTimezone;
   unsigned int m_iCurrentChannel;
   unsigned int m_iUpdateTimer;
   bool m_bUpdateTimers;

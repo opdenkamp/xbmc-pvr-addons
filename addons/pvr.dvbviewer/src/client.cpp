@@ -311,14 +311,14 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 
 const char *GetBackendName(void)
 {
-  static const char *strBackendName = DvbData ? DvbData->GetServerName().c_str()
+  static const char *strBackendName = DvbData ? DvbData->GetBackendName().c_str()
     : "unknown";
   return strBackendName;
 }
 
 const char *GetBackendVersion(void)
 {
-  static const char *strBackendVersion = DvbData ? DvbData->GetServerVersion().c_str()
+  static const char *strBackendVersion = DvbData ? DvbData->GetBackendVersion().c_str()
     : "UNKNOWN";
   return strBackendVersion;
 }

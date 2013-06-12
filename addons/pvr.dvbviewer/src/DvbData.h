@@ -226,8 +226,8 @@ public:
   Dvb(void);
   ~Dvb();
 
-  CStdString GetServerName();
-  CStdString GetServerVersion();
+  CStdString GetBackendName();
+  CStdString GetBackendVersion();
   bool Open();
   bool IsConnected();
 
@@ -281,7 +281,7 @@ private:
   void GetPreferredLanguage();
   void GetTimeZone();
   void RemoveNullChars(CStdString& str);
-  bool GetBackendVersion();
+  bool CheckBackendVersion();
   time_t ParseDateTime(const CStdString& strDate, bool iso8601 = true);
   uint64_t ParseChannelString(const CStdString& str, CStdString& channelName);
   unsigned int GetChannelUid(const CStdString& str);
@@ -291,7 +291,7 @@ private:
 private:
   // members
   bool m_connected;
-  unsigned int m_serverVersion;
+  unsigned int m_backendVersion;
   CStdString m_strURL;
   CStdString m_strURLStream;
   CStdString m_strURLRecording;

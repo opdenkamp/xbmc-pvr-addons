@@ -36,7 +36,7 @@ void tokenize(const CStdString& str, ContainerT& tokens,
 
 
 Dvb::Dvb()
-  : m_connected(false), m_serverVersion(0)
+  : m_connected(false), m_backendVersion(0)
 {
   CStdString strAuth("");
 
@@ -71,20 +71,20 @@ Dvb::~Dvb()
 }
 
 
-CStdString Dvb::GetServerName()
+CStdString Dvb::GetBackendName()
 {
   // RS api doesn't provide a reliable way to extract the server name
   return "DVBViewer";
 }
 
-CStdString Dvb::GetServerVersion()
+CStdString Dvb::GetBackendVersion()
 {
   CStdString version;
   version.Format("%u.%u.%u.%u",
-      m_serverVersion >> 24 & 0xFF,
-      m_serverVersion >> 16 & 0xFF,
-      m_serverVersion >> 8 & 0xFF,
-      m_serverVersion & 0xFF);
+      m_backendVersion >> 24 & 0xFF,
+      m_backendVersion >> 16 & 0xFF,
+      m_backendVersion >> 8 & 0xFF,
+      m_backendVersion & 0xFF);
   return version;
 }
 
@@ -92,7 +92,7 @@ bool Dvb::Open()
 {
   CLockObject lock(m_mutex);
 
-  m_connected = GetBackendVersion();
+  m_connected = CheckBackendVersion();
   if (!m_connected)
     return false;
 
@@ -1157,7 +1157,7 @@ void Dvb::RemoveNullChars(CStdString& str)
   str.erase(std::remove(str.begin(), str.end(), '\0'), str.end());
 }
 
-bool Dvb::GetBackendVersion()
+bool Dvb::CheckBackendVersion()
 {
   CStdString url;
   url.Format("%sapi/version.html", m_strURL);
@@ -1174,7 +1174,6 @@ bool Dvb::GetBackendVersion()
     return false;
   }
 
-  // Get Version
   XBMC->Log(LOG_NOTICE, "Checking backend version...");
   XMLNode xNode = xMainNode.getChildNode("version");
   if (xNode.isEmpty())
@@ -1188,10 +1187,10 @@ bool Dvb::GetBackendVersion()
   if (strVersion)
   {
     std::istringstream ss(strVersion);
-    ss >> m_serverVersion;
+    ss >> m_backendVersion;
   }
 
-  if (m_serverVersion < RS_VERSION_NUM)
+  if (m_backendVersion < RS_VERSION_NUM)
   {
     XBMC->Log(LOG_ERROR, "Recording Service version %s or higher required", RS_VERSION_STR);
     XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30501), RS_VERSION_STR);

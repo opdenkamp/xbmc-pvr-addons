@@ -44,7 +44,6 @@ Dvb::Dvb()
   if (!g_strUsername.empty() && !g_strPassword.empty())
     strAuth.Format("%s:%s@", g_strUsername, g_strPassword);
   m_strURL.Format("http://%s%s:%u/", strAuth, g_strHostname, g_iPortWeb);
-  m_strURLRecording.Format("http://%s:%u/", g_strHostname, g_iPortRecording);
   m_strURLStream.Format("http://%s:%u/", g_strHostname, g_iPortStream);
 
   m_iCurrentChannel     = 0;
@@ -210,7 +209,7 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channel,
     CStdString strTmp, strTmp2;
     GetXMLValue(xTmp.getChildNode("descriptions"), "description", strTmp, true);
     GetXMLValue(xTmp.getChildNode("events"), "event", strTmp2, true);
-    if (strTmp.size() > strTmp2.size())
+    if (strTmp.length() > strTmp2.length())
       entry.strPlot = strTmp;
     else
       entry.strPlot = strTmp2;
@@ -367,83 +366,59 @@ unsigned int Dvb::GetTimersAmount()
 
 PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 {
-  DvbRecordings_t old_recordings(m_recordings);
-  m_recordings.clear();
-
-  CStdString url(BuildURL("api/recordings.html?utf8"));
-  CStdString strXML(GetHttpXML(url));
-  RemoveNullChars(strXML);
+  CStdString url = BuildURL("api/recordings.html?images=1&nofilename=1");
+  CStdString req = GetHttpXML(url);
+  RemoveNullChars(req);
 
   XMLResults xe;
-  XMLNode xMainNode = XMLNode::parseString(strXML, NULL, &xe);
+  XMLNode xMainNode = XMLNode::parseString(req, NULL, &xe);
   if (xe.error != 0)
   {
-    XBMC->Log(LOG_ERROR, "Unable to parse recordings. Invalid XML. Error: %s", XMLNode::getError(xe.error));
+    XBMC->Log(LOG_ERROR, "Unable to parse recordings. Invalid XML. Error: %s",
+        XMLNode::getError(xe.error));
     return PVR_ERROR_SERVER_ERROR;
   }
 
   XMLNode xNode = xMainNode.getChildNode("recordings");
+
+  CStdString streamURL, imageURL;
+  GetXMLValue(xNode, "serverURL", streamURL);
+  GetXMLValue(xNode, "imageURL",  imageURL);
+
   int n = xNode.nChildNode("recording");
   XBMC->Log(LOG_DEBUG, "%s Number of recording entries: %d", __FUNCTION__, n);
+  m_recordings.clear();
 
-  unsigned int iNumRecording = 0, fetched = 0;
+  // insert recordings in reverse order
   for (int i = 0; i < n; ++i)
   {
-    DvbRecording recording;
     XMLNode xTmp = xNode.getChildNode("recording", n - i - 1);
 
-    if (xTmp.getAttribute("id"))
-      recording.strRecordingId = xTmp.getAttribute("id");
+    DvbRecording recording;
+    recording.strRecordingId = xTmp.getAttribute("id");
+    GetXMLValue(xTmp, "title",   recording.strTitle);
+    GetXMLValue(xTmp, "channel", recording.strChannelName);
+    GetXMLValue(xTmp, "info",    recording.strPlotOutline);
 
-    CStdString strTmp;
-    if (GetXMLValue(xTmp, "title", strTmp))
-      recording.strTitle = strTmp;
+    CStdString tmp;
+    recording.strPlot = (GetXMLValue(xTmp, "desc", tmp)) ? tmp
+      : recording.strPlotOutline;
 
-    CStdString strTmp2;
-    GetXMLValue(xTmp, "desc", strTmp);
-    GetXMLValue(xTmp, "info", strTmp2);
-    if (strTmp.size() > strTmp2.size())
-      recording.strPlot = strTmp;
-    else
-      recording.strPlot = strTmp2;
+    recording.strStreamURL = BuildExtURL(streamURL, "%s.ts",
+        recording.strRecordingId.c_str());
 
-    if (GetXMLValue(xTmp, "channel", strTmp))
-      recording.strChannelName = strTmp;
+    if (GetXMLValue(xTmp, "image", tmp))
+      recording.strThumbnailPath = BuildExtURL(imageURL, tmp);
 
-    recording.strStreamURL = BuildExtURL(m_strURLRecording, "upnp/recordings/%d.ts",
-        atoi(recording.strRecordingId.c_str()));
-
-    recording.startTime = ParseDateTime(xTmp.getAttribute("start"));
+    CStdString startTime = xTmp.getAttribute("start");
+    recording.startTime = ParseDateTime(startTime);
 
     int hours, mins, secs;
     sscanf(xTmp.getAttribute("duration"), "%02d%02d%02d", &hours, &mins, &secs);
     recording.iDuration = hours*60*60 + mins*60 + secs;
 
-    bool bGetThumbnails = (fetched < MAX_RECORDING_THUMBS);
-    for (DvbRecordings_t::iterator old_rec = old_recordings.begin();
-        bGetThumbnails && old_rec != old_recordings.end(); ++old_rec)
-    {
-      if (old_rec->strRecordingId == recording.strRecordingId
-          && old_rec->strThumbnailPath.size() > 20
-          && old_rec->strThumbnailPath.size() < 100)
-      {
-        recording.strThumbnailPath = old_rec->strThumbnailPath;
-        bGetThumbnails = false;
-        break;
-      }
-    }
-
-    if (bGetThumbnails)
-    {
-      CStdString strThumb = GetHttpXML(BuildURL("epg_details.html?aktion=epg_details&recID=%s",
-            recording.strRecordingId.c_str()));
-      ++fetched;
-
-      unsigned int iThumbnailPos;
-      iThumbnailPos = strThumb.find_first_of('_', RECORDING_THUMB_POS);
-      strTmp = BuildURL("thumbnails/video/%s_SM.jpg", strThumb.substr(RECORDING_THUMB_POS, iThumbnailPos - RECORDING_THUMB_POS).c_str());
-      recording.strThumbnailPath = strTmp;
-    }
+    // generate unique id by appending "_" + startTime
+    recording.strRecordingId += "_" + startTime;
 
     PVR_RECORDING tag;
     memset(&tag, 0, sizeof(PVR_RECORDING));
@@ -460,22 +435,26 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 
     PVR->TransferRecordingEntry(handle, &tag);
 
-    ++iNumRecording;
     m_recordings.push_back(recording);
 
     XBMC->Log(LOG_DEBUG, "%s loaded Recording entry '%s': start=%u, length=%u",
-        __FUNCTION__, tag.strTitle, recording.startTime, recording.iDuration);
+        __FUNCTION__, recording.strTitle.c_str(), recording.startTime, recording.iDuration);
   }
 
-  XBMC->Log(LOG_INFO, "Loaded %u Recording Entries", iNumRecording);
+  XBMC->Log(LOG_INFO, "Loaded %u Recording Entries", m_recordings.size());
 
   return PVR_ERROR_NO_ERROR;
 }
 
 PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
 {
+  CStdString recid = recinfo.strRecordingId;
+  CStdString::size_type pos = recid.find('_');
+  if (pos != CStdString::npos)
+    recid.erase(pos);
+
   GetHttpXML(BuildURL("rec_list.html?aktion=delete_rec&recid=%s",
-        recinfo.strRecordingId));
+        recid.c_str()));
 
   PVR->TriggerRecordingUpdate();
 
@@ -612,7 +591,7 @@ CStdString Dvb::URLEncodeInline(const CStdString& strData)
   /* wonder what a good value is here is, depends on how often it occurs */
   strResult.reserve(strData.length() * 2);
 
-  for (unsigned int i = 0; i < strData.size(); ++i)
+  for (unsigned int i = 0; i < strData.length(); ++i)
   {
     int kar = (unsigned char)strData[i];
     //if (kar == ' ') strResult += '+'; // obsolete
@@ -873,7 +852,7 @@ DvbTimers_t Dvb::LoadTimers()
 
     CStdString Weekdays = xTmp.getAttribute("Days");
     timer.iWeekdays = 0;
-    for (unsigned int j = 0; j < Weekdays.size(); ++j)
+    for (unsigned int j = 0; j < Weekdays.length(); ++j)
     {
       if (Weekdays.data()[j] != '-')
         timer.iWeekdays += (1 << j);
@@ -1103,7 +1082,7 @@ bool Dvb::GetXMLValue(const XMLNode& node, const char* tag, CStdString& value,
     value = xNode.getText();
     return true;
   }
-  value.Empty();
+  value.clear();
   return false;
 }
 

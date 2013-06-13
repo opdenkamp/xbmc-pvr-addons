@@ -51,13 +51,11 @@
 #define DEFAULT_CONNECT_TIMEOUT  30
 #define DEFAULT_WEB_PORT         8089
 #define DEFAULT_STREAM_PORT      7522
-#define DEFAULT_RECORDING_PORT   8090
 #define DEFAULT_TSBUFFERPATH     "special://userdata/addon_data/pvr.dvbviewer"
 
 extern CStdString    g_strHostname;
 extern int           g_iPortStream;
 extern int           g_iPortWeb;
-extern int           g_iPortRecording;
 extern CStdString    g_strUsername;
 extern CStdString    g_strPassword;
 extern bool          g_bUseFavourites;

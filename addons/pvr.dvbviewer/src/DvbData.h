@@ -17,8 +17,6 @@
 #define ADDITIONAL_AUDIO_TRACK_FLAG  (1 << 7)
 #define DAY_SECS                     (24 * 60 * 60)
 #define DELPHI_DATE                  (25569)
-#define RECORDING_THUMB_POS          (143)
-#define MAX_RECORDING_THUMBS         (20)
 
 // minimum version required
 #define RS_VERSION_MAJOR   1
@@ -302,7 +300,6 @@ private:
 
   CStdString m_strURL;
   CStdString m_strURLStream;
-  CStdString m_strURLRecording;
   unsigned int m_iCurrentChannel;
   unsigned int m_iUpdateTimer;
   bool m_bUpdateTimers;

@@ -201,15 +201,15 @@ public:
 
 struct DvbRecording
 {
-  CStdString strRecordingId;
+  CStdString id;
   time_t startTime;
-  int iDuration;
-  CStdString strTitle;
-  CStdString strStreamURL;
-  CStdString strPlot;
-  CStdString strPlotOutline;
-  CStdString strChannelName;
-  CStdString strThumbnailPath;
+  int duration;
+  CStdString title;
+  CStdString streamURL;
+  CStdString plot;
+  CStdString plotOutline;
+  CStdString channelName;
+  CStdString thumbnailPath;
 };
 
 typedef std::vector<DvbChannel> DvbChannels_t;

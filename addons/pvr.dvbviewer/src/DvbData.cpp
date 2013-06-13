@@ -58,12 +58,6 @@ Dvb::Dvb()
 Dvb::~Dvb()
 {
   StopThread();
-
-  m_channels.clear();
-  m_timers.clear();
-  m_recordings.clear();
-  m_groups.clear();
-  m_connected = false;
   if (m_tsBuffer)
     SAFE_DELETE(m_tsBuffer);
 }

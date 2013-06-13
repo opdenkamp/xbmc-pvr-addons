@@ -450,8 +450,8 @@ PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
   if (pos != CStdString::npos)
     recid.erase(pos);
 
-  GetHttpXML(BuildURL("rec_list.html?aktion=delete_rec&recid=%s",
-        recid.c_str()));
+  // RS api doesn't return a result
+  GetHttpXML(BuildURL("api/recdelete.html?recid=%s&delfile=1", recid.c_str()));
 
   PVR->TriggerRecordingUpdate();
 

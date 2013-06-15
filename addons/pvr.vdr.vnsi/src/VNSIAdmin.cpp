@@ -86,6 +86,10 @@ const char *vert = "attribute vec4 m_attrpos;\n"
 CVisGUIShader *vis_shader = NULL;
 #endif
 
+#if !defined(GL_UNPACK_ROW_LENGTH)
+#undef HAVE_GLES2
+#endif
+
 #define CONTROL_RENDER_ADDON                  9
 #define CONTROL_MENU                         10
 #define CONTROL_OSD_BUTTON                   13

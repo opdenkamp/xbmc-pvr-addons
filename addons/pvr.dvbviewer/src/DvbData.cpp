@@ -142,7 +142,6 @@ PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
       continue;
     if (channel->radio != bRadio)
       continue;
-    XBMC->Log(LOG_DEBUG, "loading channel=%d", channel->id);
 
     PVR_CHANNEL xbmcChannel;
     memset(&xbmcChannel, 0, sizeof(PVR_CHANNEL));
@@ -663,13 +662,12 @@ bool Dvb::LoadChannels()
     {
       XMLNode xGroup = xRoot.getChildNode("group", j);
 
-      DvbGroup group;
-      group.name   = xGroup.getAttribute("name");
-      group.hidden = g_useFavourites;
-      group.radio  = true;
-
-      m_groups.push_back(group);
-      if (!group.hidden)
+      m_groups.push_back(DvbGroup());
+      DvbGroup *group = &m_groups.back();
+      group->name     = xGroup.getAttribute("name");
+      group->hidden   = g_useFavourites;
+      group->radio    = true;
+      if (!group->hidden)
         ++m_groupAmount;
 
       int num_channels = xGroup.nChildNode("channel");
@@ -706,7 +704,6 @@ bool Dvb::LoadChannels()
         for (int l = 0; l < num_subchannels; ++l)
         {
           XMLNode xSubChannel = xChannel.getChildNode("subchannel", l);
-          XBMC->Log(LOG_DEBUG, "channel %s id %llu", channel->name.c_str(), ParseUInt64(xSubChannel.getAttribute("ID")));
           channel->backendIds.push_back(ParseUInt64(xSubChannel.getAttribute("ID")));
         }
 
@@ -714,12 +711,12 @@ bool Dvb::LoadChannels()
         // so generate our own unique ids, at least for this session
         channel->id = m_channels.size() + 1;
         m_channels.push_back(channel);
-        group.channels.push_back(channel);
+        group->channels.push_back(channel);
         if (!channel->hidden)
           ++m_channelAmount;
 
         if (!channel->radio)
-          group.radio = false;
+          group->radio = false;
       }
     }
   }
@@ -778,13 +775,12 @@ bool Dvb::LoadChannels()
         // name="Header" doesn't indicate a group alone. see example above
         if (CStdString(xEntry.getAttribute("name")) == "Header" && m > 1)
         {
-          DvbGroup newGroup;
-          newGroup.name   = ConvertToUtf8(xEntry.getText());
-          newGroup.hidden = false;
-          newGroup.radio  = false;
-          m_groups.push_back(newGroup);
-          ++m_groupAmount;
+          m_groups.push_back(DvbGroup());
           group = &m_groups.back();
+          group->name   = ConvertToUtf8(xEntry.getText());
+          group->hidden = false;
+          group->radio  = false;
+          ++m_groupAmount;
           continue;
         }
 

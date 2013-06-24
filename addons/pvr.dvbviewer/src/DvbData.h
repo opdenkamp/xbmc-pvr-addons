@@ -8,6 +8,7 @@
 #include "xmlParser.h"
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
+#include <list>
 
 #define CHANNELDAT_HEADER_SIZE       (7)
 #define ENCRYPTED_FLAG               (1 << 0)
@@ -28,48 +29,8 @@
 #define RS_VERSION_STR  XSTR(RS_VERSION_MAJOR) "." XSTR(RS_VERSION_MINOR) \
                           "." XSTR(RS_VERSION_PATCH1) "." XSTR(RS_VERSION_PATCH2)
 
-struct ChannelsDat
-{
-  byte TunerType;
-  byte ChannelGroup;
-  byte SatModulationSystem;
-  byte Flags;
-  unsigned int Frequency;
-  unsigned int Symbolrate;
-  unsigned short LNB_LOF;
-  unsigned short PMT_PID;
-  unsigned short Reserved1;
-  byte SatModulation;
-  byte AVFormat;
-  byte FEC;
-  byte Reserved2;
-  unsigned short Reserved3;
-  byte Polarity;
-  byte Reserved4;
-  unsigned short OrbitalPos;
-  byte Tone;
-  byte Reserved6;
-  unsigned short DiSEqCExt;
-  byte DiSEqC;
-  byte Reserved7;
-  unsigned short Reserved8;
-  unsigned short Audio_PID;
-  unsigned short Reserved9;
-  unsigned short Video_PID;
-  unsigned short TransportStream_ID;
-  unsigned short Teletext_PID;
-  unsigned short OriginalNetwork_ID;
-  unsigned short Service_ID;
-  unsigned short PCR_PID;
-  byte Root_len;
-  char Root[25];
-  byte ChannelName_len;
-  char ChannelName[25];
-  byte Category_len;
-  char Category[25];
-  byte Encrypted;
-  byte Reserved10;
-};
+/* forward declaration */
+class DvbGroup;
 
 typedef enum DVB_UPDATE_STATE
 {
@@ -79,66 +40,28 @@ typedef enum DVB_UPDATE_STATE
   DVB_UPDATE_STATE_NEW
 } DVB_UPDATE_STATE;
 
-class DvbChannelGroup
-{
-public:
-  DvbChannelGroup(const CStdString& name = "")
-    : m_name(name), m_state(DVB_UPDATE_STATE_NEW)
-  {}
-
-  void setName(const CStdString& name)
-  {
-    m_name = name;
-  }
-
-  const CStdString& getName()
-  {
-    return m_name;
-  }
-
-  bool operator==(const DvbChannelGroup& right) const
-  {
-    return (m_name == right.m_name);
-  }
-
-private:
-  CStdString m_name;
-  DVB_UPDATE_STATE m_state;
-};
-
 class DvbChannel
 {
 public:
-  DvbChannel()
-  {
-    iChannelState = DVB_UPDATE_STATE_NEW;
-  }
+  unsigned int id;
+  unsigned int backendNr;
+  std::list<uint64_t> backendIds;
+  uint64_t epgId;
+  CStdString name;
+  CStdString streamURL;
+  CStdString logoURL;
+  bool radio;
+  bool hidden;
+  bool encrypted;
+};
 
-  bool operator==(const DvbChannel& right) const
-  {
-    bool bChanged = true;
-    bChanged = bChanged && (bRadio         == right.bRadio);
-    bChanged = bChanged && (iUniqueId      == right.iUniqueId);
-    bChanged = bChanged && (iChannelNumber == right.iChannelNumber);
-    bChanged = bChanged && (group          == right.group);
-    bChanged = bChanged && (strChannelName == right.strChannelName);
-    bChanged = bChanged && (strStreamURL   == right.strStreamURL);
-    bChanged = bChanged && (strIconPath    == right.strIconPath);
-    return bChanged;
-  }
-
+class DvbGroup
+{
 public:
-  bool bRadio;
-  unsigned int iUniqueId;
-  unsigned int iChannelNumber;
-  uint64_t iChannelId;
-  uint64_t iEpgId;
-  byte Encrypted;
-  DvbChannelGroup group;
-  CStdString strChannelName;
-  CStdString strStreamURL;
-  CStdString strIconPath;
-  DVB_UPDATE_STATE iChannelState;
+  CStdString name;
+  std::list<DvbChannel *> channels;
+  bool radio;
+  bool hidden;
 };
 
 struct DvbEPGEntry
@@ -212,10 +135,10 @@ struct DvbRecording
   CStdString thumbnailPath;
 };
 
-typedef std::vector<DvbChannel> DvbChannels_t;
+typedef std::vector<DvbChannel *> DvbChannels_t;
+typedef std::vector<DvbGroup> DvbGroups_t;
 typedef std::vector<DvbTimer> DvbTimers_t;
 typedef std::vector<DvbRecording> DvbRecordings_t;
-typedef std::vector<DvbChannelGroup> DvbChannelGroups_t;
 
 class Dvb
   : public PLATFORM::CThread
@@ -237,7 +160,7 @@ public:
   PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channel, time_t iStart, time_t iEnd);
   unsigned int GetChannelsAmount(void);
 
-  PVR_ERROR GetChannelGroups(ADDON_HANDLE handle);
+  PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio);
   PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP& group);
   unsigned int GetChannelGroupsAmount(void);
 
@@ -285,31 +208,36 @@ private:
   unsigned int GetChannelUid(const CStdString& str);
   unsigned int GetChannelUid(const uint64_t channelId);
   CStdString BuildURL(const CStdString& path, ...);
-  CStdString BuildExtURL(const CStdString& baseUrl, const CStdString& path, ...);
+  CStdString BuildExtURL(const CStdString& baseURL, const CStdString& path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
+  uint64_t ParseUInt64(const CStdString& str);
 
 private:
-  // members
   bool m_connected;
   unsigned int m_backendVersion;
 
   int m_timezone;
   CStdString m_epgLanguage;
   struct { long long total, used; } m_diskspace;
-  long long m_diskspaceUsed, m_diskspaceFree;
 
   CStdString m_strURL;
-  CStdString m_strURLStream;
-  unsigned int m_iCurrentChannel;
+  unsigned int m_currentChannel;
+
+  /* channels + active (not hidden) channels */
+  DvbChannels_t m_channels;
+  unsigned int m_channelAmount;
+
+  /* channel groups + active (not hidden) groups */
+  DvbGroups_t m_groups;
+  unsigned int m_groupAmount;
+
   unsigned int m_iUpdateTimer;
   bool m_bUpdateTimers;
   bool m_bUpdateEPG;
-  DvbChannels_t m_channels;
-  DvbTimers_t m_timers;
   DvbRecordings_t m_recordings;
-  DvbChannelGroups_t m_groups;
   TimeshiftBuffer *m_tsBuffer;
 
+  DvbTimers_t m_timers;
   unsigned int m_iClientIndexCounter;
 
   PLATFORM::CMutex m_mutex;

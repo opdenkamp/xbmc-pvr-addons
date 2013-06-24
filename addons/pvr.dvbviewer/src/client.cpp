@@ -36,13 +36,14 @@ ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
 CStdString g_strHostname             = DEFAULT_HOST;
 int        g_iConnectTimeout         = DEFAULT_CONNECT_TIMEOUT;
 int        g_iPortWeb                = DEFAULT_WEB_PORT;
-int        g_iPortStream             = DEFAULT_STREAM_PORT;
 CStdString g_strUsername             = "";
 CStdString g_strPassword             = "";
-bool       g_bUseFavourites          = false;
-CStdString g_strFavouritesPath       = "";
+bool       g_useFavourites           = false;
+bool       g_useFavouritesFile       = false;
+CStdString g_favouritesFile          = "";
 bool       g_bUseTimeshift           = false;
 CStdString g_strTimeshiftBufferPath  = DEFAULT_TSBUFFERPATH;
+bool       g_useRTSP                 = false;
 
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr   *PVR  = NULL;
@@ -54,39 +55,35 @@ void ADDON_ReadSettings(void)
 {
   char buffer[1024];
 
-  /* read setting "host" from settings.xml */
   if (XBMC->GetSetting("host", buffer))
     g_strHostname = buffer;
 
-  /* read setting "user" from settings.xml */
   if (XBMC->GetSetting("user", buffer))
     g_strUsername = buffer;
 
-  /* read setting "pass" from settings.xml */
   if (XBMC->GetSetting("pass", buffer))
     g_strPassword = buffer;
 
-  /* read setting "streamport" from settings.xml */
-  if (!XBMC->GetSetting("streamport", &g_iPortStream))
-    g_iPortStream = DEFAULT_STREAM_PORT;
-
-  /* read setting "webport" from settings.xml */
   if (!XBMC->GetSetting("webport", &g_iPortWeb))
     g_iPortWeb = DEFAULT_WEB_PORT;
 
-  /* read setting "usefavourites" from settings.xml */
-  if (!XBMC->GetSetting("usefavourites", &g_bUseFavourites))
-    g_bUseFavourites = false;
+  if (!XBMC->GetSetting("usefavourites", &g_useFavourites))
+    g_useFavourites = false;
 
-  /* read setting "favouritespath" from settings.xml */
-  if (XBMC->GetSetting("favouritespath", buffer))
-    g_strFavouritesPath = buffer;
+  if (XBMC->GetSetting("usefavouritesfile", &g_useFavouritesFile))
+    g_useFavouritesFile = false;
+
+  if (g_useFavouritesFile && XBMC->GetSetting("favouritesfile", buffer))
+    g_favouritesFile = buffer;
 
   if (!XBMC->GetSetting("usetimeshift", &g_bUseTimeshift))
     g_bUseTimeshift = false;
 
   if (XBMC->GetSetting("timeshiftpath", buffer))
     g_strTimeshiftBufferPath = buffer;
+
+  if (!XBMC->GetSetting("usertsp", &g_useRTSP))
+    g_useRTSP = false;
 
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "DVBViewer Addon Configuration options");
@@ -97,10 +94,9 @@ void ADDON_ReadSettings(void)
     XBMC->Log(LOG_DEBUG, "Password:   %s", g_strPassword.c_str());
   }
   XBMC->Log(LOG_DEBUG, "WebPort:    %d", g_iPortWeb);
-  XBMC->Log(LOG_DEBUG, "StreamPort: %d", g_iPortStream);
-  XBMC->Log(LOG_DEBUG, "Use favourites: %s", (g_bUseFavourites) ? "yes" : "no");
-  if (g_bUseFavourites)
-    XBMC->Log(LOG_DEBUG, "Favourites Path: %s", g_strFavouritesPath.c_str());
+  XBMC->Log(LOG_DEBUG, "Use favourites: %s", (g_useFavourites) ? "yes" : "no");
+  if (g_useFavouritesFile)
+    XBMC->Log(LOG_DEBUG, "Favourites File: %s", g_favouritesFile.c_str());
   XBMC->Log(LOG_DEBUG, "Timeshift: %s", (g_bUseTimeshift) ? "enabled" : "disabled");
   if (g_bUseTimeshift)
     XBMC->Log(LOG_DEBUG, "Timeshift Buffer Path: %s", g_strTimeshiftBufferPath.c_str());
@@ -197,11 +193,6 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     if (g_strPassword.compare((const char *)settingValue) != 0)
       return ADDON_STATUS_NEED_RESTART;
   }
-  else if (sname == "streamport")
-  {
-    if (g_iPortStream != *(int *)settingValue)
-      return ADDON_STATUS_NEED_RESTART;
-  }
   else if (sname == "webport")
   {
     if (g_iPortWeb != *(int *)settingValue)
@@ -209,12 +200,17 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   }
   else if (sname == "usefavourites")
   {
-    if (g_bUseFavourites != *(bool *)settingValue)
+    if (g_useFavourites != *(bool *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
-  else if (sname == "favouritespath")
+  else if (sname == "usefavouritesfile")
   {
-    if (g_strFavouritesPath.compare((const char *)settingValue) != 0)
+    if (g_useFavouritesFile != *(bool *)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (sname == "favouritesfile")
+  {
+    if (g_favouritesFile.compare((const char *)settingValue) != 0)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "usetimeshift")
@@ -235,6 +231,16 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       XBMC->Log(LOG_DEBUG, "%s - Changed Setting '%s' from '%s' to '%s'", __FUNCTION__,
           settingName, g_strTimeshiftBufferPath.c_str(), newValue.c_str());
       g_strTimeshiftBufferPath = newValue;
+    }
+  }
+  else if (sname == "usertsp")
+  {
+    bool newValue = *(bool *)settingValue;
+    if (g_useRTSP != newValue)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Changed Setting '%s' from '%u' to '%u'", __FUNCTION__,
+          settingName, g_useRTSP, newValue);
+      g_useRTSP = newValue;
     }
   }
   return ADDON_STATUS_OK;
@@ -448,20 +454,14 @@ int GetChannelGroupsAmount(void)
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
-  if (bRadio)
-    return PVR_ERROR_NO_ERROR;
-
   if (!DvbData || !DvbData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return DvbData->GetChannelGroups(handle);
+  return DvbData->GetChannelGroups(handle, bRadio);
 }
 
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 {
-  if (group.bIsRadio)
-    return PVR_ERROR_NO_ERROR;
-
   if (!DvbData || !DvbData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 

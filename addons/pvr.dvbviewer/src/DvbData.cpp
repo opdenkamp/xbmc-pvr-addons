@@ -541,7 +541,7 @@ long long Dvb::LengthLiveStream(void)
   return m_tsBuffer->Length();
 }
 
-CStdString Dvb::GetLiveStreamURL(const PVR_CHANNEL& channelinfo)
+CStdString& Dvb::GetLiveStreamURL(const PVR_CHANNEL& channelinfo)
 {
   SwitchChannel(channelinfo);
   return m_channels[channelinfo.iUniqueId - 1]->streamURL;
@@ -788,7 +788,6 @@ bool Dvb::LoadChannels()
         std::istringstream ss(xEntry.getText());
         ss >> backendId;
 
-        XBMC->Log(LOG_DEBUG, "searching for: %llu", backendId);
         //TODO: use getchannelbybackendid?
         for (DvbChannels_t::iterator it = m_channels.begin();
             it != m_channels.end(); ++it)
@@ -1297,7 +1296,7 @@ CStdString Dvb::BuildExtURL(const CStdString& baseURL, const CStdString& path, .
   // simply add user@pass in front of the URL if username/password is set
   if (!g_strUsername.empty() && !g_strPassword.empty())
   {
-    CStdString strAuth("");
+    CStdString strAuth;
     strAuth.Format("%s:%s@", g_strUsername, g_strPassword);
     url.insert((url.Left(5).Equals("http:")) ? 7 : 8, strAuth);
   }

@@ -180,7 +180,7 @@ public:
   long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */);
   long long PositionLiveStream(void);
   long long LengthLiveStream(void);
-  CStdString GetLiveStreamURL(const PVR_CHANNEL& channelinfo);
+  CStdString& GetLiveStreamURL(const PVR_CHANNEL& channelinfo);
 
 protected:
   virtual void *Process(void);

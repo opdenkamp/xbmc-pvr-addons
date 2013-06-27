@@ -215,13 +215,8 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   }
   else if (sname == "usetimeshift")
   {
-    bool newValue = *(bool *)settingValue;
-    if (g_bUseTimeshift != newValue)
-    {
-      XBMC->Log(LOG_DEBUG, "%s - Changed Setting '%s' from '%u' to '%u'", __FUNCTION__,
-          settingName, g_bUseTimeshift, newValue);
-      g_bUseTimeshift = newValue;
-    }
+    if (g_bUseTimeshift != *(bool *)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "timeshiftpath")
   {
@@ -235,13 +230,8 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   }
   else if (sname == "usertsp")
   {
-    bool newValue = *(bool *)settingValue;
-    if (g_useRTSP != newValue)
-    {
-      XBMC->Log(LOG_DEBUG, "%s - Changed Setting '%s' from '%u' to '%u'", __FUNCTION__,
-          settingName, g_useRTSP, newValue);
-      g_useRTSP = newValue;
-    }
+    if (g_bUseTimeshift != *(bool *)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
   }
   return ADDON_STATUS_OK;
 }

@@ -413,51 +413,52 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
   {
     XMLNode xTmp = xNode.getChildNode("recording", n - i - 1);
 
-    DvbRecording recording;
-    recording.id = xTmp.getAttribute("id");
-    GetXMLValue(xTmp, "title",   recording.title);
-    GetXMLValue(xTmp, "channel", recording.channelName);
-    GetXMLValue(xTmp, "info",    recording.plotOutline);
+    m_recordings.push_back(DvbRecording());
+    DvbRecording *recording = &m_recordings.back();
+
+    recording->id = xTmp.getAttribute("id");
+    GetXMLValue(xTmp, "title",   recording->title);
+    GetXMLValue(xTmp, "channel", recording->channelName);
+    GetXMLValue(xTmp, "info",    recording->plotOutline);
 
     CStdString tmp;
-    recording.plot = (GetXMLValue(xTmp, "desc", tmp)) ? tmp
-      : recording.plotOutline;
+    recording->plot = (GetXMLValue(xTmp, "desc", tmp)) ? tmp
+      : recording->plotOutline;
 
-    recording.streamURL = BuildExtURL(streamURL, "%s.ts",
-        recording.id.c_str());
+    recording->streamURL = BuildExtURL(streamURL, "%s.ts",
+        recording->id.c_str());
 
     if (GetXMLValue(xTmp, "image", tmp))
-      recording.thumbnailPath = BuildExtURL(imageURL, tmp);
+      recording->thumbnailPath = BuildExtURL(imageURL, tmp);
 
     CStdString startTime = xTmp.getAttribute("start");
-    recording.startTime = ParseDateTime(startTime);
+    recording->startTime = ParseDateTime(startTime);
 
     int hours, mins, secs;
     sscanf(xTmp.getAttribute("duration"), "%02d%02d%02d", &hours, &mins, &secs);
-    recording.duration = hours*60*60 + mins*60 + secs;
+    recording->duration = hours*60*60 + mins*60 + secs;
 
     // generate a more unique id by appending "_" + startTime
-    recording.id += "_" + startTime;
+    recording->id += "_" + startTime;
 
     PVR_RECORDING tag;
     memset(&tag, 0, sizeof(PVR_RECORDING));
-    PVR_STRCPY(tag.strRecordingId,   recording.id.c_str());
-    PVR_STRCPY(tag.strTitle,         recording.title.c_str());
-    PVR_STRCPY(tag.strStreamURL,     recording.streamURL.c_str());
-    PVR_STRCPY(tag.strPlotOutline,   recording.plotOutline.c_str());
-    PVR_STRCPY(tag.strPlot,          recording.plot.c_str());
-    PVR_STRCPY(tag.strChannelName,   recording.channelName.c_str());
-    PVR_STRCPY(tag.strThumbnailPath, recording.thumbnailPath.c_str());
-    tag.recordingTime = recording.startTime;
-    tag.iDuration     = recording.duration;
+    PVR_STRCPY(tag.strRecordingId,   recording->id.c_str());
+    PVR_STRCPY(tag.strTitle,         recording->title.c_str());
+    PVR_STRCPY(tag.strStreamURL,     recording->streamURL.c_str());
+    PVR_STRCPY(tag.strPlotOutline,   recording->plotOutline.c_str());
+    PVR_STRCPY(tag.strPlot,          recording->plot.c_str());
+    PVR_STRCPY(tag.strChannelName,   recording->channelName.c_str());
+    PVR_STRCPY(tag.strThumbnailPath, recording->thumbnailPath.c_str());
+    tag.recordingTime = recording->startTime;
+    tag.iDuration     = recording->duration;
     PVR_STRCPY(tag.strDirectory, "/"); // unused
 
     PVR->TransferRecordingEntry(handle, &tag);
 
-    m_recordings.push_back(recording);
-
     XBMC->Log(LOG_DEBUG, "%s loaded Recording entry '%s': start=%u, length=%u",
-        __FUNCTION__, recording.title.c_str(), recording.startTime, recording.duration);
+        __FUNCTION__, recording->title.c_str(), recording->startTime,
+        recording->duration);
   }
 
   XBMC->Log(LOG_INFO, "Loaded %u Recording Entries", m_recordings.size());

@@ -207,8 +207,8 @@ private:
   uint64_t ParseChannelString(const CStdString& str, CStdString& channelName);
   unsigned int GetChannelUid(const CStdString& str);
   unsigned int GetChannelUid(const uint64_t channelId);
-  CStdString BuildURL(const CStdString& path, ...);
-  CStdString BuildExtURL(const CStdString& baseURL, const CStdString& path, ...);
+  CStdString BuildURL(const char* path, ...);
+  CStdString BuildExtURL(const CStdString& baseURL, const char* path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
   uint64_t ParseUInt64(const CStdString& str);
 

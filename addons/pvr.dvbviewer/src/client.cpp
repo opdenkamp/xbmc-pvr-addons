@@ -319,12 +319,12 @@ const char *GetBackendVersion(void)
 
 const char *GetConnectionString(void)
 {
-  static CStdString strConnectionString;
+  static CStdString conn;
   if (DvbData)
-    strConnectionString.Format("%s%s", g_strHostname, DvbData->IsConnected() ? "" : " (Not connected!)");
+    conn.Format("%s%s", g_strHostname, DvbData->IsConnected() ? "" : " (Not connected!)");
   else
-    strConnectionString.Format("%s (addon error!)", g_strHostname);
-  return strConnectionString.c_str();
+    conn.Format("%s (addon error!)", g_strHostname);
+  return conn.c_str();
 }
 
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)

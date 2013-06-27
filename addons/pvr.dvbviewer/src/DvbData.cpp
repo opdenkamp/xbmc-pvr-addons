@@ -1280,7 +1280,7 @@ unsigned int Dvb::GetChannelUid(const uint64_t channelId)
   return 0;
 }
 
-CStdString Dvb::BuildURL(const CStdString& path, ...)
+CStdString Dvb::BuildURL(const char* path, ...)
 {
   CStdString url(m_strURL);
   va_list argList;
@@ -1290,7 +1290,7 @@ CStdString Dvb::BuildURL(const CStdString& path, ...)
   return url;
 }
 
-CStdString Dvb::BuildExtURL(const CStdString& baseURL, const CStdString& path, ...)
+CStdString Dvb::BuildExtURL(const CStdString& baseURL, const char* path, ...)
 {
   CStdString url(baseURL);
   // simply add user@pass in front of the URL if username/password is set

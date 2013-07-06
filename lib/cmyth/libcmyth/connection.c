@@ -1174,13 +1174,6 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	uint32_t file_id;
 	int64_t file_length;
 
-	ret = cmyth_file_create(control);
-	if (!ret) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_file_create() failed\n",
-			  __FUNCTION__);
-		goto shut;
-	}
-
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting data connection\n",
 		  __FUNCTION__);
 	conn = cmyth_connect(control->server, control->port, buflen, tcp_rcvbuf);

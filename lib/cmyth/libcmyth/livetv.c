@@ -818,6 +818,7 @@ int
 cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 {
 	int ret, i;
+	cmyth_file_t oldfile = NULL;
 
 	if (dir == 0)
 		return 1;
@@ -862,7 +863,7 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 	if((dir < 0 && rec->rec_livetv_chain->chain_current + dir >= 0)
 		|| (rec->rec_livetv_chain->chain_current <
 			  rec->rec_livetv_chain->chain_ct - dir)) {
-		ref_release(rec->rec_livetv_file);
+		oldfile = rec->rec_livetv_file;
 		ret = rec->rec_livetv_chain->chain_current += dir;
 		rec->rec_livetv_file = ref_hold(rec->rec_livetv_chain->chain_files[ret]);
 		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: file switch to %d\n",__FUNCTION__,ret);
@@ -876,7 +877,8 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 	out:
 
 	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
-
+	if (oldfile)
+		ref_release(oldfile);
 	return ret;
 }
 

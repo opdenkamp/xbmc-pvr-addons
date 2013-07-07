@@ -1539,29 +1539,63 @@ int PVRClientMythTV::GetCurrentClientChannel()
 
 bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
 {
+  bool retval;
+
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - chanID: %u", __FUNCTION__, channelinfo.iUniqueId);
 
-  bool retval;
-
-  //Close current live stream for reopening
-  //Keep playback mode enabled
-  m_pEventHandler->PreventLiveChainUpdate();
-
-  retval = m_rec.Stop();
-
-  m_rec = MythRecorder();
-  m_pEventHandler->SetRecorder(m_rec);
-  m_pEventHandler->AllowLiveChainUpdate();
-
-  //Try to reopen live stream
-  if (retval)
-    retval = OpenLiveStream(channelinfo);
-
-  if (!retval)
+  if (m_rec.IsNull())
   {
-    XBMC->Log(LOG_ERROR, "%s - Failed to reopening Livestream", __FUNCTION__);
-    m_fileOps->Resume();
+    XBMC->Log(LOG_ERROR, "%s: No recorder", __FUNCTION__);
+    return false;
+  }
+
+  // First we have to get the channum of the selected channel
+  // Due to the merged view (same channum+callsign) this might not yet be the preferred channel on the preferred source to switch to
+  ChannelIdMap::iterator channelByIdIt = m_channelsById.find(channelinfo.iUniqueId);
+  if (channelByIdIt == m_channelsById.end())
+  {
+    XBMC->Log(LOG_ERROR,"%s - Channel not found", __FUNCTION__);
+    return false;
+  }
+
+  // If the recorder is recording and channel is tunable then use SET_CHANNEL method.
+  // Otherwise use fallback method and reopen the live stream:
+  //  - Channel is available on an other input card
+  //  - Recorder is a DEMO and it does not record
+  //  - Recorder is not recording for unknown reasons
+  if (m_rec.IsRecording() && m_rec.CheckChannel(channelByIdIt->second))
+  {
+    if (!(retval = m_rec.SetChannel(channelByIdIt->second)))
+    {
+      XBMC->Log(LOG_ERROR, "%s - Failed to switch channel", __FUNCTION__);
+      // Break livestream
+      m_pEventHandler->PreventLiveChainUpdate();
+      m_rec.Stop();
+      m_rec = MythRecorder();
+      m_pEventHandler->SetRecorder(m_rec);
+      m_pEventHandler->AllowLiveChainUpdate();
+      m_pEventHandler->DisablePlayback();
+      m_fileOps->Resume();
+    }
+  }
+  // Fallback method: Close current live stream for reopening.
+  else
+  {
+    XBMC->Log(LOG_NOTICE, "%s: Recorder %u doesn't provide channel %s", __FUNCTION__, m_rec.ID(), channelByIdIt->second.Name().c_str());
+    // Keep playback mode enabled
+    m_pEventHandler->PreventLiveChainUpdate();
+    retval = m_rec.Stop();
+    m_rec = MythRecorder();
+    m_pEventHandler->SetRecorder(m_rec);
+    m_pEventHandler->AllowLiveChainUpdate();
+    // Try to reopen live stream
+    if (retval)
+      retval = OpenLiveStream(channelinfo);
+    if (!retval)
+    {
+      XBMC->Log(LOG_ERROR, "%s - Failed to reopening Livestream", __FUNCTION__);
+    }
   }
 
   if (g_bExtraDebug)

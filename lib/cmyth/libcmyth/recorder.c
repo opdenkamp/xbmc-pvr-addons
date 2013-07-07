@@ -616,7 +616,8 @@ cmyth_recorder_change_channel(cmyth_recorder_t rec,
 	int err;
 	int ret = -1;
 	char msg[256];
-	cmyth_livetv_chain_t newchain = 0;
+	cmyth_livetv_chain_t newchain = NULL;
+	cmyth_livetv_chain_t oldchain = NULL;
 
 	if (!rec) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
@@ -634,32 +635,34 @@ cmyth_recorder_change_channel(cmyth_recorder_t rec,
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
 			  __FUNCTION__, err);
-		goto fail;
+		goto out;
 	}
 
 	if ((err=cmyth_rcv_okay(rec->rec_conn)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_okay() failed (%d)\n",
 			  __FUNCTION__, err);
-		goto fail;
+		goto out;
 	}
 
 	if(rec->rec_ring)
 		rec->rec_ring->file_pos = 0;
 	else {
-		newchain = cmyth_livetv_chain_create(rec->rec_livetv_chain->chainid);
-		newchain->progs = rec->rec_livetv_chain->progs;
-		ref_release(rec->rec_livetv_file);
-		rec->rec_livetv_file = NULL;
-		ref_release(rec->rec_livetv_chain);
+		oldchain = rec->rec_livetv_chain;
+		newchain = cmyth_livetv_chain_create(oldchain->chainid);
+		newchain->livetv_buflen = oldchain->livetv_buflen;
+		newchain->livetv_tcp_rcvbuf = oldchain->livetv_tcp_rcvbuf;
+		newchain->prog_update_callback = oldchain->prog_update_callback;
+		newchain->chain_switch_on_create = 1;
 		rec->rec_livetv_chain = newchain;
 	}
 
 	ret = 0;
 
-    fail:
+out:
 	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
-
+	if (oldchain)
+		ref_release(oldchain);
 	return ret;
 }
 
@@ -689,7 +692,8 @@ cmyth_recorder_set_channel(cmyth_recorder_t rec, char *channame)
 	int err;
 	int ret = -1;
 	char msg[256];
-	cmyth_livetv_chain_t newchain = 0;
+	cmyth_livetv_chain_t newchain = NULL;
+	cmyth_livetv_chain_t oldchain = NULL;
 
 	if (!rec) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
@@ -707,32 +711,34 @@ cmyth_recorder_set_channel(cmyth_recorder_t rec, char *channame)
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
 			  __FUNCTION__, err);
-		goto fail;
+		goto out;
 	}
 
 	if ((err=cmyth_rcv_okay(rec->rec_conn)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_okay() failed (%d)\n",
 			  __FUNCTION__, err);
-		goto fail;
+		goto out;
 	}
 
 	if(rec->rec_ring)
 		rec->rec_ring->file_pos = 0;
 	else {
-		newchain = cmyth_livetv_chain_create(rec->rec_livetv_chain->chainid);
-		newchain->progs = rec->rec_livetv_chain->progs;
-		ref_release(rec->rec_livetv_file);
-		rec->rec_livetv_file = NULL;
-		ref_release(rec->rec_livetv_chain);
+		oldchain = rec->rec_livetv_chain;
+		newchain = cmyth_livetv_chain_create(oldchain->chainid);
+		newchain->livetv_buflen = oldchain->livetv_buflen;
+		newchain->livetv_tcp_rcvbuf = oldchain->livetv_tcp_rcvbuf;
+		newchain->prog_update_callback = oldchain->prog_update_callback;
+		newchain->chain_switch_on_create = 1;
 		rec->rec_livetv_chain = newchain;
 	}
 
 	ret = 0;
 
-    fail:
+out:
 	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
-
+	if (oldchain)
+		ref_release(oldchain);
 	return ret;
 }
 

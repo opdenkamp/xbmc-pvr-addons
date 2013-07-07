@@ -22,13 +22,6 @@ AC_ARG_ENABLE([release],
   [use_release=$enableval],
   [use_release=no])
 
-### External libraries options
-AC_ARG_ENABLE([external-ffmpeg],
-  [AS_HELP_STRING([--enable-external-ffmpeg],
-  [enable use of external ffmpeg libraries (default is no) 'Linux only'])],
-  [use_external_ffmpeg=$enableval],
-  [use_external_ffmpeg=no])
-
 ### External dependencies option
 AC_ARG_ENABLE([addons-with-dependencies],
   [AS_HELP_STRING([--enable-addons-with-dependencies],
@@ -48,10 +41,6 @@ if test "$use_release" = "yes"; then
 fi
 
 AC_CHECK_PROG(HAVE_PKG_CONFIG, pkg-config, yes)
-if test "x$HAVE_PKG_CONFIG" != "xyes" ; then
-  AC_MSG_WARN([pkg-config was not found on your system. external ffmpeg will be disabled])
-  use_external_ffmpeg="no"
-fi
 
 OS="unknown"
 ARCHITECTURE="unknown"
@@ -122,22 +111,6 @@ case "${host}" in
 esac
 
 ### External libraries checks
-# FFmpeg
-if test "$use_external_ffmpeg" = "yes"; then
-  PKG_CHECK_MODULES([FFMPEG], [libavcodec],
-                    [FFMPEG_INCLUDES="$FFMPEG_CFLAGS"; LIBS="$LIBS $FFMPEG_LIBS"],
-                    AC_MSG_ERROR(cannot find libavcodec))
-
-  # Possible places the ffmpeg headers may be
-  AC_CHECK_HEADERS([libavcodec/avcodec.h],[FFMPEG_INCLUDES="-I$($PKG_CONFIG --variable=includedir libavcodec)/libavcodec"],
-    [AC_CHECK_HEADERS([ffmpeg/avcodec.h],[FFMPEG_INCLUDES="-I$($PKG_CONFIG --variable=includedir libavcodec)/ffmpeg"],
-      [AC_MSG_ERROR(avcodec.h not found)])
-  ])
-
-  echo "FFMPEG_INCLUDES: $FFMPEG_INCLUDES"
-fi
-AC_SUBST(FFMPEG_INCLUDES)
-
 AC_CHECK_LIB([GL],[main],have_gl=yes, have_gl=no)  
 if test "$have_gl" = "yes"; then
   AC_DEFINE([HAVE_GL],[1],["Define to 1 if we have gl"])

@@ -21,6 +21,7 @@
  */
 
 #include "libXBMC_addon.h"
+#include "libXBMC_codec.h"
 #include "libXBMC_pvr.h"
 #include "libXBMC_gui.h"
 
@@ -42,5 +43,6 @@ extern bool         g_bHandleMessages;    ///< Send VDR's OSD status messages to
 extern int          g_iTimeshift;
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
+extern CHelper_libXBMC_codec *CODEC;
 extern CHelper_libXBMC_gui   *GUI;
 extern CHelper_libXBMC_pvr   *PVR;

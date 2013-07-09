@@ -392,13 +392,20 @@ bool cVNSISession::readData(uint8_t* buffer, int totalBytes, int timeout)
   int bytesRead = m_socket->Read(buffer, totalBytes, timeout);
   if (bytesRead == totalBytes)
     return true;
-  else if (m_socket->GetErrorNumber() != ETIMEDOUT)
+  else if (m_socket->GetErrorNumber() == ETIMEDOUT && bytesRead > 0)
   {
-    SignalConnectionLost();
+    // we did read something. try to finish the read
+    bytesRead += m_socket->Read(buffer+bytesRead, totalBytes-bytesRead, timeout);
+    if (bytesRead == totalBytes)
+      return true;
+  }
+  else if (m_socket->GetErrorNumber() == ETIMEDOUT)
+  {
     return false;
   }
-  else
-    return false;
+
+  SignalConnectionLost();
+  return false;
 }
 
 void cVNSISession::SleepMs(int ms)

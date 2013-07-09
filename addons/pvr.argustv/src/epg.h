@@ -23,6 +23,7 @@
 #define __EPG_H
 
 #include <string>
+#include "xbmc_addon_types.h"
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
 #include <json/json.h>

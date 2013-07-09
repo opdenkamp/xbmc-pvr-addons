@@ -216,16 +216,16 @@ namespace PLATFORM
     fds.events = POLLIN;
     fds.revents = 0;
 
-    while (iBytesRead >= 0 && iBytesRead < (ssize_t)len && (iTimeoutMs == 0 || iTarget > iNow))
+    while (iBytesRead >= 0 &&
+        iBytesRead < (ssize_t)len &&
+        (iTimeoutMs == 0 || iTarget > iNow) &&
+        *iError == 0)
     {
       if (iTimeoutMs > 0)
       {
         int iPollResult = poll(&fds, 1, iTarget - iNow);
         if (iPollResult == 0)
-        {
           *iError = ETIMEDOUT;
-          return -ETIMEDOUT;
-        }
       }
 
       ssize_t iReadResult = (iTimeoutMs > 0) ?
@@ -236,12 +236,11 @@ namespace PLATFORM
         if (errno == EAGAIN && iTimeoutMs > 0)
           continue;
         *iError = errno;
-        return -errno;
+        return (iBytesRead > 0) ? iBytesRead : -errno;
       }
       else if (iReadResult == 0 || (iReadResult != (ssize_t)len && iTimeoutMs == 0))
       {
         *iError = ECONNRESET;
-        return -ECONNRESET;
       }
 
       iBytesRead += iReadResult;

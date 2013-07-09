@@ -224,7 +224,7 @@ namespace PLATFORM
         if (iPollResult == 0)
         {
           *iError = ETIMEDOUT;
-          return -ETIMEDOUT;
+          return (iBytesRead > 0) ? iBytesRead : -ETIMEDOUT;
         }
       }
 
@@ -236,12 +236,12 @@ namespace PLATFORM
         if (errno == EAGAIN && iTimeoutMs > 0)
           continue;
         *iError = errno;
-        return -errno;
+        return (iBytesRead > 0) ? iBytesRead : -errno;
       }
       else if (iReadResult == 0 || (iReadResult != (ssize_t)len && iTimeoutMs == 0))
       {
         *iError = ECONNRESET;
-        return -ECONNRESET;
+        return (iBytesRead > 0) ? iBytesRead : -ECONNRESET;
       }
 
       iBytesRead += iReadResult;

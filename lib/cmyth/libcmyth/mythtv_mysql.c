@@ -290,7 +290,7 @@ cmyth_mysql_escape_chars(cmyth_database_t db, char *string)
 int
 cmyth_mysql_set_watched_status(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat)
 {
-	MYSQL_RES *res = NULL;
+	int ret;
 	MYSQL* sql = cmyth_db_get_connection(db);
 	const char *query_str = "UPDATE recorded SET watched = ? WHERE chanid = ? AND starttime = ?";
 	cmyth_mysql_query_t *query;
@@ -311,13 +311,16 @@ cmyth_mysql_set_watched_status(cmyth_database_t db, cmyth_proginfo_t prog, int w
 		ref_release(query);
 		return -1;
 	}
-	if (cmyth_mysql_query(query) != 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
-		ref_release(query);
-		return -1;
-	}
-	mysql_free_result(res);
+
+	ret = cmyth_mysql_query(query);
+
 	ref_release(query);
+
+	if (ret < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
+		return ret;
+	}
+
 	return (int)mysql_affected_rows(sql);
 }
 
@@ -676,7 +679,7 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_epginfolist_t *epgli
 int
 cmyth_mysql_update_bookmark_setting(cmyth_database_t db, cmyth_proginfo_t prog)
 {
-	MYSQL_RES *res = NULL;
+	int ret;
 	MYSQL* sql = cmyth_db_get_connection(db);
 	const char *query_str = "UPDATE recorded SET bookmark = 1 WHERE chanid = ? AND starttime = ?";
 	cmyth_mysql_query_t * query;
@@ -693,13 +696,16 @@ cmyth_mysql_update_bookmark_setting(cmyth_database_t db, cmyth_proginfo_t prog)
 		ref_release(query);
 		return -1;
 	}
-	res = cmyth_mysql_query_result(query);
+
+	ret = cmyth_mysql_query(query);
+
 	ref_release(query);
-	if (res == NULL) {
+
+	if (ret < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
-		return -1;
+		return ret;
 	}
-	mysql_free_result(res);
+
 	return (int)mysql_affected_rows(sql);
 }
 
@@ -1462,9 +1468,9 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 
 	ref_release(query);
 
-	if (ret == -1) {
+	if (ret < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
-		return -1;
+		return ret;
 	}
 
 	return (int)mysql_affected_rows(sql);

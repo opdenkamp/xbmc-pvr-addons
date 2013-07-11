@@ -105,12 +105,12 @@ cmyth_storagegroup_update_fileinfo(cmyth_conn_t control, cmyth_storagegroup_file
 
 	if (!control) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n", __FUNCTION__);
-		return -1;
+		return -EINVAL;
 	}
 
 	if (!file) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no file specified\n", __FUNCTION__);
-		return -1;
+		return -EINVAL;
 	}
 
 	snprintf(msg, sizeof(msg), "QUERY_SG_FILEQUERY[]:[]%s[]:[]%s[]:[]%s", file->hostname , file->storagegroup, file->filename);
@@ -118,7 +118,7 @@ cmyth_storagegroup_update_fileinfo(cmyth_conn_t control, cmyth_storagegroup_file
 	err = cmyth_send_message(control, msg);
 	if (err < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message() failed (%d)\n", __FUNCTION__, err);
-		return -1;
+		return err;
 	}
 
 	count = cmyth_rcv_length(control);
@@ -165,14 +165,14 @@ cmyth_storagegroup_get_filelist(cmyth_conn_t control,char *storagegroup, char *h
 	int err = 0;
 	int i = 0;
 	int listsize = 10;
-	cmyth_storagegroup_filelist_t ret = 0;
-	cmyth_storagegroup_file_t file = 0;
+	cmyth_storagegroup_filelist_t ret = NULL;
+	cmyth_storagegroup_file_t file = NULL;
 	int consumed = 0; /* = profiles; */
 	char tmp_str[32768];
 
 	if (!control) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n", __FUNCTION__);
-		return 0;
+		return NULL;
 	}
 
 	pthread_mutex_lock(&control->conn_mutex);
@@ -195,8 +195,6 @@ cmyth_storagegroup_get_filelist(cmyth_conn_t control,char *storagegroup, char *h
 
 	if (!ret) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: alloc() failed for list\n", __FUNCTION__);
-		ref_release(ret);
-		ret = 0;
 		goto out;
 	}
 
@@ -205,7 +203,7 @@ cmyth_storagegroup_get_filelist(cmyth_conn_t control,char *storagegroup, char *h
 	if (!ret->storagegroup_filelist_list) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: alloc() failed for filelist list\n", __FUNCTION__);
 		ref_release(ret);
-		ret = 0;
+		ret = NULL;
 		goto out;
 	}
 	while (count) {
@@ -214,7 +212,7 @@ cmyth_storagegroup_get_filelist(cmyth_conn_t control,char *storagegroup, char *h
 		if (err) {
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_string() failed (%d)\n", __FUNCTION__, count);
 			ref_release(ret);
-			ret = 0;
+			ret = NULL;
 			goto out;
 		}
 		if (res>listsize-1)
@@ -224,7 +222,7 @@ cmyth_storagegroup_get_filelist(cmyth_conn_t control,char *storagegroup, char *h
 			if (!ret->storagegroup_filelist_list) {
 				cmyth_dbg(CMYTH_DBG_ERROR, "%s: realloc() failed for filelist list\n", __FUNCTION__);
 				ref_release(ret);
-				ret = 0;
+				ret = NULL;
 				goto out;
 			}
 		}
@@ -307,7 +305,7 @@ cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *storagegroup, char *
 		ret = NULL;
 		goto out;
 	} else if (count == 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: QUERY_SG_FILEQUERY failed(%s)\n", __FUNCTION__, tmp_str);
+		cmyth_dbg(CMYTH_DBG_WARN, "%s: QUERY_SG_FILEQUERY failed(%s)\n", __FUNCTION__, tmp_str);
 		ret = NULL;
 		goto out;
 	}

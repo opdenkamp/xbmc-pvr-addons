@@ -208,6 +208,11 @@ int MythProgramInfo::Priority()
   return cmyth_proginfo_priority(*m_proginfo_t); // Might want to use recpriority2 instead
 }
 
+CStdString MythProgramInfo::StorageGroup()
+{
+  return cmyth_proginfo_storagegroup(*m_proginfo_t);
+}
+
 void MythProgramInfo::SetFrameRate(const long long frameRate)
 {
   m_frameRate = frameRate;

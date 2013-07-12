@@ -280,6 +280,13 @@ MythProgramInfo MythConnection::GetRecordedProgram(int chanid, const MythTimesta
   return retval;
 }
 
+bool MythConnection::GenerateRecordingPreview(MythProgramInfo &recording)
+{
+  int retval = 0;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_generate_pixmap(*m_conn_t, *recording.m_proginfo_t));
+  return retval >= 0;
+}
+
 ProgramInfoMap MythConnection::GetPendingPrograms()
 {
   Lock();

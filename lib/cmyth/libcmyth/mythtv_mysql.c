@@ -218,8 +218,6 @@ cmyth_db_check_connection(cmyth_database_t db)
 		if (mysql_stat(db->mysql) == NULL) {
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_stat() failed: %s\n", __FUNCTION__, mysql_error(db->mysql));
 			cmyth_database_close(db);
-			mysql_close(db->mysql);
-			db->mysql = NULL;
 		}
 	}
 	if (db->mysql == NULL) {
@@ -231,8 +229,6 @@ cmyth_db_check_connection(cmyth_database_t db)
 		if (NULL == mysql_real_connect(db->mysql, db->db_host, db->db_user, db->db_pass, db->db_name, db->db_port, NULL, CLIENT_FOUND_ROWS)) {
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s: mysql_connect() failed: %s\n", __FUNCTION__, mysql_error(db->mysql));
 			cmyth_database_close(db);
-			mysql_close(db->mysql);
-			db->mysql = NULL;
 			return -1;
 		}
 	}

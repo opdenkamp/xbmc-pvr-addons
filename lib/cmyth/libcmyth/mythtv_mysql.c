@@ -50,6 +50,15 @@ cmyth_database_destroy(cmyth_database_t db)
 {
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s\n", __FUNCTION__);
 	cmyth_database_close(db);
+
+	if (db->db_host)
+		ref_release(db->db_host);
+	if (db->db_user)
+		ref_release(db->db_user);
+	if (db->db_pass)
+		ref_release(db->db_pass);
+	if (db->db_name)
+		ref_release(db->db_name);
 }
 
 cmyth_database_t

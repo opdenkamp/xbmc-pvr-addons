@@ -186,6 +186,8 @@ cmyth_channel_destroy(cmyth_channel_t c)
 		return;
 	}
 
+	if(c->chanstr)
+		ref_release(c->chanstr);
 	if(c->name)
 		ref_release(c->name);
 	if(c->callsign)

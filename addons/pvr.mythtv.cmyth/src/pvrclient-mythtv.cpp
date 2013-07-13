@@ -724,8 +724,10 @@ int PVRClientMythTV::FillRecordings()
   for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
     if (!it->second.IsNull() && it->second.IsVisible())
+    {
       m_db.FillRecordingArtwork(it->second);
       res++;
+    }
   }
   return res;
 }

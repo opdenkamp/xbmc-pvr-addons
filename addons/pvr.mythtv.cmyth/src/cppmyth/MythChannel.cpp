@@ -61,8 +61,10 @@ unsigned int MythChannel::NumberInt()
 
 CStdString MythChannel::Number()
 {
-  // Must not be deleted
-  return CStdString(cmyth_channel_channumstr(*m_channel_t));
+  char *cChanNum = cmyth_channel_channumstr(*m_channel_t);
+  CStdString retval(cChanNum);
+  ref_release(cChanNum);
+  return retval;
 }
 
 CStdString MythChannel::Callsign()

@@ -160,12 +160,12 @@ ChannelGroupMap MythDatabase::GetChannelGroups()
     if (channelCount > 0)
     {
       retval.insert(std::make_pair(channelGroups[i].name, std::vector<int>(channelIDs, channelIDs + channelCount)));
-      ref_release(channelIDs);
     }
     else
     {
       retval.insert(std::make_pair(channelGroups[i].name, std::vector<int>()));
     }
+    ref_release(channelIDs);
   }
   ref_release(channelGroups);
   return retval;

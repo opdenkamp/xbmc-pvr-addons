@@ -651,9 +651,9 @@ cmyth_rcv_okay(cmyth_conn_t conn)
 			  "%s: did not consume everything\n",
 			  __FUNCTION__);
 		while(count > 0 && err == 0) {
-			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
+			consumed = cmyth_rcv_data(conn, &err, tmp, sizeof(tmp) - 1, count);
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data: count %i, read %i, errno %i\n", __FUNCTION__, count, consumed, err);
 			count -= consumed;
-			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data %s\n", __FUNCTION__, tmp);
 		}
 	}
 	return ret;

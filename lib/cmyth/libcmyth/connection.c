@@ -1832,7 +1832,7 @@ cmyth_conn_get_backend_hostname(cmyth_conn_t conn)
 	if(conn->conn_version < 17) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support QUERY_HOSTNAME\n",
 			  __FUNCTION__);
-		return NULL;
+		goto err;
 	}
 
 	if ((err = cmyth_send_message(conn,  "QUERY_HOSTNAME")) < 0) {

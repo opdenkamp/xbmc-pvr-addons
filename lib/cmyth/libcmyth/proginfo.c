@@ -1947,3 +1947,14 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, const cm
 	}
 
 }
+
+char *
+cmyth_proginfo_storagegroup(cmyth_proginfo_t prog)
+{
+	if (!prog) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL program information\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	return ref_hold(prog->proginfo_storagegroup);
+}

@@ -1129,6 +1129,13 @@ extern uint16_t cmyth_proginfo_year(cmyth_proginfo_t prog);
  */
 extern int cmyth_mysql_set_watched_status(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat);
 
+/**
+ * Retrieve the storage group for this program info
+ * \param prog proginfo handle
+ * \return null-terminated string
+ */
+extern char *cmyth_proginfo_storagegroup(cmyth_proginfo_t prog);
+
 /*
  * -----------------------------------------------------------------
  * Program List Operations

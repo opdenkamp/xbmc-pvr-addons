@@ -2356,3 +2356,66 @@ cmyth_mysql_get_setting(cmyth_database_t db, char *setting, char **data)
 	mysql_free_result(res);
 	return rows;
 }
+
+/*
+ * cmyth_mysql_keep_livetv_recording()
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * keep/ignore recording.
+ *
+ * Success: returns 0 for unavailable else 1
+ *
+ * Failure: -1
+ */
+int cmyth_mysql_keep_livetv_recording(cmyth_database_t db, cmyth_proginfo_t prog, int8_t keep)
+{
+	int ret;
+	MYSQL* sql = cmyth_db_get_connection(db);
+	const char *query_str = "UPDATE recorded SET autoexpire = ?, recgroup = ? WHERE chanid = ? AND starttime = ? AND storagegroup = 'LiveTV'";
+	cmyth_mysql_query_t * query;
+	time_t starttime;
+	int autoexpire;
+	const char* recgroup;
+
+	if (cmyth_database_check_version(db) < 0)
+		return -1;
+
+	if (keep) {
+		char* data;
+		if (cmyth_mysql_get_setting(db, "AutoExpireDefault", &data) > 0) {
+			autoexpire = safe_atol(data);
+			ref_release(data);
+		}
+		recgroup = "Default";
+	}
+	else
+	{
+		autoexpire = 10000;
+		recgroup = "LiveTV";
+	}
+
+	starttime = cmyth_timestamp_to_unixtime(prog->proginfo_rec_start_ts);
+	query = cmyth_mysql_query_create(db, query_str);
+	if (cmyth_mysql_query_param_int32(query,autoexpire) < 0
+		|| cmyth_mysql_query_param_str(query,recgroup) < 0
+		|| cmyth_mysql_query_param_uint32(query, prog->proginfo_chanId) < 0
+		|| cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(query);
+		return -1;
+	}
+
+	ret = cmyth_mysql_query(query);
+
+	ref_release(query);
+
+	if (ret < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
+		return ret;
+	}
+
+	return (int)mysql_affected_rows(sql);
+}

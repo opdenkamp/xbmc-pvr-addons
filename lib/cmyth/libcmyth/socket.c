@@ -1268,8 +1268,8 @@ cmyth_rcv_timestamp(cmyth_conn_t conn, int *err, cmyth_timestamp_t *ts,
 	/*
 	 * Allow for the timestamp to be empty in the case of livetv
 	 */
-        if ((strlen(tbuf) == 1) && (tbuf[0] = ' '))
-                return consumed;
+	if ((strlen(tbuf) == 1) && (tbuf[0] == ' '))
+		return consumed;
 
 	if (strlen(tbuf) == 0)
 		return consumed;

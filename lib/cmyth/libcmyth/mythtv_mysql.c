@@ -1374,6 +1374,7 @@ cmyth_mysql_delete_recordingrule(cmyth_database_t db, uint32_t recordid)
 	}
 
 	ret = cmyth_mysql_query(query);
+	ref_release(query);
 
 	if (ret != 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);

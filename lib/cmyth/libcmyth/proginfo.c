@@ -1898,7 +1898,7 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, const cm
 		count -= i;
 
 		if (strcmp(msg, "OK") != 0) {
-			cmyth_dbg(CMYTH_DBG_ERROR, "%s: didn't recieve OK as response\n",
+			cmyth_dbg(CMYTH_DBG_INFO, "%s: didn't recieve OK as response\n",
 				  __FUNCTION__);
 			goto out;
 		}

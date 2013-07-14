@@ -567,6 +567,36 @@ void PVRClientMythTV::EventUpdateRecordings()
           // Update recording
           it->second = prog;
         }
+        // Recording was not found using UID. If not deleted then try to add it.
+        // This case occurs when keeping a live recording and stopping to watch it:
+        // MythTV create a new rule (recordid) for the recording, which is part
+        // of our UID. So replace the old live recording without rule (recordid=0)
+        // with this one.
+        else if (!prog.IsDeletePending())
+        {
+          if (g_bExtraDebug)
+            XBMC->Log(LOG_DEBUG, "%s - Replace recording: %s", __FUNCTION__, prog.UID().c_str());
+          // Before adding the new, remove existing.
+          for (it = m_recordings.begin(); it != m_recordings.end(); ++it)
+          {
+            if (!it->second.IsNull()
+                    && it->second.ChannelID() == prog.ChannelID()
+                    && it->second.RecordingStartTime() == prog.RecordingStartTime()
+                    && it->second.RecordID() == 0)
+            {
+              // Copy cached framerate
+              prog.SetFrameRate(it->second.FrameRate());
+
+              // Fill artwork
+              m_db.FillRecordingArtwork(prog);
+
+              // Replace recording
+              m_recordings.erase(it);
+              m_recordings.insert(std::pair<CStdString, MythProgramInfo>(prog.UID().c_str(), prog));
+              break;
+            }
+          }
+        }
         break;
       }
       case MythEventHandler::CHANGE_DELETE:

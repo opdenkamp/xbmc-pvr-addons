@@ -43,7 +43,7 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 	if (conn == NULL)
 		goto fail;
 
-	if ((count=cmyth_rcv_length(conn)) <= 0) {
+	if ((count = cmyth_rcv_length(conn)) <= 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, count);
@@ -61,12 +61,26 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 
 	consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
 	count -= consumed;
+
+	/*
+	 * RECORDING_LIST_CHANGE
+	 */
 	if (strcmp(tmp, "RECORDING_LIST_CHANGE") == 0) {
 		event = CMYTH_EVENT_RECORDING_LIST_CHANGE;
-	} else if (strncmp(tmp, "RECORDING_LIST_CHANGE ADD", 25) == 0) {
+	}
+
+	/*
+	 * RECORDING_LIST_CHANGE ADD
+	 */
+	else if (strncmp(tmp, "RECORDING_LIST_CHANGE ADD", 25) == 0) {
 		event = CMYTH_EVENT_RECORDING_LIST_CHANGE_ADD;
 		strncpy(data, tmp + 26, len);
-	} else if (strcmp(tmp, "RECORDING_LIST_CHANGE UPDATE") == 0) {
+	}
+
+	/*
+	 * RECORDING_LIST_CHANGE UPDATE
+	 */
+	else if (strcmp(tmp, "RECORDING_LIST_CHANGE UPDATE") == 0) {
 		event = CMYTH_EVENT_RECORDING_LIST_CHANGE_UPDATE;
 		/* receive a proginfo structure - do nothing with it (yet?)*/
 		proginfo = cmyth_proginfo_create();
@@ -79,32 +93,64 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 		consumed = cmyth_rcv_proginfo(conn, &err, proginfo, count);
 		count -= consumed;
 		*prog = proginfo;
-	} else if (strncmp(tmp, "RECORDING_LIST_CHANGE DELETE", 28) == 0) {
+	}
+
+	/*
+	 * RECORDING_LIST_CHANGE DELETE
+	 */
+	else if (strncmp(tmp, "RECORDING_LIST_CHANGE DELETE", 28) == 0) {
 		event = CMYTH_EVENT_RECORDING_LIST_CHANGE_DELETE;
 		strncpy(data, tmp + 29, len);
-	} else if (strcmp(tmp, "SCHEDULE_CHANGE") == 0) {
+	}
+
+	/*
+	 * SCHEDULE_CHANGE
+	 */
+	else if (strcmp(tmp, "SCHEDULE_CHANGE") == 0) {
 		event = CMYTH_EVENT_SCHEDULE_CHANGE;
-	} else if (strncmp(tmp, "DONE_RECORDING", 14) == 0) {
+	}
+
+	/*
+	 * DONE_RECORDING
+	 */
+	else if (strncmp(tmp, "DONE_RECORDING", 14) == 0) {
 		event = CMYTH_EVENT_DONE_RECORDING;
 		strncpy(data, tmp + 15, len);
-	} else if (strncmp(tmp, "QUIT_LIVETV", 11) == 0) {
+	}
+
+	/*
+	 * QUIT_LIVETV
+	 */
+	else if (strncmp(tmp, "QUIT_LIVETV", 11) == 0) {
 		event = CMYTH_EVENT_QUIT_LIVETV;
-	} else if (strncmp(tmp, "LIVETV_WATCH", 12) == 0) {
+	}
+
+	/*
+	 * LIVETV_WATCH
+	 */
+	else if (strncmp(tmp, "LIVETV_WATCH", 12) == 0) {
 		event = CMYTH_EVENT_LIVETV_WATCH;
 		strncpy(data, tmp + 13, len);
-	/* Sergio: Added to support the new live tv protocol */
-	} else if (strncmp(tmp, "LIVETV_CHAIN UPDATE", 19) == 0) {
+	}
+
+	/*
+	 * LIVETV_CHAIN UPDATE
+	 */
+	else if (strncmp(tmp, "LIVETV_CHAIN UPDATE", 19) == 0) {
 		event = CMYTH_EVENT_LIVETV_CHAIN_UPDATE;
 		strncpy(data, tmp + 20, len);
-	} else if (strncmp(tmp, "SIGNAL", 6) == 0) {
+	}
+
+	/*
+	 * SIGNAL
+	 */
+	else if (strncmp(tmp, "SIGNAL", 6) == 0) {
 		int32_t dstlen = len;
 		event = CMYTH_EVENT_SIGNAL;
-
 		/*Get Recorder ID */
 		strncat(data, "cardid ", 7);
 		strncat(data, tmp + 7, consumed - 12);
 		strncat(data, ";", 2);
-
 		/* get slock, signal, seen_pat, matching_pat */
 		while (count > 0) {
 			/* get signalmonitorvalue name */
@@ -120,7 +166,12 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 			strncat(data,";",2);
 			dstlen -= consumed;
 		}
-	} else if (strncmp(tmp, "ASK_RECORDING", 13) == 0) {
+	}
+
+	/*
+	 * ASK_RECORDING
+	 */
+	else if (strncmp(tmp, "ASK_RECORDING", 13) == 0) {
 		event = CMYTH_EVENT_ASK_RECORDING;
 		strncpy(data, tmp + 14, len);
 		if (cmyth_conn_get_protocol_version(conn) < 37) {
@@ -142,9 +193,19 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 			count -= consumed;
 			*prog = proginfo;
 		}
-	} else if (strncmp(tmp, "CLEAR_SETTINGS_CACHE", 20) == 0) {
+	}
+
+	/*
+	 * CLEAR_SETTINGS_CACHE
+	 */
+	else if (strncmp(tmp, "CLEAR_SETTINGS_CACHE", 20) == 0) {
 		event = CMYTH_EVENT_CLEAR_SETTINGS_CACHE;
-	} else if (strncmp(tmp, "GENERATED_PIXMAP", 16) == 0) {
+	}
+
+	/*
+	 * GENERATED_PIXMAP
+	 */
+	else if (strncmp(tmp, "GENERATED_PIXMAP", 16) == 0) {
 		/* capture the file which a pixmap has been generated for */
 		event = CMYTH_EVENT_GENERATED_PIXMAP;
 		consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
@@ -154,15 +215,30 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 		} else {
 			data[0] = 0;
 		}
-	} else if (strncmp(tmp, "SYSTEM_EVENT", 12) == 0) {
+	}
+
+	/*
+	 * SYSTEM_EVENT
+	 */
+	else if (strncmp(tmp, "SYSTEM_EVENT", 12) == 0) {
 		event = CMYTH_EVENT_SYSTEM_EVENT;
 		strncpy(data, tmp + 13, len);
-	} else if (strncmp(tmp, "UPDATE_FILE_SIZE", 16) == 0) {
+	}
+
+	/*
+	 * UPDATE_FILE_SIZE
+	 */
+	else if (strncmp(tmp, "UPDATE_FILE_SIZE", 16) == 0) {
 		event = CMYTH_EVENT_UPDATE_FILE_SIZE;
 		strncpy(data, tmp + 17, len);
-	} else {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: unknown mythtv BACKEND_MESSAGE '%s'\n", __FUNCTION__, tmp);
+	}
+
+	/*
+	 * Unknown message
+	 */
+	else {
+		cmyth_dbg(CMYTH_DBG_INFO,
+			  "%s: unknown BACKEND_MESSAGE '%s'\n", __FUNCTION__, tmp);
 		event = CMYTH_EVENT_UNKNOWN;
 	}
 

@@ -1009,13 +1009,13 @@ cmyth_mysql_tuner_type_check(cmyth_database_t db, cmyth_recorder_t rec, int chec
 		return -1;
 	}
 	res = cmyth_mysql_query_result(query);
+	ref_release(query);
 
 	if (res == NULL) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution\n", __FUNCTION__);
 		return -1;
 	}
 	row = mysql_fetch_row(res);
-	ref_release(query);
 	mysql_free_result(res);
 	if (strcmp(row[0], "MPEG") == 0) {
 		return (1); //return the first available MPEG tuner

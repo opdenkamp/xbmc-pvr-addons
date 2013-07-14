@@ -305,7 +305,7 @@ extern int cmyth_rcv_uint16(cmyth_conn_t conn, int *err, uint16_t *buf, int coun
 extern int cmyth_rcv_uint32(cmyth_conn_t conn, int *err, uint32_t *buf, int count);
 
 #define cmyth_rcv_data __cmyth_rcv_data
-extern int cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int count);
+extern int cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int buflen, int count);
 
 #define cmyth_rcv_timestamp __cmyth_rcv_timestamp
 extern int cmyth_rcv_timestamp(cmyth_conn_t conn, int *err,

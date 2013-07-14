@@ -51,6 +51,7 @@ bool          g_bAutoChannelGroups      = DEFAULT_AUTOGROUPS;
 int           g_iTimeshift              = 1;
 
 CHelper_libXBMC_addon *XBMC   = NULL;
+CHelper_libXBMC_codec *CODEC  = NULL;
 CHelper_libXBMC_gui   *GUI    = NULL;
 CHelper_libXBMC_pvr   *PVR    = NULL;
 
@@ -84,10 +85,20 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
+  CODEC = new CHelper_libXBMC_codec;
+  if (!CODEC->RegisterMe(hdl))
+  {
+    SAFE_DELETE(CODEC);
+    SAFE_DELETE(GUI);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
+
   PVR = new CHelper_libXBMC_pvr;
   if (!PVR->RegisterMe(hdl))
   {
     SAFE_DELETE(PVR);
+    SAFE_DELETE(CODEC);
     SAFE_DELETE(GUI);
     SAFE_DELETE(XBMC);
     return ADDON_STATUS_PERMANENT_FAILURE;
@@ -206,6 +217,8 @@ ADDON_STATUS ADDON_GetStatus()
 
 void ADDON_Destroy()
 {
+  SAFE_DELETE(CODEC);
+
   if (VNSIDemuxer)
     SAFE_DELETE(VNSIDemuxer);
 

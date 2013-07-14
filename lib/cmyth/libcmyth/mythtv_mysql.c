@@ -1031,13 +1031,17 @@ cmyth_mysql_tuner_type_check(cmyth_database_t db, cmyth_recorder_t rec, int chec
 int
 cmyth_mysql_testdb_connection(cmyth_database_t db, char **message)
 {
-	char *buf = ref_alloc(sizeof(char) * 1001);
+	char *buf;
+
 	if (db->mysql != NULL) {
 		if (mysql_stat(db->mysql) == NULL) {
 			cmyth_database_close(db);
 			return -1;
 		}
 	}
+
+	buf = ref_alloc(sizeof(char) * 1001);
+
 	if (db->mysql == NULL) {
 		db->mysql = mysql_init(NULL);
 		if (db->mysql == NULL) {

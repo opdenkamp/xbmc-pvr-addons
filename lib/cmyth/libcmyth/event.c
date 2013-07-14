@@ -35,13 +35,13 @@ cmyth_event_get(cmyth_conn_t conn, char * data, int32_t len)
 cmyth_event_t
 cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_proginfo_t * prog)
 {
-	int count, err, consumed, i;
+	int count, err, consumed;
 	char tmp[1024];
 	cmyth_event_t event;
 	cmyth_proginfo_t proginfo = NULL;
 
 	if (conn == NULL)
-		goto fail;
+		return CMYTH_EVENT_UNKNOWN;
 
 	if ((count = cmyth_rcv_length(conn)) <= 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
@@ -50,13 +50,16 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 		return CMYTH_EVENT_CLOSE;
 	}
 
+	data[0] = 0;
+
 	consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
 	count -= consumed;
 	if (strcmp(tmp, "BACKEND_MESSAGE") != 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_string() failed (%d)\n",
 			  __FUNCTION__, count);
-		goto fail;
+		event = CMYTH_EVENT_UNKNOWN;
+		goto out;
 	}
 
 	consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
@@ -82,13 +85,13 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 	 */
 	else if (strcmp(tmp, "RECORDING_LIST_CHANGE UPDATE") == 0) {
 		event = CMYTH_EVENT_RECORDING_LIST_CHANGE_UPDATE;
-		/* receive a proginfo structure - do nothing with it (yet?)*/
 		proginfo = cmyth_proginfo_create();
 		if (!proginfo) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				"%s: cmyth_proginfo_create() failed\n",
 				__FUNCTION__);
-			goto fail;
+			event = CMYTH_EVENT_UNKNOWN;
+			goto out;
 		}
 		consumed = cmyth_rcv_proginfo(conn, &err, proginfo, count);
 		count -= consumed;
@@ -174,20 +177,14 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 	else if (strncmp(tmp, "ASK_RECORDING", 13) == 0) {
 		event = CMYTH_EVENT_ASK_RECORDING;
 		strncpy(data, tmp + 14, len);
-		if (cmyth_conn_get_protocol_version(conn) < 37) {
-			/* receive 4 string - do nothing with them */
-			/* title, chanstr, chansign, channame */
-			for (i = 0; i < 4; i++) {
-				consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) -1, count);
-				count -= consumed;
-			}
-		} else {
+		if (cmyth_conn_get_protocol_version(conn) >= 37) {
 			proginfo = cmyth_proginfo_create();
 			if (!proginfo) {
 				cmyth_dbg(CMYTH_DBG_ERROR,
 					"%s: cmyth_proginfo_create() failed\n",
 					__FUNCTION__);
-				goto fail;
+				event = CMYTH_EVENT_UNKNOWN;
+				goto out;
 			}
 			consumed = cmyth_rcv_proginfo(conn, &err, proginfo, count);
 			count -= consumed;
@@ -209,11 +206,12 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 		/* capture the file which a pixmap has been generated for */
 		event = CMYTH_EVENT_GENERATED_PIXMAP;
 		consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
+		count -= consumed;
 		if (strncmp(tmp, "OK", 2) == 0) {
+			/* receive <chanid_timestamp (isoformat)> */
 			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
+			count -= consumed;
 			strncpy(data, tmp, len);
-		} else {
-			data[0] = 0;
 		}
 	}
 
@@ -242,16 +240,14 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 		event = CMYTH_EVENT_UNKNOWN;
 	}
 
-	while(count > 0) {
-		consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
+	out:
+	while(count > 0 && err == 0) {
+		consumed = cmyth_rcv_data(conn, &err, tmp, sizeof(tmp) - 1, count);
+		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data: count %i, read %i, errno %i\n", __FUNCTION__, count, consumed, err);
 		count -= consumed;
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data %s\n", __FUNCTION__, tmp);
 	}
 
 	return event;
-
- fail:
-	return CMYTH_EVENT_UNKNOWN;
 }
 
 int

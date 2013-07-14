@@ -1638,8 +1638,8 @@ PVR_ERROR PVRClientMythTV::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
   ID.Format("Myth Recorder %u", signal.ID());
 
   CStdString strAdapterStatus = signal.AdapterStatus();
-  strcpy(signalStatus.strAdapterName, ID.Buffer());
-  strcpy(signalStatus.strAdapterStatus, strAdapterStatus.Buffer());
+  PVR_STRCPY(signalStatus.strAdapterName, ID);
+  PVR_STRCPY(signalStatus.strAdapterStatus, strAdapterStatus);
 
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);

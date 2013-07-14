@@ -1760,7 +1760,7 @@ cmyth_conn_get_protocol_version(cmyth_conn_t conn)
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 			__FUNCTION__);
-		return -1;
+		return -EINVAL;
 	}
 
 	return conn->conn_version;
@@ -1779,7 +1779,7 @@ cmyth_conn_get_free_recorder_count(cmyth_conn_t conn)
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 			  __FUNCTION__);
-		return -1;
+		return -EINVAL;
 	}
 
 	pthread_mutex_lock(&conn->conn_mutex);
@@ -1988,7 +1988,7 @@ static int cmyth_conn_set_setting_unlocked(cmyth_conn_t conn,
 	if(conn->conn_version < 17) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support SET_SETTING\n",
 			  __FUNCTION__);
-		return -1;
+		return -EPERM;
 	}
 
 	snprintf(msg, sizeof(msg), "SET_SETTING %s %s %s", hostname, setting, value);
@@ -1996,13 +1996,13 @@ static int cmyth_conn_set_setting_unlocked(cmyth_conn_t conn,
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
 			  __FUNCTION__, err);
-		return -3;
+		return err;
 	}
 
-	if (cmyth_rcv_okay(conn) < 0) {
+	if ((err = cmyth_rcv_okay(conn)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
-		return -4;
+		return err;
 	}
 
 	return 0;
@@ -2057,7 +2057,7 @@ cmyth_conn_reschedule_recordings(cmyth_conn_t conn, uint32_t recordid)
 	if (conn->conn_version < 15) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support RESCHEDULE_RECORDINGS\n",
 			  __FUNCTION__);
-		return -1;
+		return -EPERM;
 	}
 
 	/*

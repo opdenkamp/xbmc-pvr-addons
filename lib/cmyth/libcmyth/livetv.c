@@ -343,6 +343,15 @@ cmyth_livetv_chain_add_url(cmyth_recorder_t rec, char * url)
 							= ref_hold(NULL);
 		}
 		else {
+			if (tmp)
+				ref_release(tmp);
+
+			if (fp)
+				ref_release(fp);
+
+			if (pi)
+				ref_release(pi);
+
 			ret = -1;
 			cmyth_dbg(CMYTH_DBG_ERROR,
 			 		"%s: memory allocation request failed\n",

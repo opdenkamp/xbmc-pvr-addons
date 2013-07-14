@@ -1136,6 +1136,14 @@ extern int cmyth_mysql_set_watched_status(cmyth_database_t db, cmyth_proginfo_t 
  */
 extern char *cmyth_proginfo_storagegroup(cmyth_proginfo_t prog);
 
+/**
+ * Query to generate a pixmap for this program info
+ * \param prog proginfo handle
+ * \return success: 0
+ * \return failure: -(errno)
+ */
+extern int cmyth_proginfo_generate_pixmap(cmyth_conn_t control, cmyth_proginfo_t prog);
+
 /*
  * -----------------------------------------------------------------
  * Program List Operations

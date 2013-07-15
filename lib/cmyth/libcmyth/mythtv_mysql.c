@@ -2393,6 +2393,8 @@ int cmyth_mysql_keep_livetv_recording(cmyth_database_t db, cmyth_proginfo_t prog
 		if (cmyth_mysql_get_setting(db, "AutoExpireDefault", &data) > 0) {
 			autoexpire = safe_atol(data);
 			ref_release(data);
+		} else {
+			autoexpire = 0;
 		}
 		recgroup = "Default";
 	}

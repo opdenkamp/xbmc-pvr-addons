@@ -1791,11 +1791,11 @@ cmyth_conn_get_free_recorder_count(cmyth_conn_t conn)
 	pthread_mutex_lock(&conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "GET_FREE_RECORDER_COUNT");
-	if ((err = cmyth_send_message(conn, msg)) < 0) {
+	if ((r = cmyth_send_message(conn, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto err;
 	}
 

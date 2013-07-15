@@ -185,11 +185,11 @@ cmyth_recorder_is_recording(cmyth_recorder_t rec)
 	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]IS_RECORDING",
 		 rec->rec_id);
 
-	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
+	if ((r = cmyth_send_message(rec->rec_conn, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 
@@ -247,11 +247,11 @@ cmyth_recorder_get_framerate(cmyth_recorder_t rec,
 	snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_FRAMERATE",
 		 rec->rec_id);
 
-	if ((err=cmyth_send_message(rec->rec_conn, msg)) < 0) {
+	if ((r = cmyth_send_message(rec->rec_conn, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 

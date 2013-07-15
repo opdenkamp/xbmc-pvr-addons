@@ -353,11 +353,11 @@ cmyth_ringbuf_request_block(cmyth_recorder_t rec, int32_t len)
 		 "QUERY_RECORDER %"PRIu32"[]:[]REQUEST_BLOCK_RINGBUF[]:[]%"PRId32,
 		 rec->rec_id, len);
 
-	if ((err = cmyth_send_message(rec->rec_conn, msg)) < 0) {
+	if ((r = cmyth_send_message(rec->rec_conn, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 
@@ -561,11 +561,11 @@ cmyth_ringbuf_seek(cmyth_recorder_t rec,
 		 (int32_t)(ring->file_pos >> 32),
 		 (int32_t)(ring->file_pos & 0xffffffff));
 
-	if ((err = cmyth_send_message(rec->rec_conn, msg)) < 0) {
+	if ((r = cmyth_send_message(rec->rec_conn, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 

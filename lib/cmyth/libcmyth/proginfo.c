@@ -604,11 +604,11 @@ cmyth_proginfo_delete_recording(cmyth_conn_t control, cmyth_proginfo_t prog, uin
 
 	pthread_mutex_lock(&control->conn_mutex);
 
-	if ((err = cmyth_send_message(control, buf)) < 0) {
+	if ((r = cmyth_send_message(control, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 
@@ -691,11 +691,11 @@ cmyth_proginfo_forget_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 
 	pthread_mutex_lock(&control->conn_mutex);
 
-	if ((err = cmyth_send_message(control, buf)) < 0) {
+	if ((r = cmyth_send_message(control, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 
@@ -773,11 +773,11 @@ cmyth_proginfo_stop_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 
 	pthread_mutex_lock(&control->conn_mutex);
 
-	if ((err = cmyth_send_message(control, buf)) < 0) {
+	if ((r = cmyth_send_message(control, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 

@@ -57,6 +57,7 @@ public:
   bool IsDeletePending();
   bool HasBookmark();
   bool IsVisible();
+  bool IsLiveTV();
 
   unsigned int ChannelID();
   CStdString ChannelName();

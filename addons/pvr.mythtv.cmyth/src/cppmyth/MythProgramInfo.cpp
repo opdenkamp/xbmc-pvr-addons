@@ -158,6 +158,11 @@ bool MythProgramInfo::IsVisible()
   return true;
 }
 
+bool MythProgramInfo::IsLiveTV()
+{
+  return (RecordingGroup() == "LiveTV");
+}
+
 unsigned int MythProgramInfo::ChannelID()
 {
   return cmyth_proginfo_chan_id(*m_proginfo_t);

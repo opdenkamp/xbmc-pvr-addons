@@ -1103,10 +1103,13 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
 
     // Recording rules
     RecordingRuleList::iterator recRule = std::find(m_recordingRules.begin(), m_recordingRules.end() , it->second.RecordID());
-    tag.iClientIndex = ((recRule - m_recordingRules.begin()) << 16) + recRule->size();
-    //recRule->SaveTimerString(tag);
-    std::pair<PVR_TIMER, MythProgramInfo> rrtmp(tag, it->second);
-    recRule->push_back(rrtmp);
+    if (recRule != m_recordingRules.end())
+    {
+      tag.iClientIndex = (std::distance(m_recordingRules.begin(), recRule) << 16) + recRule->size();
+      //recRule->SaveTimerString(tag);
+      std::pair<PVR_TIMER, MythProgramInfo> rrtmp(tag, it->second);
+      recRule->push_back(rrtmp);
+    }
 
     PVR->TransferTimerEntry(handle,&tag);
   }

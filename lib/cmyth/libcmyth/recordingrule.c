@@ -55,6 +55,10 @@ cmyth_recordingrule_destroy(cmyth_recordingrule_t rr)
 		ref_release(rr->description);
 	if (rr->category)
 		ref_release(rr->category);
+	if (rr->subtitle)
+		ref_release(rr->subtitle);
+	if (rr->callsign)
+		ref_release(rr->callsign);
 	if (rr->recgroup)
 		ref_release(rr->recgroup);
 	if (rr->storagegroup)

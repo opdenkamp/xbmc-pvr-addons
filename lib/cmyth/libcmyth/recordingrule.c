@@ -106,21 +106,7 @@ cmyth_recordingrule_create(void)
 	}
 	ref_set_destroy(ret, (ref_destroy_t)cmyth_recordingrule_destroy);
 
-	ret->starttime = cmyth_timestamp_create();
-	if (!ret->starttime) {
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: cmyth_timestamp_create() failed\n", __FUNCTION__);
-		goto err;
-	}
-	ret->endtime = cmyth_timestamp_create();
-	if (!ret->endtime) {
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: cmyth_timestamp_create() failed\n", __FUNCTION__);
-		goto err;
-	}
 	return ret;
-
-	err:
-	ref_release(ret);
-	return NULL;
 }
 
 /*

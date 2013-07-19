@@ -1035,7 +1035,7 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool bNewTimer)
       strWeek[i] = 'T';
   }
 
-  uint64_t iChannelId = m_channels[timer.iClientChannelUid]->backendIds.front();
+  uint64_t iChannelId = m_channels[timer.iClientChannelUid - 1]->backendIds.front();
   CStdString strTmp;
   if (bNewTimer)
     strTmp.Format("api/timeradd.html?ch=%"PRIu64"&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",

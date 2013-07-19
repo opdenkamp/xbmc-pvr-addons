@@ -431,7 +431,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
         recording->id.c_str());
 
     if (GetXMLValue(xTmp, "image", tmp))
-      recording->thumbnailPath = BuildExtURL(imageURL, tmp);
+      recording->thumbnailPath = BuildExtURL(imageURL, "%s", tmp.c_str());
 
     CStdString startTime = xTmp.getAttribute("start");
     recording->startTime = ParseDateTime(startTime);
@@ -692,13 +692,13 @@ bool Dvb::LoadChannels()
         //TODO: doesn't work for escaped chars. e.g.: "Logos/br+s%C3%BCd+hd.png"
         //xml lib bug?!?!
         if (GetXMLValue(xChannel, "logo", logoURL))
-          channel->logoURL = BuildURL(logoURL);
+          channel->logoURL = BuildURL("%s", logoURL.c_str());
 
         if (g_useRTSP)
         {
           CStdString urlParams;
           GetXMLValue(xChannel, "rtsp", urlParams);
-          channel->streamURL = BuildExtURL(streamURL, urlParams);
+          channel->streamURL = BuildExtURL(streamURL, "%s", urlParams.c_str());
         }
         else
           channel->streamURL = BuildExtURL(streamURL, "%u.ts", channel->backendNr);
@@ -1037,18 +1037,18 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool bNewTimer)
   }
 
   uint64_t iChannelId = m_channels[timer.iClientChannelUid - 1]->backendIds.front();
-  CStdString strTmp;
+  CStdString url;
   if (bNewTimer)
-    strTmp.Format("api/timeradd.html?ch=%"PRIu64"&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
+    url = BuildURL("api/timeradd.html?ch=%"PRIu64"&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
         iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle).c_str());
   else
   {
     int enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
-    strTmp.Format("api/timeredit.html?id=%d&ch=%"PRIu64"&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
+    url = BuildURL("api/timeredit.html?id=%d&ch=%"PRIu64"&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
         GetTimerId(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle).c_str());
   }
 
-  GetHttpXML(BuildURL(strTmp));
+  GetHttpXML(url);
   m_bUpdateTimers = true;
 }
 
@@ -1329,4 +1329,3 @@ uint64_t Dvb::ParseUInt64(const CStdString& str)
     return 0;
   return value;
 }
-

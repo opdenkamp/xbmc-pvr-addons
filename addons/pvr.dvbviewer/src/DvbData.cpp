@@ -154,13 +154,14 @@ PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
     PVR_STRCPY(xbmcChannel.strChannelName, channel->name.c_str());
     PVR_STRCPY(xbmcChannel.strIconPath,    channel->logoURL.c_str());
 
-    if (!channel->radio)
+    if (!channel->radio && !g_useRTSP)
       PVR_STRCPY(xbmcChannel.strInputFormat, "video/x-mpegts");
     else
       PVR_STRCPY(xbmcChannel.strInputFormat, "");
 
     if (!g_bUseTimeshift)
     {
+      // self referencing so GetLiveStreamURL() gets triggered
       CStdString streamURL;
       streamURL.Format("pvr://stream/tv/%u.ts", channel->backendNr);
       PVR_STRCPY(xbmcChannel.strStreamURL, streamURL.c_str());

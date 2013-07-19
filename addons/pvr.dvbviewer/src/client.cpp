@@ -82,7 +82,7 @@ void ADDON_ReadSettings(void)
   if (XBMC->GetSetting("timeshiftpath", buffer))
     g_strTimeshiftBufferPath = buffer;
 
-  if (!XBMC->GetSetting("usertsp", &g_useRTSP))
+  if (!XBMC->GetSetting("usertsp", &g_useRTSP) || g_bUseTimeshift)
     g_useRTSP = false;
 
   /* Log the current settings for debugging purposes */
@@ -100,6 +100,7 @@ void ADDON_ReadSettings(void)
   XBMC->Log(LOG_DEBUG, "Timeshift: %s", (g_bUseTimeshift) ? "enabled" : "disabled");
   if (g_bUseTimeshift)
     XBMC->Log(LOG_DEBUG, "Timeshift Buffer Path: %s", g_strTimeshiftBufferPath.c_str());
+  XBMC->Log(LOG_DEBUG, "Use RTSP: %s", (g_useRTSP) ? "yes" : "no");
 }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
@@ -230,7 +231,7 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   }
   else if (sname == "usertsp")
   {
-    if (g_bUseTimeshift != *(bool *)settingValue)
+    if (g_useRTSP != *(bool *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
   return ADDON_STATUS_OK;

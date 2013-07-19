@@ -18,6 +18,6 @@
     <setting label="30021" id="timeshiftpath" type="folder" default="special://userdata/addon_data/pvr.dvbviewer" option="writeable" enable="eq(-1,true)" />
 
     <setting id="sep2" type="sep" />
-    <setting label="30030" id="usertsp" type="bool" default="false" />
+    <setting label="30030" id="usertsp" type="bool" default="false" enable="eq(-3,false)" />
   </category>
 </settings>

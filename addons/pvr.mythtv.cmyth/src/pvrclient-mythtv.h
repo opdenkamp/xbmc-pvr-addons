@@ -154,7 +154,7 @@ private:
 
   // Timers
   RecordingRuleList m_recordingRules;
-  void PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule);
+  void PVRtoMythRecordingRule(const PVR_TIMER &timer, MythRecordingRule &rule);
 
   CStdString GetArtWork(FileOps::FileType storageGroup, const CStdString &shwTitle);
 };

@@ -1193,7 +1193,7 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
   return PVR_ERROR_NO_ERROR;
 }
 
-void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule)
+void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER &timer, MythRecordingRule &rule)
 {
   MythEPGInfo epgInfo;
   bool epgFound;

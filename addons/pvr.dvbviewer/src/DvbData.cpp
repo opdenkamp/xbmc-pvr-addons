@@ -439,7 +439,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     sscanf(xTmp.getAttribute("duration"), "%02d%02d%02d", &hours, &mins, &secs);
     recording->duration = hours*60*60 + mins*60 + secs;
 
-    // generate a more unique id by appending "_" + startTime
+    // generate a more unique id
     recording->id += "_" + startTime;
 
     PVR_RECORDING tag;
@@ -501,7 +501,7 @@ bool Dvb::OpenLiveStream(const PVR_CHANNEL& channelinfo)
 
   if (m_tsBuffer)
     SAFE_DELETE(m_tsBuffer);
-  XBMC->Log(LOG_INFO, "Timeshifting starts; url=%s",
+  XBMC->Log(LOG_INFO, "Timeshift starts; url=%s",
       GetLiveStreamURL(channelinfo).c_str());
   m_tsBuffer = new TimeshiftBuffer(GetLiveStreamURL(channelinfo),
       g_strTimeshiftBufferPath);
@@ -709,7 +709,7 @@ bool Dvb::LoadChannels()
           channel->backendIds.push_back(ParseUInt64(xSubChannel.getAttribute("ID")));
         }
 
-        //HACK: PVR_CHANNEL.UniqueId is uint32 but DVB Viewer ids are uint64
+        //FIXME: PVR_CHANNEL.UniqueId is uint32 but DVB Viewer ids are uint64
         // so generate our own unique ids, at least for this session
         channel->id = m_channels.size() + 1;
         m_channels.push_back(channel);
@@ -837,6 +837,8 @@ bool Dvb::LoadChannels()
 
   XBMC->Log(LOG_INFO, "Loaded (%u/%u) channels in (%u/%u) groups",
       m_channelAmount, m_channels.size(), m_groupAmount, m_groups.size());
+  // force channel sync as stream urls may have changed (e.g. rstp on/off)
+  PVR->TriggerChannelUpdate();
   return true;
 }
 

@@ -42,8 +42,9 @@ Dvb::Dvb()
   // simply add user@pass in front of the URL if username/password is set
   CStdString strAuth("");
   if (!g_strUsername.empty() && !g_strPassword.empty())
-    strAuth.Format("%s:%s@", g_strUsername, g_strPassword);
-  m_strURL.Format("http://%s%s:%u/", strAuth, g_strHostname, g_iPortWeb);
+    strAuth.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
+  m_strURL.Format("http://%s%s:%u/", strAuth.c_str(), g_strHostname.c_str(),
+      g_iPortWeb);
 
   m_currentChannel     = 0;
   m_iClientIndexCounter = 1;
@@ -306,7 +307,7 @@ PVR_ERROR Dvb::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GRO
 
       XBMC->Log(LOG_DEBUG, "%s add channel '%s' (%u) to group '%s'",
           __FUNCTION__, channel->name.c_str(), channel->backendNr,
-          pvrGroup.strGroupName);
+          group->name.c_str());
 
       PVR->TransferChannelGroupMember(handle, &tag);
     }
@@ -1039,12 +1040,12 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool bNewTimer)
   CStdString strTmp;
   if (bNewTimer)
     strTmp.Format("api/timeradd.html?ch=%"PRIu64"&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
-        iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
+        iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle).c_str());
   else
   {
     int enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
     strTmp.Format("api/timeredit.html?id=%d&ch=%"PRIu64"&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
-        GetTimerId(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle));
+        GetTimerId(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle).c_str());
   }
 
   GetHttpXML(BuildURL(strTmp));
@@ -1301,7 +1302,7 @@ CStdString Dvb::BuildExtURL(const CStdString& baseURL, const char* path, ...)
   if (!g_strUsername.empty() && !g_strPassword.empty())
   {
     CStdString strAuth;
-    strAuth.Format("%s:%s@", g_strUsername, g_strPassword);
+    strAuth.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
     url.insert((url.Left(5).Equals("http:")) ? 7 : 8, strAuth);
   }
   va_list argList;

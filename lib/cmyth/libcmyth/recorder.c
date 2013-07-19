@@ -908,7 +908,7 @@ cmyth_recorder_check_channel(cmyth_recorder_t rec,
 		goto fail;
 	}
 
-	if ((err=cmyth_rcv_feedback(rec->rec_conn, "1")) < 0) {
+	if ((err=cmyth_rcv_feedback(rec->rec_conn, "1", 1)) < 0) {
 		ret = 0;
 		goto fail;
 	}

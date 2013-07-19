@@ -2110,7 +2110,7 @@ cmyth_conn_reschedule_recordings(cmyth_conn_t conn, uint32_t recordid)
 		goto out;
 	}
 
-	if ((err=cmyth_rcv_feedback(conn, "1")) < 0) {
+	if ((err=cmyth_rcv_feedback(conn, "1", 1)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_feedback() failed (%d)\n",
 			  __FUNCTION__, err);

@@ -677,7 +677,7 @@ cmyth_rcv_okay(cmyth_conn_t conn)
  * Failure: -(errno)
  */
 int
-cmyth_rcv_feedback(cmyth_conn_t conn, char *fb)
+cmyth_rcv_feedback(cmyth_conn_t conn, char *fb, int fblen)
 {
 	int count, consumed;
 	char buf[8];
@@ -697,7 +697,7 @@ cmyth_rcv_feedback(cmyth_conn_t conn, char *fb)
 		return -err;
 	}
 	count -= consumed;
-	ret = (strncmp(buf, fb, sizeof(fb)) == 0) ? 0 : -1;
+	ret = (strncmp(buf, fb, fblen) == 0) ? 0 : -1;
 	if (count > 0) {
 		cmyth_dbg(CMYTH_DBG_INFO,
 			  "%s: did not consume everything\n",

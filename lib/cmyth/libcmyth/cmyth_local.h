@@ -273,7 +273,7 @@ extern int cmyth_rcv_string(cmyth_conn_t conn,
 extern int cmyth_rcv_okay(cmyth_conn_t conn);
 
 #define cmyth_rcv_feedback __cmyth_rcv_feedback
-extern int cmyth_rcv_feedback(cmyth_conn_t conn, char *fb);
+extern int cmyth_rcv_feedback(cmyth_conn_t conn, char *fb, int fblen);
 
 #define cmyth_rcv_version __cmyth_rcv_version
 extern int cmyth_rcv_version(cmyth_conn_t conn, uint32_t *vers);

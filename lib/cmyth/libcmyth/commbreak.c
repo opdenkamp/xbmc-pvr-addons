@@ -278,30 +278,3 @@ int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err,
 		__FUNCTION__, failed, *err);
 	return total;
 }
-
-cmyth_commbreaklist_t
-cmyth_mysql_get_commbreaklist(cmyth_database_t db, cmyth_conn_t conn, cmyth_proginfo_t prog)
-{
-	cmyth_commbreaklist_t breaklist = cmyth_commbreaklist_create();
-	time_t start_ts_dt;
-	int r;
-
-	start_ts_dt = cmyth_timestamp_to_unixtime(prog->proginfo_rec_start_ts);
-	pthread_mutex_lock(&conn->conn_mutex);
-	if ((r=cmyth_mysql_query_commbreak_list(db, prog->proginfo_chanId, start_ts_dt, breaklist, conn->conn_version)) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			"%s: cmyth_mysql_get_commbreak_list() failed (%d)\n",
-			__FUNCTION__, r);
-		goto out;
-	}
-
-	fprintf(stderr, "Found %d commercial breaks for current program.\n", breaklist->commbreak_count);
-	if (r != breaklist->commbreak_count) {
-		fprintf(stderr, "commbreak error.  Setting number of commercial breaks to zero\n");
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s  - returned rows=%d commbreak_count=%d\n",__FUNCTION__, r,breaklist->commbreak_count);
-		breaklist->commbreak_count = 0;
-	}
-	out:
-	pthread_mutex_unlock(&conn->conn_mutex);
-	return breaklist;
-}

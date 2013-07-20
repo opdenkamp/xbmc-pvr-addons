@@ -546,7 +546,4 @@ extern cmyth_epginfolist_t cmyth_epginfolist_create(void);
 #define cmyth_mysql_escape_chars __cmyth_mysql_escape_chars
 extern char *cmyth_mysql_escape_chars(cmyth_database_t db, char * string);
 
-#define cmyth_mysql_query_commbreak_list __cmyth_mysql_query_commbreak_list
-extern int cmyth_mysql_query_commbreak_list(cmyth_database_t db, uint32_t chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, uint32_t conn_version);
-
 #endif /* __CMYTH_LOCAL_H */

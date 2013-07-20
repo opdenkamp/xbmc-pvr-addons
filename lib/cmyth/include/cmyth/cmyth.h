@@ -1221,7 +1221,6 @@ extern int64_t cmyth_mysql_get_bookmark_mark(cmyth_database_t db, cmyth_proginfo
 extern int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, int64_t bookmark);
 extern cmyth_commbreaklist_t cmyth_commbreaklist_create(void);
 extern cmyth_commbreak_t cmyth_commbreak_create(void);
-extern cmyth_commbreaklist_t cmyth_mysql_get_commbreaklist(cmyth_database_t db, cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern cmyth_commbreaklist_t cmyth_get_commbreaklist(cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern cmyth_commbreaklist_t cmyth_get_cutlist(cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err, cmyth_commbreaklist_t breaklist, int count);

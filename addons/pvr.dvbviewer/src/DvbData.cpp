@@ -1303,7 +1303,9 @@ CStdString Dvb::BuildExtURL(const CStdString& baseURL, const char* path, ...)
   {
     CStdString strAuth;
     strAuth.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
-    url.insert((url.Left(5).Equals("http:")) ? 7 : 8, strAuth);
+    CStdString::size_type pos = url.find("://");
+    if (pos != CStdString::npos)
+      url.insert(pos + strlen("://"), strAuth);
   }
   va_list argList;
   va_start(argList, path);

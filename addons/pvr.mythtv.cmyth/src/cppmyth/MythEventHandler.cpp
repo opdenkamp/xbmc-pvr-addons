@@ -361,7 +361,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
 void MythEventHandler::MythEventHandlerPrivate::SetRecordingEventListener(const CStdString &recordid, const MythFile &file)
 {
   m_currentFile = file;
-  char recordIDBuffer[20];
+  char recordIDBuffer[20] = {0};
   sscanf(recordid.c_str(),"/%4s_%14s", recordIDBuffer, recordIDBuffer + 4);
   m_currentRecordID = recordIDBuffer;
 }

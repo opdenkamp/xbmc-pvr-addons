@@ -720,7 +720,7 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvb
 
 	new_rec->rec_livetv_chain->prog_update_callback = prog_update_callback;
 
-	sprintf(url, "myth://%s:%d%s", loc_prog->proginfo_hostname, rec->rec_port,
+	sprintf(url, "myth://%s:%d%s", loc_prog->proginfo_hostname, new_rec->rec_port,
 				loc_prog->proginfo_pathname);
 
 	if(cmyth_livetv_chain_has_url(new_rec, url) == -1) {

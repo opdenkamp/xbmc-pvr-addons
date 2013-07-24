@@ -50,7 +50,7 @@ CStdString MythProgramInfo::UID()
 {
   // Creates unique IDs from ChannelID, StartTime and RecordID like "100_2011-12-10T12:00:00_247"
   char buf[50] = "";
-  MythTimestamp time(RecordingStartTime());
+  MythTimestamp time = cmyth_proginfo_rec_start(*m_proginfo_t);
   sprintf(buf, "%u_%s_%u", ChannelID(), time.String().c_str(), RecordID());
   return CStdString(buf);
 }

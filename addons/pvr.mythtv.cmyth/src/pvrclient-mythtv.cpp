@@ -535,7 +535,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       tag.iPlayCount = it->second.IsWatched() ? 1 : 0;
       tag.iLastPlayedPosition = GetRecordingLastPlayedPosition(it->second);
 
-      CStdString id = it->second.UID();
+      CStdString id = it->first;
       CStdString title = it->second.Title();
       CStdString subtitle = it->second.Subtitle();
       if (!subtitle.IsEmpty())

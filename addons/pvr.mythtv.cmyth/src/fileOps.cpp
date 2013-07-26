@@ -88,7 +88,7 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   return localFilename;
 }
 
-CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename, const CStdString &recordingGroup)
+CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename, const CStdString &storageGroup)
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s: preview icon: %s", __FUNCTION__, remoteFilename.c_str());
@@ -99,7 +99,7 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename, const C
     return it->second;
 
   // Check file exists in storage group
-  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(recordingGroup, remoteFilename);
+  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(storageGroup, remoteFilename);
 
   // Determine local filename
   CStdString localFilename;

@@ -97,7 +97,8 @@ public:
 protected:
   void* Process();
 
-  bool CacheFile(const CStdString &destination, MythFile &source);
+  void *OpenFile(const CStdString &localFilename);
+  bool CacheFile(void *destination, MythFile &source);
   void CleanCache();
 
   static CStdString GetFileName(const CStdString &path, char separator = PATH_SEPARATOR_CHAR);

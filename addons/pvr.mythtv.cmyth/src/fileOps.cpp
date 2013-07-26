@@ -202,11 +202,16 @@ void* FileOps::Process()
       if (g_bExtraDebug)
         XBMC->Log(LOG_DEBUG,"%s Job fetched: local: %s, remote: %s, storagegroup: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
 
+      // Try to open the destination file
+      void *localFile = OpenFile(job.m_localFilename.c_str());
+      if (!localFile)
+        continue;
+
       // Connect to the file and cache it to the local addon cache
-      MythFile file = m_con.ConnectPath(job.m_remoteFilename, job.m_storageGroup);
-      if (!file.IsNull() && file.Length() > 0)
+      MythFile remoteFile = m_con.ConnectPath(job.m_remoteFilename, job.m_storageGroup);
+      if (!remoteFile.IsNull() && remoteFile.Length() > 0)
       {
-        if (CacheFile(job.m_localFilename.c_str(), file))
+        if (CacheFile(localFile, remoteFile))
         {
           if (g_bExtraDebug)
             XBMC->Log(LOG_DEBUG, "%s File Cached: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
@@ -224,7 +229,7 @@ void* FileOps::Process()
       {
         // Failed to open file for reading. Unfortunately it cannot be determined if this is a permanent or a temporary problem (new recording's preview hasn't been generated yet).
         // Increase the error count and retry to cache the file a few times
-        if (file.IsNull())
+        if (remoteFile.IsNull())
         {
           XBMC->Log(LOG_ERROR, "%s Failed to read file: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
           job.m_errorCount += 1;
@@ -232,7 +237,7 @@ void* FileOps::Process()
 
         // File was empty (this happens usually for new recordings where the preview image hasn't been generated yet)
         // This is not an error, always try to recache the file
-        else if (file.Length() == 0)
+        else if (remoteFile.Length() == 0)
         {
           XBMC->Log(LOG_DEBUG, "%s File is empty: local: %s, remote: %s, type: %s", __FUNCTION__, job.m_localFilename.c_str(), job.m_remoteFilename.c_str(), job.m_storageGroup.c_str());
         }
@@ -257,20 +262,8 @@ void* FileOps::Process()
   return NULL;
 }
 
-bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
+void *FileOps::OpenFile(const CStdString &localFilename)
 {
-  if (source.IsNull())
-  {
-    XBMC->Log(LOG_ERROR,"%s: NULL file provided", __FUNCTION__);
-    return false;
-  }
-
-  if (source.Length() == 0)
-  {
-    XBMC->Log(LOG_ERROR,"%s: Empty file provided", __FUNCTION__);
-    return false;
-  }
-
   // Try to open the file. If it fails, check if we need to create the directory first.
   // This way we avoid checking if the directory exists every time.
   void *file;
@@ -285,16 +278,20 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
       if (!(file = XBMC->OpenFileForWrite(localFilename.c_str(), true)))
       {
         XBMC->Log(LOG_ERROR, "%s: Failed to create cache file: %s", __FUNCTION__, localFilename.c_str());
-        return false;
+        return NULL;
       }
     }
     else
     {
       XBMC->Log(LOG_ERROR, "%s: Failed to create cache directory: %s", __FUNCTION__, cacheDirectory.c_str());
-      return false;
+      return NULL;
     }
   }
+  return file;
+}
 
+bool FileOps::CacheFile(void* destination, MythFile &source)
+{
   unsigned long long totalLength = source.Length();
   unsigned long long totalRead = 0;
 
@@ -312,7 +309,7 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
     char *p = buffer;
     while (bytes_read > 0)
     {
-      int bytes_written = XBMC->WriteFile(file, p, bytes_read);
+      int bytes_written = XBMC->WriteFile(destination, p, bytes_read);
       if (bytes_written <= 0)
         break;
 
@@ -321,13 +318,11 @@ bool FileOps::CacheFile(const CStdString &localFilename, MythFile &source)
     }
   }
 
-  XBMC->CloseFile(file);
+  XBMC->CloseFile(destination);
   delete[] buffer;
 
   if (totalRead < totalLength)
-  {
-    XBMC->Log(LOG_DEBUG, "%s: Failed to read all data: %s (%d/%d)", __FUNCTION__, localFilename.c_str(), totalRead, totalLength);
-  }
+    XBMC->Log(LOG_DEBUG, "%s: Failed to read all data: (%d/%d)", __FUNCTION__, totalRead, totalLength);
 
   return true;
 }

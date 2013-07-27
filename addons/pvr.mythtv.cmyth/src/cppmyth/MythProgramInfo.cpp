@@ -210,7 +210,10 @@ int MythProgramInfo::Priority()
 
 CStdString MythProgramInfo::StorageGroup()
 {
-  return cmyth_proginfo_storagegroup(*m_proginfo_t);
+  char* storageGroup = cmyth_proginfo_storagegroup(*m_proginfo_t);
+  CStdString retval(storageGroup);
+  ref_release(storageGroup);
+  return retval;
 }
 
 void MythProgramInfo::SetFrameRate(const long long frameRate)

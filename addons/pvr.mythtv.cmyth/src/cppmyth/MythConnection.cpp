@@ -341,7 +341,7 @@ bool MythConnection::StopRecording(const MythProgramInfo &recording)
 MythStorageGroupFile MythConnection::GetStorageGroupFile(const CStdString &storageGroup, const CStdString &filename)
 {
   cmyth_storagegroup_file_t file = NULL;
-  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_storagegroup_get_fileinfo(*m_conn_t, const_cast<char*>(storageGroup.c_str()), const_cast<char*>(GetBackendHostname().c_str()), const_cast<char*>(filename.c_str())));
+  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_storagegroup_get_fileinfo(*m_conn_t, const_cast<char*>(storageGroup.c_str()), const_cast<char*>(GetBackendName().c_str()), const_cast<char*>(filename.c_str())));
   return MythStorageGroupFile(file);
 }
 

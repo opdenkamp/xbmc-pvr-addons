@@ -204,8 +204,8 @@ sighandler(int sig)
 }
 
 static cmyth_conn_t
-cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
-		    int32_t tcp_rcvbuf)
+cmyth_connect_addr(struct addrinfo* addr, char *server, char *service,
+		    int32_t buflen, int32_t tcp_rcvbuf)
 {
 	cmyth_conn_t ret = NULL;
 	unsigned char *buf = NULL;
@@ -216,7 +216,6 @@ cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
 #endif
 	int temp;
 	socklen_t size;
-	char namebuf[NI_MAXHOST], portbuf[NI_MAXSERV];
 
 	fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
 	if (fd < 0) {
@@ -245,13 +244,8 @@ cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
 			  __FUNCTION__, errno);
 	}
 
-	if (getnameinfo(addr->ai_addr, addr->ai_addrlen, namebuf, sizeof(namebuf), portbuf, sizeof(portbuf), NI_NUMERICHOST)) {
-		strcpy(namebuf, "[unknown]");
-		strcpy(portbuf, "[unknown]");
-	}
-
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting to %s:%s fd = %d\n",
-			__FUNCTION__, namebuf, portbuf, fd);
+			__FUNCTION__, server, service, fd);
 #ifndef _MSC_VER
 	old_sighandler = signal(SIGALRM, sighandler);
 	old_alarm = alarm(5);
@@ -260,7 +254,7 @@ cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
 	if (connect(fd, addr->ai_addr, addr->ai_addrlen) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: connect failed on port %s to '%s' (%d)\n",
-			  __FUNCTION__, portbuf, namebuf, errno);
+			  __FUNCTION__, server, service, errno);
 		closesocket(fd);
 #ifndef _MSC_VER
 		signal(SIGALRM, old_sighandler);
@@ -314,7 +308,7 @@ cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: error connecting to "
 		  "%s, shutdown and close fd = %d\n",
-		  __FUNCTION__, namebuf, fd);
+		  __FUNCTION__, server, fd);
 	shutdown(fd, 2);
 	closesocket(fd);
 	return NULL;
@@ -330,7 +324,6 @@ cmyth_reconnect_addr(cmyth_conn_t conn, struct addrinfo* addr)
 #endif
 	int temp;
 	socklen_t size;
-	char namebuf[NI_MAXHOST], portbuf[NI_MAXSERV];
 
 	if (conn->conn_fd >= 0) {
 		shutdown(conn->conn_fd, 2);
@@ -365,21 +358,16 @@ cmyth_reconnect_addr(cmyth_conn_t conn, struct addrinfo* addr)
 			  __FUNCTION__, errno);
 	}
 
-	if (getnameinfo(addr->ai_addr, addr->ai_addrlen, namebuf, sizeof(namebuf), portbuf, sizeof(portbuf), NI_NUMERICHOST)) {
-		strcpy(namebuf, "[unknown]");
-		strcpy(portbuf, "[unknown]");
-	}
-
-	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting to %s:%s fd = %d\n",
-		  __FUNCTION__, namebuf, portbuf, fd);
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting to %s:%"PRIu16" fd = %d\n",
+		  __FUNCTION__, conn->server, conn->port, fd);
 #ifndef _MSC_VER
 	old_sighandler = signal(SIGALRM, sighandler);
 	old_alarm = alarm(5);
 #endif
 	my_fd = fd;
 	if (connect(fd, addr->ai_addr, addr->ai_addrlen) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: connect failed on port %s to '%s' (%d)\n",
-			  __FUNCTION__, portbuf, namebuf, errno);
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: connect failed on port %"PRIu16" to '%s' (%d)\n",
+			  __FUNCTION__, conn->server, conn->port, errno);
 		closesocket(fd);
 #ifndef _MSC_VER
 		signal(SIGALRM, old_sighandler);
@@ -408,7 +396,7 @@ cmyth_reconnect_addr(cmyth_conn_t conn, struct addrinfo* addr)
     shut:
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: error connecting to "
 		  "%s, shutdown and close fd = %d\n",
-		  __FUNCTION__, namebuf, fd);
+		  __FUNCTION__, conn->server, fd);
 
 	shutdown(fd, 2);
 	closesocket(fd);
@@ -463,7 +451,7 @@ cmyth_connect(char *server, uint16_t port, uint32_t buflen,
 	}
 
 	for (addr = result; addr; addr = addr->ai_next) {
-		conn = cmyth_connect_addr(addr, buflen, tcp_rcvbuf);
+		conn = cmyth_connect_addr(addr, server, service, buflen, tcp_rcvbuf);
 		if (conn)
 			break;
 	}

@@ -429,6 +429,31 @@ cmyth_channel_visible(cmyth_channel_t channel)
 }
 
 /*
+ * cmyth_channel_radio()
+ *
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Retrieves the 'radio' field of a channel structure.
+ *
+ * Return Value:
+ *
+ * Success: radio flag.
+ *
+ * Failure: 0
+ */
+uint8_t
+cmyth_channel_radio(cmyth_channel_t channel)
+{
+	if (!channel) {
+		return 0;
+	}
+	return channel->radio;
+}
+
+/*
  * cmyth_channel_sourceid()
  *
  *

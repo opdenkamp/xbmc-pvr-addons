@@ -2032,6 +2032,14 @@ extern char *cmyth_channel_icon(cmyth_channel_t channel);
 extern uint8_t cmyth_channel_visible(cmyth_channel_t channel);
 
 /**
+ * Retrieves the 'radio' field of a channel structure.
+ * \param channel
+ * \return success: radio flag
+ * \return failure: -(errno)
+ */
+extern uint8_t cmyth_channel_radio(cmyth_channel_t channel);
+
+/**
  * Retrieves the 'sourceid' field of a channel structure.
  * \param channel
  * \return success: sourceid

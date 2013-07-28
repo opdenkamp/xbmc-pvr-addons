@@ -904,7 +904,17 @@ cmyth_mysql_get_chanlist(cmyth_database_t db, cmyth_chanlist_t *chanlist)
 {
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
-	const char *query_str = "SELECT chanid, channum, name, icon, visible, sourceid, mplexid, callsign FROM channel;";
+	/*
+	 * The is_audio_service (radio) flag is only available from the channel scan.
+	 * The subquery therefore get the flag from the most recent channel scan.
+	 */
+	const char *query_str = "SELECT c.chanid, c.channum, c.name, c.icon, c.visible, c.sourceid, c.mplexid, c.callsign, "
+		"IFNULL(cs.is_audio_service, 0) AS is_audio_service "
+		"FROM channel c "
+		"LEFT JOIN (SELECT service_id, MAX(scanid) AS scanid FROM channelscan_channel GROUP BY service_id) s "
+		"ON s.service_id = c.serviceid "
+		"LEFT JOIN channelscan_channel cs "
+		"ON cs.service_id = s.service_id AND cs.scanid = s.scanid;";
 	int rows = 0;
 	cmyth_mysql_query_t * query;
 	cmyth_channel_t channel;
@@ -943,6 +953,7 @@ cmyth_mysql_get_chanlist(cmyth_database_t db, cmyth_chanlist_t *chanlist)
 		channel->sourceid = safe_atol(row[5]);
 		channel->multiplex = safe_atol(row[6]);
 		channel->callsign = ref_strdup(row[7]);
+		channel->radio = safe_atol(row[8]);
 		(*chanlist)->chanlist_list[rows] = channel;
 		rows++;
 	}
@@ -950,44 +961,6 @@ cmyth_mysql_get_chanlist(cmyth_database_t db, cmyth_chanlist_t *chanlist)
 	mysql_free_result(res);
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: rows= %d\n", __FUNCTION__, rows);
 	return rows;
-}
-
-int
-cmyth_mysql_is_radio(cmyth_database_t db, uint32_t chanid)
-{
-	MYSQL_RES *res = NULL;
-	MYSQL_ROW row;
-	int retval = 0;
-	const char *query_str = "SELECT is_audio_service FROM channelscan_channel INNER JOIN channel ON channelscan_channel.service_id=channel.serviceid WHERE channel.chanid = ? ORDER BY channelscan_channel.scanid DESC;";
-	cmyth_mysql_query_t * query;
-
-	if (cmyth_database_check_version(db) < 0)
-		return -1;
-
-	query = cmyth_mysql_query_create(db, query_str);
-
-	if (cmyth_mysql_query_param_uint32(query, chanid) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
-		ref_release(query);
-		return -1;
-	}
-
-	res = cmyth_mysql_query_result(query);
-	ref_release(query);
-
-	if (res == NULL) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
-		return -1;
-	}
-
-	if ((row = mysql_fetch_row(res))) {
-		retval = safe_atoi(row[0]);
-	} else {
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s, Channum %"PRIu32" not found\n", __FUNCTION__, chanid);
-		retval = 0;
-	}
-	mysql_free_result(res);
-	return retval;
 }
 
 int

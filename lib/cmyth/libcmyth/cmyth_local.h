@@ -424,6 +424,7 @@ struct cmyth_channel {
 	char *name;
 	char *icon;
 	uint8_t visible;
+	uint8_t radio;
 	uint32_t sourceid;
 	uint32_t multiplex;
 };

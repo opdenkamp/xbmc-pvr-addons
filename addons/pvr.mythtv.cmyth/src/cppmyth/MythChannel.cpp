@@ -23,13 +23,11 @@
 
 MythChannel::MythChannel()
   : m_channel_t()
-  , m_radio(false)
 {
 }
 
-MythChannel::MythChannel(cmyth_channel_t cmyth_channel, bool isRadio)
+MythChannel::MythChannel(cmyth_channel_t cmyth_channel)
   : m_channel_t(new MythPointer<cmyth_channel_t>())
-  , m_radio(isRadio)
 {
   *m_channel_t = cmyth_channel;
 }
@@ -88,9 +86,9 @@ bool MythChannel::Visible()
   return cmyth_channel_visible(*m_channel_t) > 0;
 }
 
-bool MythChannel::IsRadio() const
+bool MythChannel::IsRadio()
 {
-  return m_radio;
+  return cmyth_channel_radio(*m_channel_t) > 0;
 }
 
 unsigned int MythChannel::SourceID()

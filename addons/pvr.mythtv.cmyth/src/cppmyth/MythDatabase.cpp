@@ -135,8 +135,7 @@ ChannelIdMap MythDatabase::GetChannels()
   {
     cmyth_channel_t channel = cmyth_chanlist_get_item(channels, i);
     int channelID = cmyth_channel_chanid(channel);
-    bool isRadio = cmyth_mysql_is_radio(*m_database_t, channelID) == 1;
-    retval.insert(std::pair<int, MythChannel>(channelID, MythChannel(channel, isRadio)));
+    retval.insert(std::pair<int, MythChannel>(channelID, MythChannel(channel)));
   }
   ref_release(channels);
   return retval;

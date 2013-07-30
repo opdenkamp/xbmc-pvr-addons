@@ -314,7 +314,6 @@ void CTsReader::Close()
 
 bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long timeshiftBufferID)
 {
-#ifdef TARGET_WINDOWS
   string newFileName;
 
   XBMC->Log(LOG_NOTICE, "CTsReader::OnZap(%s)", pszFileName);
@@ -361,10 +360,6 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
     }
     return false;
   }
-#else
-  m_fileReader->SetFilePointer(0LL, FILE_END);
-  return true;
-#endif
 }
 
 void CTsReader::SetCardSettings(CCards* cardSettings)

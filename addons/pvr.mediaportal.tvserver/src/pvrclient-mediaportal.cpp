@@ -47,8 +47,8 @@ int g_iTVServerXBMCBuild = 0;
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.0.90"
 #define TVSERVERXBMC_MIN_VERSION_BUILD          90
-#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.120"
-#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  120
+#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.121, 1.3.0.121 or 1.4.0.123"
+#define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  121
 
 /************************************************************/
 /** Class interface */
@@ -941,6 +941,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
       tag.iGenreType     = recording.GenreType();
       tag.iGenreSubType  = recording.GenreSubType();
       tag.iPlayCount     = recording.TimesWatched();
+      tag.iLastPlayedPosition = recording.LastPlayedPosition();
 
       strDirectory = recording.Directory();
       if (strDirectory.length() > 0)
@@ -1072,6 +1073,62 @@ PVR_ERROR cPVRClientMediaPortal::SetRecordingPlayCount(const PVR_RECORDING &reco
   PVR->TriggerRecordingUpdate();
 
   return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR cPVRClientMediaPortal::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  if ( g_iTVServerXBMCBuild < 121 )
+    return PVR_ERROR_NOT_IMPLEMENTED;
+
+  if (!IsUp())
+    return PVR_ERROR_SERVER_ERROR;
+
+  char           command[512];
+  string         result;
+
+  snprintf(command, 512, "SetRecordingStopTime:%i|%i\n", atoi(recording.strRecordingId), lastplayedposition);
+
+  result = SendCommand(command);
+
+  if(result.find("True") == string::npos)
+  {
+    XBMC->Log(LOG_ERROR, "%s: id=%s to %i [failed]", __FUNCTION__, recording.strRecordingId, lastplayedposition);
+    return PVR_ERROR_FAILED;
+  }
+
+  XBMC->Log(LOG_DEBUG, "%s: id=%s to %i [successful]", __FUNCTION__, recording.strRecordingId, lastplayedposition);
+  PVR->TriggerRecordingUpdate();
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+int cPVRClientMediaPortal::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  if ( g_iTVServerXBMCBuild < 121 )
+    return PVR_ERROR_NOT_IMPLEMENTED;
+
+  if (!IsUp())
+    return PVR_ERROR_SERVER_ERROR;
+
+  char           command[512];
+  string         result;
+  int            lastplayedposition;
+
+  snprintf(command, 512, "GetRecordingStopTime:%i\n", atoi(recording.strRecordingId));
+
+  result = SendCommand(command);
+
+  if(result.find("-1") != string::npos)
+  {
+    XBMC->Log(LOG_ERROR, "%s: id=%s fetching stoptime [failed]", __FUNCTION__, recording.strRecordingId);
+    return 0;
+  }
+
+  lastplayedposition = atoi(result.c_str());
+
+  XBMC->Log(LOG_DEBUG, "%s: id=%s stoptime=%i {s} [successful]", __FUNCTION__, recording.strRecordingId, lastplayedposition);
+
+  return lastplayedposition;
 }
 
 /************************************************************/

@@ -1661,6 +1661,7 @@ PVR_ERROR cPVRClientMediaPortal::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 
   string          result;
 
+  // Request the signal quality for the current streaming card from the backend
   result = SendCommand("GetSignalQuality\n");
 
   if (result.length() > 0)
@@ -1668,14 +1669,25 @@ PVR_ERROR cPVRClientMediaPortal::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
     int signallevel = 0;
     int signalquality = 0;
 
+    // Fetch the signal level and SNR values from the result string
     if (sscanf(result.c_str(),"%5i|%5i", &signallevel, &signalquality) == 2)
     {
       signalStatus.iSignal = (int) (signallevel * 655.35); // 100% is 0xFFFF 65535
       signalStatus.iSNR = (int) (signalquality * 655.35); // 100% is 0xFFFF 65535
       signalStatus.iBER = 0;
       PVR_STRCPY(signalStatus.strAdapterStatus, "timeshifting"); // hardcoded for now...
-      // Fetch the name of the correct card and not just the first one...
-      PVR_STRCPY(signalStatus.strAdapterName, m_cCards[m_iCurrentCard].Name.c_str());
+
+      // Try to determine the name of the tv/radio card from the local card cache
+      Card currentCard;
+
+      if (m_cCards.GetCard(m_iCurrentCard, currentCard) == true)
+      {
+        PVR_STRCPY(signalStatus.strAdapterName, currentCard.Name.c_str());
+      }
+      else
+      {
+        PVR_STRCLR(signalStatus.strAdapterName);
+      }
     }
   }
   return PVR_ERROR_NO_ERROR;

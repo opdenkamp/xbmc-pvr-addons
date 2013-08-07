@@ -374,7 +374,7 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
       tag.bIsHidden = !it->second.Visible();
       tag.bIsRadio = it->second.IsRadio();
 
-      CStdString icon = GetArtWork(FileOps::FileTypeChannelIcon, it->second.Icon());
+      CStdString icon = m_fileOps->GetChannelIconPath(it->second.Icon());
       PVR_STRCPY(tag.strIconPath, icon);
 
       // Unimplemented
@@ -558,13 +558,13 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       // Images
       CStdString strIconPath;
       if (!it->second.Coverart().IsEmpty())
-        strIconPath = GetArtWork(FileOps::FileTypeCoverart, it->second.Coverart());
+        strIconPath = m_fileOps->GetArtworkPath(it->second.Coverart(), FileOps::FileTypeCoverart);
       else
         strIconPath = m_fileOps->GetPreviewIconPath(it->second.IconPath(), it->second.StorageGroup());
 
       CStdString strFanartPath;
       if (!it->second.Fanart().IsEmpty())
-        strFanartPath = GetArtWork(FileOps::FileTypeFanart, it->second.Fanart());
+        strFanartPath = m_fileOps->GetArtworkPath(it->second.Fanart(), FileOps::FileTypeFanart);
 
       PVR_STRCPY(tag.strIconPath, strIconPath.c_str());
       PVR_STRCPY(tag.strThumbnailPath, strIconPath.c_str());
@@ -1824,22 +1824,5 @@ void PVRClientMythTV::SetLiveTVPriority(bool enabled)
   {
     CStdString value = enabled ? "1" : "0";
     m_con.SetSetting(m_con.GetHostname(), "LiveTVPriority", value);
-  }
-}
-
-CStdString PVRClientMythTV::GetArtWork(FileOps::FileType storageGroup, const CStdString &shwTitle)
-{
-  if (storageGroup == FileOps::FileTypeCoverart || storageGroup == FileOps::FileTypeFanart)
-  {
-    return m_fileOps->GetArtworkPath(shwTitle, storageGroup);
-  }
-  else if (storageGroup == FileOps::FileTypeChannelIcon)
-  {
-    return m_fileOps->GetChannelIconPath(shwTitle);
-  }
-  else
-  {
-    XBMC->Log(LOG_DEBUG, "%s - ## Not a valid storageGroup ##", __FUNCTION__);
-    return "";
   }
 }

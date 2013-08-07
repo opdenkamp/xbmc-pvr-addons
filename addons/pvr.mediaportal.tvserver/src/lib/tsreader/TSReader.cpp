@@ -81,7 +81,7 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
     XBMC->Log(LOG_DEBUG, "Found the timeshift buffer at: %s\n", pszFileName);
     return ToXBMCPath(sFileName);
   }
-  XBMC->Log(LOG_DEBUG, "Cannot access '%s' directly. Assuming multiseat mode. Need to translate to UNC filename.", pszFileName);
+  XBMC->Log(LOG_NOTICE, "Cannot access '%s' directly. Assuming multiseat mode. Need to translate to UNC filename.", pszFileName);
 #else
   XBMC->Log(LOG_DEBUG, "Multiseat mode; need to translate '%s' to UNC filename.", pszFileName);
 #endif
@@ -135,7 +135,7 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
 
   if (bFound)
   {
-    XBMC->Log(LOG_INFO, "CTsReader:TranslatePath %s -> %s", pszFileName, sFileName.c_str());
+    XBMC->Log(LOG_NOTICE, "Translate path %s -> %s", pszFileName, sFileName.c_str());
   }
   else
   {
@@ -188,7 +188,7 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
 
 long CTsReader::Open(const char* pszFileName)
 {
-  XBMC->Log(LOG_NOTICE, "CTsReader::Open(%s)", pszFileName);
+  XBMC->Log(LOG_NOTICE, "TsReader open '%s'", pszFileName);
 
   m_fileName = pszFileName;
 
@@ -298,6 +298,7 @@ void CTsReader::Close()
     if (m_bIsRTSP)
     {
 #ifdef LIVE555
+      XBMC->Log(LOG_NOTICE, "TsReader: closing RTSP client");
       m_rtspClient->Stop();
       SAFE_DELETE(m_rtspClient);
       SAFE_DELETE(m_buffer);
@@ -305,6 +306,7 @@ void CTsReader::Close()
     }
     else
     {
+      XBMC->Log(LOG_NOTICE, "TsReader: closing file");
       m_fileReader->CloseFile();
     }
     SAFE_DELETE(m_fileReader);
@@ -316,7 +318,7 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
 {
   string newFileName;
 
-  XBMC->Log(LOG_NOTICE, "CTsReader::OnZap(%s)", pszFileName);
+  XBMC->Log(LOG_NOTICE, "TsReader: OnZap(%s)", pszFileName);
 
   // Check whether the new channel url/timeshift buffer is changed
   // In case of a new url/timeshift buffer file, close the old one first
@@ -330,7 +332,7 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
   {
     if (m_fileReader)
     {
-      XBMC->Log(LOG_DEBUG,"OnZap: request new PAT");
+      XBMC->Log(LOG_DEBUG,"%s: request new PAT", __FUNCTION__);
 
       int64_t pos_before, pos_after;
       MultiFileReader* fileReader = dynamic_cast<MultiFileReader*>(m_fileReader);
@@ -354,7 +356,7 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
       m_demultiplexer.RequestNewPat();
       fileReader->OnChannelChange();
 
-      XBMC->Log(LOG_DEBUG,"OnZap: move from %I64d to %I64d tsbufpos  %I64d", pos_before, pos_after, timeShiftBufferPos);
+      XBMC->Log(LOG_DEBUG,"%s:: move from %I64d to %I64d tsbufpos  %I64d", __FUNCTION__, pos_before, pos_after, timeShiftBufferPos);
       usleep(100000);
       return true;
     }
@@ -396,7 +398,7 @@ bool CTsReader::IsTimeShifting()
 
 long CTsReader::Pause()
 {
-  XBMC->Log(LOG_DEBUG, "CTsReader::Pause() - IsTimeShifting = %d - state = %d", IsTimeShifting(), m_State);
+  XBMC->Log(LOG_DEBUG, "TsReader: Pause - IsTimeShifting = %d - state = %d", IsTimeShifting(), m_State);
 
   if (m_State == State_Running)
   {
@@ -425,7 +427,7 @@ long CTsReader::Pause()
 #endif //LIVE555
   }
 
-  XBMC->Log(LOG_DEBUG, "CTsReader::Pause() - END - state = %d", m_State);
+  XBMC->Log(LOG_DEBUG, "TsReader: Pause - END - state = %d", m_State);
   return S_OK;
 }
 

@@ -410,32 +410,17 @@ std::string cTimer::AddScheduleCommand()
   XBMC->Log(LOG_DEBUG, "End time: %s, marginstop: %i min later", asctime(&endtime), m_postrecordinterval);
   keepdate = *localtime( &m_keepdate );
 
-  if ( g_iTVServerXBMCBuild >= 100)
-  {
-    // Sending separate marginStart, marginStop and schedType is supported
-    snprintf(command, 1023, "AddSchedule:%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
-            m_channel,                                                         //Channel number [0]
-            uri::encode(uri::PATH_TRAITS, m_title).c_str(),                    //Program title  [1]
-            starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [2..4]
-            starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [5..7]
-            endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [8..10]
-            endtime.tm_hour, endtime.tm_min, endtime.tm_sec,                   //End time       [11..13]
-            (int) m_schedtype, m_priority, (int) m_keepmethod,                 //SchedType, Priority, keepMethod [14..16]
-            keepdate.tm_year + 1900, keepdate.tm_mon + 1, keepdate.tm_mday,    //Keepdate       [17..19]
-            keepdate.tm_hour, keepdate.tm_min, keepdate.tm_sec,                //Keeptime       [20..22]
-            m_prerecordinterval, m_postrecordinterval);                        //Prerecord,postrecord [23,24]
-  }
-  else
-  {
-    // Sending a separate marginStart, marginStop and schedType is not yet supported
-    snprintf(command, 1023, "AddSchedule:%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
-            m_channel,                                                         //Channel number
-            uri::encode(uri::PATH_TRAITS, m_title).c_str(),                    //Program title
-            starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date
-            starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time
-            endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date
-            endtime.tm_hour, endtime.tm_min, endtime.tm_sec);                  //End time
-  }
+  snprintf(command, 1023, "AddSchedule:%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
+          m_channel,                                                         //Channel number [0]
+          uri::encode(uri::PATH_TRAITS, m_title).c_str(),                    //Program title  [1]
+          starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [2..4]
+          starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [5..7]
+          endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [8..10]
+          endtime.tm_hour, endtime.tm_min, endtime.tm_sec,                   //End time       [11..13]
+          (int) m_schedtype, m_priority, (int) m_keepmethod,                 //SchedType, Priority, keepMethod [14..16]
+          keepdate.tm_year + 1900, keepdate.tm_mon + 1, keepdate.tm_mday,    //Keepdate       [17..19]
+          keepdate.tm_hour, keepdate.tm_min, keepdate.tm_sec,                //Keeptime       [20..22]
+          m_prerecordinterval, m_postrecordinterval);                        //Prerecord,postrecord [23,24]
 
   return command;
 }
@@ -453,35 +438,19 @@ std::string cTimer::UpdateScheduleCommand()
   XBMC->Log(LOG_DEBUG, "End time: %s, marginstop: %i min later", asctime(&endtime), m_postrecordinterval);
   keepdate = *localtime( &m_keepdate );
 
-  if ( g_iTVServerXBMCBuild >= 100)
-  {
-    // Sending separate marginStart, marginStop and schedType is supported
-    snprintf(command, 1024, "UpdateSchedule:%i|%i|%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
-            m_index,                                                           //Schedule index [0]
-            m_active,                                                          //Active         [1]
-            m_channel,                                                         //Channel number [2]
-            uri::encode(uri::PATH_TRAITS,m_title).c_str(),                     //Program title  [3]
-            starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [4..6]
-            starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [7..9]
-            endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [10..12]
-            endtime.tm_hour, endtime.tm_min, endtime.tm_sec,                   //End time       [13..15]
-            (int) m_schedtype, m_priority, (int) m_keepmethod,                 //SchedType, Priority, keepMethod [16..18]
-            keepdate.tm_year + 1900, keepdate.tm_mon + 1, keepdate.tm_mday,    //Keepdate       [19..21]
-            keepdate.tm_hour, keepdate.tm_min, keepdate.tm_sec,                //Keeptime       [22..24]
-            m_prerecordinterval, m_postrecordinterval, m_progid);              //Prerecord,postrecord,program_id [25,26,27]
-  }
-  else
-  {
-    snprintf(command, 1024, "UpdateSchedule:%i|%i|%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
-            m_index,                                                           //Schedule index
-            m_active,                                                          //Active
-            m_channel,                                                         //Channel number
-            uri::encode(uri::PATH_TRAITS,m_title).c_str(),                       //Program title
-            starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date
-            starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time
-            endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date
-            endtime.tm_hour, endtime.tm_min, endtime.tm_sec);                  //End time
-  }
+  snprintf(command, 1024, "UpdateSchedule:%i|%i|%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
+          m_index,                                                           //Schedule index [0]
+          m_active,                                                          //Active         [1]
+          m_channel,                                                         //Channel number [2]
+          uri::encode(uri::PATH_TRAITS,m_title).c_str(),                     //Program title  [3]
+          starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [4..6]
+          starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [7..9]
+          endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [10..12]
+          endtime.tm_hour, endtime.tm_min, endtime.tm_sec,                   //End time       [13..15]
+          (int) m_schedtype, m_priority, (int) m_keepmethod,                 //SchedType, Priority, keepMethod [16..18]
+          keepdate.tm_year + 1900, keepdate.tm_mon + 1, keepdate.tm_mday,    //Keepdate       [19..21]
+          keepdate.tm_hour, keepdate.tm_min, keepdate.tm_sec,                //Keeptime       [22..24]
+          m_prerecordinterval, m_postrecordinterval, m_progid);              //Prerecord,postrecord,program_id [25,26,27]
 
   return command;
 }

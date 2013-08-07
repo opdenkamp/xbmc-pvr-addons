@@ -45,8 +45,8 @@ int g_iTVServerXBMCBuild = 0;
 #define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.8.9"
 
 /* TVServerXBMC plugin supported versions */
-#define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.0.90"
-#define TVSERVERXBMC_MIN_VERSION_BUILD          90
+#define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.7.107"
+#define TVSERVERXBMC_MIN_VERSION_BUILD          107
 #define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.122, 1.3.0.122 or 1.4.0.123"
 #define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  122
 
@@ -334,17 +334,14 @@ PVR_ERROR cPVRClientMediaPortal::GetDriveSpace(long long *iTotal, long long *iUs
   if (!IsUp())
     return PVR_ERROR_SERVER_ERROR;
 
-  if ( g_iTVServerXBMCBuild >= 100)
+  result = SendCommand("GetDriveSpace:\n");
+
+  Tokenize(result, fields, "|");
+
+  if(fields.size() >= 2)
   {
-    result = SendCommand("GetDriveSpace:\n");
-
-    Tokenize(result, fields, "|");
-
-    if(fields.size() >= 2)
-    {
-      *iTotal = (long long) atoi(fields[0].c_str());
-      *iUsed = (long long) atoi(fields[1].c_str());
-    }
+    *iTotal = (long long) atoi(fields[0].c_str());
+    *iUsed = (long long) atoi(fields[1].c_str());
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -436,21 +433,13 @@ PVR_ERROR cPVRClientMediaPortal::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &
   if (!IsUp())
     return PVR_ERROR_SERVER_ERROR;
 
-  if (g_iTVServerXBMCBuild >= 104)
-  {
-    // Request (extended) EPG data for the given period
-    snprintf(command, 256, "GetEPG:%i|%04d-%02d-%02dT%02d:%02d:%02d.0Z|%04d-%02d-%02dT%02d:%02d:%02d.0Z\n",
-            channel.iUniqueId,                                                 //Channel id
-            starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [2..4]
-            starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [5..7]
-            endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [8..10]
-            endtime.tm_hour, endtime.tm_min, endtime.tm_sec);                  //End time       [11..13]
-  }
-  else
-  {
-    // This version does not yet return all EPG fields
-    snprintf(command, 256, "GetEPG:%i\n", channel.iUniqueId);
-  }
+  // Request (extended) EPG data for the given period
+  snprintf(command, 256, "GetEPG:%i|%04d-%02d-%02dT%02d:%02d:%02d.0Z|%04d-%02d-%02dT%02d:%02d:%02d.0Z\n",
+          channel.iUniqueId,                                                 //Channel id
+          starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [2..4]
+          starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [5..7]
+          endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [8..10]
+          endtime.tm_hour, endtime.tm_min, endtime.tm_sec);                  //End time       [11..13]
 
   result = SendCommand(command);
 
@@ -645,7 +634,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
     if( channel.Parse(data) )
     {
       tag.iUniqueId = channel.UID();
-      tag.iChannelNumber = g_iTVServerXBMCBuild >= 102 ? channel.ExternalID() : channel.UID();
+      tag.iChannelNumber = channel.ExternalID();
       PVR_STRCPY(tag.strChannelName, channel.Name());
       PVR_STRCLR(tag.strIconPath);
 #ifdef TARGET_WINDOWS
@@ -854,7 +843,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannelGroupMembers(ADDON_HANDLE handle, con
     if( channel.Parse(data) )
     {
       tag.iChannelUniqueId = channel.UID();
-      tag.iChannelNumber = g_iTVServerXBMCBuild >= 102 ? channel.ExternalID() : channel.UID();
+      tag.iChannelNumber = channel.ExternalID();
       PVR_STRCPY(tag.strGroupName, group.strGroupName);
 
 
@@ -932,11 +921,11 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
     if (recording.ParseLine(data))
     {
       strRecordingId.Format("%i", recording.Index());
-      strEpisodeName = g_iTVServerXBMCBuild >= 105 ? recording.EpisodeName() : "";
+      strEpisodeName = recording.EpisodeName();
 
       PVR_STRCPY(tag.strRecordingId, strRecordingId.c_str());
       PVR_STRCPY(tag.strTitle, recording.Title());
-      PVR_STRCPY(tag.strPlotOutline, g_iTVServerXBMCBuild >= 105 ? recording.EpisodeName() : tag.strTitle);
+      PVR_STRCPY(tag.strPlotOutline, recording.EpisodeName());
       PVR_STRCPY(tag.strPlot, recording.Description());
       PVR_STRCPY(tag.strChannelName, recording.ChannelName());
       tag.recordingTime  = recording.StartTime();
@@ -954,7 +943,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
         strDirectory.Replace("\\", " - "); // XBMC supports only 1 sublevel below Recordings, so flatten the MediaPortal directory structure
         PVR_STRCPY(tag.strDirectory, strDirectory.c_str()); // used in XBMC as directory structure below "Recordings"
 
-        if ((g_iTVServerXBMCBuild >= 105) && (strDirectory.Equals(tag.strTitle)) && (strEpisodeName.length() > 0))
+        if ((strDirectory.Equals(tag.strTitle)) && (strEpisodeName.length() > 0))
         {
           strEpisodeName = recording.Title();
           strEpisodeName+= " - ";
@@ -1420,6 +1409,12 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
   {
     Tokenize(result, timeshiftfields, "|");
 
+    if(timeshiftfields.size()<4)
+    {
+      m_iCurrentChannel = -1;
+      return false;
+    }
+
     //[0] = rtsp url
     //[1] = original (unresolved) rtsp url
     //[2] = timeshift buffer filename
@@ -1458,7 +1453,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         {
           m_tsreader->SetCardId(atoi(timeshiftfields[3].c_str()));
 
-          if (g_iTVServerXBMCBuild >=110 )
+          if ((g_iTVServerXBMCBuild >=110) && (timeshiftfields.size()>=6))
             bReturn = m_tsreader->OnZap(timeshiftfields[2].c_str(), atoll(timeshiftfields[4].c_str()), atol(timeshiftfields[5].c_str()));
           else
             bReturn = m_tsreader->OnZap(timeshiftfields[2].c_str(), -1, -1);
@@ -1472,7 +1467,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         if (bReturn)
         {
           m_iCurrentChannel = (int) channelinfo.iUniqueId;
-          m_iCurrentCard = (g_iTVServerXBMCBuild >= 106) ? atoi(timeshiftfields[3].c_str()) : -1;
+          m_iCurrentCard = atoi(timeshiftfields[3].c_str());
         }
         else
         {
@@ -1517,7 +1512,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
     // at this point everything is ready for playback
     m_iCurrentChannel = (int) channelinfo.iUniqueId;
-    m_iCurrentCard = (g_iTVServerXBMCBuild >= 106) ? atoi(timeshiftfields[3].c_str()) : -1;
+    m_iCurrentCard = atoi(timeshiftfields[3].c_str());
   }
   return true;
 }
@@ -1908,14 +1903,11 @@ void cPVRClientMediaPortal::LoadGenreTable()
 void cPVRClientMediaPortal::LoadCardSettings()
 {
   /* Retrieve card settings (needed for Live TV and recordings folders) */
-  if ( g_iTVServerXBMCBuild >= 106 )
-  {
-    int code;
-    vector<string> lines;
+  int code;
+  vector<string> lines;
 
-    if ( SendCommand2("GetCardSettings\n", code, lines) )
-    {
-      m_cCards.ParseLines(lines);
-    }
+  if ( SendCommand2("GetCardSettings\n", code, lines) )
+  {
+    m_cCards.ParseLines(lines);
   }
 }

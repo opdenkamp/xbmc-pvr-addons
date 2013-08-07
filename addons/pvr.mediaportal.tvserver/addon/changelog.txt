@@ -7,6 +7,7 @@ v1.8.9
 - Fixed: potential out-of-bounds array access while accessing TV Card info
 - Fixed: Hide smb password in debug xbmc.log file
 - Added: support for retrieving channels from multiple specified groups (>1, < All groups) (requires TVServerXBMC build 122 or higher)
+- Changed: drop support for TVServerXBMC builds older than 1.1.x.107
 
 v1.8.8
 - sync with PVR API v1.8.0

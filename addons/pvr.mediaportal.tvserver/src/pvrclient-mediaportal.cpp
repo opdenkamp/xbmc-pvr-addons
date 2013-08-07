@@ -79,8 +79,6 @@ cPVRClientMediaPortal::~cPVRClientMediaPortal()
 
 string cPVRClientMediaPortal::SendCommand(string command)
 {
-  int code;
-  vector<string> lines;
   PLATFORM::CLockObject critsec(m_mutex);
 
   if ( !m_tcpclient->send(command) )
@@ -100,12 +98,13 @@ string cPVRClientMediaPortal::SendCommand(string command)
     }
   }
 
-  if ( !m_tcpclient->ReadResponse(code, lines) )
-  {
-    XBMC->Log(LOG_ERROR, "SendCommand - Failed with code: %d (%s)", code, lines[lines.size()-1].c_str());
-  }
+  string line;
 
-  return lines[lines.size()-1];
+  if ( !m_tcpclient->ReadLine( line ) )
+  {
+    XBMC->Log(LOG_ERROR, "SendCommand - Failed.");
+  }
+  return line;
 }
 
 bool cPVRClientMediaPortal::SendCommand2(string command, int& code, vector<string>& lines)
@@ -129,20 +128,17 @@ bool cPVRClientMediaPortal::SendCommand2(string command, int& code, vector<strin
     }
   }
 
-  if (!m_tcpclient->ReadResponse(code, lines))
+  string result;
+
+  if (!m_tcpclient->ReadLine(result))
   {
-    XBMC->Log(LOG_ERROR, "SendCommand2 - Failed with code: %d (%s)", code, lines[lines.size()-1].c_str());
+    XBMC->Log(LOG_ERROR, "SendCommand2 - Failed.");
     return false;
   }
-  else
-  {
-    string result = lines[lines.size()-1];
-    lines.clear();
 
-    Tokenize(result, lines, ",");
+  Tokenize(result, lines, ",");
 
-    return true;
-  }
+  return true;
 }
 
 bool cPVRClientMediaPortal::Connect()

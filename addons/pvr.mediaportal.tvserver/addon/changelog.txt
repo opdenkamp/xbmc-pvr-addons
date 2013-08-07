@@ -5,6 +5,7 @@ v1.8.9
 - Recordings: Add support for retrieving and storing the playback resume position (requires TVServerXBMC build 121 or higher)
 - Recordings: Trigger a recording list update when the backend couldn't find the selected recording
 - Fixed: potential out-of-bounds array access while accessing TV Card info
+- Added: support for retrieving channels from multiple specified groups (>1, < All groups) (requires TVServerXBMC build 122 or higher)
 
 v1.8.8
 - sync with PVR API v1.8.0

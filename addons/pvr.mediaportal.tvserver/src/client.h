@@ -65,8 +65,8 @@ extern bool             g_bResolveRTSPHostname;
 extern bool             g_bReadGenre;
 extern bool             g_bFastChannelSwitch;
 extern bool             g_bUseRTSP;           ///< Use RTSP streaming when using the tsreader
-extern std::string      g_szTVGroup;
-extern std::string      g_szRadioGroup;
+extern CStdString       g_szTVGroup;
+extern CStdString       g_szRadioGroup;
 extern std::string      g_szSMBusername;
 extern std::string      g_szSMBpassword;
 extern eStreamingMethod g_eStreamingMethod;

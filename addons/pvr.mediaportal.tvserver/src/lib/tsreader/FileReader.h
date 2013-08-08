@@ -34,6 +34,7 @@
  */
 
 #include "platform/os.h"
+#include "platform/util/StdString.h"
 
 class FileReader
 {
@@ -42,8 +43,9 @@ class FileReader
     virtual ~FileReader();
 
     // Open and write to the file
-    virtual long GetFileName(char* *lpszFileName);
-    virtual long SetFileName(const char* pszFileName);
+    virtual long GetFileName(std::string& fileName);
+    virtual long SetFileName(const std::string& fileName);
+    virtual long OpenFile(const std::string& fileName);
     virtual long OpenFile();
     virtual long CloseFile();
     virtual long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
@@ -56,7 +58,7 @@ class FileReader
     virtual int HasData(){return 0; } ;
 
   protected:
-    void*    m_hFile;               // Handle to file for streaming
-    char*    m_pFileName;           // The filename where we read from
-    int64_t  m_fileSize;
+    void*      m_hFile;               // Handle to file for streaming
+    CStdString m_fileName;           // The filename where we read from
+    int64_t    m_fileSize;
 };

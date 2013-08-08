@@ -47,20 +47,16 @@ class FileReader
     virtual long OpenFile();
     virtual long CloseFile();
     virtual long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
-    long GetStartPosition(int64_t *lpllpos);
     virtual bool IsFileInvalid();
     virtual int64_t SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
     virtual int64_t GetFilePointer();
     virtual int64_t GetFileSize();
-    virtual bool IsBuffer(){return false;};
+    virtual bool IsBuffer() { return false; };
     virtual int64_t OnChannelChange(void);
     virtual int HasData(){return 0; } ;
 
   protected:
-    void*    m_hFileHandle;        // Handle to file for streaming
-    char*    m_pFileName;           // The filename where we stream
+    void*    m_hFile;               // Handle to file for streaming
+    char*    m_pFileName;           // The filename where we read from
     int64_t  m_fileSize;
-    int64_t  m_llBufferPointer;
-
-    bool     m_bDebugOutput;
 };

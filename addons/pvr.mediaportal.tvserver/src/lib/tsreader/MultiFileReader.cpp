@@ -92,6 +92,7 @@ long MultiFileReader::OpenFile()
     return hResult;
 
   m_lastZapPosition = 0;
+  m_currentFileStartOffset = 0;
 
   int retryCount = 0;
 
@@ -182,6 +183,57 @@ int64_t MultiFileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long 
   return m_currentPosition;
 }
 
+int64_t MultiFileReader::SetCurrentFilePointer(int64_t timeShiftBufferFilePos, long timeshiftBufferFileID)
+{
+  RefreshTSBufferFile();
+
+  if (m_TSFileId != timeshiftBufferFileID)
+  {
+    // We have to switch to a different buffer file
+    TSDEBUG(LOG_DEBUG, "Change buffer file from %i to %i", m_TSFileId, timeshiftBufferFileID);
+
+    MultiFileReaderFile *file = NULL;
+    std::vector<MultiFileReaderFile *>::iterator it = m_tsFiles.begin();
+    for ( ; it < m_tsFiles.end(); ++it )
+    {
+      file = *it;
+      if (file->filePositionId == timeshiftBufferFileID)
+        break;
+    };
+
+    if(!file)
+    {
+      XBMC->Log(LOG_ERROR, "MultiFileReader::no buffer file with id=%i", timeshiftBufferFileID);
+      XBMC->QueueNotification(QUEUE_ERROR, "No buffer file");
+      return m_currentPosition;
+    }
+
+    if (m_currentPosition < (file->startPosition + timeShiftBufferFilePos))
+    {
+      m_TSFile.CloseFile();
+      m_TSFile.SetFileName(file->filename.c_str());
+      m_TSFile.OpenFile();
+
+      m_TSFileId = file->filePositionId;
+      m_currentFileStartOffset = file->startPosition;
+
+      TSDEBUG(LOG_DEBUG, "MultiFileReader::Read() Current File Changed to %s TS file id=%i\n", file->filename.c_str(), m_TSFileId);
+    }
+  }
+
+  // Reposition the read pointer within the current timeshift buffer file
+  TSDEBUG(LOG_DEBUG, "Move read pointer within buffer file %i; %I64d -> %i64d", m_TSFileId, m_currentPosition, m_currentFileStartOffset + timeShiftBufferFilePos);
+  m_currentPosition = m_currentFileStartOffset + timeShiftBufferFilePos;
+
+  if (m_currentPosition > m_endPosition)
+  {
+    XBMC->Log(LOG_ERROR, "Seeking beyond the end position: %I64d > %I64d", m_currentPosition, m_endPosition);
+    m_currentPosition = m_endPosition;
+  }
+
+  return m_currentPosition;
+}
+
 int64_t MultiFileReader::GetFilePointer()
 {
   return m_currentPosition;
@@ -232,8 +284,9 @@ long MultiFileReader::Read(unsigned char* pbData, unsigned long lDataLength, uns
       }
 
       m_TSFileId = file->filePositionId;
+      m_currentFileStartOffset = file->startPosition;
 
-      TSDEBUG(LOG_DEBUG, "MultiFileReader::Read() Current File Changed to %s\n", file->filename.c_str());
+      TSDEBUG(LOG_DEBUG, "MultiFileReader::Read() Current File Changed to %s TS file id=%i\n", file->filename.c_str(), m_TSFileId);
     }
 
     int64_t seekPosition = m_currentPosition - file->startPosition;

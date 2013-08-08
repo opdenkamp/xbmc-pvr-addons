@@ -334,16 +334,26 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
       XBMC->Log(LOG_DEBUG,"OnZap: request new PAT");
 
       int64_t pos_before, pos_after;
-      pos_before = m_fileReader->GetFilePointer();
-      pos_after = m_fileReader->SetFilePointer(0LL, FILE_END);
+      MultiFileReader* fileReader = dynamic_cast<MultiFileReader*>(m_fileReader);
 
-      if ((timeShiftBufferPos > 0) && (pos_after > timeShiftBufferPos))
+      pos_before = fileReader->GetFilePointer();
+
+      if ((timeShiftBufferPos > 0) && (timeshiftBufferID != -1))
       {
-        /* Move backward */
-        pos_after = m_fileReader->SetFilePointer((timeShiftBufferPos-pos_after), FILE_CURRENT);
+        pos_after = fileReader->SetCurrentFilePointer(timeShiftBufferPos, timeshiftBufferID);
       }
+      else
+      {
+        pos_after = m_fileReader->SetFilePointer(0LL, FILE_END);
+        if ((timeShiftBufferPos > 0) && (pos_after > timeShiftBufferPos))
+        {
+          /* Move backward */
+          pos_after = fileReader->SetFilePointer((timeShiftBufferPos-pos_after), FILE_CURRENT);
+        }
+      }
+
       m_demultiplexer.RequestNewPat();
-      m_fileReader->OnChannelChange();
+      fileReader->OnChannelChange();
 
       XBMC->Log(LOG_DEBUG,"OnZap: move from %I64d to %I64d tsbufpos  %I64d", pos_before, pos_after, timeShiftBufferPos);
       usleep(100000);

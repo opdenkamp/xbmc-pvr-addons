@@ -39,6 +39,7 @@
 #include <algorithm> //std::min, std::max
 #include "platform/util/timeutils.h" // for usleep
 #include "platform/util/util.h"
+#include "utils.h"
 
 using namespace ADDON;
 
@@ -59,7 +60,6 @@ using namespace ADDON;
 
 FileReader::FileReader() :
   m_hFile(NULL),
-  m_pFileName(0),
   m_fileSize(0)
 {
 }
@@ -67,34 +67,19 @@ FileReader::FileReader() :
 FileReader::~FileReader()
 {
   CloseFile();
-  SAFE_DELETE_ARRAY(m_pFileName);
 }
 
 
-long FileReader::GetFileName(char* *lpszFileName)
+long FileReader::GetFileName(std::string& fileName)
 {
-  *lpszFileName = m_pFileName;
+  fileName = m_fileName;
   return S_OK;
 }
 
 
-long FileReader::SetFileName(const char *pszFileName)
+long FileReader::SetFileName(const std::string& fileName)
 {
-  if(strlen(pszFileName) > MAX_PATH)
-    return ERROR_FILENAME_EXCED_RANGE;
-
-  // Take a copy of the filename
-  if (m_pFileName)
-  {
-    SAFE_DELETE_ARRAY(m_pFileName);
-  }
-
-  m_pFileName = new char[1 + strlen(pszFileName)];
-  if (m_pFileName == NULL)
-    return E_OUTOFMEMORY;
-
-  strncpy(m_pFileName, pszFileName, strlen(pszFileName) + 1);
-
+  m_fileName = ToXBMCPath(fileName);
   return S_OK;
 }
 
@@ -103,9 +88,16 @@ long FileReader::SetFileName(const char *pszFileName)
 //
 // Opens the file ready for streaming
 //
+long FileReader::OpenFile(const std::string& fileName)
+{
+  SetFileName(fileName);
+  return OpenFile();
+}
+
 long FileReader::OpenFile()
 {
   int Tmo = 25; //5 in MediaPortal
+
 
   // Is the file already opened
   if (!IsFileInvalid())
@@ -115,7 +107,7 @@ long FileReader::OpenFile()
   }
 
   // Has a filename been set yet
-  if (m_pFileName == NULL) 
+  if (m_fileName.empty()) 
   {
     XBMC->Log(LOG_ERROR, "FileReader::OpenFile() no filename");
     return ERROR_INVALID_NAME;
@@ -123,8 +115,8 @@ long FileReader::OpenFile()
 
   do
   {
-    XBMC->Log(LOG_INFO, "FileReader::OpenFile() %s.", m_pFileName);
-    void* fileHandle = XBMC->OpenFile(m_pFileName, READ_CHUNKED);
+    XBMC->Log(LOG_INFO, "FileReader::OpenFile() %s.", m_fileName.c_str());
+    void* fileHandle = XBMC->OpenFile(m_fileName.c_str(), READ_CHUNKED);
     if (fileHandle)
     {
       m_hFile = fileHandle;
@@ -138,15 +130,15 @@ long FileReader::OpenFile()
   if (Tmo)
   {
     if (Tmo<4) // 1 failed + 1 succeded is quasi-normal, more is a bit suspicious ( disk drive too slow or problem ? )
-      XBMC->Log(LOG_DEBUG, "FileReader::OpenFile(), %d tries to succeed opening %ws.", 6-Tmo, m_pFileName);
+      XBMC->Log(LOG_DEBUG, "FileReader::OpenFile(), %d tries to succeed opening %ws.", 6-Tmo, m_fileName.c_str());
   }
   else
   {
-    XBMC->Log(LOG_ERROR, "FileReader::OpenFile(), open file %s failed.", m_pFileName);
+    XBMC->Log(LOG_ERROR, "FileReader::OpenFile(), open file %s failed.", m_fileName.c_str());
     return S_FALSE;
   }
 
-  XBMC->Log(LOG_DEBUG, "%s: OpenFile(%s) succeeded.", __FUNCTION__, m_pFileName );
+  XBMC->Log(LOG_DEBUG, "%s: OpenFile(%s) succeeded.", __FUNCTION__, m_fileName.c_str() );
 
   SetFilePointer(0, SEEK_SET);
 
@@ -161,11 +153,6 @@ long FileReader::OpenFile()
 //
 long FileReader::CloseFile()
 {
-  if (IsFileInvalid())
-  {
-    return S_OK;
-  }
-
   if (m_hFile)
   {
     XBMC->CloseFile(m_hFile);
@@ -178,7 +165,7 @@ long FileReader::CloseFile()
 
 inline bool FileReader::IsFileInvalid()
 {
-  return m_hFile == NULL;
+  return (m_hFile == NULL);
 }
 
 

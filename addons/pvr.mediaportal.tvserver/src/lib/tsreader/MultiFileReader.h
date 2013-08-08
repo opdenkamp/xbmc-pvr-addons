@@ -52,8 +52,9 @@ class MultiFileReader : public FileReader
     MultiFileReader();
     virtual ~MultiFileReader();
 
-    virtual long SetFileName(const char* pszFileName);
+    virtual long SetFileName(const std::string& fileName);
     virtual long OpenFile();
+    virtual long OpenFile(const std::string& fileName);
     virtual long CloseFile();
     virtual long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
 

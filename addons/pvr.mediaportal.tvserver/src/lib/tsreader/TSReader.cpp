@@ -73,19 +73,19 @@ CTsReader::~CTsReader(void)
 
 std::string CTsReader::TranslatePath(const char*  pszFileName)
 {
+  CStdString sFileName = pszFileName;
 #if defined (TARGET_WINDOWS)
   // Can we access the given file already?
   if ( OS::CFile::Exists(pszFileName) )
   {
     XBMC->Log(LOG_DEBUG, "Found the timeshift buffer at: %s\n", pszFileName);
-    return pszFileName;
+    return ToXBMCPath(sFileName);
   }
   XBMC->Log(LOG_NOTICE, "Cannot access '%s' directly. Assuming multiseat mode. Need to translate to UNC filename.", pszFileName);
 #else
   XBMC->Log(LOG_DEBUG, "Multiseat mode; need to translate '%s' to UNC filename.", pszFileName);
 #endif
 
-  CStdString sFileName = pszFileName;
   bool bFound = false;
 
   // Card Id given? (only for Live TV / Radio). Check for an UNC path (e.g. \\tvserver\timeshift)
@@ -131,26 +131,7 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
     }
   }
 
-#if defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  CStdString CIFSName = sFileName;
-  CIFSName.Replace("\\", "/");
-  std::string SMBPrefix = "smb://";
-  if (g_szSMBusername.length() > 0)
-  {
-    SMBPrefix += g_szSMBusername;
-    if (g_szSMBpassword.length() > 0)
-    {
-      SMBPrefix += ":" + g_szSMBpassword;
-    }
-  }
-  else
-  {
-    SMBPrefix += "Guest";
-  }
-  SMBPrefix += "@";
-  CIFSName.Replace("//", SMBPrefix.c_str());
-  sFileName = CIFSName;
-#endif
+  sFileName = ToXBMCPath(sFileName);
 
   if (bFound)
   {
@@ -283,9 +264,7 @@ long CTsReader::Open(const char* pszFileName)
       return S_FALSE;
 
     // open file
-    m_fileReader->SetFileName(m_fileName.c_str());
-
-    long retval = m_fileReader->OpenFile();
+    long retval = m_fileReader->OpenFile(m_fileName);
     if (retval != S_OK)
     {
       XBMC->Log(LOG_ERROR, "Failed to open file '%s' as '%s'", pszFileName, m_fileName.c_str());

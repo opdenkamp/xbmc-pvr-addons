@@ -88,7 +88,7 @@ public:
   // Files
   MythFile ConnectFile(MythProgramInfo &recording);
   MythFile ConnectPath(const CStdString &filename, const CStdString &storageGroup);
-  MythStorageGroupFile GetStorageGroupFile(const CStdString &storageGroup, const CStdString &filename);
+  MythStorageGroupFile GetStorageGroupFile(const CStdString &hostname, const CStdString &storageGroup, const CStdString &filename);
 
   // Bookmarks
   long long GetBookmark(MythProgramInfo &recording);

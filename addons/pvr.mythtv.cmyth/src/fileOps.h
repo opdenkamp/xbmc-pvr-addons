@@ -109,6 +109,7 @@ protected:
   std::map<std::pair<FileType, CStdString>, CStdString> m_artworks;
 
   MythConnection m_con;
+  CStdString m_backendHostname;
 
   CStdString m_localBasePath;
 

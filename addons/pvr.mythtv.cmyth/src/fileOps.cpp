@@ -34,6 +34,7 @@ FileOps::FileOps(MythConnection &mythConnection)
   : CThread()
   , CMutex()
   , m_con(mythConnection)
+  , m_backendHostname()
   , m_localBasePath(g_szUserPath.c_str())
   , m_queueContent()
   , m_jobQueue()
@@ -45,6 +46,8 @@ FileOps::FileOps(MythConnection &mythConnection)
   {
     XBMC->Log(LOG_ERROR,"%s - Failed to create cache directory %s", __FUNCTION__, m_localBasePath.c_str());
   }
+
+  m_backendHostname = m_con.GetBackendHostname();
 
   CreateThread();
 }
@@ -99,7 +102,7 @@ CStdString FileOps::GetPreviewIconPath(const CStdString &remoteFilename, const C
     return it->second;
 
   // Check file exists in storage group
-  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(storageGroup, remoteFilename);
+  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(m_backendHostname, storageGroup, remoteFilename);
 
   // Determine local filename
   CStdString localFilename;
@@ -135,7 +138,7 @@ CStdString FileOps::GetArtworkPath(const CStdString &remoteFilename, FileType fi
     return iter->second;
 
   // Check file exists in storage group
-  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(GetFolderNameByFileType(fileType), remoteFilename);
+  MythStorageGroupFile sgfile = m_con.GetStorageGroupFile(m_backendHostname, GetFolderNameByFileType(fileType), remoteFilename);
 
   // Determine local filename
   CStdString localFilename;

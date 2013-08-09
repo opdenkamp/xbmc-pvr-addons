@@ -31,7 +31,7 @@
 
 class MythConnection;
 
-class FileOps : public PLATFORM::CThread, public PLATFORM::CMutex
+class FileOps : public PLATFORM::CThread
 {
 public:
   enum FileType
@@ -128,6 +128,7 @@ protected:
     int        m_errorCount;
   };
 
+  PLATFORM::CMutex m_lock;
   PLATFORM::CEvent m_queueContent;
   std::list<FileOps::JobItem> m_jobQueue;
 };

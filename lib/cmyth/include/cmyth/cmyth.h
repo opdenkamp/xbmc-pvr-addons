@@ -2131,13 +2131,13 @@ extern cmyth_storagegroup_filelist_t cmyth_storagegroup_get_filelist(cmyth_conn_
  * Before forgetting the reference to this storagegroup file structure
  * the caller must call ref_release().
  * \param control
- * \param storagegroup
  * \param hostname
+ * \param storagegroup
  * \param filename
  * \return success: storage file handle
  * \return failure: NULL
  */
-extern cmyth_storagegroup_file_t cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *storagegroup, char *hostname, char *filename);
+extern cmyth_storagegroup_file_t cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *hostname, char *storagegroup, char *filename);
 
 /**
  * Retrieves the number of elements in the storagegroup files list structure.

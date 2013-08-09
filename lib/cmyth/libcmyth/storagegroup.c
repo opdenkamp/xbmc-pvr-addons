@@ -268,7 +268,7 @@ cmyth_storagegroup_filelist_get_item(cmyth_storagegroup_filelist_t fl, int index
  }
 
 cmyth_storagegroup_file_t
-cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *storagegroup, char *hostname, char *filename)
+cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *hostname, char *storagegroup, char *filename)
 {
 	char msg[256];
 	int count = 0;

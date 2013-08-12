@@ -34,6 +34,7 @@
 #define M3U_INFO_MARKER         "#EXTINF"
 #define TVG_INFO_ID_MARKER      "tvg-id="
 #define TVG_INFO_NAME_MARKER    "tvg-name="
+#define TVG_INFO_NUM_MARKER     "tvg-num="
 #define TVG_INFO_LOGO_MARKER    "tvg-logo="
 #define TVG_INFO_SHIFT_MARKER   "tvg-shift="
 #define GROUP_NAME_MARKER       "group-title="
@@ -359,6 +360,7 @@ bool PVRIptvData::LoadPlayList(void)
       {
         double fTvgShift = atof(ReadMarkerValue(strLine, TVG_INFO_SHIFT_MARKER));
         iEPGTimeShift = (int) (fTvgShift * 3600.0);
+        iChannelNum = atoi(ReadMarkerValue(strLine, TVG_INFO_NUM_MARKER));
         continue;
       }
       else

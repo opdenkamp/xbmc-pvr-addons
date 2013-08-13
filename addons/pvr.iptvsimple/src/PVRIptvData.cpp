@@ -34,6 +34,7 @@
 #define M3U_INFO_MARKER         "#EXTINF"
 #define TVG_INFO_ID_MARKER      "tvg-id="
 #define TVG_INFO_NAME_MARKER    "tvg-name="
+#define TVG_INFO_NUM_MARKER     "tvg-num="
 #define TVG_INFO_LOGO_MARKER    "tvg-logo="
 #define TVG_INFO_SHIFT_MARKER   "tvg-shift="
 #define GROUP_NAME_MARKER       "group-title="
@@ -324,7 +325,6 @@ bool PVRIptvData::LoadPlayList(void)
   int iUniqueChannelId  = 0;
   int iUniqueGroupId    = 0;
   int iCurrentGroupId   = 0;
-  int iChannelNum       = 0;
   int iEPGTimeShift     = 0;
 
   PVRIptvChannel tmpChannel;
@@ -371,6 +371,7 @@ bool PVRIptvData::LoadPlayList(void)
     {
       bool        bRadio       = false;
       double      fTvgShift    = 0;
+      int         iTvgNum      = 1;
       CStdString  strChnlName  = "";
       CStdString  strTvgId     = "";
       CStdString  strTvgName   = "";
@@ -397,6 +398,7 @@ bool PVRIptvData::LoadPlayList(void)
         strGroupName  = ReadMarkerValue(strInfoLine, GROUP_NAME_MARKER);
         strRadio      = ReadMarkerValue(strInfoLine, RADIO_MARKER);
         fTvgShift     = atof(ReadMarkerValue(strInfoLine, TVG_INFO_SHIFT_MARKER));
+        iTvgNum       = atoi(ReadMarkerValue(strInfoLine, TVG_INFO_NUM_MARKER));
 
         if (strTvgId.IsEmpty())
         {
@@ -409,12 +411,13 @@ bool PVRIptvData::LoadPlayList(void)
           strTvgLogo = strChnlName;
         }
 
-        bRadio                = !strRadio.CompareNoCase("true");
-        tmpChannel.strTvgId   = strTvgId;
-        tmpChannel.strTvgName = XBMC->UnknownToUTF8(strTvgName);
-        tmpChannel.strTvgLogo = XBMC->UnknownToUTF8(strTvgLogo);
-        tmpChannel.iTvgShift  = (int)(fTvgShift * 3600.0);
-        tmpChannel.bRadio     = bRadio;
+        bRadio                    = !strRadio.CompareNoCase("true");
+        tmpChannel.iChannelNumber = iTvgNum;
+        tmpChannel.strTvgId       = strTvgId;
+        tmpChannel.strTvgName     = XBMC->UnknownToUTF8(strTvgName);
+        tmpChannel.strTvgLogo     = XBMC->UnknownToUTF8(strTvgLogo);
+        tmpChannel.iTvgShift      = (int)(fTvgShift * 3600.0);
+        tmpChannel.bRadio         = bRadio;
 
         if (tmpChannel.iTvgShift == 0 && iEPGTimeShift != 0)
         {
@@ -447,7 +450,7 @@ bool PVRIptvData::LoadPlayList(void)
     {
       PVRIptvChannel channel;
       channel.iUniqueId         = ++iUniqueChannelId;
-      channel.iChannelNumber    = ++iChannelNum;
+      channel.iChannelNumber    = tmpChannel.iChannelNumber;
       channel.strTvgId          = tmpChannel.strTvgId;
       channel.strChannelName    = tmpChannel.strChannelName;
       channel.strTvgName        = tmpChannel.strTvgName;

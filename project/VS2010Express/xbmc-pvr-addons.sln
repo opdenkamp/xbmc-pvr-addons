@@ -41,6 +41,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.dvbviewer", "..\..\addo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.argustv", "..\..\addons\pvr.argustv\project\VS2010Express\pvr.argustv.vcxproj", "{8D24D95E-3C4E-4DC5-ABEF-C35C938C2EBB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.iptvsimple", "..\..\addons\pvr.iptvsimple\project\VS2010Express\pvr.iptvsimple.vcxproj", "{6C67B057-CE98-4732-AABF-0E374C718815}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -107,6 +109,10 @@ Global
 		{8D24D95E-3C4E-4DC5-ABEF-C35C938C2EBB}.Debug|Win32.Build.0 = Debug|Win32
 		{8D24D95E-3C4E-4DC5-ABEF-C35C938C2EBB}.Release|Win32.ActiveCfg = Release|Win32
 		{8D24D95E-3C4E-4DC5-ABEF-C35C938C2EBB}.Release|Win32.Build.0 = Release|Win32
+		{6C67B057-CE98-4732-AABF-0E374C718815}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C67B057-CE98-4732-AABF-0E374C718815}.Debug|Win32.Build.0 = Debug|Win32
+		{6C67B057-CE98-4732-AABF-0E374C718815}.Release|Win32.ActiveCfg = Release|Win32
+		{6C67B057-CE98-4732-AABF-0E374C718815}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -640,6 +640,7 @@ extern char*cmyth_recorder_get_filename(cmyth_recorder_t rec);
 extern int cmyth_recorder_stop_livetv(cmyth_recorder_t rec);
 extern int cmyth_recorder_done_ringbuf(cmyth_recorder_t rec);
 extern uint32_t cmyth_recorder_get_recorder_id(cmyth_recorder_t rec);
+extern int cmyth_recorder_set_live_recording(cmyth_recorder_t rec, uint8_t recording);
 
 /*
  * -----------------------------------------------------------------

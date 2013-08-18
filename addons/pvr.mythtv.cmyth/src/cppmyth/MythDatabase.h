@@ -94,6 +94,7 @@ public:
   long long GetRecordingFrameRate(const MythProgramInfo &recording);
 
   bool FillRecordingArtwork(MythProgramInfo &recording);
+  bool KeepLiveTVRecording(MythProgramInfo &recording, bool keep);
 
 private:
   boost::shared_ptr<MythPointerThreadSafe<cmyth_database_t> > m_database_t;

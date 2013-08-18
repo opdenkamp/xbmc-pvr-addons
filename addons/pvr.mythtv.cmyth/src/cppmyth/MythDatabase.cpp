@@ -305,3 +305,11 @@ bool MythDatabase::FillRecordingArtwork(MythProgramInfo &recording)
   }
   return false;
 }
+
+bool MythDatabase::KeepLiveTVRecording(MythProgramInfo& recording, bool keep)
+{
+  int retval = 0;
+  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_keep_livetv_recording(*m_database_t, *recording.m_proginfo_t, (keep ? 1 : 0)));
+  return (retval > 0);
+}
+

@@ -73,6 +73,7 @@ static inline struct tm *localtime_r(const time_t * clock, struct tm *result)
 #define SUBTITLE_SEPARATOR " - "
 
 #define MENUHOOK_REC_DELETE_AND_RERECORD   1
+#define MENUHOOK_KEEP_LIVETV_RECORDING     2
 
 /*!
  * @brief PVR macros for string exchange

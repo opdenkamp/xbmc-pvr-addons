@@ -46,6 +46,18 @@ bool MythProgramInfo::IsNull() const
   return *m_proginfo_t == NULL;
 }
 
+bool MythProgramInfo::operator ==(MythProgramInfo &other)
+{
+  if (!this->IsNull() && !other.IsNull() && this->UID() == other.UID())
+    return true;
+  return false;
+}
+
+bool MythProgramInfo::operator !=(MythProgramInfo &other)
+{
+  return !(*this == other);
+}
+
 CStdString MythProgramInfo::UID()
 {
   // Creates unique IDs from ChannelID, StartTime and RecordID like "100_2011-12-10T12:00:00_247"

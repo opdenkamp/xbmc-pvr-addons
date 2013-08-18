@@ -63,10 +63,14 @@ public:
 
   bool Stop();
 
+  bool IsLiveRecording();
+  bool SetLiveRecording(bool recording);
+
 private:
   boost::shared_ptr<MythPointerThreadSafe<cmyth_recorder_t> > m_recorder_t;
   boost::shared_ptr<int> m_liveChainUpdated;
   MythConnection m_conn;
+  bool m_liveRecording;
 
   static void prog_update_callback(cmyth_proginfo_t prog);
 };

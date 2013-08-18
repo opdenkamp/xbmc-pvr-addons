@@ -176,3 +176,7 @@ msgstr ""
 msgctxt "#30411"
 msgid "Delete and re-record"
 msgstr ""
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr ""

@@ -125,6 +125,9 @@ private:
   void ForceUpdateRecording(ProgramInfoMap::iterator it);
   int FillRecordings();
   int GetRecordingLastPlayedPosition(MythProgramInfo &programInfo);
+  MythChannel FindRecordingChannel(MythProgramInfo &programInfo);
+  bool IsMyLiveTVRecording(MythProgramInfo &programInfo);
+  bool KeepLiveTVRecording(MythProgramInfo &programInfo, bool keep);
 
   // Timers
   MythRecordingRule PVRtoMythRecordingRule(const PVR_TIMER &timer);

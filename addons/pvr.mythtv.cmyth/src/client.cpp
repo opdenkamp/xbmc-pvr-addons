@@ -287,6 +287,12 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   menuHookDeleteAndRerecord.iLocalizedStringId = 30411;
   PVR->AddMenuHook(&menuHookDeleteAndRerecord);
 
+  PVR_MENUHOOK menuHookKeepLiveTVRec;
+  menuHookKeepLiveTVRec.category = PVR_MENUHOOK_RECORDING;
+  menuHookKeepLiveTVRec.iHookId = MENUHOOK_KEEP_LIVETV_RECORDING;
+  menuHookKeepLiveTVRec.iLocalizedStringId = 30412;
+  PVR->AddMenuHook(&menuHookKeepLiveTVRec);
+
   XBMC->Log(LOG_DEBUG, "MythTV cmyth PVR-Client successfully created");
   m_CurStatus = ADDON_STATUS_OK;
   g_bCreated = true;

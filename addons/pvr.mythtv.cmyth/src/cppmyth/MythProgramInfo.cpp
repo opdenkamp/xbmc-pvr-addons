@@ -157,12 +157,12 @@ bool MythProgramInfo::HasBookmark()
 
 bool MythProgramInfo::IsVisible()
 {
-  // Filter out recording of special storage groups (like LiveTV or Deleted)
-
+  // Filter out recording of special storage group Deleted
+  // Filter out recording with duration less than 5 seconds
   // When  deleting a recording, it might not be deleted immediately but marked as 'pending delete'.
   // Depending on the protocol version the recording is moved to the group Deleted or
   // the 'delete pending' flag is set
-  if (RecordingGroup() == "LiveTV" || RecordingGroup() == "Deleted" || IsDeletePending())
+  if (Duration() < 5 || RecordingGroup() == "Deleted" || IsDeletePending())
   {
     return false;
   }

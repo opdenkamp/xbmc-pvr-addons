@@ -1097,20 +1097,20 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 
 	if (db->db_version >= 1278) {
 		query_str = "INSERT INTO record (record.type, chanid, starttime, startdate, endtime, enddate, title, "
-			"description, category, findtime, station, subtitle, recpriority, startoffset, endoffset, "
+			"description, category, findtime, findday, station, subtitle, recpriority, startoffset, endoffset, "
 			"search, inactive, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, autouserjob1, "
 			"autouserjob2, autouserjob3, autouserjob4, autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, "
 			"parentid, profile, prefinput, autometadata, inetref, season, episode, filter) "
-			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TIME(?), "
+			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TIME(?), MOD(DAYOFWEEK(?),7), "
 			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	}
 	else {
 		query_str = "INSERT INTO record (record.type, chanid, starttime, startdate, endtime, enddate, title, "
-			"description, category, findtime, station, subtitle, recpriority, startoffset, endoffset, "
+			"description, category, findtime, findday, station, subtitle, recpriority, startoffset, endoffset, "
 			"search, inactive, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, autouserjob1, "
 			"autouserjob2, autouserjob3, autouserjob4, autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, "
 			"parentid, profile, prefinput) "
-			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TIME(?), "
+			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TIME(?), MOD(DAYOFWEEK(?),7), "
 			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?)";
 	}
 
@@ -1127,6 +1127,7 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			|| cmyth_mysql_query_param_str(query, rr->title) < 0
 			|| cmyth_mysql_query_param_str(query, rr->description) < 0
 			|| cmyth_mysql_query_param_str(query, rr->category) < 0
+			|| cmyth_mysql_query_param_unixtime(query, starttime, 0) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, 0) < 0
 			|| cmyth_mysql_query_param_str(query, rr->callsign) < 0
 			|| cmyth_mysql_query_param_str(query, rr->subtitle) < 0
@@ -1265,6 +1266,7 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 		query_str = "UPDATE record SET record.type = ?, chanid = ?, starttime = TIME(?), startdate = DATE(?), "
 			"endtime = TIME(?), enddate = DATE(?) ,title = ?, description = ?, category = ?, subtitle = ?, "
 			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, findtime = TIME(?), "
+			"findday = MOD(DAYOFWEEK(?),7), "
 			"station = ?, dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, "
 			"autotranscode = ?, autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, "
 			"autocommflag = ?, autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, "
@@ -1275,6 +1277,7 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 		query_str = "UPDATE record SET record.type = ?, chanid = ?, starttime = TIME(?), startdate = DATE(?), "
 			"endtime = TIME(?), enddate = DATE(?) ,title = ?, description = ?, category = ?, subtitle = ?, "
 			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, findtime = TIME(?), "
+			"findday = MOD(DAYOFWEEK(?),7), "
 			"station = ?, dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, "
 			"autotranscode = ?, autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, "
 			"autocommflag = ?, autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, "
@@ -1300,6 +1303,7 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			|| cmyth_mysql_query_param_uint(query, rr->endoffset) < 0
 			|| cmyth_mysql_query_param_uint(query, rr->searchtype) < 0
 			|| cmyth_mysql_query_param_uint(query, rr->inactive) < 0
+			|| cmyth_mysql_query_param_unixtime(query, starttime, 0) < 0
 			|| cmyth_mysql_query_param_unixtime(query, starttime, 0) < 0
 			|| cmyth_mysql_query_param_str(query, rr->callsign) < 0
 			|| cmyth_mysql_query_param_uint(query, rr->dupmethod) < 0

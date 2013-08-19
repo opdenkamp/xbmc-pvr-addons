@@ -1620,7 +1620,7 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
   //  - Recorder is a DEMO and it does not record
   //  - Recorder is not recording for unknown reasons
   //  - Recorder must keep live
-  if (!m_rec.IsLiveRecording() && m_rec.IsRecording() && m_rec.CheckChannel(channelByIdIt->second))
+  if (!m_rec.IsLiveRecording() && m_rec.IsRecording() && m_rec.IsTunable(channelByIdIt->second))
   {
     if (!(retval = m_rec.SetChannel(channelByIdIt->second)))
     {

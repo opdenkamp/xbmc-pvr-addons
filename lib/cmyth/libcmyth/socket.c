@@ -2983,7 +2983,8 @@ cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int buflen, int 
 		++conn->conn_pos;
 		++consumed;
 	}
-	cmyth_dbg(CMYTH_DBG_PROTO, "%s: string received '%s'\n",
+	buf[placed] = '\0';
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: data received '%s'\n",
 		  __FUNCTION__, buf);
 	return consumed;
 }

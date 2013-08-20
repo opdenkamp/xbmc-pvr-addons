@@ -42,11 +42,11 @@ int64_t cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
 	sprintf(buf,"%s %"PRIu32" %s","QUERY_BOOKMARK",prog->proginfo_chanId,
 		start_ts_dt);
 	pthread_mutex_lock(&conn->conn_mutex);;
-	if ((err = cmyth_send_message(conn,buf)) < 0) {
+	if ((r = cmyth_send_message(conn,buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			"%s: cmyth_send_message() failed (%d)\n",
-			__FUNCTION__, err);
-		ret = err;
+			__FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 	count = cmyth_rcv_length(conn);

@@ -31,7 +31,7 @@
 
 class MythConnection;
 
-class FileOps : public PLATFORM::CThread, public PLATFORM::CMutex
+class FileOps : public PLATFORM::CThread
 {
 public:
   enum FileType
@@ -89,7 +89,7 @@ public:
 
   CStdString GetArtworkPath(const CStdString &remoteFilename, FileType fileType);
   CStdString GetChannelIconPath(const CStdString &remoteFilename);
-  CStdString GetPreviewIconPath(const CStdString &remoteFilename, const CStdString &recordingGroup);
+  CStdString GetPreviewIconPath(const CStdString &remoteFilename, const CStdString &storageGroup);
 
   void Suspend();
   void Resume();
@@ -97,7 +97,8 @@ public:
 protected:
   void* Process();
 
-  bool CacheFile(const CStdString &destination, MythFile &source);
+  void *OpenFile(const CStdString &localFilename);
+  bool CacheFile(void *destination, MythFile &source);
   void CleanCache();
 
   static CStdString GetFileName(const CStdString &path, char separator = PATH_SEPARATOR_CHAR);
@@ -108,6 +109,7 @@ protected:
   std::map<std::pair<FileType, CStdString>, CStdString> m_artworks;
 
   MythConnection m_con;
+  CStdString m_backendHostname;
 
   CStdString m_localBasePath;
 
@@ -126,6 +128,7 @@ protected:
     int        m_errorCount;
   };
 
+  PLATFORM::CMutex m_lock;
   PLATFORM::CEvent m_queueContent;
   std::list<FileOps::JobItem> m_jobQueue;
 };

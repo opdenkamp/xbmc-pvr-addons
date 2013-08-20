@@ -1,3 +1,12 @@
+v1.8.12
+- Added 'Delete and re-record' menuhook
+- Added support for MythTV protocol 76 and 77 (MythTV 0.27)
+- Allow the backend to shutdown (by using monitor and playback connections)
+- Reduced startup time (Faster loading of channels)
+- Fixed start time for instant recordings
+- Fixed several smaller memory and multithreading issues
+- Refactored & cleaned up libcmyth (epginfo)
+
 v1.8.11
 - sync with PVR API v1.8.0
 

@@ -649,8 +649,6 @@ extern uint32_t cmyth_recorder_get_recorder_id(cmyth_recorder_t rec);
 
 extern cmyth_livetv_chain_t cmyth_livetv_chain_create(char * chainid);
 
-extern cmyth_file_t cmyth_livetv_get_cur_file(cmyth_recorder_t rec);
-
 extern int64_t cmyth_livetv_chain_duration(cmyth_recorder_t rec);
 
 extern int cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir);

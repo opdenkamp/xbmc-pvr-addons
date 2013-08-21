@@ -1513,8 +1513,6 @@ int PVRClientMythTV::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuffer
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - size: %u", __FUNCTION__, iBufferSize);
 
-  CLockObject lock(m_lock);
-
   if (m_rec.IsNull())
     return -1;
 
@@ -1530,8 +1528,6 @@ int PVRClientMythTV::GetCurrentClientChannel()
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
-
-  CLockObject lock(m_lock);
 
   if (m_rec.IsNull())
     return -1;
@@ -1612,8 +1608,6 @@ long long PVRClientMythTV::SeekLiveStream(long long iPosition, int iWhence)
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s - pos: %lld, whence: %d", __FUNCTION__, iPosition, iWhence);
 
-  CLockObject lock(m_lock);
-
   if (m_rec.IsNull())
     return -1;
 
@@ -1637,8 +1631,6 @@ long long PVRClientMythTV::LengthLiveStream()
 {
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
-
-  CLockObject lock(m_lock);
 
   if (m_rec.IsNull())
     return -1;

@@ -307,9 +307,7 @@ long long MythRecorder::LiveTVSeek(long long offset, int whence)
 long long MythRecorder::LiveTVDuration()
 {
   long long retval = 0;
-  Lock();
   retval = cmyth_livetv_chain_duration(*m_recorder_t);
-  Unlock();
   return retval;
 }
 

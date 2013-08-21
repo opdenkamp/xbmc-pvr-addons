@@ -872,11 +872,10 @@ cmyth_livetv_chain_switch_last(cmyth_recorder_t rec)
 		return -EINVAL;
 	}
 
-	if (rec->rec_conn->conn_version < 26)
+	if (!rec->rec_livetv_chain)
 		return 1;
 
-	dir = rec->rec_livetv_chain->chain_ct
-			- rec->rec_livetv_chain->chain_current - 1;
+	dir = rec->rec_livetv_chain->chain_ct - rec->rec_livetv_chain->chain_current - 1;
 
 	return cmyth_livetv_chain_switch(rec, dir);
 }
@@ -900,7 +899,8 @@ cmyth_livetv_chain_switch_last(cmyth_recorder_t rec)
 static int32_t
 cmyth_livetv_chain_request_block(cmyth_recorder_t rec, int32_t len)
 {
-	int ret, retry;
+	int32_t ret;
+	int retry;
 
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) {\n", __FUNCTION__,
 				__FILE__, __LINE__);
@@ -913,7 +913,7 @@ cmyth_livetv_chain_request_block(cmyth_recorder_t rec, int32_t len)
 			retry = cmyth_livetv_chain_switch(rec, 1);
 		}
 	}
-	while (retry);
+	while (retry > 0);
 
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s [%s:%d]: (trace) }\n",
 				__FUNCTION__, __FILE__, __LINE__);
@@ -941,14 +941,23 @@ cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, int32_t len)
 {
 	int ret, retry;
 	int32_t vlen, rlen, nlen;
+	cmyth_livetv_chain_t chain;
+	cmyth_file_t file;
+
+	if (!rec || !rec->rec_livetv_chain || !rec->rec_livetv_file)
+		return (int32_t) -EINVAL;
+
+	chain = ref_hold(rec->rec_livetv_chain);
+	file = ref_hold(rec->rec_livetv_file);
+	ref_hold(rec);
 
 	/*
-	 * Set the requested block size to the recommended value. It was
-	 * estimated the previous time.
+	 * Set the requested block size to the recommended value.
+	 * It was estimated the previous time.
 	 * = 0 : No limit. Use the input value (len)
 	 * > 0 : limit is capped at this value
 	 */
-	vlen = rec->rec_livetv_chain->livetv_block_len;
+	vlen = chain->livetv_block_len;
 
 	do {
 		if (vlen == 0 || vlen > len) {
@@ -959,7 +968,7 @@ cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, int32_t len)
 		}
 
 		retry = 0;
-		ret = cmyth_file_read(rec->rec_livetv_file, buf, rlen);
+		ret = cmyth_file_read(file, buf, rlen);
 		if (ret < 0) {
 			break;
 		}
@@ -968,16 +977,18 @@ cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, int32_t len)
 			/* eof, switch to next file */
 			retry = cmyth_livetv_chain_switch(rec, 1);
 			if (retry == 1) {
+				ref_release(file);
+				file = ref_hold(rec->rec_livetv_file);
 				/* Already requested ? seek to 0 */
-				cmyth_file_seek(rec->rec_livetv_file, 0, WHENCE_SET);
+				cmyth_file_seek(file, 0, WHENCE_SET);
 				/* Chain switch done. Retry without limit */
 				vlen = 0;
 			}
-			else if (rec->rec_livetv_chain->livetv_watch == 0) {
+			else if (retry == 0 && chain->livetv_watch == 0) {
 				/*
 				 * Current buffer is empty on the last file.
 				 * We are waiting some time refilling buffer
-				 * Timeout is 0.5 seconde before release.
+				 * Timeout is 250 ms before release.
 				 */
 				cmyth_dbg(CMYTH_DBG_ERROR,
 					  "%s: wait some 250ms before request block\n",
@@ -998,11 +1009,14 @@ cmyth_livetv_chain_read(cmyth_recorder_t rec, char *buf, int32_t len)
 			vlen = 0;
 		}
 
-	} while(retry);
+	} while (retry > 0);
 
 	/* Store the recommended value of block size for next time */
-	rec->rec_livetv_chain->livetv_block_len = vlen;
+	chain->livetv_block_len = vlen;
 
+	ref_release(rec);
+	ref_release(file);
+	ref_release(chain);
 	return ret;
 }
 
@@ -1026,16 +1040,22 @@ cmyth_livetv_chain_duration(cmyth_recorder_t rec)
 {
 	int cur, ct;
 	int64_t ret = 0;
+	cmyth_livetv_chain_t chain;
 
 	if (!rec) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n", __FUNCTION__);
 		return (int64_t) -EINVAL;
 	}
+	if (!rec->rec_livetv_chain)
+		return 0;
+	chain = ref_hold(rec->rec_livetv_chain);
 
-	ct  = rec->rec_livetv_chain->chain_ct;
+	ct  = chain->chain_ct;
 	for (cur = 0; cur < ct; cur++) {
-		ret += rec->rec_livetv_chain->chain_files[cur]->file_length;
+		ret += chain->chain_files[cur]->file_length;
 	}
+
+	ref_release(chain);
 	return ret;
 }
 
@@ -1064,27 +1084,36 @@ static int64_t
 cmyth_livetv_chain_seek(cmyth_recorder_t rec, int64_t offset, int8_t whence)
 {
 	int64_t ret;
-	cmyth_file_t fp;
+	cmyth_file_t file, fp;
+	cmyth_livetv_chain_t chain;
 	int cur, ct;
 
+	ret = (int64_t) -1;
 	fp = NULL;
 	cur = -1;
-	ct  = rec->rec_livetv_chain->chain_ct;
+
+	if (!rec || !rec->rec_livetv_chain || !rec->rec_livetv_file)
+		return (int64_t) -EINVAL;
+	chain = ref_hold(rec->rec_livetv_chain);
+	file = ref_hold(rec->rec_livetv_file);
+	ref_hold(rec);
+
+	ct  = chain->chain_ct;
 
 	if (whence == WHENCE_END) {
-		offset = - rec->rec_livetv_file->file_req - offset;
-		for (cur = rec->rec_livetv_chain->chain_current; cur < ct; cur++) {
-			offset += rec->rec_livetv_chain->chain_files[cur]->file_length;
+		offset = - file->file_req - offset;
+		for (cur = chain->chain_current; cur < ct; cur++) {
+			offset += chain->chain_files[cur]->file_length;
 		}
 
-		cur = rec->rec_livetv_chain->chain_current;
-		fp  = rec->rec_livetv_chain->chain_files[cur];
+		cur = chain->chain_current;
+		fp  = chain->chain_files[cur];
 		whence = WHENCE_CUR;
 	}
 
 	if (whence == WHENCE_SET) {
 		for (cur = 0; cur < ct; cur++) {
-    			fp = rec->rec_livetv_chain->chain_files[cur];
+			fp = chain->chain_files[cur];
 			if (offset < fp->file_length)
 				break;
 			offset -= fp->file_length;
@@ -1094,15 +1123,16 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, int64_t offset, int8_t whence)
 	if (whence == WHENCE_CUR) {
 
 		if (offset == 0) {
-			cur     = rec->rec_livetv_chain->chain_current;
-			offset += rec->rec_livetv_chain->chain_files[cur]->file_req;
+			cur     = chain->chain_current;
+			offset += chain->chain_files[cur]->file_req;
 			for (; cur > 0; cur--) {
-				offset += rec->rec_livetv_chain->chain_files[cur-1]->file_length;
+				offset += chain->chain_files[cur-1]->file_length;
 			}
-			return offset;
+			ret = offset;
+			goto out;
 		} else {
-			cur = rec->rec_livetv_chain->chain_current;
-			fp  = rec->rec_livetv_chain->chain_files[cur];
+			cur = chain->chain_current;
+			fp  = chain->chain_files[cur];
 		}
 
 		offset += fp->file_req;
@@ -1110,40 +1140,48 @@ cmyth_livetv_chain_seek(cmyth_recorder_t rec, int64_t offset, int8_t whence)
 		while (offset > fp->file_length) {
 			cur++;
 			offset -= fp->file_length;
-			if (cur == ct)
-				return -1;
-			fp = rec->rec_livetv_chain->chain_files[cur];
+			if (cur == ct) {
+				ret = -1;
+				goto out;
+			}
+			fp = chain->chain_files[cur];
 		}
 
 		while (offset < 0) {
 			cur--;
-			if (cur < 0)
-				return -1;
-			fp = rec->rec_livetv_chain->chain_files[cur];
+			if (cur < 0) {
+				ret = -1;
+				goto out;
+			}
+			fp = chain->chain_files[cur];
 			offset += fp->file_length;
 		}
 
 		whence = WHENCE_SET;
 	}
 
-	if (cur >=0 && cur < rec->rec_livetv_chain->chain_ct && fp)
+	if (cur >= 0 && cur < chain->chain_ct && fp)
 	{
 		if ((ret = cmyth_file_seek(fp, offset, whence)) >= 0) {
-			cur -= rec->rec_livetv_chain->chain_current;
+			cur -= chain->chain_current;
 			if (cmyth_livetv_chain_switch(rec, cur) == 1) {
 				/*
 				 * Return the new position in the chain
 				 */
-				for (cur = 0; cur < rec->rec_livetv_chain->chain_current; cur++) {
-					fp = rec->rec_livetv_chain->chain_files[cur];
+				for (cur = 0; cur < chain->chain_current; cur++) {
+					fp = chain->chain_files[cur];
 					ret += fp->file_length;
 				}
-				return ret;
 			}
 		}
 	}
 
-	return -1;
+	out:
+
+	ref_release(rec);
+	ref_release(chain);
+	ref_release(file);
+	return ret;
 }
 
 /*

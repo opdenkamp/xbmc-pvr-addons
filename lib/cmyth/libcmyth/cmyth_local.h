@@ -62,6 +62,7 @@ typedef int cmyth_socket_t;
 #define CMYTH_INT16_LEN (sizeof("-65536") - 1)
 #define CMYTH_INT8_LEN (sizeof("-256") - 1)
 #define CMYTH_TIMESTAMP_LEN (sizeof("YYYY-MM-DDTHH:MM:SS") - 1)
+#define CMYTH_TIMESTAMP_UTC_LEN (sizeof("YYYY-MM-DDTHH:MM:SSZ") - 1)
 #define CMYTH_TIMESTAMP_NUMERIC_LEN (sizeof("YYYYMMDDHHMMSS") - 1)
 #define CMYTH_DATESTAMP_LEN (sizeof("YYYY-MM-DD") - 1)
 #define CMYTH_UTC_LEN (sizeof("1240120680") - 1)
@@ -187,6 +188,7 @@ struct cmyth_timestamp {
 	unsigned long timestamp_minute;
 	unsigned long timestamp_second;
 	int timestamp_isdst;
+	int timestamp_isutc;
 };
 
 struct cmyth_proginfo {

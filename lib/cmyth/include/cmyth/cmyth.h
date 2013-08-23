@@ -764,6 +764,10 @@ extern cmyth_timestamp_t cmyth_timestamp_from_unixtime(time_t l);
 
 extern cmyth_timestamp_t cmyth_timestamp_utc_from_unixtime(time_t l);
 
+extern cmyth_timestamp_t cmyth_timestamp_to_utc(cmyth_timestamp_t ts);
+
+extern int cmyth_timestamp_isutc(cmyth_timestamp_t ts);
+
 extern time_t cmyth_timestamp_to_unixtime(cmyth_timestamp_t ts);
 
 extern int cmyth_timestamp_to_string(char *str, cmyth_timestamp_t ts);

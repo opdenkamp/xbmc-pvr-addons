@@ -686,6 +686,7 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvb
 	if (new_rec->rec_livetv_chain == NULL) {
 		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: error no livetv_chain\n",
 			  __FUNCTION__);
+		ref_release(new_rec);
 		new_rec = NULL;
 		goto out;
 	}
@@ -707,6 +708,7 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvb
 			cmyth_dbg(CMYTH_DBG_ERROR,
 				  "%s: cmyth_conn_connect_file(%s) failed\n",
 				  __FUNCTION__, url);
+			ref_release(new_rec);
 			new_rec = NULL;
 			goto out;
 		}
@@ -721,7 +723,9 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvb
 				cmyth_dbg(CMYTH_DBG_ERROR,
 					  "%s: cmyth_livetv_chain_add(%s) failed\n",
 					  __FUNCTION__, url);
+				ref_release(new_rec);
 				new_rec = NULL;
+				goto out;
 			}
 			else {
 				/* now switch to the valid program */

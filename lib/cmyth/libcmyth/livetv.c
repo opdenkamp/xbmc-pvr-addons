@@ -1277,3 +1277,74 @@ cmyth_spawn_live_tv(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvbuf,
 
 	return rtrn;
 }
+
+int32_t
+cmyth_livetv_chain_last(cmyth_recorder_t rec)
+{
+	if (!rec) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
+			  __FUNCTION__);
+		return (int32_t) -EINVAL;
+	}
+	if (!rec->rec_livetv_chain) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no chain\n",
+			  __FUNCTION__);
+		return (int32_t) -EINVAL;
+	}
+
+	return rec->rec_livetv_chain->chain_ct - 1;
+}
+
+cmyth_proginfo_t
+cmyth_livetv_chain_prog(cmyth_recorder_t rec, int32_t index)
+{
+	cmyth_proginfo_t prog;
+	cmyth_livetv_chain_t chain;
+
+	if (!rec) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	if (!rec->rec_livetv_chain) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no chain\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	chain = ref_hold(rec->rec_livetv_chain);
+	if (index >= 0 && index < chain->chain_ct) {
+		prog = ref_hold(chain->progs[index]);
+	}
+	else
+		prog = NULL;
+
+	ref_release(chain);
+	return prog;
+}
+
+cmyth_file_t
+cmyth_livetv_chain_file(cmyth_recorder_t rec, int32_t index)
+{
+	cmyth_file_t file;
+	cmyth_livetv_chain_t chain;
+
+	if (!rec) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	if (!rec->rec_livetv_chain) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no chain\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	chain = ref_hold(rec->rec_livetv_chain);
+	if (index >= 0 && index < chain->chain_ct) {
+		file = ref_hold(chain->chain_files[index]);
+	}
+	else
+		file = NULL;
+
+	ref_release(chain);
+	return file;
+}

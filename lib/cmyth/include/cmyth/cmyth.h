@@ -674,6 +674,12 @@ extern cmyth_recorder_t cmyth_livetv_chain_setup(cmyth_recorder_t old_rec,
 				uint32_t buflen, int32_t tcp_rcvbuf,
 				void (*prog_update_callback)(cmyth_proginfo_t));
 
+extern int32_t cmyth_livetv_chain_last(cmyth_recorder_t rec);
+
+extern cmyth_proginfo_t cmyth_livetv_chain_prog(cmyth_recorder_t rec, int32_t index);
+
+extern cmyth_file_t cmyth_livetv_chain_file(cmyth_recorder_t rec, int32_t index);
+
 extern int32_t cmyth_livetv_get_block(cmyth_recorder_t rec, char *buf,
                                 int32_t len);
 

@@ -32,9 +32,7 @@
 #include <cmyth_local.h>
 
 static int cmyth_livetv_chain_has_url(cmyth_recorder_t rec, char * url);
-static int cmyth_livetv_chain_add_file(cmyth_recorder_t rec, char * url, cmyth_file_t ft);
-static int cmyth_livetv_chain_add_url(cmyth_recorder_t rec, char * url);
-static int cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url, cmyth_file_t ft, cmyth_proginfo_t pi);
+static int cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url, cmyth_file_t file, cmyth_proginfo_t prog);
 
 
 /*
@@ -162,186 +160,6 @@ cmyth_livetv_chain_has_url(cmyth_recorder_t rec, char * url)
 }
 
 /*
- * cmyth_livetv_chain_add_file()
- *
- * Scope: PRIVATE
- *
- * Description
- *
- * Called to add a file handle to a livetv chain structure. The handle is added
- * only if the url is already there.
- *
- * Return Value:
- *
- * Success: 0
- *
- * Faiure: -1
- */
-static int
-cmyth_livetv_chain_add_file(cmyth_recorder_t rec, char * url, cmyth_file_t ft)
-{
-
-	int cur;
-	int ret = 0;
-	cmyth_file_t tmp;
-
-	if (rec->rec_livetv_chain) {
-		if (rec->rec_livetv_chain->chain_ct > 0) {
-			/* Is this file already in the chain? */
-			if ((cur = cmyth_livetv_chain_has_url(rec, url)) != -1) {
-				/* Release the existing handle after holding the new */
-				/* this allows them to be the same. */
-				tmp = rec->rec_livetv_chain->chain_files[cur];
-				rec->rec_livetv_chain->chain_files[cur] = ref_hold(ft);
-				ref_release(tmp);
-			}
-		}
-		else {
-			cmyth_dbg(CMYTH_DBG_ERROR,
-			 		"%s: attempted to add file for %s to an empty chain\n",
-			 		__FUNCTION__, url);
-			ret = -1;
-		}
-	}
-	else {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-		 		"%s: attempted to add file for %s to an non existant chain\n",
-		 		__FUNCTION__, url);
-		ret = -1;
-	}
-	return ret;
-}
-
-/*
- * cmyth_livetv_chain_add_prog()
- *
- * Scope: PRIVATE
- *
- * Description
- *
- * Called to add program info to a livetv chain structure. The info is added
- * only if the url is already there.
- *
- * Return Value:
- *
- * Success: 0
- *
- * Faiure: -1
- */
-static int
-cmyth_livetv_chain_add_prog(cmyth_recorder_t rec, char * url,
-	cmyth_proginfo_t prog)
-{
-
-	int cur;
-	int ret = 0;
-	cmyth_proginfo_t tmp;
-
-	if (rec->rec_livetv_chain) {
-		if (rec->rec_livetv_chain->chain_ct > 0) {
-			/* Is this file already in the chain? */
-			if ((cur = cmyth_livetv_chain_has_url(rec, url)) != -1) {
-				/* Release the existing handle after holding the new */
-				/* this allows them to be the same. */
-				tmp = rec->rec_livetv_chain->progs[cur];
-				rec->rec_livetv_chain->progs[cur] = ref_hold(prog);
-				ref_release(tmp);
-			}
-		}
-		else {
-			cmyth_dbg(CMYTH_DBG_ERROR,
-			 		"%s: attempted to add prog for %s to an empty chain\n",
-			 		__FUNCTION__, url);
-			ret = -1;
-		}
-	}
-	else {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-		 		"%s: attempted to add prog for %s to an non existant chain\n",
-		 		__FUNCTION__, url);
-		ret = -1;
-	}
-	return ret;
-}
-
-/*
- * cmyth_livetv_chain_add_url()
- *
- * Scope: PRIVATE
- *
- * Description
- *
- * Called to add a url to a livetv chain structure. The url is added
- * only if it is not already there.
- *
- * Return Value:
- *
- * Success: 0
- *
- * Faiure: -1
- */
-static int
-cmyth_livetv_chain_add_url(cmyth_recorder_t rec, char * url)
-{
-	char ** tmp;
-	cmyth_file_t * fp;
-	cmyth_proginfo_t * pi;
-	int ret = 0;
-
-	if (cmyth_livetv_chain_has_url(rec,url) == -1) {
-		if (rec->rec_livetv_chain->chain_ct == 0) {
-			rec->rec_livetv_chain->chain_ct = 1;
-			/* Nothing in the chain yet, allocate the space */
-			tmp = (char**)ref_alloc(sizeof(char *));
-			fp = (cmyth_file_t *)ref_alloc(sizeof(cmyth_file_t));
-			pi = (cmyth_proginfo_t *)ref_alloc(sizeof(cmyth_proginfo_t));
-		}
-		else {
-			rec->rec_livetv_chain->chain_ct++;
-			tmp = (char**)ref_realloc(rec->rec_livetv_chain->chain_urls,
-								sizeof(char *)*rec->rec_livetv_chain->chain_ct);
-			fp = (cmyth_file_t *)
-					ref_realloc(rec->rec_livetv_chain->chain_files,
-								sizeof(cmyth_file_t)*rec->rec_livetv_chain->chain_ct);
-			pi = (cmyth_proginfo_t *)
-					ref_realloc(rec->rec_livetv_chain->progs,
-								sizeof(cmyth_proginfo_t)*rec->rec_livetv_chain->chain_ct);
-		}
-		if (tmp != NULL && fp != NULL) {
-			rec->rec_livetv_chain->chain_urls = ref_hold(tmp);
-			rec->rec_livetv_chain->chain_files = ref_hold(fp);
-			rec->rec_livetv_chain->progs = ref_hold(pi);
-			ref_release(tmp);
-			ref_release(fp);
-			ref_release(pi);
-			rec->rec_livetv_chain->chain_urls[rec->rec_livetv_chain->chain_ct-1]
-							= ref_strdup(url);
-			rec->rec_livetv_chain->chain_files[rec->rec_livetv_chain->chain_ct-1]
-							= ref_hold(NULL);
-			rec->rec_livetv_chain->progs[rec->rec_livetv_chain->chain_ct-1]
-							= ref_hold(NULL);
-		}
-		else {
-			if (tmp)
-				ref_release(tmp);
-
-			if (fp)
-				ref_release(fp);
-
-			if (pi)
-				ref_release(pi);
-
-			ret = -1;
-			cmyth_dbg(CMYTH_DBG_ERROR,
-			 		"%s: memory allocation request failed\n",
-			 		__FUNCTION__);
-		}
-
-	}
-	return ret;
-}
-
-/*
  * cmyth_livetv_chain_add()
  *
  * Scope: PRIVATE
@@ -354,23 +172,71 @@ cmyth_livetv_chain_add_url(cmyth_recorder_t rec, char * url)
  *
  * Return Value:
  *
- * Success: 0
+ * Success: The index of the new entry in the chain
  *
- * Faiure: -1
+ * Failure: -1 if url alread exists else -errno
  */
 static int
-cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url, cmyth_file_t ft,
-	cmyth_proginfo_t pi)
+cmyth_livetv_chain_add(cmyth_recorder_t rec, char * url, cmyth_file_t file, cmyth_proginfo_t prog)
 {
-	int ret = 0;
+	char ** tmp;
+	cmyth_file_t * fp;
+	cmyth_proginfo_t * pi;
+	int ret;
 
-	if (cmyth_livetv_chain_has_url(rec, url) == -1)
-		ret = cmyth_livetv_chain_add_url(rec, url);
-	if (ret != -1)
-		ret = cmyth_livetv_chain_add_file(rec, url, ft);
-	if (ret != -1)
-		ret = cmyth_livetv_chain_add_prog(rec, url, pi);
+	if (cmyth_livetv_chain_has_url(rec, url) >= 0) {
+		/* url already exists in the chain */
+		ret = -1;
+	}
+	else
+	{
+		/* Nothing in the chain yet, allocate the space */
+		if (rec->rec_livetv_chain->chain_ct == 0) {
+			rec->rec_livetv_chain->chain_ct = 1;
+			tmp = (char**)ref_alloc(sizeof(char *));
+			fp = (cmyth_file_t *)ref_alloc(sizeof(cmyth_file_t));
+			pi = (cmyth_proginfo_t *)ref_alloc(sizeof(cmyth_proginfo_t));
+		}
+		/* Reallocate space for the new url */
+		else {
+			rec->rec_livetv_chain->chain_ct++;
+			tmp = (char**)ref_realloc(rec->rec_livetv_chain->chain_urls,
+								sizeof(char *)*rec->rec_livetv_chain->chain_ct);
+			fp = (cmyth_file_t *)
+					ref_realloc(rec->rec_livetv_chain->chain_files,
+								sizeof(cmyth_file_t)*rec->rec_livetv_chain->chain_ct);
+			pi = (cmyth_proginfo_t *)
+					ref_realloc(rec->rec_livetv_chain->progs,
+								sizeof(cmyth_proginfo_t)*rec->rec_livetv_chain->chain_ct);
+		}
+		if (tmp != NULL && fp != NULL && pi != NULL) {
+			int pos = rec->rec_livetv_chain->chain_ct - 1;
+			rec->rec_livetv_chain->chain_urls = tmp;
+			rec->rec_livetv_chain->chain_files = fp;
+			rec->rec_livetv_chain->progs = pi;
+			rec->rec_livetv_chain->chain_urls[pos] = ref_strdup(url);
+			rec->rec_livetv_chain->chain_files[pos] = ref_hold(file);
+			rec->rec_livetv_chain->progs[pos] = ref_hold(prog);
+			/* Url added. Return index of the new entry */
+			ret = pos;
+		}
+		else {
+			if (tmp)
+				ref_release(tmp);
 
+			if (fp)
+				ref_release(fp);
+
+			if (pi)
+				ref_release(pi);
+
+			ret = -ENOMEM;
+			cmyth_dbg(CMYTH_DBG_ERROR,
+			 		"%s: memory allocation request failed\n",
+			 		__FUNCTION__);
+		}
+
+	}
 	return ret;
 }
 
@@ -447,7 +313,7 @@ cmyth_livetv_chain_update(cmyth_recorder_t rec, char * chainid)
 			 * add a valid program.
 			 */
 			if (cmyth_file_is_open(ft) > 0) {
-				if (cmyth_livetv_chain_add(rec, url, ft, loc_prog) == -1) {
+				if (cmyth_livetv_chain_add(rec, url, ft, loc_prog) < 0) {
 					cmyth_dbg(CMYTH_DBG_ERROR,
 						  "%s: cmyth_livetv_chain_add(%s) failed\n",
 						  __FUNCTION__, url);
@@ -719,7 +585,7 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvb
 		 * add a valid program.
 		 */
 		if (cmyth_file_is_open(ft) > 0) {
-			if (cmyth_livetv_chain_add(new_rec, url, ft, loc_prog) == -1) {
+			if (cmyth_livetv_chain_add(new_rec, url, ft, loc_prog) < 0) {
 				cmyth_dbg(CMYTH_DBG_ERROR,
 					  "%s: cmyth_livetv_chain_add(%s) failed\n",
 					  __FUNCTION__, url);

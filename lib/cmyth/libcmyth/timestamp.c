@@ -215,7 +215,7 @@ cmyth_timestamp_from_string(const char *str)
 	return NULL;
 }
 
-cmyth_timestamp_t
+static cmyth_timestamp_t
 cmyth_timestamp_from_tm(struct tm * tm_datetime)
 {
 	cmyth_timestamp_t ret = cmyth_timestamp_create();
@@ -719,5 +719,5 @@ cmyth_timestamp_diff(cmyth_timestamp_t ts1, cmyth_timestamp_t ts2)
 	tm_datetime.tm_isdst = ts2->timestamp_isdst;
 	end = mktime(&tm_datetime);
 
-	return (int)(end - start);
+	return (int)difftime(end, start);
 }

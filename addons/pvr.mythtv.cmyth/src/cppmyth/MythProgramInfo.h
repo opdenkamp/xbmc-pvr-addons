@@ -41,11 +41,22 @@ public:
   MythProgramInfo();
   MythProgramInfo(cmyth_proginfo_t cmyth_proginfo);
 
+  /**
+   * \brief Returns internal Unique Identifier for recording
+   *
+   * Make recording UID like "1001 2011-12-10T12:00:00Z" based on 'channelid'
+   * and 'recstartts'.
+   * 'channelid' is the myth channel identifier of the RECORDED PROGRAM.
+   * 'recstartts' is the start time of the RECORDED PROGRAM. Do not confuse with
+   * start time of PROGRAM which is time of EPG program.
+   */
+  static CStdString MakeUID(unsigned int chanid, MythTimestamp &ts);
+
   bool IsNull() const;
   bool operator ==(MythProgramInfo &other);
   bool operator !=(MythProgramInfo &other);
 
-  CStdString UID();
+  CStdString UID() const;
   CStdString ProgramID();
   CStdString Title();
   CStdString Subtitle();
@@ -81,11 +92,10 @@ public:
 
 private:
   boost::shared_ptr<MythPointer<cmyth_proginfo_t> > m_proginfo_t;
+  CStdString m_UID;
 
   // Cached PVR attributes
   long long m_frameRate;
-
-  // Artworks
   CStdString m_coverart;
   CStdString m_fanart;
 };

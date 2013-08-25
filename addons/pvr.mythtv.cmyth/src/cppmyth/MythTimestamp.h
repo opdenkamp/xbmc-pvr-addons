@@ -36,8 +36,8 @@ public:
 
   MythTimestamp();
   MythTimestamp(cmyth_timestamp_t cmyth_timestamp);
-  MythTimestamp(CStdString time, bool datetime);
-  MythTimestamp(time_t time);
+  MythTimestamp(CStdString time);
+  MythTimestamp(time_t time, bool utc);
 
   bool operator==(const MythTimestamp &other);
   bool operator!=(const MythTimestamp &other) { return !(*this == other); }
@@ -53,6 +53,9 @@ public:
   CStdString IsoString();
   CStdString DisplayString(bool use12hClock);
   CStdString NumString();
+
+  bool IsUTC();
+  MythTimestamp ToUTC();
 
 private:
   boost::shared_ptr<MythPointer<cmyth_timestamp_t> > m_timestamp_t;

@@ -404,6 +404,11 @@ void PVRClientMythTV::LoadChannelsAndChannelGroups()
   m_channelGroups = m_db.GetChannelGroups();
 }
 
+void PVRClientMythTV::UpdateRecordings()
+{
+  PVR->TriggerRecordingUpdate();
+}
+
 int PVRClientMythTV::GetRecordingsAmount(void)
 {
   int res = 0;
@@ -572,36 +577,6 @@ void PVRClientMythTV::EventUpdateRecordings()
 
           // Update recording
           it->second = prog;
-        }
-        // Recording was not found using UID. If not deleted then try to add it.
-        // This case occurs when keeping a live recording and stopping to watch it:
-        // MythTV create a new rule (recordid) for the recording, which is part
-        // of our UID. So replace the old live recording without rule (recordid=0)
-        // with this one.
-        else if (!prog.IsDeletePending())
-        {
-          if (g_bExtraDebug)
-            XBMC->Log(LOG_DEBUG, "%s - Replace recording: %s", __FUNCTION__, prog.UID().c_str());
-          // Before adding the new, remove existing.
-          for (it = m_recordings.begin(); it != m_recordings.end(); ++it)
-          {
-            if (!it->second.IsNull()
-                    && it->second.ChannelID() == prog.ChannelID()
-                    && it->second.RecordingStartTime() == prog.RecordingStartTime()
-                    && it->second.RecordID() == 0)
-            {
-              // Copy cached framerate
-              prog.SetFrameRate(it->second.FrameRate());
-
-              // Fill artwork
-              m_db.FillRecordingArtwork(prog);
-
-              // Replace recording
-              m_recordings.erase(it);
-              m_recordings.insert(std::pair<CStdString, MythProgramInfo>(prog.UID().c_str(), prog));
-              break;
-            }
-          }
         }
         break;
       }
@@ -1550,7 +1525,7 @@ void PVRClientMythTV::CloseLiveStream()
   if (!m_rec.Stop())
     XBMC->Log(LOG_NOTICE, "%s - Stop live stream failed", __FUNCTION__);
   m_rec = MythRecorder();
-
+  m_pEventHandler->SetRecordingListener("", m_file);
   m_pEventHandler->SetRecorder(m_rec);
   m_pEventHandler->DisablePlayback();
   m_pEventHandler->AllowLiveChainUpdate();
@@ -1609,6 +1584,7 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
   m_pEventHandler->PreventLiveChainUpdate();
   retval = m_rec.Stop();
   m_rec = MythRecorder();
+  m_pEventHandler->SetRecordingListener("", m_file);
   m_pEventHandler->SetRecorder(m_rec);
   m_pEventHandler->AllowLiveChainUpdate();
   // Try to reopen live stream

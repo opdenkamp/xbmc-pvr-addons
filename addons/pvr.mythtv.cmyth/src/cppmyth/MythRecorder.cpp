@@ -22,6 +22,7 @@
 #include "MythProgramInfo.h"
 #include "MythChannel.h"
 #include "MythPointer.h"
+#include "MythFile.h"
 #include "../client.h"
 
 using namespace ADDON;
@@ -314,6 +315,21 @@ long long MythRecorder::LiveTVDuration()
   long long retval = 0;
   retval = cmyth_livetv_chain_duration(*m_recorder_t);
   return retval;
+}
+
+int MythRecorder::GetLiveTVChainLast()
+{
+  return cmyth_livetv_chain_last(*m_recorder_t);
+}
+
+MythProgramInfo MythRecorder::GetLiveTVChainProgram(int index)
+{
+  return MythProgramInfo(cmyth_livetv_chain_prog(*m_recorder_t, index));
+}
+
+MythFile MythRecorder::GetLiveTVChainFile(int index)
+{
+  return MythFile(cmyth_livetv_chain_file(*m_recorder_t, index));
 }
 
 bool MythRecorder::Stop()

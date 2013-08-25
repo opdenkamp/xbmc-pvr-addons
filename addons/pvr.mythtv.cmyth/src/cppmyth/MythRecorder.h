@@ -31,6 +31,7 @@ extern "C" {
 
 class MythProgramInfo;
 class MythChannel;
+class MythFile;
 
 template <class T> class MythPointer;
 
@@ -60,6 +61,9 @@ public:
   int ReadLiveTV(void *buffer, unsigned int length);
   long long LiveTVSeek(long long offset, int whence);
   long long LiveTVDuration();
+  int GetLiveTVChainLast();
+  MythProgramInfo GetLiveTVChainProgram(int index);
+  MythFile GetLiveTVChainFile(int index);
 
   bool Stop();
 

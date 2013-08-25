@@ -53,6 +53,7 @@ public:
   PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group);
 
   // Recordings
+  void UpdateRecordings();
   int GetRecordingsAmount(void);
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);

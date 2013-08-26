@@ -211,7 +211,7 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
       CStdString description;
       CStdString category;
 
-      tag.iUniqueBroadcastId = (it->StartTime() << 16) + (it->ChannelNumberInt() & 0xFFFF);
+      tag.iUniqueBroadcastId = (((int)(difftime(it->StartTime(), 0) / 60) & 0xFFFF) << 16) + (it->ChannelNumberInt() & 0xFFFF);
       tag.iChannelNumber = it->ChannelNumberInt();
       tag.startTime = it->StartTime();
       tag.endTime = it->EndTime();
@@ -1161,9 +1161,13 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
 PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
 {
   XBMC->Log(LOG_DEBUG, "%s - title: %s, start: %ld, end: %ld, chanID: %u", __FUNCTION__, timer.strTitle, timer.startTime, timer.endTime, timer.iClientChannelUid);
+  CLockObject lock(m_lock);
   // Check if our timer is quick recording of live:
-  // Assumptions: Timer start time = 0, and our live recorder is lock on the same channel.
+  // Assumptions: Timer start time <= now, and our live recorder is lock on the same channel.
   // If true then keep recording, setup recorder and let backend handle the rule.
+  time_t st = timer.startTime;
+  time_t now = time(NULL);
+  if (st <= now && !m_rec.IsNull() && m_rec.IsRecording())
   {
     CLockObject lock(m_lock);
     if (timer.startTime == 0 && !m_rec.IsNull() && m_rec.IsRecording())
@@ -1244,6 +1248,7 @@ MythRecordingRule PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER &timer
   bool epgFound = false;
   time_t st = timer.startTime;
   time_t et = timer.endTime;
+  time_t now = time(NULL);
   CStdString title = timer.strTitle;
   CStdString cs;
 
@@ -1251,31 +1256,32 @@ MythRecordingRule PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER &timer
     if (channelIt != m_channelsById.end())
       cs = channelIt->second.Callsign();
 
-  // Create the best matching rule depending of timer type
+  // Fix timeslot as needed
   if (st == 0)
+    st = now;
+  if (et < st)
+  {
+    struct tm oldtm;
+    struct tm newtm;
+    localtime_r(&et, &oldtm);
+    localtime_r(&st, &newtm);
+    newtm.tm_hour = oldtm.tm_hour;
+    newtm.tm_min = oldtm.tm_min;
+    newtm.tm_sec = oldtm.tm_sec;
+    newtm.tm_mday++;
+    et = mktime(&newtm);
+  }
+
+  // Depending of timer type, create the best rule
+  if (st <= now)
   {
     // Find the current program info
-    // Then create a SINGLE record rule
-    st = time(NULL);
-    epgFound = m_db.FindCurrentProgram(st, timer.iClientChannelUid, epgInfo);
+    // Then create a SIGNLE record rule
+    epgFound = m_db.FindCurrentProgram(now, timer.iClientChannelUid, epgInfo);
     rule = m_scheduleManager->NewSingleRecord(epgInfo);
   }
   else
   {
-    // Fix timeslot as needed
-    if (et < st)
-    {
-      struct tm oldtm;
-      struct tm newtm;
-      localtime_r(&et, &oldtm);
-      localtime_r(&st, &newtm);
-      newtm.tm_hour = oldtm.tm_hour;
-      newtm.tm_min = oldtm.tm_min;
-      newtm.tm_sec = oldtm.tm_sec;
-      newtm.tm_mday++;
-      et = mktime(&newtm);
-    }
-
     if (timer.bIsRepeating && timer.iWeekdays < 0x7F && timer.iWeekdays > 0)
     {
       // Move time to next day of week and find program info

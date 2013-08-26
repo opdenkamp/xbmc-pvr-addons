@@ -37,7 +37,7 @@ class MythProgramInfo;
 
 template <class T> class MythPointerThreadSafe;
 
-typedef std::vector<MythEPGInfo> EPGInfoList;
+typedef std::map<time_t, MythEPGInfo> EPGInfoMap;
 
 typedef std::map<int, MythChannel> ChannelIdMap;
 typedef std::multimap<CStdString, MythChannel> ChannelNumberMap;
@@ -72,7 +72,7 @@ public:
 
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythEPGInfo &epgInfo);
   bool FindCurrentProgram(time_t attime, int channelid, MythEPGInfo &epgInfo);
-  EPGInfoList GetGuide(int channelid, time_t starttime, time_t endtime);
+  EPGInfoMap GetGuide(int channelid, time_t starttime, time_t endtime);
 
   ChannelIdMap GetChannels();
   ChannelGroupMap GetChannelGroups();

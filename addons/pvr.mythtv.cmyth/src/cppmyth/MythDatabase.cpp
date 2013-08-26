@@ -106,10 +106,10 @@ bool MythDatabase::FindCurrentProgram(time_t attime, int channelid, MythEPGInfo 
   return retval > 0;
 }
 
-EPGInfoList MythDatabase::GetGuide(int channelid, time_t starttime, time_t endtime)
+EPGInfoMap MythDatabase::GetGuide(int channelid, time_t starttime, time_t endtime)
 {
   int ret;
-  EPGInfoList retval;
+  EPGInfoMap retval;
   cmyth_epginfolist_t epgInfoList = NULL;
   CMYTH_DB_CALL(ret, ret < 0, cmyth_mysql_get_guide(*m_database_t, &epgInfoList, channelid, starttime, endtime));
   int epgCount = cmyth_epginfolist_get_count(epgInfoList);
@@ -117,7 +117,8 @@ EPGInfoList MythDatabase::GetGuide(int channelid, time_t starttime, time_t endti
   for (int i = 0; i < epgCount; i++)
   {
     cmyth_epginfo_t epg = cmyth_epginfolist_get_item(epgInfoList, i);
-    retval.push_back(MythEPGInfo(epg));
+    MythEPGInfo epgInfo = MythEPGInfo(epg);
+    retval.insert(std::make_pair(epgInfo.StartTime(), epgInfo));
   }
   ref_release(epgInfoList);
   return retval;

@@ -196,13 +196,22 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
 
   if (!channel.bIsHidden)
   {
-    EPGInfoList EPG = m_db.GetGuide(channel.iUniqueId, iStart, iEnd);
-
+    EPGInfoMap EPG = m_db.GetGuide(channel.iUniqueId, iStart, iEnd);
+    EPGInfoMap::reverse_iterator prevIt = EPG.rbegin();
     // Transfer EPG for the given channel
-    for (EPGInfoList::iterator it = EPG.begin(); it != EPG.end(); ++it)
+    for (EPGInfoMap::reverse_iterator it = EPG.rbegin(); it != EPG.rend(); ++it)
     {
       EPG_TAG tag;
       memset(&tag, 0, sizeof(EPG_TAG));
+      // Fill the gap until previous start time
+      tag.startTime = it->first;
+      if (it != prevIt)
+        tag.endTime = prevIt->first;
+      else
+        tag.endTime = it->second.EndTime();
+      // Reject bad entry
+      if (tag.endTime <= tag.startTime)
+        continue;
 
       // EPG_TAG expects strings as char* and not as copies (like the other PVR types).
       // Therefore we have to make sure that we don't pass invalid (freed) memory to TransferEpgEntry.
@@ -211,20 +220,17 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
       CStdString description;
       CStdString category;
 
-      tag.iUniqueBroadcastId = (((int)(difftime(it->StartTime(), 0) / 60) & 0xFFFF) << 16) + (it->ChannelNumberInt() & 0xFFFF);
-      tag.iChannelNumber = it->ChannelNumberInt();
-      tag.startTime = it->StartTime();
-      tag.endTime = it->EndTime();
-
-      title = this->MakeProgramTitle(it->Title(), it->Subtitle());
+      tag.iUniqueBroadcastId = (((int)(difftime(it->second.StartTime(), 0) / 60) & 0xFFFF) << 16) + (it->second.ChannelNumberInt() & 0xFFFF);
+      tag.iChannelNumber = it->second.ChannelNumberInt();
+      title = this->MakeProgramTitle(it->second.Title(), it->second.Subtitle());
       tag.strTitle = title;
-      description = it->Description();
+      description = it->second.Description();
       tag.strPlot = description;
 
-      int genre = m_categories.Category(it->Category());
+      int genre = m_categories.Category(it->second.Category());
       tag.iGenreSubType = genre & 0x0F;
       tag.iGenreType = genre & 0xF0;
-      category = it->Category();
+      category = it->second.Category();
       tag.strGenreDescription = category;
 
       // Unimplemented
@@ -240,6 +246,7 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
       tag.iStarRating = 0;
 
       PVR->TransferEpgEntry(handle, &tag);
+      prevIt = it;
     }
   }
 

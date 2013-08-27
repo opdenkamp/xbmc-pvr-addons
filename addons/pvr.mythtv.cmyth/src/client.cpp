@@ -230,28 +230,25 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     XBMC->Log(LOG_ERROR, "Couldn't get 'rec_template_provider' setting, falling back to '%i' as default", DEFAULT_RECORD_TEMPLATE);
     g_iRecTemplateType = DEFAULT_RECORD_TEMPLATE;
   }
-  /* Get internal template settings when selected (0) */
-  if (g_iRecTemplateType == 0)
-  {
-    if (!XBMC->GetSetting("rec_autometadata", &g_bRecAutoMetadata))
-      g_bRecAutoMetadata = true;
-    if (!XBMC->GetSetting("rec_autocommflag", &g_bRecAutoCommFlag))
-      g_bRecAutoCommFlag = false;
-    if (!XBMC->GetSetting("rec_autotranscode", &g_bRecAutoTranscode))
-      g_bRecAutoTranscode = false;
-    if (!XBMC->GetSetting("rec_autorunjob1", &g_bRecAutoRunJob1))
-      g_bRecAutoRunJob1 = false;
-    if (!XBMC->GetSetting("rec_autorunjob2", &g_bRecAutoRunJob2))
-      g_bRecAutoRunJob2 = false;
-    if (!XBMC->GetSetting("rec_autorunjob3", &g_bRecAutoRunJob3))
-      g_bRecAutoRunJob3 = false;
-    if (!XBMC->GetSetting("rec_autorunjob4", &g_bRecAutoRunJob4))
-      g_bRecAutoRunJob4 = false;
-    if (!XBMC->GetSetting("rec_autoexpire", &g_bRecAutoExpire))
-      g_bRecAutoExpire = false;
-    if (!XBMC->GetSetting("rec_transcoder", &g_iRecTranscoder))
-      g_iRecTranscoder = 0;
-  }
+  /* Get internal template settings */
+  if (!XBMC->GetSetting("rec_autometadata", &g_bRecAutoMetadata))
+    g_bRecAutoMetadata = true;
+  if (!XBMC->GetSetting("rec_autocommflag", &g_bRecAutoCommFlag))
+    g_bRecAutoCommFlag = false;
+  if (!XBMC->GetSetting("rec_autotranscode", &g_bRecAutoTranscode))
+    g_bRecAutoTranscode = false;
+  if (!XBMC->GetSetting("rec_autorunjob1", &g_bRecAutoRunJob1))
+    g_bRecAutoRunJob1 = false;
+  if (!XBMC->GetSetting("rec_autorunjob2", &g_bRecAutoRunJob2))
+    g_bRecAutoRunJob2 = false;
+  if (!XBMC->GetSetting("rec_autorunjob3", &g_bRecAutoRunJob3))
+    g_bRecAutoRunJob3 = false;
+  if (!XBMC->GetSetting("rec_autorunjob4", &g_bRecAutoRunJob4))
+    g_bRecAutoRunJob4 = false;
+  if (!XBMC->GetSetting("rec_autoexpire", &g_bRecAutoExpire))
+    g_bRecAutoExpire = false;
+  if (!XBMC->GetSetting("rec_transcoder", &g_iRecTranscoder))
+    g_iRecTranscoder = 0;
 
   free (buffer);
 
@@ -420,19 +417,13 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'extra debug' from %u to %u", g_bExtraDebug, *(bool*)settingValue);
     if (g_bExtraDebug != *(bool*)settingValue)
-    {
      g_bExtraDebug = *(bool*)settingValue;
-      return ADDON_STATUS_OK;
-    }
   }
   else if (str == "livetv")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'livetv' from %u to %u", g_bLiveTV, *(bool*)settingValue);
     if (g_bLiveTV != *(bool*)settingValue)
-    {
       g_bLiveTV = *(bool*)settingValue;
-      return ADDON_STATUS_OK;
-    }
   }
   else if (str == "livetv_priority")
   {
@@ -441,8 +432,67 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     {
       g_bLiveTVPriority = *(bool*)settingValue;
       g_client->SetLiveTVPriority(g_bLiveTVPriority);
-      return ADDON_STATUS_OK;
     }
+  }
+  else if (str == "rec_template_provider")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_template_provider' from %u to %u", g_iRecTemplateType, *(int*)settingValue);
+    if (g_iRecTemplateType != *(int*)settingValue)
+      g_iRecTemplateType = *(int*)settingValue;
+  }
+  else if (str == "rec_autometadata")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autometadata' from %u to %u", g_bRecAutoMetadata, *(bool*)settingValue);
+    if (g_bRecAutoMetadata != *(bool*)settingValue)
+      g_bRecAutoMetadata = *(bool*)settingValue;
+  }
+  else if (str == "rec_autocommflag")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autocommflag' from %u to %u", g_bRecAutoCommFlag, *(bool*)settingValue);
+    if (g_bRecAutoCommFlag != *(bool*)settingValue)
+      g_bRecAutoCommFlag = *(bool*)settingValue;
+  }
+  else if (str == "rec_autotranscode")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autotranscode' from %u to %u", g_bRecAutoTranscode, *(bool*)settingValue);
+    if (g_bRecAutoTranscode != *(bool*)settingValue)
+      g_bRecAutoTranscode = *(bool*)settingValue;
+  }
+  else if (str == "rec_transcoder")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_transcoder' from %u to %u", g_iRecTranscoder, *(int*)settingValue);
+    if (g_iRecTranscoder != *(int*)settingValue)
+      g_iRecTranscoder = *(int*)settingValue;
+  }
+  else if (str == "rec_autorunjob1")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autorunjob1' from %u to %u", g_bRecAutoRunJob1, *(bool*)settingValue);
+    if (g_bRecAutoRunJob1 != *(bool*)settingValue)
+      g_bRecAutoRunJob1 = *(bool*)settingValue;
+  }
+  else if (str == "rec_autorunjob2")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autorunjob2' from %u to %u", g_bRecAutoRunJob2, *(bool*)settingValue);
+    if (g_bRecAutoRunJob2 != *(bool*)settingValue)
+      g_bRecAutoRunJob2 = *(bool*)settingValue;
+  }
+  else if (str == "rec_autorunjob3")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autorunjob3' from %u to %u", g_bRecAutoRunJob3, *(bool*)settingValue);
+    if (g_bRecAutoRunJob3 != *(bool*)settingValue)
+      g_bRecAutoRunJob3 = *(bool*)settingValue;
+  }
+  else if (str == "rec_autorunjob4")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autorunjob4' from %u to %u", g_bRecAutoRunJob4, *(bool*)settingValue);
+    if (g_bRecAutoRunJob4 != *(bool*)settingValue)
+      g_bRecAutoRunJob4 = *(bool*)settingValue;
+  }
+  else if (str == "rec_autoexpire")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autoexpire' from %u to %u", g_bRecAutoExpire, *(bool*)settingValue);
+    if (g_bRecAutoExpire != *(bool*)settingValue)
+      g_bRecAutoExpire = *(bool*)settingValue;
   }
   return ADDON_STATUS_OK;
 }

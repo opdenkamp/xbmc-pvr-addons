@@ -133,8 +133,6 @@ unsigned int Dvb::GetCurrentClientChannel(void)
 
 PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
-  unsigned int channelNumber = 1;
-
   for (DvbChannels_t::iterator it = m_channels.begin();
       it != m_channels.end(); ++it)
   {
@@ -149,7 +147,7 @@ PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
     xbmcChannel.iUniqueId         = channel->id;
     xbmcChannel.bIsRadio          = channel->radio;
-    xbmcChannel.iChannelNumber    = channelNumber++;
+    xbmcChannel.iChannelNumber    = channel->frontendNr;
     xbmcChannel.iEncryptionSystem = channel->encrypted;
     xbmcChannel.bIsHidden         = false;
     PVR_STRCPY(xbmcChannel.strChannelName, channel->name.c_str());
@@ -680,17 +678,16 @@ bool Dvb::LoadChannels()
 
         DvbChannel *channel = new DvbChannel();
         int flags  = atoi(xChannel.getAttribute("flags"));
-        channel->radio     = !(flags & VIDEO_FLAG);
-        channel->encrypted = (flags & ENCRYPTED_FLAG);
-        channel->name      = xChannel.getAttribute("name");
-        channel->backendNr = atoi(xChannel.getAttribute("nr"));
-        channel->epgId     = ParseUInt64(xChannel.getAttribute("EPGID"));
-        channel->hidden    = g_useFavourites;
+        channel->radio      = !(flags & VIDEO_FLAG);
+        channel->encrypted  = (flags & ENCRYPTED_FLAG);
+        channel->name       = xChannel.getAttribute("name");
+        channel->backendNr  = atoi(xChannel.getAttribute("nr"));
+        channel->epgId      = ParseUInt64(xChannel.getAttribute("EPGID"));
+        channel->hidden     = g_useFavourites;
+        channel->frontendNr = (!g_useFavourites) ? m_channels.size() + 1 : 0;
         channel->backendIds.push_back(ParseUInt64(xChannel.getAttribute("ID")));
 
         CStdString logoURL;
-        //TODO: doesn't work for escaped chars. e.g.: "Logos/br+s%C3%BCd+hd.png"
-        //xml lib bug?!?!
         if (GetXMLValue(xChannel, "logo", logoURL))
           channel->logoURL = BuildURL("%s", logoURL.c_str());
 
@@ -731,7 +728,7 @@ bool Dvb::LoadChannels()
     {
       if (!XBMC->FileExists(g_favouritesFile, false))
       {
-        //TODO: print error instead of loading usual favourites
+        //TODO: print error instead of loading favourites
         return false;
       }
       url = g_favouritesFile;
@@ -814,7 +811,7 @@ bool Dvb::LoadChannels()
           if (found)
           {
             channel->hidden = false;
-            ++m_channelAmount;
+            channel->frontendNr = ++m_channelAmount;
             if (!ss.eof())
             {
               ss.ignore(1);
@@ -833,6 +830,15 @@ bool Dvb::LoadChannels()
           }
         }
       }
+    }
+
+    // assign channel number to remaining channels
+    unsigned int channelNumber = m_channelAmount;
+    for (DvbChannels_t::iterator it = m_channels.begin();
+        it != m_channels.end(); ++it)
+    {
+      if (!(*it)->frontendNr)
+        (*it)->frontendNr = ++channelNumber;
     }
   }
 

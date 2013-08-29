@@ -1261,23 +1261,21 @@ bool cPVRClientArgusTV::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
       }
     }
 
-#if defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-    // TODO FHo: merge this code and the code that translates names from recordings
     std::string CIFSname = filename;
     std::string SMBPrefix = "smb://";
-    if (g_szUser.length() > 0)
-    {
-      SMBPrefix += g_szUser;
-      if (g_szPass.length() > 0)
-      {
-        SMBPrefix += ":" + g_szPass;
-      }
-    }
-    else
-    {
-      SMBPrefix += "Guest";
-    }
-    SMBPrefix += "@";
+    //if (g_szUser.length() > 0)
+    //{
+    //  SMBPrefix += g_szUser;
+    //  if (g_szPass.length() > 0)
+    //  {
+    //    SMBPrefix += ":" + g_szPass;
+    //  }
+    //}
+    //else
+    //{
+    //  SMBPrefix += "Guest";
+    //}
+    //SMBPrefix += "@";
     size_t found;
     while ((found = CIFSname.find("\\")) != std::string::npos)
     {
@@ -1286,7 +1284,6 @@ bool cPVRClientArgusTV::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
     CIFSname.erase(0,2);
     CIFSname.insert(0, SMBPrefix.c_str());
     filename = CIFSname;
-#endif
 
     if (retval != E_SUCCESS || filename.length() == 0)
     {

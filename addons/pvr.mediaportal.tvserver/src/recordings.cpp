@@ -217,15 +217,15 @@ int cRecording::Lifetime(void) const
   //  automatically deleted in favour of a new  recording,  until  the
   //  given  number  of days since the start time of the recording has
   //  passed by
-  KeepMethodType m_keepmethod = (KeepMethodType) m_keepUntil;
+  TvDatabase::KeepMethodType m_keepmethod = (TvDatabase::KeepMethodType) m_keepUntil;
 
   switch (m_keepmethod)
   {
-    case UntilSpaceNeeded: //until space needed
-    case UntilWatched: //until watched
+    case TvDatabase::UntilSpaceNeeded: //until space needed
+    case TvDatabase::UntilWatched: //until watched
       return 0;
       break;
-    case UntilKeepDate: //until keepdate
+    case TvDatabase::TillDate: //until keepdate
       {
         double diffseconds = difftime(m_keepUntilDate, m_StartTime);
         int daysremaining = (int)(diffseconds / cSecsInDay);
@@ -241,7 +241,7 @@ int cRecording::Lifetime(void) const
         }
       }
       break;
-    case Forever: //forever
+    case TvDatabase::Always: //forever
       return MAXLIFETIME;
     default:
       return MAXLIFETIME;

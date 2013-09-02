@@ -9,6 +9,7 @@ v1.8.9
 - Added: support for retrieving channels from multiple specified groups (>1, < All groups) (requires TVServerXBMC build 122 or higher)
 - Changed: drop support for TVServerXBMC builds older than 1.1.x.107
 - Changed: more log notifications on errors
+- EPG: added additional genre strings to the genre string to id translation table
 
 v1.8.8
 - sync with PVR API v1.8.0

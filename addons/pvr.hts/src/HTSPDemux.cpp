@@ -59,6 +59,7 @@ bool CHTSPDemux::Open(const PVR_CHANNEL &channelinfo)
   if(!SendSubscribe(++m_subs, m_channel))
     return false;
 
+  m_bIsOpen = true;
   return true;
 }
 
@@ -392,7 +393,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     XBMC->Log(LOG_INFO, "%s - subscription started on an unknown device", __FUNCTION__);
   }
 
-  m_bIsOpen = true;
   m_startedCondition.Signal();
 }
 

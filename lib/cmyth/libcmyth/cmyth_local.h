@@ -471,6 +471,7 @@ struct cmyth_recordingrule {
 	uint32_t maxepisodes;            //range 0,100
 	uint8_t maxnewest;               //bool
 	uint32_t transcoder;             //recordingprofiles id
+	uint32_t parentid;               //parent rule recordid
 	char* profile;
 	uint32_t prefinput;
 	uint8_t autometadata;            //DB version 1278

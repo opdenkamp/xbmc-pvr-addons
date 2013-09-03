@@ -233,6 +233,7 @@ cmyth_recordingrule_init(void)
 	cmyth_recordingrule_set_maxepisodes(rr, 0);
 	cmyth_recordingrule_set_maxnewest(rr, 0);
 	cmyth_recordingrule_set_transcoder(rr, 0);
+	cmyth_recordingrule_set_parentid(rr, 0);
         cmyth_recordingrule_set_profile(rr, "Default");
 	cmyth_recordingrule_set_prefinput(rr, 0);
 	cmyth_recordingrule_set_autometadata(rr, 0);
@@ -666,6 +667,21 @@ void
 cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, uint32_t transcoder)
 {
 	rr->transcoder = transcoder;
+}
+
+uint32_t
+cmyth_recordingrule_parentid(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return 0;
+	}
+	return rr->parentid;
+}
+
+void
+cmyth_recordingrule_set_parentid(cmyth_recordingrule_t rr, uint32_t parentid)
+{
+	rr->parentid = parentid;
 }
 
 char *

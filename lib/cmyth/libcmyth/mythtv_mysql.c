@@ -981,8 +981,8 @@ cmyth_mysql_get_recordingrules(cmyth_database_t db, cmyth_recordingrulelist_t *r
 			"UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(enddate,endtime),?,'SYSTEM')),title,description, type, category, "
 			"subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod, dupin, recgroup, "
 			"storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | "
-			"(autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, profile, prefinput, "
-			"autometadata, inetref, season, episode , filter "
+			"(autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, parentid, profile, "
+			"prefinput, autometadata, inetref, season, episode , filter "
 			"FROM record ORDER BY recordid";
 	}
 	else {
@@ -990,7 +990,8 @@ cmyth_mysql_get_recordingrules(cmyth_database_t db, cmyth_recordingrulelist_t *r
 			"UNIX_TIMESTAMP(CONVERT_TZ(ADDTIME(enddate,endtime),?,'SYSTEM')),title,description, type, category, "
 			"subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod, dupin, recgroup, "
 			"storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | "
-			"(autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, profile, prefinput "
+			"(autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, parentid, profile, "
+			"prefinput "
 			"FROM record ORDER BY recordid";
 	}
 
@@ -1049,14 +1050,15 @@ cmyth_mysql_get_recordingrules(cmyth_database_t db, cmyth_recordingrulelist_t *r
 		rr->maxepisodes = safe_atol(row[24]);
 		rr->maxnewest = safe_atoi(row[25]);
 		rr->transcoder = safe_atol(row[26]);
-		rr->profile = ref_strdup(row[27]);
-		rr->prefinput = safe_atol(row[28]);
+		rr->parentid = safe_atol(row[27]);
+		rr->profile = ref_strdup(row[28]);
+		rr->prefinput = safe_atol(row[29]);
 		if (db->db_version >= 1278) {
-			rr->autometadata = safe_atoi(row[29]);
-			rr->inetref = ref_strdup(row[30]);
-			rr->season = safe_atoi(row[31]);
-			rr->episode = safe_atoi(row[32]);
-			rr->filter = safe_atol(row[33]);
+			rr->autometadata = safe_atoi(row[30]);
+			rr->inetref = ref_strdup(row[31]);
+			rr->season = safe_atoi(row[32]);
+			rr->episode = safe_atoi(row[33]);
+			rr->filter = safe_atol(row[34]);
 		}
 		else {
 			rr->autometadata = 0;
@@ -1092,18 +1094,18 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			"description, category, findid, findtime, station, subtitle, recpriority, startoffset, endoffset, "
 			"search, inactive, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, autouserjob1, "
 			"autouserjob2, autouserjob3, autouserjob4, autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, "
-			"profile, prefinput, autometadata, inetref, season, episode, filter) "
+			"parentid, profile, prefinput, autometadata, inetref, season, episode, filter) "
 			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TO_DAYS(DATE(?)), TIME(?), "
-			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	}
 	else {
 		query_str = "INSERT INTO record (record.type, chanid, starttime, startdate, endtime, enddate, title, "
 			"description, category, findid, findtime, station, subtitle, recpriority, startoffset, endoffset, "
 			"search, inactive, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, autouserjob1, "
 			"autouserjob2, autouserjob3, autouserjob4, autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, "
-			"profile, prefinput) "
+			"parentid, profile, prefinput) "
 			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TO_DAYS(DATE(?)), TIME(?), "
-			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?);";
+			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?)";
 	}
 
 	starttime = cmyth_timestamp_to_unixtime(rr->starttime);
@@ -1143,6 +1145,7 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			|| cmyth_mysql_query_param_uint32(query, rr->maxepisodes) < 0
 			|| cmyth_mysql_query_param_uint(query, rr->maxnewest) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->transcoder) < 0
+			|| cmyth_mysql_query_param_uint32(query, rr->parentid) < 0
 			|| cmyth_mysql_query_param_str(query, rr->profile) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->prefinput) < 0)
 			|| (db->db_version >= 1278
@@ -1216,8 +1219,8 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, station = ?, "
 			"dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, autotranscode = ?, "
 			"autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, autocommflag = ?, "
-			"autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, profile = ?, prefinput = ?, "
-			"autometadata = ?, inetref = ?, season = ?, episode = ?, filter = ? "
+			"autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, profile = ?"
+			"prefinput = ?, autometadata = ?, inetref = ?, season = ?, episode = ?, filter = ? "
 			"WHERE recordid = ? ;";
 	}
 	else {
@@ -1226,7 +1229,8 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, station = ?, "
 			"dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, autotranscode = ?, "
 			"autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, autocommflag = ?, "
-			"autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, profile = ?, prefinput = ? "
+			"autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, profile = ? "
+			"prefinput = ? "
 			"WHERE recordid = ? ;";
 	}
 	starttime = cmyth_timestamp_to_unixtime(rr->starttime);
@@ -1264,6 +1268,7 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			|| cmyth_mysql_query_param_uint32(query, rr->maxepisodes) < 0
 			|| cmyth_mysql_query_param_uint(query, rr->maxnewest) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->transcoder) < 0
+			|| cmyth_mysql_query_param_uint32(query, rr->parentid) < 0
 			|| cmyth_mysql_query_param_str(query, rr->playgroup) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->prefinput) < 0)
 			|| (db->db_version >= 1278

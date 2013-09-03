@@ -1781,6 +1781,21 @@ extern uint32_t cmyth_recordingrule_transcoder(cmyth_recordingrule_t rr);
 extern void cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, uint32_t transcoder);
 
 /**
+ * Retrieves the 'parentid' field of a recording rule structure.
+ * \param rr
+ * \return success: parentid
+ * \return failure: -(errno)
+ */
+extern uint32_t cmyth_recordingrule_parentid(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'parentid' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param parentid
+ */
+extern void cmyth_recordingrule_set_parentid(cmyth_recordingrule_t rr, uint32_t parentid);
+
+/**
  * Retrieves the 'profile' field of a recording rule structure.
  * Before forgetting the reference to this string the caller
  * must call ref_release().

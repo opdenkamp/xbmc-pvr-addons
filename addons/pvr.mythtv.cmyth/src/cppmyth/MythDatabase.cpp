@@ -218,10 +218,10 @@ bool MythDatabase::UpdateRecordingRule(const MythRecordingRule &rule)
   return retval > 0;
 }
 
-bool MythDatabase::DeleteRecordingRule(unsigned int recordid)
+bool MythDatabase::DeleteRecordingRule(const MythRecordingRule &rule)
 {
   int retval = 0;
-  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_delete_recordingrule(*m_database_t, recordid));
+  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_delete_recordingrule(*m_database_t, *rule.m_recordingrule_t));
   return retval > 0;
 }
 

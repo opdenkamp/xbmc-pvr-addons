@@ -1168,7 +1168,7 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
       }
     }
     XBMC->Log(LOG_DEBUG, "%s - Delete recording rule %u (modifier of rule %u)", __FUNCTION__, (*it)->RecordID(), rule.RecordID());
-    if (!m_db.DeleteRecordingRule((*it)->RecordID()))
+    if (!m_db.DeleteRecordingRule(**it))
       return PVR_ERROR_FAILED;
   }
 
@@ -1184,7 +1184,7 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
     }
   }
   XBMC->Log(LOG_DEBUG, "%s - Delete recording rule %u", __FUNCTION__, rule.RecordID());
-  if (!m_db.DeleteRecordingRule(rule.RecordID()))
+  if (!m_db.DeleteRecordingRule(rule))
     return PVR_ERROR_FAILED;
 
   m_con.UpdateSchedules(-1);

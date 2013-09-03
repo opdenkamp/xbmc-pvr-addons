@@ -82,7 +82,7 @@ public:
   RecordingRuleMap GetRecordingRules();
   bool AddRecordingRule(const MythRecordingRule &rule);
   bool UpdateRecordingRule(const MythRecordingRule &rule);
-  bool DeleteRecordingRule(unsigned int recordid);
+  bool DeleteRecordingRule(const MythRecordingRule &rule);
   MythRecordingRule LoadRecordingRuleTemplate(const CStdString &category, const CStdString &category_type);
 
   RecordingProfileList GetRecordingProfiles();

@@ -40,6 +40,11 @@ bool MythRecordingRule::IsNull() const
   return *m_recordingrule_t == NULL;
 }
 
+MythRecordingRule MythRecordingRule::DuplicateRecordingRule() const
+{
+  return MythRecordingRule(cmyth_recordingrule_dup(*m_recordingrule_t));
+}
+
 unsigned int MythRecordingRule::RecordID() const
 {
   return cmyth_recordingrule_recordid(*m_recordingrule_t);

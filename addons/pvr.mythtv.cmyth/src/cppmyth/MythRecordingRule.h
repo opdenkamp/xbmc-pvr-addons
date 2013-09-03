@@ -82,6 +82,8 @@ public:
 
   bool IsNull() const;
 
+  MythRecordingRule DuplicateRecordingRule() const;
+
   unsigned int RecordID() const;
   void SetRecordID(unsigned int recordid);
 

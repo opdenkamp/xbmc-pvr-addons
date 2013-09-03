@@ -239,7 +239,7 @@ void *MythEventHandler::MythEventHandlerPrivate::Process()
       {
         if (g_bExtraDebug)
           XBMC->Log(LOG_NOTICE, "%s - Event schedule change", __FUNCTION__);
-        PVR->TriggerTimerUpdate();
+        m_observer->UpdateSchedules();
       }
 
       else if (myth_event == CMYTH_EVENT_RECORDING_LIST_CHANGE_ADD)

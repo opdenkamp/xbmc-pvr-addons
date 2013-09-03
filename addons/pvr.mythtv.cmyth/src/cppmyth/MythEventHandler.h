@@ -43,6 +43,7 @@ class MythEventObserver
 public:
   // Request to stop Live TV
   virtual void CloseLiveStream() = 0;
+  virtual void UpdateSchedules() = 0;
 };
 
 class MythEventHandler

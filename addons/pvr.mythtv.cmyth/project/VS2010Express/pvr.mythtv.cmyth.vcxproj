@@ -22,6 +22,7 @@
     <ClCompile Include="..\..\src\cppmyth\MythProgramInfo.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythRecorder.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythRecordingRule.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythScheduleManager.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythStorageGroupFile.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythSignal.cpp" />
     <ClCompile Include="..\..\src\cppmyth\MythTimestamp.cpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="..\..\src\cppmyth\MythProgramInfo.h" />
     <ClInclude Include="..\..\src\cppmyth\MythRecorder.h" />
     <ClInclude Include="..\..\src\cppmyth\MythRecordingRule.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythScheduleManager.h" />
     <ClInclude Include="..\..\src\cppmyth\MythStorageGroupFile.h" />
     <ClInclude Include="..\..\src\cppmyth\MythSignal.h" />
     <ClInclude Include="..\..\src\cppmyth\MythTimestamp.h" />

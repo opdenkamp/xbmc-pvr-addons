@@ -11,3 +11,4 @@
 #include "cppmyth/MythSignal.h"
 #include "cppmyth/MythRecordingRule.h"
 #include "cppmyth/MythTimestamp.h"
+#include "cppmyth/MythScheduleManager.h"

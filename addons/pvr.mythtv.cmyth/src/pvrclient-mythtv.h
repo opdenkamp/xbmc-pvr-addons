@@ -25,34 +25,6 @@
 #include <xbmc_pvr_types.h>
 #include <platform/threads/mutex.h>
 
-class RecordingRule : public MythRecordingRule, public std::vector<std::pair<PVR_TIMER, MythProgramInfo> >
-{
-public:
-  RecordingRule(const MythRecordingRule &rule);
-  RecordingRule& operator=(const MythRecordingRule &rule);
-  bool operator==(const unsigned int &id);
-
-  RecordingRule* GetParent() const;
-  void SetParent(RecordingRule &parent);
-
-  bool HasOverrideRules() const;
-  std::vector<RecordingRule*> GetOverrideRules() const;
-  void AddOverrideRule(RecordingRule &overrideRule);
-
-  bool SameTimeslot(RecordingRule &rule) const;
-
-  void push_back(std::pair<PVR_TIMER, MythProgramInfo> &_val);
-
-private:
-  void SaveTimerString(PVR_TIMER &timer);
-
-  RecordingRule* m_parent;
-  std::vector<RecordingRule*> m_overrideRules;
-  std::vector<boost::shared_ptr<CStdString> > m_stringStore;
-};
-
-typedef std::vector<RecordingRule> RecordingRuleList;
-
 class PVRClientMythTV : public MythEventObserver
 {
 public:
@@ -91,6 +63,7 @@ public:
   PVR_ERROR GetRecordingEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entries[], int *size);
 
   // Timers
+  void UpdateSchedules();
   int GetTimersAmount();
   PVR_ERROR GetTimers(ADDON_HANDLE handle);
   PVR_ERROR AddTimer(const PVR_TIMER &timer);
@@ -130,6 +103,7 @@ private:
   FileOps *m_fileOps;
   PLATFORM::CMutex m_lock;
   MythFile m_file;
+  MythScheduleManager *m_scheduleManager;
 
   CStdString m_backendName;
   CStdString m_backendVersion;
@@ -153,6 +127,14 @@ private:
   int GetRecordingLastPlayedPosition(MythProgramInfo &programInfo);
 
   // Timers
-  RecordingRuleList m_recordingRules;
-  void PVRtoMythRecordingRule(const PVR_TIMER &timer, MythRecordingRule &rule);
+  MythRecordingRule PVRtoMythRecordingRule(const PVR_TIMER &timer);
+  std::map<unsigned int, boost::shared_ptr<PVR_TIMER> > m_PVRtimerMemorandum;
+
+  /**
+   * \brief Returns full title of MythTV program
+   *
+   * Make formatted title based on original title and subtitle of program.
+   * \see class MythProgramInfo , class MythEPGInfo
+   */
+  CStdString MakeProgramTitle(const CStdString &title, const CStdString &subtitle) const;
 };

@@ -2411,7 +2411,6 @@ extern uint32_t cmyth_epginfo_channum(cmyth_epginfo_t e);
 
 extern int cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_epginfolist_t *epglist, time_t starttime, char *program_name);
 extern int cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_epginfolist_t *epglist,  time_t starttime, char *program_name);
-extern int cmyth_mysql_get_prog_finder_time2(cmyth_database_t db, cmyth_epginfolist_t *epglist,  time_t starttime, char *program_name);
 extern int cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_epginfo_t *epg, uint32_t chanid);
 extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_epginfo_t *epg, time_t starttime, char *program_name, uint32_t chanid);
 extern int cmyth_mysql_get_guide(cmyth_database_t db, cmyth_epginfolist_t *epglist, uint32_t chanid, time_t starttime, time_t endtime);

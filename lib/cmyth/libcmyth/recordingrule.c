@@ -234,7 +234,7 @@ cmyth_recordingrule_init(void)
 	cmyth_recordingrule_set_maxnewest(rr, 0);
 	cmyth_recordingrule_set_transcoder(rr, 0);
 	cmyth_recordingrule_set_parentid(rr, 0);
-        cmyth_recordingrule_set_profile(rr, "Default");
+	cmyth_recordingrule_set_profile(rr, "Default");
 	cmyth_recordingrule_set_prefinput(rr, 0);
 	cmyth_recordingrule_set_autometadata(rr, 0);
 	cmyth_recordingrule_set_inetref(rr, "");

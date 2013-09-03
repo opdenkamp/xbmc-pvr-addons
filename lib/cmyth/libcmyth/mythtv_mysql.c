@@ -468,7 +468,7 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_epginfolist_t *epglist, uint32_
 		epg->channame = ref_strdup(row[12]);
 		epg->sourceid = safe_atol(row[13]);
 		(*epglist)->epginfolist_list[rows] = epg;
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: [%d] chanid = %"PRIu32" title = %s\n", __FUNCTION__, rows, epg->chanid, epg->title);
+		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: [%d] chanid = %"PRIu32" starttime = %lu title = %s\n", __FUNCTION__, rows, epg->chanid, epg->starttime, epg->title);
 		rows++;
 	}
 	mysql_free_result(res);

@@ -27,7 +27,7 @@
 inline int daytime(time_t *time)
 {
   struct tm* ptm = localtime(time);
-  int retval = ptm->tm_sec * 60 + ptm->tm_min * 60 + ptm->tm_hour;
+  int retval = ptm->tm_sec + ptm->tm_min * 60 + ptm->tm_hour * 3600;
   return retval;
 }
 

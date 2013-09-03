@@ -478,7 +478,7 @@ struct cmyth_recordingrule {
 	char* inetref;                   //DB version 1278
 	uint16_t season;                 //DB version 1278
 	uint16_t episode;                //DB version 1278
-	uint32_t filter;		 //DB version 1276
+	uint32_t filter;                 //DB version 1276
 	};
 
 struct cmyth_recordingrulelist {

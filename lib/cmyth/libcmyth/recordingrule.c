@@ -213,7 +213,7 @@ cmyth_recordingrule_init(void)
 	cmyth_recordingrule_set_endtime(rr, 0);
 	cmyth_recordingrule_set_title(rr, "");
 	cmyth_recordingrule_set_description(rr, "");
-	cmyth_recordingrule_set_type(rr, RRULE_DONT_RECORD);
+	cmyth_recordingrule_set_type(rr, RRULE_NOT_RECORDING);
 	cmyth_recordingrule_set_category(rr, "");
 	cmyth_recordingrule_set_subtitle(rr, "");
 	cmyth_recordingrule_set_recpriority(rr, 0);

@@ -329,7 +329,6 @@ cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_epginfolist_t *epglist)
 {
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
-	int n = 0;
 	int rows = 0;
 	const char *query_str = "SELECT oldrecorded.chanid, UNIX_TIMESTAMP(CONVERT_TZ(oldrecorded.starttime, ?, 'SYSTEM')), "
 			"UNIX_TIMESTAMP(CONVERT_TZ(oldrecorded.endtime, ?, 'SYSTEM')), oldrecorded.title, oldrecorded.description, "
@@ -410,7 +409,6 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_epginfolist_t *epglist, uint32_
 			"AND program.manualid = 0 "
 			"ORDER BY (channel.channum + 0), program.starttime ASC";
 	int rows = 0;
-	int n = 0;
 	cmyth_mysql_query_t *query;
 	cmyth_epginfo_t epg;
 
@@ -520,7 +518,6 @@ cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_epginfolist_t 
 	char *N_title;
 	char *query_str;
 	int rows = 0;
-	int n = 0;
 	cmyth_mysql_query_t *query;
 	cmyth_epginfo_t epg;
 

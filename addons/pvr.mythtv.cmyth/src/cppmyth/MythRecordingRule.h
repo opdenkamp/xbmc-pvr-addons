@@ -174,6 +174,9 @@ public:
   unsigned int ParentID() const;
   void SetParentID(unsigned int parentid);
 
+  unsigned int Filter() const;
+  void SetFilter(unsigned int filter);
+
 private:
   boost::shared_ptr<MythPointer<cmyth_recordingrule_t> > m_recordingrule_t;
 };

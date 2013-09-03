@@ -378,3 +378,12 @@ void MythRecordingRule::SetParentID(unsigned int parentid)
   cmyth_recordingrule_set_parentid(*m_recordingrule_t, parentid);
 }
 
+unsigned int MythRecordingRule::Filter() const
+{
+  return cmyth_recordingrule_filter(*m_recordingrule_t);
+}
+
+void MythRecordingRule::SetFilter(unsigned int filter)
+{
+  cmyth_recordingrule_set_filter(*m_recordingrule_t, filter);
+}

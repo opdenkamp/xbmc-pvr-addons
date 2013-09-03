@@ -1202,7 +1202,7 @@ void PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER &timer, MythRecordi
   bool epgFound;
 
   if (timer.startTime == 0)
-    epgFound = m_db.FindCurrentProgram(timer.iClientChannelUid, epgInfo);
+    epgFound = m_db.FindCurrentProgram(time(NULL), timer.iClientChannelUid, epgInfo);
   else
     epgFound = m_db.FindProgram(timer.startTime, timer.iClientChannelUid, "%", epgInfo);
 

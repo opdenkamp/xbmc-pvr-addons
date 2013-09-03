@@ -71,7 +71,7 @@ public:
   CStdString GetSetting(const CStdString &setting);
 
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythEPGInfo &epgInfo);
-  bool FindCurrentProgram(int channelid, MythEPGInfo &epgInfo);
+  bool FindCurrentProgram(time_t attime, int channelid, MythEPGInfo &epgInfo);
   EPGInfoList GetGuide(int channelid, time_t starttime, time_t endtime);
 
   ChannelIdMap GetChannels();

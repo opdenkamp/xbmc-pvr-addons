@@ -97,11 +97,11 @@ bool MythDatabase::FindProgram(time_t starttime, int channelid, const CStdString
   return retval > 0;
 }
 
-bool MythDatabase::FindCurrentProgram(int channelid, MythEPGInfo &epgInfo)
+bool MythDatabase::FindCurrentProgram(time_t attime, int channelid, MythEPGInfo &epgInfo)
 {
   int retval = 0;
   cmyth_epginfo_t epg = NULL;
-  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_get_prog_finder_chan(*m_database_t, &epg, channelid));
+  CMYTH_DB_CALL(retval, retval < 0, cmyth_mysql_get_prog_finder_chan(*m_database_t, &epg, attime, channelid));
   epgInfo = MythEPGInfo(epg);
   return retval > 0;
 }

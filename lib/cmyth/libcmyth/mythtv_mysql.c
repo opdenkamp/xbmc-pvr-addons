@@ -1264,22 +1264,22 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 	if (db->db_version >= 1278) {
 		query_str = "UPDATE record SET record.type = ?, chanid = ?, starttime = TIME(?), startdate = DATE(?), "
 			"endtime = TIME(?), enddate = DATE(?) ,title = ?, description = ?, category = ?, subtitle = ?, "
-			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, findtime = TIME(?), station = ?, "
-			"dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, autotranscode = ?, "
-			"autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, autocommflag = ?, "
-			"autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, profile = ?"
-			"prefinput = ?, autometadata = ?, inetref = ?, season = ?, episode = ?, filter = ? "
-			"WHERE recordid = ? ;";
+			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, findtime = TIME(?), "
+			"station = ?, dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, "
+			"autotranscode = ?, autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, "
+			"autocommflag = ?, autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, "
+			"profile = ?, prefinput = ?, autometadata = ?, inetref = ?, season = ?, episode = ?, filter = ? "
+			"WHERE recordid = ?";
 	}
 	else {
 		query_str = "UPDATE record SET record.type = ?, chanid = ?, starttime = TIME(?), startdate = DATE(?), "
 			"endtime = TIME(?), enddate = DATE(?) ,title = ?, description = ?, category = ?, subtitle = ?, "
-			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, findtime = TIME(?), station = ?, "
-			"dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, autotranscode = ?, "
-			"autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, autocommflag = ?, "
-			"autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, profile = ? "
-			"prefinput = ? "
-			"WHERE recordid = ? ;";
+			"recpriority = ?, startoffset = ?, endoffset = ?, search = ?, inactive = ?, findtime = TIME(?), "
+			"station = ?, dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, "
+			"autotranscode = ?, autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, "
+			"autocommflag = ?, autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, "
+			"profile = ?, prefinput = ? "
+			"WHERE recordid = ?";
 	}
 	starttime = cmyth_timestamp_to_unixtime(rr->starttime);
 	endtime = cmyth_timestamp_to_unixtime(rr->endtime);

@@ -1092,6 +1092,9 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 	if (cmyth_database_check_version(db) < 0)
 		return -1;
 
+	if (!rr)
+		return -EINVAL;
+
 	if (db->db_version >= 1278) {
 		query_str = "INSERT INTO record (record.type, chanid, starttime, startdate, endtime, enddate, title, "
 			"description, category, findtime, station, subtitle, recpriority, startoffset, endoffset, "
@@ -1214,6 +1217,9 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 
 	if (cmyth_database_check_version(db) < 0)
 		return -1;
+
+	if (!rr || rr->recordid == 0)
+		return -EINVAL;
 
 	if (db->db_version >= 1278) {
 		query_str = "UPDATE record SET record.type = ?, chanid = ?, starttime = TIME(?), startdate = DATE(?), "

@@ -1953,7 +1953,7 @@ extern int cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrul
  * \return failure: -(errno)
  * \see cmyth_recordingrule_recordid
  */
-extern int cmyth_mysql_delete_recordingrule(cmyth_database_t db, uint32_t recordid);
+extern int cmyth_mysql_delete_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr);
 
 /**
  * Update recording rule within the database.

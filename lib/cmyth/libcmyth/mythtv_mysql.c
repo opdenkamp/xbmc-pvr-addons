@@ -1177,32 +1177,72 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 }
 
 int
-cmyth_mysql_delete_recordingrule(cmyth_database_t db, uint32_t recordid)
+cmyth_mysql_delete_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 {
-	int ret;
+	int ret, rows;
 	MYSQL* sql = cmyth_db_get_connection(db);
-	const char *query_str = "DELETE FROM record WHERE recordid = ?;";
+	char *query_str;
+
 	cmyth_mysql_query_t * query;
 
 	if (cmyth_database_check_version(db) < 0)
 		return -1;
 
+	if (!rr || rr->recordid == 0)
+		return -EINVAL;
+
+	/* Remove record */
+	query_str = "DELETE FROM record WHERE recordid = ?";
 	query = cmyth_mysql_query_create(db, query_str);
-	if (cmyth_mysql_query_param_uint32(query, recordid) < 0) {
+	if (cmyth_mysql_query_param_uint32(query, rr->recordid) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
 		return -1;
 	}
+	ret = cmyth_mysql_query(query);
+	ref_release(query);
 
+
+	if (ret != 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, DELETE FROM RECORD: finalisation/execution of query failed!\n", __FUNCTION__);
+		return -1;
+	}
+
+	rows = (int)mysql_affected_rows(sql);
+
+	/* Remove oldfind */
+	query_str = "DELETE FROM oldfind WHERE recordid = ?";
+	query = cmyth_mysql_query_create(db, query_str);
+	if (cmyth_mysql_query_param_uint32(query, rr->recordid) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(query);
+		return -1;
+	}
 	ret = cmyth_mysql_query(query);
 	ref_release(query);
 
 	if (ret != 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query failed!\n", __FUNCTION__);
-		return -1;
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, DELETE FROM OLDFIND: finalisation/execution of query failed!\n", __FUNCTION__);
 	}
 
-	return (int)mysql_affected_rows(sql);
+	if (rr->searchtype == RRULE_MANUAL_SEARCH) {
+		/* Remove manual program */
+		query_str = "DELETE FROM program WHERE manualid = ?";
+		query = cmyth_mysql_query_create(db, query_str);
+		if (cmyth_mysql_query_param_uint32(query, rr->recordid) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+			ref_release(query);
+			return -1;
+		}
+		ret = cmyth_mysql_query(query);
+		ref_release(query);
+
+		if (ret != 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s, DELETE FROM PROGRAM: finalisation/execution of query failed!\n", __FUNCTION__);
+		}
+	}
+
+	return rows;
 }
 
 int

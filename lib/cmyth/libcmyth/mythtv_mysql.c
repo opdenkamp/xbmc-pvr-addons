@@ -407,6 +407,7 @@ cmyth_mysql_get_guide(cmyth_database_t db, cmyth_epginfolist_t *epglist, uint32_
 			"WHERE channel.chanid = ? AND ((program.endtime > ? AND program.endtime < ?) OR "
 			"(program.starttime >= ? AND program.starttime <= ?) OR "
 			"(program.starttime <= ? AND program.endtime >= ?)) "
+			"AND program.manualid = 0 "
 			"ORDER BY (channel.channum + 0), program.starttime ASC";
 	int rows = 0;
 	int n = 0;
@@ -533,7 +534,8 @@ cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_epginfolist_t 
 			"channel.channum, channel.callsign, channel.name, channel.sourceid "
 			"FROM program LEFT JOIN channel on program.chanid=channel.chanid "
 			"WHERE ( program.title NOT REGEXP '^[A-Z0-9]' AND program.title NOT REGEXP '^The [A-Z0-9]' "
-			"AND program.title NOT REGEXP '^A [A-Z0-9]' AND program.starttime >= ?) ORDER BY program.title ASC";
+			"AND program.title NOT REGEXP '^A [A-Z0-9]' AND program.starttime >= ?) AND program.manualid = 0 "
+			"ORDER BY program.title ASC";
 		query = cmyth_mysql_query_create(db, query_str);
 		if (cmyth_mysql_query_param_unixtime(query, starttime, db->db_tz_utc) < 0) {
 			cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
@@ -614,7 +616,8 @@ cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_epginfolist_t *epgli
 			"program.subtitle, program.programid, program.seriesid, program.category, program.category_type, "
 			"channel.channum, channel.callsign, channel.name, channel.sourceid "
 			"FROM program LEFT JOIN channel on program.chanid=channel.chanid "
-			"WHERE program.starttime >= ? and program.title = ? ORDER BY program.starttime ASC";
+			"WHERE program.starttime >= ? and program.title = ? and program.manualid = 0 "
+			"ORDER BY program.starttime ASC";
 	int rows = 0;
 	cmyth_mysql_query_t *query;
 	cmyth_epginfo_t epg;

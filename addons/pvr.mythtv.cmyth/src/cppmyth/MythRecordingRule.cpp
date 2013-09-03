@@ -362,3 +362,14 @@ void MythRecordingRule::SetTranscoder(unsigned int transcoder)
 {
   cmyth_recordingrule_set_transcoder(*m_recordingrule_t, transcoder);
 }
+
+unsigned int MythRecordingRule::ParentID() const
+{
+  return cmyth_recordingrule_parentid(*m_recordingrule_t);
+}
+
+void MythRecordingRule::SetParentID(unsigned int parentid)
+{
+  cmyth_recordingrule_set_parentid(*m_recordingrule_t, parentid);
+}
+

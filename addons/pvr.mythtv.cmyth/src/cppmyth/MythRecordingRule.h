@@ -169,6 +169,9 @@ public:
   unsigned int Transcoder() const;
   void SetTranscoder(unsigned int transcoder);
 
+  unsigned int ParentID() const;
+  void SetParentID(unsigned int parentid);
+
 private:
   boost::shared_ptr<MythPointer<cmyth_recordingrule_t> > m_recordingrule_t;
 };

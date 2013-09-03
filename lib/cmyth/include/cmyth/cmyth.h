@@ -1360,6 +1360,15 @@ typedef enum {
 extern cmyth_recordingrule_t cmyth_recordingrule_init(void);
 
 /**
+ * Duplicate recording rule.
+ * Before forgetting the reference to this recording rule structure
+ * the caller must call ref_release().
+ * \return success: A new recording rule
+ * \return failure: NULL
+ */
+extern cmyth_recordingrule_t cmyth_recordingrule_dup(cmyth_recordingrule_t rule);
+
+/**
  * Retrieves the 'recordid' field of a recording rule structure.
  * \param rr
  * \return success: recordid

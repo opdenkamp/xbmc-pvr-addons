@@ -1614,7 +1614,7 @@ cmyth_mysql_get_recorder_source_channum(cmyth_database_t db, char *channum, cmyt
 }
 
 int
-cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_epginfo_t *epg, uint32_t chanid)
+cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_epginfo_t *epg, time_t attime, uint32_t chanid)
 {
 	MYSQL_RES *res = NULL;
 	MYSQL_ROW row;
@@ -1623,8 +1623,7 @@ cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_epginfo_t *epg, uint
 			"program.subtitle, program.programid, program.seriesid, program.category, program.category_type, "
 			"channel.channum, channel.callsign, channel.name, channel.sourceid "
 			"FROM program LEFT JOIN channel on program.chanid=channel.chanid "
-			"WHERE program.chanid = ? AND UNIX_TIMESTAMP(NOW())>=UNIX_TIMESTAMP(CONVERT_TZ(program.starttime,?,'SYSTEM')) "
-			"AND UNIX_TIMESTAMP(NOW())<=UNIX_TIMESTAMP(CONVERT_TZ(program.endtime,?,'SYSTEM')) AND program.manualid = 0 "
+			"WHERE program.chanid = ? AND program.starttime <= ? AND program.endtime >= ? AND program.manualid = 0 "
 			"ORDER BY (channel.channum + 0), program.starttime ASC";
 	int rows = 0;
 	cmyth_mysql_query_t * query;
@@ -1637,8 +1636,8 @@ cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_epginfo_t *epg, uint
 	if (cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
 			|| cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
 			|| cmyth_mysql_query_param_uint32(query, chanid) < 0
-			|| cmyth_mysql_query_param_str(query, db->db_tz_name) < 0
-			|| cmyth_mysql_query_param_str(query, db->db_tz_name) < 0) {
+			|| cmyth_mysql_query_param_unixtime(query, attime, db->db_tz_utc) < 0
+			|| cmyth_mysql_query_param_unixtime(query, attime, db->db_tz_utc) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
 		ref_release(query);
 		return -1;

@@ -953,7 +953,7 @@ cmyth_mysql_get_chanlist(cmyth_database_t db, cmyth_chanlist_t *chanlist)
 		channel->sourceid = safe_atol(row[5]);
 		channel->multiplex = safe_atol(row[6]);
 		channel->callsign = ref_strdup(row[7]);
-		channel->radio = safe_atol(row[8]);
+		channel->radio = safe_atoi(row[8]);
 		(*chanlist)->chanlist_list[rows] = channel;
 		rows++;
 	}

@@ -449,7 +449,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       PVR_RECORDING tag;
       memset(&tag, 0, sizeof(PVR_RECORDING));
 
-      tag.recordingTime = it->second.StartTime();
+      tag.recordingTime = it->second.RecordingStartTime();
       tag.iDuration = it->second.Duration();
       tag.iPlayCount = it->second.IsWatched() ? 1 : 0;
       tag.iLastPlayedPosition = GetRecordingLastPlayedPosition(it->second);

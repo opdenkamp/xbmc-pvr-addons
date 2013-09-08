@@ -77,6 +77,36 @@
     <ClCompile Include="..\..\src\lib\tsreader\TSReader.cpp">
       <Filter>Source Files\lib%255ctsreader</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\DeMultiplexer.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\ChannelInfo.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\DvbUtil.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\PacketSync.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\PatParser.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\PidTable.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\PmtParser.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\Section.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\SectionDecoder.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lib\tsreader\TSHeader.cpp">
+      <Filter>Source Files\lib%255ctsreader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Cards.h">
@@ -126,6 +156,42 @@
     </ClInclude>
     <ClInclude Include="..\..\src\lib\tsreader\TSReader.h">
       <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\ChannelInfo.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\DeMultiplexer.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\DvbUtil.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\ISectionCallback.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\PacketSync.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\PatParser.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\PidTable.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\PmtParser.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\Section.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\SectionDecoder.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\lib\tsreader\TSHeader.h">
+      <Filter>Header Files\lib%255ctsreader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\os-dependent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

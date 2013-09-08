@@ -35,11 +35,11 @@ cTimer::cTimer()
   m_index              = -1;
   m_active             = true;
   m_channel            = 0;
-  m_schedtype          = Once;
+  m_schedtype          = TvDatabase::Once;
   m_starttime          = 0;
   m_endtime            = 0;
   m_priority           = 0;
-  m_keepmethod         = UntilSpaceNeeded;
+  m_keepmethod         = TvDatabase::UntilSpaceNeeded;
   m_keepdate           = cUndefinedDate;
   m_prerecordinterval  = -1; // Use MediaPortal setting instead
   m_postrecordinterval = -1; // Use MediaPortal setting instead
@@ -119,7 +119,7 @@ cTimer::cTimer(const PVR_TIMER& timerinfo)
   }
   else
   {
-    m_schedtype = Once;
+    m_schedtype = TvDatabase::Once;
     m_series = false;
   }
 
@@ -241,7 +241,7 @@ bool cTimer::ParseLine(const char *s)
     m_channel = atoi(schedulefields[3].c_str());
     m_title = schedulefields[5];
 
-    m_schedtype = (ScheduleRecordingType) atoi(schedulefields[6].c_str());
+    m_schedtype = (TvDatabase::ScheduleRecordingType) atoi(schedulefields[6].c_str());
 
     m_priority = atoi(schedulefields[7].c_str());
     m_done = stringtobool(schedulefields[8]);
@@ -251,7 +251,7 @@ bool cTimer::ParseLine(const char *s)
     if(schedulefields.size() >= 18)
     {
       //TVServerXBMC build >= 100
-      m_keepmethod = (KeepMethodType) atoi(schedulefields[11].c_str());
+      m_keepmethod = (TvDatabase::KeepMethodType) atoi(schedulefields[11].c_str());
       m_keepdate = DateTimeToTimeT(schedulefields[12]);
 
       if( m_keepdate < 0)
@@ -278,7 +278,7 @@ bool cTimer::ParseLine(const char *s)
     }
     else
     {
-      m_keepmethod = UntilSpaceNeeded;
+      m_keepmethod = TvDatabase::UntilSpaceNeeded;
       m_keepdate = cUndefinedDate;
       m_prerecordinterval = -1;
       m_postrecordinterval = -1;
@@ -298,7 +298,7 @@ bool cTimer::ParseLine(const char *s)
   return false;
 }
 
-int cTimer::SchedRecType2RepeatFlags(ScheduleRecordingType schedtype)
+int cTimer::SchedRecType2RepeatFlags(TvDatabase::ScheduleRecordingType schedtype)
 {
   // margro: the meaning of the XBMC-PVR Weekdays field is undocumented.
   // Assuming that VDR is the source for this field:
@@ -313,13 +313,13 @@ int cTimer::SchedRecType2RepeatFlags(ScheduleRecordingType schedtype)
 
   switch (schedtype)
   {
-    case Once:
+    case TvDatabase::Once:
       weekdays = 0;
       break;
-    case Daily:
+    case TvDatabase::Daily:
       weekdays = 127; // 0111 1111
       break;
-    case Weekly:
+    case TvDatabase::Weekly:
       {
         // Not sure what to do with this MediaPortal option...
         // Assumption: record once a week, on the same day and time
@@ -338,16 +338,16 @@ int cTimer::SchedRecType2RepeatFlags(ScheduleRecordingType schedtype)
         weekdays = 1 << weekday;
         break;
       }
-    case EveryTimeOnThisChannel:
+    case TvDatabase::EveryTimeOnThisChannel:
       // Don't know what to do with this MediaPortal option?
       break;
-    case EveryTimeOnEveryChannel:
+    case TvDatabase::EveryTimeOnEveryChannel:
       // Don't know what to do with this MediaPortal option?
       break;
-    case Weekends:
+    case TvDatabase::Weekends:
       weekdays = 96; // 0110 0000
       break;
-    case WorkingDays:
+    case TvDatabase::WorkingDays:
       weekdays = 31; // 0001 1111
       break;
     default:
@@ -357,7 +357,7 @@ int cTimer::SchedRecType2RepeatFlags(ScheduleRecordingType schedtype)
   return weekdays;
 }
 
-ScheduleRecordingType cTimer::RepeatFlags2SchedRecType(int repeatflags)
+TvDatabase::ScheduleRecordingType cTimer::RepeatFlags2SchedRecType(int repeatflags)
 {
   // margro: the meaning of the XBMC-PVR Weekdays field is undocumented.
   // Assuming that VDR is the source for this field:
@@ -371,7 +371,7 @@ ScheduleRecordingType cTimer::RepeatFlags2SchedRecType(int repeatflags)
   switch (repeatflags)
   {
     case 0:
-      return Once;
+      return TvDatabase::Once;
       break;
     case 1: //Monday
     case 2: //Tuesday
@@ -380,21 +380,21 @@ ScheduleRecordingType cTimer::RepeatFlags2SchedRecType(int repeatflags)
     case 16: //Friday
     case 32: //Saturday
     case 64: //Sunday
-      return Weekly;
+      return TvDatabase::Weekly;
       break;
     case 31:  // 0001 1111
-      return WorkingDays;
+      return TvDatabase::WorkingDays;
     case 96:  // 0110 0000
-      return Weekends;
+      return TvDatabase::Weekends;
       break;
     case 127: // 0111 1111
-      return Daily;
+      return TvDatabase::Daily;
       break;
     default:
       break;
   }
 
-  return Once;
+  return TvDatabase::Once;
 }
 
 std::string cTimer::AddScheduleCommand()
@@ -410,32 +410,17 @@ std::string cTimer::AddScheduleCommand()
   XBMC->Log(LOG_DEBUG, "End time: %s, marginstop: %i min later", asctime(&endtime), m_postrecordinterval);
   keepdate = *localtime( &m_keepdate );
 
-  if ( g_iTVServerXBMCBuild >= 100)
-  {
-    // Sending separate marginStart, marginStop and schedType is supported
-    snprintf(command, 1023, "AddSchedule:%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
-            m_channel,                                                         //Channel number [0]
-            uri::encode(uri::PATH_TRAITS, m_title).c_str(),                    //Program title  [1]
-            starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [2..4]
-            starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [5..7]
-            endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [8..10]
-            endtime.tm_hour, endtime.tm_min, endtime.tm_sec,                   //End time       [11..13]
-            (int) m_schedtype, m_priority, (int) m_keepmethod,                 //SchedType, Priority, keepMethod [14..16]
-            keepdate.tm_year + 1900, keepdate.tm_mon + 1, keepdate.tm_mday,    //Keepdate       [17..19]
-            keepdate.tm_hour, keepdate.tm_min, keepdate.tm_sec,                //Keeptime       [20..22]
-            m_prerecordinterval, m_postrecordinterval);                        //Prerecord,postrecord [23,24]
-  }
-  else
-  {
-    // Sending a separate marginStart, marginStop and schedType is not yet supported
-    snprintf(command, 1023, "AddSchedule:%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
-            m_channel,                                                         //Channel number
-            uri::encode(uri::PATH_TRAITS, m_title).c_str(),                    //Program title
-            starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date
-            starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time
-            endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date
-            endtime.tm_hour, endtime.tm_min, endtime.tm_sec);                  //End time
-  }
+  snprintf(command, 1023, "AddSchedule:%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
+          m_channel,                                                         //Channel number [0]
+          uri::encode(uri::PATH_TRAITS, m_title).c_str(),                    //Program title  [1]
+          starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [2..4]
+          starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [5..7]
+          endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [8..10]
+          endtime.tm_hour, endtime.tm_min, endtime.tm_sec,                   //End time       [11..13]
+          (int) m_schedtype, m_priority, (int) m_keepmethod,                 //SchedType, Priority, keepMethod [14..16]
+          keepdate.tm_year + 1900, keepdate.tm_mon + 1, keepdate.tm_mday,    //Keepdate       [17..19]
+          keepdate.tm_hour, keepdate.tm_min, keepdate.tm_sec,                //Keeptime       [20..22]
+          m_prerecordinterval, m_postrecordinterval);                        //Prerecord,postrecord [23,24]
 
   return command;
 }
@@ -453,35 +438,19 @@ std::string cTimer::UpdateScheduleCommand()
   XBMC->Log(LOG_DEBUG, "End time: %s, marginstop: %i min later", asctime(&endtime), m_postrecordinterval);
   keepdate = *localtime( &m_keepdate );
 
-  if ( g_iTVServerXBMCBuild >= 100)
-  {
-    // Sending separate marginStart, marginStop and schedType is supported
-    snprintf(command, 1024, "UpdateSchedule:%i|%i|%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
-            m_index,                                                           //Schedule index [0]
-            m_active,                                                          //Active         [1]
-            m_channel,                                                         //Channel number [2]
-            uri::encode(uri::PATH_TRAITS,m_title).c_str(),                     //Program title  [3]
-            starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [4..6]
-            starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [7..9]
-            endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [10..12]
-            endtime.tm_hour, endtime.tm_min, endtime.tm_sec,                   //End time       [13..15]
-            (int) m_schedtype, m_priority, (int) m_keepmethod,                 //SchedType, Priority, keepMethod [16..18]
-            keepdate.tm_year + 1900, keepdate.tm_mon + 1, keepdate.tm_mday,    //Keepdate       [19..21]
-            keepdate.tm_hour, keepdate.tm_min, keepdate.tm_sec,                //Keeptime       [22..24]
-            m_prerecordinterval, m_postrecordinterval, m_progid);              //Prerecord,postrecord,program_id [25,26,27]
-  }
-  else
-  {
-    snprintf(command, 1024, "UpdateSchedule:%i|%i|%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
-            m_index,                                                           //Schedule index
-            m_active,                                                          //Active
-            m_channel,                                                         //Channel number
-            uri::encode(uri::PATH_TRAITS,m_title).c_str(),                       //Program title
-            starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date
-            starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time
-            endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date
-            endtime.tm_hour, endtime.tm_min, endtime.tm_sec);                  //End time
-  }
+  snprintf(command, 1024, "UpdateSchedule:%i|%i|%i|%s|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i|%i\n",
+          m_index,                                                           //Schedule index [0]
+          m_active,                                                          //Active         [1]
+          m_channel,                                                         //Channel number [2]
+          uri::encode(uri::PATH_TRAITS,m_title).c_str(),                     //Program title  [3]
+          starttime.tm_year + 1900, starttime.tm_mon + 1, starttime.tm_mday, //Start date     [4..6]
+          starttime.tm_hour, starttime.tm_min, starttime.tm_sec,             //Start time     [7..9]
+          endtime.tm_year + 1900, endtime.tm_mon + 1, endtime.tm_mday,       //End date       [10..12]
+          endtime.tm_hour, endtime.tm_min, endtime.tm_sec,                   //End time       [13..15]
+          (int) m_schedtype, m_priority, (int) m_keepmethod,                 //SchedType, Priority, keepMethod [16..18]
+          keepdate.tm_year + 1900, keepdate.tm_mon + 1, keepdate.tm_mday,    //Keepdate       [19..21]
+          keepdate.tm_hour, keepdate.tm_min, keepdate.tm_sec,                //Keeptime       [22..24]
+          m_prerecordinterval, m_postrecordinterval, m_progid);              //Prerecord,postrecord,program_id [25,26,27]
 
   return command;
 }
@@ -517,17 +486,17 @@ void cTimer::SetKeepMethod(int lifetime)
   //      99 means that this recording will never be automatically deleted
   if (lifetime == 0)
   {
-    m_keepmethod = UntilSpaceNeeded;
+    m_keepmethod = TvDatabase::UntilSpaceNeeded;
     m_keepdate = cUndefinedDate;
   }
   else if (lifetime == 99)
   {
-    m_keepmethod = Forever;
+    m_keepmethod = TvDatabase::Always;
     m_keepdate = cUndefinedDate;
   }
   else
   {
-    m_keepmethod = UntilKeepDate;
+    m_keepmethod = TvDatabase::TillDate;
     m_keepdate = m_starttime + (lifetime * cSecsInDay);
   }
 }
@@ -546,11 +515,11 @@ int cTimer::GetLifetime(void)
   //  passed by
   switch (m_keepmethod)
   {
-    case UntilSpaceNeeded: //until space needed
-    case UntilWatched: //until watched
+    case TvDatabase::UntilSpaceNeeded: //until space needed
+    case TvDatabase::UntilWatched: //until watched
       return 0;
       break;
-    case UntilKeepDate: //until keepdate
+    case TvDatabase::TillDate: //until keepdate
       {
         double diffseconds = difftime(m_keepdate, m_starttime);
         int daysremaining = (int)(diffseconds / cSecsInDay);
@@ -566,7 +535,7 @@ int cTimer::GetLifetime(void)
         }
       }
       break;
-    case Forever: //forever
+    case TvDatabase::Always: //forever
       return 99;
     default:
       return 0;

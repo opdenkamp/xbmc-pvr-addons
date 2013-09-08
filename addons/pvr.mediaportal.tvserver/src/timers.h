@@ -1,6 +1,6 @@
 #pragma once
 /*
- *      Copyright (C) 2005-2011 Team XBMC
+ *      Copyright (C) 2005-2013 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -38,6 +38,9 @@ enum eTimerFlags { tfNone      = 0x0000,
                  };
 */
 
+namespace TvDatabase
+{
+
 // From MediaPortal: TvDatabase.ScheduleRecordingType
 enum ScheduleRecordingType
 {
@@ -47,15 +50,19 @@ enum ScheduleRecordingType
   EveryTimeOnThisChannel = 3,
   EveryTimeOnEveryChannel = 4,
   Weekends = 5,
-  WorkingDays = 6
+  WorkingDays = 6,
+  WeeklyEveryTimeOnThisChannel = 7
 };
 
+// From MediaPortal: TvDatabase.KeepMethodType
 enum KeepMethodType
 {
   UntilSpaceNeeded = 0,
   UntilWatched = 1,
-  UntilKeepDate = 2,
-  Forever = 3
+  TillDate = 2,
+  Always = 3
+};
+
 };
 
 class cTimer
@@ -77,17 +84,17 @@ class cTimer
     int PreRecordInterval(void) const { return m_prerecordinterval; }
     int PostRecordInterval(void) const { return m_postrecordinterval; }
     int RepeatFlags() { return SchedRecType2RepeatFlags(m_schedtype); };
-    bool Repeat() const { return (m_schedtype == Once ? false : true); };
+    bool Repeat() const { return (m_schedtype == TvDatabase::Once ? false : true); };
     bool Done() const { return m_done; };
     bool IsManual() const { return m_ismanual; };
     bool IsActive() const { return !m_canceled; };
     bool IsRecording() const { return m_isrecording; };
-    ScheduleRecordingType RepeatFlags2SchedRecType(int repeatflags);
+    TvDatabase::ScheduleRecordingType RepeatFlags2SchedRecType(int repeatflags);
     std::string AddScheduleCommand();
     std::string UpdateScheduleCommand();
 
   private:
-    int SchedRecType2RepeatFlags(ScheduleRecordingType schedtype);
+    int SchedRecType2RepeatFlags(TvDatabase::ScheduleRecordingType schedtype);
 
     /**
      * @brief Convert a XBMC Lifetime value to MediaPortals keepMethod+keepDate settings
@@ -103,7 +110,7 @@ class cTimer
     // MediaPortal database fields:
     int         m_index;               ///> MediaPortal id_Schedule
     int         m_channel;             ///> MediaPortal idChannel
-    ScheduleRecordingType m_schedtype; ///> MediaPortal scheduleType
+    TvDatabase::ScheduleRecordingType m_schedtype; ///> MediaPortal scheduleType
     std::string m_title;               ///> MediaPortal programName
     time_t      m_starttime;           ///> MediaPortal startTime
     time_t      m_endtime;             ///> MediaPortal endTime
@@ -111,7 +118,7 @@ class cTimer
     int         m_priority;            ///> MediaPortal priority (not the XBMC one!!!)
     std::string m_directory;           ///> MediaPortal directory
     //                                      skipped:  quality field
-    KeepMethodType m_keepmethod;       ///> MediaPortal keepMethod
+    TvDatabase::KeepMethodType m_keepmethod;       ///> MediaPortal keepMethod
     time_t      m_keepdate;            ///> MediaPortal keepDate
     int         m_prerecordinterval;   ///> MediaPortal preRecordInterval
     int         m_postrecordinterval;  ///> MediaPortal postRecordInterval

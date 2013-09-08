@@ -31,6 +31,7 @@
 #include "client.h"
 #include "FileReader.h"
 #include "platform/util/StdString.h"
+#include "DeMultiplexer.h"
 #include "Cards.h"
 
 #ifdef LIVE555
@@ -90,6 +91,7 @@ private:
   CStdString      m_fileName;
   FileReader*     m_fileReader;
   FileReader*     m_fileDuration;
+  CDeMultiplexer  m_demultiplexer;
 #ifdef LIVE555
   CRTSPClient*    m_rtspClient;
   CMemoryBuffer*  m_buffer;

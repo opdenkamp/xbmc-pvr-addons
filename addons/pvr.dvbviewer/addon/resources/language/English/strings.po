@@ -1,8 +1,8 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon version: 1.8.10
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -28,38 +28,47 @@ msgid "Webinterface Port"
 msgstr ""
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr ""
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr ""
-
-msgctxt "#30004"
 msgid "Username"
 msgstr ""
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr ""
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
 msgstr ""
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr ""
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr ""
 
-msgctxt "#30100"
+msgctxt "#30020"
 msgid "Enable Timeshift"
 msgstr ""
 
-msgctxt "#30101"
+msgctxt "#30021"
 msgid "Timeshift buffer path"
 msgstr ""
 
-#empty strings from id 30008 to 30499
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr ""
+
+# sections
+
+msgctxt "#30100"
+msgid "General"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr ""
+
 #notifications
 
 msgctxt "#30500"
@@ -67,5 +76,5 @@ msgid "Can't connect to the Recording Service"
 msgstr ""
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
+msgid "Recording Service version %s or higher required"
 msgstr ""

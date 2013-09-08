@@ -1,3 +1,16 @@
+1.8.10
+
+[updated] Require DVB Viewer Recording Service 1.25.0 or later
+[updated] In general use RS XML API instead of HTML/channeldat parsing
+[updated] Rewrote channel parsing. Use favourites if you want fast startups.
+[updated] Rewrote recording parsing, generate unique recording IDs
+[added] Show available diskspace
+[added] RTSP support (Note: RTSP is only available if timeshift is disabled)
+[fixed] Removed signal status information. Not available anymore
+[fixed] Channel logos not being displayed for some channels
+[fixed] After changing certain settings live TV wasn't work anymore and XBMC restart was required
+[fixed] possible crash (2x)
+
 1.8.9
 
 [updated] sync with PVR API v1.8.0

@@ -27,8 +27,18 @@ libmediaportal_addon_la_SOURCES = src/Cards.cpp \
                                   src/timers.cpp \
                                   src/uri.cpp \
                                   src/utils.cpp \
+                                  src/lib/tsreader/ChannelInfo.cpp \
+                                  src/lib/tsreader/DeMultiplexer.cpp \
+                                  src/lib/tsreader/DvbUtil.cpp \
                                   src/lib/tsreader/FileReader.cpp \
                                   src/lib/tsreader/MultiFileReader.cpp \
+                                  src/lib/tsreader/PacketSync.cpp \
+                                  src/lib/tsreader/PatParser.cpp \
+                                  src/lib/tsreader/PidTable.cpp \
+                                  src/lib/tsreader/PmtParser.cpp \
+                                  src/lib/tsreader/Section.cpp \
+                                  src/lib/tsreader/SectionDecoder.cpp \
+                                  src/lib/tsreader/TSHeader.cpp \
                                   src/lib/tsreader/TSReader.cpp
 libmediaportal_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

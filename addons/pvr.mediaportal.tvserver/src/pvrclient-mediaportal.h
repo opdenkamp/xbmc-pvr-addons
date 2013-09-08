@@ -43,7 +43,7 @@ public:
   static void* Process(void*);
 
   /* Server handling */
-  bool Connect();
+  ADDON_STATUS Connect();
   void Disconnect();
   bool IsUp();
 
@@ -72,6 +72,8 @@ public:
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
   PVR_ERROR RenameRecording(const PVR_RECORDING &recording);
   PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
+  PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
+  int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
 
   /* Timer handling */
   int GetNumTimers(void);

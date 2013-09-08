@@ -31,6 +31,7 @@
 #include "client.h" //for XBMC->Log
 #include "MultiFileReader.h"
 #include "utils.h"
+#include "TSDebug.h"
 #include "platform/util/timeutils.h"
 #ifdef LIVE555
 #include "MemoryReader.h"
@@ -41,7 +42,7 @@
 
 using namespace ADDON;
 
-CTsReader::CTsReader()
+CTsReader::CTsReader(): m_demultiplexer( *this )
 {
   m_fileReader      = NULL;
   m_fileDuration    = NULL;
@@ -63,31 +64,28 @@ CTsReader::CTsReader()
 
 CTsReader::~CTsReader(void)
 {
-  if (m_fileReader)
-    delete m_fileReader;
+  SAFE_DELETE(m_fileReader);
 #ifdef LIVE555
-  if (m_buffer)
-    delete m_buffer;
-  if (m_rtspClient)
-    delete m_rtspClient;
+  SAFE_DELETE(m_buffer);
+  SAFE_DELETE(m_rtspClient);
 #endif
 }
 
 std::string CTsReader::TranslatePath(const char*  pszFileName)
 {
+  CStdString sFileName = pszFileName;
 #if defined (TARGET_WINDOWS)
   // Can we access the given file already?
   if ( OS::CFile::Exists(pszFileName) )
   {
     XBMC->Log(LOG_DEBUG, "Found the timeshift buffer at: %s\n", pszFileName);
-    return pszFileName;
+    return ToXBMCPath(sFileName);
   }
-  XBMC->Log(LOG_DEBUG, "Cannot access '%s' directly. Assuming multiseat mode. Need to translate to UNC filename.", pszFileName);
+  XBMC->Log(LOG_NOTICE, "Cannot access '%s' directly. Assuming multiseat mode. Need to translate to UNC filename.", pszFileName);
 #else
   XBMC->Log(LOG_DEBUG, "Multiseat mode; need to translate '%s' to UNC filename.", pszFileName);
 #endif
 
-  CStdString sFileName = pszFileName;
   bool bFound = false;
 
   // Card Id given? (only for Live TV / Radio). Check for an UNC path (e.g. \\tvserver\timeshift)
@@ -133,46 +131,11 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
     }
   }
 
-#if defined(TARGET_LINUX) || defined(TARGET_DARWIN)
-  CStdString CIFSName = sFileName;
-  CIFSName.Replace("\\", "/");
-  std::string SMBPrefix = "smb://";
-  if (g_szSMBusername.length() > 0)
-  {
-    SMBPrefix += g_szSMBusername;
-    if (g_szSMBpassword.length() > 0)
-    {
-      SMBPrefix += ":" + g_szSMBpassword;
-    }
-  }
-  else
-  {
-    SMBPrefix += "Guest";
-  }
-  SMBPrefix += "@";
-  CIFSName.Replace("//", SMBPrefix.c_str());
-  sFileName = CIFSName;
-
-  //size_t found = string::npos;
-
-  //// Extract filename:
-  //found = CIFSname.find_last_of("\\");
-
-  //if (found != string::npos)
-  //{
-  //  CIFSname.erase(0, found + 1);
-  //  CIFSname.insert(0, m_basePath.c_str());
-  //  CIFSname.erase(0, 6); // Remove smb://
-  //}
-  //CIFSname.insert(0, SMBPrefix.c_str());
-
-  //XBMC->Log(LOG_INFO, "CTsReader:TranslatePath %s -> %s", pszFileName, CIFSname.c_str());
-  //return CIFSname;
-#endif
+  sFileName = ToXBMCPath(sFileName);
 
   if (bFound)
   {
-    XBMC->Log(LOG_INFO, "CTsReader:TranslatePath %s -> %s", pszFileName, sFileName.c_str());
+    XBMC->Log(LOG_NOTICE, "Translate path %s -> %s", pszFileName, sFileName.c_str());
   }
   else
   {
@@ -225,34 +188,31 @@ std::string CTsReader::TranslatePath(const char*  pszFileName)
 
 long CTsReader::Open(const char* pszFileName)
 {
-  XBMC->Log(LOG_NOTICE, "CTsReader::Open(%s)", pszFileName);
+  XBMC->Log(LOG_NOTICE, "TsReader open '%s'", pszFileName);
 
   m_fileName = pszFileName;
-  char url[MAX_PATH];
-  strncpy(url, m_fileName.c_str(), MAX_PATH-1);
-  url[MAX_PATH-1]='\0'; // make sure that we always have a 0-terminated string
+
+  if (m_State != State_Stopped)
+    Close();
 
   // check file type
-  int length = strlen(url);
+  int length = m_fileName.length();
 
-  if ((length > 7) && (strnicmp(url, "rtsp://",7) == 0))
+  if ((length > 7) && (strnicmp(m_fileName.c_str(), "rtsp://",7) == 0))
   {
     // rtsp:// stream
     // open stream
-    XBMC->Log(LOG_DEBUG, "open rtsp: %s", url);
+    XBMC->Log(LOG_DEBUG, "open rtsp: %s", m_fileName.c_str());
 #ifdef LIVE555
     //strcpy(m_rtspClient.m_outFileName, "e:\\temp\\rtsptest.ts");
-    if (m_buffer)
-      delete m_buffer;
-    if (m_rtspClient)
-      delete m_rtspClient;
     m_buffer = new CMemoryBuffer();
     m_rtspClient = new CRTSPClient();
     m_rtspClient->Initialize(m_buffer);
 
-    if ( !m_rtspClient->OpenStream(url))
+    if ( !m_rtspClient->OpenStream(m_fileName.c_str()) )
     {
       SAFE_DELETE(m_rtspClient);
+      SAFE_DELETE(m_buffer);
       return E_FAIL;
     }
 
@@ -261,7 +221,7 @@ long CTsReader::Open(const char* pszFileName)
     m_bLiveTv = true;
 
     // are we playing a recording via RTSP
-    if (strstr(url, "/stream") == NULL)
+    if (m_fileName.find_first_of("/stream") == string::npos )
     {
       // yes, then we're not timeshifting
       m_bTimeShifting = false;
@@ -273,14 +233,14 @@ long CTsReader::Open(const char* pszFileName)
     m_fileReader = new CMemoryReader(*m_buffer);
     m_State = State_Running;
 #else
-    XBMC->Log(LOG_ERROR, "Failed to open %s. PVR client is compiled without LIVE555 RTSP support.", url);
-    XBMC->QueueNotification(QUEUE_ERROR, "PVR client has no RTSP support: %s", url);
+    XBMC->Log(LOG_ERROR, "Failed to open %s. PVR client is compiled without LIVE555 RTSP support.", m_fileName.c_str());
+    XBMC->QueueNotification(QUEUE_ERROR, "PVR client has no RTSP support: %s", m_fileName.c_str());
     return E_FAIL;
 #endif //LIVE555
   }
   else
   {
-    if ((length < 9) || (strnicmp(&url[length-9], ".tsbuffer", 9) != 0))
+    if ((length < 9) || (strnicmp(&m_fileName.c_str()[length-9], ".tsbuffer", 9) != 0))
     {
       // local .ts file
       m_bTimeShifting = false;
@@ -298,20 +258,21 @@ long CTsReader::Open(const char* pszFileName)
     }
 
     // Translate path (e.g. Local filepath to smb://user:pass@share)
-    m_fileName = TranslatePath(url);
+    m_fileName = TranslatePath(m_fileName.c_str());
 
     if (m_fileName.empty())
       return S_FALSE;
 
     // open file
-    m_fileReader->SetFileName(m_fileName.c_str());
-    //m_fileReader->SetDebugOutput(true);
-    long retval = m_fileReader->OpenFile();
+    long retval = m_fileReader->OpenFile(m_fileName);
     if (retval != S_OK)
     {
-      XBMC->Log(LOG_ERROR, "Failed to open file '%s' as '%s'", url, m_fileName.c_str());
+      XBMC->Log(LOG_ERROR, "Failed to open file '%s' as '%s'", pszFileName, m_fileName.c_str());
       return retval;
     }
+    // detect audio/video pids
+    m_demultiplexer.SetFileReader(m_fileReader);
+    m_demultiplexer.Start();
 
     m_fileReader->SetFilePointer(0LL, FILE_BEGIN);
     m_State = State_Running;
@@ -323,11 +284,7 @@ long CTsReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned 
 {
   if (m_fileReader)
   {
-    long ret;
-
-    ret = m_fileReader->Read(pbData, lDataLength, dwReadBytes);
-
-    return ret;
+    return m_fileReader->Read(pbData, lDataLength, dwReadBytes);
   }
 
   dwReadBytes = 0;
@@ -341,6 +298,7 @@ void CTsReader::Close()
     if (m_bIsRTSP)
     {
 #ifdef LIVE555
+      XBMC->Log(LOG_NOTICE, "TsReader: closing RTSP client");
       m_rtspClient->Stop();
       SAFE_DELETE(m_rtspClient);
       SAFE_DELETE(m_buffer);
@@ -348,6 +306,7 @@ void CTsReader::Close()
     }
     else
     {
+      XBMC->Log(LOG_NOTICE, "TsReader: closing file");
       m_fileReader->CloseFile();
     }
     SAFE_DELETE(m_fileReader);
@@ -357,10 +316,9 @@ void CTsReader::Close()
 
 bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long timeshiftBufferID)
 {
-#ifdef TARGET_WINDOWS
   string newFileName;
 
-  XBMC->Log(LOG_NOTICE, "CTsReader::OnZap(%s)", pszFileName);
+  XBMC->Log(LOG_NOTICE, "TsReader: OnZap(%s)", pszFileName);
 
   // Check whether the new channel url/timeshift buffer is changed
   // In case of a new url/timeshift buffer file, close the old one first
@@ -374,27 +332,36 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
   {
     if (m_fileReader)
     {
+      XBMC->Log(LOG_DEBUG,"%s: request new PAT", __FUNCTION__);
+
       int64_t pos_before, pos_after;
-      pos_before = m_fileReader->GetFilePointer();
-      pos_after = m_fileReader->SetFilePointer(0LL, FILE_END);
+      MultiFileReader* fileReader = dynamic_cast<MultiFileReader*>(m_fileReader);
 
-      if ((timeShiftBufferPos > 0) && (pos_after > timeShiftBufferPos))
+      pos_before = fileReader->GetFilePointer();
+
+      if ((timeShiftBufferPos > 0) && (timeshiftBufferID != -1))
       {
-        /* Move backward */
-        pos_after = m_fileReader->SetFilePointer((timeShiftBufferPos-pos_after), FILE_CURRENT);
+        pos_after = fileReader->SetCurrentFilePointer(timeShiftBufferPos, timeshiftBufferID);
       }
-      m_fileReader->OnChannelChange();
+      else
+      {
+        pos_after = m_fileReader->SetFilePointer(0LL, FILE_END);
+        if ((timeShiftBufferPos > 0) && (pos_after > timeShiftBufferPos))
+        {
+          /* Move backward */
+          pos_after = fileReader->SetFilePointer((timeShiftBufferPos-pos_after), FILE_CURRENT);
+        }
+      }
 
-      XBMC->Log(LOG_DEBUG,"OnZap: move from %I64d to %I64d tsbufpos  %I64d", pos_before, pos_after, timeShiftBufferPos);
+      m_demultiplexer.RequestNewPat();
+      fileReader->OnChannelChange();
+
+      XBMC->Log(LOG_DEBUG,"%s:: move from %I64d to %I64d tsbufpos  %I64d", __FUNCTION__, pos_before, pos_after, timeShiftBufferPos);
       usleep(100000);
       return true;
     }
-    return S_FALSE;
+    return false;
   }
-#else
-  m_fileReader->SetFilePointer(0LL, FILE_END);
-  return S_OK;
-#endif
 }
 
 void CTsReader::SetCardSettings(CCards* cardSettings)
@@ -431,7 +398,7 @@ bool CTsReader::IsTimeShifting()
 
 long CTsReader::Pause()
 {
-  XBMC->Log(LOG_DEBUG, "CTsReader::Pause() - IsTimeShifting = %d - state = %d", IsTimeShifting(), m_State);
+  XBMC->Log(LOG_DEBUG, "TsReader: Pause - IsTimeShifting = %d - state = %d", IsTimeShifting(), m_State);
 
   if (m_State == State_Running)
   {
@@ -456,10 +423,11 @@ long CTsReader::Pause()
         m_rtspClient->Continue();
         XBMC->Log(LOG_DEBUG, "CTsReader::Pause() rtsp running"); // at position: %f", (m_seekTime.Millisecs() / 1000.0f));
     }
+    m_State = State_Running;
 #endif //LIVE555
   }
 
-  XBMC->Log(LOG_DEBUG, "CTsReader::Pause() - END - state = %d", m_State);
+  XBMC->Log(LOG_DEBUG, "TsReader: Pause - END - state = %d", m_State);
   return S_OK;
 }
 

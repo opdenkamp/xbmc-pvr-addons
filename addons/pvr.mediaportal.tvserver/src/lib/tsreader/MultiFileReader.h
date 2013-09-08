@@ -52,23 +52,11 @@ class MultiFileReader : public FileReader
     MultiFileReader();
     virtual ~MultiFileReader();
 
-    //virtual long GetFileName(char* *lpszFileName);
-    virtual long SetFileName(const char* pszFileName);
+    virtual long SetFileName(const std::string& fileName);
     virtual long OpenFile();
+    virtual long OpenFile(const std::string& fileName);
     virtual long CloseFile();
     virtual long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes);
-    //virtual long Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes, int64_t llDistanceToMove, unsigned long dwMoveMethod);
-    //virtual long get_ReadOnly(bool *ReadOnly);
-    //virtual long set_DelayMode(bool DelayMode);
-    //virtual long get_DelayMode(bool *DelayMode);
-    //virtual long get_ReaderMode(unsigned short *ReaderMode);
-    //virtual unsigned long setFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod);
-    //virtual int64_t getFilePointer();
-    //virtual int64_t getBufferPointer();
-    //virtual void setBufferPointer();
-
-    //TODO: GetFileSize should go since get_FileSize should do the same thing.
-    //virtual long GetFileSize(int64_t *pStartPosition, int64_t *pLength);
 
     virtual bool IsFileInvalid();
 
@@ -76,19 +64,18 @@ class MultiFileReader : public FileReader
     virtual int64_t GetFilePointer();
     virtual int64_t GetFileSize();
     virtual int64_t OnChannelChange(void);
+    int64_t SetCurrentFilePointer(int64_t timeShiftBufferFilePos, long timeshiftBufferFileID);
 
   protected:
     long RefreshTSBufferFile();
     long GetFileLength(const char* pFilename, int64_t &length);
-    void RefreshFileSize();
 
-    //  SharedMemory* m_pSharedMemory;
     FileReader m_TSBufferFile;
     int64_t m_startPosition;
+    int64_t m_currentFileStartOffset;
     int64_t m_endPosition;
     int64_t m_currentPosition;
     int64_t m_lastZapPosition;
-    int64_t m_llBufferPointer;  
     int32_t m_filesAdded;
     int32_t m_filesRemoved;
 
@@ -96,8 +83,5 @@ class MultiFileReader : public FileReader
 
     FileReader m_TSFile;
     long     m_TSFileId;
-    bool     m_bReadOnly;
     bool     m_bDelay;
-    bool     m_bDebugOutput;
-    int64_t  m_cachedFileSize;
 };

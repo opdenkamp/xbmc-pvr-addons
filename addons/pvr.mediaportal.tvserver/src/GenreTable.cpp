@@ -29,11 +29,11 @@ bool CGenreTable::LoadGenreXML(const std::string &filename)
   TiXmlDocument xmlDoc;
   if (!xmlDoc.LoadFile(filename))
   {
-    XBMC->Log(LOG_DEBUG, "Unable to load %s: %s at line %d", filename.c_str(), xmlDoc.ErrorDesc(), xmlDoc.ErrorRow());
+    XBMC->Log(LOG_ERROR, "Unable to load %s: %s at line %d", filename.c_str(), xmlDoc.ErrorDesc(), xmlDoc.ErrorRow());
     return false;
   }
 
-  XBMC->Log(LOG_DEBUG, "Opened %s to read genre string to type/subtype translation table", filename.c_str());
+  XBMC->Log(LOG_NOTICE, "Opened %s to read genre string to type/subtype translation table", filename.c_str());
 
   TiXmlHandle hDoc(&xmlDoc);
   TiXmlElement* pElem;
@@ -47,7 +47,7 @@ bool CGenreTable::LoadGenreXML(const std::string &filename)
   // should always have a valid root but handle gracefully if it does
   if (!pElem)
   {
-    XBMC->Log(LOG_DEBUG, "Could not find <genrestrings> element");
+    XBMC->Log(LOG_ERROR, "Could not find <genrestrings> element");
     return false;
   }
 
@@ -62,7 +62,7 @@ bool CGenreTable::LoadGenreXML(const std::string &filename)
 
   if (!pGenreNode)
   {
-    XBMC->Log(LOG_DEBUG, "Could not find <genre> element");
+    XBMC->Log(LOG_ERROR, "Could not find <genre> element");
     return false;
   }
 

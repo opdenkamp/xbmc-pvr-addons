@@ -38,8 +38,8 @@ bool             g_bRadioEnabled        = DEFAULT_RADIO;                 ///< Se
 bool             g_bHandleMessages      = DEFAULT_HANDLE_MSG;            ///< Send VDR's OSD status messages to XBMC OSD
 bool             g_bResolveRTSPHostname = DEFAULT_RESOLVE_RTSP_HOSTNAME; ///< Resolve the server hostname in the rtsp URLs to an IP at the TV Server side (default: false)
 bool             g_bReadGenre           = DEFAULT_READ_GENRE;            ///< Read the genre strings from MediaPortal and translate them into XBMC DVB genre id's (only English)
-std::string      g_szTVGroup            = DEFAULT_TVGROUP;               ///< Import only TV channels from this TV Server TV group
-std::string      g_szRadioGroup         = DEFAULT_RADIOGROUP;            ///< Import only radio channels from this TV Server radio group
+CStdString       g_szTVGroup            = DEFAULT_TVGROUP;               ///< Import only TV channels from this TV Server TV group
+CStdString       g_szRadioGroup         = DEFAULT_RADIOGROUP;            ///< Import only radio channels from this TV Server radio group
 std::string      g_szSMBusername        = DEFAULT_SMBUSERNAME;           ///< Windows user account used to access share
 std::string      g_szSMBpassword        = DEFAULT_SMBPASSWORD;           ///< Windows user password used to access share
                                                                          ///< Leave empty to use current user when running on Windows
@@ -99,16 +99,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   /* Create connection to MediaPortal XBMC TV client */
   g_client       = new cPVRClientMediaPortal();
-  if (!g_client->Connect())
+
+  m_CurStatus = g_client->Connect();
+  if (m_CurStatus != ADDON_STATUS_OK)
   {
     SAFE_DELETE(g_client);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
-    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
-    return m_CurStatus;
   }
-
-  m_CurStatus = ADDON_STATUS_OK;
 
   return m_CurStatus;
 }
@@ -214,14 +212,16 @@ void ADDON_ReadSettings(void)
     XBMC->Log(LOG_ERROR, "Couldn't get 'tvgroup' setting, falling back to '' as default");
   } else {
     g_szTVGroup = buffer;
+    g_szTVGroup.Replace(";","|");
   }
 
   if (!XBMC->GetSetting("radiogroup", &buffer))
   {
     /* If setting is unknown fallback to defaults */
-    XBMC->Log(LOG_ERROR, "Couldn't get 'tvgroup' setting, falling back to '' as default");
+    XBMC->Log(LOG_ERROR, "Couldn't get 'radiogroup' setting, falling back to '' as default");
   } else {
     g_szRadioGroup = buffer;
+    g_szRadioGroup.Replace(";","|");
   }
 
   if (!XBMC->GetSetting("streamingmethod", &g_eStreamingMethod))
@@ -299,7 +299,7 @@ void ADDON_ReadSettings(void)
   XBMC->Log(LOG_DEBUG, "settings: readgenre=%i, sleeponrtspurl=%i", (int) g_bReadGenre, g_iSleepOnRTSPurl);
   XBMC->Log(LOG_DEBUG, "settings: resolvertsphostname=%i", (int) g_bResolveRTSPHostname);
   XBMC->Log(LOG_DEBUG, "settings: fastchannelswitch=%i", (int) g_bFastChannelSwitch);
-  XBMC->Log(LOG_DEBUG, "settings: smb user='%s', pass='%s'", g_szSMBusername.c_str(), g_szSMBpassword.c_str());
+  XBMC->Log(LOG_DEBUG, "settings: smb user='%s', pass=%s", g_szSMBusername.c_str(), (g_szSMBpassword.length() > 0 ? "<set>" : "<empty>"));
 }
 
 //-- SetSetting ---------------------------------------------------------------
@@ -467,7 +467,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   pCapabilities->bHandlesDemuxing            = false;
   pCapabilities->bSupportsChannelScan        = false;
   pCapabilities->bSupportsRecordingPlayCount = (g_iTVServerXBMCBuild < 117) ? false : true;
-  pCapabilities->bSupportsLastPlayedPosition = false;
+  pCapabilities->bSupportsLastPlayedPosition = (g_iTVServerXBMCBuild < 121) ? false : true;
   pCapabilities->bSupportsRecordingFolders   = false; // Don't show the timer directory field. This does not influence the displaying directories in the recordings list.
 
   return PVR_ERROR_NO_ERROR;
@@ -662,6 +662,22 @@ PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
     return PVR_ERROR_SERVER_ERROR;
   else
     return g_client->SetRecordingPlayCount(recording, count);
+}
+
+PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  if (!g_client)
+    return PVR_ERROR_SERVER_ERROR;
+  else
+    return g_client->SetRecordingLastPlayedPosition(recording, lastplayedposition);
+}
+
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  if (!g_client)
+    return PVR_ERROR_SERVER_ERROR;
+  else
+    return g_client->GetRecordingLastPlayedPosition(recording);
 }
 
 /*******************************************/
@@ -867,8 +883,6 @@ void DemuxAbort(void) {}
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
 
-PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 bool SeekTime(int,bool,double*) { return false; }

@@ -79,10 +79,6 @@ using namespace std;
 
 enum SocketFamily
 {
-  #ifdef CONFIG_SOCKET_IPV6
-    af_inet6  = AF_INET6,
-    af_unspec = AF_UNSPEC,    ///< Either INET or INET6
-  #endif
   af_inet = AF_INET
 };
 
@@ -91,10 +87,6 @@ enum SocketDomain
   #if defined TARGET_LINUX || defined TARGET_DARWIN
     pf_unix  = PF_UNIX,
     pf_local = PF_LOCAL,
-  #endif
-  #ifdef CONFIG_SOCKET_IPV6
-    pf_inet6  = PF_INET6,
-    pf_unspec = PF_UNSPEC,    //< Either INET or INET6
   #endif
   pf_inet = PF_INET
 };
@@ -109,9 +101,6 @@ enum SocketProtocol
 {
   tcp = IPPROTO_TCP,
   udp = IPPROTO_UDP
-  #ifdef CONFIG_SOCKET_IPV6
-    , ipv6 = IPPROTO_IPV6
-  #endif
 };
 
 class Socket
@@ -282,7 +271,7 @@ class Socket
 
     bool set_non_blocking ( const bool );
 
-    bool ReadResponse (int &code, vector<string> &lines);
+    bool ReadLine (string& line);
 
     bool is_valid() const;
 

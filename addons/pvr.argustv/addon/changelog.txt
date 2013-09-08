@@ -1,3 +1,5 @@
+v1.8.167 (29-08-2013)
+- Fixed Live-TV XBMC Gotham
 v1.8.166 (08-06-2013)
 - sync with PVR API v1.8.0
 v1.7.166 (13-03-2013)

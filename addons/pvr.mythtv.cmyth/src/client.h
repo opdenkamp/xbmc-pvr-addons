@@ -60,6 +60,8 @@ extern "C" {
 
 #define SUBTITLE_SEPARATOR " - "
 
+#define MENUHOOK_REC_DELETE_AND_RERECORD   1
+
 /*!
  * @brief PVR macros for string exchange
  */

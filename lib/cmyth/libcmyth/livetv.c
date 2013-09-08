@@ -343,6 +343,15 @@ cmyth_livetv_chain_add_url(cmyth_recorder_t rec, char * url)
 							= ref_hold(NULL);
 		}
 		else {
+			if (tmp)
+				ref_release(tmp);
+
+			if (fp)
+				ref_release(fp);
+
+			if (pi)
+				ref_release(pi);
+
 			ret = -1;
 			cmyth_dbg(CMYTH_DBG_ERROR,
 			 		"%s: memory allocation request failed\n",
@@ -711,7 +720,7 @@ cmyth_livetv_chain_setup(cmyth_recorder_t rec, uint32_t buflen, int32_t tcp_rcvb
 
 	new_rec->rec_livetv_chain->prog_update_callback = prog_update_callback;
 
-	sprintf(url, "myth://%s:%d%s", loc_prog->proginfo_hostname, rec->rec_port,
+	sprintf(url, "myth://%s:%d%s", loc_prog->proginfo_hostname, new_rec->rec_port,
 				loc_prog->proginfo_pathname);
 
 	if(cmyth_livetv_chain_has_url(new_rec, url) == -1) {
@@ -818,6 +827,7 @@ int
 cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 {
 	int ret, i;
+	cmyth_file_t oldfile = NULL;
 
 	if (dir == 0)
 		return 1;
@@ -862,7 +872,7 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 	if((dir < 0 && rec->rec_livetv_chain->chain_current + dir >= 0)
 		|| (rec->rec_livetv_chain->chain_current <
 			  rec->rec_livetv_chain->chain_ct - dir)) {
-		ref_release(rec->rec_livetv_file);
+		oldfile = rec->rec_livetv_file;
 		ret = rec->rec_livetv_chain->chain_current += dir;
 		rec->rec_livetv_file = ref_hold(rec->rec_livetv_chain->chain_files[ret]);
 		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: file switch to %d\n",__FUNCTION__,ret);
@@ -876,7 +886,8 @@ cmyth_livetv_chain_switch(cmyth_recorder_t rec, int dir)
 	out:
 
 	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
-
+	if (oldfile)
+		ref_release(oldfile);
 	return ret;
 }
 

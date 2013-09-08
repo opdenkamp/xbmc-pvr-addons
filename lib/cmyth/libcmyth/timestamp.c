@@ -241,6 +241,28 @@ cmyth_timestamp_from_unixtime(time_t l)
 	return cmyth_timestamp_from_tm(&tm_datetime);
 }
 
+/*
+ * cmyth_timestamp_utc_from_unixtime(time_t l)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Create and fill out a UTC timestamp structure using the time_t 'l'.
+ *
+ * Return Value:
+ *
+ * Success: cmyth_timestamp_t object
+ *
+ * Failure: -(ERRNO)
+ */
+cmyth_timestamp_t
+cmyth_timestamp_utc_from_unixtime(time_t l)
+{
+	struct tm tm_datetime;
+	gmtime_r(&l, &tm_datetime);
+	return cmyth_timestamp_from_tm(&tm_datetime);
+}
 
 /*
  * cmyth_timestamp_to_longlong( cmyth_timestamp_t ts)

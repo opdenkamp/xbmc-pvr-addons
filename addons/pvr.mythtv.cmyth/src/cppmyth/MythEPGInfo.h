@@ -1,6 +1,6 @@
 #pragma once
 /*
- *      Copyright (C) 2005-2012 Team XBMC
+ *      Copyright (C) 2005-2013 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -29,25 +29,29 @@ extern "C" {
 
 template <class T> class MythPointer;
 
-class MythChannel
+class MythEPGInfo
 {
 public:
-  MythChannel();
-  MythChannel(cmyth_channel_t cmyth_channel);
+  MythEPGInfo();
+  MythEPGInfo(cmyth_epginfo_t cmyth_epginfo);
 
   bool IsNull() const;
 
-  unsigned int ID();
-  CStdString Name();
-  unsigned int NumberInt();
-  CStdString Number();
+  unsigned int ChannelID();
+  CStdString ChannelName();
   CStdString Callsign();
-  CStdString Icon();
-  bool Visible();
-  bool IsRadio();
   unsigned int SourceID();
-  unsigned int MultiplexID();
+  CStdString Title();
+  CStdString Subtitle();
+  CStdString Description();
+  time_t StartTime();
+  time_t EndTime();
+  CStdString ProgramID();
+  CStdString SeriesID();
+  CStdString Category();
+  CStdString CategoryType();
+  unsigned int ChannelNumberInt();
 
 private:
-  boost::shared_ptr<MythPointer<cmyth_channel_t> > m_channel_t;
+  boost::shared_ptr<MythPointer<cmyth_epginfo_t> > m_epginfo_t;
 };

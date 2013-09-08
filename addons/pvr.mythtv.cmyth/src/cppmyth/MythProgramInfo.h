@@ -67,9 +67,10 @@ public:
   time_t RecordingStartTime();
   time_t RecordingEndTime();
   int Priority();
+  CStdString StorageGroup();
 
-  void SetFramerate(const long long framerate);
-  long long Framterate() const;
+  void SetFrameRate(const long long frameRate);
+  long long FrameRate() const;
 
   CStdString IconPath();
   CStdString Coverart() const;
@@ -79,7 +80,7 @@ private:
   boost::shared_ptr<MythPointer<cmyth_proginfo_t> > m_proginfo_t;
 
   // Cached PVR attributes
-  long long m_framerate;
+  long long m_frameRate;
 
   // Artworks
   CStdString m_coverart;

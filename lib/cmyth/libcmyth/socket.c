@@ -236,7 +236,7 @@ cmyth_conn_refill(cmyth_conn_t conn, int len)
 		tv.tv_usec = 0;
 		FD_ZERO(&fds);
 		FD_SET(conn->conn_fd, &fds);
-		if ((r=select((int)conn->conn_fd+1, &fds, NULL, NULL, &tv)) == 0) {
+		if ((r = select((int)conn->conn_fd+1, &fds, NULL, NULL, &tv)) == 0) {
 			conn->conn_hang = 1;
 			return -ETIMEDOUT;
 		} else if (r > 0) {
@@ -248,7 +248,7 @@ cmyth_conn_refill(cmyth_conn_t conn, int len)
 				cmyth_dbg(CMYTH_DBG_ERROR,
 					  "%s: read failed (%d)\n",
 					  __FUNCTION__, errno);
-	            conn->conn_hang = 1;
+				conn->conn_hang = 1;
 				if ( r == 0 )
 					return -1 * EBADF;
 				else
@@ -651,9 +651,9 @@ cmyth_rcv_okay(cmyth_conn_t conn)
 			  "%s: did not consume everything\n",
 			  __FUNCTION__);
 		while(count > 0 && err == 0) {
-			consumed = cmyth_rcv_string(conn, &err, tmp, sizeof(tmp) - 1, count);
+			consumed = cmyth_rcv_data(conn, &err, tmp, sizeof(tmp) - 1, count);
+			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data: count %i, read %i, errno %i\n", __FUNCTION__, count, consumed, err);
 			count -= consumed;
-			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data %s\n", __FUNCTION__, tmp);
 		}
 	}
 	return ret;
@@ -677,7 +677,7 @@ cmyth_rcv_okay(cmyth_conn_t conn)
  * Failure: -(errno)
  */
 int
-cmyth_rcv_feedback(cmyth_conn_t conn, char *fb)
+cmyth_rcv_feedback(cmyth_conn_t conn, char *fb, int fblen)
 {
 	int count, consumed;
 	char buf[8];
@@ -697,7 +697,7 @@ cmyth_rcv_feedback(cmyth_conn_t conn, char *fb)
 		return -err;
 	}
 	count -= consumed;
-	ret = (strncmp(buf, fb, sizeof(fb)) == 0) ? 0 : -1;
+	ret = (strncmp(buf, fb, fblen) == 0) ? 0 : -1;
 	if (count > 0) {
 		cmyth_dbg(CMYTH_DBG_INFO,
 			  "%s: did not consume everything\n",
@@ -1268,8 +1268,8 @@ cmyth_rcv_timestamp(cmyth_conn_t conn, int *err, cmyth_timestamp_t *ts,
 	/*
 	 * Allow for the timestamp to be empty in the case of livetv
 	 */
-        if ((strlen(tbuf) == 1) && (tbuf[0] = ' '))
-                return consumed;
+	if ((strlen(tbuf) == 1) && (tbuf[0] == ' '))
+		return consumed;
 
 	if (strlen(tbuf) == 0)
 		return consumed;
@@ -1582,6 +1582,22 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 			failed = "cmyth_rcv_ushort";
 			goto fail;
 		}
+	}
+
+	if (buf->proginfo_version >= 76) {
+		/*
+		 * Get proginfo_syndicated_episode (string)
+		 */
+		consumed = cmyth_rcv_string(conn, err, tmp_str, sizeof(tmp_str) - 1, count);
+		count -= consumed;
+		total += consumed;
+		if (*err) {
+			failed = "cmyth_rcv_string";
+			goto fail;
+		}
+		if (buf->proginfo_syndicated_episode)
+			ref_release(buf->proginfo_syndicated_episode);
+		buf->proginfo_syndicated_episode = ref_strdup(tmp_str);
 	}
 
 	/*
@@ -2278,6 +2294,26 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		}
 	}
 
+	if (buf->proginfo_version >= 76) {
+		/*
+		 * Get partnumber and parttotal
+		 */
+		consumed = cmyth_rcv_uint16(conn, err, &buf->proginfo_partnumber, count);
+		count -= consumed;
+		total += consumed;
+		if (*err) {
+			failed = "cmyth_rcv_ushort proginfo_partnumber";
+			goto fail;
+		}
+		consumed = cmyth_rcv_uint16(conn, err, &buf->proginfo_parttotal, count);
+		count -= consumed;
+		total += consumed;
+		if (*err) {
+			failed = "cmyth_rcv_ushort proginfo_parttotal";
+			goto fail;
+		}
+	}
+
 	cmyth_dbg(CMYTH_DBG_INFO, "%s: got recording info\n", __FUNCTION__);
 
 	cmyth_proginfo_parse_url(buf);
@@ -2848,83 +2884,108 @@ cmyth_rcv_ringbuf(cmyth_conn_t conn, int *err, cmyth_ringbuf_t buf, int count)
 }
 
 /*
- * cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
+ * cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int buflen, int count)
  *
  * Scope: PRIVATE (mapped to __cmyth_rcv_data)
  *
  * Description
  *
  * Receive raw data from the socket specified by 'conn' and place it
- * in 'buf'.  This function consumes 'count' bytes and places them in
- * 'buf'.  If an error is encountered and 'err' is not NULL, an
+ * in 'buf'. This function consumes 'count' bytes and places them in
+ * 'buf'. If an error is encountered and 'err' is not NULL, an
  * indication of the nature of the error will be recorded by placing
  * an error code in the location pointed to by 'err'.  If all goes
- * well, 'err' wil be set to 0.
+ * well, 'err' will be set to 0.
  *
  * Return Value:
  *
  * A value >=0 indicating the number of bytes consumed.
  */
 int
-cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int count)
+cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int buflen, int count)
 {
-	int r;
-	int total = 0;
-	unsigned char *p;
-	int tmp_err;
-	struct timeval tv;
-	fd_set fds;
+	int consumed = 0;
+	int placed = 0;
+	int tmp;
 
 	if (!err) {
-		err = &tmp_err;
+		err = &tmp;
 	}
-	if (count <= 0) {
+
+	if (count < 0) {
+		/*
+		 * Data is terminated at the end of the payload. If the last data
+		 * requested in the payload is empty, count will be zero.
+		 * In this case we should return an empty buffer rather than an error.
+		 */
 		*err = EINVAL;
 		return 0;
 	}
-	*err = 0;
+
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 			  __FUNCTION__);
-		*err = EINVAL;
+		*err = EBADF;
 		return 0;
 	}
-	p = buf;
-	while (count > 0) {
-		tv.tv_sec = 10;
-		tv.tv_usec = 0;
-		FD_ZERO(&fds);
-		FD_SET(conn->conn_fd, &fds);
-		if (select((int)conn->conn_fd+1, &fds, NULL, NULL, &tv) == 0) {
-			conn->conn_hang = 1;
-			return -ETIMEDOUT;
-		} else {
-			conn->conn_hang = 0;
-		}
-		r = recv(conn->conn_fd, p, count, 0);
-		if (r < 0) {
-			if (total == 0) {
-				cmyth_dbg(CMYTH_DBG_ERROR,
-					  "%s: read failed (%d)\n",
-					  __FUNCTION__, errno);
-	            conn->conn_hang = 1;
-				if (r == 0)
-					*err = -1 * EBADF;
-				else
-					*err = -1 * errno;
-				return 0;
-			}
+
+	if (conn->conn_fd < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: not connected\n",
+			  __FUNCTION__);
+		*err = EBADF;
+		return 0;
+	}
+
+	if (!conn->conn_buf) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection buffer\n",
+			  __FUNCTION__);
+		*err = EBADF;
+		return 0;
+	}
+
+	if (!buf) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no output buffer\n",
+			  __FUNCTION__);
+		*err = EBADF;
+		return 0;
+	}
+
+	while (1) {
+		if (consumed >= count) {
 			/*
-			 * There were bytes read before the error, use them and
-			 * then report the error next time.
+			 * We have consumed all the characters we were
+			 * asked to from the stream. Force a refill
+			 * on the next call, and return 'consumed'.
 			 */
+			conn->conn_pos = conn->conn_len = 0;
 			break;
 		}
-		total += r;
-		count -= r;
-		p += r;
+
+		if (conn->conn_pos >= conn->conn_len) {
+			/*
+			 * We run out of (or never had any) bytes
+			 * from the connection. Refill the buffer.
+			 */
+			*err = cmyth_conn_refill(conn, count - consumed);
+			if (*err < 0) {
+				*err = -1 * (*err);
+				break;
+			}
+		}
+
+		if (placed < buflen) {
+			/*
+			 * This character goes in the output buffer,
+			 * put it there.
+			 */
+			buf[placed++] = conn->conn_buf[conn->conn_pos];
+		}
+		++conn->conn_pos;
+		++consumed;
 	}
-	return total;
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: string received '%s'\n",
+		  __FUNCTION__, buf);
+	return consumed;
 }
 
 void cmyth_toupper_string(char *str)

@@ -67,6 +67,9 @@ cmyth_proginfo_destroy(cmyth_proginfo_t p)
 	if (p->proginfo_description) {
 		ref_release(p->proginfo_description);
 	}
+	if (p->proginfo_syndicated_episode) {
+		ref_release(p->proginfo_syndicated_episode);
+	}
 	if (p->proginfo_category) {
 		ref_release(p->proginfo_category);
 	}
@@ -212,6 +215,7 @@ cmyth_proginfo_create(void)
 	ret->proginfo_description = NULL;
 	ret->proginfo_season = 0;
 	ret->proginfo_episode = 0;
+	ret->proginfo_syndicated_episode = NULL;
 	ret->proginfo_category = NULL;
 	ret->proginfo_chanId = 0;
 	ret->proginfo_chanstr = NULL;
@@ -257,6 +261,8 @@ cmyth_proginfo_create(void)
 	ret->proginfo_videoproperties = 0;
 	ret->proginfo_subtitletype = 0;
 	ret->proginfo_year = 0;
+	ret->proginfo_partnumber = 0;
+	ret->proginfo_parttotal = 0;
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s }\n", __FUNCTION__);
 	return ret;
 
@@ -305,6 +311,7 @@ cmyth_proginfo_dup(cmyth_proginfo_t p)
 	ret->proginfo_description = ref_hold(p->proginfo_description);
 	ret->proginfo_season = p->proginfo_season;
 	ret->proginfo_episode = p->proginfo_episode;
+	ret->proginfo_syndicated_episode = ref_hold(p->proginfo_syndicated_episode);
 	ret->proginfo_category = ref_hold(p->proginfo_category);
 	ret->proginfo_chanId = p->proginfo_chanId;
 	ret->proginfo_chanstr = ref_hold(p->proginfo_chanstr);
@@ -350,6 +357,9 @@ cmyth_proginfo_dup(cmyth_proginfo_t p)
 	ret->proginfo_videoproperties = p->proginfo_videoproperties;
 	ret->proginfo_subtitletype = p->proginfo_subtitletype;
 	ret->proginfo_year = p->proginfo_year;
+	ret->proginfo_partnumber = p->proginfo_partnumber;
+	ret->proginfo_parttotal = p->proginfo_parttotal;
+
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s }\n", __FUNCTION__);
 	return ret;
 }
@@ -378,6 +388,7 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	len += strlen(S(prog->proginfo_title));
 	len += strlen(S(prog->proginfo_subtitle));
 	len += strlen(S(prog->proginfo_description));
+	len += strlen(S(prog->proginfo_syndicated_episode));
 	len += strlen(S(prog->proginfo_category));
 	len += strlen(S(prog->proginfo_chanstr));
 	len += strlen(S(prog->proginfo_chansign));
@@ -425,6 +436,9 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	if (control->conn_version >= 67) {
 		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_season);
 		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_episode);
+	}
+	if (control->conn_version >= 76) {
+		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_syndicated_episode));
 	}
 	sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_category));
 	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_chanId);
@@ -497,6 +511,10 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	if (control->conn_version >= 43) {
 		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_year);
 	}
+	if (control->conn_version >= 76) {
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_partnumber);
+		sprintf(buf + strlen(buf), "%"PRIu16"[]:[]", prog->proginfo_parttotal);
+	}
 #undef S
 
 	return buf;
@@ -542,63 +560,89 @@ cmyth_proginfo_check_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
  * Failure: -(ERRNO)
  */
 int
-cmyth_proginfo_delete_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
+cmyth_proginfo_delete_recording(cmyth_conn_t control, cmyth_proginfo_t prog, uint8_t force, uint8_t forget)
 {
-	int32_t c = 0;
+	int32_t result_code = 0;
 	int err = 0;
 	int count = 0;
 	int r = 0;
 	int ret = 0;
 	char *buf;
 	char *proginfo;
+	char recstartts[CMYTH_TIMESTAMP_NUMERIC_LEN + 1];
+	cmyth_timestamp_t t_utc;
 
 	if (!control) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 			  __FUNCTION__);
 		return -EINVAL;
 	}
-	if (control->conn_version < 12)
-	{
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: delete not supported with protocol ver %d\n",
-			  __FUNCTION__, control->conn_version);
-		return -EINVAL;
-	}
 
-	proginfo = cmyth_proginfo_string(control, prog);
-	if (proginfo == NULL) {
-		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: program_info failed.\n",
-			  __FUNCTION__);
-		return -EINVAL;
-	}
+	if (control->conn_version < 56) {
+		proginfo = cmyth_proginfo_string(control, prog);
+		if (proginfo == NULL) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s: program_info failed.\n", __FUNCTION__);
+			return -EINVAL;
+		}
 
-	buf = malloc(strlen(proginfo) + 23 + 1);
-	if (!buf) {
+		buf = malloc(strlen(proginfo) + 21 + 1);
+		if (!buf) {
+			free(proginfo);
+			return -ENOMEM;
+		}
+		sprintf(buf, "DELETE_RECORDING[]:[]%s", proginfo);
 		free(proginfo);
-		return -ENOMEM;
+	} else {
+		if (control->conn_version < 75) {
+			ret = cmyth_timestamp_to_numstring(recstartts, prog->proginfo_rec_start_ts);
+		} else {
+			/* Convert local time to UTC time */
+			t_utc = cmyth_timestamp_utc_from_unixtime(cmyth_timestamp_to_unixtime(prog->proginfo_rec_start_ts));
+			ret = cmyth_timestamp_to_numstring(recstartts, t_utc);
+			ref_release(t_utc);
+		}
+		if (ret < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_timestamp_to_numstring failed.\n", __FUNCTION__);
+			return ret;
+		}
+
+		buf = malloc(17 + CMYTH_INT32_LEN + 1 + CMYTH_TIMESTAMP_NUMERIC_LEN + 9 + 10 + 1);
+		if (!buf) {
+			return -ENOMEM;
+		}
+		sprintf(buf,"DELETE_RECORDING %"PRIu32" %s %s",
+			prog->proginfo_chanId,
+			recstartts,
+			force ? "FORCE" : "NO_FORCE");
+
+		if (control->conn_version >= 59) {
+			strcat(buf, forget ? " FORGET" : " NO_FORGET");
+		}
 	}
-	sprintf(buf, "DELETE_RECORDING 0[]:[]%s", proginfo);
-	free(proginfo);
 
 	pthread_mutex_lock(&control->conn_mutex);
 
-	if ((err = cmyth_send_message(control, buf)) < 0) {
+	if ((r = cmyth_send_message(control, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 
 	count = cmyth_rcv_length(control);
-	if ((r = cmyth_rcv_int32(control, &err, &c, count)) < 0) {
+	if ((r = cmyth_rcv_int32(control, &err, &result_code, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, r);
 		ret = err;
 		goto out;
 	}
+
+	if (result_code == -2)
+		ret = -1;
+	else
+		ret = 0;
 
 	out:
 	pthread_mutex_unlock(&control->conn_mutex);
@@ -665,11 +709,11 @@ cmyth_proginfo_forget_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 
 	pthread_mutex_lock(&control->conn_mutex);
 
-	if ((err = cmyth_send_message(control, buf)) < 0) {
+	if ((r = cmyth_send_message(control, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 
@@ -747,11 +791,11 @@ cmyth_proginfo_stop_recording(cmyth_conn_t control, cmyth_proginfo_t prog)
 
 	pthread_mutex_lock(&control->conn_mutex);
 
-	if ((err = cmyth_send_message(control, buf)) < 0) {
+	if ((r = cmyth_send_message(control, buf)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 
@@ -930,6 +974,37 @@ cmyth_proginfo_episode(cmyth_proginfo_t prog)
 		return 0;
 	}
 	return prog->proginfo_episode;
+}
+
+/*
+ * cmyth_proginfo_syndicated_episode()
+ *
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Retrieves the 'proginfo_syndicated_episode' field of a program info structure.
+ *
+ * The returned string is a pointer to the string within the program
+ * info structure, so it should not be modified by the caller.
+ * The return value is a 'char *' for this reason.
+ *
+ * Return Value:
+ *
+ * Success: A pointer to a 'char *' pointing to the field.
+ *
+ * Failure: NULL
+ */
+char *
+cmyth_proginfo_syndicated_episode(cmyth_proginfo_t prog)
+{
+	if (!prog) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL program information\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	return ref_hold(prog->proginfo_syndicated_episode);
 }
 
 /*
@@ -1423,6 +1498,58 @@ cmyth_proginfo_year(cmyth_proginfo_t prog)
 }
 
 /*
+ * cmyth_proginfo_partnumber()
+ *
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Retrieves the 'proginfo_partnumber' field of a program info
+ * structure.
+ *
+ * Return Value:
+ *
+ * Success: the part number for the program
+ *
+ * Failure: 0
+ */
+uint16_t
+cmyth_proginfo_partnumber(cmyth_proginfo_t prog)
+{
+	if (!prog) {
+		return 0;
+	}
+	return prog->proginfo_partnumber;
+}
+
+/*
+ * cmyth_proginfo_parttotal()
+ *
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Retrieves the 'proginfo_total' field of a program info
+ * structure.
+ *
+ * Return Value:
+ *
+ * Success: the part total for the program
+ *
+ * Failure: 0
+ */
+uint16_t
+cmyth_proginfo_parttotal(cmyth_proginfo_t prog)
+{
+	if (!prog) {
+		return 0;
+	}
+	return prog->proginfo_parttotal;
+}
+
+/*
  * cmyth_proginfo_fill()
  *
  * Scope: PRIVATE (static)
@@ -1719,31 +1846,6 @@ cmyth_proginfo_chanicon(cmyth_proginfo_t prog)
 	return ref_hold(prog->proginfo_chanicon);
 }
 
-int
-cmyth_get_delete_list(cmyth_conn_t conn, char * msg, cmyth_proglist_t prog)
-{
-        int err=0;
-        int count;
-        int prog_count=0;
-
-        if (!conn) {
-                cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n", __FUNCTION__);
-                return -1;
-        }
-        pthread_mutex_lock(&conn->conn_mutex);
-        if ((err = cmyth_send_message(conn, msg)) < 0) {
-                fprintf (stderr, "ERROR %d \n",err);
-                cmyth_dbg(CMYTH_DBG_ERROR,
-                        "%s: cmyth_send_message() failed (%d)\n",__FUNCTION__,err);
-                return err;
-        }
-        count = cmyth_rcv_length(conn);
-        cmyth_rcv_proglist(conn, &err, prog, count);
-        prog_count=cmyth_proglist_get_count(prog);
-        pthread_mutex_unlock(&conn->conn_mutex);
-        return prog_count;
-}
-
 cmyth_proginfo_t
 cmyth_proginfo_get_from_basename(cmyth_conn_t control, const char* basename)
 {
@@ -1897,7 +1999,7 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, const cm
 		count -= i;
 
 		if (strcmp(msg, "OK") != 0) {
-			cmyth_dbg(CMYTH_DBG_ERROR, "%s: didn't recieve OK as response\n",
+			cmyth_dbg(CMYTH_DBG_INFO, "%s: didn't recieve OK as response\n",
 				  __FUNCTION__);
 			goto out;
 		}
@@ -1945,4 +2047,75 @@ cmyth_proginfo_get_from_timeslot(cmyth_conn_t control, uint32_t chanid, const cm
 		return prog;
 	}
 
+}
+
+char *
+cmyth_proginfo_storagegroup(cmyth_proginfo_t prog)
+{
+	if (!prog) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL program information\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	return ref_hold(prog->proginfo_storagegroup);
+}
+
+int
+cmyth_proginfo_generate_pixmap(cmyth_conn_t control, cmyth_proginfo_t prog)
+{
+	int err = 0;
+	int ret = 0;
+	char *buf;
+	char *proginfo;
+
+	if (!control) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
+			  __FUNCTION__);
+		return -EINVAL;
+	}
+
+	if (!prog) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no program info\n",
+			  __FUNCTION__);
+		return -EINVAL;
+	}
+
+	if (control->conn_version < 61) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support QUERY_PIXMAP2\n",
+			  __FUNCTION__);
+		return -EPERM;
+	}
+
+	proginfo = cmyth_proginfo_string(control, prog);
+	if (proginfo == NULL) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: program_info failed.\n",
+			  __FUNCTION__);
+		return -EINVAL;
+	}
+
+	buf = malloc(strlen(proginfo) + 37 + 1);
+	if (!buf) {
+		free(proginfo);
+		return -ENOMEM;
+	}
+	sprintf(buf, "QUERY_GENPIXMAP2[]:[]do_not_care[]:[]%s", proginfo);
+	free(proginfo);
+
+	pthread_mutex_lock(&control->conn_mutex);
+
+	if ((err = cmyth_send_message(control, buf)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_send_message() failed (%d)\n", __FUNCTION__, err);
+		ret = err;
+		goto out;
+	}
+
+	if ((ret = cmyth_rcv_okay(control)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n", __FUNCTION__);
+	}
+
+	out:
+	pthread_mutex_unlock(&control->conn_mutex);
+	free(buf);
+
+	return ret;
 }

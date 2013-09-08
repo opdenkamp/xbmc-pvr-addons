@@ -186,6 +186,8 @@ cmyth_channel_destroy(cmyth_channel_t c)
 		return;
 	}
 
+	if(c->chanstr)
+		ref_release(c->chanstr);
 	if(c->name)
 		ref_release(c->name);
 	if(c->callsign)
@@ -424,6 +426,31 @@ cmyth_channel_visible(cmyth_channel_t channel)
 		return 0;
 	}
 	return channel->visible;
+}
+
+/*
+ * cmyth_channel_radio()
+ *
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Retrieves the 'radio' field of a channel structure.
+ *
+ * Return Value:
+ *
+ * Success: radio flag.
+ *
+ * Failure: 0
+ */
+uint8_t
+cmyth_channel_radio(cmyth_channel_t channel)
+{
+	if (!channel) {
+		return 0;
+	}
+	return channel->radio;
 }
 
 /*

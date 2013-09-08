@@ -91,6 +91,30 @@ long MultiFileReader::SetFileName(const char* pszFileName)
 //
 long MultiFileReader::OpenFile()
 {
+  char * bufferfilename;
+  m_TSBufferFile.GetFileName(&bufferfilename);
+
+  struct __stat64 stat;
+  if (XBMC->StatFile(bufferfilename, &stat) != 0)
+  {
+	  XBMC->Log(LOG_ERROR, "MultiFileReader: can not get stat from buffer file %s.", bufferfilename);
+	  return S_FALSE;
+  }
+
+  int64_t fileLength = stat.st_size;
+  XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file %s, stat.st_size %ld.", bufferfilename, fileLength);
+
+  int retryCount = 0;
+  if (fileLength == 0) do
+  {
+    retryCount++;
+    XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file has zero length, closing, waiting 500 ms and re-opening. Try %d.", retryCount);
+    usleep(500000);
+    XBMC->StatFile(bufferfilename, &stat);
+    fileLength = stat.st_size;
+  } while (fileLength == 0 && retryCount < 20);
+  XBMC->Log(LOG_DEBUG, "MultiFileReader: buffer file %s, after %d retries stat.st_size returns %ld.", bufferfilename, retryCount, fileLength);
+
   long hr = m_TSBufferFile.OpenFile();
 
   if (RefreshTSBufferFile() == S_FALSE)
@@ -451,7 +475,7 @@ long MultiFileReader::RefreshTSBufferFile()
 
     m_TSBufferFile.GetFileName(&filename);
     sFilename = filename;
-    pos = sFilename.find_last_of(PATH_SEPARATOR_CHAR);
+    pos = sFilename.find_last_of('/');
     path = sFilename.substr(0, pos+1);
     //name3 = filename1.substr(pos+1);
 
@@ -589,65 +613,16 @@ long MultiFileReader::RefreshTSBufferFile()
 
 long MultiFileReader::GetFileLength(const char* pFilename, int64_t &length)
 {
-#if defined(TARGET_WINDOWS)
-  //USES_CONVERSION;
-
   length = 0;
+  struct __stat64 stat;
+  if (XBMC->StatFile(pFilename, &stat) != 0)
+  {
+	  XBMC->Log(LOG_ERROR, "MultiFileReader::GetFileLength: can not get stat from file %s.", pFilename);
+	  return S_FALSE;
+  }
 
-  // Try to open the file
-  CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(pFilename);
-  HANDLE hFile = ::CreateFileW(strWFile,   // The filename
-            (DWORD) GENERIC_READ,          // File access
-             (DWORD) (FILE_SHARE_READ |
-             FILE_SHARE_WRITE),            // Share access
-             NULL,                         // Security
-             (DWORD) OPEN_EXISTING,        // Open flags
-             (DWORD) 0,                    // More flags
-             NULL);                        // Template
-  if (hFile != INVALID_HANDLE_VALUE)
-  {
-    LARGE_INTEGER li;
-    li.QuadPart = 0;
-    li.LowPart = ::SetFilePointer(hFile, 0, &li.HighPart, FILE_END);
-    ::CloseHandle(hFile);
-    
-    length = li.QuadPart;
-  }
-  else
-  {
-    //wchar_t msg[MAX_PATH];
-    DWORD dwErr = GetLastError();
-    //swprintf((LPWSTR)&msg, L"Failed to open file %s : 0x%x\n", pFilename, dwErr);
-    //::OutputDebugString(W2T((LPWSTR)&msg));
-    XBMC->Log(LOG_ERROR, "Failed to open file %s : 0x%x\n", pFilename, dwErr);
-    XBMC->QueueNotification(QUEUE_ERROR, "Failed to open file %s", pFilename);
-    return HRESULT_FROM_WIN32(dwErr);
-  }
+  length = stat.st_size;
   return S_OK;
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN) || defined(TARGET_FREEBSD)
-  //USES_CONVERSION;
-
-  length = 0;
-
-  // Try to open the file
-  void* hFile;
-  if (((hFile = XBMC->OpenFile(pFilename, 0)) != NULL))
-  {
-    length = XBMC->GetFileLength(hFile);
-    XBMC->CloseFile(hFile);
-  }
-  else
-  {
-    XBMC->Log(LOG_ERROR, "Failed to open file %s : 0x%x(%s)\n", pFilename, errno, strerror(errno));
-    XBMC->QueueNotification(QUEUE_ERROR, "Failed to open file %s", pFilename);
-    return S_FALSE;
-  }
-  XBMC->Log(LOG_DEBUG, "GetFileLength(%s) == %lli.\n", pFilename, length);
-  return S_OK;
-#else
-#error FIXME: Add MultiFileReader::GetFileLenght implementation for your OS.
-  return S_FALSE;
-#endif
 }
 
 int64_t MultiFileReader::GetFileSize()

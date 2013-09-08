@@ -249,7 +249,7 @@ namespace PLATFORM
         iNow = GetTimeMs();
     }
 
-    if (iBytesRead < (ssize_t)len)
+    if (iBytesRead < (ssize_t)len && iError == 0)
       *iError = ETIMEDOUT;
     return iBytesRead;
   }

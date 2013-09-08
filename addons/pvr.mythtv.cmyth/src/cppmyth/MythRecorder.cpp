@@ -202,66 +202,43 @@ bool MythRecorder::SetChannel(MythChannel &channel)
 {
   Lock();
 
-  if (!IsRecording())
-  {
-    XBMC->Log(LOG_ERROR, "%s: Recorder %u is not recording", __FUNCTION__, ID(), const_cast<char*>(channel.Name().c_str()));
-    // m_recorder_t->Unlock();
-    Unlock();
-    return false;
-  }
-
   CStdString channelNum = channel.Number();
 
   if (cmyth_recorder_pause(*m_recorder_t) != 0)
   {
     XBMC->Log(LOG_ERROR, "%s: Failed to pause recorder %u", __FUNCTION__, ID());
-    // m_recorder_t->Unlock();
-    Unlock();
-    return false;
-  }
-
-  if (!CheckChannel(channel))
-  {
-    XBMC->Log(LOG_ERROR, "%s: Recorder %u doesn't provide channel %s", __FUNCTION__, ID(), channel.Name().c_str());
-    // m_recorder_t->Unlock();
-    Unlock();
-    return false;
-  }
-
-  if (cmyth_recorder_set_channel(*m_recorder_t,channelNum.GetBuffer())!=0)
-  {
-    XBMC->Log(LOG_ERROR, "%s: Failed to change recorder %u to channel %s", __FUNCTION__, ID(), channel.Name().c_str());
-    // m_recorder_t->Unlock();
-    Unlock();
-    return false;
-  }
-
-  if (cmyth_livetv_chain_switch_last(*m_recorder_t) != 1)
-  {
-    XBMC->Log(LOG_ERROR,"%s: Failed to switch chain for recorder %u", __FUNCTION__, ID(), channel.Name().c_str());
-    // m_recorder_t->Unlock();
     Unlock();
     return false;
   }
 
   *m_liveChainUpdated = 0;
-  int i = 20;
-  while (*m_liveChainUpdated == 0 && i-- != 0)
+
+  if (cmyth_recorder_set_channel(*m_recorder_t,channelNum.GetBuffer()) != 0)
   {
+    XBMC->Log(LOG_ERROR, "%s: Failed to change recorder %u to channel %s", __FUNCTION__, ID(), channel.Name().c_str());
+    Unlock();
+    return false;
+  }
+
+  // Wait for chain update for 30s before break
+  int i = 0;
+  while (*m_liveChainUpdated == 0 && i < 30000) {
+    // Release the latch to allow chain update
     Unlock();
     usleep(100000);
+    // Get the latch before reading chain status
     Lock();
+    i += 100;
+    XBMC->Log(LOG_DEBUG, "%s: Delay channel switch: %d", __FUNCTION__, i);
+  }
+  if (*m_liveChainUpdated == 0)
+  {
+    XBMC->Log(LOG_ERROR,"%s - Chain update failed", __FUNCTION__);
+    Unlock();
+    return false;
   }
 
   Unlock();
-
-  for (int i = 0; i < 20; i++)
-  {
-    if (!IsRecording())
-      usleep(1000);
-    else
-      break;
-  }
 
   return true;
 }

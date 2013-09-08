@@ -280,6 +280,13 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     g_client->SetLiveTVPriority(savedLiveTVPriority);
   }
 
+  XBMC->Log(LOG_DEBUG, "Creating menu hooks");
+  PVR_MENUHOOK menuHookDeleteAndRerecord;
+  menuHookDeleteAndRerecord.category = PVR_MENUHOOK_RECORDING;
+  menuHookDeleteAndRerecord.iHookId = MENUHOOK_REC_DELETE_AND_RERECORD;
+  menuHookDeleteAndRerecord.iLocalizedStringId = 30411;
+  PVR->AddMenuHook(&menuHookDeleteAndRerecord);
+
   XBMC->Log(LOG_DEBUG, "MythTV cmyth PVR-Client successfully created");
   m_CurStatus = ADDON_STATUS_OK;
   g_bCreated = true;
@@ -767,6 +774,7 @@ int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
   if (dataread < 0)
   {
     XBMC->Log(LOG_ERROR,"%s: Failed to read liveStream. Errorcode: %d!", __FUNCTION__, dataread);
+    dataread = 0;
   }
   return dataread;
 }

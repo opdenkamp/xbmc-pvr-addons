@@ -38,6 +38,9 @@
     <ClCompile Include="..\..\src\cppmyth\MythRecordingRule.cpp">
       <Filter>cppmyth</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythEPGInfo.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
@@ -80,6 +83,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\categories.h" />
     <ClInclude Include="..\..\src\cppmyth\MythRecordingRule.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythEPGInfo.h">
       <Filter>cppmyth</Filter>
     </ClInclude>
   </ItemGroup>

@@ -67,17 +67,23 @@ MythConnection::MythConnection()
   : m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>())
   , m_server("")
   , m_port(0)
+  , m_playback(false)
   , m_pEventHandler(NULL)
 {
 }
 
-MythConnection::MythConnection(const CStdString &server, unsigned short port)
+MythConnection::MythConnection(const CStdString &server, unsigned short port, bool playback)
   : m_conn_t(new MythPointerThreadSafe<cmyth_conn_t>)
   , m_server(server)
   , m_port(port)
+  , m_playback(playback)
   , m_pEventHandler(NULL)
 {
-  cmyth_conn_t connection = cmyth_conn_connect_ctrl(const_cast<char*>(server.c_str()), port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
+  cmyth_conn_t connection;
+  if (m_playback)
+    connection = cmyth_conn_connect_playback(const_cast<char*>(server.c_str()), port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
+  else
+    connection = cmyth_conn_connect_monitor(const_cast<char*>(server.c_str()), port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
   *m_conn_t = connection;
 }
 
@@ -129,7 +135,10 @@ bool MythConnection::TryReconnect()
 {
   int retval;
   Lock();
-  retval = cmyth_conn_reconnect_ctrl(*m_conn_t);
+  if (m_playback)
+    retval = cmyth_conn_reconnect_playback(*m_conn_t);
+  else
+    retval = cmyth_conn_reconnect_monitor(*m_conn_t);
   Unlock();
   if (retval == 0)
     XBMC->Log(LOG_DEBUG, "%s - Unable to reconnect", __FUNCTION__);
@@ -208,7 +217,14 @@ MythRecorder MythConnection::GetRecorder(int n)
 bool  MythConnection::DeleteRecording(MythProgramInfo &recording)
 {
   int retval = 0;
-  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t));
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t, 0, 0));
+  return retval >= 0;
+}
+
+bool  MythConnection::DeleteAndForgetRecording(MythProgramInfo &recording)
+{
+  int retval = 0;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_delete_recording(*m_conn_t, *recording.m_proginfo_t, 0, 1));
   return retval >= 0;
 }
 
@@ -322,10 +338,10 @@ bool MythConnection::StopRecording(const MythProgramInfo &recording)
   return (retval >= 0);
 }
 
-MythStorageGroupFile MythConnection::GetStorageGroupFile(const CStdString &storageGroup, const CStdString &filename)
+MythStorageGroupFile MythConnection::GetStorageGroupFile(const CStdString &hostname, const CStdString &storageGroup, const CStdString &filename)
 {
   cmyth_storagegroup_file_t file = NULL;
-  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_storagegroup_get_fileinfo(*m_conn_t, const_cast<char*>(storageGroup.c_str()), const_cast<char*>(GetBackendHostname().c_str()), const_cast<char*>(filename.c_str())));
+  CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_storagegroup_get_fileinfo(*m_conn_t, const_cast<char*>(hostname.c_str()), const_cast<char*>(storageGroup.c_str()), const_cast<char*>(filename.c_str())));
   return MythStorageGroupFile(file);
 }
 

@@ -10,11 +10,11 @@ ADDONNAME       = pvr.argustv
 LIBNAME         = libargustv-addon
 lib_LTLIBRARIES = libargustv-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/jsoncpp/libjsoncpp.la
+LIBS            = @abs_top_builddir@/lib/jsoncpp/libjsoncpp.la
 
 include ../Makefile.include.am
 
-INCLUDES+=-Isrc -Isrc/lib/filesystem -I@abs_top_srcdir@/lib/jsoncpp/include
+INCLUDES+=-I$(srcdir)/src -I$(srcdir)/src/lib/filesystem -I@abs_top_srcdir@/lib/jsoncpp/include
 
 libargustv_addon_la_SOURCES = src/activerecording.cpp \
                                    src/channel.cpp \

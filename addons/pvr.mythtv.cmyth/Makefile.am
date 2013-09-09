@@ -10,7 +10,7 @@ ADDONNAME       = pvr.mythtv.cmyth
 LIBNAME         = libmythtvcmyth-addon
 lib_LTLIBRARIES = libmythtvcmyth-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/cmyth/libcmyth.la
+LIBS            = @abs_top_builddir@/lib/cmyth/libcmyth.la
 
 AM_CPPFLAGS = -I$(abs_top_srcdir)/lib/cmyth/include
 

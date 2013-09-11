@@ -36,9 +36,7 @@
 using namespace std;
 using namespace ADDON;
 
-#if !defined(TARGET_WINDOWS)
 using namespace PLATFORM;
-#endif
 
 #define SIGNALQUALITY_INTERVAL 10
 
@@ -616,7 +614,6 @@ PVR_ERROR cPVRClientArgusTV::GetChannelGroupMembers(ADDON_HANDLE handle, const P
   {
     name = response[index]["GroupName"].asString();
     guid = response[index]["ChannelGroupId"].asString();
-    int id = response[index]["Id"].asInt();
     if (name == group.strGroupName) break;
   }
   if (name != group.strGroupName)
@@ -690,6 +687,7 @@ PVR_ERROR cPVRClientArgusTV::GetRecordings(ADDON_HANDLE handle)
   int iNumRecordings = 0;
 
   XBMC->Log(LOG_DEBUG, "RequestRecordingsList()");
+  int64_t t = GetTimeMs();
   retval = ArgusTV::GetRecordingGroupByTitle(recordinggroupresponse);
   if(retval >= 0)
   {           
@@ -749,6 +747,8 @@ PVR_ERROR cPVRClientArgusTV::GetRecordings(ADDON_HANDLE handle)
       }
     }
   }
+  t = GetTimeMs() - t;
+  XBMC->Log(LOG_INFO, "Retrieving all recordings took %d milliseconds.", t);
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -1229,19 +1229,6 @@ bool cPVRClientArgusTV::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
     std::string CIFSname = filename;
     std::string SMBPrefix = "smb://";
-    //if (g_szUser.length() > 0)
-    //{
-    //  SMBPrefix += g_szUser;
-    //  if (g_szPass.length() > 0)
-    //  {
-    //    SMBPrefix += ":" + g_szPass;
-    //  }
-    //}
-    //else
-    //{
-    //  SMBPrefix += "Guest";
-    //}
-    //SMBPrefix += "@";
     size_t found;
     while ((found = CIFSname.find("\\")) != std::string::npos)
     {
@@ -1300,7 +1287,7 @@ bool cPVRClientArgusTV::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
     XBMC->Log(LOG_DEBUG, "Open TsReader");
     m_tsreader->Open(filename.c_str());
     m_tsreader->OnZap();
-    XBMC->Log(LOG_DEBUG, "Delaying %ld milliseconds.", (1000 * g_iTuneDelay));
+    XBMC->Log(LOG_DEBUG, "Delaying %ld milliseconds.", (g_iTuneDelay));
     usleep(1000 * g_iTuneDelay);
     return true;
   }
@@ -1316,7 +1303,11 @@ bool cPVRClientArgusTV::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
 bool cPVRClientArgusTV::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 {
-  return _OpenLiveStream(channelinfo);
+  int64_t t = GetTimeMs();
+  bool rc = _OpenLiveStream(channelinfo);
+  t = GetTimeMs() - t;
+  XBMC->Log(LOG_INFO, "Opening live stream took %d milliseconds.", t);
+  return rc;
 }
 
 int cPVRClientArgusTV::ReadLiveStream(unsigned char* pBuffer, unsigned int iBufferSize)

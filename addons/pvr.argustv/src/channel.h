@@ -44,6 +44,5 @@ public:
   int LCN(void) const { return lcn; }
   ArgusTV::ChannelType Type(void) const { return type; }
   int ID(void) const { return id; }
-  void SetID(int new_id) { id = new_id; }
   const std::string& GuideChannelID(void) const { return guidechannelid; };
 };

@@ -106,11 +106,11 @@ public:
   const char* GetLiveStreamURL(const PVR_CHANNEL &channel);
 
 private:
-  cChannel* FetchChannel(int channel_uid, bool LogError = true);
-  cChannel* FetchChannel(std::string channelid, bool LogError = true);
+  cChannel* FetchChannel(int channelid, bool LogError = true);
+  cChannel* FetchChannel(std::vector<cChannel*> m_Channels, int channelid, bool LogError = true);
+  void FreeChannels(std::vector<cChannel*> m_Channels);
   void Close();
   bool FetchRecordingDetails(std::string recordingid, cRecording& recording);
-  bool FetchGuideProgramDetails(std::string Id, cGuideProgram& guideprogram);
   bool _OpenLiveStream(const PVR_CHANNEL &channel);
 
   int                     m_iCurrentChannel;
@@ -123,8 +123,8 @@ private:
   time_t                  m_BackendUTCoffset;
   time_t                  m_BackendTime;
 
-  std::vector<cChannel>   m_Channels; // Local channel cache list needed for id to guid conversion
-  int                     m_channel_id_offset;
+  std::vector<cChannel*>   m_TVChannels; // Local TV channel cache list needed for id to guid conversion
+  std::vector<cChannel*>   m_RadioChannels; // Local Radio channel cache list needed for id to guid conversion
   int                     m_epg_id_offset;
   int                     m_signalqualityInterval;
   CTsReader*              m_tsreader;

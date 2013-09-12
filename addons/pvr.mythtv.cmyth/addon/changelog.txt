@@ -1,3 +1,6 @@
+v1.8.13
+- add timeshift buffer functions
+
 v1.8.12
 - Added 'Delete and re-record' menuhook
 - Added support for MythTV protocol 76 and 77 (MythTV 0.27)

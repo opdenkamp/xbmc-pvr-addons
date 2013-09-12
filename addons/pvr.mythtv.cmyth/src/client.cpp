@@ -961,5 +961,7 @@ void DemuxFlush() {}
 const char * GetLiveStreamURL(const PVR_CHANNEL &) { return ""; }
 bool SeekTime(int,bool,double*) { return false; }
 void SetSpeed(int) {};
-
+time_t GetPlayingTime() { return 0; }
+time_t GetBufferTimeStart() { return 0; }
+time_t GetBufferTimeEnd() { return 0; }
 } //end extern "C"

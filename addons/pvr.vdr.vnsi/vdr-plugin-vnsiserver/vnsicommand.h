@@ -112,6 +112,7 @@
 #define VNSI_STREAM_SIGNALINFO   5
 #define VNSI_STREAM_CONTENTINFO  6
 #define VNSI_STREAM_BUFFERSTATS  7
+#define VNSI_STREAM_REFTIME      8
 
 /** Scan packet types (server -> client) */
 #define VNSI_SCANNER_PERCENTAGE  1

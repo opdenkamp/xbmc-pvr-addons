@@ -521,10 +521,10 @@ cTSStream::~cTSStream()
 int cTSStream::ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, bool iframe)
 {
   if (!data)
-    return false;
+    return 1;
 
   if (!m_pesParser)
-    return false;
+    return 1;
 
   int payloadSize = m_pesParser->ParsePacketHeader(data);
   if (payloadSize == 0)

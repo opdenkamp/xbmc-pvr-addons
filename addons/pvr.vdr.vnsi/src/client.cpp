@@ -647,6 +647,30 @@ bool SeekTime(int time, bool backwards, double *startpts)
   return ret;
 }
 
+time_t GetPlayingTime()
+{
+  time_t time = 0;
+  if (VNSIDemuxer)
+    time = VNSIDemuxer->GetPlayingTime();
+  return time;
+}
+
+time_t GetBufferTimeStart()
+{
+  time_t time = 0;
+  if (VNSIDemuxer)
+    time = VNSIDemuxer->GetBufferTimeStart();
+  return time;
+}
+
+time_t GetBufferTimeEnd()
+{
+  time_t time = 0;
+  if (VNSIDemuxer)
+    time = VNSIDemuxer->GetBufferTimeEnd();
+  return time;
+}
+
 void SetSpeed(int) {};
 void PauseStream(bool bPaused) {}
 
@@ -737,7 +761,4 @@ PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int las
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 unsigned int GetChannelSwitchDelay(void) { return 0; }
-time_t GetPlayingTime() { return 0; }
-time_t GetBufferTimeStart() { return 0; }
-time_t GetBufferTimeEnd() { return 0; }
 }

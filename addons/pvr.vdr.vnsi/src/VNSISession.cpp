@@ -296,7 +296,7 @@ bool cVNSISession::TransmitMessage(cRequestPacket* vrp)
   ssize_t iWriteResult = m_socket->Write(vrp->getPtr(), vrp->getLen());
   if (iWriteResult != (ssize_t)vrp->getLen())
   {
-    XBMC->Log(LOG_ERROR, "%s - Failed to write packet (%s), bytes written: %d of total: %s", __FUNCTION__, m_socket->GetError().c_str(), iWriteResult, vrp->getLen());
+    XBMC->Log(LOG_ERROR, "%s - Failed to write packet (%s), bytes written: %d of total: %d", __FUNCTION__, m_socket->GetError().c_str(), iWriteResult, vrp->getLen());
     return false;
   }
   return true;

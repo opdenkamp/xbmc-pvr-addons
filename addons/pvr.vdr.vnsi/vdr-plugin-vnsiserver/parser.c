@@ -453,25 +453,55 @@ cTSStream::cTSStream(eStreamType type, int pid, sPtsWrap *ptsWrap)
   m_IsStreamChange  = false;
 
   if (m_streamType == stMPEG2VIDEO)
+  {
     m_pesParser = new cParserMPEG2Video(m_pID, this, ptsWrap, true);
+    m_streamContent = scVIDEO;
+  }
   else if (m_streamType == stH264)
+  {
     m_pesParser = new cParserH264(m_pID, this, ptsWrap, true);
+    m_streamContent = scVIDEO;
+  }
   else if (m_streamType == stMPEG2AUDIO)
+  {
     m_pesParser = new cParserMPEG2Audio(m_pID, this, ptsWrap, true);
+    m_streamContent = scAUDIO;
+  }
   else if (m_streamType == stAACADTS)
+  {
     m_pesParser = new cParserAAC(m_pID, this, ptsWrap, true);
+    m_streamContent = scAUDIO;
+  }
   else if (m_streamType == stAACLATM)
+  {
     m_pesParser = new cParserAAC(m_pID, this, ptsWrap, true);
+    m_streamContent = scAUDIO;
+  }
   else if (m_streamType == stAC3)
+  {
     m_pesParser = new cParserAC3(m_pID, this, ptsWrap, true);
+    m_streamContent = scAUDIO;
+  }
   else if (m_streamType == stEAC3)
+  {
     m_pesParser = new cParserAC3(m_pID, this, ptsWrap, true);
+    m_streamContent = scAUDIO;
+  }
   else if (m_streamType == stDTS)
+  {
     m_pesParser = new cParserDTS(m_pID, this, ptsWrap, true);
+    m_streamContent = scAUDIO;
+  }
   else if (m_streamType == stTELETEXT)
+  {
     m_pesParser = new cParserTeletext(m_pID, this, ptsWrap, false);
+    m_streamContent = scTELETEXT;
+  }
   else if (m_streamType == stDVBSUB)
+  {
     m_pesParser = new cParserSubtitle(m_pID, this, ptsWrap, false);
+    m_streamContent = scSUBTITLE;
+  }
   else
   {
     ERRORLOG("Unrecognised type %i inside stream %i", m_streamType, m_pID);
@@ -546,7 +576,7 @@ bool cTSStream::ReadTime(uint8_t *data, int64_t *dts)
   if (m_pesParser->m_IsPusi)
   {
     data += TS_SIZE-payloadSize;
-    if (m_pesParser->IsValidStartCode(data, payloadSize))
+    if (payloadSize >= 6 && m_pesParser->IsValidStartCode(data, payloadSize))
     {
       m_pesParser->m_curDTS = DVD_NOPTS_VALUE;
       m_pesParser->ParsePESHeader(data, payloadSize);
@@ -556,6 +586,7 @@ bool cTSStream::ReadTime(uint8_t *data, int64_t *dts)
         return true;
       }
     }
+    m_pesParser->m_IsPusi = false;
   }
   return false;
 }

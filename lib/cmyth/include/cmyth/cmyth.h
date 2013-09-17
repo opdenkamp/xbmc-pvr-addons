@@ -936,7 +936,7 @@ extern uint16_t cmyth_proginfo_episode(cmyth_proginfo_t prog);
  * \param prog proginfo handle
  * \return null-terminated string
  */
-extern char *proginfo_syndicated_episode(cmyth_proginfo_t prog);
+extern char *cmyth_proginfo_syndicated_episode(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the category of a program.

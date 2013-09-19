@@ -23,10 +23,19 @@ libvdrvnsi_addon_la_SOURCES = src/client.cpp \
                               src/responsepacket.cpp \
                               src/tools.cpp
                               
+libvdrvnsi_addon_la_LDFLAGS = @TARGET_LDFLAGS@
+
 if HAVE_GLES2
 libvdrvnsi_addon_la_SOURCES += src/EGLHelpers/VisGUIShader.cpp \
                                src/EGLHelpers/VisShader.cpp \
-                               src/EGLHelpers/VisMatrixGLES.cpp                     
+                               src/EGLHelpers/VisMatrixGLES.cpp
+
+if HOST_IS_OSX
+  libvdrvnsi_addon_la_LDFLAGS += -framework OpenGLES
+else                               
+  libvdrvnsi_addon_la_LDFLAGS += -lGLESv2
+endif
+                                                    
 endif
 
-libvdrvnsi_addon_la_LDFLAGS = @TARGET_LDFLAGS@
+

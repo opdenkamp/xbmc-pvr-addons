@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.vdr.vnsi"
-  version="1.8.3"
+  version="1.8.4"
   name="VDR VNSI Client"
   provider-name="FernetMenta, Team XBMC">
   <requires>
     <c-pluff version="0.1"/>
     <import addon="xbmc.pvr" version="1.8.1"/>
     <import addon="xbmc.codec" version="1.0.0"/>
+    <import addon="xbmc.gui" version="1.0.0"/>
   </requires>
   <extension
     point="xbmc.pvrclient"

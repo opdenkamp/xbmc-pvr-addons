@@ -599,12 +599,15 @@ bool cVNSIDemuxer::GetTimeAtPos(off_t *pos, int64_t *time)
   int ts_pid;
 
   m_VideoBuffer->SetPos(*pos);
+  ResetParsers();
   while (len = m_VideoBuffer->Read(&buf, TS_SIZE) == TS_SIZE)
   {
     ts_pid = TsPid(buf);
     if (stream = FindStream(ts_pid))
     {
-      if (stream->ReadTime(buf, time))
+      // only consider video or audio streams
+      if ((stream->Content() == scVIDEO || stream->Content() == scAUDIO) &&
+          stream->ReadTime(buf, time))
       {
         return true;
       }

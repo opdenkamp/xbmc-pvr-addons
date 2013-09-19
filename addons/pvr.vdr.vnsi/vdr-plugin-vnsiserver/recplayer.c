@@ -34,6 +34,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#ifndef O_NOATIME
+#define O_NOATIME 0
+#endif
+
 cRecPlayer::cRecPlayer(cRecording* rec, bool inProgress)
 {
   m_file          = -1;
@@ -239,8 +243,10 @@ int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
 
   if (!m_inProgress)
   {
+#ifndef __FreeBSD__
     // Tell linux not to bother keeping the data in the FS cache
     posix_fadvise(m_file, filePosition, bytes_read, POSIX_FADV_DONTNEED);
+#endif
   }
 
   return bytes_read;

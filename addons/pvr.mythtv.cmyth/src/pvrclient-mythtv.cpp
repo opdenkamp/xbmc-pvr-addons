@@ -1169,28 +1169,22 @@ PVR_ERROR PVRClientMythTV::AddTimer(const PVR_TIMER &timer)
 {
   XBMC->Log(LOG_DEBUG, "%s - title: %s, start: %ld, end: %ld, chanID: %u", __FUNCTION__, timer.strTitle, timer.startTime, timer.endTime, timer.iClientChannelUid);
   CLockObject lock(m_lock);
-  // Check if our timer is quick recording of live:
-  // Assumptions: Timer start time <= now, and our live recorder is lock on the same channel.
-  // If true then keep recording, setup recorder and let backend handle the rule.
-  time_t st = timer.startTime;
-  time_t now = time(NULL);
-  if (st <= now && !m_rec.IsNull() && m_rec.IsRecording())
+  // Check if our timer is a quick recording of live tv
+  // Assumptions: Timer start time = 0, and our live recorder is locked on the same channel.
+  // If true then keep recording, setup recorder and let the backend handle the rule.
+  if (timer.startTime == 0 && !m_rec.IsNull() && m_rec.IsRecording())
   {
-    CLockObject lock(m_lock);
-    if (timer.startTime == 0 && !m_rec.IsNull() && m_rec.IsRecording())
+    MythProgramInfo currentProgram = m_rec.GetCurrentProgram();
+    if ((unsigned int)timer.iClientChannelUid == currentProgram.ChannelID())
     {
-      MythProgramInfo currentProgram = m_rec.GetCurrentProgram();
-      if ((unsigned int)timer.iClientChannelUid == currentProgram.ChannelID())
-      {
-        XBMC->Log(LOG_DEBUG, "%s - Timer is a quick recording. Toggling Record on", __FUNCTION__);
-        if (m_rec.IsLiveRecording())
-          XBMC->Log(LOG_NOTICE, "%s - Record already on !!! Retrying...", __FUNCTION__);
-        if (KeepLiveTVRecording(currentProgram, true) && m_rec.SetLiveRecording(true))
-          return PVR_ERROR_NO_ERROR;
-        else
-          // Supress error notification! XBMC locks if we return an error here.
-          return PVR_ERROR_NO_ERROR;
-      }
+      XBMC->Log(LOG_DEBUG, "%s - Timer is a quick recording. Toggling Record on", __FUNCTION__);
+      if (m_rec.IsLiveRecording())
+        XBMC->Log(LOG_NOTICE, "%s - Record already on! Retrying...", __FUNCTION__);
+      if (KeepLiveTVRecording(currentProgram, true) && m_rec.SetLiveRecording(true))
+        return PVR_ERROR_NO_ERROR;
+      else
+        // Supress error notification! XBMC locks if we return an error here.
+        return PVR_ERROR_NO_ERROR;
     }
   }
 
@@ -1280,16 +1274,9 @@ MythRecordingRule PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER &timer
   }
 
   // Depending of timer type, create the best rule
-  if (st <= now)
+  if (timer.bIsRepeating)
   {
-    // Find the current program info
-    // Then create a SIGNLE record rule
-    epgFound = m_db.FindCurrentProgram(now, timer.iClientChannelUid, epgInfo);
-    rule = m_scheduleManager->NewSingleRecord(epgInfo);
-  }
-  else
-  {
-    if (timer.bIsRepeating && timer.iWeekdays < 0x7F && timer.iWeekdays > 0)
+    if (timer.iWeekdays < 0x7F && timer.iWeekdays > 0)
     {
       // Move time to next day of week and find program info
       // Then create a WEEKLY record rule
@@ -1315,24 +1302,26 @@ MythRecordingRule PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER &timer
         epgInfo = MythEPGInfo();
       rule = m_scheduleManager->NewWeeklyRecord(epgInfo);
     }
-
-    if (timer.bIsRepeating && timer.iWeekdays == 0x7F)
+    else if (timer.iWeekdays == 0x7F)
     {
+      // Create a DAILY record rule
       if (m_db.FindProgram(st, timer.iClientChannelUid, "%", epgInfo) && title.compare(0, epgInfo.Title().length(), epgInfo.Title()) == 0)
         epgFound = true;
       else
         epgInfo = MythEPGInfo();
       rule = m_scheduleManager->NewDailyRecord(epgInfo);
     }
-
-    if (!timer.bIsRepeating)
-    {
-      if (m_db.FindProgram(st, timer.iClientChannelUid, "%", epgInfo) && title.compare(0, epgInfo.Title().length(), epgInfo.Title()) == 0)
-        epgFound = true;
-      else
-        epgInfo = MythEPGInfo();
-      rule = m_scheduleManager->NewSingleRecord(epgInfo);
-    }
+  }
+  else
+  {
+    // Find the program info at the given start time with the same title
+    // When no entry was found with the same title, then the record rule type is manual
+    if (m_db.FindProgram(st, timer.iClientChannelUid, "%", epgInfo) && title.compare(0, epgInfo.Title().length(), epgInfo.Title()) == 0)
+      epgFound = true;
+    else
+      epgInfo = MythEPGInfo();
+    // Create a SIGNLE record rule
+    rule = m_scheduleManager->NewSingleRecord(epgInfo);
   }
 
   if (!epgFound)

@@ -50,10 +50,12 @@
 #define DEFAULT_HOST             "127.0.0.1"
 #define DEFAULT_CONNECT_TIMEOUT  30
 #define DEFAULT_WEB_PORT         8089
+#define DEFAULT_BROADCAST_PORT   1901
 #define DEFAULT_TSBUFFERPATH     "special://userdata/addon_data/pvr.dvbviewer"
 
 extern CStdString    g_strHostname;
 extern int           g_iPortWeb;
+extern int           g_iPortBroadcast;
 extern CStdString    g_strUsername;
 extern CStdString    g_strPassword;
 extern bool          g_useFavourites;

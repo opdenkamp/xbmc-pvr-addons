@@ -36,6 +36,7 @@ ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
 CStdString g_strHostname             = DEFAULT_HOST;
 int        g_iConnectTimeout         = DEFAULT_CONNECT_TIMEOUT;
 int        g_iPortWeb                = DEFAULT_WEB_PORT;
+int        g_iPortBroadcast          = DEFAULT_BROADCAST_PORT;
 CStdString g_strUsername             = "";
 CStdString g_strPassword             = "";
 bool       g_useFavourites           = false;
@@ -66,6 +67,9 @@ void ADDON_ReadSettings(void)
 
   if (!XBMC->GetSetting("webport", &g_iPortWeb))
     g_iPortWeb = DEFAULT_WEB_PORT;
+
+  if (!XBMC->GetSetting("broadcastport", &g_iPortBroadcast))
+    g_iPortBroadcast = DEFAULT_BROADCAST_PORT;
 
   if (!XBMC->GetSetting("usefavourites", &g_useFavourites))
     g_useFavourites = false;

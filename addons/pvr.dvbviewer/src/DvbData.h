@@ -9,6 +9,7 @@
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 #include <list>
+#include "Socket.h"
 
 #define CHANNELDAT_HEADER_SIZE       (7)
 #define ENCRYPTED_FLAG               (1 << 0)
@@ -236,9 +237,7 @@ private:
   DvbGroups_t m_groups;
   unsigned int m_groupAmount;
 
-  unsigned int m_iUpdateTimer;
-  bool m_bUpdateTimers;
-  bool m_bUpdateEPG;
+  unsigned int m_iUpdateEPG;
   DvbRecordings_t m_recordings;
   TimeshiftBuffer *m_tsBuffer;
 
@@ -247,6 +246,7 @@ private:
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;
+  Socket *m_udpbroadcast;
 };
 
 #endif

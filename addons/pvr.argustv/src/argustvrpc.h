@@ -344,6 +344,4 @@ namespace ArgusTV
 
   time_t WCFDateToTimeT(const std::string& wcfdate, int& offset);
   std::string TimeTToWCFDate(const time_t thetime);
-  std::string ToCIFS(std::string& UNCName);
-  std::string ToUNC(std::string& CIFSName);
 } //namespace ArgusTV

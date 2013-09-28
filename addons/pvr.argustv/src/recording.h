@@ -54,7 +54,6 @@ private:
   std::string rating;
   std::string recordingfileformatid;
   std::string recordingfilename;
-  std::string cifsrecordingfilename;
   std::string recordingid;
   time_t recordingstarttime;
   time_t recordingstoptime;
@@ -104,7 +103,6 @@ public:
   const char *Rating(void) const { return rating.c_str(); }
   const char *RecordingFileFormatId(void) const { return recordingfileformatid.c_str(); }
   const char *RecordingFileName(void) const { return recordingfilename.c_str(); }
-  const char *CIFSRecordingFileName(void) const { return cifsrecordingfilename.c_str(); }
   const char *RecordingId(void) const { return recordingid.c_str(); }
   time_t RecordingStartTime(void) const { return recordingstarttime; }
   time_t RecordingStopTime(void) const { return recordingstoptime; }

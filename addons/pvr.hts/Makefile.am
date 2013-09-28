@@ -10,7 +10,7 @@ ADDONNAME       = pvr.hts
 LIBNAME         = libtvheadend-addon
 lib_LTLIBRARIES = libtvheadend-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/libhts/libhts.la -ldl
+LIBS            = @abs_top_builddir@/lib/libhts/libhts.la -ldl
 
 include ../Makefile.include.am
 

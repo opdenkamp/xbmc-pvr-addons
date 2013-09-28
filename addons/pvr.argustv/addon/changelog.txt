@@ -1,3 +1,6 @@
+v1.8.168 (12-09-2013)
+- Minimum ARGUS TV version 2.1 required
+- Switched to integer ID's
 v1.8.167 (29-08-2013)
 - Fixed Live-TV XBMC Gotham
 v1.8.166 (08-06-2013)

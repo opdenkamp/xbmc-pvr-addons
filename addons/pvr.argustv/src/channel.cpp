@@ -44,18 +44,9 @@ bool cChannel::Parse(const Json::Value& data)
     name = data["DisplayName"].asString();
     type = (ArgusTV::ChannelType) data["ChannelType"].asInt();
     lcn = data["LogicalChannelNumber"].asInt();
-    // Useless for XBMC: a unique id as 128 bit GUID string. XBMC accepts only integers here...
+	id = data["Id"].asInt();
     guid = data["ChannelId"].asString();
     guidechannelid = data["GuideChannelId"].asString();
-
-    // Not needed...
-    //["BroadcastStart"] //string
-    //["BroadcastStop"] //string
-    //["DefaultPostRecordSeconds"] //int
-    //["DefaultPreRecordSeconds"] //int
-    //["Sequence"] //int =0
-    //["Version"] //int =0
-    //["VisibleInGuide"] //boolean =true
 
     return true;
 }

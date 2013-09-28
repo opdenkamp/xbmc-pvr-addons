@@ -40,6 +40,9 @@ private:
   std::string scheduleid;
   bool isallocated;
   bool isinconflict;
+  int id;
+  int ichannelid;
+
 
 public:
   cUpcomingRecording(void);
@@ -47,7 +50,9 @@ public:
 
   bool Parse(const Json::Value& data);
 
+  int ID(void) const { return id; }
   const std::string& ChannelId(void) const { return channelid; }
+  int ChannelID(void) const { return ichannelid; }
   const std::string& ChannelDisplayname(void) const { return channeldisplayname; }
   time_t StartTime(void) const { return starttime; }
   time_t StopTime(void) const { return stoptime; }

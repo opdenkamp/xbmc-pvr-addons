@@ -940,6 +940,8 @@ PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_E
         {
           if (mask == 1)
             start = psoffset;
+          else if (edlIt->start_mark == 0)
+            start = 0;
           else
             start = nsoffset;
 
@@ -947,8 +949,12 @@ PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_E
           XBMC->Log(LOG_DEBUG, "%s - end_mark offset mask: %d, psoffset: %"PRId64", nsoffset: %"PRId64, __FUNCTION__, mask, psoffset, nsoffset);
           if (mask == 2)
             end = nsoffset;
-          else
+          else if (mask == 1 || mask == 3)
             end = psoffset;
+          else
+            // By forcing the end to be zero, it will never be > start, which makes the values invalid
+            // This is only for failed lookups for the end position
+            end = 0;
         }
         if (mask <= 0)
           XBMC->Log(LOG_DEBUG, "%s - Failed to retrieve recordedseek offset values", __FUNCTION__);

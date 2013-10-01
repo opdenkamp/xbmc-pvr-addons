@@ -2289,3 +2289,107 @@ int cmyth_mysql_keep_livetv_recording(cmyth_database_t db, cmyth_proginfo_t prog
 
 	return (int)mysql_affected_rows(sql);
 }
+
+/*
+ * cmyth_mysql_get_recording_seek_offset()
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Returns seek offsets around the mark
+ *
+ * Success:
+ * 0 = None
+ * 1 = Found before the mark
+ * 2 = Found after the mark
+ * 3 = Found around the mark
+ *
+ * Failure: -1
+ */
+int8_t
+cmyth_mysql_get_recording_seek_offset(cmyth_database_t db, cmyth_proginfo_t prog, cmyth_recording_markup_t type, int64_t mark, int64_t *psoffset, int64_t *nsoffset)
+{
+	MYSQL_RES *res = NULL;
+	MYSQL_ROW row;
+	/*
+	 * Force usage of primary key index to retrieve mark value:
+	 * const DESC, const DESC, const DESC
+	 */
+	const char *query_str1 = "SELECT mark,offset FROM recordedseek WHERE chanid = ? AND starttime = ? AND type = ? AND mark >= ? ORDER BY chanid ASC, starttime ASC, type ASC, mark ASC LIMIT 1;";
+	const char *query_str2 = "SELECT mark,offset FROM recordedseek WHERE chanid = ? AND starttime = ? AND type = ? AND mark <= ? ORDER BY chanid DESC, starttime DESC, type DESC, mark DESC LIMIT 1;";
+	int64_t next_mark = 0;
+	int64_t next_offset = 0;
+	int64_t prev_mark = 0;
+	int64_t prev_offset = 0;
+	uint8_t mask = 0;
+	time_t start_ts_dt;
+	cmyth_mysql_query_t * query;
+
+	if (cmyth_database_check_version(db) < 0)
+		return -1;
+
+	start_ts_dt = cmyth_timestamp_to_unixtime(prog->proginfo_rec_start_ts);
+
+	query = cmyth_mysql_query_create(db, query_str1);
+
+	if (cmyth_mysql_query_param_uint32(query, prog->proginfo_chanId) < 0
+			|| cmyth_mysql_query_param_unixtime(query, start_ts_dt, db->db_tz_utc) < 0
+			|| cmyth_mysql_query_param_int(query, type) < 0
+			|| cmyth_mysql_query_param_int64(query, mark) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(query);
+		return -1;
+	}
+	res = cmyth_mysql_query_result(query);
+	ref_release(query);
+	if (res == NULL) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query 1 failed!\n", __FUNCTION__);
+		return -1;
+	}
+	while ((row = mysql_fetch_row(res))) {
+		next_mark = safe_atoll(row[0]);
+		next_offset = safe_atoll(row[1]);
+		mask |= 1;
+	}
+	mysql_free_result(res);
+
+	query = cmyth_mysql_query_create(db, query_str2);
+
+	if (cmyth_mysql_query_param_uint32(query, prog->proginfo_chanId) < 0
+			|| cmyth_mysql_query_param_unixtime(query, start_ts_dt, db->db_tz_utc) < 0
+			|| cmyth_mysql_query_param_int(query, type) < 0
+			|| cmyth_mysql_query_param_int64(query, mark) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, binding of query parameters failed! Maybe we're out of memory?\n", __FUNCTION__);
+		ref_release(query);
+		return -1;
+	}
+	res = cmyth_mysql_query_result(query);
+	ref_release(query);
+	if (res == NULL) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s, finalisation/execution of query 2 failed!\n", __FUNCTION__);
+		return -1;
+	}
+	while ((row = mysql_fetch_row(res))) {
+		prev_mark = safe_atoll(row[0]);
+		prev_offset = safe_atoll(row[1]);
+		mask |= 2;
+	}
+	mysql_free_result(res);
+
+	if (mask == 3) {
+		*psoffset = prev_offset;
+		*nsoffset = next_offset;
+	} else if (mask == 1) {
+		*psoffset = next_offset;
+		*nsoffset = 0;
+	} else if (mask == 2) {
+		*psoffset = 0;
+		*nsoffset = prev_offset;
+	} else {
+		*psoffset = 0;
+		*nsoffset = 0;
+	}
+
+	return mask;
+}

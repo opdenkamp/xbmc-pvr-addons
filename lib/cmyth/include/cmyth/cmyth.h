@@ -2370,6 +2370,19 @@ extern int64_t cmyth_mysql_get_recording_markup(cmyth_database_t db, cmyth_progi
  */
 extern int64_t cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_proginfo_t prog);
 
+/**
+ * Retrieve seek offset for mark of recording
+ * \param db
+ * \param prog program info
+ * \param type markup type
+ * \param mark markup mark
+ * \param poffset to store previous offset found
+ * \param noffset to store next offset found
+ * \return success: mask of found offsets. 1:previous, 2:next, 3:both
+ * \return failure: -(errno)
+ */
+extern int8_t cmyth_mysql_get_recording_seek_offset(cmyth_database_t db, cmyth_proginfo_t prog, cmyth_recording_markup_t type, int64_t mark, int64_t *psoffset, int64_t *nsoffset);
+
 /*
  * -----------------------------------------------------------------
  * Recording artworks

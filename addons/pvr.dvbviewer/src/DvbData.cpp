@@ -1139,10 +1139,7 @@ bool Dvb::UpdateBackendStatus(bool updateSettings)
 
   TiXmlElement *root = doc.RootElement();
   if (updateSettings)
-  {
     XMLUtils::GetInt(root, "timezone", m_timezone);
-    XMLUtils::GetString(root, "epglang", m_epgLanguage);
-  }
 
   // compute disk space. duplicates are detected by their identical values
   typedef std::pair<long long, long long> Recfolder_t;

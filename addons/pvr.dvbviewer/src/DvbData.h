@@ -20,7 +20,7 @@
 
 // minimum version required
 #define RS_VERSION_MAJOR   1
-#define RS_VERSION_MINOR   25
+#define RS_VERSION_MINOR   26
 #define RS_VERSION_PATCH1  0
 #define RS_VERSION_PATCH2  0
 #define RS_VERSION_NUM  (RS_VERSION_MAJOR << 24 | RS_VERSION_MINOR << 16 | \
@@ -216,7 +216,6 @@ private:
   unsigned int m_backendVersion;
 
   int m_timezone;
-  CStdString m_epgLanguage;
   struct { long long total, used; } m_diskspace;
 
   CStdString m_strURL;

@@ -24,6 +24,7 @@
 #include "tools.h"
 
 #include <time.h>
+#include <inttypes.h>
 #include <set>
 
 using namespace ADDON;
@@ -875,12 +876,32 @@ PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_E
     return PVR_ERROR_FAILED;
   }
 
-  float frameRate = m_db.GetRecordingFrameRate(it->second) / 1000.0f;
-  if (frameRate <= 0)
+  bool useFrameRate = true;
+  float frameRate = 0.0f;
+  int64_t psoffset, nsoffset;
+
+  if (m_db.GetSchemaVersion() >= 1309)
   {
-    XBMC->Log(LOG_DEBUG, "%s - Failed to read framerate for %s", __FUNCTION__, recording.strRecordingId);
-    *size = 0;
-    return PVR_ERROR_FAILED;
+    if (m_db.GetRecordingSeekOffset(it->second, MARK_DURATION_MS, 0, &psoffset, &nsoffset) > 0)
+    {
+      // mark 33 found for recording. no need convertion using framerate.
+      useFrameRate = false;
+    }
+    else
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Missing recordedseek map, try running 'mythcommflag --rebuild' for recording %s", __FUNCTION__, recording.strRecordingId);
+      XBMC->Log(LOG_DEBUG, "%s - Fallback using framerate ...", __FUNCTION__);
+    }
+  }
+  if (useFrameRate)
+  {
+    frameRate = m_db.GetRecordingFrameRate(it->second) / 1000.0f;
+    if (frameRate <= 0)
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Failed to read framerate for %s", __FUNCTION__, recording.strRecordingId);
+      *size = 0;
+      return PVR_ERROR_FAILED;
+    }
   }
 
   Edl commbreakList = m_con.GetCommbreakList(it->second);
@@ -898,16 +919,58 @@ PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_E
   {
     if (index < *size)
     {
-      PVR_EDL_ENTRY entry;
-      entry.start = (int64_t)(edlIt->start_mark / frameRate * 1000);
-      entry.end = (int64_t)(edlIt->end_mark / frameRate * 1000);
-      entry.type = index < commbreakCount ? PVR_EDL_TYPE_COMBREAK : PVR_EDL_TYPE_CUT;
-      entries[index] = entry;
-      index++;
+      int64_t start, end;
+      start = end = 0;
+
+      // Pull the closest match in the DB if it exists
+      if (useFrameRate)
+      {
+        start = (int64_t)(edlIt->start_mark / frameRate * 1000);
+        end = (int64_t)(edlIt->end_mark / frameRate * 1000);
+        XBMC->Log(LOG_DEBUG, "%s - start_mark: %lld, end_mark: %lld, start: %lld, end: %lld", __FUNCTION__, edlIt->start_mark, edlIt->end_mark, start, end);
+      }
+      else
+      {
+        // mask == 1 ==> Found before the mark (use psoffset, nsoffset is zero)
+        // mask == 2 ==> Found after the mark (use nsoffset, psoffset is zero)
+        // mask == 3 ==> Found around the mark (use nsoffset [next offset / later] for start, psoffset [prev. offset / before] for end)
+        int mask = m_db.GetRecordingSeekOffset(it->second, MARK_DURATION_MS, edlIt->start_mark, &psoffset, &nsoffset);
+        XBMC->Log(LOG_DEBUG, "%s - start_mark offset mask: %d, psoffset: %"PRId64", nsoffset: %"PRId64, __FUNCTION__, mask, psoffset, nsoffset);
+        if (mask > 0)
+        {
+          if (mask == 1)
+            start = psoffset;
+          else
+            start = nsoffset;
+
+          mask = m_db.GetRecordingSeekOffset(it->second, MARK_DURATION_MS, edlIt->end_mark, &psoffset, &nsoffset);
+          XBMC->Log(LOG_DEBUG, "%s - end_mark offset mask: %d, psoffset: %"PRId64", nsoffset: %"PRId64, __FUNCTION__, mask, psoffset, nsoffset);
+          if (mask == 2)
+            end = nsoffset;
+          else
+            end = psoffset;
+        }
+        if (mask <= 0)
+          XBMC->Log(LOG_DEBUG, "%s - Failed to retrieve recordedseek offset values", __FUNCTION__);
+      }
+
+      if (start < end)
+      {
+        // We have both a valid start and end value now
+        XBMC->Log(LOG_DEBUG, "%s - start_mark: %"PRId64", end_mark: %"PRId64", start: %"PRId64", end: %"PRId64, __FUNCTION__, edlIt->start_mark, edlIt->end_mark, start, end);
+        PVR_EDL_ENTRY entry;
+        entry.start = start;
+        entry.end = end;
+        entry.type = index < commbreakCount ? PVR_EDL_TYPE_COMBREAK : PVR_EDL_TYPE_CUT;
+        entries[index] = entry;
+        index++;
+      }
+      else
+        XBMC->Log(LOG_DEBUG, "%s - invalid offset: start_mark: %"PRId64", end_mark: %"PRId64", start: %"PRId64", end: %"PRId64, __FUNCTION__, edlIt->start_mark, edlIt->end_mark, start, end);
     }
     else
     {
-      XBMC->Log(LOG_ERROR, "%s - Maximum number of edl entries reached for: %s", __FUNCTION__, recording.strTitle);
+      XBMC->Log(LOG_ERROR, "%s - Maximum number of edl entries reached for %s", __FUNCTION__, recording.strTitle);
       break;
     }
   }

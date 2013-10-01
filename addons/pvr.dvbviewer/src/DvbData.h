@@ -5,7 +5,6 @@
 
 #include "client.h"
 #include "TimeshiftBuffer.h"
-#include "xmlParser.h"
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 #include <list>
@@ -193,7 +192,7 @@ protected:
 private:
   // functions
   CStdString GetHttpXML(const CStdString& url);
-  CStdString URLEncodeInline(const CStdString& strData);
+  CStdString URLEncodeInline(const CStdString& data);
   bool LoadChannels();
   DvbTimers_t LoadTimers();
   void TimerUpdates();
@@ -201,10 +200,6 @@ private:
   int GetTimerId(const PVR_TIMER& timer);
 
   // helper functions
-  bool GetXMLValue(const XMLNode& node, const char* tag, int& value);
-  bool GetXMLValue(const XMLNode& node, const char* tag, bool& value);
-  bool GetXMLValue(const XMLNode& node, const char* tag, CStdString& value,
-      bool localize = false);
   void RemoveNullChars(CStdString& str);
   bool CheckBackendVersion();
   bool UpdateBackendStatus(bool updateSettings = false);
@@ -215,7 +210,6 @@ private:
   CStdString BuildURL(const char* path, ...);
   CStdString BuildExtURL(const CStdString& baseURL, const char* path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
-  uint64_t ParseUInt64(const CStdString& str);
 
 private:
   bool m_connected;

@@ -10,11 +10,12 @@ ADDONNAME       = pvr.dvbviewer
 LIBNAME         = libdvbviewer-addon
 lib_LTLIBRARIES = libdvbviewer-addon.la
 
+LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la
+
 include ../Makefile.include.am
 
 libdvbviewer_addon_la_SOURCES = src/client.cpp \
                                 src/DvbData.cpp \
-                                src/xmlParser.cpp \
                                 src/TimeshiftBuffer.cpp
 libdvbviewer_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

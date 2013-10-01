@@ -42,7 +42,7 @@ void TimeshiftBuffer::Stop()
 
 void *TimeshiftBuffer::Process()
 {
-  XBMC->Log(LOG_DEBUG, "TimeShiftProcess:: thread started");
+  XBMC->Log(LOG_DEBUG, "Timeshift: thread started");
   byte buffer[STREAM_READ_BUFFER_SIZE];
   int bytesRead = STREAM_READ_BUFFER_SIZE;
 
@@ -51,7 +51,7 @@ void *TimeshiftBuffer::Process()
     bytesRead = XBMC->ReadFile(m_streamHandle, buffer, sizeof(buffer));
     XBMC->WriteFile(m_filebufferWriteHandle, buffer, bytesRead);
   }
-  XBMC->Log(LOG_DEBUG, "TimeShiftProcess:: thread stopped");
+  XBMC->Log(LOG_DEBUG, "Timeshift: thread stopped");
   return NULL;
 }
 

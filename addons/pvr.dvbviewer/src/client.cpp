@@ -123,7 +123,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
-  XBMC->Log(LOG_DEBUG, "%s - Creating DVBViewer PVR-Client", __FUNCTION__);
+  XBMC->Log(LOG_DEBUG, "%s Creating DVBViewer PVR-Client", __FUNCTION__);
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 
   ADDON_ReadSettings();
@@ -224,7 +224,7 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     CStdString newValue = (const char *)settingValue;
     if (g_strTimeshiftBufferPath != newValue)
     {
-      XBMC->Log(LOG_DEBUG, "%s - Changed Setting '%s' from '%s' to '%s'", __FUNCTION__,
+      XBMC->Log(LOG_DEBUG, "%s Changed Setting '%s' from '%s' to '%s'", __FUNCTION__,
           settingName, g_strTimeshiftBufferPath.c_str(), newValue.c_str());
       g_strTimeshiftBufferPath = newValue;
     }

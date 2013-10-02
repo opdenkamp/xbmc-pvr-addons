@@ -81,7 +81,15 @@ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, int64_t bookmar
 	if (!buf) {
 		return -ENOMEM;
 	}
-	if (conn->conn_version >= 66) {
+	if (conn->conn_version >= 77) {
+		/*
+		 * Since protocol 77 mythbackend no longer expects the trailing 4th parameter
+		 * http://code.mythtv.org/trac/ticket/11104
+		 */
+		sprintf(buf, "SET_BOOKMARK %"PRIu32" %s %"PRId64, prog->proginfo_chanId,
+				start_ts_dt, bookmark);
+	}
+	else if (conn->conn_version >= 66) {
 		/*
 		 * Since protocol 66 mythbackend expects a single 64 bit integer rather than two 32 bit
 		 * hi and lo integers. Nevertheless the backend (at least up to 0.25) checks

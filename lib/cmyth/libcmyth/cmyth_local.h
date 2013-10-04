@@ -216,7 +216,7 @@ struct cmyth_proginfo {
 	uint32_t proginfo_source_id; /* ??? in V8 */
 	uint32_t proginfo_card_id;   /* ??? in V8 */
 	uint32_t proginfo_input_id;  /* ??? in V8 */
-	int8_t proginfo_rec_priority;  /* ??? in V8 */
+	int32_t proginfo_rec_priority;  /* ??? in V8 */
 	int8_t proginfo_rec_status; /* ??? in V8 */
 	uint32_t proginfo_record_id;  /* ??? in V8 */
 	uint8_t proginfo_rec_type;   /* ??? in V8 */
@@ -242,7 +242,7 @@ struct cmyth_proginfo {
 	char *proginfo_host;
 	uint32_t proginfo_version;
 	char *proginfo_playgroup; /* new in v18 */
-	int8_t proginfo_recpriority_2;  /* new in V25 */
+	int32_t proginfo_recpriority_2;  /* new in V25 */
 	uint32_t proginfo_parentid; /* new in V31 */
 	char *proginfo_storagegroup; /* new in v32 */
 	uint16_t proginfo_audioproperties; /* new in v35 */

@@ -1869,7 +1869,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	/*
 	 * Get proginfo_rec_priority (byte)
 	 */
-	consumed = cmyth_rcv_int8(conn, err,
+	consumed = cmyth_rcv_int32(conn, err,
 				    &buf->proginfo_rec_priority, count);
 	count -= consumed;
 	total += consumed;
@@ -2211,7 +2211,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		/*
 		 * Get proginfo_recpriority_2 (byte)
 		 */
-		consumed = cmyth_rcv_int8(conn, err,
+		consumed = cmyth_rcv_int32(conn, err,
 					    &buf->proginfo_recpriority_2,
 					    count);
 		count -= consumed;

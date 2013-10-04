@@ -1013,7 +1013,7 @@ extern uint32_t cmyth_proginfo_recordid(cmyth_proginfo_t prog);
  * \param prog proginfo handle
  * \return int32_t
  */
-extern int8_t cmyth_proginfo_priority(cmyth_proginfo_t prog);
+extern int32_t cmyth_proginfo_priority(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the critics rating (number of stars) of a program.

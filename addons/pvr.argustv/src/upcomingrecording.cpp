@@ -36,6 +36,8 @@ cUpcomingRecording::cUpcomingRecording(void)
   iscancelled = false;
   isallocated = true;
   isinconflict = true;
+  id = 0;
+  ichannelid = 0;
 }
 
 cUpcomingRecording::~cUpcomingRecording(void)
@@ -50,6 +52,7 @@ bool cUpcomingRecording::Parse(const Json::Value& data)
   programobject = data["Program"];
   date = 0;
 
+  id = programobject["Id"].asInt(); 
   t = programobject["StartTime"].asString();
   starttime = ArgusTV::WCFDateToTimeT(t, offset);
   t = programobject["StopTime"].asString();
@@ -66,6 +69,7 @@ bool cUpcomingRecording::Parse(const Json::Value& data)
   channelobject = programobject["Channel"];
   channelid = channelobject["ChannelId"].asString();
   channeldisplayname = channelobject["DisplayName"].asString();
+  ichannelid = channelobject["Id"].asInt(); 
 
   if (data["CardChannelAllocation"].empty())
     isallocated = false; 

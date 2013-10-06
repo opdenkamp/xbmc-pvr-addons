@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-    <setting label="30000" id="host"           type="text"   default="127.0.0.1" />
-    <setting label="30001" id="webport"        type="number" default="8089" option="int" />
-    <setting label="30002" id="streamport"     type="number" default="7522" option="int" />
-    <setting label="30003" id="recordingport"  type="number" default="8090" option="int" />
-    <setting label="30004" id="user"           type="text"   default="" />
-    <setting label="30005" id="pass"           type="text"   default="" option="hidden" />
-    <setting label="30006" id="usefavourites"  type="bool"   default="false"/>
-    <setting label="30007" id="favouritespath" type="file"   default="" enable="eq(-1,true)" />
+  <!-- general -->
+  <category label="30100">
+    <setting label="30000" id="host"    type="text"   default="127.0.0.1" />
+    <setting label="30001" id="webport" type="number" default="8089" option="int" />
+    <setting label="30002" id="user"    type="text"   default="" />
+    <setting label="30003" id="pass"    type="text"   default="" option="hidden" />
 
     <setting id="sep1" type="sep" />
-    <setting label="30100" id="usetimeshift"  type="bool"   default="false" />
-    <setting label="30101" id="timeshiftpath" type="folder" default="special://userdata/addon_data/pvr.dvbviewer" option="writeable" enable="eq(-1,true)" />
+    <setting label="30010" id="usefavourites" type="bool" default="false" />
+    <setting label="30011" id="usefavouritesfile" type="bool" default="false" enable="eq(-1,true)" />
+    <setting label="30012" id="favouritesfile"    type="file" default="" enable="eq(-1,true)" />
+  </category>
+
+  <category label="30101">
+    <setting label="30020" id="usetimeshift"  type="bool"   default="false" />
+    <setting label="30021" id="timeshiftpath" type="folder" default="special://userdata/addon_data/pvr.dvbviewer" option="writeable" enable="eq(-1,true)" />
+
+    <setting id="sep2" type="sep" />
+    <setting label="30030" id="usertsp" type="bool" default="false" enable="eq(-3,false)" />
+  </category>
 </settings>

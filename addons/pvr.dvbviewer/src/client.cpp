@@ -36,14 +36,14 @@ ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
 CStdString g_strHostname             = DEFAULT_HOST;
 int        g_iConnectTimeout         = DEFAULT_CONNECT_TIMEOUT;
 int        g_iPortWeb                = DEFAULT_WEB_PORT;
-int        g_iPortStream             = DEFAULT_STREAM_PORT;
-int        g_iPortRecording          = DEFAULT_RECORDING_PORT;
 CStdString g_strUsername             = "";
 CStdString g_strPassword             = "";
-bool       g_bUseFavourites          = false;
-CStdString g_strFavouritesPath       = "";
+bool       g_useFavourites           = false;
+bool       g_useFavouritesFile       = false;
+CStdString g_favouritesFile          = "";
 bool       g_bUseTimeshift           = false;
 CStdString g_strTimeshiftBufferPath  = DEFAULT_TSBUFFERPATH;
+bool       g_useRTSP                 = false;
 
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr   *PVR  = NULL;
@@ -55,43 +55,35 @@ void ADDON_ReadSettings(void)
 {
   char buffer[1024];
 
-  /* read setting "host" from settings.xml */
   if (XBMC->GetSetting("host", buffer))
     g_strHostname = buffer;
 
-  /* read setting "user" from settings.xml */
   if (XBMC->GetSetting("user", buffer))
     g_strUsername = buffer;
 
-  /* read setting "pass" from settings.xml */
   if (XBMC->GetSetting("pass", buffer))
     g_strPassword = buffer;
 
-  /* read setting "streamport" from settings.xml */
-  if (!XBMC->GetSetting("streamport", &g_iPortStream))
-    g_iPortStream = DEFAULT_STREAM_PORT;
-
-  /* read setting "webport" from settings.xml */
   if (!XBMC->GetSetting("webport", &g_iPortWeb))
     g_iPortWeb = DEFAULT_WEB_PORT;
 
-  /* read setting "recordingport" from settings.xml */
-  if (!XBMC->GetSetting("recordingport", &g_iPortRecording))
-    g_iPortRecording = DEFAULT_RECORDING_PORT;
+  if (!XBMC->GetSetting("usefavourites", &g_useFavourites))
+    g_useFavourites = false;
 
-  /* read setting "usefavourites" from settings.xml */
-  if (!XBMC->GetSetting("usefavourites", &g_bUseFavourites))
-    g_bUseFavourites = false;
+  if (XBMC->GetSetting("usefavouritesfile", &g_useFavouritesFile))
+    g_useFavouritesFile = false;
 
-  /* read setting "favouritespath" from settings.xml */
-  if (XBMC->GetSetting("favouritespath", buffer))
-    g_strFavouritesPath = buffer;
+  if (g_useFavouritesFile && XBMC->GetSetting("favouritesfile", buffer))
+    g_favouritesFile = buffer;
 
   if (!XBMC->GetSetting("usetimeshift", &g_bUseTimeshift))
     g_bUseTimeshift = false;
 
   if (XBMC->GetSetting("timeshiftpath", buffer))
     g_strTimeshiftBufferPath = buffer;
+
+  if (!XBMC->GetSetting("usertsp", &g_useRTSP) || g_bUseTimeshift)
+    g_useRTSP = false;
 
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "DVBViewer Addon Configuration options");
@@ -102,14 +94,13 @@ void ADDON_ReadSettings(void)
     XBMC->Log(LOG_DEBUG, "Password:   %s", g_strPassword.c_str());
   }
   XBMC->Log(LOG_DEBUG, "WebPort:    %d", g_iPortWeb);
-  XBMC->Log(LOG_DEBUG, "StreamPort: %d", g_iPortStream);
-  XBMC->Log(LOG_DEBUG, "Rec.Port:   %d", g_iPortRecording);
-  XBMC->Log(LOG_DEBUG, "Use favourites: %s", (g_bUseFavourites) ? "yes" : "no");
-  if (g_bUseFavourites)
-    XBMC->Log(LOG_DEBUG, "Favourites Path: %s", g_strFavouritesPath.c_str());
+  XBMC->Log(LOG_DEBUG, "Use favourites: %s", (g_useFavourites) ? "yes" : "no");
+  if (g_useFavouritesFile)
+    XBMC->Log(LOG_DEBUG, "Favourites File: %s", g_favouritesFile.c_str());
   XBMC->Log(LOG_DEBUG, "Timeshift: %s", (g_bUseTimeshift) ? "enabled" : "disabled");
   if (g_bUseTimeshift)
     XBMC->Log(LOG_DEBUG, "Timeshift Buffer Path: %s", g_strTimeshiftBufferPath.c_str());
+  XBMC->Log(LOG_DEBUG, "Use RTSP: %s", (g_useRTSP) ? "yes" : "no");
 }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
@@ -203,40 +194,30 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     if (g_strPassword.compare((const char *)settingValue) != 0)
       return ADDON_STATUS_NEED_RESTART;
   }
-  else if (sname == "streamport")
-  {
-    if (g_iPortStream != *(int *)settingValue)
-      return ADDON_STATUS_NEED_RESTART;
-  }
   else if (sname == "webport")
   {
     if (g_iPortWeb != *(int *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
-  else if (sname == "recordingport")
-  {
-    if (g_iPortRecording != *(int *)settingValue)
-      return ADDON_STATUS_NEED_RESTART;
-  }
   else if (sname == "usefavourites")
   {
-    if (g_bUseFavourites != *(bool *)settingValue)
+    if (g_useFavourites != *(bool *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
-  else if (sname == "favouritespath")
+  else if (sname == "usefavouritesfile")
   {
-    if (g_strFavouritesPath.compare((const char *)settingValue) != 0)
+    if (g_useFavouritesFile != *(bool *)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (sname == "favouritesfile")
+  {
+    if (g_favouritesFile.compare((const char *)settingValue) != 0)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "usetimeshift")
   {
-    bool newValue = *(bool *)settingValue;
-    if (g_bUseTimeshift != newValue)
-    {
-      XBMC->Log(LOG_DEBUG, "%s - Changed Setting '%s' from '%u' to '%u'", __FUNCTION__,
-          settingName, g_bUseTimeshift, newValue);
-      g_bUseTimeshift = newValue;
-    }
+    if (g_bUseTimeshift != *(bool *)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "timeshiftpath")
   {
@@ -247,6 +228,11 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
           settingName, g_strTimeshiftBufferPath.c_str(), newValue.c_str());
       g_strTimeshiftBufferPath = newValue;
     }
+  }
+  else if (sname == "usertsp")
+  {
+    if (g_useRTSP != *(bool *)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
   }
   return ADDON_STATUS_OK;
 }
@@ -294,7 +280,6 @@ const char* GetMininumGUIAPIVersion(void)
 
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
-  //pCapabilities->bSupportsChannelSettings = false;
   pCapabilities->bSupportsEPG             = true;
   pCapabilities->bSupportsTV              = true;
   pCapabilities->bSupportsRadio           = true;
@@ -311,30 +296,34 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 
 const char *GetBackendName(void)
 {
-  static const char *strBackendName = DvbData ? DvbData->GetServerName().c_str()
+  static const CStdString name = DvbData ? DvbData->GetBackendName()
     : "unknown";
-  return strBackendName;
+  return name.c_str();
 }
 
 const char *GetBackendVersion(void)
 {
-  static const char *strBackendVersion = "UNKNOWN";
-  return strBackendVersion;
+  static const CStdString version = DvbData ? DvbData->GetBackendVersion()
+    : "UNKNOWN";
+  return version.c_str();
 }
 
 const char *GetConnectionString(void)
 {
-  static CStdString strConnectionString;
+  static CStdString conn;
   if (DvbData)
-    strConnectionString.Format("%s%s", g_strHostname, DvbData->IsConnected() ? "" : " (Not connected!)");
+    conn.Format("%s%s", g_strHostname, DvbData->IsConnected() ? "" : " (Not connected!)");
   else
-    strConnectionString.Format("%s (addon error!)", g_strHostname);
-  return strConnectionString.c_str();
+    conn.Format("%s (addon error!)", g_strHostname);
+  return conn.c_str();
 }
 
-PVR_ERROR GetDriveSpace(long long *_UNUSED(iTotal), long long *_UNUSED(iUsed))
+PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 {
-  return PVR_ERROR_SERVER_ERROR;
+  if (!DvbData || !DvbData->IsConnected())
+    return PVR_ERROR_SERVER_ERROR;
+
+  return DvbData->GetDriveSpace(iTotal, iUsed);
 }
 
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
@@ -456,20 +445,14 @@ int GetChannelGroupsAmount(void)
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
-  if (bRadio)
-    return PVR_ERROR_NO_ERROR;
-
   if (!DvbData || !DvbData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
-  return DvbData->GetChannelGroups(handle);
+  return DvbData->GetChannelGroups(handle, bRadio);
 }
 
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 {
-  if (group.bIsRadio)
-    return PVR_ERROR_NO_ERROR;
-
   if (!DvbData || !DvbData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
 
@@ -479,7 +462,7 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
 void CloseLiveStream(void)
 {
   DvbData->CloseLiveStream();
-};
+}
 
 bool OpenLiveStream(const PVR_CHANNEL &channel)
 {
@@ -501,6 +484,7 @@ bool CanPauseStream(void)
 {
   if (!DvbData || !DvbData->IsConnected())
     return false;
+
   return g_bUseTimeshift;
 }
 
@@ -508,6 +492,7 @@ bool CanSeekStream(void)
 {
   if (!DvbData || !DvbData->IsConnected())
     return false;
+
   return g_bUseTimeshift;
 }
 
@@ -515,6 +500,7 @@ int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
   if (!DvbData || !DvbData->IsConnected())
     return 0;
+
   return DvbData->ReadLiveStream(pBuffer, iBufferSize);
 }
 
@@ -522,6 +508,7 @@ long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */)
 {
   if (!DvbData || !DvbData->IsConnected())
     return -1;
+
   return DvbData->SeekLiveStream(iPosition, iWhence);
 }
 
@@ -529,6 +516,7 @@ long long PositionLiveStream(void)
 {
   if (!DvbData || !DvbData->IsConnected())
     return -1;
+
   return DvbData->PositionLiveStream();
 }
 
@@ -536,12 +524,18 @@ long long LengthLiveStream(void)
 {
   if (!DvbData || !DvbData->IsConnected())
     return 0;
+
   return DvbData->LengthLiveStream();
 }
 
 PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 {
-  return DvbData->SignalStatus(signalStatus);
+  // the RS api doesn't provide information about signal quality (yet)
+  strncpy(signalStatus.strAdapterName, "DVBViewer Recording Service",
+      sizeof(signalStatus.strAdapterName));
+  strncpy(signalStatus.strAdapterStatus, "OK",
+      sizeof(signalStatus.strAdapterStatus));
+  return PVR_ERROR_NO_ERROR;
 }
 
 /** UNUSED API FUNCTIONS */
@@ -549,7 +543,7 @@ PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* _UNUSED(pProperties)) { ret
 void DemuxAbort(void) { return; }
 DemuxPacket* DemuxRead(void) { return NULL; }
 PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &_UNUSED(menuhook), const PVR_MENUHOOK_DATA &_UNUSED(item)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR MoveChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }

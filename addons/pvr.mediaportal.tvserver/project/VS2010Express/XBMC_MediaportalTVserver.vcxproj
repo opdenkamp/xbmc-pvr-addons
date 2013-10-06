@@ -61,7 +61,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4996;4355;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -91,6 +91,7 @@
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <DisableSpecificWarnings>4996;4355;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -122,8 +123,18 @@
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\epg.cpp" />
     <ClCompile Include="..\..\src\GenreTable.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\ChannelInfo.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\DeMultiplexer.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\DvbUtil.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\FileReader.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\MultiFileReader.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\PacketSync.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\PatParser.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\PidTable.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\PmtParser.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\Section.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\SectionDecoder.cpp" />
+    <ClCompile Include="..\..\src\lib\tsreader\TSHeader.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\TSReader.cpp" />
     <ClCompile Include="..\..\src\pvrclient-mediaportal.cpp" />
     <ClCompile Include="..\..\src\recordings.cpp" />
@@ -141,9 +152,21 @@
     <ClInclude Include="..\..\src\epg.h" />
     <ClInclude Include="..\..\src\FileUtils.h" />
     <ClInclude Include="..\..\src\GenreTable.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\ChannelInfo.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\DeMultiplexer.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\DvbUtil.h" />
     <ClInclude Include="..\..\src\lib\tsreader\FileReader.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\ISectionCallback.h" />
     <ClInclude Include="..\..\src\lib\tsreader\MultiFileReader.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\PacketSync.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\PatParser.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\PidTable.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\PmtParser.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\Section.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\SectionDecoder.h" />
+    <ClInclude Include="..\..\src\lib\tsreader\TSHeader.h" />
     <ClInclude Include="..\..\src\lib\tsreader\TSReader.h" />
+    <ClInclude Include="..\..\src\os-dependent.h" />
     <ClInclude Include="..\..\src\pvrclient-mediaportal.h" />
     <ClInclude Include="..\..\src\recordings.h" />
     <ClInclude Include="..\..\src\Socket.h" />

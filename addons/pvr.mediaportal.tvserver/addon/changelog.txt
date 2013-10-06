@@ -1,5 +1,17 @@
-v1.8.8
+v1.8.9
+- TSReader: Fixed: channel switching behavior when switching across tsbuffer files
+- TSReader: Fixed: Windows share access in multiseat mode (return smb:// URI's instead of \\UNC paths to XBMC also for Windows)
+- TSReader: Fixed: SD<->HD channel switching with "fast channel switching" enabled (add PAT detection to find the exact start of the new channel in the timeshift buffer file)
+- Recordings: Add support for retrieving and storing the playback resume position (requires TVServerXBMC build 121 or higher)
+- Recordings: Trigger a recording list update when the backend couldn't find the selected recording
+- Fixed: potential out-of-bounds array access while accessing TV Card info
+- Fixed: Hide smb password in debug xbmc.log file
+- Added: support for retrieving channels from multiple specified groups (>1, < All groups) (requires TVServerXBMC build 122 or higher)
+- Changed: drop support for TVServerXBMC builds older than 1.1.x.107
+- Changed: more log notifications on errors
+- EPG: added additional genre strings to the genre string to id translation table
 
+v1.8.8
 - sync with PVR API v1.8.0
 
 v1.7.8
@@ -25,7 +37,7 @@ v1.6.5
 - Updated language files from Transifex
 
 v1.6.4
--New version number by Team XBMC
+- New version number by Team XBMC
 
 v1.2.3.117
 - Added: timeshift support for XBMC Frodo

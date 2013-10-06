@@ -27,6 +27,10 @@
 #ifndef VNSI_CXSOCKET_H
 #define VNSI_CXSOCKET_H
 
+#ifdef __FreeBSD__
+#include <netinet/in.h>
+#endif
+
 #include <inttypes.h>
 #include <sys/types.h>
 #include <sys/socket.h>

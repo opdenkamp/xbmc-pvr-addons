@@ -28,11 +28,14 @@ using namespace ADDON;
 bool CCards::ParseLines(vector<string>& lines)
 {
   if (lines.empty())
+  {
+    XBMC->Log(LOG_DEBUG, "No card settings found.");
     return false;
+  }
 
   for (vector<string>::iterator it = lines.begin(); it < lines.end(); ++it)
   {
-    string& data(*it);
+    string data = *it;
 
     if (!data.empty())
     {
@@ -60,6 +63,8 @@ bool CCards::ParseLines(vector<string>& lines)
       // field 16 = stopgraph
       // field 17 = UNC path recording folder (when shared)
       // field 18 = UNC path timeshift folder (when shared)
+      if (fields.size() < 17)
+        return false;
 
       card.IdCard = atoi(fields[0].c_str());
       card.DevicePath = fields[1];
@@ -79,7 +84,7 @@ bool CCards::ParseLines(vector<string>& lines)
       card.NetProvider = atoi(fields[15].c_str());
       card.StopGraph = stringtobool(fields[16]);
 
-      if (fields.size() > 17) // since TVServerXBMC build 115
+      if (fields.size() >= 19) // since TVServerXBMC build 115
       {
         card.RecordingFolderUNC = fields[17];
         card.TimeshiftFolderUNC = fields[18];

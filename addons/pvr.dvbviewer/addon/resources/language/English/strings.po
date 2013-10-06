@@ -64,7 +64,14 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr ""
 
-#empty strings from id 30031 to 30099
+#empty strings from id 30031 to 30039
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr ""
+
+#empty strings from id 30041 to 30099
+#sections
 
 msgctxt "#30100"
 msgid "General"

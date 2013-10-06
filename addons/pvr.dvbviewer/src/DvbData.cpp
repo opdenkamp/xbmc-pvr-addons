@@ -434,7 +434,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
         recording->id.c_str());
 
     CStdString thumbnail;
-    if (XMLUtils::GetString(xRecording, "image", thumbnail))
+    if (!g_lowPerformance && XMLUtils::GetString(xRecording, "image", thumbnail))
       recording->thumbnailPath = BuildExtURL(imageURL, "%s", thumbnail.c_str());
 
     CStdString startTime = xRecording->Attribute("start");
@@ -693,7 +693,7 @@ bool Dvb::LoadChannels()
         channel->backendIds.push_back(backendId);
 
         CStdString logoURL;
-        if (XMLUtils::GetString(xChannel, "logo", logoURL))
+        if (!g_lowPerformance && XMLUtils::GetString(xChannel, "logo", logoURL))
           channel->logoURL = BuildURL("%s", logoURL.c_str());
 
         if (g_useRTSP)

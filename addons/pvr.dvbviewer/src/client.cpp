@@ -44,6 +44,7 @@ CStdString g_favouritesFile          = "";
 bool       g_bUseTimeshift           = false;
 CStdString g_strTimeshiftBufferPath  = DEFAULT_TSBUFFERPATH;
 bool       g_useRTSP                 = false;
+bool       g_lowPerformance          = false;
 
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr   *PVR  = NULL;
@@ -85,6 +86,9 @@ void ADDON_ReadSettings(void)
   if (!XBMC->GetSetting("usertsp", &g_useRTSP) || g_bUseTimeshift)
     g_useRTSP = false;
 
+  if (!XBMC->GetSetting("lowperformance", &g_lowPerformance))
+    g_lowPerformance = false;
+
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "DVBViewer Addon Configuration options");
   XBMC->Log(LOG_DEBUG, "Hostname:   %s", g_strHostname.c_str());
@@ -101,6 +105,7 @@ void ADDON_ReadSettings(void)
   if (g_bUseTimeshift)
     XBMC->Log(LOG_DEBUG, "Timeshift Buffer Path: %s", g_strTimeshiftBufferPath.c_str());
   XBMC->Log(LOG_DEBUG, "Use RTSP: %s", (g_useRTSP) ? "yes" : "no");
+  XBMC->Log(LOG_DEBUG, "Low performance mode: %s", (g_lowPerformance) ? "yes" : "no");
 }
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
@@ -232,6 +237,11 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   else if (sname == "usertsp")
   {
     if (g_useRTSP != *(bool *)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (sname == "lowperformance")
+  {
+    if (g_lowPerformance != *(bool *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
   return ADDON_STATUS_OK;

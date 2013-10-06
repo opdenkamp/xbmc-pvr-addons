@@ -62,6 +62,7 @@ extern CStdString    g_favouritesFile;
 extern bool          g_bUseTimeshift;
 extern CStdString    g_strTimeshiftBufferPath;
 extern bool          g_useRTSP;
+extern bool          g_lowPerformance;
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 

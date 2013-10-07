@@ -33,18 +33,17 @@ ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
  * Default values are defined inside client.h
  * and exported to the other source files.
  */
-CStdString g_strHostname             = DEFAULT_HOST;
-int        g_iConnectTimeout         = DEFAULT_CONNECT_TIMEOUT;
-int        g_iPortWeb                = DEFAULT_WEB_PORT;
-CStdString g_strUsername             = "";
-CStdString g_strPassword             = "";
-bool       g_useFavourites           = false;
-bool       g_useFavouritesFile       = false;
-CStdString g_favouritesFile          = "";
-bool       g_bUseTimeshift           = false;
-CStdString g_strTimeshiftBufferPath  = DEFAULT_TSBUFFERPATH;
-bool       g_useRTSP                 = false;
-bool       g_lowPerformance          = false;
+CStdString g_hostname             = DEFAULT_HOST;
+int        g_webPort              = DEFAULT_WEB_PORT;
+CStdString g_username             = "";
+CStdString g_password             = "";
+bool       g_useFavourites        = false;
+bool       g_useFavouritesFile    = false;
+CStdString g_favouritesFile       = "";
+bool       g_useTimeshift         = false;
+CStdString g_timeshiftBufferPath  = DEFAULT_TSBUFFERPATH;
+bool       g_useRTSP              = false;
+bool       g_lowPerformance       = false;
 
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr   *PVR  = NULL;
@@ -57,16 +56,16 @@ void ADDON_ReadSettings(void)
   char buffer[1024];
 
   if (XBMC->GetSetting("host", buffer))
-    g_strHostname = buffer;
+    g_hostname = buffer;
 
   if (XBMC->GetSetting("user", buffer))
-    g_strUsername = buffer;
+    g_username = buffer;
 
   if (XBMC->GetSetting("pass", buffer))
-    g_strPassword = buffer;
+    g_password = buffer;
 
-  if (!XBMC->GetSetting("webport", &g_iPortWeb))
-    g_iPortWeb = DEFAULT_WEB_PORT;
+  if (!XBMC->GetSetting("webport", &g_webPort))
+    g_webPort = DEFAULT_WEB_PORT;
 
   if (!XBMC->GetSetting("usefavourites", &g_useFavourites))
     g_useFavourites = false;
@@ -77,13 +76,13 @@ void ADDON_ReadSettings(void)
   if (g_useFavouritesFile && XBMC->GetSetting("favouritesfile", buffer))
     g_favouritesFile = buffer;
 
-  if (!XBMC->GetSetting("usetimeshift", &g_bUseTimeshift))
-    g_bUseTimeshift = false;
+  if (!XBMC->GetSetting("usetimeshift", &g_useTimeshift))
+    g_useTimeshift = false;
 
   if (XBMC->GetSetting("timeshiftpath", buffer))
-    g_strTimeshiftBufferPath = buffer;
+    g_timeshiftBufferPath = buffer;
 
-  if (!XBMC->GetSetting("usertsp", &g_useRTSP) || g_bUseTimeshift)
+  if (!XBMC->GetSetting("usertsp", &g_useRTSP) || g_useTimeshift)
     g_useRTSP = false;
 
   if (!XBMC->GetSetting("lowperformance", &g_lowPerformance))
@@ -91,19 +90,19 @@ void ADDON_ReadSettings(void)
 
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "DVBViewer Addon Configuration options");
-  XBMC->Log(LOG_DEBUG, "Hostname:   %s", g_strHostname.c_str());
-  if (!g_strUsername.empty() && !g_strPassword.empty())
+  XBMC->Log(LOG_DEBUG, "Hostname:   %s", g_hostname.c_str());
+  if (!g_username.empty() && !g_password.empty())
   {
-    XBMC->Log(LOG_DEBUG, "Username:   %s", g_strUsername.c_str());
-    XBMC->Log(LOG_DEBUG, "Password:   %s", g_strPassword.c_str());
+    XBMC->Log(LOG_DEBUG, "Username:   %s", g_username.c_str());
+    XBMC->Log(LOG_DEBUG, "Password:   %s", g_password.c_str());
   }
-  XBMC->Log(LOG_DEBUG, "WebPort:    %d", g_iPortWeb);
+  XBMC->Log(LOG_DEBUG, "WebPort:    %d", g_webPort);
   XBMC->Log(LOG_DEBUG, "Use favourites: %s", (g_useFavourites) ? "yes" : "no");
   if (g_useFavouritesFile)
     XBMC->Log(LOG_DEBUG, "Favourites File: %s", g_favouritesFile.c_str());
-  XBMC->Log(LOG_DEBUG, "Timeshift: %s", (g_bUseTimeshift) ? "enabled" : "disabled");
-  if (g_bUseTimeshift)
-    XBMC->Log(LOG_DEBUG, "Timeshift Buffer Path: %s", g_strTimeshiftBufferPath.c_str());
+  XBMC->Log(LOG_DEBUG, "Timeshift: %s", (g_useTimeshift) ? "enabled" : "disabled");
+  if (g_useTimeshift)
+    XBMC->Log(LOG_DEBUG, "Timeshift Buffer Path: %s", g_timeshiftBufferPath.c_str());
   XBMC->Log(LOG_DEBUG, "Use RTSP: %s", (g_useRTSP) ? "yes" : "no");
   XBMC->Log(LOG_DEBUG, "Low performance mode: %s", (g_lowPerformance) ? "yes" : "no");
 }
@@ -186,22 +185,22 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   CStdString sname(settingName);
   if (sname == "host")
   {
-    if (g_strHostname.compare((const char *)settingValue) != 0)
+    if (g_hostname.compare((const char *)settingValue) != 0)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "user")
   {
-    if (g_strUsername.compare((const char *)settingValue) != 0)
+    if (g_username.compare((const char *)settingValue) != 0)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "pass")
   {
-    if (g_strPassword.compare((const char *)settingValue) != 0)
+    if (g_password.compare((const char *)settingValue) != 0)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "webport")
   {
-    if (g_iPortWeb != *(int *)settingValue)
+    if (g_webPort != *(int *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "usefavourites")
@@ -221,17 +220,17 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   }
   else if (sname == "usetimeshift")
   {
-    if (g_bUseTimeshift != *(bool *)settingValue)
+    if (g_useTimeshift != *(bool *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "timeshiftpath")
   {
     CStdString newValue = (const char *)settingValue;
-    if (g_strTimeshiftBufferPath != newValue)
+    if (g_timeshiftBufferPath != newValue)
     {
       XBMC->Log(LOG_DEBUG, "%s Changed Setting '%s' from '%s' to '%s'", __FUNCTION__,
-          settingName, g_strTimeshiftBufferPath.c_str(), newValue.c_str());
-      g_strTimeshiftBufferPath = newValue;
+          settingName, g_timeshiftBufferPath.c_str(), newValue.c_str());
+      g_timeshiftBufferPath = newValue;
     }
   }
   else if (sname == "usertsp")
@@ -266,14 +265,14 @@ void ADDON_Announce(const char *_UNUSED(flag), const char *_UNUSED(sender),
 
 const char* GetPVRAPIVersion(void)
 {
-  static const char *strApiVersion = XBMC_PVR_API_VERSION;
-  return strApiVersion;
+  static const char *apiVersion = XBMC_PVR_API_VERSION;
+  return apiVersion;
 }
 
 const char* GetMininumPVRAPIVersion(void)
 {
-  static const char *strMinApiVersion = XBMC_PVR_MIN_API_VERSION;
-  return strMinApiVersion;
+  static const char *minApiVersion = XBMC_PVR_MIN_API_VERSION;
+  return minApiVersion;
 }
 
 const char* GetGUIAPIVersion(void)
@@ -322,9 +321,9 @@ const char *GetConnectionString(void)
 {
   static CStdString conn;
   if (DvbData)
-    conn.Format("%s%s", g_strHostname, DvbData->IsConnected() ? "" : " (Not connected!)");
+    conn.Format("%s%s", g_hostname, DvbData->IsConnected() ? "" : " (Not connected!)");
   else
-    conn.Format("%s (addon error!)", g_strHostname);
+    conn.Format("%s (addon error!)", g_hostname);
   return conn.c_str();
 }
 
@@ -495,7 +494,7 @@ bool CanPauseStream(void)
   if (!DvbData || !DvbData->IsConnected())
     return false;
 
-  return g_bUseTimeshift;
+  return g_useTimeshift;
 }
 
 bool CanSeekStream(void)
@@ -503,7 +502,7 @@ bool CanSeekStream(void)
   if (!DvbData || !DvbData->IsConnected())
     return false;
 
-  return g_bUseTimeshift;
+  return g_useTimeshift;
 }
 
 int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)

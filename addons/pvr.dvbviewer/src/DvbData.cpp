@@ -43,10 +43,10 @@ Dvb::Dvb()
 {
   // simply add user@pass in front of the URL if username/password is set
   CStdString strAuth("");
-  if (!g_strUsername.empty() && !g_strPassword.empty())
-    strAuth.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
-  m_strURL.Format("http://%s%s:%u/", strAuth.c_str(), g_strHostname.c_str(),
-      g_iPortWeb);
+  if (!g_username.empty() && !g_password.empty())
+    strAuth.Format("%s:%s@", g_username.c_str(), g_password.c_str());
+  m_strURL.Format("http://%s%s:%u/", strAuth.c_str(), g_hostname.c_str(),
+      g_webPort);
 
   m_currentChannel     = 0;
   m_iClientIndexCounter = 1;
@@ -160,7 +160,7 @@ PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
     else
       PVR_STRCPY(xbmcChannel.strInputFormat, "");
 
-    if (!g_bUseTimeshift)
+    if (!g_useTimeshift)
     {
       // self referencing so GetLiveStreamURL() gets triggered
       CStdString streamURL;
@@ -501,7 +501,7 @@ bool Dvb::OpenLiveStream(const PVR_CHANNEL& channelinfo)
     return true;
 
   SwitchChannel(channelinfo);
-  if (!g_bUseTimeshift)
+  if (!g_useTimeshift)
     return true;
 
   if (m_tsBuffer)
@@ -509,7 +509,7 @@ bool Dvb::OpenLiveStream(const PVR_CHANNEL& channelinfo)
   XBMC->Log(LOG_INFO, "Timeshift starts; url=%s",
       GetLiveStreamURL(channelinfo).c_str());
   m_tsBuffer = new TimeshiftBuffer(GetLiveStreamURL(channelinfo),
-      g_strTimeshiftBufferPath);
+      g_timeshiftBufferPath);
   return m_tsBuffer->IsValid();
 }
 
@@ -1247,10 +1247,10 @@ CStdString Dvb::BuildExtURL(const CStdString& baseURL, const char* path, ...)
 {
   CStdString url(baseURL);
   // simply add user@pass in front of the URL if username/password is set
-  if (!g_strUsername.empty() && !g_strPassword.empty())
+  if (!g_username.empty() && !g_password.empty())
   {
     CStdString strAuth;
-    strAuth.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
+    strAuth.Format("%s:%s@", g_username.c_str(), g_password.c_str());
     CStdString::size_type pos = url.find("://");
     if (pos != CStdString::npos)
       url.insert(pos + strlen("://"), strAuth);

@@ -134,6 +134,10 @@ bool MythConnection::IsConnected()
 bool MythConnection::TryReconnect()
 {
   int retval;
+
+  if (!g_szMythHostEther.IsEmpty())
+      XBMC->WakeOnLan(g_szMythHostEther);
+
   Lock();
   if (m_playback)
     retval = cmyth_conn_reconnect_playback(*m_conn_t);

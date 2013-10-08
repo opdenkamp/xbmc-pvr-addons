@@ -66,6 +66,10 @@ msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
 msgstr ""
 
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr ""
+
 msgctxt "#30019"
 msgid "General"
 msgstr ""

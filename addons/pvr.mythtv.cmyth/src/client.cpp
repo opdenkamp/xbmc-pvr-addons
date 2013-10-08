@@ -32,6 +32,7 @@ using namespace ADDON;
  * and exported to the other source files.
  */
 CStdString   g_szMythHostname          = DEFAULT_HOST;                     ///< The Host name or IP of the mythtv server
+CStdString   g_szMythHostEther         = "";                               ///< The Host MAC address of the mythtv server
 int          g_iMythPort               = DEFAULT_PORT;                     ///< The mythtv Port (default is 6543)
 CStdString   g_szDBUser                = DEFAULT_DB_USER;                  ///< The mythtv sql username (default is mythtv)
 CStdString   g_szDBPassword            = DEFAULT_DB_PASSWORD;              ///< The mythtv sql password (default is mythtv)
@@ -268,6 +269,16 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     XBMC->Log(LOG_ERROR, "Couldn't get 'demuxing' setting, falling back to '%b' as default", DEFAULT_HANDLE_DEMUXING);
     g_bDemuxing = DEFAULT_HANDLE_DEMUXING;
   }
+
+  /* Read setting "host_ether" from settings.xml */
+  if (XBMC->GetSetting("host_ether", buffer))
+    g_szMythHostEther = buffer;
+  else
+  {
+    /* If setting is unknown fallback to defaults */
+    g_szMythHostEther = "";
+  }
+  buffer[0] = 0;
 
   free (buffer);
 

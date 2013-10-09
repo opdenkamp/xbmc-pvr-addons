@@ -196,7 +196,7 @@ private:
   bool LoadChannels();
   DvbTimers_t LoadTimers();
   void TimerUpdates();
-  void GenerateTimer(const PVR_TIMER& timer, bool bNewtimer = true);
+  void GenerateTimer(const PVR_TIMER& timer, bool newtimer = true);
   int GetTimerId(const PVR_TIMER& timer);
 
   // helper functions
@@ -218,7 +218,7 @@ private:
   int m_timezone;
   struct { long long total, used; } m_diskspace;
 
-  CStdString m_strURL;
+  CStdString m_url;
   unsigned int m_currentChannel;
 
   /* channels + active (not hidden) channels */
@@ -229,14 +229,13 @@ private:
   DvbGroups_t m_groups;
   unsigned int m_groupAmount;
 
-  unsigned int m_iUpdateTimer;
-  bool m_bUpdateTimers;
-  bool m_bUpdateEPG;
+  bool m_updateTimers;
+  bool m_updateEPG;
   DvbRecordings_t m_recordings;
   TimeshiftBuffer *m_tsBuffer;
 
   DvbTimers_t m_timers;
-  unsigned int m_iClientIndexCounter;
+  unsigned int m_newTimerIndex;
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;

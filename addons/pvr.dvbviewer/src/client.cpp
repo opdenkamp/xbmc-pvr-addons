@@ -27,7 +27,7 @@
 
 using namespace ADDON;
 
-ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
+ADDON_STATUS m_curStatus = ADDON_STATUS_UNKNOWN;
 
 /* User adjustable settings are saved here.
  * Default values are defined inside client.h
@@ -128,7 +128,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   }
 
   XBMC->Log(LOG_DEBUG, "%s Creating DVBViewer PVR-Client", __FUNCTION__);
-  m_CurStatus = ADDON_STATUS_UNKNOWN;
+  m_curStatus = ADDON_STATUS_UNKNOWN;
 
   ADDON_ReadSettings();
 
@@ -138,21 +138,21 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     SAFE_DELETE(DvbData);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
-    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
-    return m_CurStatus;
+    m_curStatus = ADDON_STATUS_LOST_CONNECTION;
+    return m_curStatus;
   }
 
-  m_CurStatus = ADDON_STATUS_OK;
-  return m_CurStatus;
+  m_curStatus = ADDON_STATUS_OK;
+  return m_curStatus;
 }
 
 ADDON_STATUS ADDON_GetStatus()
 {
   /* check whether we're still connected */
-  if (m_CurStatus == ADDON_STATUS_OK && !DvbData->IsConnected())
-    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+  if (m_curStatus == ADDON_STATUS_OK && !DvbData->IsConnected())
+    m_curStatus = ADDON_STATUS_LOST_CONNECTION;
 
-  return m_CurStatus;
+  return m_curStatus;
 }
 
 void ADDON_Destroy()
@@ -161,7 +161,7 @@ void ADDON_Destroy()
   SAFE_DELETE(PVR);
   SAFE_DELETE(XBMC);
 
-  m_CurStatus = ADDON_STATUS_UNKNOWN;
+  m_curStatus = ADDON_STATUS_UNKNOWN;
 }
 
 bool ADDON_HasSettings()

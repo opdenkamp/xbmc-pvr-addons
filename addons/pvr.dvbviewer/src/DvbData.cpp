@@ -42,19 +42,17 @@ Dvb::Dvb()
   : m_connected(false), m_backendVersion(0)
 {
   // simply add user@pass in front of the URL if username/password is set
-  CStdString strAuth("");
+  CStdString auth("");
   if (!g_username.empty() && !g_password.empty())
-    strAuth.Format("%s:%s@", g_username.c_str(), g_password.c_str());
-  m_strURL.Format("http://%s%s:%u/", strAuth.c_str(), g_hostname.c_str(),
-      g_webPort);
+    auth.Format("%s:%s@", g_username.c_str(), g_password.c_str());
+  m_url.Format("http://%s%s:%u/", auth.c_str(), g_hostname.c_str(), g_webPort);
 
-  m_currentChannel     = 0;
-  m_iClientIndexCounter = 1;
+  m_currentChannel = 0;
+  m_newTimerIndex  = 1;
 
-  m_iUpdateTimer  = 0;
-  m_bUpdateTimers = false;
-  m_bUpdateEPG    = false;
-  m_tsBuffer      = NULL;
+  m_updateTimers = false;
+  m_updateEPG    = false;
+  m_tsBuffer     = NULL;
 }
 
 Dvb::~Dvb()
@@ -84,7 +82,7 @@ bool Dvb::Open()
 
   TimerUpdates();
 
-  XBMC->Log(LOG_INFO, "Starting separate client update thread...");
+  XBMC->Log(LOG_INFO, "Starting separate polling thread...");
   CreateThread();
 
   return IsRunning();
@@ -124,7 +122,7 @@ PVR_ERROR Dvb::GetDriveSpace(long long *total, long long *used)
 bool Dvb::SwitchChannel(const PVR_CHANNEL& channel)
 {
   m_currentChannel = channel.iUniqueId;
-  m_bUpdateEPG = true;
+  m_updateEPG = true;
   return true;
 }
 
@@ -376,7 +374,7 @@ PVR_ERROR Dvb::DeleteTimer(const PVR_TIMER& timer)
   if (timer.state == PVR_TIMER_STATE_RECORDING)
     PVR->TriggerRecordingUpdate();
 
-  m_bUpdateTimers = true;
+  m_updateTimers = true;
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -557,32 +555,33 @@ CStdString& Dvb::GetLiveStreamURL(const PVR_CHANNEL& channelinfo)
 
 void *Dvb::Process()
 {
+  int updateTimer = 0;
   XBMC->Log(LOG_DEBUG, "%s starting", __FUNCTION__);
 
   while (!IsStopped())
   {
     Sleep(1000);
-    ++m_iUpdateTimer;
+    ++updateTimer;
 
-    if (m_bUpdateEPG)
+    if (m_updateEPG)
     {
       Sleep(8000); /* Sleep enough time to let the recording service grab the EPG data */
       PVR->TriggerEpgUpdate(m_currentChannel);
-      m_bUpdateEPG = false;
+      m_updateEPG = false;
     }
 
-    if (m_iUpdateTimer > 60 || m_bUpdateTimers)
+    if (updateTimer > 60 || m_updateTimers)
     {
-      m_iUpdateTimer = 0;
+      updateTimer = 0;
 
       // Trigger Timer and Recording updates acording to the addon settings
       CLockObject lock(m_mutex);
-      XBMC->Log(LOG_INFO, "Perform timer/recording updates!");
+      XBMC->Log(LOG_INFO, "Performing timer/recording updates!");
 
-      if (m_bUpdateTimers)
+      if (m_updateTimers)
       {
         Sleep(500);
-        m_bUpdateTimers = false;
+        m_updateTimers = false;
       }
       TimerUpdates();
       PVR->TriggerRecordingUpdate();
@@ -896,7 +895,7 @@ DvbTimers_t Dvb::LoadTimers()
     CStdString DateTime = xTimer->Attribute("Date");
     DateTime.append(xTimer->Attribute("Start"));
     timer.startTime = ParseDateTime(DateTime, false);
-    timer.endTime = timer.startTime + atoi(xTimer->Attribute("Dur"))*60;
+    timer.endTime = timer.startTime + atoi(xTimer->Attribute("Dur")) * 60;
 
     CStdString Weekdays = xTimer->Attribute("Days");
     timer.iWeekdays = 0;
@@ -950,8 +949,7 @@ void Dvb::TimerUpdates()
     timer->iUpdateState = DVB_UPDATE_STATE_NONE;
 
   DvbTimers_t newtimers = LoadTimers();
-  unsigned int iUpdated = 0;
-  unsigned int iUnchanged = 0;
+  unsigned int updated = 0, unchanged = 0;
   for (DvbTimers_t::iterator newtimer = newtimers.begin();
       newtimer != newtimers.end(); ++newtimer)
   {
@@ -964,7 +962,7 @@ void Dvb::TimerUpdates()
       if (*timer == *newtimer)
       {
         timer->iUpdateState = newtimer->iUpdateState = DVB_UPDATE_STATE_FOUND;
-        ++iUnchanged;
+        ++unchanged;
       }
       else
       {
@@ -981,12 +979,12 @@ void Dvb::TimerUpdates()
         timer->iPriority    = newtimer->iPriority;
         timer->iFirstDay    = newtimer->iFirstDay;
         timer->state        = newtimer->state;
-        ++iUpdated;
+        ++updated;
       }
     }
   }
 
-  unsigned int iRemoved = 0;
+  unsigned int removed = 0;
   for (DvbTimers_t::iterator it = m_timers.begin(); it != m_timers.end();)
   {
     if (it->iUpdateState == DVB_UPDATE_STATE_NONE)
@@ -994,38 +992,40 @@ void Dvb::TimerUpdates()
       XBMC->Log(LOG_DEBUG, "%s Removed timer: '%s', ClientIndex: %u",
           __FUNCTION__, it->strTitle.c_str(), it->iClientIndex);
       it = m_timers.erase(it);
-      ++iRemoved;
+      ++removed;
     }
     else
       ++it;
   }
 
-  unsigned int iNew = 0;
+  unsigned int added = 0;
   for (DvbTimers_t::iterator it = newtimers.begin(); it != newtimers.end(); ++it)
   {
     if (it->iUpdateState == DVB_UPDATE_STATE_NEW)
     {
-      it->iClientIndex = m_iClientIndexCounter;
+      it->iClientIndex = m_newTimerIndex;
       XBMC->Log(LOG_DEBUG, "%s New timer: '%s', ClientIndex: %u",
-          __FUNCTION__, it->strTitle.c_str(), m_iClientIndexCounter);
+          __FUNCTION__, it->strTitle.c_str(), m_newTimerIndex);
       m_timers.push_back(*it);
-      ++m_iClientIndexCounter;
-      ++iNew;
+      ++m_newTimerIndex;
+      ++added;
     }
   }
 
-  XBMC->Log(LOG_DEBUG, "%s Timers update: removed=%u, untouched=%u, updated=%u, new=%u",
-      __FUNCTION__, iRemoved, iUnchanged, iUpdated, iNew);
+  XBMC->Log(LOG_DEBUG, "%s Timers update: removed=%u, untouched=%u, updated=%u, added=%u",
+      __FUNCTION__, removed, unchanged, updated, added);
 
-  if (iRemoved || iUpdated || iNew)
+  if (removed || updated || added)
   {
     XBMC->Log(LOG_INFO, "Changes in timerlist detected, triggering an update!");
     PVR->TriggerTimerUpdate();
   }
 }
 
-void Dvb::GenerateTimer(const PVR_TIMER& timer, bool bNewTimer)
+void Dvb::GenerateTimer(const PVR_TIMER& timer, bool newTimer)
 {
+  // http://en.dvbviewer.tv/wiki/Recording_Service_Web_API#Add_a_timer
+
   XBMC->Log(LOG_DEBUG, "%s iChannelUid=%u title='%s' epgid=%d",
       __FUNCTION__, timer.iClientChannelUid, timer.strTitle, timer.iEpgUid);
 
@@ -1039,33 +1039,33 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool bNewTimer)
     endTime += timer.iMarginEnd * 60;
   }
 
-  int dor = ((startTime + m_timezone * 60) / DAY_SECS) + DELPHI_DATE;
+  int date = ((startTime + m_timezone * 60) / DAY_SECS) + DELPHI_DATE;
   timeinfo = localtime(&startTime);
   int start = timeinfo->tm_hour * 60 + timeinfo->tm_min;
   timeinfo = localtime(&endTime);
   int stop = timeinfo->tm_hour * 60 + timeinfo->tm_min;
 
-  char strWeek[8] = "-------";
+  char repeat[8] = "-------";
   for (int i = 0; i < 7; ++i)
   {
     if (timer.iWeekdays & (1 << i))
-      strWeek[i] = 'T';
+      repeat[i] = 'T';
   }
 
   uint64_t iChannelId = m_channels[timer.iClientChannelUid - 1]->backendIds.front();
   CStdString url;
-  if (bNewTimer)
+  if (newTimer)
     url = BuildURL("api/timeradd.html?ch=%"PRIu64"&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
-        iChannelId, dor, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle).c_str());
+        iChannelId, date, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
   else
   {
     int enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
     url = BuildURL("api/timeredit.html?id=%d&ch=%"PRIu64"&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
-        GetTimerId(timer), iChannelId, dor, enabled, start, stop, timer.iPriority, strWeek, URLEncodeInline(timer.strTitle).c_str());
+        GetTimerId(timer), iChannelId, date, enabled, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
   }
 
   GetHttpXML(url);
-  m_bUpdateTimers = true;
+  m_updateTimers = true;
 }
 
 int Dvb::GetTimerId(const PVR_TIMER& timer)
@@ -1235,7 +1235,7 @@ unsigned int Dvb::GetChannelUid(const uint64_t channelId)
 
 CStdString Dvb::BuildURL(const char* path, ...)
 {
-  CStdString url(m_strURL);
+  CStdString url(m_url);
   va_list argList;
   va_start(argList, path);
   url.AppendFormatV(path, argList);
@@ -1249,11 +1249,11 @@ CStdString Dvb::BuildExtURL(const CStdString& baseURL, const char* path, ...)
   // simply add user@pass in front of the URL if username/password is set
   if (!g_username.empty() && !g_password.empty())
   {
-    CStdString strAuth;
-    strAuth.Format("%s:%s@", g_username.c_str(), g_password.c_str());
+    CStdString auth;
+    auth.Format("%s:%s@", g_username.c_str(), g_password.c_str());
     CStdString::size_type pos = url.find("://");
     if (pos != CStdString::npos)
-      url.insert(pos + strlen("://"), strAuth);
+      url.insert(pos + strlen("://"), auth);
   }
   va_list argList;
   va_start(argList, path);

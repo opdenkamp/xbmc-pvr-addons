@@ -98,6 +98,12 @@ std::string ToThumbFileName(const char* strChannelName)
   strThumbName.Replace(":","_");
   strThumbName.Replace("/","_");
   strThumbName.Replace("\\","_");
+  strThumbName.Replace(">","_");
+  strThumbName.Replace("<","_");
+  strThumbName.Replace("*","_");
+  strThumbName.Replace("?","_");
+  strThumbName.Replace("\"","_");
+  strThumbName.Replace("|","_");
 
   return strThumbName;
 }

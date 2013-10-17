@@ -1092,7 +1092,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     tag.iGenreType = genre & 0xF0;
 
     // Fill info from recording rule if possible
-    MythRecordingRuleNode *node = m_scheduleManager->FindRuleById(it->second->RecordID());
+    boost::shared_ptr<MythRecordingRuleNode> node = m_scheduleManager->FindRuleById(it->second->RecordID());
     if (node)
     {
       MythRecordingRule rule = node->GetRule();
@@ -1286,7 +1286,7 @@ PVR_ERROR PVRClientMythTV::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete
     CLockObject lock(m_lock);
     if (!m_rec.IsNull() && m_rec.IsLiveRecording())
     {
-      MythProgramInfo *recording = m_scheduleManager->FindUpComingByIndex(timer.iClientIndex);
+      boost::shared_ptr<MythProgramInfo> recording = m_scheduleManager->FindUpComingByIndex(timer.iClientIndex);
       if (recording && this->IsMyLiveTVRecording(*recording))
       {
         XBMC->Log(LOG_DEBUG, "%s - Timer %i is a quick recording. Toggling Record off", __FUNCTION__, timer.iClientIndex);

@@ -153,7 +153,7 @@ ScheduleList MythScheduleManager::GetUpcomingRecordings()
   CLockObject lock(m_lock);
   for (RecordingList::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
-    recordings.push_back(std::make_pair(it->first, it->second.get()));
+    recordings.push_back(std::make_pair(it->first, it->second));
   }
   return recordings;
 }
@@ -173,11 +173,11 @@ MythScheduleManager::MSM_ERROR MythScheduleManager::DeleteRecording(unsigned int
 {
   CLockObject lock(m_lock);
 
-  MythProgramInfo *recording = this->FindUpComingByIndex(index);
+  boost::shared_ptr<MythProgramInfo> recording = this->FindUpComingByIndex(index);
   if (!recording)
     return MSM_ERROR_FAILED;
 
-  MythRecordingRuleNode *node = this->FindRuleById(recording->RecordID());
+  boost::shared_ptr<MythRecordingRuleNode> node = this->FindRuleById(recording->RecordID());
   if (node)
   {
     XBMC->Log(LOG_DEBUG, "%s - %u : Found rule %u type %d", __FUNCTION__, index, node->m_rule.RecordID(), node->m_rule.Type());
@@ -243,14 +243,14 @@ MythScheduleManager::MSM_ERROR MythScheduleManager::DisableRecording(unsigned in
 {
   CLockObject lock(m_lock);
 
-  MythProgramInfo *recording = this->FindUpComingByIndex(index);
+  boost::shared_ptr<MythProgramInfo> recording = this->FindUpComingByIndex(index);
   if (!recording)
     return MSM_ERROR_FAILED;
 
   if (recording->Status() == RS_INACTIVE || recording->Status() == RS_DONT_RECORD)
     return MSM_ERROR_SUCCESS;
 
-  MythRecordingRuleNode *node = this->FindRuleById(recording->RecordID());
+  boost::shared_ptr<MythRecordingRuleNode> node = this->FindRuleById(recording->RecordID());
   if (node)
   {
     XBMC->Log(LOG_DEBUG, "%s - %u : Found rule %u type %d", __FUNCTION__, index, node->m_rule.RecordID(), node->m_rule.Type());
@@ -335,11 +335,11 @@ MythScheduleManager::MSM_ERROR MythScheduleManager::EnableRecording(unsigned int
 {
   CLockObject lock(m_lock);
 
-  MythProgramInfo *recording = this->FindUpComingByIndex(index);
+  boost::shared_ptr<MythProgramInfo> recording = this->FindUpComingByIndex(index);
   if (!recording)
     return MSM_ERROR_FAILED;
 
-  MythRecordingRuleNode *node = this->FindRuleById(recording->RecordID());
+  boost::shared_ptr<MythRecordingRuleNode> node = this->FindRuleById(recording->RecordID());
   if (node)
   {
     XBMC->Log(LOG_DEBUG, "%s - %u : Found rule %u type %d", __FUNCTION__, index, node->m_rule.RecordID(), node->m_rule.Type());
@@ -424,11 +424,11 @@ MythScheduleManager::MSM_ERROR MythScheduleManager::UpdateRecording(unsigned int
 {
   CLockObject lock(m_lock);
 
-  MythProgramInfo *recording = this->FindUpComingByIndex(index);
+  boost::shared_ptr<MythProgramInfo> recording = this->FindUpComingByIndex(index);
   if (!recording)
     return MSM_ERROR_FAILED;
 
-  MythRecordingRuleNode *node = this->FindRuleById(recording->RecordID());
+  boost::shared_ptr<MythRecordingRuleNode> node = this->FindRuleById(recording->RecordID());
   if (node)
   {
     XBMC->Log(LOG_DEBUG, "%s - %u : Found rule %u type %d", __FUNCTION__, index, node->m_rule.RecordID(), node->m_rule.Type());
@@ -538,14 +538,14 @@ MythScheduleManager::MSM_ERROR MythScheduleManager::UpdateRecording(unsigned int
   return MSM_ERROR_NOT_IMPLEMENTED;
 }
 
-MythRecordingRuleNode *MythScheduleManager::FindRuleById(unsigned int recordID) const
+boost::shared_ptr<MythRecordingRuleNode> MythScheduleManager::FindRuleById(unsigned int recordID) const
 {
   CLockObject lock(m_lock);
 
   NodeById::const_iterator it = m_rulesById.find(recordID);
   if (it != m_rulesById.end())
-    return it->second.get();
-  return NULL;
+    return it->second;
+  return boost::shared_ptr<MythRecordingRuleNode>();
 }
 
 ScheduleList MythScheduleManager::FindUpComingByRuleId(unsigned int recordID) const
@@ -560,21 +560,21 @@ ScheduleList MythScheduleManager::FindUpComingByRuleId(unsigned int recordID) co
     {
       RecordingList::const_iterator recordingIt = m_recordings.find(it->second);
       if (recordingIt != m_recordings.end())
-        found.push_back(std::make_pair(it->second, recordingIt->second.get()));
+        found.push_back(std::make_pair(it->second, recordingIt->second));
     }
   }
   return found;
 }
 
-MythProgramInfo *MythScheduleManager::FindUpComingByIndex(unsigned int index) const
+boost::shared_ptr<MythProgramInfo> MythScheduleManager::FindUpComingByIndex(unsigned int index) const
 {
   CLockObject lock(m_lock);
 
   RecordingList::const_iterator it = m_recordings.find(index);
   if (it != m_recordings.end())
-    return it->second.get();
+    return it->second;
   else
-    return NULL;
+    return boost::shared_ptr<MythProgramInfo>();
 }
 
 void MythScheduleManager::Update()

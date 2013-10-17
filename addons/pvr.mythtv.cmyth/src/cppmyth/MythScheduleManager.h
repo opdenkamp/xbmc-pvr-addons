@@ -34,7 +34,7 @@
 typedef std::vector<MythRecordingRule> OverrideRuleList;
 
 // Schedule element is pair < index of schedule , program info of schedule >
-typedef std::vector<std::pair<unsigned int, MythProgramInfo*> > ScheduleList;
+typedef std::vector<std::pair<unsigned int, boost::shared_ptr<MythProgramInfo> > > ScheduleList;
 
 class MythRecordingRuleNode
 {
@@ -83,9 +83,9 @@ public:
   MSM_ERROR EnableRecording(unsigned int index);
   MSM_ERROR UpdateRecording(unsigned int index, MythRecordingRule &newrule);
 
-  MythRecordingRuleNode *FindRuleById(unsigned int recordID) const;
+  boost::shared_ptr<MythRecordingRuleNode> FindRuleById(unsigned int recordID) const;
   ScheduleList FindUpComingByRuleId(unsigned int recordID) const;
-  MythProgramInfo *FindUpComingByIndex(unsigned int index) const;
+  boost::shared_ptr<MythProgramInfo> FindUpComingByIndex(unsigned int index) const;
 
   void Update();
 

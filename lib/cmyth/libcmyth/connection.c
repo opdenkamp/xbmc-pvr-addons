@@ -255,7 +255,7 @@ cmyth_connect_addr(struct addrinfo* addr, char *server, char *service,
 	my_fd = fd;
 	if (connect(fd, addr->ai_addr, addr->ai_addrlen) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
-			  "%s: connect failed on port %s to '%s' (%d)\n",
+			  "%s: failed to connect to %s:%s (%d)\n",
 			  __FUNCTION__, server, service, errno);
 		closesocket(fd);
 #ifndef _MSC_VER
@@ -368,7 +368,7 @@ cmyth_reconnect_addr(cmyth_conn_t conn, struct addrinfo* addr)
 #endif
 	my_fd = fd;
 	if (connect(fd, addr->ai_addr, addr->ai_addrlen) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: connect failed on port %"PRIu16" to '%s' (%d)\n",
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: failed to connect to %s:%"PRIu16" (%d)\n",
 			  __FUNCTION__, conn->server, conn->port, errno);
 		closesocket(fd);
 #ifndef _MSC_VER

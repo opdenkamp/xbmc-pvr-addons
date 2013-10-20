@@ -213,7 +213,11 @@ void cVNSIServer::Action(void)
   }
   else
   {
+#if VDRVERSNUM >= 20102
+    cmd = cString::sprintf("rm -f %s/*.vnsi", cVideoDirectory::Name());
+#else
     cmd = cString::sprintf("rm -f %s/*.vnsi", VideoDirectory);
+#endif
   }
   int ret = system(cmd);
 

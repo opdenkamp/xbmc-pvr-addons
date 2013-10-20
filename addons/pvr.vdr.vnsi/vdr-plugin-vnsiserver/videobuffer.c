@@ -386,7 +386,11 @@ bool cVideoBufferFile::Init()
       m_Filename = cString::sprintf("%s/Timeshift-%d.vnsi", TimeshiftBufferDir, m_ClientID);
   }
   else
+#if VDRVERSNUM >= 20102
+    m_Filename = cString::sprintf("%s/Timeshift-%d.vnsi", cVideoDirectory::Name(), m_ClientID);
+#else
     m_Filename = cString::sprintf("%s/Timeshift-%d.vnsi", VideoDirectory, m_ClientID);
+#endif
 
   m_Fd = open(m_Filename, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU);
   if (m_Fd == -1)

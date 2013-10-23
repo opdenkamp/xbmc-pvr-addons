@@ -39,7 +39,7 @@ cRecording::cRecording(void)
   episodenumbertotal = 0;
   episodepart = 0;
   episodeparttotal = 0;
-  ischanged = false;
+  isfullywatched = false;
   ispartofseries = false;
   ispartialrecording = false;
   ispremiere = false;
@@ -62,12 +62,8 @@ cRecording::cRecording(void)
   schedulepriority = ArgusTV::Normal;
   seriesnumber = 0;
   starrating = 0.0;
-  starttime = 0;
-  stoptime = 0;
   subtitle = "";
-  thumbnailfilename = "";
   title = "";
-  videoaspect = ArgusTV::Unknown;
 }
 
 cRecording::~cRecording(void)
@@ -78,6 +74,7 @@ bool cRecording::Parse(const Json::Value& data)
 {
   int offset;
   std::string t;
+  id = data["Id"].asInt();
   actors = data["Actors"].asString();
   category = data["Category"].asString();
   channeldisplayname = data["ChannelDisplayName"].asString();
@@ -90,7 +87,7 @@ bool cRecording::Parse(const Json::Value& data)
   episodenumbertotal = data["EpisodeNumberTotal"].asInt();
   episodepart = data["EpisodePart"].asInt();
   episodeparttotal = data["EpisodePartTotal"].asInt();
-  ischanged = data["IsChanged"].asBool();
+  isfullywatched = data["IsFullyWatched"].asBool();
   ispartofseries = data["IsPartOfSeries"].asBool();
   ispartialrecording = data["IsPartialRecording"].asBool();
   ispremiere = data["IsPremiere"].asBool();
@@ -119,14 +116,8 @@ bool cRecording::Parse(const Json::Value& data)
   schedulepriority = (ArgusTV::SchedulePriority) data["SchedulePriority"].asInt();
   seriesnumber = data["SeriesNumber"].asInt();
   starrating = data["StarRating"].asDouble();
-  t = data["StartTime"].asString();
-  starttime = ArgusTV::WCFDateToTimeT(t, offset);
-  t = data["StopTime"].asString();
-  stoptime = ArgusTV::WCFDateToTimeT(t, offset);
   subtitle = data["SubTitle"].asString();
-  thumbnailfilename = data["ThumbnailFileName"].asString();
   title = data["Title"].asString();
-  videoaspect = (ArgusTV::VideoAspectRatio) data["VideoAspect"].asInt();
 
   return true;
 }

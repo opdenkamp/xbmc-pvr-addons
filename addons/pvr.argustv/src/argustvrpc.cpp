@@ -705,25 +705,25 @@ namespace ArgusTV
     return retval;
   }
 
-  int GetRecordingsForTitleUsingPOSTData(const std::string& title, Json::Value& response)
+  int GetFullRecordingsForTitle(const std::string& title, Json::Value& response)
   {
-    XBMC->Log(LOG_DEBUG, "GetRecordingsForTitleUsingPOSTData(\"%s\")", title.c_str());
-    std::string command = "ArgusTV/Control/GetRecordingsForProgramTitle/Television?includeNonExisting=false";
-    std::string arguments = "\"" + title + "\"";
+    XBMC->Log(LOG_DEBUG, "GetFullRecordingsForTitle(\"%s\")", title.c_str());
+    std::string command = "ArgusTV/Control/GetFullRecordings/Television?includeNonExisting=false";
+    Json::Value jsArgument;
+    jsArgument["ScheduleId"] = Json::nullValue;
+    jsArgument["ProgramTitle"] = title;
+    jsArgument["Category"] = Json::nullValue;
+    jsArgument["ChannelId"] = Json::nullValue;
+    Json::FastWriter writer;
+    std::string arguments = writer.write(jsArgument);
 
     int retval = ArgusTV::ArgusTVJSONRPC(command, arguments, response);
     if (retval < 0)
     {
-      XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingPOSTData remote call failed.");
+      XBMC->Log(LOG_NOTICE, "GetFullRecordingsForTitle remote call failed. (%d)", retval);
     }
+
     return retval;
-  }
-
-  int GetRecordingsForTitle(const std::string& title, Json::Value& response)
-  {
-    XBMC->Log(LOG_DEBUG, "GetRecordingsForTitle");
-
-    return GetRecordingsForTitleUsingPOSTData(title, response);
   }
 
   int GetRecordingById(const std::string& id, Json::Value& response)

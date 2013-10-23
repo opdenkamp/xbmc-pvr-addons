@@ -92,7 +92,6 @@
     <ClCompile Include="..\..\src\pvrclient-argustv.cpp" />
     <ClCompile Include="..\..\src\recording.cpp" />
     <ClCompile Include="..\..\src\recordinggroup.cpp" />
-    <ClCompile Include="..\..\src\recordingsummary.cpp" />
     <ClCompile Include="..\..\src\tools.cpp" />
     <ClCompile Include="..\..\src\upcomingrecording.cpp" />
     <ClCompile Include="..\..\src\uri.cpp" />
@@ -112,7 +111,6 @@
     <ClInclude Include="..\..\src\pvrclient-argustv.h" />
     <ClInclude Include="..\..\src\recording.h" />
     <ClInclude Include="..\..\src\recordinggroup.h" />
-    <ClInclude Include="..\..\src\recordingsummary.h" />
     <ClInclude Include="..\..\src\tools.h" />
     <ClInclude Include="..\..\src\upcomingrecording.h" />
     <ClInclude Include="..\..\src\uri.h" />

@@ -1309,56 +1309,6 @@ namespace ArgusTV
     return wcfdate;
   }
 
-  // transform [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
-  // into      [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
-  std::string ToCIFS(std::string& UNCName)
-  {
-    std::string CIFSname = UNCName;
-    std::string SMBPrefix = "smb://";
-    if (g_szUser.length() > 0)
-    {
-      SMBPrefix += g_szUser;
-      if (g_szPass.length() > 0)
-      {
-        SMBPrefix += ":" + g_szPass;
-      }
-    }
-    else
-    {
-      SMBPrefix += "Guest";
-    }
-    SMBPrefix += "@";
-    size_t found;
-    while ((found = CIFSname.find("\\")) != std::string::npos)
-    {
-      CIFSname.replace(found, 1, "/");
-    }
-    CIFSname.erase(0,2);
-    CIFSname.insert(0, SMBPrefix);
-    return CIFSname;
-  }
-
-
-  // transform [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
-  // into      [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
-  std::string ToUNC(std::string& CIFSName)
-  {
-    std::string UNCname = CIFSName;
-
-    UNCname.erase(0,6);
-    size_t found = UNCname.find("@");
-    if (found != std::string::npos) {
-      UNCname.erase(0, found+1);
-    }
-
-    while ((found = UNCname.find("/")) != std::string::npos)
-    {
-      UNCname.replace(found, 1, "\\");
-    }
-    UNCname.insert(0, "\\\\");
-    return UNCname;
-  }
-
 }
 
    

@@ -36,6 +36,10 @@ namespace Json
   void printValueTree( const Json::Value& value, const std::string& path = "." );
 }
 
+std::string ToCIFS(std::string& UNCName);
+std::string ToUNC(std::string& CIFSName);
+std::string ToUNC(const char* CIFSName);
+
 #if defined(TARGET_WINDOWS)
 namespace UTF8Util
 {

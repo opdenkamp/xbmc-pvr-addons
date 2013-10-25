@@ -1,3 +1,5 @@
+v1.8.169 (28-09-2013)
+- add timeshift buffer functions
 v1.8.168 (12-09-2013)
 - Minimum ARGUS TV version 2.1 required
 - Switched to integer ID's

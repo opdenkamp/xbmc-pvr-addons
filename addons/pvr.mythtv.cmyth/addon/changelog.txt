@@ -1,3 +1,11 @@
+v1.6.11
+- Added support for MythTV protocol 76 and 77 (MythTV 0.27)
+- Allow the backend to shutdown (by using monitor and playback connections)
+- Reduced startup time (Faster loading of channels)
+- Fixed start time for instant recordings
+- Fixed several smaller memory and multithreading issues
+- Refactored & cleaned up libcmyth (epginfo)
+
 v1.6.10
 - Fixed crash when setting up Live TV (in rare cases)
 - Fixed issue with not updated recording list (Daylight Saving Time)

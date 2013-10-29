@@ -32,6 +32,7 @@
 #include <malloc.h>
 #include <winsock2.h>
 #include <Ws2tcpip.h>
+#include <time.h>
 
 #pragma warning(disable:4267)
 #pragma warning(disable:4996)
@@ -48,6 +49,7 @@ typedef SOCKET cmyth_socket_t;
 typedef int socklen_t;
 
 #define snprintf _snprintf
+#define gmtime_r(a, b) gmtime_s(b, a)
 #define sleep(a) Sleep(a*1000)
 #define usleep(a) Sleep(a/1000)
 

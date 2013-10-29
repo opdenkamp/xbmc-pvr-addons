@@ -16,6 +16,7 @@
     <ClCompile Include="..\libcmyth\commbreak.c" />
     <ClCompile Include="..\libcmyth\connection.c" />
     <ClCompile Include="..\libcmyth\debug.c" />
+    <ClCompile Include="..\libcmyth\epginfo.c" />
     <ClCompile Include="..\libcmyth\event.c" />
     <ClCompile Include="..\libcmyth\file.c" />
     <ClCompile Include="..\libcmyth\freespace.c" />

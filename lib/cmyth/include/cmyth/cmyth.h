@@ -262,6 +262,46 @@ extern cmyth_conn_t cmyth_conn_connect_event(char *server,
 extern int cmyth_conn_reconnect_event(cmyth_conn_t conn);
 
 /**
+ * Create a monitor connection to a backend.
+ * \param server server hostname or ip address
+ * \param port port number to connect on
+ * \param buflen buffer size for the connection to use
+ * \param tcp_rcvbuf if non-zero, the TCP receive buffer size for the socket
+ * \return control handle
+ */
+extern cmyth_conn_t cmyth_conn_connect_monitor(char *server,
+					    uint16_t port,
+					    uint32_t buflen, int32_t tcp_rcvbuf);
+
+/**
+ * Reconnect monitor connection to a backend.
+ * \param control control handle
+ * \return success: 1
+ * \return failure: 0
+ */
+extern int cmyth_conn_reconnect_monitor(cmyth_conn_t control);
+
+/**
+ * Create a playback connection to a backend.
+ * \param server server hostname or ip address
+ * \param port port number to connect on
+ * \param buflen buffer size for the connection to use
+ * \param tcp_rcvbuf if non-zero, the TCP receive buffer size for the socket
+ * \return control handle
+ */
+extern cmyth_conn_t cmyth_conn_connect_playback(char *server,
+					    uint16_t port,
+					    uint32_t buflen, int32_t tcp_rcvbuf);
+
+/**
+ * Reconnect playback connection to a backend.
+ * \param control control handle
+ * \return success: 1
+ * \return failure: 0
+ */
+extern int cmyth_conn_reconnect_playback(cmyth_conn_t control);
+
+/**
  * Create a file connection to a backend for reading a recording.
  * \param prog program handle
  * \param control control handle
@@ -494,6 +534,8 @@ extern cmyth_posmap_t cmyth_recorder_get_position_map(cmyth_recorder_t rec,
 						      uint32_t start,
 						      uint32_t end);
 
+extern cmyth_posmap_t cmyth_recorder_get_duration_map(cmyth_recorder_t rec, uint32_t start, uint32_t end);
+
 extern cmyth_proginfo_t cmyth_recorder_get_recording(cmyth_recorder_t rec);
 
 extern int cmyth_recorder_stop_playing(cmyth_recorder_t rec);
@@ -649,6 +691,8 @@ extern int32_t cmyth_livetv_read(cmyth_recorder_t rec,
 
 extern int cmyth_mysql_tuner_type_check(cmyth_database_t db, cmyth_recorder_t rec, int check_tuner_enabled);
 
+extern int cmyth_mysql_keep_livetv_recording(cmyth_database_t db, cmyth_proginfo_t prog, int8_t keep);
+
 /*
  * -----------------------------------------------------------------
  * Database Operations
@@ -718,6 +762,8 @@ extern cmyth_timestamp_t cmyth_timestamp_create(void);
 extern cmyth_timestamp_t cmyth_timestamp_from_string(const char *str);
 
 extern cmyth_timestamp_t cmyth_timestamp_from_unixtime(time_t l);
+
+extern cmyth_timestamp_t cmyth_timestamp_utc_from_unixtime(time_t l);
 
 extern time_t cmyth_timestamp_to_unixtime(cmyth_timestamp_t ts);
 
@@ -803,11 +849,13 @@ extern int cmyth_proginfo_check_recording(cmyth_conn_t control,
  * Delete a program.
  * \param control backend control handle
  * \param prog proginfo handle
+ * \param force force deletion
+ * \param forget allow to record the recording
  * \return success: 0
  * \return failure: -(errno)
  */
 extern int cmyth_proginfo_delete_recording(cmyth_conn_t control,
-					   cmyth_proginfo_t prog);
+					   cmyth_proginfo_t prog, uint8_t force, uint8_t forget);
 
 /**
  * Delete a program such that it may be recorded again.
@@ -873,6 +921,13 @@ extern uint16_t cmyth_proginfo_season(cmyth_proginfo_t prog);
  * \return episode
  */
 extern uint16_t cmyth_proginfo_episode(cmyth_proginfo_t prog);
+
+/**
+ * Retrieve the syndicated episode of a program.
+ * \param prog proginfo handle
+ * \return null-terminated string
+ */
+extern char *proginfo_syndicated_episode(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the category of a program.
@@ -1073,6 +1128,45 @@ extern char *cmyth_proginfo_chanicon(cmyth_proginfo_t prog);
  */
 extern uint16_t cmyth_proginfo_year(cmyth_proginfo_t prog);
 
+/**
+ * Retrieve the part number for this program info
+ * \param prog proginfo handle
+ * \return part number
+ */
+extern uint16_t cmyth_proginfo_partnumber(cmyth_proginfo_t prog);
+
+/**
+ * Retrieve the part total for this program info
+ * \param prog proginfo handle
+ * \return part total
+ */
+extern uint16_t cmyth_proginfo_parttotal(cmyth_proginfo_t prog);
+
+/**
+ * Retrieve the watched status for this program info
+ * \param db database connection
+ * \param prog proginfo handle
+ * \param watchedStat returned status
+ * \return success: 1 = program found, 0 = program not found
+ * \return failure: -(errno)
+ */
+extern int cmyth_mysql_set_watched_status(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat);
+
+/**
+ * Retrieve the storage group for this program info
+ * \param prog proginfo handle
+ * \return null-terminated string
+ */
+extern char *cmyth_proginfo_storagegroup(cmyth_proginfo_t prog);
+
+/**
+ * Query to generate a pixmap for this program info
+ * \param prog proginfo handle
+ * \return success: 0
+ * \return failure: -(errno)
+ */
+extern int cmyth_proginfo_generate_pixmap(cmyth_conn_t control, cmyth_proginfo_t prog);
+
 /*
  * -----------------------------------------------------------------
  * Program List Operations
@@ -1139,9 +1233,9 @@ extern int cmyth_file_set_timeout(cmyth_file_t file, int32_t fast);
 extern cmyth_freespace_t cmyth_freespace_create(void);
 
 /*
- * -------
+ * -----------------------------------------------------------------
  * Bookmark,Commercial Skip Operations
- * -------
+ * -----------------------------------------------------------------
  */
 extern int64_t cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern int64_t cmyth_mysql_get_bookmark_offset(cmyth_database_t db, uint32_t chanid, int64_t mark, time_t starttime, int mode);
@@ -1150,33 +1244,15 @@ extern int64_t cmyth_mysql_get_bookmark_mark(cmyth_database_t db, cmyth_proginfo
 extern int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, int64_t bookmark);
 extern cmyth_commbreaklist_t cmyth_commbreaklist_create(void);
 extern cmyth_commbreak_t cmyth_commbreak_create(void);
-extern cmyth_commbreaklist_t cmyth_mysql_get_commbreaklist(cmyth_database_t db, cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern cmyth_commbreaklist_t cmyth_get_commbreaklist(cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern cmyth_commbreaklist_t cmyth_get_cutlist(cmyth_conn_t conn, cmyth_proginfo_t prog);
 extern int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err, cmyth_commbreaklist_t breaklist, int count);
 
 /*
- * mysql info
+ * -----------------------------------------------------------------
+ * Recording Groups Operations
+ * -----------------------------------------------------------------
  */
-
-
-typedef struct cmyth_program {
-	uint32_t chanid;
-	char callsign[21];
-	char name[65];
-	uint32_t sourceid;
-	char title[129];
-	char subtitle[129];
-	char description[1921];
-	time_t starttime;
-	time_t endtime;
-	char programid[65];
-	char seriesid[65];
-	char category[65];
-	char category_type[65];
-	int8_t rec_status;
-	uint32_t channum;
-} cmyth_program_t;
 
 typedef struct cmyth_recgrougs {
 	char recgroups[33];
@@ -1184,20 +1260,13 @@ typedef struct cmyth_recgrougs {
 
 extern int cmyth_mysql_get_recgroups(cmyth_database_t, cmyth_recgroups_t **);
 
-extern int cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_program_t **prog, time_t starttime, char *program_name);
-extern int cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_program_t **prog,  time_t starttime, char *program_name);
-extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_program_t *prog, time_t starttime, char *program_name, uint32_t chanid);
-extern int cmyth_mysql_get_guide(cmyth_database_t db, cmyth_program_t **prog, uint32_t chanid, time_t starttime, time_t endtime);
+/*
+ * -----------------------------------------------------------------
+ * mysql info
+ * -----------------------------------------------------------------
+ */
+
 extern int cmyth_mysql_testdb_connection(cmyth_database_t db,char **message);
-extern char *cmyth_mysql_escape_chars(cmyth_database_t db, char * string);
-extern int cmyth_mysql_get_commbreak_list(cmyth_database_t db, uint32_t chanid, time_t start_ts_dt, cmyth_commbreaklist_t breaklist, uint32_t conn_version);
-
-extern int cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_program_t **prog);
-
-extern int cmyth_get_delete_list(cmyth_conn_t, char *, cmyth_proglist_t);
-
-extern int cmyth_mysql_set_watched_status(cmyth_database_t db, cmyth_proginfo_t prog, int watchedStat);
-
 
 /*
  * -----------------------------------------------------------------
@@ -1963,6 +2032,14 @@ extern char *cmyth_channel_icon(cmyth_channel_t channel);
 extern uint8_t cmyth_channel_visible(cmyth_channel_t channel);
 
 /**
+ * Retrieves the 'radio' field of a channel structure.
+ * \param channel
+ * \return success: radio flag
+ * \return failure: -(errno)
+ */
+extern uint8_t cmyth_channel_radio(cmyth_channel_t channel);
+
+/**
  * Retrieves the 'sourceid' field of a channel structure.
  * \param channel
  * \return success: sourceid
@@ -2054,13 +2131,13 @@ extern cmyth_storagegroup_filelist_t cmyth_storagegroup_get_filelist(cmyth_conn_
  * Before forgetting the reference to this storagegroup file structure
  * the caller must call ref_release().
  * \param control
- * \param storagegroup
  * \param hostname
+ * \param storagegroup
  * \param filename
  * \return success: storage file handle
  * \return failure: NULL
  */
-extern cmyth_storagegroup_file_t cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *storagegroup, char *hostname, char *filename);
+extern cmyth_storagegroup_file_t cmyth_storagegroup_get_fileinfo(cmyth_conn_t control, char *hostname, char *storagegroup, char *filename);
 
 /**
  * Retrieves the number of elements in the storagegroup files list structure.
@@ -2279,5 +2356,43 @@ extern int64_t cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_pr
  * \return failure: -(errno)
  */
 extern int cmyth_mysql_get_recording_artwork(cmyth_database_t db, cmyth_proginfo_t prog, char **coverart, char **fanart, char **banner);
+
+/*
+ * -----------------------------------------------------------------
+ * EPG info
+ * -----------------------------------------------------------------
+ */
+
+struct cmyth_epginfo;
+
+typedef struct cmyth_epginfo *cmyth_epginfo_t;
+
+struct cmyth_epginfolist;
+typedef struct cmyth_epginfolist *cmyth_epginfolist_t;
+
+extern cmyth_epginfo_t cmyth_epginfolist_get_item(cmyth_epginfolist_t el, int index);
+extern int cmyth_epginfolist_get_count(cmyth_epginfolist_t el);
+extern uint32_t cmyth_epginfo_chanid(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_callsign(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_channame(cmyth_epginfo_t e);
+extern uint32_t cmyth_epginfo_sourceid(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_title(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_subtitle(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_description(cmyth_epginfo_t e);
+extern time_t cmyth_epginfo_starttime(cmyth_epginfo_t e);
+extern time_t cmyth_epginfo_endtime(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_programid(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_seriesid(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_category(cmyth_epginfo_t e);
+extern char * cmyth_epginfo_category_type(cmyth_epginfo_t e);
+extern uint32_t cmyth_epginfo_channum(cmyth_epginfo_t e);
+
+extern int cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_epginfolist_t *epglist, time_t starttime, char *program_name);
+extern int cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_epginfolist_t *epglist,  time_t starttime, char *program_name);
+extern int cmyth_mysql_get_prog_finder_time2(cmyth_database_t db, cmyth_epginfolist_t *epglist,  time_t starttime, char *program_name);
+extern int cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_epginfo_t *epg, uint32_t chanid);
+extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_epginfo_t *epg, time_t starttime, char *program_name, uint32_t chanid);
+extern int cmyth_mysql_get_guide(cmyth_database_t db, cmyth_epginfolist_t *epglist, uint32_t chanid, time_t starttime, time_t endtime);
+extern int cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_epginfolist_t *epglist);
 
 #endif /* __CMYTH_H */

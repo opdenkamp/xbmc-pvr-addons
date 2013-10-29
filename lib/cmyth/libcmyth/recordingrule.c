@@ -55,6 +55,10 @@ cmyth_recordingrule_destroy(cmyth_recordingrule_t rr)
 		ref_release(rr->description);
 	if (rr->category)
 		ref_release(rr->category);
+	if (rr->subtitle)
+		ref_release(rr->subtitle);
+	if (rr->callsign)
+		ref_release(rr->callsign);
 	if (rr->recgroup)
 		ref_release(rr->recgroup);
 	if (rr->storagegroup)
@@ -102,21 +106,7 @@ cmyth_recordingrule_create(void)
 	}
 	ref_set_destroy(ret, (ref_destroy_t)cmyth_recordingrule_destroy);
 
-	ret->starttime = cmyth_timestamp_create();
-	if (!ret->starttime) {
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: cmyth_timestamp_create() failed\n", __FUNCTION__);
-		goto err;
-	}
-	ret->endtime = cmyth_timestamp_create();
-	if (!ret->endtime) {
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: cmyth_timestamp_create() failed\n", __FUNCTION__);
-		goto err;
-	}
 	return ret;
-
-	err:
-	ref_release(ret);
-	return NULL;
 }
 
 /*

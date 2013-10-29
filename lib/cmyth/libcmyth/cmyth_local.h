@@ -195,6 +195,7 @@ struct cmyth_proginfo {
 	char *proginfo_description;
 	uint16_t proginfo_season;    /* new in V67 */
 	uint16_t proginfo_episode;    /* new in V67 */
+	char *proginfo_syndicated_episode; /* new in V76 */
 	char *proginfo_category;
 	uint32_t proginfo_chanId;
 	char *proginfo_chanstr;
@@ -246,6 +247,8 @@ struct cmyth_proginfo {
 	uint16_t proginfo_videoproperties; /* new in v35 */
 	uint16_t proginfo_subtitletype; /* new in v35 */
 	uint16_t proginfo_year; /* new in v43 */
+	uint16_t proginfo_partnumber; /* new in V76 */
+	uint16_t proginfo_parttotal; /* new in V76 */
 };
 
 struct cmyth_proglist {
@@ -273,7 +276,7 @@ extern int cmyth_rcv_string(cmyth_conn_t conn,
 extern int cmyth_rcv_okay(cmyth_conn_t conn);
 
 #define cmyth_rcv_feedback __cmyth_rcv_feedback
-extern int cmyth_rcv_feedback(cmyth_conn_t conn, char *fb);
+extern int cmyth_rcv_feedback(cmyth_conn_t conn, char *fb, int fblen);
 
 #define cmyth_rcv_version __cmyth_rcv_version
 extern int cmyth_rcv_version(cmyth_conn_t conn, uint32_t *vers);
@@ -305,7 +308,7 @@ extern int cmyth_rcv_uint16(cmyth_conn_t conn, int *err, uint16_t *buf, int coun
 extern int cmyth_rcv_uint32(cmyth_conn_t conn, int *err, uint32_t *buf, int count);
 
 #define cmyth_rcv_data __cmyth_rcv_data
-extern int cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int count);
+extern int cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int buflen, int count);
 
 #define cmyth_rcv_timestamp __cmyth_rcv_timestamp
 extern int cmyth_rcv_timestamp(cmyth_conn_t conn, int *err,
@@ -421,6 +424,7 @@ struct cmyth_channel {
 	char *name;
 	char *icon;
 	uint8_t visible;
+	uint8_t radio;
 	uint32_t sourceid;
 	uint32_t multiplex;
 };
@@ -508,5 +512,42 @@ extern cmyth_storagegroup_file_t cmyth_storagegroup_file_create(void);
 
 #define cmyth_storagegroup_filelist_create __cmyth_storagegroup_filelist_create
 extern cmyth_storagegroup_filelist_t cmyth_storagegroup_filelist_create(void);
+
+/*
+ * From epginfo.c
+ */
+struct cmyth_epginfo {
+	uint32_t chanid;
+	char* callsign;
+	char* channame;
+	uint32_t sourceid;
+	char* title;
+	char* subtitle;
+	char* description;
+	time_t starttime;
+	time_t endtime;
+	char* programid;
+	char* seriesid;
+	char* category;
+	char* category_type;
+	uint32_t channum;
+};
+
+struct cmyth_epginfolist {
+	cmyth_epginfo_t *epginfolist_list;
+	int epginfolist_count;
+};
+
+#define cmyth_epginfo_create __cmyth_epginfo_create
+extern cmyth_epginfo_t cmyth_epginfo_create(void);
+
+#define cmyth_epginfolist_create __cmyth_epginfolist_create
+extern cmyth_epginfolist_t cmyth_epginfolist_create(void);
+
+/*
+ * From mythtv_mysql.c
+ */
+#define cmyth_mysql_escape_chars __cmyth_mysql_escape_chars
+extern char *cmyth_mysql_escape_chars(cmyth_database_t db, char * string);
 
 #endif /* __CMYTH_LOCAL_H */

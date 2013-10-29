@@ -53,6 +53,8 @@ static myth_protomap_t protomap[] = {
 	{73, "D7FE8D6F"},
 	{74, "SingingPotato"},
 	{75, "SweetRock"},
+	{76, "FireWilde"},
+	{77, "WindMark" },
 	{0, ""}
 };
 
@@ -204,8 +206,8 @@ sighandler(int sig)
 }
 
 static cmyth_conn_t
-cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
-		    int32_t tcp_rcvbuf)
+cmyth_connect_addr(struct addrinfo* addr, char *server, char *service,
+		    int32_t buflen, int32_t tcp_rcvbuf)
 {
 	cmyth_conn_t ret = NULL;
 	unsigned char *buf = NULL;
@@ -216,7 +218,6 @@ cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
 #endif
 	int temp;
 	socklen_t size;
-	char namebuf[NI_MAXHOST], portbuf[NI_MAXSERV];
 
 	fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
 	if (fd < 0) {
@@ -236,19 +237,17 @@ cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
 	temp = tcp_rcvbuf;
 	size = sizeof(temp);
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: setting socket option SO_RCVBUF to %d", __FUNCTION__, tcp_rcvbuf);
-	setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, size);
+	if (setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, size)) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: could not set rcvbuf from socket(%d)\n",
+			  __FUNCTION__, errno);
+	}
 	if(getsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, &size)) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: could not get rcvbuf from socket(%d)\n",
 			  __FUNCTION__, errno);
 	}
 
-	if (getnameinfo(addr->ai_addr, addr->ai_addrlen, namebuf, sizeof(namebuf), portbuf, sizeof(portbuf), NI_NUMERICHOST)) {
-		strcpy(namebuf, "[unknown]");
-		strcpy(portbuf, "[unknown]");
-	}
-
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting to %s:%s fd = %d\n",
-			__FUNCTION__, namebuf, portbuf, fd);
+			__FUNCTION__, server, service, fd);
 #ifndef _MSC_VER
 	old_sighandler = signal(SIGALRM, sighandler);
 	old_alarm = alarm(5);
@@ -257,7 +256,7 @@ cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
 	if (connect(fd, addr->ai_addr, addr->ai_addrlen) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: connect failed on port %s to '%s' (%d)\n",
-			  __FUNCTION__, portbuf, namebuf, errno);
+			  __FUNCTION__, server, service, errno);
 		closesocket(fd);
 #ifndef _MSC_VER
 		signal(SIGALRM, old_sighandler);
@@ -311,7 +310,7 @@ cmyth_connect_addr(struct addrinfo* addr, uint32_t buflen,
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: error connecting to "
 		  "%s, shutdown and close fd = %d\n",
-		  __FUNCTION__, namebuf, fd);
+		  __FUNCTION__, server, fd);
 	shutdown(fd, 2);
 	closesocket(fd);
 	return NULL;
@@ -327,7 +326,6 @@ cmyth_reconnect_addr(cmyth_conn_t conn, struct addrinfo* addr)
 #endif
 	int temp;
 	socklen_t size;
-	char namebuf[NI_MAXHOST], portbuf[NI_MAXSERV];
 
 	if (conn->conn_fd >= 0) {
 		shutdown(conn->conn_fd, 2);
@@ -353,27 +351,25 @@ cmyth_reconnect_addr(cmyth_conn_t conn, struct addrinfo* addr)
 	temp = conn->conn_tcp_rcvbuf;
 	size = sizeof(temp);
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s: setting socket option SO_RCVBUF to %d", __FUNCTION__, conn->conn_tcp_rcvbuf);
-	setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, size);
+	if (setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, size)) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: could not set rcvbuf from socket(%d)\n",
+			  __FUNCTION__, errno);
+	}
 	if (getsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*)&temp, &size)) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: could not get rcvbuf from socket(%d)\n",
 			  __FUNCTION__, errno);
 	}
 
-	if (getnameinfo(addr->ai_addr, addr->ai_addrlen, namebuf, sizeof(namebuf), portbuf, sizeof(portbuf), NI_NUMERICHOST)) {
-		strcpy(namebuf, "[unknown]");
-		strcpy(portbuf, "[unknown]");
-	}
-
-	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting to %s:%s fd = %d\n",
-		  __FUNCTION__, namebuf, portbuf, fd);
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting to %s:%"PRIu16" fd = %d\n",
+		  __FUNCTION__, conn->server, conn->port, fd);
 #ifndef _MSC_VER
 	old_sighandler = signal(SIGALRM, sighandler);
 	old_alarm = alarm(5);
 #endif
 	my_fd = fd;
 	if (connect(fd, addr->ai_addr, addr->ai_addrlen) < 0) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: connect failed on port %s to '%s' (%d)\n",
-			  __FUNCTION__, portbuf, namebuf, errno);
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: connect failed on port %"PRIu16" to '%s' (%d)\n",
+			  __FUNCTION__, conn->server, conn->port, errno);
 		closesocket(fd);
 #ifndef _MSC_VER
 		signal(SIGALRM, old_sighandler);
@@ -402,7 +398,7 @@ cmyth_reconnect_addr(cmyth_conn_t conn, struct addrinfo* addr)
     shut:
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: error connecting to "
 		  "%s, shutdown and close fd = %d\n",
-		  __FUNCTION__, namebuf, fd);
+		  __FUNCTION__, conn->server, fd);
 
 	shutdown(fd, 2);
 	closesocket(fd);
@@ -457,7 +453,7 @@ cmyth_connect(char *server, uint16_t port, uint32_t buflen,
 	}
 
 	for (addr = result; addr; addr = addr->ai_next) {
-		conn = cmyth_connect_addr(addr, buflen, tcp_rcvbuf);
+		conn = cmyth_connect_addr(addr, server, service, buflen, tcp_rcvbuf);
 		if (conn)
 			break;
 	}
@@ -772,10 +768,8 @@ cmyth_conn_connect_ctrl(char *server, uint16_t port, uint32_t buflen,
  *
  * Description:
  *
- * Create a connection for use as a control connection within the
- * MythTV protocol.  Return a pointer to the newly created connection.
- * The connection is returned held, and may be released using
- * ref_release().
+ * Reconnect connection for use as a control connection within the
+ * MythTV protocol.
  *
  * Return Value:
  *
@@ -801,6 +795,24 @@ cmyth_conn_reconnect_ctrl(cmyth_conn_t control)
 	return ret;
 }
 
+/*
+ * cmyth_conn_connect_event()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Create a connection for use as a event connection within the
+ * MythTV protocol.  Return a pointer to the newly created connection.
+ * The connection is returned held, and may be released using
+ * ref_release().
+ *
+ * Return Value:
+ *
+ * Success: Non-NULL cmyth_conn_t (this is a pointer type)
+ *
+ * Failure: NULL cmyth_conn_t
+ */
 cmyth_conn_t
 cmyth_conn_connect_event(char *server, uint16_t port, uint32_t buflen,
 			 int32_t tcp_rcvbuf)
@@ -815,6 +827,22 @@ cmyth_conn_connect_event(char *server, uint16_t port, uint32_t buflen,
 	return ret;
 }
 
+/*
+ * cmyth_conn_reconnect_event()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Reconnect connection for use as a event connection within the
+ * MythTV protocol.
+ *
+ * Return Value:
+ *
+ * Success: 1
+ *
+ * Failure: 0
+ */
 int
 cmyth_conn_reconnect_event(cmyth_conn_t conn)
 {
@@ -826,6 +854,138 @@ cmyth_conn_reconnect_event(cmyth_conn_t conn)
 	else
 		ret = 0;
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done re-connecting event channel connection ret = %d\n",
+		  __FUNCTION__, ret);
+	return ret;
+}
+
+/*
+ * cmyth_conn_connect_monitor()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Create a connection for use as a monitor connection within the
+ * MythTV protocol.  Return a pointer to the newly created connection.
+ * The connection is returned held, and may be released using
+ * ref_release().
+ *
+ * Return Value:
+ *
+ * Success: Non-NULL cmyth_conn_t (this is a pointer type)
+ *
+ * Failure: NULL cmyth_conn_t
+ */
+cmyth_conn_t
+cmyth_conn_connect_monitor(char *server, uint16_t port, uint32_t buflen,
+			int32_t tcp_rcvbuf)
+{
+	cmyth_conn_t ret;
+
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting monitor connection\n",
+		  __FUNCTION__);
+	ret = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 0, ANN_MONITOR);
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done connecting monitor connection ret = %p\n",
+		  __FUNCTION__, ret);
+	return ret;
+}
+
+/*
+ * cmyth_conn_reconnect_monitor()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Reconnect connection for use as a monitor connection within the
+ * MythTV protocol.
+ *
+ * Return Value:
+ *
+ * Success: 1
+ *
+ * Failure: 0
+ */
+int
+cmyth_conn_reconnect_monitor(cmyth_conn_t control)
+{
+	int ret;
+
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: reconnecting monitor connection\n",
+		  __FUNCTION__);
+	if (control)
+		ret = cmyth_conn_reconnect(control, 0, ANN_MONITOR);
+	else
+		ret = 0;
+	if (ret)
+		control->conn_hang = 0;
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done reconnecting monitor connection ret = %d\n",
+		  __FUNCTION__, ret);
+	return ret;
+}
+
+/*
+ * cmyth_conn_connect_playback()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Create a connection for use as a playback connection within the
+ * MythTV protocol.  Return a pointer to the newly created connection.
+ * The connection is returned held, and may be released using
+ * ref_release().
+ *
+ * Return Value:
+ *
+ * Success: Non-NULL cmyth_conn_t (this is a pointer type)
+ *
+ * Failure: NULL cmyth_conn_t
+ */
+cmyth_conn_t
+cmyth_conn_connect_playback(char *server, uint16_t port, uint32_t buflen,
+			int32_t tcp_rcvbuf)
+{
+	cmyth_conn_t ret;
+
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting playback connection\n",
+		  __FUNCTION__);
+	ret = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 0, ANN_PLAYBACK);
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done connecting playback connection ret = %p\n",
+		  __FUNCTION__, ret);
+	return ret;
+}
+
+/*
+ * cmyth_conn_reconnect_playback()
+ *
+ * Scope: PUBLIC
+ *
+ * Description:
+ *
+ * Reconnect connection for use as a playback connection within the
+ * MythTV protocol.
+ *
+ * Return Value:
+ *
+ * Success: 1
+ *
+ * Failure: 0
+ */
+int
+cmyth_conn_reconnect_playback(cmyth_conn_t control)
+{
+	int ret;
+
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: reconnecting playback connection\n",
+		  __FUNCTION__);
+	if (control)
+		ret = cmyth_conn_reconnect(control, 0, ANN_PLAYBACK);
+	else
+		ret = 0;
+	if (ret)
+		control->conn_hang = 0;
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: done reconnecting playback connection ret = %d\n",
 		  __FUNCTION__, ret);
 	return ret;
 }
@@ -1009,13 +1169,6 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
 	cmyth_file_t ret = NULL;
 	uint32_t file_id;
 	int64_t file_length;
-
-	ret = cmyth_file_create(control);
-	if (!ret) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_file_create() failed\n",
-			  __FUNCTION__);
-		goto shut;
-	}
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting data connection\n",
 		  __FUNCTION__);
@@ -1219,7 +1372,7 @@ cmyth_conn_connect_recorder(cmyth_recorder_t rec, uint32_t buflen,
 
 	cmyth_dbg(CMYTH_DBG_PROTO, "%s: connecting recorder control\n",
 		  __FUNCTION__);
-	conn = cmyth_conn_connect_ctrl(server, port, buflen, tcp_rcvbuf);
+	conn = cmyth_conn_connect(server, port, buflen, tcp_rcvbuf, 0, ANN_PLAYBACK);
 	cmyth_dbg(CMYTH_DBG_PROTO,
 		  "%s: done connecting recorder control, conn = %p\n",
 		  __FUNCTION__, conn);
@@ -1603,7 +1756,7 @@ cmyth_conn_get_protocol_version(cmyth_conn_t conn)
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 			__FUNCTION__);
-		return -1;
+		return -EINVAL;
 	}
 
 	return conn->conn_version;
@@ -1622,17 +1775,17 @@ cmyth_conn_get_free_recorder_count(cmyth_conn_t conn)
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 			  __FUNCTION__);
-		return -1;
+		return -EINVAL;
 	}
 
 	pthread_mutex_lock(&conn->conn_mutex);
 
 	snprintf(msg, sizeof(msg), "GET_FREE_RECORDER_COUNT");
-	if ((err = cmyth_send_message(conn, msg)) < 0) {
+	if ((r = cmyth_send_message(conn, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto err;
 	}
 
@@ -1665,17 +1818,17 @@ cmyth_conn_get_backend_hostname(cmyth_conn_t conn)
 	int count, err;
 	char* result = NULL;
 
-	pthread_mutex_lock(&conn->conn_mutex);
-	if(conn->conn_version < 17) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support QUERY_HOSTNAME\n",
-			  __FUNCTION__);
-		return NULL;
-	}
-
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 			  __FUNCTION__);
 		return NULL;
+	}
+
+	pthread_mutex_lock(&conn->conn_mutex);
+	if(conn->conn_version < 17) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support QUERY_HOSTNAME\n",
+			  __FUNCTION__);
+		goto err;
 	}
 
 	if ((err = cmyth_send_message(conn,  "QUERY_HOSTNAME")) < 0) {
@@ -1740,14 +1893,14 @@ cmyth_conn_get_setting_unlocked(cmyth_conn_t conn, const char* hostname, const c
 	int count, err;
 	char* result = NULL;
 
-	if(conn->conn_version < 17) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support QUERY_SETTING\n",
+	if (!conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 			  __FUNCTION__);
 		return NULL;
 	}
 
-	if (!conn) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
+	if(conn->conn_version < 17) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support QUERY_SETTING\n",
 			  __FUNCTION__);
 		return NULL;
 	}
@@ -1803,6 +1956,12 @@ cmyth_conn_get_setting(cmyth_conn_t conn, const char* hostname, const char* sett
 {
 	char* result = NULL;
 
+	if (!conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+
 	pthread_mutex_lock(&conn->conn_mutex);
 	result = cmyth_conn_get_setting_unlocked(conn, hostname, setting);
 	pthread_mutex_unlock(&conn->conn_mutex);
@@ -1816,16 +1975,16 @@ static int cmyth_conn_set_setting_unlocked(cmyth_conn_t conn,
 	char msg[1024];
 	int err = 0;
 
-	if(conn->conn_version < 17) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support SET_SETTING\n",
-			  __FUNCTION__);
-		return -1;
-	}
-
 	if (!conn) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
 			  __FUNCTION__);
-		return -2;
+		return -EINVAL;
+	}
+
+	if(conn->conn_version < 17) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support SET_SETTING\n",
+			  __FUNCTION__);
+		return -EPERM;
 	}
 
 	snprintf(msg, sizeof(msg), "SET_SETTING %s %s %s", hostname, setting, value);
@@ -1833,13 +1992,13 @@ static int cmyth_conn_set_setting_unlocked(cmyth_conn_t conn,
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
 			  __FUNCTION__, err);
-		return -3;
+		return err;
 	}
 
-	if (cmyth_rcv_okay(conn) < 0) {
+	if ((err = cmyth_rcv_okay(conn)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_rcv_okay() failed\n",
 			  __FUNCTION__);
-		return -4;
+		return err;
 	}
 
 	return 0;
@@ -1849,6 +2008,12 @@ int cmyth_conn_set_setting(cmyth_conn_t conn,
                const char* hostname, const char* setting, const char* value)
 {
 	int result;
+
+	if (!conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
+		  __FUNCTION__);
+		return -EINVAL;
+	}
 
 	pthread_mutex_lock(&conn->conn_mutex);
 	result = cmyth_conn_set_setting_unlocked(conn, hostname, setting, value);
@@ -1879,10 +2044,16 @@ cmyth_conn_reschedule_recordings(cmyth_conn_t conn, uint32_t recordid)
 	int err = 0;
 	char msg[256];
 
+	if (!conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
+			  __FUNCTION__);
+		return -EINVAL;
+	}
+
 	if (conn->conn_version < 15) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support RESCHEDULE_RECORDINGS\n",
 			  __FUNCTION__);
-		return -1;
+		return -EPERM;
 	}
 
 	/*
@@ -1929,7 +2100,7 @@ cmyth_conn_reschedule_recordings(cmyth_conn_t conn, uint32_t recordid)
 		goto out;
 	}
 
-	if ((err=cmyth_rcv_feedback(conn, "1")) < 0) {
+	if ((err=cmyth_rcv_feedback(conn, "1", 1)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_feedback() failed (%d)\n",
 			  __FUNCTION__, err);

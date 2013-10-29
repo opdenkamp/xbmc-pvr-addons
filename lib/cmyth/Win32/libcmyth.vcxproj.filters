@@ -88,6 +88,9 @@
     <ClCompile Include="..\libcmyth\storagegroup.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\libcmyth\epginfo.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\cmyth\cmyth.h">

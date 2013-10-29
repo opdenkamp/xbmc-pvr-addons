@@ -37,7 +37,7 @@ class MythProgramInfo;
 
 template <class T> class MythPointerThreadSafe;
 
-typedef std::vector<MythEPGInfo> EPGInfoList;
+typedef std::map<time_t, MythEPGInfo> EPGInfoMap;
 
 typedef std::map<int, MythChannel> ChannelIdMap;
 typedef std::multimap<CStdString, MythChannel> ChannelNumberMap;
@@ -71,8 +71,8 @@ public:
   CStdString GetSetting(const CStdString &setting);
 
   bool FindProgram(time_t starttime, int channelid, const CStdString &title, MythEPGInfo &epgInfo);
-  bool FindCurrentProgram(int channelid, MythEPGInfo &epgInfo);
-  EPGInfoList GetGuide(int channelid, time_t starttime, time_t endtime);
+  bool FindCurrentProgram(time_t attime, int channelid, MythEPGInfo &epgInfo);
+  EPGInfoMap GetGuide(int channelid, time_t starttime, time_t endtime);
 
   ChannelIdMap GetChannels();
   ChannelGroupMap GetChannelGroups();
@@ -82,7 +82,7 @@ public:
   RecordingRuleMap GetRecordingRules();
   bool AddRecordingRule(const MythRecordingRule &rule);
   bool UpdateRecordingRule(const MythRecordingRule &rule);
-  bool DeleteRecordingRule(unsigned int recordid);
+  bool DeleteRecordingRule(const MythRecordingRule &rule);
   MythRecordingRule LoadRecordingRuleTemplate(const CStdString &category, const CStdString &category_type);
 
   RecordingProfileList GetRecordingProfiles();
@@ -94,6 +94,7 @@ public:
   long long GetRecordingFrameRate(const MythProgramInfo &recording);
 
   bool FillRecordingArtwork(MythProgramInfo &recording);
+  bool KeepLiveTVRecording(MythProgramInfo &recording, bool keep);
 
 private:
   boost::shared_ptr<MythPointerThreadSafe<cmyth_database_t> > m_database_t;

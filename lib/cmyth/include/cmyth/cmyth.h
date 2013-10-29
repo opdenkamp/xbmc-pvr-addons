@@ -640,6 +640,7 @@ extern char*cmyth_recorder_get_filename(cmyth_recorder_t rec);
 extern int cmyth_recorder_stop_livetv(cmyth_recorder_t rec);
 extern int cmyth_recorder_done_ringbuf(cmyth_recorder_t rec);
 extern uint32_t cmyth_recorder_get_recorder_id(cmyth_recorder_t rec);
+extern int cmyth_recorder_set_live_recording(cmyth_recorder_t rec, uint8_t recording);
 
 /*
  * -----------------------------------------------------------------
@@ -648,8 +649,6 @@ extern uint32_t cmyth_recorder_get_recorder_id(cmyth_recorder_t rec);
  */
 
 extern cmyth_livetv_chain_t cmyth_livetv_chain_create(char * chainid);
-
-extern cmyth_file_t cmyth_livetv_get_cur_file(cmyth_recorder_t rec);
 
 extern int64_t cmyth_livetv_chain_duration(cmyth_recorder_t rec);
 
@@ -674,6 +673,12 @@ extern cmyth_recorder_t cmyth_spawn_live_tv(cmyth_recorder_t rec,
 extern cmyth_recorder_t cmyth_livetv_chain_setup(cmyth_recorder_t old_rec,
 				uint32_t buflen, int32_t tcp_rcvbuf,
 				void (*prog_update_callback)(cmyth_proginfo_t));
+
+extern int32_t cmyth_livetv_chain_last(cmyth_recorder_t rec);
+
+extern cmyth_proginfo_t cmyth_livetv_chain_prog(cmyth_recorder_t rec, int32_t index);
+
+extern cmyth_file_t cmyth_livetv_chain_file(cmyth_recorder_t rec, int32_t index);
 
 extern int32_t cmyth_livetv_get_block(cmyth_recorder_t rec, char *buf,
                                 int32_t len);
@@ -764,6 +769,10 @@ extern cmyth_timestamp_t cmyth_timestamp_from_string(const char *str);
 extern cmyth_timestamp_t cmyth_timestamp_from_unixtime(time_t l);
 
 extern cmyth_timestamp_t cmyth_timestamp_utc_from_unixtime(time_t l);
+
+extern cmyth_timestamp_t cmyth_timestamp_to_utc(cmyth_timestamp_t ts);
+
+extern int cmyth_timestamp_isutc(cmyth_timestamp_t ts);
 
 extern time_t cmyth_timestamp_to_unixtime(cmyth_timestamp_t ts);
 
@@ -1004,7 +1013,7 @@ extern uint32_t cmyth_proginfo_recordid(cmyth_proginfo_t prog);
  * \param prog proginfo handle
  * \return int32_t
  */
-extern int8_t cmyth_proginfo_priority(cmyth_proginfo_t prog);
+extern int32_t cmyth_proginfo_priority(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the critics rating (number of stars) of a program.
@@ -1360,6 +1369,15 @@ typedef enum {
  * \return failure: NULL
  */
 extern cmyth_recordingrule_t cmyth_recordingrule_init(void);
+
+/**
+ * Duplicate recording rule.
+ * Before forgetting the reference to this recording rule structure
+ * the caller must call ref_release().
+ * \return success: A new recording rule
+ * \return failure: NULL
+ */
+extern cmyth_recordingrule_t cmyth_recordingrule_dup(cmyth_recordingrule_t rule);
 
 /**
  * Retrieves the 'recordid' field of a recording rule structure.
@@ -1783,6 +1801,21 @@ extern uint32_t cmyth_recordingrule_transcoder(cmyth_recordingrule_t rr);
 extern void cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, uint32_t transcoder);
 
 /**
+ * Retrieves the 'parentid' field of a recording rule structure.
+ * \param rr
+ * \return success: parentid
+ * \return failure: -(errno)
+ */
+extern uint32_t cmyth_recordingrule_parentid(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'parentid' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param parentid
+ */
+extern void cmyth_recordingrule_set_parentid(cmyth_recordingrule_t rr, uint32_t parentid);
+
+/**
  * Retrieves the 'profile' field of a recording rule structure.
  * Before forgetting the reference to this string the caller
  * must call ref_release().
@@ -1931,7 +1964,7 @@ extern int cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrul
  * \return failure: -(errno)
  * \see cmyth_recordingrule_recordid
  */
-extern int cmyth_mysql_delete_recordingrule(cmyth_database_t db, uint32_t recordid);
+extern int cmyth_mysql_delete_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr);
 
 /**
  * Update recording rule within the database.
@@ -2337,6 +2370,19 @@ extern int64_t cmyth_mysql_get_recording_markup(cmyth_database_t db, cmyth_progi
  */
 extern int64_t cmyth_mysql_get_recording_framerate(cmyth_database_t db, cmyth_proginfo_t prog);
 
+/**
+ * Retrieve seek offset for mark of recording
+ * \param db
+ * \param prog program info
+ * \param type markup type
+ * \param mark markup mark
+ * \param poffset to store previous offset found
+ * \param noffset to store next offset found
+ * \return success: mask of found offsets. 1:previous, 2:next, 3:both
+ * \return failure: -(errno)
+ */
+extern int8_t cmyth_mysql_get_recording_seek_offset(cmyth_database_t db, cmyth_proginfo_t prog, cmyth_recording_markup_t type, int64_t mark, int64_t *psoffset, int64_t *nsoffset);
+
 /*
  * -----------------------------------------------------------------
  * Recording artworks
@@ -2389,8 +2435,7 @@ extern uint32_t cmyth_epginfo_channum(cmyth_epginfo_t e);
 
 extern int cmyth_mysql_get_prog_finder_char_title(cmyth_database_t db, cmyth_epginfolist_t *epglist, time_t starttime, char *program_name);
 extern int cmyth_mysql_get_prog_finder_time(cmyth_database_t db, cmyth_epginfolist_t *epglist,  time_t starttime, char *program_name);
-extern int cmyth_mysql_get_prog_finder_time2(cmyth_database_t db, cmyth_epginfolist_t *epglist,  time_t starttime, char *program_name);
-extern int cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_epginfo_t *epg, uint32_t chanid);
+extern int cmyth_mysql_get_prog_finder_chan(cmyth_database_t db, cmyth_epginfo_t *epg, time_t attime, uint32_t chanid);
 extern int cmyth_mysql_get_prog_finder_time_title_chan(cmyth_database_t db, cmyth_epginfo_t *epg, time_t starttime, char *program_name, uint32_t chanid);
 extern int cmyth_mysql_get_guide(cmyth_database_t db, cmyth_epginfolist_t *epglist, uint32_t chanid, time_t starttime, time_t endtime);
 extern int cmyth_mysql_get_prev_recorded(cmyth_database_t db, cmyth_epginfolist_t *epglist);

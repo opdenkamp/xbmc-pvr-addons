@@ -167,3 +167,7 @@ msgstr ""
 msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
 msgstr ""
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr ""

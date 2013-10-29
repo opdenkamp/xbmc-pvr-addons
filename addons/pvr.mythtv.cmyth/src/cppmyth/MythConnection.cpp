@@ -280,6 +280,13 @@ MythProgramInfo MythConnection::GetRecordedProgram(int chanid, const MythTimesta
   return retval;
 }
 
+bool MythConnection::GenerateRecordingPreview(MythProgramInfo &recording)
+{
+  int retval = 0;
+  CMYTH_CONN_CALL(retval, retval < 0, cmyth_proginfo_generate_pixmap(*m_conn_t, *recording.m_proginfo_t));
+  return retval >= 0;
+}
+
 ProgramInfoMap MythConnection::GetPendingPrograms()
 {
   Lock();
@@ -351,7 +358,7 @@ MythFile MythConnection::ConnectFile(MythProgramInfo &recording)
   // so always check after calling cmyth_conn_connect_file if still connected to control socket.
   cmyth_file_t file = NULL;
   CMYTH_CONN_CALL_REF(file, true, cmyth_conn_connect_file(*recording.m_proginfo_t, *m_conn_t, RCV_BUF_DATA_SIZE, TCP_RCV_BUF_DATA_SIZE));
-  MythFile retval = MythFile(file, *this);
+  MythFile retval = MythFile(file);
   return retval;
 }
 
@@ -359,7 +366,7 @@ MythFile MythConnection::ConnectPath(const CStdString &filename, const CStdStrin
 {
   cmyth_file_t file = NULL;
   CMYTH_CONN_CALL_REF(file, file == NULL, cmyth_conn_connect_path(const_cast<char*>(filename.c_str()), *m_conn_t, RCV_BUF_DATA_SIZE, TCP_RCV_BUF_DATA_SIZE, const_cast<char*>(storageGroup.c_str())));
-  return MythFile(file, *this);
+  return MythFile(file);
 }
 
 bool MythConnection::SetBookmark(MythProgramInfo &recording, long long bookmark)

@@ -22,6 +22,7 @@
 #include "MythProgramInfo.h"
 #include "MythChannel.h"
 #include "MythPointer.h"
+#include "MythFile.h"
 #include "../client.h"
 
 using namespace ADDON;
@@ -30,6 +31,7 @@ MythRecorder::MythRecorder()
   : m_recorder_t(new MythPointerThreadSafe<cmyth_recorder_t>())
   , m_liveChainUpdated(new int(0))
   , m_conn()
+  , m_liveRecording(false)
 {
 }
 
@@ -37,6 +39,7 @@ MythRecorder::MythRecorder(cmyth_recorder_t cmyth_recorder, const MythConnection
   : m_recorder_t(new MythPointerThreadSafe<cmyth_recorder_t>())
   , m_liveChainUpdated(new int(0))
   , m_conn(conn)
+  , m_liveRecording(false)
 {
   *m_recorder_t = cmyth_recorder;
 }
@@ -266,6 +269,9 @@ bool MythRecorder::LiveTVDoneRecording(const CStdString &msg)
 {
   int retval = 0;
   Lock();
+  // Recording is now completed and recorder doesn't keep anymore. Track it.
+  m_liveRecording = false;
+  // Return feedback to check the chain
   retval = cmyth_livetv_done_recording(*m_recorder_t, const_cast<char*>(msg.c_str()));
   Unlock();
   if (retval != 0)
@@ -307,10 +313,23 @@ long long MythRecorder::LiveTVSeek(long long offset, int whence)
 long long MythRecorder::LiveTVDuration()
 {
   long long retval = 0;
-  Lock();
   retval = cmyth_livetv_chain_duration(*m_recorder_t);
-  Unlock();
   return retval;
+}
+
+int MythRecorder::GetLiveTVChainLast()
+{
+  return cmyth_livetv_chain_last(*m_recorder_t);
+}
+
+MythProgramInfo MythRecorder::GetLiveTVChainProgram(int index)
+{
+  return MythProgramInfo(cmyth_livetv_chain_prog(*m_recorder_t, index));
+}
+
+MythFile MythRecorder::GetLiveTVChainFile(int index)
+{
+  return MythFile(cmyth_livetv_chain_file(*m_recorder_t, index));
 }
 
 bool MythRecorder::Stop()
@@ -318,6 +337,29 @@ bool MythRecorder::Stop()
   int retval = 0;
   Lock();
   retval = cmyth_recorder_stop_livetv(*m_recorder_t);
+  Unlock();
+  return retval >= 0;
+}
+
+bool MythRecorder::IsLiveRecording()
+{
+  bool retval;
+  Lock();
+  retval = m_liveRecording;
+  Unlock();
+  return retval;
+}
+
+bool MythRecorder::SetLiveRecording(bool recording)
+{
+  int retval = 0;
+  Lock();
+  retval = cmyth_recorder_set_live_recording(*m_recorder_t, (recording ? 1 : 0));
+  // Check feedback (Response == Request ?) then track it
+  if (recording && retval == 1)
+    m_liveRecording = true;
+  else if (!recording && retval == 0)
+    m_liveRecording = false;
   Unlock();
   return retval >= 0;
 }

@@ -32,19 +32,19 @@ MythTimestamp::MythTimestamp(cmyth_timestamp_t cmyth_timestamp)
   *m_timestamp_t = cmyth_timestamp;
 }
 
-MythTimestamp::MythTimestamp(CStdString time, bool datetime)
+MythTimestamp::MythTimestamp(CStdString time)
  : m_timestamp_t(new MythPointer<cmyth_timestamp_t>())
 {
-  // datetime ? DatetimeFromString(time.Buffer()) : cmyth_timestamp_from_string(time.Buffer())
-  (void)datetime;
-
   *m_timestamp_t = (cmyth_timestamp_from_string(time.Buffer()));
 }
 
-MythTimestamp::MythTimestamp(time_t time)
+MythTimestamp::MythTimestamp(time_t time, bool utc)
   : m_timestamp_t(new MythPointer<cmyth_timestamp_t>())
 {
-  *m_timestamp_t = cmyth_timestamp_from_unixtime(time);
+  if (utc)
+    *m_timestamp_t = cmyth_timestamp_utc_from_unixtime(time);
+  else
+    *m_timestamp_t = cmyth_timestamp_from_unixtime(time);
 }
 
 bool MythTimestamp::operator==(const MythTimestamp &other)
@@ -91,7 +91,7 @@ CStdString MythTimestamp::IsoString()
 CStdString MythTimestamp::DisplayString(bool use12hClock)
 {
   char time[25];
-  bool succeded=cmyth_timestamp_to_display_string(time, *m_timestamp_t, use12hClock) == 0;
+  bool succeded = cmyth_timestamp_to_display_string(time, *m_timestamp_t, use12hClock) == 0;
   return succeded ? CStdString(time) : CStdString("");
 }
 
@@ -100,4 +100,18 @@ CStdString MythTimestamp::NumString()
   char time[15];
   bool succeded = cmyth_timestamp_to_numstring(time, *m_timestamp_t) == 0;
   return succeded ? CStdString(time) : CStdString("");
+}
+
+bool MythTimestamp::IsUTC()
+{
+  if (cmyth_timestamp_isutc(*m_timestamp_t) == 1)
+    return true;
+  return false;
+}
+
+MythTimestamp MythTimestamp::ToUTC()
+{
+  if (this->IsUTC())
+    return *this;
+  return MythTimestamp(cmyth_timestamp_to_utc(*m_timestamp_t));
 }

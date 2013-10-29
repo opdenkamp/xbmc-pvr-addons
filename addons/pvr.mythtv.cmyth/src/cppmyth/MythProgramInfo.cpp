@@ -24,6 +24,7 @@
 
 MythProgramInfo::MythProgramInfo()
   : m_proginfo_t()
+  , m_UID()
   , m_frameRate(-1)
   , m_coverart("")
   , m_fanart("")
@@ -32,11 +33,33 @@ MythProgramInfo::MythProgramInfo()
 
 MythProgramInfo::MythProgramInfo(cmyth_proginfo_t cmyth_proginfo)
   : m_proginfo_t(new MythPointer<cmyth_proginfo_t>())
+  , m_UID()
   , m_frameRate(-1)
   , m_coverart("")
   , m_fanart("")
 {
   *m_proginfo_t = cmyth_proginfo;
+  // Make Unique Identifier
+  if (cmyth_proginfo)
+  {
+    MythTimestamp ts = MythTimestamp(cmyth_proginfo_rec_start(cmyth_proginfo));
+    m_UID = MakeUID(ChannelID(), ts);
+  }
+}
+
+CStdString MythProgramInfo::MakeUID(unsigned int chanid, MythTimestamp &ts)
+{
+  char buf[50] = "";
+  CStdString timestr;
+  if (!ts.IsUTC())
+  {
+    MythTimestamp utc = ts.ToUTC();
+    timestr = utc.String();
+  }
+  else
+    timestr = ts.String();
+  sprintf(buf, "%u %s", chanid, timestr.c_str());
+  return CStdString(buf);
 }
 
 bool MythProgramInfo::IsNull() const
@@ -46,13 +69,21 @@ bool MythProgramInfo::IsNull() const
   return *m_proginfo_t == NULL;
 }
 
-CStdString MythProgramInfo::UID()
+bool MythProgramInfo::operator ==(MythProgramInfo &other)
 {
-  // Creates unique IDs from ChannelID, StartTime and RecordID like "100_2011-12-10T12:00:00_247"
-  char buf[50] = "";
-  MythTimestamp time = cmyth_proginfo_rec_start(*m_proginfo_t);
-  sprintf(buf, "%u_%s_%u", ChannelID(), time.String().c_str(), RecordID());
-  return CStdString(buf);
+  if (!this->IsNull() && !other.IsNull() && this->UID() == other.UID())
+    return true;
+  return false;
+}
+
+bool MythProgramInfo::operator !=(MythProgramInfo &other)
+{
+  return !(*this == other);
+}
+
+CStdString MythProgramInfo::UID() const
+{
+  return m_UID;
 }
 
 CStdString MythProgramInfo::ProgramID()
@@ -145,17 +176,22 @@ bool MythProgramInfo::HasBookmark()
 
 bool MythProgramInfo::IsVisible()
 {
-  // Filter out recording of special storage groups (like LiveTV or Deleted)
-
+  // Filter out recording of special storage group Deleted
+  // Filter out recording with duration less than 5 seconds
   // When  deleting a recording, it might not be deleted immediately but marked as 'pending delete'.
   // Depending on the protocol version the recording is moved to the group Deleted or
   // the 'delete pending' flag is set
-  if (RecordingGroup() == "LiveTV" || RecordingGroup() == "Deleted" || IsDeletePending())
+  if (Duration() < 5 || RecordingGroup() == "Deleted" || IsDeletePending())
   {
     return false;
   }
 
   return true;
+}
+
+bool MythProgramInfo::IsLiveTV()
+{
+  return (RecordingGroup() == "LiveTV");
 }
 
 unsigned int MythProgramInfo::ChannelID()

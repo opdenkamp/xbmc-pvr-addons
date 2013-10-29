@@ -242,7 +242,7 @@ cmyth_event_get_message(cmyth_conn_t conn, char * data, int32_t len, cmyth_progi
 
 	out:
 	while(count > 0 && err == 0) {
-		consumed = cmyth_rcv_data(conn, &err, tmp, sizeof(tmp) - 1, count);
+		consumed = cmyth_rcv_data(conn, &err, (unsigned char*)tmp, sizeof(tmp) - 1, count);
 		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data: count %i, read %i, errno %i\n", __FUNCTION__, count, consumed, err);
 		count -= consumed;
 	}

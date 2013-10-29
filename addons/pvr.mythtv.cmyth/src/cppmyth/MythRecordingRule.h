@@ -36,51 +36,67 @@ class MythRecordingRule
 public:
   enum RuleType
   {
-    NotRecording = 0,
-    SingleRecord = 1,
-    TimeslotRecord,
-    ChannelRecord,
-    AllRecord,
-    WeekslotRecord,
-    FindOneRecord,
-    OverrideRecord,
-    DontRecord,
-    FindDailyRecord,
-    FindWeeklyRecord,
-    TemplateRecord
+    RT_NotRecording                   = 0,
+    RT_SingleRecord                   = 1,
+    RT_DailyRecord                    = 2,
+    RT_ChannelRecord                  = 3,
+    RT_AllRecord                      = 4,
+    RT_WeeklyRecord                   = 5,
+    RT_OneRecord                      = 6,
+    RT_OverrideRecord                 = 7,
+    RT_DontRecord                     = 8,
+    RT_FindDailyRecord                = 9,  // Obsolete (0.27). cf DailyRecord
+    RT_FindWeeklyRecord               = 10, // Obsolete (0.27). cf WeeklyRecord
+    RT_TemplateRecord                 = 11
   };
 
   enum RuleSearchType
   {
-    NoSearch = 0,
-    PowerSearch,
-    TitleSearch,
-    KeywordSearch,
-    PeopleSearch,
-    ManualSearch
+    ST_NoSearch                       = 0,
+    ST_PowerSearch,
+    ST_TitleSearch,
+    ST_KeywordSearch,
+    ST_PeopleSearch,
+    ST_ManualSearch
   };
 
   enum RuleDuplicateControlMethod
   {
-    CheckNone                    = 0x01,
-    CheckSubtitle                = 0x02,
-    CheckDescription             = 0x04,
-    CheckSubtitleAndDescription  = 0x06,
-    CheckSubtitleThenDescription = 0x08
+    DM_CheckNone                      = 0x01,
+    DM_CheckSubtitle                  = 0x02,
+    DM_CheckDescription               = 0x04,
+    DM_CheckSubtitleAndDescription    = 0x06,
+    DM_CheckSubtitleThenDescription   = 0x08
   };
 
   enum RuleCheckDuplicatesInType
   {
-    InRecorded    = 0x01,
-    InOldRecorded = 0x02,
-    InAll         = 0x0F,
-    NewEpi        = 0x10
+    DI_InRecorded                     = 0x01,
+    DI_InOldRecorded                  = 0x02,
+    DI_InAll                          = 0x0F,
+    DI_NewEpi                         = 0x10
+  };
+
+  enum RuleFilterMask
+  {
+    FM_NewEpisode                     = 0x001,
+    FM_IdentifiableEpisode            = 0x002,
+    FM_FirstShowing                   = 0x004,
+    FM_PrimeTime                      = 0x008,
+    FM_CommercialFree                 = 0x010,
+    FM_HighDefinition                 = 0x020,
+    FM_ThisEpisode                    = 0x040,
+    FM_ThisSeries                     = 0x080,
+    FM_ThisTime                       = 0x100,
+    FM_ThisDayAndTime                 = 0x200
   };
 
   MythRecordingRule();
   MythRecordingRule(cmyth_recordingrule_t cmyth_recordingrule);
 
   bool IsNull() const;
+
+  MythRecordingRule DuplicateRecordingRule() const;
 
   unsigned int RecordID() const;
   void SetRecordID(unsigned int recordid);
@@ -168,6 +184,12 @@ public:
 
   unsigned int Transcoder() const;
   void SetTranscoder(unsigned int transcoder);
+
+  unsigned int ParentID() const;
+  void SetParentID(unsigned int parentid);
+
+  unsigned int Filter() const;
+  void SetFilter(unsigned int filter);
 
 private:
   boost::shared_ptr<MythPointer<cmyth_recordingrule_t> > m_recordingrule_t;

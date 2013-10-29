@@ -62,6 +62,7 @@ typedef int cmyth_socket_t;
 #define CMYTH_INT16_LEN (sizeof("-65536") - 1)
 #define CMYTH_INT8_LEN (sizeof("-256") - 1)
 #define CMYTH_TIMESTAMP_LEN (sizeof("YYYY-MM-DDTHH:MM:SS") - 1)
+#define CMYTH_TIMESTAMP_UTC_LEN (sizeof("YYYY-MM-DDTHH:MM:SSZ") - 1)
 #define CMYTH_TIMESTAMP_NUMERIC_LEN (sizeof("YYYYMMDDHHMMSS") - 1)
 #define CMYTH_DATESTAMP_LEN (sizeof("YYYY-MM-DD") - 1)
 #define CMYTH_UTC_LEN (sizeof("1240120680") - 1)
@@ -187,6 +188,7 @@ struct cmyth_timestamp {
 	unsigned long timestamp_minute;
 	unsigned long timestamp_second;
 	int timestamp_isdst;
+	int timestamp_isutc;
 };
 
 struct cmyth_proginfo {
@@ -214,7 +216,7 @@ struct cmyth_proginfo {
 	uint32_t proginfo_source_id; /* ??? in V8 */
 	uint32_t proginfo_card_id;   /* ??? in V8 */
 	uint32_t proginfo_input_id;  /* ??? in V8 */
-	int8_t proginfo_rec_priority;  /* ??? in V8 */
+	int32_t proginfo_rec_priority;  /* ??? in V8 */
 	int8_t proginfo_rec_status; /* ??? in V8 */
 	uint32_t proginfo_record_id;  /* ??? in V8 */
 	uint8_t proginfo_rec_type;   /* ??? in V8 */
@@ -240,7 +242,7 @@ struct cmyth_proginfo {
 	char *proginfo_host;
 	uint32_t proginfo_version;
 	char *proginfo_playgroup; /* new in v18 */
-	int8_t proginfo_recpriority_2;  /* new in V25 */
+	int32_t proginfo_recpriority_2;  /* new in V25 */
 	uint32_t proginfo_parentid; /* new in V31 */
 	char *proginfo_storagegroup; /* new in v32 */
 	uint16_t proginfo_audioproperties; /* new in v35 */
@@ -471,13 +473,14 @@ struct cmyth_recordingrule {
 	uint32_t maxepisodes;            //range 0,100
 	uint8_t maxnewest;               //bool
 	uint32_t transcoder;             //recordingprofiles id
+	uint32_t parentid;               //parent rule recordid
 	char* profile;
 	uint32_t prefinput;
 	uint8_t autometadata;            //DB version 1278
 	char* inetref;                   //DB version 1278
 	uint16_t season;                 //DB version 1278
 	uint16_t episode;                //DB version 1278
-	uint32_t filter;		 //DB version 1276
+	uint32_t filter;                 //DB version 1276
 	};
 
 struct cmyth_recordingrulelist {

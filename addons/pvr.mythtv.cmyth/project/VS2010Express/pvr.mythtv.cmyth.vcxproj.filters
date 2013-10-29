@@ -41,6 +41,9 @@
     <ClCompile Include="..\..\src\cppmyth\MythEPGInfo.cpp">
       <Filter>cppmyth</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\cppmyth\MythScheduleManager.cpp">
+      <Filter>cppmyth</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
@@ -86,6 +89,9 @@
       <Filter>cppmyth</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\cppmyth\MythEPGInfo.h">
+      <Filter>cppmyth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cppmyth\MythScheduleManager.h">
       <Filter>cppmyth</Filter>
     </ClInclude>
   </ItemGroup>

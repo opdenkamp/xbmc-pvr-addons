@@ -651,7 +651,7 @@ cmyth_rcv_okay(cmyth_conn_t conn)
 			  "%s: did not consume everything\n",
 			  __FUNCTION__);
 		while(count > 0 && err == 0) {
-			consumed = cmyth_rcv_data(conn, &err, tmp, sizeof(tmp) - 1, count);
+			consumed = cmyth_rcv_data(conn, &err, (unsigned char*)tmp, sizeof(tmp) - 1, count);
 			cmyth_dbg(CMYTH_DBG_DEBUG, "%s: leftover data: count %i, read %i, errno %i\n", __FUNCTION__, count, consumed, err);
 			count -= consumed;
 		}
@@ -1869,7 +1869,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 	/*
 	 * Get proginfo_rec_priority (byte)
 	 */
-	consumed = cmyth_rcv_int8(conn, err,
+	consumed = cmyth_rcv_int32(conn, err,
 				    &buf->proginfo_rec_priority, count);
 	count -= consumed;
 	total += consumed;
@@ -2211,7 +2211,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
 		/*
 		 * Get proginfo_recpriority_2 (byte)
 		 */
-		consumed = cmyth_rcv_int8(conn, err,
+		consumed = cmyth_rcv_int32(conn, err,
 					    &buf->proginfo_recpriority_2,
 					    count);
 		count -= consumed;
@@ -2983,7 +2983,8 @@ cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int buflen, int 
 		++conn->conn_pos;
 		++consumed;
 	}
-	cmyth_dbg(CMYTH_DBG_PROTO, "%s: string received '%s'\n",
+	buf[placed] = '\0';
+	cmyth_dbg(CMYTH_DBG_PROTO, "%s: data received '%s'\n",
 		  __FUNCTION__, buf);
 	return consumed;
 }

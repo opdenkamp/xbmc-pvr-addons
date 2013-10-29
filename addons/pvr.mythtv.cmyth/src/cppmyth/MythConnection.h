@@ -78,6 +78,7 @@ public:
   ProgramInfoMap GetRecordedPrograms();
   MythProgramInfo GetRecordedProgram(const CStdString &basename);
   MythProgramInfo GetRecordedProgram(int chanid, const MythTimestamp &recstartts);
+  bool GenerateRecordingPreview(MythProgramInfo &recording);
 
   // Timers
   ProgramInfoMap GetPendingPrograms();

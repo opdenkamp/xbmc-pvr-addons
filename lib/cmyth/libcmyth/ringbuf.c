@@ -122,7 +122,7 @@ cmyth_ringbuf_create(void)
 cmyth_recorder_t
 cmyth_ringbuf_setup(cmyth_recorder_t rec)
 {
-	static const char service[]="rbuf://";
+	static const char service[] = "rbuf://";
 	cmyth_recorder_t new_rec = NULL;
 	char *host = NULL;
 	char *port = NULL;
@@ -138,8 +138,7 @@ cmyth_ringbuf_setup(cmyth_recorder_t rec)
 	cmyth_conn_t control;
 
 	if (!rec) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
-			  __FUNCTION__);
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n", __FUNCTION__);
 		return NULL;
 	}
 
@@ -151,7 +150,7 @@ cmyth_ringbuf_setup(cmyth_recorder_t rec)
 		 "QUERY_RECORDER %"PRIu32"[]:[]SETUP_RING_BUFFER[]:[]0",
 		 rec->rec_id);
 
-	if ((err=cmyth_send_message(control, msg)) < 0) {
+	if ((err = cmyth_send_message(control, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
 			  __FUNCTION__, err);
@@ -167,7 +166,7 @@ cmyth_ringbuf_setup(cmyth_recorder_t rec)
 	r = cmyth_rcv_string(control, &err, url, sizeof(url)-1, count);
 	count -= r;
 
-	if ((r=cmyth_rcv_int64(control, &err, &size, count)) < 0) {
+	if ((r = cmyth_rcv_int64(control, &err, &size, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, r);
@@ -175,7 +174,7 @@ cmyth_ringbuf_setup(cmyth_recorder_t rec)
 	}
 	count -= r;
 
-	if ((r=cmyth_rcv_int64(control, &err, &fill, count)) < 0) {
+	if ((r = cmyth_rcv_int64(control, &err, &fill, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, r);
@@ -245,7 +244,12 @@ cmyth_ringbuf_setup(cmyth_recorder_t rec)
 char *
 cmyth_ringbuf_pathname(cmyth_recorder_t rec)
 {
-        return ref_hold(rec->rec_ring->ringbuf_url);
+	if (!rec) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n", __FUNCTION__);
+		return NULL;
+	}
+
+	return ref_hold(rec->rec_ring->ringbuf_url);
 }
 
 /*
@@ -261,7 +265,7 @@ cmyth_ringbuf_pathname(cmyth_recorder_t rec)
  *
  * Success: number of bytes read into buf
  *
- * Failure: -1
+ * Failure: an int containing -errno
  */
 int32_t
 cmyth_ringbuf_get_block(cmyth_recorder_t rec, char *buf, int32_t len)
@@ -269,8 +273,10 @@ cmyth_ringbuf_get_block(cmyth_recorder_t rec, char *buf, int32_t len)
 	struct timeval tv;
 	fd_set fds;
 
-	if (rec == NULL)
-		return -EINVAL;
+	if (!rec) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n", __FUNCTION__);
+		return (int32_t) -EINVAL;
+	}
 
 	if(len > rec->rec_ring->conn_data->conn_tcp_rcvbuf)
 		len = rec->rec_ring->conn_data->conn_tcp_rcvbuf;
@@ -295,8 +301,11 @@ cmyth_ringbuf_select(cmyth_recorder_t rec, struct timeval *timeout)
 	fd_set fds;
 	int ret;
 	cmyth_socket_t fd;
-	if (rec == NULL)
+
+	if (!rec) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n", __FUNCTION__);
 		return -EINVAL;
+	}
 
 	fd = rec->rec_ring->conn_data->conn_fd;
 
@@ -339,9 +348,8 @@ cmyth_ringbuf_request_block(cmyth_recorder_t rec, int32_t len)
 	char msg[256];
 
 	if (!rec) {
-		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
-			  __FUNCTION__);
-		return -EINVAL;
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n", __FUNCTION__);
+		return (int32_t) -EINVAL;
 	}
 
 	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
@@ -394,7 +402,8 @@ cmyth_ringbuf_request_block(cmyth_recorder_t rec, int32_t len)
  *
  * Failure: an int containing -errno
  */
-int32_t cmyth_ringbuf_read(cmyth_recorder_t rec, char *buf, int32_t len)
+int32_t
+cmyth_ringbuf_read(cmyth_recorder_t rec, char *buf, int32_t len)
 {
 	int err, count;
 	int ret, req, nfds;
@@ -403,11 +412,9 @@ int32_t cmyth_ringbuf_read(cmyth_recorder_t rec, char *buf, int32_t len)
 	struct timeval tv;
 	fd_set fds;
 
-	if (!rec)
-	{
-		cmyth_dbg (CMYTH_DBG_ERROR, "%s: no connection\n",
-		           __FUNCTION__);
-		return -EINVAL;
+	if (!rec) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n", __FUNCTION__);
+		return (int32_t) -EINVAL;
 	}
 
 	pthread_mutex_lock (&rec->rec_conn->conn_mutex);
@@ -542,8 +549,10 @@ cmyth_ringbuf_seek(cmyth_recorder_t rec,
 	int64_t c, ret;
 	cmyth_ringbuf_t ring;
 
-	if (rec == NULL)
-		return -EINVAL;
+	if (!rec) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n", __FUNCTION__);
+		return (int64_t) -EINVAL;
+	}
 
 	ring = rec->rec_ring;
 
@@ -570,7 +579,7 @@ cmyth_ringbuf_seek(cmyth_recorder_t rec,
 	}
 
 	count = cmyth_rcv_length(rec->rec_conn);
-	if ((r=cmyth_rcv_int64(rec->rec_conn, &err, &c, count)) < 0) {
+	if ((r = cmyth_rcv_int64(rec->rec_conn, &err, &c, count)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_rcv_length() failed (%d)\n",
 			  __FUNCTION__, r);

@@ -504,10 +504,10 @@ bool Dvb::OpenLiveStream(const PVR_CHANNEL& channelinfo)
 
   if (m_tsBuffer)
     SAFE_DELETE(m_tsBuffer);
-  XBMC->Log(LOG_INFO, "Timeshift starts; url=%s",
-      GetLiveStreamURL(channelinfo).c_str());
-  m_tsBuffer = new TimeshiftBuffer(GetLiveStreamURL(channelinfo),
-      g_timeshiftBufferPath);
+
+  CStdString streamURL = GetLiveStreamURL(channelinfo);
+  XBMC->Log(LOG_INFO, "Timeshift starts; url=%s", streamURL.c_str());
+  m_tsBuffer = new TimeshiftBuffer(streamURL, g_timeshiftBufferPath);
   return m_tsBuffer->IsValid();
 }
 
@@ -548,7 +548,6 @@ long long Dvb::LengthLiveStream(void)
 
 CStdString& Dvb::GetLiveStreamURL(const PVR_CHANNEL& channelinfo)
 {
-  SwitchChannel(channelinfo);
   return m_channels[channelinfo.iUniqueId - 1]->streamURL;
 }
 

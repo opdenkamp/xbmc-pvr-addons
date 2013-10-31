@@ -117,7 +117,10 @@ private:
   ChannelIdMap m_channelsById;
   ChannelNumberMap m_channelsByNumber;
   ChannelGroupMap m_channelGroups;
+  typedef std::map<int, int> PVRChannelMap;
+  PVRChannelMap m_PVRChannelUidById;
   void LoadChannelsAndChannelGroups();
+  int FindPVRChannelUid(int channelId) const;
 
   // Recordings
   ProgramInfoMap m_recordings;

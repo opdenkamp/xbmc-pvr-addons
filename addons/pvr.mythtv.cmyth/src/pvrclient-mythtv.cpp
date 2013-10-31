@@ -273,9 +273,10 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
     XBMC->Log(LOG_DEBUG, "%s - radio: %s", __FUNCTION__, (bRadio ? "true" : "false"));
 
   LoadChannelsAndChannelGroups();
+  m_PVRChannelUidById.clear();
 
-  // Create a set<channum, callsign> to merge channels with same channum and callsign
-  std::set<std::pair<CStdString, CStdString> > channelIdentifiers;
+  // Create a map<(channum, callsign), chanid> to merge channels with same channum and callsign
+  std::map<std::pair<CStdString, CStdString>, unsigned int> channelIdentifiers;
 
   // Transfer channels of the requested type (radio / tv)
   for (ChannelIdMap::iterator it = m_channelsById.begin(); it != m_channelsById.end(); ++it)
@@ -283,13 +284,18 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
     if (it->second.IsRadio() == bRadio && !it->second.IsNull())
     {
       // Skip channels with same channum and callsign
-      std::pair<CStdString, CStdString> channelIdentifier = make_pair(it->second.Number(), it->second.Callsign());
-      if (channelIdentifiers.find(channelIdentifier) != channelIdentifiers.end())
+      std::pair<CStdString, CStdString> channelIdentifier = std::make_pair(it->second.Number(), it->second.Callsign());
+      std::map<std::pair<CStdString, CStdString>, unsigned int>::iterator itm = channelIdentifiers.find(channelIdentifier);
+      if (itm != channelIdentifiers.end())
       {
         XBMC->Log(LOG_DEBUG, "%s - skipping channel: %d", __FUNCTION__, it->second.ID());
+        // Map channel with merged channel
+        m_PVRChannelUidById.insert(std::make_pair(it->first, itm->second));
         continue;
       }
-      channelIdentifiers.insert(channelIdentifier);
+      channelIdentifiers.insert(std::make_pair(channelIdentifier, it->first));
+      // Map channel to itself
+      m_PVRChannelUidById.insert(std::make_pair(it->first, it->first));
 
       PVR_CHANNEL tag;
       memset(&tag, 0, sizeof(PVR_CHANNEL));
@@ -387,7 +393,7 @@ PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR
       memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
 
       tag.iChannelNumber = channelNumber++;
-      tag.iChannelUniqueId = channelIt->second.ID();
+      tag.iChannelUniqueId = FindPVRChannelUid(channelIt->second.ID());
       PVR_STRCPY(tag.strGroupName, group.strGroupName);
       PVR->TransferChannelGroupMember(handle, &tag);
     }
@@ -410,6 +416,14 @@ void PVRClientMythTV::LoadChannelsAndChannelGroups()
     m_channelsByNumber.insert(std::make_pair(channelIt->second.Number(), channelIt->second));
 
   m_channelGroups = m_db.GetChannelGroups();
+}
+
+int PVRClientMythTV::FindPVRChannelUid(int channelId) const
+{
+  PVRChannelMap::const_iterator it = m_PVRChannelUidById.find(channelId);
+  if (it != m_PVRChannelUidById.end())
+    return it->second;
+  return -1; // PVR dummy channel UID
 }
 
 void PVRClientMythTV::UpdateRecordings()
@@ -1085,7 +1099,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     CStdString rulemarker = "";
     tag.startTime = it->second->StartTime();
     tag.endTime = it->second->EndTime();
-    tag.iClientChannelUid = it->second->ChannelID();
+    tag.iClientChannelUid = FindPVRChannelUid(it->second->ChannelID());
     tag.iPriority = it->second->Priority();
     int genre = m_categories.Category(it->second->Category());
     tag.iGenreSubType = genre & 0x0F;

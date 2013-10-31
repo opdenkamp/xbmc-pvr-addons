@@ -908,7 +908,7 @@ cmyth_mysql_get_chanlist(cmyth_database_t db, cmyth_chanlist_t *chanlist)
 	 * The is_audio_service (radio) flag is only available from the channel scan.
 	 * The subquery therefore get the flag from the most recent channel scan.
 	 */
-	const char *query_str = "SELECT c.chanid, c.channum, c.name, c.icon, c.visible, c.sourceid, c.mplexid, c.callsign, "
+	const char *query_str = "SELECT DISTINCT c.chanid, c.channum, c.name, c.icon, c.visible, c.sourceid, c.mplexid, c.callsign, "
 		"IFNULL(cs.is_audio_service, 0) AS is_audio_service "
 		"FROM channel c "
 		"LEFT JOIN (SELECT service_id, MAX(scanid) AS scanid FROM channelscan_channel GROUP BY service_id) s "

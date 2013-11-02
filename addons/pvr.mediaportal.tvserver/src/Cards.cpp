@@ -28,7 +28,10 @@ using namespace ADDON;
 bool CCards::ParseLines(vector<string>& lines)
 {
   if (lines.empty())
+  {
+    XBMC->Log(LOG_DEBUG, "No card settings found.");
     return false;
+  }
 
   for (vector<string>::iterator it = lines.begin(); it < lines.end(); ++it)
   {

@@ -337,7 +337,6 @@ void CTsReader::Close()
 
 bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long timeshiftBufferID)
 {
-#ifdef TARGET_WINDOWS
   string newFileName;
 
   XBMC->Log(LOG_NOTICE, "TsReader: OnZap(%s)", pszFileName);
@@ -354,30 +353,36 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
   {
     if (m_fileReader)
     {
-      XBMC->Log(LOG_DEBUG,"OnZap: request new PAT");
+      XBMC->Log(LOG_DEBUG,"%s: request new PAT", __FUNCTION__);
 
       int64_t pos_before, pos_after;
-      pos_before = m_fileReader->GetFilePointer();
-      pos_after = m_fileReader->SetFilePointer(0LL, FILE_END);
+      MultiFileReader* fileReader = dynamic_cast<MultiFileReader*>(m_fileReader);
 
-      if ((timeShiftBufferPos > 0) && (pos_after > timeShiftBufferPos))
+      pos_before = fileReader->GetFilePointer();
+
+      if ((timeShiftBufferPos > 0) && (timeshiftBufferID != -1))
       {
-        /* Move backward */
-        pos_after = m_fileReader->SetFilePointer((timeShiftBufferPos-pos_after), FILE_CURRENT);
+        pos_after = fileReader->SetCurrentFilePointer(timeShiftBufferPos, timeshiftBufferID);
       }
-      m_demultiplexer.RequestNewPat();
-      m_fileReader->OnChannelChange();
+      else
+      {
+        pos_after = m_fileReader->SetFilePointer(0LL, FILE_END);
+        if ((timeShiftBufferPos > 0) && (pos_after > timeShiftBufferPos))
+        {
+          /* Move backward */
+          pos_after = fileReader->SetFilePointer((timeShiftBufferPos-pos_after), FILE_CURRENT);
+        }
+      }
 
-      XBMC->Log(LOG_DEBUG,"OnZap: move from %I64d to %I64d tsbufpos  %I64d", pos_before, pos_after, timeShiftBufferPos);
+      m_demultiplexer.RequestNewPat();
+      fileReader->OnChannelChange();
+
+      XBMC->Log(LOG_DEBUG,"%s:: move from %I64d to %I64d tsbufpos  %I64d", __FUNCTION__, pos_before, pos_after, timeShiftBufferPos);
       usleep(100000);
       return true;
     }
     return false;
   }
-#else
-  m_fileReader->SetFilePointer(0LL, FILE_END);
-  return true;
-#endif
 }
 
 void CTsReader::SetCardSettings(CCards* cardSettings)

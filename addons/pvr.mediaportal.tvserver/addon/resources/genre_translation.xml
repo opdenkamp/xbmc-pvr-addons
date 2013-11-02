@@ -2,25 +2,96 @@
 <!-- Use only lower case strings and hexadecimal id's //-->
 <!-- See below for the type/subtype number definitions //-->
 <genrestrings>
-  <!-- English strings //-->
+  <!-- English strings (see also MediaPortal sources: TsWriter\source\epgDecoder.cpp) //-->
   <genre lang="en" type="0x10" subtype="0x00">movie/drama (general)</genre>
   <genre lang="en" type="0x10" subtype="0x01">detective/thriller</genre>
+  <genre lang="en" type="0x10" subtype="0x02">adventure/western/war</genre>
+  <genre lang="en" type="0x10" subtype="0x03">science fiction/fantasy/horror</genre>
   <genre lang="en" type="0x10" subtype="0x04">comedy</genre>
   <genre lang="en" type="0x10" subtype="0x05">soap/melodram/folkloric</genre>
+  <genre lang="en" type="0x10" subtype="0x06">romance</genre>
+  <genre lang="en" type="0x10" subtype="0x07">serious/classical/religious/historical movie/drama</genre>
   <genre lang="en" type="0x10" subtype="0x08">adult movie/drama</genre>
+
   <genre lang="en" type="0x20" subtype="0x00">news/current affairs (general)</genre>
+  <genre lang="en" type="0x20" subtype="0x01">news/weather report</genre>
+  <genre lang="en" type="0x20" subtype="0x02">news magazine</genre>
   <genre lang="en" type="0x20" subtype="0x03">documentary</genre>
+  <genre lang="en" type="0x20" subtype="0x04">discussion/interview/debate</genre>
+
   <genre lang="en" type="0x30" subtype="0x00">show/game show (general)</genre>
+  <genre lang="en" type="0x30" subtype="0x01">game show/quiz/contest</genre>
+  <genre lang="en" type="0x30" subtype="0x02">variety show</genre>
+  <genre lang="en" type="0x30" subtype="0x03">talk show</genre>
+
   <genre lang="en" type="0x40" subtype="0x00">sports (general)</genre>
+  <genre lang="en" type="0x40" subtype="0x01">special events</genre>
+  <genre lang="en" type="0x40" subtype="0x02">sports magazine</genre>
+  <genre lang="en" type="0x40" subtype="0x03">football/soccer</genre>
+  <genre lang="en" type="0x40" subtype="0x04">tennis/squash</genre>
+  <genre lang="en" type="0x40" subtype="0x05">team sports</genre>
+  <genre lang="en" type="0x40" subtype="0x06">athletics</genre>
+  <genre lang="en" type="0x40" subtype="0x07">motor sport</genre>
+  <genre lang="en" type="0x40" subtype="0x08">water sport</genre>
+  <genre lang="en" type="0x40" subtype="0x09">winter sport</genre>
+  <genre lang="en" type="0x40" subtype="0x0A">equestrian</genre>
+  <genre lang="en" type="0x40" subtype="0x0B">martial sports</genre>
+
   <genre lang="en" type="0x50" subtype="0x00">childrens's/youth program (general)</genre>
+  <genre lang="en" type="0x50" subtype="0x01">pre-school children's program</genre>
+  <genre lang="en" type="0x50" subtype="0x02">entertainment (6-14 year old)</genre>
+  <genre lang="en" type="0x50" subtype="0x03">entertainment (10-16 year old)</genre>
+  <genre lang="en" type="0x50" subtype="0x04">information/education/school program</genre>
   <genre lang="en" type="0x50" subtype="0x05">cartoon/puppets</genre>
+
   <genre lang="en" type="0x60" subtype="0x00">music/ballet/dance (general)</genre>
+  <genre lang="en" type="0x60" subtype="0x01">rock/pop</genre>
+  <genre lang="en" type="0x60" subtype="0x02">serious music/classic music</genre>
+  <genre lang="en" type="0x60" subtype="0x03">folk/traditional music</genre>
+  <genre lang="en" type="0x60" subtype="0x04">jazz</genre>
+  <genre lang="en" type="0x60" subtype="0x05">musical/opera</genre>
+  <genre lang="en" type="0x60" subtype="0x06">ballet</genre>
+
   <genre lang="en" type="0x70" subtype="0x00">arts/culture (without music, general)</genre>
+  <genre lang="en" type="0x70" subtype="0x01">performing arts</genre>
+  <genre lang="en" type="0x70" subtype="0x02">fine arts</genre>
   <genre lang="en" type="0x70" subtype="0x03">religion</genre>
+  <genre lang="en" type="0x70" subtype="0x04">popular culture/traditional arts</genre>
+  <genre lang="en" type="0x70" subtype="0x05">literature</genre>
+  <genre lang="en" type="0x70" subtype="0x06">film/cinema</genre>
+  <genre lang="en" type="0x70" subtype="0x07">experimental film/video</genre>
+  <genre lang="en" type="0x70" subtype="0x08">broadcasting/press</genre>
+  <genre lang="en" type="0x70" subtype="0x09">new media</genre>
+  <genre lang="en" type="0x70" subtype="0x0A">arts/culture magazine</genre>
+  <genre lang="en" type="0x70" subtype="0x0B">fashion</genre>
+
+  <genre lang="en" type="0x80" subtype="0x00">social/political issues/economics (general)</genre>
   <genre lang="en" type="0x80" subtype="0x01">magazines/reports/documentary</genre>
+  <genre lang="en" type="0x80" subtype="0x0"></genre>
+  <genre lang="en" type="0x80" subtype="0x0"></genre>
+
   <genre lang="en" type="0x90" subtype="0x00">education/science/factual topics (general)</genre>
   <genre lang="en" type="0x90" subtype="0x01">nature/animals/environment</genre>
+  <genre lang="en" type="0x90" subtype="0x02">technology/natural science</genre>
+  <genre lang="en" type="0x90" subtype="0x03">medicine/physiology/psychology</genre>
+  <genre lang="en" type="0x90" subtype="0x04">foreign countries/expeditions</genre>
+  <genre lang="en" type="0x90" subtype="0x05">social/spiritual science</genre>
+  <genre lang="en" type="0x90" subtype="0x06">further education</genre>
+  <genre lang="en" type="0x90" subtype="0x07">languages</genre>
 
+  <genre lang="en" type="0xA0" subtype="0x00">leisure hobbies (general)</genre>
+  <genre lang="en" type="0xA0" subtype="0x01">tourism/travel</genre>
+  <genre lang="en" type="0xA0" subtype="0x02">handicraft</genre>
+  <genre lang="en" type="0xA0" subtype="0x03">motoring</genre>
+  <genre lang="en" type="0xA0" subtype="0x04">fitness & health</genre>
+  <genre lang="en" type="0xA0" subtype="0x05">cooking</genre>
+  <genre lang="en" type="0xA0" subtype="0x06">advertisement/shopping</genre>
+  <genre lang="en" type="0xA0" subtype="0x07">gardening</genre>
+
+  <genre lang="en" type="0xB0" subtype="0x00">original language</genre>
+  <genre lang="en" type="0xB0" subtype="0x01">black & white</genre>
+  <genre lang="en" type="0xB0" subtype="0x02">unpublished</genre>
+  <genre lang="en" type="0xB0" subtype="0x03">live broadcast</genre>
 </genrestrings>
 
 <!-- TODO: Finish me... This list is probably not complete yet

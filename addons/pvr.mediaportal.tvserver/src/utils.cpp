@@ -125,12 +125,6 @@ std::string ToXBMCPath(const std::string& strFileName)
       }
       SMBPrefix += "@";
     }
-#ifndef TARGET_WINDOWS
-    else
-    {
-      SMBPrefix += "Guest@";
-    }
-#endif
     strXBMCFileName.Replace("\\\\", SMBPrefix);
   }
   strXBMCFileName.Replace('\\', '/');

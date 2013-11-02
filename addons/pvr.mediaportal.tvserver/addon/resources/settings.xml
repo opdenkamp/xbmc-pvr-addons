@@ -5,7 +5,7 @@
     <setting id="host" type="text" label="30000" option="urlencoded" default="127.0.0.1" />
     <setting id="port" type="number" label="30001" default="9596" />
     <setting id="timeout" type="enum" label="30005" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20" default="10"/>
-    <setting id="smbusername" type="text" label="30016" default="Guest" />
+    <setting id="smbusername" type="text" label="30016" default="" />
     <setting id="smbpassword" type="text" label="30017" option="hidden" default="" />
   </category>
 

@@ -20,7 +20,7 @@
  */
 #pragma once
 #include "os-dependent.h"
-//#include "TeletextServiceInfo.h"
+
 #include <vector>
 
 // This class used to store subtitle stream specific information
@@ -170,7 +170,6 @@ public:
   unsigned long PcrPid;
   unsigned long PmtPid;
   short TeletextPid; // which PID contains the teletext data
-  //std::vector<TeletextServiceInfo> TeletextInfo;
 
   int  ServiceId;
 

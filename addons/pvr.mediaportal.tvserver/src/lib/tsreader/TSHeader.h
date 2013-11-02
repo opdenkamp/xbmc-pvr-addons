@@ -20,8 +20,6 @@
  */
 #pragma once
 
-//#include "os-dependent.h"
-
 class CTsHeader
 {
 public:

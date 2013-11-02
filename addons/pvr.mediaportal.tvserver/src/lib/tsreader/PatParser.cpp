@@ -172,9 +172,7 @@ void CPatParser::OnNewSection(CSection& section)
     //XBMC->Log(LOG_DEBUG, "DecodePat  %d section:%d lastsection:%d sectionlen:%d",
     //            version_number,section_number,last_section_number,section_length);
 
-    //int pmtcount=0;
     int loop = (section.section_length - 9) / 4;
-    //bool newPmtsAdded=false;
     for(int i=0; i < loop; i++)
     {
       int offset = (8 +(i * 4));
@@ -201,9 +199,7 @@ void CPatParser::OnNewSection(CSection& section)
         pmtParser->SetPid(pmtPid);
         //pmtParser->SetPmtCallBack(this);
         m_pmtParsers.push_back( pmtParser );
-        //LogDebug("PatParser:  add pmt# %d pid: %x",m_pmtParsers.size(), pmtPid);
         XBMC->Log(LOG_DEBUG, "PatParser:  add pmt# %d pid: %x",m_pmtParsers.size(), pmtPid);
-        //newPmtsAdded=true;
       }
     }
   }

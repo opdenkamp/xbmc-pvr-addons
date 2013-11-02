@@ -63,15 +63,9 @@ void CDeMultiplexer::Start()
   //reset some values
   m_bStarting = true;
   m_receivedPackets = 0;
-  //m_mpegParserTriggerFormatChange=false;
   m_bEndOfFile = false;
-  //m_bHoldAudio=false;
-  //m_bHoldVideo=false;
   m_iPatVersion = -1;
   m_ReqPatVersion = -1;
-  //m_bSetAudioDiscontinuity=false;
-  //m_bSetVideoDiscontinuity=false;
-  //unsigned long dwBytesProcessed=0;
   unsigned long m_Time = GetTickCount();
 
   while( (GetTickCount() - m_Time) < 5000  && m_bGotNewChannel == false)
@@ -79,26 +73,7 @@ void CDeMultiplexer::Start()
     int BytesRead = ReadFromFile(false,false);
     if (0 == BytesRead)
       usleep(10000);
-    //if (dwBytesProcessed > INITIAL_READ_SIZE || GetAudioStreamCount() > 0)
-    //{
-    //  #ifdef USE_DYNAMIC_PINS
-    //  if ((!m_mpegPesParser->basicVideoInfo.isValid &&  m_pids.videoPids.size() > 0 && 
-    //    m_pids.videoPids[0].Pid>1) && dwBytesProcessed<INITIAL_READ_SIZE)
-    //  {
-    //    dwBytesProcessed+=BytesRead;
-    //    continue;
-    //  }
-    //  #endif
-    //  m_reader->SetFilePointer(0,FILE_BEGIN);
-    //  Flush();
-    //  m_streamPcr.Reset();
-    //  m_bStarting=false;
-    //  return;
-    //}
-    //dwBytesProcessed+=BytesRead;
   }
-  //m_streamPcr.Reset();
-  //m_iAudioReadCount=0;
   m_bStarting=false;
 }
 
@@ -122,7 +97,6 @@ int CDeMultiplexer::ReadFromFile(bool isAudio, bool isVideo)
 
   byte buffer[READ_SIZE];
   unsigned long dwReadBytes = 0;
-  //bool result=false;
 
   // if we are playing a RTSP stream
   if (m_reader->IsBuffer())
@@ -237,62 +211,6 @@ void CDeMultiplexer::OnTsPacket(byte* tsPacket)
       return;
     }
   }
-#if 0
-  //if we have no PCR pid (yet) then there's nothing to decode, so return
-  if (m_pids.PcrPid==0) return;
-
-  if (header.Pid==0) return;
-    
-  // 'TScrambling' check commented out - headers are never scrambled, 
-  // so it's safe to detect scrambled payload at PES level (in FillVideo()/FillAudio())
-  
-  //if (header.TScrambling) return;
-
-  //skip any packets with errors in it
-  if (header.TransportError) return;
-
-  if( m_pids.TeletextPid > 0 && m_pids.TeletextPid != m_currentTeletextPid )
-  {
-    IDVBSubtitle* pDVBSubtitleFilter(m_filter.GetSubtitleFilter());
-    if( pTeletextServiceInfoCallback )
-      {
-      std::vector<TeletextServiceInfo>::iterator vit = m_pids.TeletextInfo.begin();
-      while(vit != m_pids.TeletextInfo.end())
-      {
-        TeletextServiceInfo& info = *vit;
-        LogDebug("Calling Teletext Service info callback");
-        (*pTeletextServiceInfoCallback)(info.page, info.type, (byte)info.lang[0],(byte)info.lang[1],(byte)info.lang[2]);
-        vit++;
-      }
-      m_currentTeletextPid = m_pids.TeletextPid;
-    }
-  }
-
-  //is this the PCR pid ?
-  if (header.Pid==m_pids.PcrPid)
-  {
-    //yep, does it have a PCR timestamp?
-    CAdaptionField field;
-    field.Decode(header,tsPacket);
-    if (field.Pcr.IsValid)
-    {
-      //then update our stream pcr which holds the current playback timestamp
-      m_streamPcr=field.Pcr;
-    }
-  }
-
-  //as long as we dont have a stream pcr timestamp we return
-  if (m_streamPcr.IsValid==false)
-  {
-    return;
-  }
-
-  //process the ts packet further
-  FillSubtitle(header,tsPacket);
-  FillAudio(header,tsPacket);
-  FillVideo(header,tsPacket);
-  FillTeletext(header,tsPacket);
-#endif
 }
 
 void CDeMultiplexer::RequestNewPat(void)

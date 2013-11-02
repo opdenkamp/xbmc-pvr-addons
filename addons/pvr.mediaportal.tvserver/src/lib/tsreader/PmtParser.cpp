@@ -283,7 +283,7 @@ void CPmtParser::OnNewSection(CSection& section)
 
             int real_page = teletext_magazine_number*100 + real_page_tens*10 + real_page_units;
 
-            //LogDebug("Mag: %i, tens %i, units %i, total ?= %i", teletext_magazine_number,real_page_tens,real_page_units,real_page);
+            //XBMC->Log(LOG_DEBUG, "Mag: %i, tens %i, units %i, total ?= %i", teletext_magazine_number,real_page_tens,real_page_units,real_page);
 
             //if its a teletext subtitle service (standard / hard of hearing respectively)
             if (teletext_type == 0x02 || teletext_type == 0x05)

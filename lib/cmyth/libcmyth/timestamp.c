@@ -61,6 +61,7 @@ cmyth_timestamp_create(void)
 	ret->timestamp_minute = 0;
 	ret->timestamp_second = 0;
 	ret->timestamp_isdst = -1;
+	ret->timestamp_isutc = 0;
 	return ret;
 }
 
@@ -86,15 +87,16 @@ cmyth_timestamp_t
 cmyth_timestamp_from_string(const char *str)
 {
 	cmyth_timestamp_t ret;
-	unsigned int i;
-	int datetime = 1;
+	int i;
+	int format = 2;
 	char *yyyy;
 	char *MM;
 	char *dd;
 	char *hh;
 	char *mm;
 	char *ss;
-	char buf[CMYTH_TIMESTAMP_LEN + 1];
+	char buf[CMYTH_TIMESTAMP_UTC_LEN + 1];
+	int len;
 
 	if (!str) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL string\n", __FUNCTION__);
@@ -108,6 +110,7 @@ cmyth_timestamp_from_string(const char *str)
 	hh = buf + 11;
 	mm = buf + 14;
 	ss = buf + 17;
+	len = strlen(buf);
 
 	ret = cmyth_timestamp_create();
 	if (!ret) {
@@ -115,24 +118,37 @@ cmyth_timestamp_from_string(const char *str)
 			  __FUNCTION__);
 		return NULL;
 	}
-	if (strlen(buf) != CMYTH_TIMESTAMP_LEN) {
-		datetime = 0;
-		if (strlen(buf) != CMYTH_DATESTAMP_LEN) {
-			cmyth_dbg(CMYTH_DBG_ERROR,
-				  "%s: string is not a timestamp '%s'\n",
-				  __FUNCTION__, buf);
-			goto err;
+
+	ret->timestamp_isutc = 1;
+	if (len != CMYTH_TIMESTAMP_UTC_LEN) {
+		format = 1;
+		ret->timestamp_isutc = 0;
+		if (len != CMYTH_TIMESTAMP_LEN) {
+			format = 0;
+			if (len != CMYTH_DATESTAMP_LEN) {
+				cmyth_dbg(CMYTH_DBG_ERROR,
+					  "%s: string is not a timestamp '%s'\n",
+					  __FUNCTION__, buf);
+				goto err;
+			}
 		}
 	}
 
-	if ((datetime == 1) &&
+	if ((format == 2) &&
+	    ((buf[4] != '-') || (buf[7] != '-') || (buf[10] != 'T') ||
+	     (buf[13] != ':') || (buf[16] != ':') || (buf[19] != 'Z'))) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: string is badly formed '%s'\n",
+			  __FUNCTION__, buf);
+		goto err;
+	}
+	if ((format == 1) &&
 	    ((buf[4] != '-') || (buf[7] != '-') || (buf[10] != 'T') ||
 	     (buf[13] != ':') || (buf[16] != ':'))) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: string is badly formed '%s'\n",
 			  __FUNCTION__, buf);
 		goto err;
 	}
-	if ((datetime == 0) &&
+	if ((format == 0) &&
 	    ((buf[4] != '-') || (buf[7] != '-'))) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: string is badly formed '%s'\n",
 			  __FUNCTION__, buf);
@@ -141,13 +157,14 @@ cmyth_timestamp_from_string(const char *str)
 
 	buf[4] = '\0';
 	buf[7] = '\0';
-	if (datetime) {
+	if (format > 0) {
 		buf[10] = '\0';
 		buf[13] = '\0';
 		buf[16] = '\0';
+		buf[19] = '\0';
 	}
 	for (i = 0;
-	     i < (datetime ? CMYTH_TIMESTAMP_LEN : CMYTH_DATESTAMP_LEN);
+	     i < len;
 	     ++i) {
 		if (buf[i] && !isdigit(buf[i])) {
 			cmyth_dbg(CMYTH_DBG_ERROR,
@@ -170,7 +187,7 @@ cmyth_timestamp_from_string(const char *str)
 		goto err;
 	}
 
-	if (datetime == 0)
+	if (format == 0)
 		return ret;
 
 	ret->timestamp_hour = atoi(hh);
@@ -198,7 +215,7 @@ cmyth_timestamp_from_string(const char *str)
 	return NULL;
 }
 
-cmyth_timestamp_t
+static cmyth_timestamp_t
 cmyth_timestamp_from_tm(struct tm * tm_datetime)
 {
 	cmyth_timestamp_t ret = cmyth_timestamp_create();
@@ -229,15 +246,15 @@ cmyth_timestamp_from_tm(struct tm * tm_datetime)
  *
  * Return Value:
  *
- * Success: cmyth_timestamp_t object
+ * Success: cmyth_timestamp_t structure
  *
- * Failure: -(ERRNO)
+ * Failure: NULL
  */
 cmyth_timestamp_t
 cmyth_timestamp_from_unixtime(time_t l)
 {
 	struct tm tm_datetime;
-	localtime_r(&l,&tm_datetime);
+	localtime_r(&l, &tm_datetime);
 	return cmyth_timestamp_from_tm(&tm_datetime);
 }
 
@@ -252,16 +269,69 @@ cmyth_timestamp_from_unixtime(time_t l)
  *
  * Return Value:
  *
- * Success: cmyth_timestamp_t object
+ * Success: cmyth_timestamp_t structure
  *
- * Failure: -(ERRNO)
+ * Failure: NULL
  */
 cmyth_timestamp_t
 cmyth_timestamp_utc_from_unixtime(time_t l)
 {
 	struct tm tm_datetime;
+	cmyth_timestamp_t ts;
 	gmtime_r(&l, &tm_datetime);
-	return cmyth_timestamp_from_tm(&tm_datetime);
+	ts = cmyth_timestamp_from_tm(&tm_datetime);
+	ts->timestamp_isutc = 1;
+	return ts;
+}
+
+/*
+ * cmyth_timestamp_to_utc(cmyth_timestamp_t ts)
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Create and fill out a UTC timestamp structure
+ *
+ * Return Value:
+ *
+ * Success: cmyth_timestamp_t structure
+ *
+ * Failure: NULL
+ */
+cmyth_timestamp_t
+cmyth_timestamp_to_utc(cmyth_timestamp_t ts)
+{
+	time_t l;
+	struct tm tm_datetime;
+	cmyth_timestamp_t ret;
+
+	if (!ts) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL timestamp\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	if (ts->timestamp_isutc) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: UTC timestamp provided\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+	l = cmyth_timestamp_to_unixtime(ts);
+	gmtime_r(&l, &tm_datetime);
+	ret = cmyth_timestamp_from_tm(&tm_datetime);
+	ret->timestamp_isutc = 1;
+	return ret;
+}
+
+int
+cmyth_timestamp_isutc(cmyth_timestamp_t ts)
+{
+	if (!ts) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL timestamp\n",
+			  __FUNCTION__);
+		return -EINVAL;
+	}
+	return ts->timestamp_isutc;
 }
 
 /*
@@ -289,7 +359,12 @@ cmyth_timestamp_to_unixtime(cmyth_timestamp_t ts)
 	if (!ts) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL timestamp provided\n",
 			  __FUNCTION__);
-		return -EINVAL;
+		return (time_t) -1;
+	}
+	if (ts->timestamp_isutc == 1) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: UTC timestamp provided\n",
+			  __FUNCTION__);
+		return (time_t) -1;
 	}
 
 	tm_datetime.tm_sec = ts->timestamp_second;
@@ -334,14 +409,29 @@ cmyth_timestamp_to_string(char *str, cmyth_timestamp_t ts)
 			  __FUNCTION__);
 		return -EINVAL;
 	}
-	sprintf(str,
-		"%4.4ld-%2.2ld-%2.2ldT%2.2ld:%2.2ld:%2.2ld",
-		ts->timestamp_year,
-		ts->timestamp_month,
-		ts->timestamp_day,
-		ts->timestamp_hour,
-		ts->timestamp_minute,
-		ts->timestamp_second);
+	/* ISO 8601 formats */
+	if (ts->timestamp_isutc == 1)
+	{
+		sprintf(str,
+			"%4.4ld-%2.2ld-%2.2ldT%2.2ld:%2.2ld:%2.2ldZ",
+			ts->timestamp_year,
+			ts->timestamp_month,
+			ts->timestamp_day,
+			ts->timestamp_hour,
+			ts->timestamp_minute,
+			ts->timestamp_second);
+	}
+	else
+	{
+		sprintf(str,
+			"%4.4ld-%2.2ld-%2.2ldT%2.2ld:%2.2ld:%2.2ld",
+			ts->timestamp_year,
+			ts->timestamp_month,
+			ts->timestamp_day,
+			ts->timestamp_hour,
+			ts->timestamp_minute,
+			ts->timestamp_second);
+	}
 	return 0;
 }
 
@@ -420,6 +510,18 @@ cmyth_timestamp_to_display_string(char *str, cmyth_timestamp_t ts, int time_form
 			ts->timestamp_second,
 			pm ? "PM" : "AM");
 	}
+	/* ISO 8601 formats */
+	else if (ts->timestamp_isutc == 1)
+	{
+		sprintf(str,
+			"%4.4ld-%2.2ld-%2.2ldT%2.2ld:%2.2ld:%2.2ldZ",
+			ts->timestamp_year,
+			ts->timestamp_month,
+			ts->timestamp_day,
+			ts->timestamp_hour,
+			ts->timestamp_minute,
+			ts->timestamp_second);
+	}
 	else
 	{
 		sprintf(str,
@@ -465,6 +567,11 @@ cmyth_datetime_to_string(char *str, cmyth_timestamp_t ts)
 	}
 	if (!ts) {
 		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL timestamp provided\n",
+			  __FUNCTION__);
+		return -EINVAL;
+	}
+	if (ts->timestamp_isutc == 1) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: UTC timestamp provided\n",
 			  __FUNCTION__);
 		return -EINVAL;
 	}
@@ -612,5 +719,5 @@ cmyth_timestamp_diff(cmyth_timestamp_t ts1, cmyth_timestamp_t ts2)
 	tm_datetime.tm_isdst = ts2->timestamp_isdst;
 	end = mktime(&tm_datetime);
 
-	return (int)(end - start);
+	return (int)difftime(end, start);
 }

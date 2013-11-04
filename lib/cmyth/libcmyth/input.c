@@ -137,7 +137,7 @@ cmyth_get_free_inputlist(cmyth_recorder_t rec)
 		goto out;
 	}
 
-	out:
+out:
 	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
 	return inputlist;
 }
@@ -162,8 +162,12 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 		count -= consumed;
 		total += consumed;
 		if (*err) {
-			failed = "cmyth_rcv_string() inputname";
+			failed = "cmyth_rcv_string()";
 			goto fail;
+		}
+		if (strncmp(tmp_str, "EMPTY_LIST", 10) == 0) {
+			ref_release(input);
+			goto out;
 		}
 		input->inputname = ref_strdup(tmp_str);
 
@@ -213,7 +217,7 @@ int cmyth_rcv_free_inputlist(cmyth_conn_t conn, int *err,
 					(++inputlist->input_count) * sizeof(cmyth_input_t));
 		inputlist->input_list[inputlist->input_count - 1] = input;
 	}
-
+	out:
 	return total;
 
 	fail:

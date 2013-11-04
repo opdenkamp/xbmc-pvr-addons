@@ -23,13 +23,11 @@
 
 MythFile::MythFile()
   : m_file_t(new MythPointer<cmyth_file_t>())
-  , m_conn(MythConnection())
 {
 }
 
-MythFile::MythFile(cmyth_file_t myth_file, MythConnection conn)
+MythFile::MythFile(cmyth_file_t myth_file)
   : m_file_t(new MythPointer<cmyth_file_t>())
-  , m_conn(conn)
 {
   *m_file_t = myth_file;
 }

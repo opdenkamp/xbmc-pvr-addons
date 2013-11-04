@@ -322,7 +322,7 @@ cmyth_file_get_block(cmyth_file_t file, char *buf, int32_t len)
 {
 	struct timeval tv;
 	fd_set fds;
-	int ret;
+	int32_t ret;
 
 	if (file == NULL || file->file_data == NULL)
 		return -EINVAL;

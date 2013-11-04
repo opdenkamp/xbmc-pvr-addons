@@ -463,7 +463,7 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_source_id);
 	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_card_id);
 	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_input_id);
-	sprintf(buf + strlen(buf), "%"PRId8"[]:[]", prog->proginfo_rec_priority);
+	sprintf(buf + strlen(buf), "%"PRId32"[]:[]", prog->proginfo_rec_priority);
 	sprintf(buf + strlen(buf), "%"PRId8"[]:[]", prog->proginfo_rec_status);
 	sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_record_id);
 	sprintf(buf + strlen(buf), "%"PRIu8"[]:[]", prog->proginfo_rec_type);
@@ -495,7 +495,7 @@ cmyth_proginfo_string(cmyth_conn_t control, cmyth_proginfo_t prog)
 		sprintf(buf + strlen(buf), "%s[]:[]", S(prog->proginfo_playgroup));
 	}
 	if (control->conn_version >= 25) {
-		sprintf(buf + strlen(buf), "%"PRId8"[]:[]", prog->proginfo_recpriority_2);
+		sprintf(buf + strlen(buf), "%"PRId32"[]:[]", prog->proginfo_recpriority_2);
 	}
 	if (control->conn_version >= 31) {
 		sprintf(buf + strlen(buf), "%"PRIu32"[]:[]", prog->proginfo_parentid);
@@ -1812,7 +1812,7 @@ cmyth_proginfo_recordid(cmyth_proginfo_t prog)
 	return prog->proginfo_record_id;
 }
 
-int8_t
+int32_t
 cmyth_proginfo_priority(cmyth_proginfo_t prog)
 {
 	if (!prog) {

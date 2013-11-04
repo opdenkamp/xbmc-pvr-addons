@@ -34,6 +34,18 @@ extern "C" {
 
 #ifdef __WINDOWS__
 #define strdup _strdup // # strdup is POSIX, _strdup should be used instead
+
+static inline struct tm *localtime_r(const time_t * clock, struct tm *result)
+{
+	struct tm *data;
+	if (!clock || !result)
+		return NULL;
+	data = localtime(clock);
+	if (!data)
+		return NULL;
+	memcpy(result, data, sizeof(*result));
+	return result;
+}
 #endif
 
 #define TCP_RCV_BUF_CONTROL_SIZE           128000 // Inherited from MythTV's MythSocket class
@@ -61,6 +73,7 @@ extern "C" {
 #define SUBTITLE_SEPARATOR " - "
 
 #define MENUHOOK_REC_DELETE_AND_RERECORD   1
+#define MENUHOOK_KEEP_LIVETV_RECORDING     2
 
 /*!
  * @brief PVR macros for string exchange

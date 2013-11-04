@@ -168,7 +168,15 @@ msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
 msgstr ""
 
+msgctxt "#30309"
+msgid "Not recording"
+msgstr ""
+
 # Menu Hooks
 msgctxt "#30411"
 msgid "Delete and re-record"
+msgstr ""
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
 msgstr ""

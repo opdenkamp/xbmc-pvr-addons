@@ -191,11 +191,11 @@ int cmyth_rcv_commbreaklist(cmyth_conn_t conn, int *err,
 	int total = 0;
 	int rows;
 	int64_t mark;
-	int64_t start_mark;
+	int64_t start_mark = 0;
 	char *failed = NULL;
 	cmyth_commbreak_t commbreak;
 	uint8_t type;
-	uint8_t start_type;
+	uint8_t start_type = -1;
 	int started = 0;
 	int i;
 

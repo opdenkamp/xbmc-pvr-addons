@@ -31,7 +31,7 @@ class MythFile
 {
 public:
   MythFile();
-  MythFile(cmyth_file_t myth_file, MythConnection conn);
+  MythFile(cmyth_file_t myth_file);
 
   bool IsNull() const;
 
@@ -44,5 +44,4 @@ public:
 
 private:
   boost::shared_ptr<MythPointer<cmyth_file_t> > m_file_t;
-  MythConnection m_conn;
 };

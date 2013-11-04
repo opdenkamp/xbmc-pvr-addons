@@ -85,6 +85,44 @@ namespace Json
 } //namespace Json
 
 
+// transform [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
+// into      [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
+std::string ToCIFS(std::string& UNCName)
+{
+  std::string CIFSname = UNCName;
+  std::string SMBPrefix = "smb://";
+  size_t found;
+  while ((found = CIFSname.find("\\")) != std::string::npos)
+  {
+    CIFSname.replace(found, 1, "/");
+  }
+  CIFSname.erase(0,2);
+  CIFSname.insert(0, SMBPrefix);
+  return CIFSname;
+}
+
+
+// transform [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
+// into      [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
+std::string ToUNC(std::string& CIFSName)
+{
+  std::string UNCname = CIFSName;
+
+  UNCname.erase(0,6);
+  size_t found;
+  while ((found = UNCname.find("/")) != std::string::npos)
+  {
+    UNCname.replace(found, 1, "\\");
+  }
+  UNCname.insert(0, "\\\\");
+  return UNCname;
+}
+
+std::string ToUNC(const char* CIFSName)
+{
+  std::string temp = CIFSName;
+  return ToUNC(temp);
+}
 #if defined(TARGET_WINDOWS)
 //////////////////////////////////////////////////////////////////////////////
 //

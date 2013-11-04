@@ -39,7 +39,7 @@ cRecording::cRecording(void)
   episodenumbertotal = 0;
   episodepart = 0;
   episodeparttotal = 0;
-  ischanged = false;
+  isfullywatched = false;
   ispartofseries = false;
   ispartialrecording = false;
   ispremiere = false;
@@ -62,12 +62,8 @@ cRecording::cRecording(void)
   schedulepriority = ArgusTV::Normal;
   seriesnumber = 0;
   starrating = 0.0;
-  starttime = 0;
-  stoptime = 0;
   subtitle = "";
-  thumbnailfilename = "";
   title = "";
-  videoaspect = ArgusTV::Unknown;
 }
 
 cRecording::~cRecording(void)
@@ -78,6 +74,7 @@ bool cRecording::Parse(const Json::Value& data)
 {
   int offset;
   std::string t;
+  id = data["Id"].asInt();
   actors = data["Actors"].asString();
   category = data["Category"].asString();
   channeldisplayname = data["ChannelDisplayName"].asString();
@@ -90,7 +87,7 @@ bool cRecording::Parse(const Json::Value& data)
   episodenumbertotal = data["EpisodeNumberTotal"].asInt();
   episodepart = data["EpisodePart"].asInt();
   episodeparttotal = data["EpisodePartTotal"].asInt();
-  ischanged = data["IsChanged"].asBool();
+  isfullywatched = data["IsFullyWatched"].asBool();
   ispartofseries = data["IsPartOfSeries"].asBool();
   ispartialrecording = data["IsPartialRecording"].asBool();
   ispremiere = data["IsPremiere"].asBool();
@@ -107,7 +104,8 @@ bool cRecording::Parse(const Json::Value& data)
   programstoptime = ArgusTV::WCFDateToTimeT(t, offset);
   rating = data["Rating"].asString();
   recordingfileformatid = data["RecordingFileFormatId"].asString();
-  recordingfilename = data["RecordingFileName"].asString();
+  t = data["RecordingFileName"].asString();
+  recordingfilename = ToCIFS(t);
   recordingid = data["RecordingId"].asString();
   t = data["RecordingStartTime"].asString();
   recordingstarttime = ArgusTV::WCFDateToTimeT(t, offset);
@@ -118,37 +116,8 @@ bool cRecording::Parse(const Json::Value& data)
   schedulepriority = (ArgusTV::SchedulePriority) data["SchedulePriority"].asInt();
   seriesnumber = data["SeriesNumber"].asInt();
   starrating = data["StarRating"].asDouble();
-  t = data["StartTime"].asString();
-  starttime = ArgusTV::WCFDateToTimeT(t, offset);
-  t = data["StopTime"].asString();
-  stoptime = ArgusTV::WCFDateToTimeT(t, offset);
   subtitle = data["SubTitle"].asString();
-  thumbnailfilename = data["ThumbnailFileName"].asString();
   title = data["Title"].asString();
-  videoaspect = (ArgusTV::VideoAspectRatio) data["VideoAspect"].asInt();
-  std::string CIFSname = recordingfilename;
-  std::string SMBPrefix = "smb://";
-  if (g_szUser.length() > 0)
-  {
-    SMBPrefix += g_szUser;
-    if (g_szPass.length() > 0)
-    {
-      SMBPrefix += ":" + g_szPass;
-    }
-  }
-  else
-  {
-    SMBPrefix += "Guest";
-  }
-  SMBPrefix += "@";
-  size_t found;
-  while ((found = CIFSname.find("\\")) != std::string::npos)
-  {
-    CIFSname.replace(found, 1, "/");
-  }
-  CIFSname.erase(0,2);
-  CIFSname.insert(0, SMBPrefix);
-  cifsrecordingfilename = CIFSname;  
 
   return true;
 }

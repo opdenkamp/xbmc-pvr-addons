@@ -22,7 +22,6 @@
 #include "activerecording.h"
 #include "upcomingrecording.h"
 #include "recordinggroup.h"
-#include "recordingsummary.h"
 #include "recording.h"
 #include "epg.h"
 #include "utils.h"
@@ -39,6 +38,8 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 #define SIGNALQUALITY_INTERVAL 10
+#define MAXLIFETIME 99 //Based on VDR addon and VDR documentation. 99=Keep forever, 0=can be deleted at any time, 1..98=days to keep
+
 
 /************************************************************/
 /** Class interface */
@@ -184,64 +185,8 @@ bool cPVRClientArgusTV::ShareErrorsFound(void)
       bool isAccessibleByATV = accesibleshare["ShareAccessible"].asBool();
       bool isAccessibleByAddon = false;
       std::string accessMsg = "";
-#if defined(TARGET_WINDOWS)
-      // Try to open the directory
-      CStdStringW strWFile = UTF8Util::ConvertUTF8ToUTF16(sharename.c_str());
-      HANDLE hFile = ::CreateFileW(strWFile,      // The filename
-        (DWORD) GENERIC_READ,             // File access
-        (DWORD) FILE_SHARE_READ,          // Share access
-        NULL,                             // Security
-        (DWORD) OPEN_EXISTING,            // Open flags
-        (DWORD) FILE_FLAG_BACKUP_SEMANTICS, // More flags
-        NULL);                            // Template
-      if (hFile != INVALID_HANDLE_VALUE)
-      {
-        (void) CloseHandle(hFile);
-        isAccessibleByAddon = true;
-      }
-      else
-      {
-        LPVOID lpMsgBuf;
-        DWORD dwErr = GetLastError();
-        FormatMessage(
-          FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-          FORMAT_MESSAGE_FROM_SYSTEM |
-          FORMAT_MESSAGE_IGNORE_INSERTS,
-          NULL,
-          dwErr,
-          MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-          (LPTSTR) &lpMsgBuf,
-          0, NULL );
-        accessMsg = (char*) lpMsgBuf;
-        LocalFree(lpMsgBuf);
-      }
-#elif defined(TARGET_LINUX) || defined(TARGET_DARWIN) || defined(TARGET_FREEBSD)
-      std::string CIFSname = sharename;
-      std::string SMBPrefix = "smb://";
-      if (g_szUser.length() > 0)
-      {
-        SMBPrefix += g_szUser;
-        if (g_szPass.length() > 0)
-        {
-          SMBPrefix += ":" + g_szPass;
-        }
-      }
-      else
-      {
-        SMBPrefix += "Guest";
-      }
-      SMBPrefix += "@";
-      size_t found;
-      while ((found = CIFSname.find("\\")) != std::string::npos)
-      {
-        CIFSname.replace(found, 1, "/");
-      }
-      CIFSname.erase(0,2);
-      CIFSname.insert(0, SMBPrefix);
+      std::string CIFSname = ToCIFS(sharename);
       isAccessibleByAddon = XBMC->CanOpenDirectory(CIFSname.c_str());
-#else
-#error implement for your OS!
-#endif
       // write analysis results to the log
       if (isAccessibleByATV)
       {
@@ -699,17 +644,16 @@ PVR_ERROR cPVRClientArgusTV::GetRecordings(ADDON_HANDLE handle)
       if (recordinggroup.Parse(recordinggroupresponse[recordinggroupindex]))
       {
         Json::Value recordingsbytitleresponse;
-        retval = ArgusTV::GetRecordingsForTitle(recordinggroup.ProgramTitle(), recordingsbytitleresponse);
+        retval = ArgusTV::GetFullRecordingsForTitle(recordinggroup.ProgramTitle(), recordingsbytitleresponse);
         if (retval >= 0)
         {
-          // process list of recording summaries for this group
+          // process list of recording details for this group
           int nrOfRecordings = recordingsbytitleresponse.size();
           for (int recordingindex = 0; recordingindex < nrOfRecordings; recordingindex++)
           {
             cRecording recording;
 
-            cRecordingSummary recordingsummary;
-            if (recordingsummary.Parse(recordingsbytitleresponse[recordingindex]) && FetchRecordingDetails(recordingsummary.RecordingId(), recording))
+            if (recording.Parse(recordingsbytitleresponse[recordingindex]))
             {
               PVR_RECORDING tag;
               memset(&tag, 0 , sizeof(tag));
@@ -717,7 +661,7 @@ PVR_ERROR cPVRClientArgusTV::GetRecordings(ADDON_HANDLE handle)
               strncpy(tag.strRecordingId, recording.RecordingId(), sizeof(tag.strRecordingId));
               strncpy(tag.strChannelName, recording.ChannelDisplayName(), sizeof(tag.strChannelName));
               tag.iLifetime      = MAXLIFETIME; //TODO: recording.Lifetime();
-              tag.iPriority      = 0; //TODO? recording.Priority();
+              tag.iPriority      = recording.SchedulePriority();
               tag.recordingTime  = recording.RecordingStartTime();
               tag.iDuration      = recording.RecordingStopTime() - recording.RecordingStartTime();
               strncpy(tag.strPlot, recording.Description(), sizeof(tag.strPlot));
@@ -734,11 +678,7 @@ PVR_ERROR cPVRClientArgusTV::GetRecordings(ADDON_HANDLE handle)
               }
               strncpy(tag.strTitle, recording.Title(), sizeof(tag.strTitle));
               strncpy(tag.strPlotOutline, recording.SubTitle(), sizeof(tag.strPlotOutline));
-#ifdef TARGET_WINDOWS
               strncpy(tag.strStreamURL, recording.RecordingFileName(), sizeof(tag.strStreamURL));
-#else
-              strncpy(tag.strStreamURL, recording.CIFSRecordingFileName(), sizeof(tag.strStreamURL));
-#endif
               PVR->TransferRecordingEntry(handle, &tag);
               iNumRecordings++;
             }
@@ -748,25 +688,8 @@ PVR_ERROR cPVRClientArgusTV::GetRecordings(ADDON_HANDLE handle)
     }
   }
   t = GetTimeMs() - t;
-  XBMC->Log(LOG_INFO, "Retrieving all recordings took %d milliseconds.", t);
+  XBMC->Log(LOG_INFO, "Retrieving %d recordings took %d milliseconds.", iNumRecordings, t);
   return PVR_ERROR_NO_ERROR;
-}
-
-bool cPVRClientArgusTV::FetchRecordingDetails(std::string recordingid, cRecording& recording)
-{ 
-  bool fRc = false;
-  Json::Value recordingresponse;
-
-  cRecordingSummary recordingsummary;
-    int retval = ArgusTV::GetRecordingById(recordingid, recordingresponse);
-    if (retval >= 0)
-    {
-      if (recordingresponse.type() == Json::objectValue)
-      {
-        fRc = recording.Parse(recordingresponse);
-      }
-    }
-  return fRc;
 }
 
 PVR_ERROR cPVRClientArgusTV::DeleteRecording(const PVR_RECORDING &recinfo)
@@ -774,22 +697,20 @@ PVR_ERROR cPVRClientArgusTV::DeleteRecording(const PVR_RECORDING &recinfo)
   PVR_ERROR rc = PVR_ERROR_FAILED;
 
   XBMC->Log(LOG_DEBUG, "->DeleteRecording(%s)", recinfo.strRecordingId);
+  std::string UNCname = ToUNC(recinfo.strStreamURL);
 
-  cRecording recording;
-  if (FetchRecordingDetails(recinfo.strRecordingId, recording))
+  XBMC->Log(LOG_DEBUG, "->DeleteRecording(%s == \"%s\")", recinfo.strRecordingId, UNCname.c_str());
+  // JSONify the stream_url
+  Json::Value recordingname (UNCname);
+  Json::FastWriter writer;
+  std::string jsonval = writer.write(recordingname);
+  if (ArgusTV::DeleteRecording(jsonval) >= 0)
   {
-    XBMC->Log(LOG_DEBUG, "->DeleteRecording(%s == \"%s\")", recinfo.strRecordingId, recording.RecordingFileName());
-    // JSONify the stream_url
-    Json::Value recordingname (recording.RecordingFileName());
-    Json::StyledWriter writer;
-    std::string jsonval = writer.write(recordingname);
-    if (ArgusTV::DeleteRecording(jsonval) >= 0)
-    {
-      // Trigger XBMC to update it's list
-      PVR->TriggerRecordingUpdate();
-      rc =  PVR_ERROR_NO_ERROR;
-    }
+    // Trigger XBMC to update it's list
+    PVR->TriggerRecordingUpdate();
+    rc =  PVR_ERROR_NO_ERROR;
   }
+
   return rc;
 }
 
@@ -803,10 +724,7 @@ PVR_ERROR cPVRClientArgusTV::SetRecordingLastPlayedPosition(const PVR_RECORDING 
 {
   XBMC->Log(LOG_DEBUG, "->SetRecordingLastPlayedPosition(index=%s [%s], %d)", recinfo.strRecordingId, recinfo.strStreamURL, lastplayedposition);
 
-  std::string recordingfilename = recinfo.strStreamURL;
-#if !defined(TARGET_WINDOWS)
-  recordingfilename = ArgusTV::ToUNC(recordingfilename);
-#endif
+  std::string recordingfilename = ToUNC(recinfo.strStreamURL);
 
   // JSONify the stream_url
   Json::Value recordingname (recordingfilename);
@@ -826,10 +744,7 @@ int cPVRClientArgusTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recin
 {
   XBMC->Log(LOG_DEBUG, "->GetRecordingLastPlayedPosition(index=%s [%s])", recinfo.strRecordingId, recinfo.strStreamURL);
 
-  std::string recordingfilename = recinfo.strStreamURL;
-#if !defined(TARGET_WINDOWS)
-  recordingfilename = ArgusTV::ToUNC(recordingfilename);
-#endif
+  std::string recordingfilename = ToUNC(recinfo.strStreamURL);
 
   // JSONify the stream_url
   Json::Value response;
@@ -853,10 +768,7 @@ PVR_ERROR cPVRClientArgusTV::SetRecordingPlayCount(const PVR_RECORDING &recinfo,
 {
   XBMC->Log(LOG_DEBUG, "->SetRecordingPlayCount(index=%s [%s], %d)", recinfo.strRecordingId, recinfo.strStreamURL, playcount);
 
-  std::string recordingfilename = recinfo.strStreamURL;
-#if !defined(TARGET_WINDOWS)
-  recordingfilename = ArgusTV::ToUNC(recordingfilename);
-#endif
+  std::string recordingfilename = ToUNC(recinfo.strStreamURL);
 
   // JSONify the stream_url
   Json::Value recordingname (recordingfilename);
@@ -1227,16 +1139,7 @@ bool cPVRClientArgusTV::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
       }
     }
 
-    std::string CIFSname = filename;
-    std::string SMBPrefix = "smb://";
-    size_t found;
-    while ((found = CIFSname.find("\\")) != std::string::npos)
-    {
-      CIFSname.replace(found, 1, "/");
-    }
-    CIFSname.erase(0,2);
-    CIFSname.insert(0, SMBPrefix.c_str());
-    filename = CIFSname;
+    filename = ToCIFS(filename);
 
     if (retval != E_SUCCESS || filename.length() == 0)
     {
@@ -1512,19 +1415,8 @@ PVR_ERROR cPVRClientArgusTV::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 /** Record stream handling */
 bool cPVRClientArgusTV::OpenRecordedStream(const PVR_RECORDING &recinfo)
 {
-  XBMC->Log(LOG_DEBUG, "->OpenRecordedStream(index=%s)", recinfo.strRecordingId);
-  cRecording recording;
-  if (!FetchRecordingDetails(recinfo.strRecordingId, recording))
-  {
-    XBMC->Log(LOG_ERROR, "Unable to fetch recording details for %s", recinfo.strRecordingId);
-    return false;
-  }
-
-#if TARGET_WINDOWS
-  const char* recordingName = recording.RecordingFileName();
-#else
-  const char* recordingName = recording.CIFSRecordingFileName();
-#endif
+  XBMC->Log(LOG_DEBUG, "->OpenRecordedStream(%s)", recinfo.strStreamURL);
+  std::string UNCname = ToUNC(recinfo.strStreamURL);
 
   if (m_tsreader != NULL)
   {
@@ -1533,7 +1425,7 @@ bool cPVRClientArgusTV::OpenRecordedStream(const PVR_RECORDING &recinfo)
     SAFE_DELETE(m_tsreader);
   }
   m_tsreader = new CTsReader();
-  if (m_tsreader->Open(recordingName) != S_OK)
+  if (m_tsreader->Open(UNCname.c_str()) != S_OK)
   {
     SAFE_DELETE(m_tsreader);
     return false;

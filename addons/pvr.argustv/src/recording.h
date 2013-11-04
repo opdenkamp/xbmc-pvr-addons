@@ -27,6 +27,7 @@
 class cRecording
 {
 private:
+  int id;
   std::string actors;
   std::string category;
   std::string channeldisplayname;
@@ -39,7 +40,7 @@ private:
   int episodenumbertotal;
   int episodepart;
   int episodeparttotal;
-  bool ischanged;
+  bool isfullywatched;
   bool ispartofseries;
   bool ispartialrecording;
   bool ispremiere;
@@ -54,7 +55,6 @@ private:
   std::string rating;
   std::string recordingfileformatid;
   std::string recordingfilename;
-  std::string cifsrecordingfilename;
   std::string recordingid;
   time_t recordingstarttime;
   time_t recordingstoptime;
@@ -63,12 +63,8 @@ private:
   ArgusTV::SchedulePriority schedulepriority;
   int seriesnumber;
   double starrating;
-  time_t starttime;
-  time_t stoptime;
   std::string subtitle;
-  std::string thumbnailfilename;
   std::string title;
-  ArgusTV::VideoAspectRatio videoaspect;
 public:
   cRecording(void);
   virtual ~cRecording(void);
@@ -76,7 +72,7 @@ public:
   bool Parse(const Json::Value& data);
 
   void Transform(bool isgroupmember);
-
+  int Id(void) const { return id; }
   const char *Actors(void) const { return actors.c_str(); }
   const char *Category(void) const { return category.c_str(); }
   const char *ChannelDisplayName(void) const { return channeldisplayname.c_str(); }
@@ -89,7 +85,7 @@ public:
   int EpisodeNumberTotal(void) const { return episodenumbertotal; }
   int EpisodePart(void) const { return episodepart; }
   int EpisodePartTotal(void) const { return episodeparttotal; }
-  bool IsChanged(void) const { return ischanged; }
+  bool IsFullyWatched(void) const { return isfullywatched; }
   bool IsPartOfSeries(void) const { return ispartofseries; }
   bool IsPartialRecording(void) const { return ispartialrecording; }
   bool IsPremiere(void) const { return ispremiere; }
@@ -104,7 +100,6 @@ public:
   const char *Rating(void) const { return rating.c_str(); }
   const char *RecordingFileFormatId(void) const { return recordingfileformatid.c_str(); }
   const char *RecordingFileName(void) const { return recordingfilename.c_str(); }
-  const char *CIFSRecordingFileName(void) const { return cifsrecordingfilename.c_str(); }
   const char *RecordingId(void) const { return recordingid.c_str(); }
   time_t RecordingStartTime(void) const { return recordingstarttime; }
   time_t RecordingStopTime(void) const { return recordingstoptime; }
@@ -113,10 +108,6 @@ public:
   ArgusTV::SchedulePriority SchedulePriority(void) const { return schedulepriority; }
   int SeriesNumber(void) const { return seriesnumber; }
   double StarRating(void) const { return starrating; }
-  time_t StartTime(void) const { return starttime; }
-  time_t StopTime(void) const { return stoptime; }
   const char *SubTitle(void) const { return subtitle.c_str(); }
-  const char *ThumbnailFileName(void) const { return thumbnailfilename.c_str(); }
   const char *Title(void) const { return title.c_str(); }
-  ArgusTV::VideoAspectRatio VideoAspect(void) const { return videoaspect; }
 };

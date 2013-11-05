@@ -21,9 +21,9 @@
 #include <json/json.h>
 #include <cstdlib>
 
-#define ATV_2_1_0 (53)
-#define ATV_REST_MINIMUM_API_VERSION ATV_2_1_0
-#define ATV_REST_MAXIMUM_API_VERSION ATV_2_1_0
+#define ATV_2_2_0 (60)
+#define ATV_REST_MINIMUM_API_VERSION ATV_2_2_0
+#define ATV_REST_MAXIMUM_API_VERSION ATV_2_2_0
 
 #define E_SUCCESS 0
 #define E_FAILED -1
@@ -195,11 +195,11 @@ namespace ArgusTV
   int GetRecordingGroupByTitle(Json::Value& response);
 
   /**
-   * \brief Fetch the data for all recordings for a given title
+   * \brief Fetch the detailed data for all recordings for a given title
    * \param title Program title of recording
    * \param response Reference to a std::string used to store the json response string
    */
-  int GetRecordingsForTitle(const std::string& title, Json::Value& response);
+  int GetFullRecordingsForTitle(const std::string& title, Json::Value& response);
 
   /**
    * \brief Fetch the detailed information of a recorded show
@@ -344,6 +344,4 @@ namespace ArgusTV
 
   time_t WCFDateToTimeT(const std::string& wcfdate, int& offset);
   std::string TimeTToWCFDate(const time_t thetime);
-  std::string ToCIFS(std::string& UNCName);
-  std::string ToUNC(std::string& CIFSName);
 } //namespace ArgusTV

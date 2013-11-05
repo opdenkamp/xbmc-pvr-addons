@@ -110,7 +110,6 @@ private:
   cChannel* FetchChannel(std::vector<cChannel*> m_Channels, int channelid, bool LogError = true);
   void FreeChannels(std::vector<cChannel*> m_Channels);
   void Close();
-  bool FetchRecordingDetails(std::string recordingid, cRecording& recording);
   bool _OpenLiveStream(const PVR_CHANNEL &channel);
 
   int                     m_iCurrentChannel;

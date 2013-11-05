@@ -14,6 +14,7 @@ SUBDIRS = pvr.demo \
           pvr.njoy \
           pvr.vuplus \
           pvr.argustv \
+          pvr.dvblink \
           $(ADDON_MYTHTV_SUBDIRS) \
           $(ADDON_IPTVSIMPLE_SUBDIRS)
 

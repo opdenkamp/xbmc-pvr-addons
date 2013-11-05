@@ -26,7 +26,6 @@ libargustv_addon_la_SOURCES = src/activerecording.cpp \
                                    src/pvrclient-argustv.cpp \
                                    src/recording.cpp \
                                    src/recordinggroup.cpp \
-                                   src/recordingsummary.cpp \
                                    src/tools.cpp \
                                    src/upcomingrecording.cpp \
                                    src/uri.cpp \

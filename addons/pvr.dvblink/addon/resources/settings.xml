@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+  <!-- Connection -->
+  <category label="30000">
+    <setting id="host" type="text" label="30001" option="urlencoded" default="127.0.0.1" />
+    <setting id="port" type="number" option="int" label="30002" default="8080" />
+    <setting id="timeout" visible="false" type="enum" label="30004" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20" default="10"/>
+    <setting id="client" type="text" label="30003" default="xbmc" />
+	<setting id="username" type="text" label="30005" default="" />
+	<setting id="password" type="text" label="30006" default="" option="hidden"  enable="!eq(-1,)" />
+
+  </category>
+  <!-- Stream -->  
+  <category label="30100">  
+		<setting id="streamtype" type="enum" label="30102" lvalues="30107|30108|30109|30110" default="0" />
+		<setting id="timeshift"  visible="eq(-1,0)" type="bool" label="30111" default="false" />
+		<setting id="timeshiftpath"  visible="eq(-2,0)" enabled="eq(-1,0)" type="text" label="30112" default="special://userdata/addon_data/pvr.dvblink/" />
+		<setting id="height"  visible="gt(-3,0)" type="number" label="30103" default="720" />
+		<setting id="width"  visible="gt(-4,0)" type="number" label="30104" default="576" />
+		<setting id="bitrate"  visible="gt(-5,0)" type="number" label="30105" default="512" />
+		<setting id="audiotrack"  visible="gt(-6,0)" type="text" label="30106" default="eng" /> 
+  </category>
+   <!-- Advanced -->
+  <category label="30200">   
+  
+  <setting id="ch_handle" type="bool" label="30201" default="true" />
+  <setting id="showinfomsg" type="bool" label="30202" default="false" />
+</category>
+</settings>

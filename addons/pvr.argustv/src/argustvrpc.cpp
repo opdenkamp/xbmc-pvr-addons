@@ -705,25 +705,25 @@ namespace ArgusTV
     return retval;
   }
 
-  int GetRecordingsForTitleUsingPOSTData(const std::string& title, Json::Value& response)
+  int GetFullRecordingsForTitle(const std::string& title, Json::Value& response)
   {
-    XBMC->Log(LOG_DEBUG, "GetRecordingsForTitleUsingPOSTData(\"%s\")", title.c_str());
-    std::string command = "ArgusTV/Control/GetRecordingsForProgramTitle/Television?includeNonExisting=false";
-    std::string arguments = "\"" + title + "\"";
+    XBMC->Log(LOG_DEBUG, "GetFullRecordingsForTitle(\"%s\")", title.c_str());
+    std::string command = "ArgusTV/Control/GetFullRecordings/Television?includeNonExisting=false";
+    Json::Value jsArgument;
+    jsArgument["ScheduleId"] = Json::nullValue;
+    jsArgument["ProgramTitle"] = title;
+    jsArgument["Category"] = Json::nullValue;
+    jsArgument["ChannelId"] = Json::nullValue;
+    Json::FastWriter writer;
+    std::string arguments = writer.write(jsArgument);
 
     int retval = ArgusTV::ArgusTVJSONRPC(command, arguments, response);
     if (retval < 0)
     {
-      XBMC->Log(LOG_NOTICE, "GetRecordingsForTitleUsingPOSTData remote call failed.");
+      XBMC->Log(LOG_NOTICE, "GetFullRecordingsForTitle remote call failed. (%d)", retval);
     }
+
     return retval;
-  }
-
-  int GetRecordingsForTitle(const std::string& title, Json::Value& response)
-  {
-    XBMC->Log(LOG_DEBUG, "GetRecordingsForTitle");
-
-    return GetRecordingsForTitleUsingPOSTData(title, response);
   }
 
   int GetRecordingById(const std::string& id, Json::Value& response)
@@ -1307,56 +1307,6 @@ namespace ArgusTV
       wcfdate = result;
     }
     return wcfdate;
-  }
-
-  // transform [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
-  // into      [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
-  std::string ToCIFS(std::string& UNCName)
-  {
-    std::string CIFSname = UNCName;
-    std::string SMBPrefix = "smb://";
-    if (g_szUser.length() > 0)
-    {
-      SMBPrefix += g_szUser;
-      if (g_szPass.length() > 0)
-      {
-        SMBPrefix += ":" + g_szPass;
-      }
-    }
-    else
-    {
-      SMBPrefix += "Guest";
-    }
-    SMBPrefix += "@";
-    size_t found;
-    while ((found = CIFSname.find("\\")) != std::string::npos)
-    {
-      CIFSname.replace(found, 1, "/");
-    }
-    CIFSname.erase(0,2);
-    CIFSname.insert(0, SMBPrefix);
-    return CIFSname;
-  }
-
-
-  // transform [smb://user:password@nascat/qrecordings/NCIS/2012-05-15_20-30_SBS 6_NCIS.ts]
-  // into      [\\nascat\qrecordings\NCIS\2012-05-15_20-30_SBS 6_NCIS.ts]
-  std::string ToUNC(std::string& CIFSName)
-  {
-    std::string UNCname = CIFSName;
-
-    UNCname.erase(0,6);
-    size_t found = UNCname.find("@");
-    if (found != std::string::npos) {
-      UNCname.erase(0, found+1);
-    }
-
-    while ((found = UNCname.find("/")) != std::string::npos)
-    {
-      UNCname.replace(found, 1, "\\");
-    }
-    UNCname.insert(0, "\\\\");
-    return UNCname;
   }
 
 }

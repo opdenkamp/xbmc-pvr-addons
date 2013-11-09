@@ -1,3 +1,6 @@
+[B]Version 1.9.0[/B]
+Sync with XBMC PVR API v1.9.0
+
 [B]Version 1.7.0[/B]
 Fixed: Recordings on DVBLINK 4.5.3
 Fixed: Closing socket file handles

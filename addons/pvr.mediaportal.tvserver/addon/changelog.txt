@@ -1,3 +1,6 @@
+v1.9.10
+- add timeshift buffer functions
+
 v1.8.9
 - TSReader: Fixed: channel switching behavior when switching across tsbuffer files
 - TSReader: Fixed: Windows share access in multiseat mode (return smb:// URI's instead of \\UNC paths to XBMC also for Windows)

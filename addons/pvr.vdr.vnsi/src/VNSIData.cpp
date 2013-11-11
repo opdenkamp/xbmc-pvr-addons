@@ -744,6 +744,39 @@ PVR_ERROR cVNSIData::DeleteRecording(const PVR_RECORDING& recinfo)
   return PVR_ERROR_NO_ERROR;
 }
 
+PVR_ERROR cVNSIData::GetRecordingEdl(const PVR_RECORDING& recinfo, PVR_EDL_ENTRY edl[], int *size)
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_RECORDINGS_GETEDL))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  if (!vrp.add_U32(atoi(recinfo.strRecordingId)))
+    return PVR_ERROR_UNKNOWN;
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (vresp == NULL || vresp->noResponse())
+  {
+    delete vresp;
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  *size = 0;
+  while (!vresp->end() && *size < PVR_ADDON_EDL_LENGTH)
+  {
+    edl[*size].start = vresp->extract_S64();
+    edl[*size].end = vresp->extract_S64();
+    edl[*size].type = (PVR_EDL_TYPE)vresp->extract_S32();
+    (*size)++;
+  }
+
+  delete vresp;
+
+  return PVR_ERROR_NO_ERROR;
+}
+
 bool cVNSIData::OnResponsePacket(cResponsePacket* pkt)
 {
   return false;

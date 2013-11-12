@@ -8,7 +8,7 @@
     <c-pluff version="0.1"/>
     <import addon="xbmc.pvr" version="1.9.0"/>
     <import addon="xbmc.codec" version="1.0.0"/>
-    <import addon="xbmc.gui" version="1.0.0"/>
+    <import addon="xbmc.gui" version="5.0.1"/>
   </requires>
   <extension
     point="xbmc.pvrclient"

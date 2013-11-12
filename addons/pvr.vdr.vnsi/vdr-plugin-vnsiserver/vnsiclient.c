@@ -527,6 +527,9 @@ bool cVNSIClient::processRequest(cRequestPacket* req)
       result = processRECORDINGS_Delete();
       break;
 
+    case VNSI_RECORDINGS_GETEDL:
+      result = processRECORDINGS_GetEdl();
+      break;
 
     /** OPCODE 120 - 139: VNSI network functions for epg access and manipulating */
     case VNSI_EPG_GETFORCHANNEL:
@@ -1625,6 +1628,37 @@ bool cVNSIClient::processRECORDINGS_Delete() /* OPCODE 104 */
     m_resp->add_U32(VNSI_RET_DATAUNKNOWN);
   }
 
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+
+  return true;
+}
+
+bool cVNSIClient::processRECORDINGS_GetEdl() /* OPCODE 105 */
+{
+  cString recName;
+  cRecording* recording = NULL;
+
+  uint32_t uid = m_req->extract_U32();
+  recording = cRecordingsCache::GetInstance().Lookup(uid);
+
+  if (recording)
+  {
+    cMarks marks;
+    if(marks.Load(recording->FileName(), recording->FramesPerSecond(), recording->IsPesRecording()))
+    {
+#if VDRVERSNUM >= 10732
+      cMark* mark = NULL;
+      double fps = recording->FramesPerSecond();
+      while((mark = marks.GetNextBegin(mark)) != NULL)
+      {
+        m_resp->add_U64(mark->Position() *1000 / fps);
+        m_resp->add_U64(mark->Position() *1000 / fps);
+        m_resp->add_S32(2);
+      }
+#endif
+    }
+  }
   m_resp->finalise();
   m_socket.write(m_resp->getPtr(), m_resp->getLen());
 

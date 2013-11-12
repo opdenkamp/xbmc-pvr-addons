@@ -147,6 +147,7 @@ private:
   bool processRECORDINGS_Rename();
   bool processRECORDINGS_Delete();
   bool processRECORDINGS_Move();
+  bool processRECORDINGS_GetEdl();
 
   bool processEPG_GetForChannel();
 

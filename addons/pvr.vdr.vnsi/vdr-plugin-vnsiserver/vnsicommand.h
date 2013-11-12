@@ -88,6 +88,7 @@
 #define VNSI_RECORDINGS_GETLIST    102
 #define VNSI_RECORDINGS_RENAME     103
 #define VNSI_RECORDINGS_DELETE     104
+#define VNSI_RECORDINGS_GETEDL     105
 
 /* OPCODE 120 - 139: VNSI network functions for epg access and manipulating */
 #define VNSI_EPG_GETFORCHANNEL     120

@@ -22,8 +22,8 @@
         <include>Furniture_SettingsBackPanel</include>
       <control type="list" id="10">
         <defaultcontrol always="true">1</defaultcontrol>
-		<posx>63</posx>
-		<posy>180</posy>
+		<left>63</left>
+		<top>180</top>
 		<width>326</width>
 		<height>768</height>
 		<onleft>10</onleft>
@@ -68,20 +68,20 @@
         </content>
       </control>
       <control type="group" id="11">
-        <posx>387</posx>
-        <posy>120</posy>
+        <left>387</left>
+        <top>120</top>
         <control type="image">
           <description>Background</description>
-          <posx>0</posx>
-          <posy>0</posy>
+          <left>0</left>
+          <top>0</top>
           <width>1469</width>
           <height>741</height>
           <texture background="true">$INFO[Container(9000).ListItem.Icon]</texture>
         </control>
         <control type="image">
           <description>Background Title</description>
-          <posx>0</posx>
-          <posy>0</posy>
+          <left>0</left>
+          <top>0</top>
           <width>1469</width>
           <height>50</height>
           <aspectratio>stretch</aspectratio>
@@ -91,8 +91,8 @@
 	      <visible>StringCompare(Window.Property(menu),osd)</visible>
 		  <control type="button" id="13">
             <description>osd control label</description>
-            <posx>25</posx>
-            <posy>10</posy>
+            <left>25</left>
+            <top>10</top>
             <width>1400</width>
             <height>30</height>
             <texturefocus>views/tripanel/listselect_fo.png</texturefocus>
@@ -107,8 +107,8 @@
 		  <control type="label">
             <description>not focused label</description>
             <visible>Control.HasFocus(11)</visible>
-            <posx>300</posx>
-            <posy>20</posy>
+            <left>300</left>
+            <top>20</top>
             <width>1380</width>
             <height>30</height>
             <font>font16caps</font>
@@ -119,8 +119,8 @@
             <shadowcolor>black</shadowcolor>
           </control>
           <control type="renderaddon" id ="9">
-            <posx>5</posx>
-            <posy>50</posy>
+            <left>5</left>
+            <top>50</top>
             <width>1453</width>
             <height>740</height>
           </control>
@@ -130,8 +130,8 @@
 		  <defaultcontrol always="true">21</defaultcontrol>
 		  <control type="spincontrolex" id="21">
             <description>Source Type</description>
-            <posx>10</posx>
-            <posy>50</posy>
+            <left>10</left>
+            <top>50</top>
             <width>1400</width>
             <height>40</height>
             <texturefocus>views/tripanel/listselect_fo.png</texturefocus>
@@ -147,8 +147,8 @@
         </control>
 	    <control type="spincontrolex" id="22">
             <description>Source Type</description>
-            <posx>10</posx>
-            <posy>100</posy>
+            <left>10</left>
+            <top>100</top>
             <width>1400</width>
             <height>40</height>
             <texturefocus>views/tripanel/listselect_fo.png</texturefocus>
@@ -165,8 +165,8 @@
         </control>
         <control type="spincontrolex" id="23">
             <description>Source Type</description>
-            <posx>10</posx>
-            <posy>150</posy>
+            <left>10</left>
+            <top>150</top>
             <width>1400</width>
             <height>40</height>
             <texturefocus>views/tripanel/listselect_fo.png</texturefocus>

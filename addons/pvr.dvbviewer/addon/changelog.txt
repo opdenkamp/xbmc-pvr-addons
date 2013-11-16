@@ -1,3 +1,6 @@
+1.9.11
+[added] add timeshift buffer functions
+
 1.8.10
 
 [updated] Require DVB Viewer Recording Service 1.25.0 or later

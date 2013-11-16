@@ -697,4 +697,7 @@ unsigned int GetChannelSwitchDelay(void) { return 0; }
 
 bool SeekTime(int,bool,double*) { return false; }
 void SetSpeed(int) {};
+time_t GetPlayingTime() { return 0; }
+time_t GetBufferTimeStart() { return 0; }
+time_t GetBufferTimeEnd() { return 0; }
 } //end extern "C"

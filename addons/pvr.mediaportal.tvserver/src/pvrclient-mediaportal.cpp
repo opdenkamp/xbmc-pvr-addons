@@ -137,6 +137,12 @@ bool cPVRClientMediaPortal::SendCommand2(string command, vector<string>& lines)
     return false;
   }
 
+  if (result.find("[ERROR]:") != std::string::npos)
+  {
+    XBMC->Log(LOG_ERROR, "TVServerXBMC error: %s", result.c_str());
+    return false;
+  }
+
   Tokenize(result, lines, ",");
 
   return true;

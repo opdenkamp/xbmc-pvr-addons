@@ -1,3 +1,7 @@
+v1.6.10
+- Recordings: Add support for retrieving and storing the playback resume position (requires TVServerXBMC build 121 or higher)
+- Fixed: Hide smb password in debug xbmc.log file
+
 v1.6.9
 - Added: Fast channel switching: PAT detection on channel switch to find the new channel in the Timeshift buffer file.
   This should fix SD<->HD channel switching

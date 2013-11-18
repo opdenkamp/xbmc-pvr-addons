@@ -53,6 +53,7 @@ class FileReader
     virtual int64_t GetFileSize();
     virtual bool IsBuffer() { return false; };
     virtual int64_t OnChannelChange(void);
+    virtual int HasData(){return 0; } ;
 
   protected:
     void*    m_hFile;               // Handle to file for streaming

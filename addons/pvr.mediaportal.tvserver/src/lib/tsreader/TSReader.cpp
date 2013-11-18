@@ -42,7 +42,7 @@
 
 using namespace ADDON;
 
-CTsReader::CTsReader()
+CTsReader::CTsReader(): m_demultiplexer( *this )
 {
   m_fileReader      = NULL;
   m_fileDuration    = NULL;
@@ -291,6 +291,9 @@ long CTsReader::Open(const char* pszFileName)
       XBMC->Log(LOG_ERROR, "Failed to open file '%s' as '%s'", pszFileName, m_fileName.c_str());
       return retval;
     }
+    // detect audio/video pids
+    m_demultiplexer.SetFileReader(m_fileReader);
+    m_demultiplexer.Start();
 
     m_fileReader->SetFilePointer(0LL, FILE_BEGIN);
     m_State = State_Running;
@@ -349,6 +352,8 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
   {
     if (m_fileReader)
     {
+      XBMC->Log(LOG_DEBUG,"OnZap: request new PAT");
+
       int64_t pos_before, pos_after;
       pos_before = m_fileReader->GetFilePointer();
       pos_after = m_fileReader->SetFilePointer(0LL, FILE_END);
@@ -358,17 +363,18 @@ bool CTsReader::OnZap(const char* pszFileName, int64_t timeShiftBufferPos, long 
         /* Move backward */
         pos_after = m_fileReader->SetFilePointer((timeShiftBufferPos-pos_after), FILE_CURRENT);
       }
+      m_demultiplexer.RequestNewPat();
       m_fileReader->OnChannelChange();
 
       XBMC->Log(LOG_DEBUG,"OnZap: move from %I64d to %I64d tsbufpos  %I64d", pos_before, pos_after, timeShiftBufferPos);
       usleep(100000);
       return true;
     }
-    return S_FALSE;
+    return false;
   }
 #else
   m_fileReader->SetFilePointer(0LL, FILE_END);
-  return S_OK;
+  return true;
 #endif
 }
 

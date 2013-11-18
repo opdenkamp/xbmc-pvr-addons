@@ -451,7 +451,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   pCapabilities->bHandlesDemuxing            = false;
   pCapabilities->bSupportsChannelScan        = false;
   pCapabilities->bSupportsRecordingPlayCount = (g_iTVServerXBMCBuild < 117) ? false : true;
-  pCapabilities->bSupportsLastPlayedPosition = false;
+  pCapabilities->bSupportsLastPlayedPosition = (g_iTVServerXBMCBuild < 121) ? false : true;
   pCapabilities->bSupportsRecordingFolders   = false; // Don't show the timer directory field. This does not influence the displaying directories in the recordings list.
 
   return PVR_ERROR_NO_ERROR;
@@ -646,6 +646,22 @@ PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
     return PVR_ERROR_SERVER_ERROR;
   else
     return g_client->SetRecordingPlayCount(recording, count);
+}
+
+PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  if (!g_client)
+    return PVR_ERROR_SERVER_ERROR;
+  else
+    return g_client->SetRecordingLastPlayedPosition(recording, lastplayedposition);
+}
+
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  if (!g_client)
+    return PVR_ERROR_SERVER_ERROR;
+  else
+    return g_client->GetRecordingLastPlayedPosition(recording);
 }
 
 /*******************************************/
@@ -851,8 +867,6 @@ void DemuxAbort(void) {}
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
 
-PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 bool SeekTime(int,bool,double*) { return false; }
 void SetSpeed(int) {};

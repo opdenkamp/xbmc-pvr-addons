@@ -43,6 +43,7 @@ cRecording::cRecording()
   m_scheduleID      = 0;
   m_keepUntil       = 0;
   m_timesWatched    = 0;
+  m_lastPlayedPosition = 0;
 }
 
 
@@ -85,6 +86,7 @@ bool cRecording::ParseLine(const std::string& data)
     //[17] idchannel (int)
     //[18] isrecording (bool)
     //[19] timesWatched (int)
+    //[20] stopTime (int)
 
     m_Index = atoi(fields[0].c_str());
     m_StartTime = DateTimeToTimeT(fields[1]);
@@ -172,6 +174,10 @@ bool cRecording::ParseLine(const std::string& data)
       if (fields.size() >= 20) // Since TVServerXBMC 1.2.x.117
       {
         m_timesWatched = atoi( fields[19].c_str() );
+        if (fields.size() >= 21) // Since TVServerXBMC 1.2.x.121
+        {
+          m_lastPlayedPosition = atoi( fields[20].c_str() );
+        }
       }
     }
 

@@ -194,14 +194,7 @@ bool Socket::accept ( Socket& new_socket ) const
 
 int Socket::send ( const std::string& data )
 {
-  if (!is_valid())
-  {
-    return 0;
-  }
-
-  int status = Socket::send( (const char*) data.c_str(), (const unsigned int) data.size());
-
-  return status;
+  return Socket::send( (const char*) data.c_str(), (const unsigned int) data.size());
 }
 
 
@@ -247,6 +240,7 @@ int Socket::send ( const char* data, const unsigned int len )
     errormessage( getLastError(), "Socket::send");
     XBMC->Log(LOG_ERROR, "Socket::send  - failed to send data");
     _sd = INVALID_SOCKET;
+    return 0;
   }
   return status;
 }
@@ -295,46 +289,26 @@ int Socket::receive ( std::string& data, unsigned int minpacketsize ) const
   return status;
 }
 
+
 //Receive until error or \n
-bool Socket::ReadResponse (int &code, vector<string> &lines)
+bool Socket::ReadLine (string& line)
 {
   fd_set         set_r, set_e;
   timeval        timeout;
   int            result;
   int            retries = 6;
   char           buffer[2048];
-  char           cont = 0;
-  string         line;
-  size_t         pos1 = 0, pos2 = 0, pos3 = 0;
+  size_t         pos1 = 0;
 
-  code = 0;
+  if (!is_valid())
+    return false;
 
   while (true)
   {
-    while ((pos1 = line.find("\r\n", pos3)) != std::string::npos)
+    if ((pos1 = line.find("\r\n", 0)) != std::string::npos)
     {
-      pos2 = line.find(cont);
-
-      lines.push_back(line.substr(pos2+1, pos1-pos2-1));
-
-      line.erase(0, pos1 + 2);
-      pos3 = 0;
+      line.erase(pos1,  string::npos);
       return true;
-    }
-
-    // we only need to recheck 1 byte
-    if (line.size() > 0)
-    {
-      pos3 = line.size() - 1;
-    }
-    else
-    {
-      pos3 = 0;
-    }
-
-    if (cont == ' ')
-    {
-      break;
     }
 
     timeout.tv_sec  = RECEIVE_TIMEOUT;
@@ -350,8 +324,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     if (result < 0)
     {
       XBMC->Log(LOG_DEBUG, "%s: select failed", __FUNCTION__);
-      lines.push_back("ERROR: Select failed");
-      code = 1; //error
+      errormessage(getLastError(), __FUNCTION__);
       _sd = INVALID_SOCKET;
       return false;
     }
@@ -364,10 +337,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
          retries--;
         continue;
       } else {
-         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response. Failed after 10 retries.", __FUNCTION__);
-         lines.push_back("ERROR: Failed after 10 retries");
-         code = 1; //error
-        _sd = INVALID_SOCKET;
+         XBMC->Log(LOG_DEBUG, "%s: timeout waiting for response. Aborting after 10 retries.", __FUNCTION__);
          return false;
       }
     }
@@ -376,8 +346,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
     if (result < 0)
     {
       XBMC->Log(LOG_DEBUG, "%s: recv failed", __FUNCTION__);
-      lines.push_back("ERROR: Recv failed");
-      code = 1; //error
+      errormessage(getLastError(), __FUNCTION__);
       _sd = INVALID_SOCKET;
       return false;
     }
@@ -388,6 +357,7 @@ bool Socket::ReadResponse (int &code, vector<string> &lines)
 
   return true;
 }
+
 
 int Socket::receive ( std::string& data) const
 {

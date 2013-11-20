@@ -52,6 +52,7 @@ bool         g_bRecAutoRunJob3         = false;
 bool         g_bRecAutoRunJob4         = false;
 bool         g_bRecAutoExpire          = false;
 int          g_iRecTranscoder          = 0;
+bool         g_bDemuxing               = DEFAULT_HANDLE_DEMUXING;
 
 ///* Client member variables */
 ADDON_STATUS m_CurStatus              = ADDON_STATUS_UNKNOWN;
@@ -65,6 +66,7 @@ PVRClientMythTV       *g_client       = NULL;
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
 CHelper_libXBMC_gui   *GUI            = NULL;
+CHelper_libXBMC_codec *CODEC          = NULL;
 
 extern "C" {
 
@@ -116,6 +118,15 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
   XBMC->Log(LOG_DEBUG, "Register handle @ libXBMC_gui...done");
+
+  CODEC = new CHelper_libXBMC_codec;
+  if (!CODEC->RegisterMe(hdl))
+  {
+    SAFE_DELETE(PVR);
+    SAFE_DELETE(XBMC);
+    SAFE_DELETE(GUI);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
 
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
   g_szUserPath   = pvrprops->strUserPath;
@@ -250,6 +261,14 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   if (!XBMC->GetSetting("rec_transcoder", &g_iRecTranscoder))
     g_iRecTranscoder = 0;
 
+  /* Read setting "demuxing" from settings.xml */
+  if (!XBMC->GetSetting("demuxing", &g_bDemuxing))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'demuxing' setting, falling back to '%b' as default", DEFAULT_HANDLE_DEMUXING);
+    g_bDemuxing = DEFAULT_HANDLE_DEMUXING;
+  }
+
   free (buffer);
 
   // Create our addon
@@ -259,6 +278,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   {
     XBMC->Log(LOG_ERROR, "Failed to connect to backend");
     SAFE_DELETE(g_client);
+    SAFE_DELETE(CODEC);
     SAFE_DELETE(GUI);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
@@ -303,6 +323,12 @@ void ADDON_Destroy()
     delete g_client;
     g_client = NULL;
     g_bCreated = false;
+  }
+
+  if (CODEC)
+  {
+    delete(CODEC);
+    CODEC = NULL;
   }
 
   if (PVR)
@@ -411,6 +437,12 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     tmp_sDBName = g_szDBName;
     g_szDBName = (const char*)settingValue;
     if (tmp_sDBName != g_szDBName)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (str == "demuxing")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'demuxing' from %u to %u", g_bDemuxing, *(bool*)settingValue);
+    if (g_bDemuxing != *(bool*)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "extradebug")
@@ -550,7 +582,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
     pCapabilities->bSupportsTimers             = true;
 
     pCapabilities->bHandlesInputStream           = true;
-    pCapabilities->bHandlesDemuxing              = false;
+    pCapabilities->bHandlesDemuxing              = g_bDemuxing;
 
     pCapabilities->bSupportsRecordings           = true;
     pCapabilities->bSupportsRecordingPlayCount   = true;
@@ -562,12 +594,6 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   {
     return PVR_ERROR_FAILED;
   }
-}
-
-PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* props)
-{
-  (void)props;
-  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 const char *GetBackendName()
@@ -950,16 +976,49 @@ long long LengthRecordedStream(void)
   return g_client->LengthRecordedStream();
 }
 
+/*******************************************/
+/** PVR Demux Functions                   **/
+
+PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
+{
+  if (g_client == NULL)
+    return PVR_ERROR_SERVER_ERROR;
+
+  return g_client->GetStreamProperties(pProperties);
+}
+
+void DemuxAbort(void)
+{
+  if (g_client != NULL)
+    g_client->DemuxAbort();
+}
+
+DemuxPacket* DemuxRead(void)
+{
+  if (g_client == NULL)
+    return NULL;
+
+  return g_client->DemuxRead();
+}
+
+void DemuxFlush(void)
+{
+  if (g_client != NULL)
+    g_client->DemuxFlush();
+}
+
+bool SeekTime(int time, bool backwards, double *startpts)
+{
+  if (g_client != NULL)
+    return g_client->SeekTime(time, backwards, startpts);
+  return false;
+}
 
 /*******************************************/
 /** Unused API Functions                  **/
 
-DemuxPacket* DemuxRead() { return NULL; }
-void DemuxAbort() {}
 void DemuxReset() {}
-void DemuxFlush() {}
 const char * GetLiveStreamURL(const PVR_CHANNEL &) { return ""; }
-bool SeekTime(int,bool,double*) { return false; }
 void SetSpeed(int) {};
 time_t GetPlayingTime() { return 0; }
 time_t GetBufferTimeStart() { return 0; }

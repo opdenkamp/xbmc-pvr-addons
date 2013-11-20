@@ -26,4 +26,7 @@
     <setting id="rec_autorunjob3" type="bool" label="30031" enable="eq(-9,0)" default="false" />
     <setting id="rec_autorunjob4" type="bool" label="30032" enable="eq(-10,0)" default="false" />
   </category>
+  <category label="30050">
+    <setting id="demuxing" type="bool" label="30052" default="false" />
+  </category>
 </settings>

@@ -1800,6 +1800,40 @@ bool PVRClientMythTV::SeekTime(int time, bool backwards, double* startpts)
   return m_demux ? m_demux->SeekTime(time, backwards, startpts) : false;
 }
 
+time_t PVRClientMythTV::GetPlayingTime()
+{
+  CLockObject lock(m_lock);
+  if (m_rec.IsNull() || !m_demux)
+    return 0;
+  int sec = m_demux->GetPlayingTime() / 1000;
+  time_t st = GetBufferTimeStart();
+  struct tm playtm;
+  localtime_r(&st, &playtm);
+  playtm.tm_sec += sec;
+  time_t pt = mktime(&playtm);
+  return pt;
+}
+
+time_t PVRClientMythTV::GetBufferTimeStart()
+{
+  CLockObject lock(m_lock);
+  if (m_rec.IsNull() || m_rec.GetLiveTVChainLast() < 0)
+    return 0;
+  MythProgramInfo prog = m_rec.GetLiveTVChainProgram(0);
+  return prog.RecordingStartTime();
+}
+
+time_t PVRClientMythTV::GetBufferTimeEnd()
+{
+  CLockObject lock(m_lock);
+  int last;
+  if (m_rec.IsNull() || (last = m_rec.GetLiveTVChainLast()) < 0)
+    return 0;
+  time_t now = time(NULL);
+  MythProgramInfo prog = m_rec.GetLiveTVChainProgram(last);
+  return (now > prog.RecordingEndTime() ? prog.RecordingEndTime() : now);
+}
+
 bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)
 {
   if (g_bExtraDebug)

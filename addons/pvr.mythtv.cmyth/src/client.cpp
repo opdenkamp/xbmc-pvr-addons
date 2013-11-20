@@ -1015,12 +1015,33 @@ bool SeekTime(int time, bool backwards, double *startpts)
 }
 
 /*******************************************/
+/** PVR Timeshift Functions               **/
+
+time_t GetPlayingTime()
+{
+  if (g_client != NULL)
+    return g_client->GetPlayingTime();
+  return 0;
+}
+
+time_t GetBufferTimeStart()
+{
+  if (g_client != NULL)
+    return g_client->GetBufferTimeStart();
+  return 0;
+}
+
+time_t GetBufferTimeEnd()
+{
+  if (g_client != NULL)
+    return g_client->GetBufferTimeEnd();
+  return 0;
+}
+
+/*******************************************/
 /** Unused API Functions                  **/
 
 void DemuxReset() {}
 const char * GetLiveStreamURL(const PVR_CHANNEL &) { return ""; }
 void SetSpeed(int) {};
-time_t GetPlayingTime() { return 0; }
-time_t GetBufferTimeStart() { return 0; }
-time_t GetBufferTimeEnd() { return 0; }
 } //end extern "C"

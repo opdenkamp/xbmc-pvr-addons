@@ -88,6 +88,10 @@ public:
   DemuxPacket* DemuxRead(void);
   bool SeekTime(int time, bool backwards, double *startpts);
 
+  time_t GetPlayingTime();
+  time_t GetBufferTimeStart();
+  time_t GetBufferTimeEnd();
+
   // Recording playback
   bool OpenRecordedStream(const PVR_RECORDING &recinfo);
   void CloseRecordedStream();

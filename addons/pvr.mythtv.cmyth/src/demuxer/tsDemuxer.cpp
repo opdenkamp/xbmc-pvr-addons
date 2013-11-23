@@ -105,11 +105,7 @@ ElementaryStream* AVContext::GetPIDStream()
   CLockObject lock(mutex);
 
   if (packet && packet->packet_type == PACKET_TYPE_PES)
-  {
-    std::map<uint16_t, Packet>::iterator it = packets.find(pid);
-    if (it != packets.end())
-      return it->second.stream;
-  }
+    return packet->stream;
   return NULL;
 }
 

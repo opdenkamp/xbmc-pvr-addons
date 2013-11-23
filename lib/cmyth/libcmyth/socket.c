@@ -2991,9 +2991,9 @@ cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int buflen, int 
 
 void cmyth_toupper_string(char *str)
 {
+	size_t i;
 	if (str) {
-		int i;
-		for ( i=0 ; i < sizeof(str) && str[i] != '\0' ; i++ ) {
+		for (i=0 ; i < sizeof(str) && str[i] != '\0' ; i++) {
 			str[i] = toupper(str[i]);
 		}
 	}

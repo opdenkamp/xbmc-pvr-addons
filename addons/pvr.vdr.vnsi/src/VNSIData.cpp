@@ -210,6 +210,11 @@ bool cVNSIData::GetChannelsList(ADDON_HANDLE handle, bool radio)
     XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
     return false;
   }
+  if (!vrp.add_U8(1)) // apply filter
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
+    return false;
+  }
 
   cResponsePacket* vresp = ReadResult(&vrp);
   if (!vresp)
@@ -224,16 +229,18 @@ bool cVNSIData::GetChannelsList(ADDON_HANDLE handle, bool radio)
     memset(&tag, 0 , sizeof(tag));
 
     tag.iChannelNumber    = vresp->extract_U32();
-    char *strChannelName = vresp->extract_String();
+    char *strChannelName  = vresp->extract_String();
     strncpy(tag.strChannelName, strChannelName, sizeof(tag.strChannelName) - 1);
+    char *strProviderName = vresp->extract_String();
     tag.iUniqueId         = vresp->extract_U32();
-                            vresp->extract_U32(); // still here for compatibility
     tag.iEncryptionSystem = vresp->extract_U32();
-                            vresp->extract_U32(); // uint32_t vtype - currently unused
+    char *strCaids        = vresp->extract_String();
     tag.bIsRadio          = radio;
 
     PVR->TransferChannelEntry(handle, &tag);
     delete[] strChannelName;
+    delete[] strProviderName;
+    delete[] strCaids;
   }
 
   delete vresp;
@@ -967,6 +974,7 @@ bool cVNSIData::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GR
 
   vrp.add_String(group.strGroupName);
   vrp.add_U8(group.bIsRadio);
+  vrp.add_U8(1); // filter channels
 
   cResponsePacket* vresp = ReadResult(&vrp);
   if (vresp == NULL || vresp->noResponse())

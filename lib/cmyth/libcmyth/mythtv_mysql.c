@@ -2318,9 +2318,7 @@ cmyth_mysql_get_recording_seek_offset(cmyth_database_t db, cmyth_proginfo_t prog
 	 */
 	const char *query_str1 = "SELECT mark,offset FROM recordedseek WHERE chanid = ? AND starttime = ? AND type = ? AND mark >= ? ORDER BY chanid ASC, starttime ASC, type ASC, mark ASC LIMIT 1;";
 	const char *query_str2 = "SELECT mark,offset FROM recordedseek WHERE chanid = ? AND starttime = ? AND type = ? AND mark <= ? ORDER BY chanid DESC, starttime DESC, type DESC, mark DESC LIMIT 1;";
-	int64_t next_mark = 0;
 	int64_t next_offset = 0;
-	int64_t prev_mark = 0;
 	int64_t prev_offset = 0;
 	uint8_t mask = 0;
 	time_t start_ts_dt;
@@ -2348,7 +2346,6 @@ cmyth_mysql_get_recording_seek_offset(cmyth_database_t db, cmyth_proginfo_t prog
 		return -1;
 	}
 	while ((row = mysql_fetch_row(res))) {
-		next_mark = safe_atoll(row[0]);
 		next_offset = safe_atoll(row[1]);
 		mask |= 1;
 	}
@@ -2371,7 +2368,6 @@ cmyth_mysql_get_recording_seek_offset(cmyth_database_t db, cmyth_proginfo_t prog
 		return -1;
 	}
 	while ((row = mysql_fetch_row(res))) {
-		prev_mark = safe_atoll(row[0]);
 		prev_offset = safe_atoll(row[1]);
 		mask |= 2;
 	}

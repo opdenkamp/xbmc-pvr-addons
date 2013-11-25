@@ -45,6 +45,7 @@
 #include "vnsi.h"
 #include "vnsiserver.h"
 #include "vnsiclient.h"
+#include "channelfilter.h"
 
 unsigned int cVNSIServer::m_IdCnt = 0;
 
@@ -83,6 +84,9 @@ cVNSIServer::cVNSIServer(int listenPort) : cThread("VDR VNSI Server")
     ERRORLOG("cVNSIServer: missing ConfigDirectory!");
     m_AllowedHostsFile = cString::sprintf("/video/" ALLOWED_HOSTS_FILE);
   }
+
+  VNSIChannelFilter.Load();
+  VNSIChannelFilter.SortChannels();
 
   m_ServerFD = socket(AF_INET, SOCK_STREAM, 0);
   if(m_ServerFD == -1)

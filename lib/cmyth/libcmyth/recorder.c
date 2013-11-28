@@ -292,7 +292,48 @@ cmyth_recorder_get_framerate(cmyth_recorder_t rec,
 int64_t
 cmyth_recorder_get_frames_written(cmyth_recorder_t rec)
 {
-	return (int64_t) -ENOSYS;
+	int r, err, count;
+	int64_t ret;
+	char msg[256];
+
+	if (!rec || !rec->rec_conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
+			  __FUNCTION__);
+		return (int64_t) -EINVAL;
+	}
+
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
+
+	if (rec->rec_conn->conn_version >= 66)
+	{
+		snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_FRAMES_WRITTEN", rec->rec_id);
+
+		if ((r = cmyth_send_message(rec->rec_conn, msg)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_send_message() failed (%d)\n",
+				  __FUNCTION__, r);
+			ret = r;
+			goto fail;
+		}
+
+		count = cmyth_rcv_length(rec->rec_conn);
+		if ((r = cmyth_rcv_int64(rec->rec_conn, &err, &ret, count)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_rcv_int64() failed (%d)\n",
+				  __FUNCTION__, r);
+			ret = err;
+			goto fail;
+		}
+	}
+	else
+	{
+		ret = (int64_t) -EPERM;
+	}
+
+fail:
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
+
+	return ret;
 }
 
 /*

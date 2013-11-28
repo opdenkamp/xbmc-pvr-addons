@@ -799,6 +799,8 @@ extern cmyth_keyframe_t cmyth_keyframe_create(void);
 
 extern char *cmyth_keyframe_string(cmyth_keyframe_t kf);
 
+extern uint32_t cmyth_keyframe_number(cmyth_keyframe_t kf);
+
 /*
  * -----------------------------------------------------------------
  * Position Map Operations

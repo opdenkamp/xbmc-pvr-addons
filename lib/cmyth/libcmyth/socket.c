@@ -2727,15 +2727,53 @@ cmyth_rcv_keyframe(cmyth_conn_t conn, int *err, cmyth_keyframe_t buf,
 		   int count)
 {
 	int tmp_err;
+	int consumed;
+	int total = 0;
+	char *failed = NULL;
 
 	if (!err) {
 		err = &tmp_err;
 	}
+	if (count <= 0) {
+		*err = EINVAL;
+		return 0;
+	}
+	if(!buf) {
+		*err = EINVAL;
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL buffer\n", __FUNCTION__);
+		return 0;
+	}
+
+	*err = 0;
+
 	/*
-	 * For now this is unimplemented.
+	 * Get frame number (uint32)
 	 */
-	*err = ENOSYS;
-	return 0;
+	consumed = cmyth_rcv_uint32(conn, err, &(buf->keyframe_number), count);
+	count -= consumed;
+	total += consumed;
+	if (*err) {
+		failed = "cmyth_rcv_uint32";
+		goto fail;
+	}
+
+	/*
+	 * Get position (int64)
+	 */
+	consumed = cmyth_rcv_int64(conn, err, &(buf->keyframe_pos) , count);
+	count -= consumed;
+	total += consumed;
+	if (*err) {
+		failed = "cmyth_rcv_int64";
+		goto fail;
+	}
+
+	return total;
+
+fail:
+	cmyth_dbg(CMYTH_DBG_ERROR, "%s: %s() failed (%d) (count = %d)\n",
+		  __FUNCTION__, failed, *err, count);
+	return total;
 }
 
 /*

@@ -107,3 +107,12 @@ cmyth_keyframe_number(cmyth_keyframe_t kf)
 	else
 		return 0;
 }
+
+int64_t
+cmyth_keyframe_pos(cmyth_keyframe_t kf)
+{
+	if (kf)
+		return kf->keyframe_pos;
+	else
+		return 0;
+}

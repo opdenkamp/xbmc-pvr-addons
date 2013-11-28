@@ -341,6 +341,11 @@ extern int cmyth_rcv_keyframe(cmyth_conn_t conn, int *err,
 			      cmyth_keyframe_t buf,
 			      int count);
 
+#define cmyth_rcv_posmap __cmyth_rcv_posmap
+extern int cmyth_rcv_posmap(cmyth_conn_t conn, int *err,
+			    cmyth_posmap_t buf,
+			    int count);
+
 #define cmyth_rcv_freespace __cmyth_rcv_freespace
 extern int cmyth_rcv_freespace(cmyth_conn_t conn, int *err,
 			       cmyth_freespace_t buf,

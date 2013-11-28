@@ -87,6 +87,17 @@ LiveShiftSource::~LiveShiftSource(void)
   }
 }
 
+void LiveShiftSource::Close()
+{
+  if (m_pSocket != NULL)
+  {
+    char request[48];
+    memset(request, 0, sizeof(request));
+    snprintf(request, sizeof(request), "Close");
+    m_pSocket->send(request, sizeof(request));
+  }
+}
+
 void LiveShiftSource::LOG(char const *fmt, ... )
 {
   if (m_log != NULL)

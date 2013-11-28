@@ -42,6 +42,7 @@ std::string            g_szUserPath   = "";
 std::string            g_szClientPath = "";
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
+CHelper_libXBMC_gui   *GUI            = NULL; 
 bool                   g_bUseTimeshift = false;
 extern "C" {
 
@@ -69,6 +70,15 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
+  // register gui
+  GUI = new CHelper_libXBMC_gui;
+  if (!GUI->RegisterMe(hdl))
+  {
+    SAFE_DELETE(GUI);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
+
   PVR = new CHelper_libXBMC_pvr;
   if (!PVR->RegisterMe(hdl))
   {
@@ -85,7 +95,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   ADDON_ReadSettings();
 
-  /* Create connection to MediaPortal XBMC TV client */
+  /* Create connection to NextPVR XBMC TV client */
   g_client       = new cPVRClientNextPVR();
   if (!g_client->Connect())
   {
@@ -300,7 +310,8 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = false;
   pCapabilities->bSupportsChannelScan        = false;
-  pCapabilities->bSupportsLastPlayedPosition = false;
+  pCapabilities->bSupportsLastPlayedPosition = true;
+  pCapabilities->bSupportsRecordingEdl       = true;
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -681,6 +692,27 @@ bool CanSeekStream(void)
   return false;
 }
 
+PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  if (g_client)
+    return g_client->SetRecordingLastPlayedPosition(recording, lastplayedposition);
+  return PVR_ERROR_SERVER_ERROR; 
+}
+
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  if (g_client)
+    return g_client->GetRecordingLastPlayedPosition(recording);
+  return -1;
+}
+
+PVR_ERROR GetRecordingEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entries[], int *size) 
+{
+  if (g_client)
+    return g_client->GetRecordingEdl(recording, entries, size);
+  return PVR_ERROR_SERVER_ERROR;
+}
+
 
 /** UNUSED API FUNCTIONS */
 PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
@@ -690,9 +722,6 @@ void DemuxReset(void) {}
 void DemuxFlush(void) {}
 
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
-PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 
 bool SeekTime(int,bool,double*) { return false; }

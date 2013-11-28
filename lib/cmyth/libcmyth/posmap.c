@@ -101,3 +101,12 @@ cmyth_posmap_count(cmyth_posmap_t pm)
 	else
 		return 0;
 }
+
+cmyth_keyframe_t
+cmyth_posmap_keyframe(cmyth_posmap_t pm, int index)
+{
+	if (pm && pm->posmap_count > index)
+		return ref_hold(pm->posmap_list[index]);
+	else
+		return NULL;
+}

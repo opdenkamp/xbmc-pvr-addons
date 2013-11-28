@@ -812,6 +812,8 @@ extern cmyth_posmap_t cmyth_posmap_create(void);
 
 extern int cmyth_posmap_count(cmyth_posmap_t pm);
 
+extern cmyth_keyframe_t cmyth_posmap_keyframe(cmyth_posmap_t pm, int index);
+
 /*
  * -----------------------------------------------------------------
  * Program Info Operations

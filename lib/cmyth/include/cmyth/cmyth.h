@@ -810,6 +810,8 @@ extern int64_t cmyth_keyframe_pos(cmyth_keyframe_t kf);
  */
 extern cmyth_posmap_t cmyth_posmap_create(void);
 
+extern int cmyth_posmap_count(cmyth_posmap_t pm);
+
 /*
  * -----------------------------------------------------------------
  * Program Info Operations

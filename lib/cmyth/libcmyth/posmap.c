@@ -92,3 +92,12 @@ cmyth_posmap_create(void)
 	ret->posmap_list = NULL;
 	return ret;
 }
+
+int
+cmyth_posmap_count(cmyth_posmap_t pm)
+{
+	if (pm)
+		return pm->posmap_count;
+	else
+		return 0;
+}

@@ -78,7 +78,7 @@ protected:
   cPatPmtParser m_PatPmtParser;
   int m_OldPmtVersion;
   bool m_WaitIFrame;
-  int64_t m_FirstFrameDTS;
+  int64_t m_FirstFramePTS;
   cVideoBuffer *m_VideoBuffer;
   cMutex m_Mutex;
   uint32_t m_MuxPacketSerial;

@@ -12,6 +12,8 @@ lib_LTLIBRARIES = libpvrwmc-addon.la
 
 LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la
 
+AM_CPPFLAGS     = -D_GOTHAM_
+
 include ../Makefile.include.am
 
 libpvrwmc_addon_la_SOURCES = src/DialogDeleteTimer.cpp \

@@ -272,8 +272,6 @@ void cVNSIClient::EpgChange()
     if (!VNSIChannelFilter.PassFilter(*channel))
       continue;
 
-    INFOLOG("Trigger EPG update for channel %s", channel->Name());
-
     uint32_t channelId = CreateStringHash(schedule->ChannelID().ToString());
     it = m_epgUpdate.find(channelId);
     if (it == m_epgUpdate.end())
@@ -283,6 +281,8 @@ void cVNSIClient::EpgChange()
 
     if (it->second >= lastEvent->StartTime())
       continue;
+
+    INFOLOG("Trigger EPG update for channel %s", channel->Name());
 
     cResponsePacket *resp = new cResponsePacket();
     if (!resp->initStatus(VNSI_STATUS_EPGCHANGE))

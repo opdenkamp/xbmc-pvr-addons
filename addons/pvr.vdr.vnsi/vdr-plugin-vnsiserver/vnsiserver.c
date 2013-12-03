@@ -225,6 +225,9 @@ void cVNSIServer::Action(void)
   }
   int ret = system(cmd);
 
+  // set thread priority
+  SetPriority(1);
+
   while (Running())
   {
     FD_ZERO(&fds);

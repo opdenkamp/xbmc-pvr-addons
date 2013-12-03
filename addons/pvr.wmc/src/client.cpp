@@ -26,7 +26,6 @@
 
 using namespace std;
 using namespace ADDON;
-//using namespace PLATFORM;
 
 #ifdef TARGET_WINDOWS
 #define snprintf _snprintf
@@ -86,8 +85,6 @@ extern "C" {
 		{
 			XBMC->Log(LOG_ERROR, "Couldn't get 'host' setting, using '127.0.0.1'");
 		}
-
-
 
 		// get the name of the computer client is running on
 #ifdef TARGET_WINDOWS
@@ -150,14 +147,6 @@ extern "C" {
 		ADDON_ReadSettings();
 
 		_wmc = new Pvr2Wmc;								// create interface to ServerWMC
-
-
-		//menuHook = new PVR_MENUHOOK();
-		//menuHook->category = PVR_MENUHOOK_ALL;
-		//menuHook->iHookId = 1;
-		//menuHook->iLocalizedStringId = 30100;
-		//PVR->AddMenuHook(menuHook);
-
 		if (_wmc->IsServerDown())						// check if server is down, if it is shut her down
 		{
 			SAFE_DELETE(_wmc);
@@ -210,8 +199,6 @@ extern "C" {
 		return 0;
 	}
 
-
-
 	// Called everytime a setting is changed by the user and to inform AddOn about
 	// new setting and to do required stuff to apply it.
 	ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
@@ -234,8 +221,6 @@ extern "C" {
 
 		return ADDON_STATUS_OK;
 	}
-
-
 
 	void ADDON_Stop()
 	{
@@ -332,19 +317,15 @@ extern "C" {
 		return PVR_ERROR_SERVER_ERROR;
 	}
 
-
-
 	int GetCurrentClientChannel(void)
 	{
 		return _currentChannel.iUniqueId;
 	}
 
-
 	PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
 	{
 		return PVR_ERROR_NOT_IMPLEMENTED;
 	}
-
 
 	PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 	{
@@ -362,6 +343,7 @@ extern "C" {
 
 		return -1;
 	}
+
 	PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 	{
 		if (_wmc)
@@ -369,6 +351,7 @@ extern "C" {
 
 		return PVR_ERROR_SERVER_ERROR;
 	}
+
 	int GetChannelGroupsAmount(void)
 	{
 		if (_wmc)
@@ -376,6 +359,7 @@ extern "C" {
 
 		return -1;
 	}
+
 	PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 	{
 		if (_wmc)
@@ -383,6 +367,7 @@ extern "C" {
 
 		return PVR_ERROR_SERVER_ERROR;
 	}
+
 	PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 	{
 		if (_wmc)
@@ -400,6 +385,7 @@ extern "C" {
 
 		return PVR_ERROR_SERVER_ERROR;
 	}
+
 	PVR_ERROR GetTimers(ADDON_HANDLE handle) 
 	{ 
 		if (_wmc)
@@ -407,6 +393,7 @@ extern "C" {
 
 		return PVR_ERROR_SERVER_ERROR;
 	}
+
 	PVR_ERROR AddTimer(const PVR_TIMER &timer) 
 	{ 
 		if (_wmc)
@@ -414,19 +401,20 @@ extern "C" {
 
 		return PVR_ERROR_NO_ERROR; 
 	}
+
 	PVR_ERROR UpdateTimer(const PVR_TIMER &timer)
 	{ 
 		if (_wmc)
 			return _wmc->AddTimer(timer);
 		return PVR_ERROR_NO_ERROR;
 	}
+
 	PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) 
 	{
 		if (_wmc)
 			return _wmc->DeleteTimer(timer, bForceDelete);
 		return PVR_ERROR_NO_ERROR;
 	}
-
 
 	// recording file functions
 	PVR_ERROR GetRecordings(ADDON_HANDLE handle) 
@@ -435,6 +423,7 @@ extern "C" {
 			return _wmc->GetRecordings(handle);
 		return PVR_ERROR_NO_ERROR;
 	}
+
 	int GetRecordingsAmount(void) 
 	{ 
 		if (_wmc)
@@ -442,7 +431,6 @@ extern "C" {
 
 		return -1;
 	}
-
 
 	PVR_ERROR RenameRecording(const PVR_RECORDING &recording) 
 	{ 
@@ -482,6 +470,7 @@ extern "C" {
 		}
 		return false;
 	}
+
 	int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize) 
 	{ 
 		if (_wmc)
@@ -490,6 +479,7 @@ extern "C" {
 		}
 		return -1;
 	}
+
 	void CloseLiveStream(void)
 	{
 		_bIsPlaying = false;
@@ -498,6 +488,7 @@ extern "C" {
 			_wmc->CloseLiveStream();
 		}
 	}
+
 	long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */) 
 	{ 
 		if (_wmc)
@@ -505,6 +496,7 @@ extern "C" {
 		else
 			return -1; 
 	}
+
 	long long PositionLiveStream(void) 
 	{ 
 		if (_wmc)
@@ -512,6 +504,7 @@ extern "C" {
 		else
 			return -1; 
 	}
+
 	long long LengthLiveStream(void) 
 	{ 
 		if (_wmc)
@@ -519,15 +512,18 @@ extern "C" {
 		else
 			return -1; 
 	}
+
 	void PauseStream(bool bPaused)
 	{
 		if (_wmc)
 			return _wmc->PauseStream(bPaused);
 	}
+
 	bool CanPauseStream(void) 
 	{
 		return true; 
 	}
+
 	bool CanSeekStream(void) 
 	{ 
 		return true; 
@@ -547,6 +543,7 @@ extern "C" {
 		}
 		return false; 
 	}
+
 	int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize) 
 	{ 
 		if (_wmc)
@@ -555,6 +552,7 @@ extern "C" {
 		}
 		return -1;
 	}
+
 	void CloseRecordedStream(void) 
 	{
 		_bIsPlaying = false;
@@ -563,6 +561,7 @@ extern "C" {
 			_wmc->CloseLiveStream();
 		}
 	}
+
 	long long SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */) 
 	{ 
 		if (_wmc)
@@ -570,6 +569,7 @@ extern "C" {
 		else
 			return -1; 
 	}
+
 	long long PositionRecordedStream(void) 
 	{ 
 		if (_wmc)
@@ -577,6 +577,7 @@ extern "C" {
 		else
 			return -1; 
 	}
+
 	long long LengthRecordedStream(void) 
 	{ 
 		if (_wmc)

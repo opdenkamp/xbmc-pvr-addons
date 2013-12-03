@@ -22,14 +22,12 @@
 #include "client.h"
 #include "Socket.h"
 
-
 #include "utilities.h"
 #include "platform/util/timeutils.h"
 #include "platform/threads/mutex.h"
 
 using namespace std;
 using namespace ADDON;
-
 
 PLATFORM::CMutex        m_mutex;
 
@@ -47,7 +45,6 @@ Socket::Socket(const enum SocketFamily family, const enum SocketDomain domain, c
 	//set_non_blocking(1);  
 }
 
-
 Socket::Socket()
 {
 	// Default constructor, default settings
@@ -58,7 +55,6 @@ Socket::Socket()
 	_protocol = tcp;
 	memset (&_sockaddr, 0, sizeof( _sockaddr ) );
 }
-
 
 Socket::~Socket()
 {
@@ -142,10 +138,6 @@ bool Socket::create()
 	return true;
 }
 
-
-
-
-
 int Socket::send( const CStdString& data )
 {
 	if (!is_valid())
@@ -157,7 +149,6 @@ int Socket::send( const CStdString& data )
 
 	return status;
 }
-
 
 int Socket::send ( const char* data, const unsigned int len )
 {
@@ -205,7 +196,6 @@ int Socket::send ( const char* data, const unsigned int len )
 	return status;
 }
 
-
 //Receive until error or \n
 bool Socket::ReadResponses(int &code, vector<CStdString> &lines)
 {
@@ -213,47 +203,6 @@ bool Socket::ReadResponses(int &code, vector<CStdString> &lines)
 	char				buffer[4096];		// this buff size has to be known in server
 	code = 0;
 	
-	//fd_set				set_r, set_e;
-	//timeval				timeout;
-	//int					retries = 6;
-	//timeout.tv_sec  = RECEIVE_TIMEOUT;
-	//timeout.tv_usec = 0;
-	// fill with new data
-	//FD_ZERO(&set_r);
-	//FD_ZERO(&set_e);
-	//FD_SET(_sd, &set_r);
-	//FD_SET(_sd, &set_e);
-	//result = select(FD_SETSIZE, &set_r, NULL, &set_e, &timeout);
-
-	//if (result < 0)
-	//{
-	//	XBMC->Log(LOG_DEBUG, "ReadResponse ERROR - select failed");
-	//	//lines.push_back("ERROR: Select failed");
-	//	code = 1; //error
-	//	_sd = INVALID_SOCKET;
-	//	return false;
-	//}
-
-	//if (result == 0)
-	//{
-	//	if (retries != 0)
-	//	{
-	//		while (result == 0 && retries > 0)
-	//		{
-	//			XBMC->Log(LOG_DEBUG, "ReadResponse - timeout waiting for response, retrying... (%i)", retries);
-	//			retries--;
-	//			result = select(FD_SETSIZE, &set_r, NULL, &set_e, &timeout);
-	//		}
-	//		if (result == 0)
-	//		{
-	//			XBMC->Log(LOG_DEBUG, "ReadResponse ERROR - timeout waiting for response. Failed after 10 retries.");
-	//			code = 1; //error
-	//			_sd = INVALID_SOCKET;
-	//			return false;
-	//		}
-	//	}
-	//}
-
 	bool readComplete = false;
 	CStdString bigString = "";
 	int attemptCnt = 0;
@@ -297,155 +246,6 @@ bool Socket::ReadResponses(int &code, vector<CStdString> &lines)
 	
 	return readComplete;
 }
-
-
-//Receive until error or \n
-//bool Socket::ReadResponse (int &code, vector<string> &lines)
-//{
-//  fd_set         set_r, set_e;
-//  timeval        timeout;
-//  int            result;
-//  int            retries = 6;
-//  char           buffer[2048];
-//  char           cont = 0;
-//  string         line;
-//  size_t         pos1 = 0, pos2 = 0, pos3 = 0;
-//
-//  code = 0;
-//
-//  while (true)
-//  {
-//    while ((pos1 = line.find("\r\n", pos3)) != std::string::npos)
-//    {
-//      pos2 = line.find(cont);
-//
-//      lines.push_back(line.substr(pos2+1, pos1-pos2-1));
-//
-//      line.erase(0, pos1 + 2);
-//      pos3 = 0;
-//      return true;
-//    }
-//
-//    // we only need to recheck 1 byte
-//    if (line.size() > 0)
-//    {
-//      pos3 = line.size() - 1;
-//    }
-//    else
-//    {
-//      pos3 = 0;
-//    }
-//
-//    if (cont == ' ')
-//    {
-//      break;
-//    }
-//
-//    timeout.tv_sec  = RECEIVE_TIMEOUT;
-//    timeout.tv_usec = 0;
-//
-//    // fill with new data
-//    FD_ZERO(&set_r);
-//    FD_ZERO(&set_e);
-//    FD_SET(_sd, &set_r);
-//    FD_SET(_sd, &set_e);
-//    result = select(FD_SETSIZE, &set_r, NULL, &set_e, &timeout);
-//
-//    if (result < 0)
-//    {
-//      XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - select failed");
-//      lines.push_back("ERROR: Select failed");
-//      code = 1; //error
-//      _sd = INVALID_SOCKET;
-//      return false;
-//    }
-//
-//    if (result == 0)
-//    {
-//      if (retries != 0)
-//      {
-//         XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - timeout waiting for response, retrying... (%i)", retries);
-//         retries--;
-//        continue;
-//      } else {
-//         XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - timeout waiting for response. Failed after 10 retries.");
-//         lines.push_back("ERROR: Failed after 10 retries");
-//         code = 1; //error
-//        _sd = INVALID_SOCKET;
-//         return false;
-//      }
-//    }
-//
-//    result = recv(_sd, buffer, sizeof(buffer) - 1, 0);
-//    if (result < 0)
-//    {
-//      XBMC->Log(LOG_DEBUG, "CVTPTransceiver::ReadResponse - recv failed");
-//      lines.push_back("ERROR: Recv failed");
-//      code = 1; //error
-//      _sd = INVALID_SOCKET;
-//      return false;
-//    }
-//    buffer[result] = 0;
-//
-//    line.append(buffer);
-//  }
-//
-//  return true;
-//}
-
-//int Socket::receive ( std::string& data) const
-//{
-//	char buf[MAXRECV + 1];
-//	int status = 0;
-//
-//	if ( !is_valid() )
-//	{
-//		return 0;
-//	}
-//
-//	memset ( buf, 0, MAXRECV + 1 );
-//	status = receive( buf, MAXRECV, 0 );
-//	data = buf;
-//
-//	return status;
-//}
-
-//int Socket::receive ( char* data, const unsigned int buffersize, const unsigned int minpacketsize ) const
-//{
-//
-//	unsigned int receivedsize = 0;
-//	int status = 0;
-//
-//	if ( !is_valid() )
-//	{
-//		return 0;
-//	}
-//
-//	while ( (receivedsize <= minpacketsize) && (receivedsize < buffersize) )
-//	{
-//		status = ::recv(_sd, data+receivedsize, (buffersize - receivedsize), 0 );
-//
-//		if ( status == SOCKET_ERROR )
-//		{
-//			errormessage( getLastError(), "Socket::receive" );
-//			return status;
-//		}
-//
-//		receivedsize += status;
-//	}
-//
-//	return receivedsize;
-//}
-
-
-//int Socket::recvfrom ( char* data, const int buffersize, const int minpacketsize, struct sockaddr* from, socklen_t* fromlen) const
-//{
-//	int status = ::recvfrom(_sd, data, buffersize, 0, from, fromlen);
-//
-//	return status;
-//}
-
-
 
 bool Socket::connect ( const CStdString& host, const unsigned short port )
 {
@@ -826,11 +626,6 @@ std::vector<CStdString> Socket::GetVector(const CStdString &request)
 			}
 		}
 	}
-	
-	//if (reponses.size() == 1)
-	//{
-	//	assert(reponses[0] != "SocketError");						// for now: terminate xbmc if error occurs
-	//}
 
 	close();													// close socket
 	return reponses;											// return responses

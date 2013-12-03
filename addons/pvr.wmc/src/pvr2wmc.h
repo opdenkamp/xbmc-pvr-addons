@@ -25,8 +25,6 @@
 #include "client.h"
 #include "Socket.h"
 
-
-
 struct PVR_CHANNELGroup
 {
 	bool             bRadio;
@@ -48,8 +46,7 @@ public:
 	// channels
 	virtual int GetChannelsAmount(void);
 	virtual PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
-	virtual bool GetChannel(const PVR_CHANNEL &channel, PVR_CHANNEL &myChannel);
-
+	
 	virtual int GetChannelGroupsAmount(void);
 	virtual PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio);
 	virtual PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group);
@@ -98,7 +95,6 @@ private:
 
 	Socket _socketClient;
 
-	
 	void* _streamFile;					// handle to a streamed file
 	CStdString _streamFileName;			// the name of the stream file
 	bool _lostStream;					// set to true if stream is lost

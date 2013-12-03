@@ -40,7 +40,6 @@ CDialogDeleteTimer::CDialogDeleteTimer(	bool delSeries, std::string showName)
 	_confirmed = -1;
 	_window = GUI->Window_create("DeleteTimer.xml", "Confluence", false, true);
 
-
 	// needed for every dialog
 	_window->m_cbhdl = this;
 	_window->CBOnInit = OnInitCB;
@@ -53,7 +52,6 @@ CDialogDeleteTimer::~CDialogDeleteTimer()
 {
   GUI->Window_destroy(_window);
 }
-
 
 bool CDialogDeleteTimer::OnInit()
 {
@@ -68,7 +66,6 @@ bool CDialogDeleteTimer::OnInit()
 
 	return true;
 }
-
 
 bool CDialogDeleteTimer::OnClick(int controlId)
 {
@@ -145,12 +142,10 @@ int CDialogDeleteTimer::DoModal()
   return _confirmed;		// return true if user didn't cancel dialog
 }
 
-
 bool CDialogDeleteTimer::OnFocus(int controlId)
 {
   return true;
 }
-
 
 bool CDialogDeleteTimer::OnAction(int actionId)
 {

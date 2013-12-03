@@ -14,7 +14,6 @@
 // format related string functions taken from:
 // http://www.flipcode.com/archives/Safe_sprintf.shtml
 
-
 bool Str2Bool(const CStdString str)
 {
 	return str.compare("True") == 0 ? true:false;
@@ -40,24 +39,6 @@ std::vector<CStdString> split(const CStdString& s, const CStdString& delim, cons
     }
     return result;
 }
-/*
-CStdString ToString(const bool& t)
-{
-   if (t)
-		return "True";
-   else
-		return "False";
-}
-*/
-/*
-template< class T >
-CStdString ToString(const T& t)
-{
-   CStdStringstream w;
-   w << t;
-   return w.str();
-}
-*/
 
 bool EndsWith(CStdString const &fullString, CStdString const &ending)
 {
@@ -67,7 +48,6 @@ bool EndsWith(CStdString const &fullString, CStdString const &ending)
         return false;
     }
 }
-
 
 bool StartsWith(CStdString const &fullString, CStdString const &starting)
 {

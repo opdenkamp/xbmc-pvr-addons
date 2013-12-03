@@ -26,20 +26,16 @@
 #include "DialogDeleteTimer.h"
 #include "platform/util/timeutils.h"
 
-
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
 
 #define null NULL
 
-
 #define STRCPY(dest, src) strncpy(dest, src, sizeof(dest)-1); 
 #define FOREACH(ss, vv) for(std::vector<CStdString>::iterator ss = vv.begin(); ss != vv.end(); ++ss)
 
-
 int64_t _lastRecordingUpdateTime;
-
 
 Pvr2Wmc::Pvr2Wmc(void)
 {
@@ -67,7 +63,6 @@ Pvr2Wmc::~Pvr2Wmc(void)
 	_channels.clear();
 	_groups.clear();
 }
-
 
 bool Pvr2Wmc::IsServerDown()
 {
@@ -99,12 +94,10 @@ const char *Pvr2Wmc::GetBackendVersion(void)
 	return "0.0";
 }
 
-
 int Pvr2Wmc::GetChannelsAmount(void)
 {
 	return _socketClient.GetInt("GetChannelCount");
 }
-
 
 // test for returned error vector from server, handle accompanying messages if any
 bool isServerError(vector<CStdString> results)
@@ -146,33 +139,6 @@ void TriggerUpdates(vector<CStdString> results)
 	}
 }
 
-
-// Cycle through all the channel strings from the server and unpack
-// string to an xbmc channel struct.
-// returns true if a channel was returned by server
-bool GetNextChannel(PVR_CHANNEL *xChannel)
-{
-	//CStdString result;														// holds responses from server
-	//if (Pipe.DoServerRequest("GetChannels", &result))							// open pipe/get next string response
-	//{
-	//	memset(xChannel, 0, sizeof(PVR_CHANNEL));							// set all mem to zero
-	//	//vector<CStdString> v = split(result, '|');							// split to unpack string
-	//	vector<CStdString> v = split(result, "|");
-	//	// packing: id, bradio, c.OriginalNumber, c.CallSign, c.IsEncrypted, imageStr, c.IsBlocked
-	//	xChannel->iUniqueId = atoi(v[0].c_str());							// the order data was xfer'd from server
-	//	xChannel->bIsRadio = Str2Bool(v[1]);
-	//	xChannel->iChannelNumber = atoi(v[2].c_str());
-	//	STRCPY(xChannel->strChannelName,  v[3].c_str());
-	//	xChannel->iEncryptionSystem = Str2Bool(v[4]);
-	//	if (v[5].compare("NULL") != 0)										// if icon path is null
-	//		STRCPY(xChannel->strIconPath,  v[5].c_str()); 
-	//	xChannel->bIsHidden = Str2Bool(v[6]);
-
-	//	return true;
-	//}
-	return false;
-}
-
 // xbmc call: get all channels for either tv or radio
 PVR_ERROR Pvr2Wmc::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
@@ -203,41 +169,6 @@ PVR_ERROR Pvr2Wmc::GetChannels(ADDON_HANDLE handle, bool bRadio)
 		PVR->TransferChannelEntry(handle, &xChannel);
 	}
 	return PVR_ERROR_NO_ERROR;
-	//if (IsServerDown())
-	//	return PVR_ERROR_SERVER_ERROR;
-
-	//PVR_CHANNEL xChannel;
-	//while (GetNextChannel(&xChannel))
-	//{
-	//	PVR->TransferChannelEntry(handle, &xChannel);
-	//}
-	//return PVR_ERROR_NO_ERROR;
-}
-
-
-// Given the input channel, find the first channel that matches its ID and return it in myChannel
-bool Pvr2Wmc::GetChannel(const PVR_CHANNEL &channel, PVR_CHANNEL &myChannel)
-{
-	PVR_CHANNEL thisChannel;
-	while (GetNextChannel(&thisChannel))
-	{
-		if (channel.iUniqueId == thisChannel.iUniqueId)
-		{
-			myChannel.iUniqueId         = thisChannel.iUniqueId;
-			myChannel.bIsRadio          = thisChannel.bIsRadio;
-			myChannel.iChannelNumber    = thisChannel.iChannelNumber;
-			myChannel.iEncryptionSystem = thisChannel.iEncryptionSystem;
-			myChannel.bIsHidden = thisChannel.bIsHidden;
-
-			STRCPY(thisChannel.strChannelName, myChannel.strChannelName);
-			STRCPY(thisChannel.strIconPath, myChannel.strIconPath);
-			STRCPY(thisChannel.strStreamURL, myChannel.strStreamURL);
-			STRCPY(thisChannel.strInputFormat, myChannel.strInputFormat);
-
-			return true;
-		}
-	}
-	return false;
 }
 
 int Pvr2Wmc::GetChannelGroupsAmount(void)
@@ -294,11 +225,8 @@ PVR_ERROR Pvr2Wmc::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL
 	return PVR_ERROR_NO_ERROR;
 }
 
-
-
 PVR_ERROR Pvr2Wmc::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
-
 	if (IsServerDown())
 		return PVR_ERROR_SERVER_ERROR;
 
@@ -306,14 +234,12 @@ PVR_ERROR Pvr2Wmc::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &chan
 	request.Format("GetEntries|%d|%d|%d", channel.iUniqueId, iStart, iEnd);		// build the request string
 
 	vector<CStdString> results = _socketClient.GetVector(request);												// get entries from server
-
-
+	
 	FOREACH(response, results)
 	{ 
 		EPG_TAG xEpg;
 		memset(&xEpg, 0, sizeof(EPG_TAG));											// set all mem to zero
 		vector<CStdString> v = split(*response, "|");								// split to unpack string
-
 
 		if (v.size() < 16)
 		{
@@ -354,10 +280,8 @@ PVR_ERROR Pvr2Wmc::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &chan
 // timer functions -------------------------------------------------------------
 int Pvr2Wmc::GetTimersAmount(void)
 {
-	return _socketClient.GetInt("GetTimerCount"); 
-	//return 0;!!!
+	return _socketClient.GetInt("GetTimerCount");
 }
-
 
 #ifdef TARGET_WINDOWS
 UINT_PTR _recTimer = null;					// holds the recording update timer
@@ -469,9 +393,7 @@ PVR_ERROR Pvr2Wmc::AddTimer(const PVR_TIMER &xTmr)
 
 	command.append(extra);								
 
-
 	vector<CStdString> results = _socketClient.GetVector(command);	// get results from server
-
 
 	PVR->TriggerTimerUpdate();							// update timers regardless of whether there is an error
 
@@ -517,15 +439,12 @@ PVR_ERROR Pvr2Wmc::AddTimer(const PVR_TIMER &xTmr)
 					infoStr = XBMC->GetLocalizedString(30013) + splitResult[1] + " min";
 					XBMC->QueueNotification(QUEUE_ERROR, infoStr.c_str());
 				}
-
 			}
 		}
 
 		return PVR_ERROR_NO_ERROR;
 	}
 }
-
-
 
 CStdString Pvr2Wmc::Timer2String(const PVR_TIMER &xTmr)
 {
@@ -539,14 +458,12 @@ CStdString Pvr2Wmc::Timer2String(const PVR_TIMER &xTmr)
 	return tStr;
 }
 
-
 PVR_ERROR Pvr2Wmc::DeleteTimer(const PVR_TIMER &xTmr, bool bForceDelete)
 {
 	if (IsServerDown())
 		return PVR_ERROR_SERVER_ERROR;
 
 	bool deleteSeries = false;
-
 
 	if (xTmr.bIsRepeating)									// if timer is a series timer, ask if want to cancel series
 	{
@@ -563,7 +480,6 @@ PVR_ERROR Pvr2Wmc::DeleteTimer(const PVR_TIMER &xTmr, bool bForceDelete)
 
 	CStdString command = "DeleteTimer" + Timer2String(xTmr);
 
-	//command += format("|%d", deleteSeries);						
 	CStdString eStr;										// append whether to delete the series or episode
 	eStr.Format("|%d", deleteSeries);
 	command.append(eStr);
@@ -631,12 +547,10 @@ PVR_ERROR Pvr2Wmc::GetTimers(ADDON_HANDLE handle)
 	return PVR_ERROR_NO_ERROR;
 }
 
-
 // recording functions ------------------------------------------------------------------------
 int Pvr2Wmc::GetRecordingsAmount(void)
 {
 	return _socketClient.GetInt("GetRecordingsAmount");
-	//return 5; !!!
 }
 
 // recording file  functions
@@ -682,7 +596,6 @@ PVR_ERROR Pvr2Wmc::GetRecordings(ADDON_HANDLE handle)
 	return PVR_ERROR_NO_ERROR;
 }
 
-
 PVR_ERROR Pvr2Wmc::DeleteRecording(const PVR_RECORDING &recording)
 {
 	if (IsServerDown())
@@ -722,7 +635,6 @@ PVR_ERROR Pvr2Wmc::RenameRecording(const PVR_RECORDING &recording)
 
 	vector<CStdString> results = _socketClient.GetVector(command);					// get results from server
 
-
 	if (isServerError(results))							// did the server do it?
 	{
 		return PVR_ERROR_NO_ERROR;						// report "no error" so our error shows up
@@ -742,11 +654,9 @@ CStdString Pvr2Wmc::Channel2String(const PVR_CHANNEL &xCh)
 	CStdString chStr;
 	chStr.Format("|%d|%d|%d|%s", xCh.iUniqueId, xCh.bIsRadio, xCh.iChannelNumber, xCh.strChannelName);
 	return chStr;
-	//return format("|%d|%d|%d|%s", xCh.iUniqueId, xCh.bIsRadio, xCh.iChannelNumber, xCh.strChannelName);
 }
 
 // live/recorded stream functions --------------------------------------------------------------
-
 
 bool Pvr2Wmc::OpenLiveStream(const PVR_CHANNEL &channel)
 {
@@ -773,7 +683,6 @@ bool Pvr2Wmc::OpenLiveStream(const PVR_CHANNEL &channel)
 			XBMC->Log(LOG_DEBUG, "OpenLiveStream> opening stream: " + results[1]);		// log password safe path of client if available
 		else
 			XBMC->Log(LOG_DEBUG, "OpenLiveStream> opening stream: " + _streamFileName);	
-
 		
 		// Initialise variables for starting stream at an offset
 		_initialStreamResetCnt = 0;
@@ -807,7 +716,6 @@ bool Pvr2Wmc::OpenLiveStream(const PVR_CHANNEL &channel)
 			XBMC->Log(LOG_DEBUG, "OpenLiveStream> stream file opened successfully");
 		}
 
-
 		_lostStream = false;						// if we got to here, stream started ok
 		_lastStreamSize = 0;
 		_isStreamFileGrowing = true;
@@ -815,21 +723,17 @@ bool Pvr2Wmc::OpenLiveStream(const PVR_CHANNEL &channel)
 	}
 }
 
-
 bool Pvr2Wmc::SwitchChannel(const PVR_CHANNEL &channel)
 {
 	CStdString request = "SwitchChannel|" + g_strClientName + Channel2String(channel);		// request a live stream using channel
 	return _socketClient.GetBool(request);				// try to open live stream, get path to stream file
 }
 
-
-
 // read from the live stream file opened in OpenLiveStream
 int Pvr2Wmc::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
 	if (_lostStream)									// if stream has already been flagged as lost, return 0 bytes 
 		return 0;										// after this happens a few time, xbmc will call CloseLiveStream
-
 
 	if (!_streamWTV)									// if NOT streaming wtv, make sure stream is big enough before it is read
 	{						
@@ -873,8 +777,6 @@ int Pvr2Wmc::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 
 		if (_isStreamFileGrowing && totalRead + iBufferSize > fileSize)		// if its not big enough for the readsize
 			fileSize = ActualFileSize(timeout);								// get the current size of the stream file
-
-		//XBMC->Log(LOG_DEBUG, "File size: %llu, position: %llu", fileSize, totalRead);
 
 		// if the stream file is growing, see if the stream file is big enough to accomodate this read
 		// if its not, wait until it is
@@ -992,7 +894,6 @@ long long Pvr2Wmc::ActualFileSize(int count)
 	return lFileSize;
 }
 
-
 // return the length of the current stream file
 long long Pvr2Wmc::LengthLiveStream(void) 
 {
@@ -1028,7 +929,6 @@ bool Pvr2Wmc::CloseLiveStream(bool notifyServer /*=true*/)
 		return true;
 }
 
-
 // this is only called if a recording is actively being recorded, xbmc detects this when the server
 // doesn't enter a path in the strStreamURL field during a "GetRecordings"
 bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
@@ -1062,7 +962,6 @@ bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
 
 		_streamFile = XBMC->OpenFile(_streamFileName.c_str(), 0);	// open the video file for streaming, same handle
 
-
 		if (!_streamFile)	// something went wrong
 		{
 			CStdString lastError;
@@ -1086,4 +985,3 @@ bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
 		return true;								// if we got to here, stream started ok
 	}
 }
-

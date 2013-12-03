@@ -59,7 +59,6 @@ CDialogRecordPref::~CDialogRecordPref()
   GUI->Window_destroy(_window);
 }
 
-
 bool CDialogRecordPref::OnInit()
 {
 	// display the show name in the window
@@ -95,14 +94,8 @@ bool CDialogRecordPref::OnInit()
 	_spinChannel->SetVisible(RecSeries);
 	_spinAirTime->SetVisible(RecSeries);
 
-
   return true;
 }
-
-//bool CDialogRecordPref::LoadFailed()
-//{
-//	return _window->;
-//}
 
 bool CDialogRecordPref::OnClick(int controlId)
 {
@@ -154,7 +147,6 @@ bool CDialogRecordPref::OnClickCB(GUIHANDLE cbhdl, int controlId)
 	CDialogRecordPref* dialog = static_cast<CDialogRecordPref*>(cbhdl);
 	if (controlId == BUTTON_OK)
 		dialog->_confirmed = 1;
-	//dialog->_confirmed = (controlId == BUTTON_OK);
 	return dialog->OnClick(controlId);
 }
 
@@ -191,7 +183,6 @@ int CDialogRecordPref::DoModal()
   return _confirmed;		// return true if user didn't cancel dialog
 }
 
-
 bool CDialogRecordPref::OnFocus(int controlId)
 {
   return true;
@@ -199,12 +190,8 @@ bool CDialogRecordPref::OnFocus(int controlId)
 
 bool CDialogRecordPref::OnAction(int actionId)
 {
-	//if (actionId != 107)
-    //return true;
-
   if (actionId == ADDON_ACTION_CLOSE_DIALOG || actionId == ADDON_ACTION_PREVIOUS_MENU || actionId == 92/*back*/)
     return OnClick(BUTTON_CANCEL);
   else
     return false;
 }
-

@@ -985,3 +985,37 @@ bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
 		return true;								// if we got to here, stream started ok
 	}
 }
+
+PVR_ERROR Pvr2Wmc::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
+{
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
+
+	CStdString command;
+	command.Format("SignalStatus");
+
+	vector<CStdString> results = _socketClient.GetVector(command);					// get results from server
+
+	// strDevice, strStatus, strProvider, strService, iSignal
+
+	if (isServerError(results))							// did the server do it?
+	{
+		return PVR_ERROR_SERVER_ERROR;					// report "no error" so our error shows up
+	}
+	else
+	{
+		if (results.size() >= 8)
+		{
+			snprintf(signalStatus.strAdapterName, sizeof(signalStatus.strAdapterName), results[0]);
+			snprintf(signalStatus.strAdapterStatus, sizeof(signalStatus.strAdapterStatus), results[1]);
+			snprintf(signalStatus.strProviderName, sizeof(signalStatus.strProviderName), results[2]);
+			snprintf(signalStatus.strServiceName, sizeof(signalStatus.strServiceName), results[3]);
+			snprintf(signalStatus.strMuxName, sizeof(signalStatus.strMuxName), results[4]);
+			signalStatus.iSignal = atoi(results[5]) * 655.35;
+			signalStatus.dVideoBitrate = atof(results[6]);
+			signalStatus.dAudioBitrate = atof(results[7]);
+		}
+
+		return PVR_ERROR_NO_ERROR;
+	}
+}

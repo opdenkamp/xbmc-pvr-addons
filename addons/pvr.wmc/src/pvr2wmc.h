@@ -80,6 +80,7 @@ public:
 	bool SwitchChannel(const PVR_CHANNEL &channel);
 	long long LengthLiveStream(void) ;
 	long long ActualFileSize(int count);
+	PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
 	
 	bool CheckErrorOnServer();
 

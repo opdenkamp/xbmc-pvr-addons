@@ -329,8 +329,8 @@ extern "C" {
 
 	PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 	{
-		snprintf(signalStatus.strAdapterName, sizeof(signalStatus.strAdapterName), "pvr demo adapter 1");
-		snprintf(signalStatus.strAdapterStatus, sizeof(signalStatus.strAdapterStatus), "OK");
+		if (_wmc)
+			return _wmc->SignalStatus(signalStatus);
 
 		return PVR_ERROR_NO_ERROR;
 	}
@@ -593,7 +593,6 @@ extern "C" {
 			return _wmc->DeleteRecording(recording);
 		return PVR_ERROR_NO_ERROR; 
 	}
-
 
 #ifdef _GOTHAM_
 	PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)

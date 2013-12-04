@@ -2786,6 +2786,7 @@ cmyth_rcv_posmap(cmyth_conn_t conn, int *err, cmyth_posmap_t buf,
 	int c;
 	cmyth_keyframe_t kf;
 	int i;
+	void *ptr;
 
 	cmyth_dbg(CMYTH_DBG_DEBUG, "%s\n", __FUNCTION__);
 	if (!err) {
@@ -2826,7 +2827,7 @@ cmyth_rcv_posmap(cmyth_conn_t conn, int *err, cmyth_posmap_t buf,
 
 		if (c <= i) {
 			c += 100;
-			void *ptr = realloc(buf->posmap_list, c * sizeof(cmyth_keyframe_t));
+			ptr = realloc(buf->posmap_list, c * sizeof(cmyth_keyframe_t));
 			if (!ptr) {
 				ref_release(kf);
 				*err = ENOMEM;

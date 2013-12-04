@@ -12,3 +12,12 @@ VDR Plugin 'vnsiserver' Revision History
 - proper handling of PMT changes
 - suffix plugin with version of protocol: vnsiserver3
 - this version is compatible with XBMC 12.0
+
+2013-12-04: Version 0.9.3
+
+- add support for EDL (marks)
+- add channel filter
+- send buffer times for timeshift
+- bump protocol to XBMC to 5
+- suffix plugin with version of protocol: vnsiserver5
+- this version is compatible with XBMC 13

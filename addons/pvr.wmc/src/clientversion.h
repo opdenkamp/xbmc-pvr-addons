@@ -23,8 +23,8 @@
 inline CStdString PVRWMC_GetClientVersion()
 {
 	#ifdef _GOTHAM_
-	return "0.2.91, Gotham 1014";	// ALSO CHANGE IN REV NUMBER in 'addon.xml.in' 
+	return "0.2.92, Gotham 1014";	// ALSO CHANGE IN REV NUMBER in 'addon.xml.in' 
 	#else
-	return "0.1.91, build 1014";	// ALSO CHANGE IN REV NUMBER in 'addon.xml.in' 
+	return "0.1.92, build 1014";	// ALSO CHANGE IN REV NUMBER in 'addon.xml.in' 
 	#endif
 }

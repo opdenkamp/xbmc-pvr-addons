@@ -96,6 +96,8 @@ private:
 
 	Socket _socketClient;
 
+	bool _discardSignalStatus;			// flag to discard signal status for channels where the backend had an error
+
 	void* _streamFile;					// handle to a streamed file
 	CStdString _streamFileName;			// the name of the stream file
 	bool _lostStream;					// set to true if stream is lost

@@ -32,6 +32,7 @@ using namespace ADDON;
 #endif
 
 #define DEFAULT_PORT 9080
+#define DEFAULT_ENABLE_SIGNAL false
 
 Pvr2Wmc*		_wmc			= NULL;
 bool			_bCreated       = false;
@@ -43,6 +44,7 @@ PVR_MENUHOOK	*menuHook       = NULL;
 CStdString		g_strServerName;							// the name of the server to connect to
 CStdString		g_strClientName;							// the name of the computer running addon
 int				g_port;
+bool			g_bEnableSignal;
 CStdString		g_clientOS;									// OS of client, passed to server
 
 /* User adjustable settings are saved here.
@@ -69,6 +71,7 @@ extern "C" {
 
 		g_strServerName = LOCALHOST;			// either "mediaserver" OR "." / "127.0.0.1"
 		g_port = DEFAULT_PORT;
+		g_bEnableSignal = DEFAULT_ENABLE_SIGNAL;
 
 		/* Read setting "port" from settings.xml */
 		if (!XBMC->GetSetting("port", &g_port))
@@ -84,6 +87,11 @@ extern "C" {
 		else
 		{
 			XBMC->Log(LOG_ERROR, "Couldn't get 'host' setting, using '127.0.0.1'");
+		}
+
+		if (!XBMC->GetSetting("signal", &g_bEnableSignal))
+		{
+			XBMC->Log(LOG_ERROR, "Couldn't get 'signal' setting, using '%s'", DEFAULT_ENABLE_SIGNAL);
 		}
 
 		// get the name of the computer client is running on

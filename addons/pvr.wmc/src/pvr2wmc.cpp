@@ -46,6 +46,7 @@ Pvr2Wmc::Pvr2Wmc(void)
 	_socketClient.SetServerName(g_strServerName);
 	_socketClient.SetClientName(g_strClientName);
 	_socketClient.SetServerPort(g_port);
+	_discardSignalStatus = false;
 
 	_lastRecordingUpdateTime = 0;
 	_streamFile = 0;				// handle to a streamed file
@@ -713,6 +714,7 @@ bool Pvr2Wmc::OpenLiveStream(const PVR_CHANNEL &channel)
 		}
 		else
 		{
+			_discardSignalStatus = false;			// reset signal status discard flag
 			XBMC->Log(LOG_DEBUG, "OpenLiveStream> stream file opened successfully");
 		}
 
@@ -991,12 +993,18 @@ PVR_ERROR Pvr2Wmc::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 	if (IsServerDown())
 		return PVR_ERROR_SERVER_ERROR;
 
+	if (!g_bEnableSignal || _discardSignalStatus)
+	{
+		return PVR_ERROR_NO_ERROR;
+	}
+
 	CStdString command;
 	command.Format("SignalStatus");
 
 	vector<CStdString> results = _socketClient.GetVector(command);					// get results from server
 
-	// strDevice, strStatus, strProvider, strService, iSignal
+	// strDeviceName, strDeviceStatus, strProvider, strService, strMux
+	// iSignal, dVideoBitrate, dAudioBitrate, Error
 
 	if (isServerError(results))							// did the server do it?
 	{
@@ -1004,7 +1012,7 @@ PVR_ERROR Pvr2Wmc::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 	}
 	else
 	{
-		if (results.size() >= 8)
+		if (results.size() >= 9)
 		{
 			snprintf(signalStatus.strAdapterName, sizeof(signalStatus.strAdapterName), results[0]);
 			snprintf(signalStatus.strAdapterStatus, sizeof(signalStatus.strAdapterStatus), results[1]);
@@ -1014,6 +1022,14 @@ PVR_ERROR Pvr2Wmc::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 			signalStatus.iSignal = atoi(results[5]) * 655.35;
 			signalStatus.dVideoBitrate = atof(results[6]);
 			signalStatus.dAudioBitrate = atof(results[7]);
+			
+			bool error = atoi(results[8]) == 1;
+			if (error)
+			{
+				// Backend indicates it can't provide SignalStatus for this channel
+				// Set flag to discard further attempts until a channel change
+				_discardSignalStatus = true;
+			}
 		}
 
 		return PVR_ERROR_NO_ERROR;

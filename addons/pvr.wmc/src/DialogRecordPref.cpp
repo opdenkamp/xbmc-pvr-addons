@@ -67,6 +67,8 @@ bool CDialogRecordPref::OnInit()
 	// init radio buttons
 	_radioRecEpisode = GUI->Control_getRadioButton(_window, RADIO_BUTTON_EPISODE);
 	_radioRecSeries = GUI->Control_getRadioButton(_window, RADIO_BUTTON_SERIES);
+	_radioRecEpisode->SetText(XBMC->GetLocalizedString(30101));
+	_radioRecSeries->SetText(XBMC->GetLocalizedString(30102));
 	_radioRecEpisode->SetSelected(!RecSeries);
 	_radioRecSeries->SetSelected(RecSeries);  
 

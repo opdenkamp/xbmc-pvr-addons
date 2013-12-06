@@ -64,6 +64,8 @@ public:
 	virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle);
 	PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
 	PVR_ERROR RenameRecording(const PVR_RECORDING &recording);
+	PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
+	int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
 
 	// recording streams
 	bool OpenRecordedStream(const PVR_RECORDING &recording);

@@ -61,6 +61,8 @@ bool CDialogDeleteTimer::OnInit()
 	// init radio buttons
 	_radioDelEpisode = GUI->Control_getRadioButton(_window, RADIO_BUTTON_EPISODE);
 	_radioDelSeries = GUI->Control_getRadioButton(_window, RADIO_BUTTON_SERIES);
+	_radioDelEpisode->SetText(XBMC->GetLocalizedString(30121));
+	_radioDelSeries->SetText(XBMC->GetLocalizedString(30122));  
 	_radioDelEpisode->SetSelected(!DeleteSeries);
 	_radioDelSeries->SetSelected(DeleteSeries);  
 

@@ -285,7 +285,11 @@ extern "C" {
 		pCapabilities->bHandlesInputStream         = true;
 		pCapabilities->bHandlesDemuxing            = false;
 		pCapabilities->bSupportsChannelScan        = false;
+#ifdef _GOTHAM_
+		pCapabilities->bSupportsLastPlayedPosition = true;
+#else
 		pCapabilities->bSupportsLastPlayedPosition = false;
+#endif
 
 		return PVR_ERROR_NO_ERROR;
 	}
@@ -603,6 +607,24 @@ extern "C" {
 	}
 
 #ifdef _GOTHAM_
+	PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) 
+	{ 
+		if (_wmc)
+			return _wmc->SetRecordingLastPlayedPosition(recording, lastplayedposition);
+		return PVR_ERROR_NOT_IMPLEMENTED; 
+	}
+	int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) 
+	{ 
+		if (_wmc)
+			return _wmc->GetRecordingLastPlayedPosition(recording);
+		return -1; 
+	}
+#else
+	PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
+	int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
+#endif
+
+#ifdef _GOTHAM_
 	PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
 #else
 	PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
@@ -621,8 +643,6 @@ extern "C" {
 	void DemuxReset(void) {}
 	void DemuxFlush(void) {}
 	PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
-	PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
-	int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 	void DemuxAbort(void) {}
 	DemuxPacket* DemuxRead(void) { return NULL; }
 	unsigned int GetChannelSwitchDelay(void) { return 0; }

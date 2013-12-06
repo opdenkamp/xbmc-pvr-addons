@@ -588,6 +588,9 @@ PVR_ERROR Pvr2Wmc::GetRecordings(ADDON_HANDLE handle)
 		xRec.iLifetime = atoi(v[12].c_str());
 		xRec.iGenreType = atoi(v[13].c_str());
 		xRec.iGenreSubType = atoi(v[14].c_str());
+#ifdef _GOTHAM_
+		xRec.iLastPlayedPosition = atoi(v[15].c_str());
+#endif
 
 		PVR->TransferRecordingEntry(handle, &xRec);
 	}
@@ -646,6 +649,23 @@ PVR_ERROR Pvr2Wmc::RenameRecording(const PVR_RECORDING &recording)
 		XBMC->Log(LOG_DEBUG, "deleted recording '%s'", recording.strTitle);
 		return PVR_ERROR_NO_ERROR;
 	}
+}
+
+
+PVR_ERROR Pvr2Wmc::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+	CStdString command;
+	command.Format("SetResumePosition|%s|%d", recording.strRecordingId, lastplayedposition);
+	vector<CStdString> results = _socketClient.GetVector(command);					// get results from server
+	return PVR_ERROR_NO_ERROR;
+}
+
+int Pvr2Wmc::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+	CStdString command;
+	command.Format("GetResumePosition|%s", recording.strRecordingId);
+	int pos = _socketClient.GetInt(command);
+	return pos;
 }
 
 

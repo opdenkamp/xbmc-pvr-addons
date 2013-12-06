@@ -66,7 +66,7 @@
     </Link>
     <PostBuildEvent>
       <Command>if "$(ComputerName)" == "MORBO"  robocopy    "C:\Users\Victor\Documents\Visual Studio 2010\Projects\xbmc-pvr-addons-git\addons\pvr.wmc\addon"  "\\mediaserver\VDsoftware\pvr.wmc (gotham)\pvr.wmc"  /s /NP
-if "$(ComputerName)" == "SCARECROW"  robocopy $(TargetDir) d:\0\dev\repos\gotham\xbmc\addons\pvr.wmc /s /NP
+if "$(ComputerName)" == "SCARECROW"  robocopy $(TargetDir) d:\0\dev\repos\gotham\scarecrow420_xbmc\addons\pvr.wmc /s /NP
 if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     </PostBuildEvent>
     <PreBuildEvent>

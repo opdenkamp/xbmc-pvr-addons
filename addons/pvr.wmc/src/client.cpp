@@ -46,7 +46,7 @@ CStdString		g_strServerName;							// the name of the server to connect to
 CStdString		g_strClientName;							// the name of the computer running addon
 int				g_port;
 bool			g_bSignalEnable;
-bool			g_signalThrottle;
+int				g_signalThrottle;
 CStdString		g_clientOS;									// OS of client, passed to server
 
 /* User adjustable settings are saved here.

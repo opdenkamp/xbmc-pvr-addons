@@ -653,15 +653,19 @@ PVR_ERROR Pvr2Wmc::RenameRecording(const PVR_RECORDING &recording)
 	}
 }
 
-
+// set the recording resume position in the wmc database
 PVR_ERROR Pvr2Wmc::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
 {
 	CStdString command;
 	command.Format("SetResumePosition|%s|%d", recording.strRecordingId, lastplayedposition);
-	vector<CStdString> results = _socketClient.GetVector(command);					// get results from server
+	vector<CStdString> results = _socketClient.GetVector(command);					
+	PVR->TriggerRecordingUpdate();		// this is needed to get the new resume point actually used by the player (xbmc bug)								
 	return PVR_ERROR_NO_ERROR;
 }
 
+// get the rercording resume position from the wmc database
+// note: although this resume point time will be displayed to the user in the gui (in the resume dlog)
+// the return value is ignored by the xbmc player.  That's why TriggerRecordingUpdate is required in the setting above
 int Pvr2Wmc::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 {
 	CStdString command;

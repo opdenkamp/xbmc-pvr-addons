@@ -98,6 +98,7 @@ private:
 
 	Socket _socketClient;
 
+	int _signalStatusCount;				// call backend for signal status every N calls (because XBMC calls every 1 second!)
 	bool _discardSignalStatus;			// flag to discard signal status for channels where the backend had an error
 
 	void* _streamFile;					// handle to a streamed file

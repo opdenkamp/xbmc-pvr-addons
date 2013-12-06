@@ -32,7 +32,8 @@ using namespace ADDON;
 #endif
 
 #define DEFAULT_PORT 9080
-#define DEFAULT_ENABLE_SIGNAL false
+#define DEFAULT_SIGNAL_ENABLE false
+#define DEFAULT_SIGNAL_THROTTLE 10
 
 Pvr2Wmc*		_wmc			= NULL;
 bool			_bCreated       = false;
@@ -44,7 +45,8 @@ PVR_MENUHOOK	*menuHook       = NULL;
 CStdString		g_strServerName;							// the name of the server to connect to
 CStdString		g_strClientName;							// the name of the computer running addon
 int				g_port;
-bool			g_bEnableSignal;
+bool			g_bSignalEnable;
+bool			g_signalThrottle;
 CStdString		g_clientOS;									// OS of client, passed to server
 
 /* User adjustable settings are saved here.
@@ -71,7 +73,8 @@ extern "C" {
 
 		g_strServerName = LOCALHOST;			// either "mediaserver" OR "." / "127.0.0.1"
 		g_port = DEFAULT_PORT;
-		g_bEnableSignal = DEFAULT_ENABLE_SIGNAL;
+		g_bSignalEnable = DEFAULT_SIGNAL_ENABLE;
+		g_signalThrottle = DEFAULT_SIGNAL_THROTTLE;
 
 		/* Read setting "port" from settings.xml */
 		if (!XBMC->GetSetting("port", &g_port))
@@ -89,9 +92,14 @@ extern "C" {
 			XBMC->Log(LOG_ERROR, "Couldn't get 'host' setting, using '127.0.0.1'");
 		}
 
-		if (!XBMC->GetSetting("signal", &g_bEnableSignal))
+		if (!XBMC->GetSetting("signal", &g_bSignalEnable))
 		{
-			XBMC->Log(LOG_ERROR, "Couldn't get 'signal' setting, using '%s'", DEFAULT_ENABLE_SIGNAL);
+			XBMC->Log(LOG_ERROR, "Couldn't get 'signal' setting, using '%s'", DEFAULT_SIGNAL_ENABLE);
+		}
+
+		if (!XBMC->GetSetting("signal_throttle", &g_signalThrottle))
+		{
+			XBMC->Log(LOG_ERROR, "Couldn't get 'signal_throttle' setting, using '%s'", DEFAULT_SIGNAL_THROTTLE);
 		}
 
 		// get the name of the computer client is running on

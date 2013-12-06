@@ -46,6 +46,8 @@ Pvr2Wmc::Pvr2Wmc(void)
 	_socketClient.SetServerName(g_strServerName);
 	_socketClient.SetClientName(g_strClientName);
 	_socketClient.SetServerPort(g_port);
+
+	_signalStatusCount = 0;
 	_discardSignalStatus = false;
 
 	_lastRecordingUpdateTime = 0;
@@ -1013,45 +1015,56 @@ PVR_ERROR Pvr2Wmc::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 	if (IsServerDown())
 		return PVR_ERROR_SERVER_ERROR;
 
-	if (!g_bEnableSignal || _discardSignalStatus)
+	if (!g_bSignalEnable || _discardSignalStatus)
 	{
 		return PVR_ERROR_NO_ERROR;
 	}
 
-	CStdString command;
-	command.Format("SignalStatus");
+	static PVR_SIGNAL_STATUS cachedSignalStatus;
 
-	vector<CStdString> results = _socketClient.GetVector(command);					// get results from server
-
-	// strDeviceName, strDeviceStatus, strProvider, strService, strMux
-	// iSignal, dVideoBitrate, dAudioBitrate, Error
-
-	if (isServerError(results))							// did the server do it?
+	// Only send request to backend every N times
+	if (_signalStatusCount-- <= 0)
 	{
-		return PVR_ERROR_SERVER_ERROR;					// report "no error" so our error shows up
-	}
-	else
-	{
-		if (results.size() >= 9)
+      // Reset count to throttle value
+		_signalStatusCount = g_signalThrottle;
+
+		CStdString command;
+		command.Format("SignalStatus");
+
+		vector<CStdString> results = _socketClient.GetVector(command);					// get results from server
+
+		// strDeviceName, strDeviceStatus, strProvider, strService, strMux
+		// iSignal, dVideoBitrate, dAudioBitrate, Error
+
+		if (isServerError(results))							// did the server do it?
 		{
-			snprintf(signalStatus.strAdapterName, sizeof(signalStatus.strAdapterName), results[0]);
-			snprintf(signalStatus.strAdapterStatus, sizeof(signalStatus.strAdapterStatus), results[1]);
-			snprintf(signalStatus.strProviderName, sizeof(signalStatus.strProviderName), results[2]);
-			snprintf(signalStatus.strServiceName, sizeof(signalStatus.strServiceName), results[3]);
-			snprintf(signalStatus.strMuxName, sizeof(signalStatus.strMuxName), results[4]);
-			signalStatus.iSignal = atoi(results[5]) * 655.35;
-			signalStatus.dVideoBitrate = atof(results[6]);
-			signalStatus.dAudioBitrate = atof(results[7]);
-			
-			bool error = atoi(results[8]) == 1;
-			if (error)
+			return PVR_ERROR_SERVER_ERROR;					// report "no error" so our error shows up
+		}
+		else
+		{
+			if (results.size() >= 9)
 			{
-				// Backend indicates it can't provide SignalStatus for this channel
-				// Set flag to discard further attempts until a channel change
-				_discardSignalStatus = true;
+				memset(&cachedSignalStatus, 0, sizeof(cachedSignalStatus));
+				snprintf(signalStatus.strAdapterName, sizeof(signalStatus.strAdapterName), results[0]);
+				snprintf(signalStatus.strAdapterStatus, sizeof(signalStatus.strAdapterStatus), results[1]);
+				snprintf(signalStatus.strProviderName, sizeof(signalStatus.strProviderName), results[2]);
+				snprintf(signalStatus.strServiceName, sizeof(signalStatus.strServiceName), results[3]);
+				snprintf(signalStatus.strMuxName, sizeof(signalStatus.strMuxName), results[4]);
+				signalStatus.iSignal = atoi(results[5]) * 655.35;
+				signalStatus.dVideoBitrate = atof(results[6]);
+				signalStatus.dAudioBitrate = atof(results[7]);
+			
+				bool error = atoi(results[8]) == 1;
+				if (error)
+				{
+					// Backend indicates it can't provide SignalStatus for this channel
+					// Set flag to discard further attempts until a channel change
+					_discardSignalStatus = true;
+				}
 			}
 		}
-
-		return PVR_ERROR_NO_ERROR;
 	}
+	
+	signalStatus = cachedSignalStatus;
+	return PVR_ERROR_NO_ERROR;
 }

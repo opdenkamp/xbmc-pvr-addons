@@ -34,7 +34,8 @@ extern CStdString						g_strServerName;		// the name of the server to connect to
 extern CStdString						g_strClientName;		// the name of the computer running addon
 extern CStdString						g_clientOS;				// OS of client, passed to server
 extern int								g_port;
-extern bool								g_bEnableSignal;
+extern bool								g_bSignalEnable;
+extern int								g_signalThrottle;
 extern ADDON::CHelper_libXBMC_addon		*XBMC;
 extern CHelper_libXBMC_pvr				*PVR;
 extern CHelper_libXBMC_gui				*GUI;

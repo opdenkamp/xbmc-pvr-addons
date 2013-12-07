@@ -84,6 +84,10 @@ msgctxt "#30015"
 msgid "Refresh SignalStatus Interval (sec)"
 msgstr ""
 
+msgctxt "#30016"
+msgid "Store viewing resume times on server"
+msgstr ""
+
 msgctxt "#30020"
 msgid "All tuners for this channel are busy"
 msgstr ""

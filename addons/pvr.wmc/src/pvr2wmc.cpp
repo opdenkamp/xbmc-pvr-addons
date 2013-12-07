@@ -590,9 +590,9 @@ PVR_ERROR Pvr2Wmc::GetRecordings(ADDON_HANDLE handle)
 		xRec.iLifetime = atoi(v[12].c_str());
 		xRec.iGenreType = atoi(v[13].c_str());
 		xRec.iGenreSubType = atoi(v[14].c_str());
-#ifdef _GOTHAM_
-		xRec.iLastPlayedPosition = atoi(v[15].c_str());
-#endif
+		if (g_bEnableMultiResume)
+			xRec.iLastPlayedPosition = atoi(v[15].c_str());
+	
 
 		PVR->TransferRecordingEntry(handle, &xRec);
 	}
@@ -669,7 +669,7 @@ PVR_ERROR Pvr2Wmc::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording
 int Pvr2Wmc::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 {
 	CStdString command;
-	command.Format("GetResumePosition|%s", recording.strRecordingId);
+	command.Format("GetResumePosition|%s", recording.strRecordingId); 
 	int pos = _socketClient.GetInt(command);
 	return pos;
 }
@@ -925,11 +925,9 @@ long long Pvr2Wmc::ActualFileSize(int count)
 // return the length of the current stream file
 long long Pvr2Wmc::LengthLiveStream(void) 
 {
-	long long fSize = ActualFileSize(0);
-	if (fSize > 0)
-		return fSize;
-	else
-		return -1;
+	if (_lastStreamSize > 0)
+		return _lastStreamSize;
+	return -1;
 }
 
 void Pvr2Wmc::PauseStream(bool bPaused)

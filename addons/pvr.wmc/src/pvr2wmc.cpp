@@ -897,12 +897,10 @@ long long Pvr2Wmc::ActualFileSize(int count)
 // return the length of the current stream file
 long long Pvr2Wmc::LengthLiveStream(void) 
 {
-	long long fSize = ActualFileSize(0);
-	if (fSize > 0)
-		return fSize;
-	else
-		return -1;
-}
+	if (_lastStreamSize > 0)
+		return _lastStreamSize;
+	return -1;
+} 
 
 void Pvr2Wmc::PauseStream(bool bPaused)
 {

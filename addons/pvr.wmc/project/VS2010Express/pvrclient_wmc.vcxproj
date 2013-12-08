@@ -65,7 +65,7 @@
       <ShowProgress>LinkVerbose</ShowProgress>
     </Link>
     <PostBuildEvent>
-      <Command>if "$(ComputerName)" == "MORBO"  robocopy "C:\Users\Victor\Documents\Visual Studio 2010\Projects\xbmc-pvr-addons-frodo\xbmc-pvr-addons-frodo\addons\pvr.wmc\addon"  "\\mediaserver\VDsoftware\pvr.wmc (frodo)\pvr.wmc" /s /NP
+      <Command>if "$(ComputerName)" == "MORBO"  robocopy $(TargetDir) "\\mediaserver\VDsoftware\pvr.wmc (frodo)\pvr.wmc" /s /NP
 if "$(ComputerName)" == "SCARECROW"  robocopy $(TargetDir) d:\0\dev\repos\xbmc\addons\pvr.wmc /s /NP
 if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     </PostBuildEvent>

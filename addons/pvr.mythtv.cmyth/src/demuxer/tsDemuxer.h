@@ -35,6 +35,8 @@
 #define FLUTS_ATSC_TS_PACKETSIZE    208
 
 #define AV_CONTEXT_PACKETSIZE       208
+#define TS_CHECK_MIN_SCORE          2
+#define TS_CHECK_MAX_SCORE          10
 
 class TSDemuxer
 {
@@ -85,6 +87,7 @@ private:
   AVContext(const AVContext&);
   AVContext& operator=(const AVContext&);
 
+  int configure_ts();
   static STREAM_TYPE get_stream_type(uint8_t pes_type);
   static uint8_t av_rb8(const unsigned char* p);
   static uint16_t av_rb16(const unsigned char* p);
@@ -104,10 +107,12 @@ private:
 
   // Raw packet buffer
   uint64_t av_pos;
-  size_t av_buf_len;
+  size_t av_data_len;
+  size_t av_pkt_size;
   unsigned char av_buf[AV_CONTEXT_PACKETSIZE];
 
   // TS Streams context
+  bool is_configured;
   uint16_t channel;
   std::map<uint16_t, Packet> packets;
 

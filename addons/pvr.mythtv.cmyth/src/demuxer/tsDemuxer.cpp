@@ -32,7 +32,9 @@ using namespace PLATFORM;
 
 AVContext::AVContext(TSDemuxer* const demux, uint64_t pos, uint16_t channel)
   : av_pos(pos)
-  , av_buf_len(FLUTS_NORMAL_TS_PACKETSIZE)
+  , av_data_len(FLUTS_NORMAL_TS_PACKETSIZE)
+  , av_pkt_size(0)
+  , is_configured(false)
   , channel(channel)
   , pid(0xffff)
   , transport_error(false)
@@ -237,17 +239,95 @@ STREAM_TYPE AVContext::get_stream_type(uint8_t pes_type)
   return STREAM_TYPE_UNKNOWN;
 }
 
+int AVContext::configure_ts()
+{
+  const unsigned char* data;
+  size_t data_size = AV_CONTEXT_PACKETSIZE;
+  uint64_t pos = av_pos;
+  int fluts[][2] = {
+    {FLUTS_NORMAL_TS_PACKETSIZE, 0},
+    {FLUTS_M2TS_TS_PACKETSIZE, 0},
+    {FLUTS_DVB_ASI_TS_PACKETSIZE, 0},
+    {FLUTS_ATSC_TS_PACKETSIZE, 0}
+  };
+  int nb = sizeof (fluts) / (2 * sizeof (int));
+  int score = TS_CHECK_MIN_SCORE;
+
+  for (int i = 0; i < MAX_RESYNC_SIZE; i++)
+  {
+    if (!(data = m_demux->ReadAV(pos, data_size)))
+      return AVCONTEXT_IO_ERROR;
+    if (data[0] == 0x47)
+    {
+      int count, found;
+      for (int t = 0; t < nb; t++) // for all fluts
+      {
+        const unsigned char* ndata;
+        uint64_t npos = pos;
+        int do_retry = score; // Reach for score
+        do
+        {
+          --do_retry;
+          npos += fluts[t][0];
+          if (!(ndata = m_demux->ReadAV(npos, data_size)))
+            return AVCONTEXT_IO_ERROR;
+        }
+        while (ndata[0] == 0x47 && (++fluts[t][1]) && do_retry);
+      }
+      // Is score reached ?
+      count = found = 0;
+      for (int t = 0; t < nb; t++)
+      {
+        if (fluts[t][1] == score)
+        {
+          found = t;
+          ++count;
+        }
+        // Reset score for next retry
+        fluts[t][1] = 0;
+      }
+      // One and only one is eligible
+      if (count == 1)
+      {
+        demux_dbg(DEMUX_DBG_DEBUG, "%s: packet size is %d\n", __FUNCTION__, fluts[found][0]);
+        av_pkt_size = fluts[found][0];
+        av_pos = pos;
+        return AVCONTEXT_CONTINUE;
+      }
+      // More one: Retry for highest score
+      else if (count > 1 && ++score > TS_CHECK_MAX_SCORE)
+        // Packet size remains undetermined
+        break;
+      // None: Bad sync. Shift and retry
+      else
+        pos++;
+    }
+    else
+      pos++;
+  }
+
+  demux_dbg(DEMUX_DBG_ERROR, "%s: invalid stream\n", __FUNCTION__);
+  return AVCONTEXT_TS_NOSYNC;
+}
+
 int AVContext::TSResync()
 {
   const unsigned char* data;
+  if (!is_configured)
+  {
+    int ret = configure_ts();
+    if (ret != AVCONTEXT_CONTINUE)
+      return ret;
+    is_configured = true;
+  }
   for (int i = 0; i < MAX_RESYNC_SIZE; i++)
   {
-    data = m_demux->ReadAV(av_pos, av_buf_len);
+    data = m_demux->ReadAV(av_pos, av_pkt_size);
     if (!data)
       return AVCONTEXT_IO_ERROR;
     if (data[0] == 0x47)
     {
-      memcpy(av_buf, data, av_buf_len);
+      memcpy(av_buf, data, av_pkt_size);
       Reset();
       return AVCONTEXT_CONTINUE;
     }
@@ -259,7 +339,7 @@ int AVContext::TSResync()
 
 uint64_t AVContext::GoNext()
 {
-  av_pos += av_buf_len;
+  av_pos += av_pkt_size;
   Reset();
   return av_pos;
 }
@@ -339,7 +419,7 @@ int AVContext::ProcessTSPacket()
   if (has_adaptation)
   {
     size_t len = (size_t)av_rb8(this->av_buf + 4);
-    if (len > (this->av_buf_len - 5))
+    if (len > (this->av_data_len - 5))
       return AVCONTEXT_TS_ERROR;
     n = len + 1;
     if (len > 0)
@@ -351,7 +431,7 @@ int AVContext::ProcessTSPacket()
   {
     // Payload start after adaptation fields
     this->payload = this->av_buf + n + 4;
-    this->payload_len = this->av_buf_len - n - 4;
+    this->payload_len = this->av_data_len - n - 4;
   }
 
   it = this->packets.find(this->pid);

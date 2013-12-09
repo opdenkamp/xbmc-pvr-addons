@@ -4,6 +4,10 @@ v1.6.10
 - Fixed: Hide smb password in debug xbmc.log file
 - Changed: more log notifications on errors
 - EPG: added additional genre strings to the genre string to id translation table
+- Better error logging on failures
+- TSReader: Don't replace \\ by smb:// when not at the start of the path
+- Allow empty username and password for SMB share access
+- Channel thumbnails: replace more invalid file name characters in the channel name by a _
 
 v1.6.9
 - Added: Fast channel switching: PAT detection on channel switch to find the new channel in the Timeshift buffer file.

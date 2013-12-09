@@ -1,6 +1,8 @@
 v1.6.10
+- TSReader: Fixed: channel switching behavior when switching across tsbuffer files
 - Recordings: Add support for retrieving and storing the playback resume position (requires TVServerXBMC build 121 or higher)
 - Fixed: Hide smb password in debug xbmc.log file
+- Changed: more log notifications on errors
 - EPG: added additional genre strings to the genre string to id translation table
 
 v1.6.9

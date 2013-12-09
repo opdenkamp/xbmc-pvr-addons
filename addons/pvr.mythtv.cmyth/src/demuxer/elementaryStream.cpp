@@ -201,33 +201,33 @@ void ElementaryStream::ResetStreamPacket(STREAM_PKT* pkt)
 
 uint64_t ElementaryStream::Rescale(uint64_t a, uint64_t b, uint64_t c)
 {
-  uint64_t r = c/2;
+  uint64_t r = c / 2;
 
-  if (b<=INT_MAX && c<=INT_MAX)
+  if (b <= INT_MAX && c <= INT_MAX)
   {
-    if (a<=INT_MAX)
-      return (a * b + r)/c;
+    if (a <= INT_MAX)
+      return (a * b + r) / c;
     else
-      return a/c*b + (a%c*b + r)/c;
+      return a / c * b + (a % c * b + r) / c;
   }
   else
   {
-    uint64_t a0= a&0xFFFFFFFF;
-    uint64_t a1= a>>32;
-    uint64_t b0= b&0xFFFFFFFF;
-    uint64_t b1= b>>32;
-    uint64_t t1= a0*b1 + a1*b0;
-    uint64_t t1a= t1<<32;
+    uint64_t a0 = a & 0xFFFFFFFF;
+    uint64_t a1 = a >> 32;
+    uint64_t b0 = b & 0xFFFFFFFF;
+    uint64_t b1 = b >> 32;
+    uint64_t t1 = a0 * b1 + a1 * b0;
+    uint64_t t1a = t1 << 32;
 
-    a0 = a0*b0 + t1a;
-    a1 = a1*b1 + (t1>>32) + (a0<t1a);
+    a0 = a0 * b0 + t1a;
+    a1 = a1 * b1 + (t1 >> 32) + (a0 < t1a);
     a0 += r;
-    a1 += a0<r;
+    a1 += a0 < r;
 
-    for (int i=63; i>=0; i--)
+    for (int i = 63; i >= 0; i--)
     {
-      a1+= a1 + ((a0>>i)&1);
-      t1+=t1;
+      a1 += a1 + ((a0 >> i) & 1);
+      t1 += t1;
       if (c <= a1)
       {
         a1 -= c;

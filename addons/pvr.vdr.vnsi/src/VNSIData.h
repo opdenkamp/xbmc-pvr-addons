@@ -63,6 +63,7 @@ public:
   PVR_ERROR   GetRecordingsList(ADDON_HANDLE handle);
   PVR_ERROR   RenameRecording(const PVR_RECORDING& recinfo, const char* newname);
   PVR_ERROR   DeleteRecording(const PVR_RECORDING& recinfo);
+  PVR_ERROR   GetRecordingEdl(const PVR_RECORDING& recinfo, PVR_EDL_ENTRY edl[], int *size);
 
   cResponsePacket*  ReadResult(cRequestPacket* vrp);
 

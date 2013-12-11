@@ -34,7 +34,7 @@ public:
   static cVideoBuffer* Create(cString filename);
   static cVideoBuffer* Create(cRecording *rec);
   virtual void Put(uint8_t *buf, unsigned int size) = 0;
-  virtual int ReadBlock(uint8_t **buf, unsigned int size) = 0;
+  virtual int ReadBlock(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime) = 0;
   virtual off_t GetPosMin() { return 0; };
   virtual off_t GetPosMax() { return 0; };
   virtual off_t GetPosCur() { return 0; };
@@ -42,11 +42,14 @@ public:
   virtual void SetPos(off_t pos) {};
   virtual void SetCache(bool on) {};
   virtual bool HasBuffer() { return false; };
-  int Read(uint8_t **buf, unsigned int size);
+  virtual time_t GetRefTime();
+  int Read(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime);
   void AttachInput(bool attach);
 protected:
   cVideoBuffer();
   cTimeMs m_Timer;
   bool m_CheckEof;
   bool m_InputAttached;
+  time_t m_bufferEndTime;
+  time_t m_bufferWrapTime;
 };

@@ -21,6 +21,7 @@
  */
 
 #include "VNSIData.h"
+#include "VNSIChannels.h"
 #include "client.h"
 
 class cOSDRender;
@@ -60,6 +61,14 @@ protected:
   virtual void OnReconnect() {};
   bool ConnectOSD();
   bool IsVdrAction(int action);
+  bool ReadChannelList(bool radio);
+  bool ReadChannelWhitelist(bool radio);
+  bool ReadChannelBlacklist(bool radio);
+  bool SaveChannelWhitelist(bool radio);
+  bool SaveChannelBlacklist(bool radio);
+  void ClearListItems();
+  void LoadListItemsProviders();
+  void LoadListItemsChannels();
 
 private:
 
@@ -70,6 +79,11 @@ private:
   CAddonGUISpinControl *m_spinTimeshiftMode;
   CAddonGUISpinControl *m_spinTimeshiftBufferRam;
   CAddonGUISpinControl *m_spinTimeshiftBufferFile;
+  CAddonGUIRadioButton *m_ratioIsRadio;
+  std::vector<CAddonListItem*> m_listItems;
+  std::map<GUIHANDLE, int> m_listItemsMap;
+  std::map<GUIHANDLE, int> m_listItemsChannelsMap;
+  CVNSIChannels m_channels;
   bool m_bIsOsdControl;
   bool m_bIsOsdDirty;
   int m_width, m_height;

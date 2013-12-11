@@ -355,6 +355,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
   pCapabilities->bSupportsEPG                = true;
   pCapabilities->bSupportsRecordings         = true;
+  pCapabilities->bSupportsRecordingEdl       = true;
   pCapabilities->bSupportsTimers             = true;
   pCapabilities->bSupportsTV                 = true;
   pCapabilities->bSupportsRadio              = true;
@@ -647,6 +648,30 @@ bool SeekTime(int time, bool backwards, double *startpts)
   return ret;
 }
 
+time_t GetPlayingTime()
+{
+  time_t time = 0;
+  if (VNSIDemuxer)
+    time = VNSIDemuxer->GetPlayingTime();
+  return time;
+}
+
+time_t GetBufferTimeStart()
+{
+  time_t time = 0;
+  if (VNSIDemuxer)
+    time = VNSIDemuxer->GetBufferTimeStart();
+  return time;
+}
+
+time_t GetBufferTimeEnd()
+{
+  time_t time = 0;
+  if (VNSIDemuxer)
+    time = VNSIDemuxer->GetBufferTimeEnd();
+  return time;
+}
+
 void SetSpeed(int) {};
 void PauseStream(bool bPaused) {}
 
@@ -706,6 +731,15 @@ long long LengthRecordedStream(void)
   return 0;
 }
 
+PVR_ERROR GetRecordingEdl(const PVR_RECORDING& recinfo, PVR_EDL_ENTRY edl[], int *size)
+{
+  if(!VNSIData)
+    return PVR_ERROR_UNKNOWN;
+
+  return VNSIData->GetRecordingEdl(recinfo, edl, size);
+}
+
+
 /*******************************************/
 /** PVR Menu Hook Functions               **/
 
@@ -735,9 +769,5 @@ const char * GetLiveStreamURL(const PVR_CHANNEL &channel) { return ""; }
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
-PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 unsigned int GetChannelSwitchDelay(void) { return 0; }
-time_t GetPlayingTime() { return 0; }
-time_t GetBufferTimeStart() { return 0; }
-time_t GetBufferTimeEnd() { return 0; }
 }

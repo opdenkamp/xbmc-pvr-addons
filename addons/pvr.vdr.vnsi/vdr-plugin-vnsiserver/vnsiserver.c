@@ -45,6 +45,7 @@
 #include "vnsi.h"
 #include "vnsiserver.h"
 #include "vnsiclient.h"
+#include "channelfilter.h"
 
 unsigned int cVNSIServer::m_IdCnt = 0;
 
@@ -83,6 +84,9 @@ cVNSIServer::cVNSIServer(int listenPort) : cThread("VDR VNSI Server")
     ERRORLOG("cVNSIServer: missing ConfigDirectory!");
     m_AllowedHostsFile = cString::sprintf("/video/" ALLOWED_HOSTS_FILE);
   }
+
+  VNSIChannelFilter.Load();
+  VNSIChannelFilter.SortChannels();
 
   m_ServerFD = socket(AF_INET, SOCK_STREAM, 0);
   if(m_ServerFD == -1)
@@ -184,10 +188,6 @@ void cVNSIServer::Action(void)
   fd_set fds;
   struct timeval tv;
 
-  // initial time for channels change
-  struct timespec channelsUpdate;
-  channelsUpdate.tv_sec = 0;
-  channelsUpdate.tv_nsec = 0;
   cTimeMs chanTimer(0);
 
   // get initial state of the recordings
@@ -220,6 +220,9 @@ void cVNSIServer::Action(void)
 #endif
   }
   int ret = system(cmd);
+
+  // set thread priority
+  SetPriority(1);
 
   while (Running())
   {
@@ -254,17 +257,13 @@ void cVNSIServer::Action(void)
       // trigger clients to reload the modified channel list
       if(m_clients.size() > 0 && chanTimer.TimedOut())
       {
-        struct stat s;
-        if(stat(Channels.FileName(), &s) != -1)
+        int modified = Channels.Modified();
+        if (modified)
         {
-          if ((s.st_mtim.tv_sec != channelsUpdate.tv_sec) &&
-              (s.st_mtim.tv_nsec != channelsUpdate.tv_nsec))
-          {
-            INFOLOG("Requesting clients to reload channel list");
-            for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
-              (*i)->ChannelChange();
-            channelsUpdate = s.st_mtim;
-          }
+          Channels.SetModified((modified == CHANNELSMOD_USER) ? true : false);
+          INFOLOG("Requesting clients to reload channel list");
+          for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
+            (*i)->ChannelChange();
         }
         chanTimer.Set(5000);
       }

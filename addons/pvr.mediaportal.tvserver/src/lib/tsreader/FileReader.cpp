@@ -34,10 +34,12 @@
 
 #include "FileReader.h"
 #include "client.h" //for XBMC->Log
+#include "TSDebug.h"
 #include "platform/threads/threads.h"
 #include <algorithm> //std::min, std::max
 #include "platform/util/timeutils.h" // for usleep
 #include "platform/util/util.h"
+#include "utils.h"
 
 using namespace ADDON;
 
@@ -57,45 +59,27 @@ using namespace ADDON;
 #define READ_BITRATE   0x10
 
 FileReader::FileReader() :
-  m_hFileHandle(NULL),
-  m_pFileName(0),
-  m_fileSize(0),
-  m_llBufferPointer(0),
-  m_bDebugOutput(false)
+  m_hFile(NULL),
+  m_fileSize(0)
 {
 }
 
 FileReader::~FileReader()
 {
   CloseFile();
-  SAFE_DELETE_ARRAY(m_pFileName);
 }
 
 
-long FileReader::GetFileName(char* *lpszFileName)
+long FileReader::GetFileName(std::string& fileName)
 {
-  *lpszFileName = m_pFileName;
+  fileName = m_fileName;
   return S_OK;
 }
 
 
-long FileReader::SetFileName(const char *pszFileName)
+long FileReader::SetFileName(const std::string& fileName)
 {
-  if(strlen(pszFileName) > MAX_PATH)
-    return ERROR_FILENAME_EXCED_RANGE;
-
-  // Take a copy of the filename
-  if (m_pFileName)
-  {
-    SAFE_DELETE_ARRAY(m_pFileName);
-  }
-
-  m_pFileName = new char[1 + strlen(pszFileName)];
-  if (m_pFileName == NULL)
-    return E_OUTOFMEMORY;
-
-  strncpy(m_pFileName, pszFileName, strlen(pszFileName) + 1);
-
+  m_fileName = ToXBMCPath(fileName);
   return S_OK;
 }
 
@@ -104,9 +88,16 @@ long FileReader::SetFileName(const char *pszFileName)
 //
 // Opens the file ready for streaming
 //
+long FileReader::OpenFile(const std::string& fileName)
+{
+  SetFileName(fileName);
+  return OpenFile();
+}
+
 long FileReader::OpenFile()
 {
   int Tmo = 25; //5 in MediaPortal
+
 
   // Is the file already opened
   if (!IsFileInvalid())
@@ -116,22 +107,19 @@ long FileReader::OpenFile()
   }
 
   // Has a filename been set yet
-  if (m_pFileName == NULL) 
+  if (m_fileName.empty()) 
   {
     XBMC->Log(LOG_ERROR, "FileReader::OpenFile() no filename");
     return ERROR_INVALID_NAME;
   }
 
-  XBMC->Log(LOG_DEBUG, "FileReader::OpenFile() Trying to open %s\n", m_pFileName);
-
   do
   {
-    XBMC->Log(LOG_INFO, "FileReader::OpenFile() %s.", m_pFileName);
-    // Open in readonly mode with this filename
-    void* fileHandle = XBMC->OpenFile(m_pFileName, READ_CHUNKED);
+    XBMC->Log(LOG_INFO, "FileReader::OpenFile() %s.", m_fileName.c_str());
+    void* fileHandle = XBMC->OpenFile(m_fileName.c_str(), READ_CHUNKED);
     if (fileHandle)
     {
-      m_hFileHandle = fileHandle;
+      m_hFile = fileHandle;
       break;
     }
 
@@ -142,18 +130,17 @@ long FileReader::OpenFile()
   if (Tmo)
   {
     if (Tmo<4) // 1 failed + 1 succeded is quasi-normal, more is a bit suspicious ( disk drive too slow or problem ? )
-      XBMC->Log(LOG_DEBUG, "FileReader::OpenFile(), %d tries to succeed opening %ws.", 6-Tmo, m_pFileName);
+      XBMC->Log(LOG_DEBUG, "FileReader::OpenFile(), %d tries to succeed opening %ws.", 6-Tmo, m_fileName.c_str());
   }
   else
   {
-    XBMC->Log(LOG_ERROR, "FileReader::OpenFile(), open file %s failed.", m_pFileName);
+    XBMC->Log(LOG_ERROR, "FileReader::OpenFile(), open file %s failed.", m_fileName.c_str());
     return S_FALSE;
   }
 
-  XBMC->Log(LOG_DEBUG, "%s: OpenFile(%s) succeeded.", __FUNCTION__, m_pFileName );
+  XBMC->Log(LOG_DEBUG, "%s: OpenFile(%s) succeeded.", __FUNCTION__, m_fileName.c_str() );
 
   SetFilePointer(0, SEEK_SET);
-  m_llBufferPointer = 0;
 
   return S_OK;
 
@@ -166,54 +153,41 @@ long FileReader::OpenFile()
 //
 long FileReader::CloseFile()
 {
-  if (IsFileInvalid())
+  if (m_hFile)
   {
-    return S_OK;
+    XBMC->CloseFile(m_hFile);
+    m_hFile = NULL;
   }
 
-  if (m_hFileHandle)
-  {
-    XBMC->CloseFile(m_hFileHandle);
-    m_hFileHandle = NULL;
-  }
-
-  m_llBufferPointer = 0;
   return S_OK;
 } // CloseFile
 
 
 inline bool FileReader::IsFileInvalid()
 {
-  return m_hFileHandle == NULL;
-}
-
-
-long FileReader::GetStartPosition(int64_t *lpllpos)
-{
-  *lpllpos = 0;
-  return S_OK;
+  return (m_hFile == NULL);
 }
 
 
 int64_t FileReader::SetFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
 {
-  //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod);
-  int64_t rc = XBMC->SeekFile(m_hFileHandle, llDistanceToMove, dwMoveMethod);
-  //XBMC->Log(LOG_DEBUG, "%s: distance %d method %d returns %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod, rc);
+  TSDEBUG(LOG_DEBUG, "%s: distance %d method %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod);
+  int64_t rc = XBMC->SeekFile(m_hFile, llDistanceToMove, dwMoveMethod);
+  TSDEBUG(LOG_DEBUG, "%s: distance %d method %d returns %d.", __FUNCTION__, llDistanceToMove, dwMoveMethod, rc);
   return rc;
 }
 
 
 int64_t FileReader::GetFilePointer()
 {
-  return XBMC->GetFilePosition(m_hFileHandle);
+  return XBMC->GetFilePosition(m_hFile);
 }
 
 
 long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned long *dwReadBytes)
 {
-  *dwReadBytes = XBMC->ReadFile(m_hFileHandle, (void*)pbData, lDataLength);//Read file data into buffer
-  //XBMC->Log(LOG_DEBUG, "%s: requested read length %d actually read %d.", __FUNCTION__, lDataLength, *dwReadBytes);
+  *dwReadBytes = XBMC->ReadFile(m_hFile, (void*)pbData, lDataLength);//Read file data into buffer
+  TSDEBUG(LOG_DEBUG, "%s: requested read length %d actually read %d.", __FUNCTION__, lDataLength, *dwReadBytes);
 
   if (*dwReadBytes < lDataLength)
   {
@@ -226,10 +200,10 @@ long FileReader::Read(unsigned char* pbData, unsigned long lDataLength, unsigned
 
 int64_t FileReader::GetFileSize()
 {
-  return XBMC->GetFileLength(m_hFileHandle);
+  return XBMC->GetFileLength(m_hFile);
 }
 
 int64_t FileReader::OnChannelChange(void)
 {
-  return XBMC->GetFilePosition(m_hFileHandle);
+  return XBMC->GetFilePosition(m_hFile);
 }

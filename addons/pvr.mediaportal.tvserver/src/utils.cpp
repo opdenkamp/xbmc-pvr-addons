@@ -130,8 +130,58 @@ std::string ToThumbFileName(const char* strChannelName)
   strThumbName.Replace(":","_");
   strThumbName.Replace("/","_");
   strThumbName.Replace("\\","_");
+  strThumbName.Replace(">","_");
+  strThumbName.Replace("<","_");
+  strThumbName.Replace("*","_");
+  strThumbName.Replace("?","_");
+  strThumbName.Replace("\"","_");
+  strThumbName.Replace("|","_");
 
   return strThumbName;
+}
+
+std::string ToXBMCPath(const std::string& strFileName)
+{
+  CStdString strXBMCFileName = strFileName;
+
+  if (strXBMCFileName.Left(2) == "\\\\")
+  {
+    CStdString SMBPrefix = "smb://";
+
+    if (g_szSMBusername.length() > 0)
+    {
+      SMBPrefix += g_szSMBusername;
+      if (g_szSMBpassword.length() > 0)
+      {
+        SMBPrefix += ":" + g_szSMBpassword;
+      }
+      SMBPrefix += "@";
+    }
+    strXBMCFileName.Replace("\\\\", SMBPrefix);
+  }
+  strXBMCFileName.Replace('\\', '/');
+
+  return strXBMCFileName;
+}
+
+std::string ToWindowsPath(const std::string& strFileName)
+{
+  CStdString strWinFileName;
+  std::size_t found = strFileName.find_first_of('@');
+
+  if (found != std::string::npos)
+  {
+    strWinFileName = "\\\\" + strFileName.substr(found+1);
+  }
+  else
+  {
+    strWinFileName = strFileName;
+    strWinFileName.Replace("smb://","\\\\");
+  }
+
+  strWinFileName.Replace('/','\\');
+
+  return strWinFileName;
 }
 
 #if defined(TARGET_WINDOWS)

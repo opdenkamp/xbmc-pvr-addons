@@ -1,3 +1,20 @@
+v1.6.10
+- TSReader: Fixed: channel switching behavior when switching across tsbuffer files
+- Recordings: Add support for retrieving and storing the playback resume position (requires TVServerXBMC build 121 or higher)
+- Fixed: Hide smb password in debug xbmc.log file
+- Changed: more log notifications on errors
+- EPG: added additional genre strings to the genre string to id translation table
+- Better error logging on failures
+- TSReader: Don't replace \\ by smb:// when not at the start of the path
+- Allow empty username and password for SMB share access
+- Channel thumbnails: replace more invalid file name characters in the channel name by a _
+
+v1.6.9
+- Added: Fast channel switching: PAT detection on channel switch to find the new channel in the Timeshift buffer file.
+  This should fix SD<->HD channel switching
+- Recordings: Trigger a recording list update when the backend couldn't find the selected recording
+- Recordings: Add support for retrieving and storing the playback resume position (requires TVServerXBMC build 121 or higher)
+
 v1.6.8
 - Channels: Use MediaPortal VisibleInGuide property as inverted IsHidden flag in XBMC. (requires TVServerXBMC build 120)
 - Channelgroups: Don't import other channel groups when the user selected to import channels from a single group.
@@ -18,7 +35,7 @@ v1.6.5
 - Updated language files from Transifex
 
 v1.6.4
--New version number by Team XBMC
+- New version number by Team XBMC
 
 v1.2.3.117
 - Added: timeshift support for XBMC Frodo

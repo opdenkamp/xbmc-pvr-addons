@@ -59,6 +59,7 @@ private:
   bool m_isRecording;
   CGenreTable* m_genretable;
   int m_timesWatched;
+  int m_lastPlayedPosition;
 
 public:
   cRecording();
@@ -78,6 +79,7 @@ public:
   int ScheduleID(void) const { return m_scheduleID; }
   int Lifetime(void) const;
   int TimesWatched(void) const {return m_timesWatched; }
+  int LastPlayedPosition(void) const { return m_lastPlayedPosition; }
 
   /**
    * \brief Filename of this recording with full path (at server side)

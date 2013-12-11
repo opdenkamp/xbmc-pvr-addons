@@ -96,6 +96,12 @@ CVisGUIShader *vis_shader = NULL;
 #define CONTROL_SPIN_TIMESHIFT_MODE          21
 #define CONTROL_SPIN_TIMESHIFT_BUFFER_RAM    22
 #define CONTROL_SPIN_TIMESHIFT_BUFFER_FILE   23
+#define CONTROL_LABEL_FILTERS                31
+#define CONTROL_RADIO_ISRADIO                32
+#define CONTROL_PROVIDERS_BUTTON             33
+#define CONTROL_CHANNELS_BUTTON              34
+#define CONTROL_FILTERSAVE_BUTTON            35
+#define CONTROL_ITEM_LIST                    36
 
 #define ACTION_NONE                    0
 #define ACTION_MOVE_LEFT               1
@@ -840,7 +846,11 @@ bool cVNSIAdmin::Open(const std::string& hostname, int port, const char* name)
   m_window->CBOnFocus = OnFocusCB;
   m_window->CBOnClick = OnClickCB;
   m_window->CBOnAction= OnActionCB;
+
   m_window->DoModal();
+
+  ClearListItems();
+  m_window->ClearProperties();
 
 #if defined(XBMC_GUI_API_VERSION)
   GUI->Control_releaseRendering(m_renderControl);
@@ -849,7 +859,9 @@ bool cVNSIAdmin::Open(const std::string& hostname, int port, const char* name)
   GUI->Control_releaseSpin(m_spinTimeshiftMode);
   GUI->Control_releaseSpin(m_spinTimeshiftBufferRam);
   GUI->Control_releaseSpin(m_spinTimeshiftBufferFile);
+  GUI->Control_releaseRadioButton(m_ratioIsRadio);
   GUI->Window_destroy(m_window);
+  StopThread();
   Close();
 
   if (m_osdRender)
@@ -900,6 +912,89 @@ bool cVNSIAdmin::OnClick(int controlId)
       XBMC->Log(LOG_ERROR, "%s - failed to set timeshift buffer file", __FUNCTION__);
     }
     return true;
+  }
+  else if (controlId == CONTROL_PROVIDERS_BUTTON)
+  {
+    if(!m_channels.m_loaded || m_ratioIsRadio->IsSelected() != m_channels.m_radio)
+    {
+      ReadChannelList(m_ratioIsRadio->IsSelected());
+      ReadChannelWhitelist(m_ratioIsRadio->IsSelected());
+      ReadChannelBlacklist(m_ratioIsRadio->IsSelected());
+      m_channels.CreateProviders();
+      m_channels.LoadProviderWhitelist();
+      m_channels.LoadChannelBlacklist();
+      m_channels.m_loaded = true;
+      m_channels.m_radio = m_ratioIsRadio->IsSelected();
+      m_window->SetProperty("IsDirty", "0");
+    }
+    LoadListItemsProviders();
+    m_channels.m_mode = CVNSIChannels::PROVIDER;
+  }
+  else if (controlId == CONTROL_CHANNELS_BUTTON)
+  {
+    if(!m_channels.m_loaded || m_ratioIsRadio->IsSelected() != m_channels.m_radio)
+    {
+      ReadChannelList(m_ratioIsRadio->IsSelected());
+      ReadChannelWhitelist(m_ratioIsRadio->IsSelected());
+      ReadChannelBlacklist(m_ratioIsRadio->IsSelected());
+      m_channels.CreateProviders();
+      m_channels.LoadProviderWhitelist();
+      m_channels.LoadChannelBlacklist();
+      m_channels.m_loaded = true;
+      m_channels.m_radio = m_ratioIsRadio->IsSelected();
+      m_window->SetProperty("IsDirty", "0");
+    }
+    LoadListItemsChannels();
+    m_channels.m_mode = CVNSIChannels::CHANNEL;
+  }
+  else if (controlId == CONTROL_FILTERSAVE_BUTTON)
+  {
+    if(m_channels.m_loaded)
+    {
+      SaveChannelWhitelist(m_ratioIsRadio->IsSelected());
+      SaveChannelBlacklist(m_ratioIsRadio->IsSelected());
+      m_window->SetProperty("IsDirty", "0");
+    }
+  }
+  else if (controlId == CONTROL_ITEM_LIST)
+  {
+    if(m_channels.m_mode == CVNSIChannels::PROVIDER)
+    {
+      int pos = m_window->GetCurrentListPosition();
+      GUIHANDLE hdl = m_window->GetListItem(pos);
+      int idx = m_listItemsMap[hdl];
+      CAddonListItem *item = m_listItems[idx];
+      if (m_channels.m_providers[idx].m_whitelist)
+      {
+        item->SetProperty("IsWhitelist", "false");
+        m_channels.m_providers[idx].m_whitelist = false;
+      }
+      else
+      {
+        item->SetProperty("IsWhitelist", "true");
+        m_channels.m_providers[idx].m_whitelist = true;
+      }
+      m_window->SetProperty("IsDirty", "1");
+    }
+    else if(m_channels.m_mode == CVNSIChannels::CHANNEL)
+    {
+      int pos = m_window->GetCurrentListPosition();
+      GUIHANDLE hdl = m_window->GetListItem(pos);
+      int idx = m_listItemsMap[hdl];
+      CAddonListItem *item = m_listItems[idx];
+      int channelidx = m_listItemsChannelsMap[hdl];
+      if (m_channels.m_channels[channelidx].m_blacklist)
+      {
+        item->SetProperty("IsBlacklist", "false");
+        m_channels.m_channels[channelidx].m_blacklist = false;
+      }
+      else
+      {
+        item->SetProperty("IsBlacklist", "true");
+        m_channels.m_channels[channelidx].m_blacklist = true;
+      }
+      m_window->SetProperty("IsDirty", "1");
+    }
   }
   return false;
 }
@@ -1022,6 +1117,10 @@ bool cVNSIAdmin::OnInit()
     m_spinTimeshiftBufferFile->SetValue(mode);
     delete resp;
   }
+
+  // channel filters
+  m_ratioIsRadio = GUI->Control_getRadioButton(m_window, CONTROL_RADIO_ISRADIO);
+
   return true;
 }
 
@@ -1067,10 +1166,11 @@ bool cVNSIAdmin::OnAction(int actionId)
 
   if (actionId == ACTION_SELECT_ITEM)
   {
-    int controlID = m_window->GetFocusId();
-    if (controlID == CONTROL_MENU)
+    if (m_window->GetFocusId() == CONTROL_MENU)
     {
-      if (strncmp(m_window->GetProperty("menu"), "osd", 3) == 0)
+      const char *tmp = m_window->GetProperty("menu");
+      //if (strncmp(m_window->GetProperty("menu"), "osd", 3) == 0)
+      if (strncmp(tmp, "osd", 3) == 0)
       {
 #if defined(XBMC_GUI_API_VERSION)
         m_window->MarkDirtyRegion();
@@ -1288,4 +1388,277 @@ bool cVNSIAdmin::ConnectOSD()
   delete vresp;
 
   return true;
+}
+
+bool cVNSIAdmin::ReadChannelList(bool radio)
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_CHANNELS_GETCHANNELS))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return false;
+  }
+  if (!vrp.add_U32(radio))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
+    return false;
+  }
+  if (!vrp.add_U8(0)) // apply no filter
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
+    return false;
+  }
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (!vresp)
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't get response packed", __FUNCTION__);
+    return false;
+  }
+
+  m_channels.m_channels.clear();
+  m_channels.m_channelsMap.clear();
+  while (!vresp->end())
+  {
+    CChannel channel;
+    channel.m_blacklist = false;
+
+    channel.m_number      = vresp->extract_U32();
+    char *strChannelName  = vresp->extract_String();
+    channel.m_name = strChannelName;
+    char *strProviderName = vresp->extract_String();
+    channel.m_provider = strProviderName;
+    channel.m_id          = vresp->extract_U32();
+                            vresp->extract_U32(); // first caid
+    char *strCaids        = vresp->extract_String();
+    channel.SetCaids(strCaids);
+    channel.m_radio       = radio;
+
+    delete[] strChannelName;
+    delete[] strProviderName;
+    delete[] strCaids;
+    m_channels.m_channels.push_back(channel);
+    m_channels.m_channelsMap[channel.m_id] = m_channels.m_channels.size() - 1;
+  }
+  delete vresp;
+
+  return true;
+}
+
+bool cVNSIAdmin::ReadChannelWhitelist(bool radio)
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_CHANNELS_GETWHITELIST))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return false;
+  }
+  if (!vrp.add_U8(radio))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
+    return false;
+  }
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (!vresp)
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't get response packed", __FUNCTION__);
+    return false;
+  }
+
+  m_channels.m_providerWhitelist.clear();
+  CProvider provider;
+  while (!vresp->end())
+  {
+    char *strProviderName = vresp->extract_String();
+    provider.m_name = strProviderName;
+    provider.m_caid = vresp->extract_U32();
+    m_channels.m_providerWhitelist.push_back(provider);
+    delete [] strProviderName;
+  }
+  delete vresp;
+
+  return true;
+}
+
+bool cVNSIAdmin::SaveChannelWhitelist(bool radio)
+{
+  m_channels.ExtractProviderWhitelist();
+
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_CHANNELS_SETWHITELIST))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return false;
+  }
+  if (!vrp.add_U8(radio))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
+    return false;
+  }
+
+  for(unsigned int i=0; i<m_channels.m_providerWhitelist.size(); i++)
+  {
+    vrp.add_String(m_channels.m_providerWhitelist[i].m_name.c_str());
+    vrp.add_S32(m_channels.m_providerWhitelist[i].m_caid);
+  }
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (!vresp)
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't get response packed", __FUNCTION__);
+    return false;
+  }
+
+  return true;
+}
+
+bool cVNSIAdmin::ReadChannelBlacklist(bool radio)
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_CHANNELS_GETBLACKLIST))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return false;
+  }
+  if (!vrp.add_U8(radio))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
+    return false;
+  }
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (!vresp)
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't get response packed", __FUNCTION__);
+    return false;
+  }
+
+  m_channels.m_channelBlacklist.clear();
+  while (!vresp->end())
+  {
+    int id = vresp->extract_U32();
+    m_channels.m_channelBlacklist.push_back(id);
+  }
+  delete vresp;
+
+  return true;
+}
+
+bool cVNSIAdmin::SaveChannelBlacklist(bool radio)
+{
+  m_channels.ExtractChannelBlacklist();
+
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_CHANNELS_SETBLACKLIST))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return false;
+  }
+  if (!vrp.add_U8(radio))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
+    return false;
+  }
+
+  for(unsigned int i=0; i<m_channels.m_channelBlacklist.size(); i++)
+  {
+    vrp.add_S32(m_channels.m_channelBlacklist[i]);
+  }
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (!vresp)
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't get response packed", __FUNCTION__);
+    return false;
+  }
+
+  return true;
+}
+
+void cVNSIAdmin::ClearListItems()
+{
+  m_window->ClearList();
+  std::vector<CAddonListItem*>::iterator it;
+  for(it=m_listItems.begin(); it!=m_listItems.end(); ++it)
+  {
+    GUI->ListItem_destroy(*it);
+  }
+  m_listItems.clear();
+  m_listItemsMap.clear();
+  m_listItemsChannelsMap.clear();
+}
+
+void cVNSIAdmin::LoadListItemsProviders()
+{
+  ClearListItems();
+
+  std::vector<CProvider>::iterator it;
+  int count = 0;
+  for(it=m_channels.m_providers.begin(); it!=m_channels.m_providers.end(); ++it)
+  {
+    std::string tmp;
+    if(!it->m_name.empty())
+      tmp = it->m_name;
+    else
+      tmp = XBMC->GetLocalizedString(30114);
+    if (it->m_caid == 0)
+    {
+      tmp += " - FTA";
+    }
+    else
+    {
+      tmp += " - CAID: ";
+      char buf[16];
+      sprintf(buf, "%04x", it->m_caid);
+      tmp += buf;
+    }
+
+    CAddonListItem *item = GUI->ListItem_create(tmp.c_str(), NULL, NULL, NULL, NULL);
+    m_window->AddItem(item, count);
+    GUIHANDLE hdl = m_window->GetListItem(count);
+    m_listItems.push_back(item);
+    m_listItemsMap[hdl] = count;
+
+    if (it->m_whitelist)
+      item->SetProperty("IsWhitelist", "true");
+    else
+      item->SetProperty("IsWhitelist", "false");
+
+    count++;
+  }
+}
+
+void cVNSIAdmin::LoadListItemsChannels()
+{
+  ClearListItems();
+
+  int count = 0;
+  std::string tmp;
+  for(unsigned int i=0; i<m_channels.m_channels.size(); i++)
+  {
+    if(!m_channels.IsWhitelist(m_channels.m_channels[i]))
+      continue;
+
+    tmp = m_channels.m_channels[i].m_name;
+    tmp += " (";
+    if(!m_channels.m_channels[i].m_provider.empty())
+      tmp += m_channels.m_channels[i].m_provider;
+    else
+      tmp += XBMC->GetLocalizedString(30114);
+    tmp += ")";
+    CAddonListItem *item = GUI->ListItem_create(tmp.c_str(), NULL, NULL, NULL, NULL);
+    m_window->AddItem(item, count);
+    GUIHANDLE hdl = m_window->GetListItem(count);
+    m_listItems.push_back(item);
+    m_listItemsMap[hdl] = count;
+    m_listItemsChannelsMap[hdl] = i;
+
+    if (m_channels.m_channels[i].m_blacklist)
+      item->SetProperty("IsBlacklist", "true");
+    else
+      item->SetProperty("IsBlacklist", "false");
+
+    count++;
+  }
 }

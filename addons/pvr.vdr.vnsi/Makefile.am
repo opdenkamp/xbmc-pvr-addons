@@ -19,6 +19,7 @@ libvdrvnsi_addon_la_SOURCES = src/client.cpp \
                               src/VNSIRecording.cpp \
                               src/VNSISession.cpp \
                               src/VNSIAdmin.cpp \
+                              src/VNSIChannels.cpp \
                               src/requestpacket.cpp \
                               src/responsepacket.cpp \
                               src/tools.cpp

@@ -67,6 +67,9 @@ public:
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
   PVR_ERROR RenameRecording(const PVR_RECORDING &recording);
+  PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
+  int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
+  PVR_ERROR GetRecordingEdl(const PVR_RECORDING& recording, PVR_EDL_ENTRY[], int *size);
 
   /* Timer handling */
   int GetNumTimers(void);
@@ -124,6 +127,9 @@ private:
   bool                    m_supportsLiveTimeshift;
   long long               m_currentLiveLength;
   long long               m_currentLivePosition;
+  int                     m_iDefaultPrePadding;
+  int                     m_iDefaultPostPadding;
+  std::string             m_recordingDirectories;
 
   CStdString              m_PlaybackURL;
   LiveShiftSource        *m_pLiveShiftSource;

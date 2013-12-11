@@ -107,6 +107,10 @@
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
@@ -118,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\DialogRecordPref.cpp" />
     <ClCompile Include="..\..\src\liveshift.cpp" />
     <ClCompile Include="..\..\src\md5.cpp" />
     <ClCompile Include="..\..\src\pvrclient-nextpvr.cpp" />
@@ -127,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\DialogRecordPref.h" />
     <ClInclude Include="..\..\src\liveshift.h" />
     <ClInclude Include="..\..\src\md5.h" />
     <ClInclude Include="..\..\src\pvrclient-nextpvr.h" />

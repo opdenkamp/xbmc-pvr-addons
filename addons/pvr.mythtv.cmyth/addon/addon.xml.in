@@ -58,7 +58,7 @@
     <description lang="gl">Interface de MythTV (maior da MythTV 0.27). Compatíbel coa transmisión de TV ao vivo, gravacións e escoita de canles de Radio, EPG e temporizadores.</description>
     <description lang="he">ממשק קדמי MythTV (עד MythTV 0.27). תומך בשידור ממשק טלוויזיה והקלטה, האזנה לערוצי רדיו, לוח שידורים ותזמוני הקלטה.</description>
     <description lang="hu">MythTV előtér-kiszolgáló (MythTv 0.27 verzióig). Élő adások, felvételek,és rádió adások sugárzásának támogatása EPG-vel és időzítéssel.</description>
-    <description lang="it">Frontend MythTV (compatibile fino a MythTV 0.27). Supporta lo streaming di Live TV, le registrazioni, l'ascolto dei canali radio, EPG e i timer.</description>
+    <description lang="it">Frontend MythTV (compatibile fino a MythTV 0.27). Supporta lo streaming TV in diretta, le registrazioni, l'ascolto dei canali radio, EPG e programmazioni.</description>
     <description lang="ja">MythTV (バージョン 0.27 まで) のフロントエンドです。ライブ TV ストリーミング、録画、ラジオ放送の視聴、EPG、タイマーをサポートしています。</description>
     <description lang="ko">MythTV 프론트엔드 (up to MythTV 0.27). 라이브 TV 스트리밍, 녹화, 라디오 채널 청취, EPG, 예약 지원.</description>
     <description lang="lt">MythTV sąsaja (kelias iki MythTV 0.27). Palaiko duomenų srautams pritaikyta(-as) Live TV &amp; Recordings</description>

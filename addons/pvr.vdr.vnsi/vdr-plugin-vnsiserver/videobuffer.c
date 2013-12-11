@@ -37,7 +37,7 @@ class cVideoBufferSimple : public cVideoBuffer
 friend class cVideoBuffer;
 public:
   virtual void Put(uint8_t *buf, unsigned int size);
-  virtual int ReadBlock(uint8_t **buf, unsigned int size);
+  virtual int ReadBlock(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime);
 
 protected:
   cVideoBufferSimple();
@@ -64,7 +64,7 @@ void cVideoBufferSimple::Put(uint8_t *buf, unsigned int size)
   m_Buffer->Put(buf, size);
 }
 
-int cVideoBufferSimple::ReadBlock(uint8_t **buf, unsigned int size)
+int cVideoBufferSimple::ReadBlock(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime)
 {
   int  readBytes;
   if (m_BytesConsumed)
@@ -96,6 +96,8 @@ int cVideoBufferSimple::ReadBlock(uint8_t **buf, unsigned int size)
   }
 
   m_BytesConsumed += TS_SIZE;
+  endTime = 0;
+  wrapTime = 0;
   return TS_SIZE;
 }
 
@@ -193,7 +195,7 @@ class cVideoBufferRAM : public cVideoBufferTimeshift
 friend class cVideoBuffer;
 public:
   virtual void Put(uint8_t *buf, unsigned int size);
-  virtual int ReadBlock(uint8_t **buf, unsigned int size);
+  virtual int ReadBlock(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime);
   virtual void SetPos(off_t pos);
 
 protected:
@@ -263,11 +265,16 @@ void cVideoBufferRAM::Put(uint8_t *buf, unsigned int size)
   if (!m_BufferFull)
   {
     if ((m_WritePtr + 2*MARGIN) > m_BufferSize)
+    {
       m_BufferFull = true;
+      time(&m_bufferWrapTime);
+    }
   }
+
+  time(&m_bufferEndTime);
 }
 
-int cVideoBufferRAM::ReadBlock(uint8_t **buf, unsigned int size)
+int cVideoBufferRAM::ReadBlock(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime)
 {
   // move read pointer
   if (m_BytesConsumed)
@@ -276,6 +283,9 @@ int cVideoBufferRAM::ReadBlock(uint8_t **buf, unsigned int size)
     m_ReadPtr += m_BytesConsumed;
     if (m_ReadPtr >= m_BufferSize)
       m_ReadPtr -= m_BufferSize;
+
+    endTime = m_bufferEndTime;
+    wrapTime = m_bufferWrapTime;
   }
   m_BytesConsumed = 0;
 
@@ -323,7 +333,7 @@ friend class cVideoBuffer;
 public:
   virtual off_t GetPosMax();
   virtual void Put(uint8_t *buf, unsigned int size);
-  virtual int ReadBlock(uint8_t **buf, unsigned int size);
+  virtual int ReadBlock(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime);
   virtual void SetPos(off_t pos);
 
 protected:
@@ -491,8 +501,13 @@ void cVideoBufferFile::Put(uint8_t *buf, unsigned int size)
   if (!m_BufferFull)
   {
     if ((m_WritePtr + 2*MARGIN) > m_BufferSize)
+    {
       m_BufferFull = true;
+      time(&m_bufferWrapTime);
+    }
   }
+
+  time(&m_bufferEndTime);
 }
 
 int cVideoBufferFile::ReadBytes(uint8_t *buf, off_t pos, unsigned int size)
@@ -509,7 +524,7 @@ int cVideoBufferFile::ReadBytes(uint8_t *buf, off_t pos, unsigned int size)
   }
 }
 
-int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
+int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime)
 {
   // move read pointer
   if (m_BytesConsumed)
@@ -519,6 +534,9 @@ int cVideoBufferFile::ReadBlock(uint8_t **buf, unsigned int size)
     if (m_ReadPtr >= m_BufferSize)
       m_ReadPtr -= m_BufferSize;
     m_ReadCachePtr += m_BytesConsumed;
+
+    endTime = m_bufferEndTime;
+    wrapTime = m_bufferWrapTime;
   }
   m_BytesConsumed = 0;
 
@@ -607,7 +625,8 @@ friend class cVideoBuffer;
 public:
   virtual off_t GetPosMax();
   virtual void Put(uint8_t *buf, unsigned int size);
-  virtual int ReadBlock(uint8_t **buf, unsigned int size);
+  virtual int ReadBlock(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime);
+  virtual time_t GetRefTime();
 
 protected:
   cVideoBufferRecording(cRecording *rec);
@@ -663,7 +682,13 @@ bool cVideoBufferRecording::Init()
   m_ReadCacheSize = 0;
   m_InputAttached = false;
   m_ScanTimer.Set(0);
+
   return true;
+}
+
+time_t cVideoBufferRecording::GetRefTime()
+{
+  return m_Recording->Start();
 }
 
 off_t cVideoBufferRecording::Available()
@@ -677,7 +702,7 @@ off_t cVideoBufferRecording::Available()
   return cVideoBufferTimeshift::Available();
 }
 
-int cVideoBufferRecording::ReadBlock(uint8_t **buf, unsigned int size)
+int cVideoBufferRecording::ReadBlock(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime)
 {
   // move read pointer
   if (m_BytesConsumed)
@@ -739,6 +764,8 @@ int cVideoBufferRecording::ReadBlock(uint8_t **buf, unsigned int size)
   }
 
   m_BytesConsumed += TS_SIZE;
+  time(&endTime);
+  wrapTime = 0;
   return TS_SIZE;
 }
 
@@ -829,6 +856,8 @@ cVideoBuffer::cVideoBuffer()
 {
   m_CheckEof = false;
   m_InputAttached = true;
+  m_bufferEndTime = 0;
+  m_bufferWrapTime = 0;
 }
 
 cVideoBuffer::~cVideoBuffer()
@@ -897,9 +926,9 @@ cVideoBuffer* cVideoBuffer::Create(cRecording *rec)
     return buffer;
 }
 
-int cVideoBuffer::Read(uint8_t **buf, unsigned int size)
+int cVideoBuffer::Read(uint8_t **buf, unsigned int size, time_t &endTime, time_t &wrapTime)
 {
-  int count = ReadBlock(buf, size);
+  int count = ReadBlock(buf, size, endTime, wrapTime);
 
   // check for end of file
   if (!m_InputAttached && count != TS_SIZE)
@@ -924,4 +953,11 @@ int cVideoBuffer::Read(uint8_t **buf, unsigned int size)
 void cVideoBuffer::AttachInput(bool attach)
 {
   m_InputAttached = attach;
+}
+
+time_t cVideoBuffer::GetRefTime()
+{
+  time_t t;
+  time(&t);
+  return t;
 }

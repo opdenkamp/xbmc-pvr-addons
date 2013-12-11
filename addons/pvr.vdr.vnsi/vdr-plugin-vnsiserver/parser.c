@@ -164,7 +164,7 @@ int cParser::ParsePESHeader(uint8_t *buf, size_t len)
     }
   }
   else
-    m_curDTS = m_curPTS;
+    m_curDTS = DVD_NOPTS_VALUE;
 
   return hdr_len;
 }
@@ -521,10 +521,10 @@ cTSStream::~cTSStream()
 int cTSStream::ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, bool iframe)
 {
   if (!data)
-    return false;
+    return 1;
 
   if (!m_pesParser)
-    return false;
+    return 1;
 
   int payloadSize = m_pesParser->ParsePacketHeader(data);
   if (payloadSize == 0)
@@ -548,12 +548,11 @@ int cTSStream::ProcessTSPacket(uint8_t *data, sStreamPacket *pkt, bool iframe)
     int64_t dts = pkt->dts;
     int64_t pts = pkt->pts;
 
-    if (dts == DVD_NOPTS_VALUE)
-      dts = pts;
-
     // Rescale for XBMC
-    pkt->dts      = Rescale(dts, DVD_TIME_BASE, 90000);
-    pkt->pts      = Rescale(pts, DVD_TIME_BASE, 90000);
+    if (pkt->dts != DVD_NOPTS_VALUE)
+      pkt->dts      = Rescale(dts, DVD_TIME_BASE, 90000);
+    if (pkt->pts != DVD_NOPTS_VALUE)
+      pkt->pts      = Rescale(pts, DVD_TIME_BASE, 90000);
     pkt->duration = Rescale(pkt->duration, DVD_TIME_BASE, 90000);
     return 0;
   }
@@ -578,11 +577,17 @@ bool cTSStream::ReadTime(uint8_t *data, int64_t *dts)
     data += TS_SIZE-payloadSize;
     if (payloadSize >= 6 && m_pesParser->IsValidStartCode(data, payloadSize))
     {
+      m_pesParser->m_curPTS = DVD_NOPTS_VALUE;
       m_pesParser->m_curDTS = DVD_NOPTS_VALUE;
       m_pesParser->ParsePESHeader(data, payloadSize);
       if (m_pesParser->m_curDTS != DVD_NOPTS_VALUE)
       {
         *dts = m_pesParser->m_curDTS;
+        return true;
+      }
+      else if (m_pesParser->m_curPTS != DVD_NOPTS_VALUE)
+      {
+        *dts = m_pesParser->m_curPTS;
         return true;
       }
     }

@@ -41,6 +41,8 @@ public:
   long long GetPosition();
   void Seek(long long offset);
 
+  void Close();
+
 private:
   void LOG(char const *fmt, ... );
 

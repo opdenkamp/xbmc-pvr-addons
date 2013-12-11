@@ -2,69 +2,80 @@
   <defaultcontrol always="true">10</defaultcontrol>
   <onload>SetProperty(menu,osd)</onload>
   <allowoverlay>no</allowoverlay>
+  <views>36</views>
   <include condition="!Skin.HasSetting(firstrun4.0)">AutoConfig</include>
-  <animation type="WindowOpen" reversible="false" condition="![Window.Previous(settings) | Window.Previous(skinsettings)]">
-    <effect type="zoom" start="150" end="100" center="960,540" time="900" tween="cubic" />
+  <animation type="WindowOpen" reversible="false"
+    condition="![Window.Previous(settings) | Window.Previous(skinsettings)]">
+    <effect type="zoom" start="150" end="100" center="960,540"
+      time="900" tween="cubic" />
     <effect type="fade" end="100" time="900" />
   </animation>
-  <animation type="WindowClose" reversible="false" condition="![Window.Next(settings) | Window.Next(skinsettings)]">
+  <animation type="WindowClose" reversible="false"
+    condition="![Window.Next(settings) | Window.Next(skinsettings)]">
     <effect type="fade" start="100" end="0" time="300" />
-    <effect type="zoom" start="100" end="130" center="960,540" time="300" tween="cubic" easing="in" />
+    <effect type="zoom" start="100" end="130" center="960,540"
+      time="300" tween="cubic" easing="in" />
   </animation>
   <controls>
-      <control type="group">
-        <include>CommonSettingsBackground</include>
-        <include>CommonMediaPlayingBackground</include>
-        <include>Furniture_SettingsFloor</include>
-      </control>
-	  <control type="group">
-        <animation effect="zoom" end="91" center="960,360" time="400" tween="cubic" easing="inout" condition="true">Conditional</animation>
-        <include>Furniture_SettingsBackPanel</include>
+    <control type="group">
+      <include>CommonSettingsBackground</include>
+      <include>CommonMediaPlayingBackground</include>
+      <include>Furniture_SettingsFloor</include>
+    </control>
+    <control type="group">
+      <animation effect="zoom" end="91" center="960,360" time="400"
+        tween="cubic" easing="inout" condition="true">Conditional</animation>
+      <include>Furniture_SettingsBackPanel</include>
       <control type="list" id="10">
         <defaultcontrol always="true">1</defaultcontrol>
-		<posx>63</posx>
-		<posy>180</posy>
-		<width>326</width>
-		<height>768</height>
-		<onleft>10</onleft>
-		<onright>11</onright>
-		<onup>10</onup>
-		<ondown>9000</ondown>
-		<pagecontrol>-</pagecontrol>
-		<scrolltime>300</scrolltime>
-		<itemlayout height="74" width="334">
-		  <control type="label">
-		    <width>334</width>
-		    <height>74</height>
-		    <font>Font_Bold20</font>
+        <posx>63</posx>
+        <posy>180</posy>
+        <width>326</width>
+        <height>768</height>
+        <onleft>10</onleft>
+        <onright>11</onright>
+        <onup>10</onup>
+        <ondown>9000</ondown>
+        <pagecontrol>-</pagecontrol>
+        <scrolltime>300</scrolltime>
+        <itemlayout height="74" width="334">
+          <control type="label">
+            <width>334</width>
+            <height>74</height>
+            <font>Font_Bold20</font>
             <textcolor>grey2</textcolor>
             <label>$INFO[ListItem.Label]</label>
-		  </control>
-		</itemlayout>
-		<focusedlayout height="74" width="334">
-		  <control type="image">
+          </control>
+        </itemlayout>
+        <focusedlayout height="74" width="334">
+          <control type="image">
             <width>334</width>
             <height>74</height>
             <texture>views/tripanel/listselect_fo.png</texture>
-            <animation effect="fade" start="100" end="50" time="50" condition="!Control.HasFocus(9000)">Conditional</animation>
+            <animation effect="fade" start="100" end="50"
+              time="50" condition="!Control.HasFocus(9000)">Conditional</animation>
             <colordiffuse>$VAR[FocusTextureColorVar]</colordiffuse>
-		  </control>
-		  <control type="label">
+          </control>
+          <control type="label">
             <width>334</width>
             <height>74</height>
             <font>Font_Bold20</font>
             <label>$INFO[ListItem.Label]</label>
-		  </control>
-		</focusedlayout>
-		<content>
-         <item id="1">
-		   <label>$ADDON[pvr.vdr.vnsi 30100]</label>
-		   <onclick>SetProperty(menu,osd)</onclick>
-		 </item>
-		 <item id="2">
-		   <label>$ADDON[pvr.vdr.vnsi 30101]</label>
-		   <onclick>SetProperty(menu,setup)</onclick>
-		 </item>
+          </control>
+        </focusedlayout>
+        <content>
+          <item id="1">
+            <label>$ADDON[pvr.vdr.vnsi 30100]</label>
+            <onclick>SetProperty(menu,osd)</onclick>
+          </item>
+          <item id="2">
+            <label>$ADDON[pvr.vdr.vnsi 30101]</label>
+            <onclick>SetProperty(menu,setup)</onclick>
+          </item>
+          <item id="3">
+            <label>$ADDON[pvr.vdr.vnsi 30108]</label>
+            <onclick>SetProperty(menu,channels)</onclick>
+          </item>
         </content>
       </control>
       <control type="group" id="11">
@@ -87,9 +98,9 @@
           <aspectratio>stretch</aspectratio>
           <texture>GlassTitleBar.png</texture>
         </control>
-	    <control type="group" id="12">
-	      <visible>StringCompare(Window.Property(menu),osd)</visible>
-		  <control type="button" id="13">
+        <control type="group" id="12">
+          <visible>StringCompare(Window.Property(menu),osd)</visible>
+          <control type="button" id="13">
             <description>osd control label</description>
             <posx>25</posx>
             <posy>10</posy>
@@ -102,33 +113,19 @@
             <font>font16caps</font>
             <textcolor>grey</textcolor>
             <focusedcolor>white2</focusedcolor>
-		    <onleft>10</onleft>
+            <onleft>10</onleft>
           </control>
-		  <control type="label">
-            <description>not focused label</description>
-            <visible>Control.HasFocus(11)</visible>
-            <posx>300</posx>
-            <posy>20</posy>
-            <width>1380</width>
-            <height>30</height>
-            <font>font16caps</font>
-            <label>$ADDON[pvr.vdr.vnsi 30103]</label>
-            <align>left</align>
-            <aligny>center</aligny>
-            <textcolor>white</textcolor>
-            <shadowcolor>black</shadowcolor>
-          </control>
-          <control type="renderaddon" id ="9">
+          <control type="renderaddon" id="9">
             <posx>5</posx>
             <posy>50</posy>
             <width>1453</width>
             <height>740</height>
           </control>
-	    </control>
-	    <control type="group" id="20">
-	      <visible>StringCompare(Window.Property(menu),setup)</visible>
-		  <defaultcontrol always="true">21</defaultcontrol>
-		  <control type="spincontrolex" id="21">
+        </control>
+        <control type="group" id="20">
+          <visible>StringCompare(Window.Property(menu),setup)</visible>
+          <defaultcontrol always="true">21</defaultcontrol>
+          <control type="spincontrolex" id="21">
             <description>Source Type</description>
             <posx>10</posx>
             <posy>50</posy>
@@ -143,9 +140,9 @@
             <aligny>center</aligny>
             <label>$ADDON[pvr.vdr.vnsi 30104]</label>
             <onleft>10</onleft>
-			<ondown>22</ondown>
-        </control>
-	    <control type="spincontrolex" id="22">
+            <ondown>22</ondown>
+          </control>
+          <control type="spincontrolex" id="22">
             <description>Source Type</description>
             <posx>10</posx>
             <posy>100</posy>
@@ -160,10 +157,10 @@
             <aligny>center</aligny>
             <label>$ADDON[pvr.vdr.vnsi 30105]</label>
             <onleft>10</onleft>
-			<onup>21</onup>
-			<ondown>23</ondown>
-        </control>
-        <control type="spincontrolex" id="23">
+            <onup>21</onup>
+            <ondown>23</ondown>
+          </control>
+          <control type="spincontrolex" id="23">
             <description>Source Type</description>
             <posx>10</posx>
             <posy>150</posy>
@@ -178,11 +175,217 @@
             <aligny>center</aligny>
             <label>$ADDON[pvr.vdr.vnsi 30106]</label>
             <onleft>10</onleft>
-			<onup>22</onup>
+            <onup>22</onup>
+          </control>
         </control>
-	    </control>
+        <control type="group" id="30">
+          <visible>StringCompare(Window.Property(menu),channels)</visible>
+          <defaultcontrol always="true">33</defaultcontrol>
+          <control type="label" id="31">
+            <description>Channels label</description>
+            <posx>25</posx>
+            <posy>10</posy>
+            <width>1000</width>
+            <height>30</height>
+            <font>font16caps</font>
+            <label>$ADDON[pvr.vdr.vnsi 30111]</label>
+            <align>posx</align>
+            <aligny>center</aligny>
+            <textcolor>white</textcolor>
+            <shadowcolor>black</shadowcolor>
+          </control>
+          <control type="image">
+            <posx>1090</posx>
+            <posy>30</posy>
+            <width>30</width>
+            <height>30</height>
+            <aspectratio>stretch</aspectratio>
+            <colordiffuse>FFCC0000</colordiffuse>
+            <texture>views/scrollbarnub-focus.png</texture>
+            <visible>StringCompare(Window.Property(IsDirty),1)</visible>
+          </control>
+          <control type="image">
+            <posx>1090</posx>
+            <posy>30</posy>
+            <width>30</width>
+            <height>30</height>
+            <aspectratio>stretch</aspectratio>
+            <colordiffuse>FF00FF00</colordiffuse>
+            <texture>views/scrollbarnub-focus.png</texture>
+            <visible>!StringCompare(Window.Property(IsDirty),1)</visible>
+          </control>
+          <control type="radiobutton" id="32">
+            <description>Is Radio</description>
+            <posx>75</posx>
+            <posy>150</posy>
+            <width>375</width>
+            <height>30</height>
+            <font>font16caps</font>
+            <textcolor>grey3</textcolor>
+            <focusedcolor>white</focusedcolor>
+            <texturefocus>views/tripanel/listselect_fo.png</texturefocus>
+            <colordiffuse>$VAR[FocusTextureColorVar]</colordiffuse>
+            <texturenofocus>settings/settings_radiobuttonoff.png</texturenofocus>
+            <label>$ADDON[pvr.vdr.vnsi 30112]</label>
+            <onleft>10</onleft>
+            <ondown>33</ondown>
+            <onright>36</onright>
+          </control>
+          <control type="button" id="33">
+            <description>providers</description>
+            <posx>75</posx>
+            <posy>250</posy>
+            <width>375</width>
+            <height>30</height>
+            <texturefocus>views/tripanel/listselect_fo.png</texturefocus>
+            <texturenofocus>settings/settings_radiobuttonoff.png</texturenofocus>
+            <label>$ADDON[pvr.vdr.vnsi 30109]</label>
+            <font>font16caps</font>
+            <textcolor>grey3</textcolor>
+            <onleft>10</onleft>
+            <onright>36</onright>
+            <onup>32</onup>
+            <ondown>34</ondown>
+          </control>
+          <control type="button" id="34">
+            <description>channels</description>
+            <posx>75</posx>
+            <posy>350</posy>
+            <width>375</width>
+            <height>30</height>
+            <texturefocus>views/tripanel/listselect_fo.png</texturefocus>
+            <texturenofocus>settings/settings_radiobuttonoff.png</texturenofocus>
+            <label>$ADDON[pvr.vdr.vnsi 30110]</label>
+            <font>font16caps</font>
+            <textcolor>grey3</textcolor>
+            <onleft>10</onleft>
+            <onright>36</onright>
+            <onup>33</onup>
+            <ondown>35</ondown>
+          </control>
+          <control type="button" id="35">
+            <description>save</description>
+            <posx>75</posx>
+            <posy>450</posy>
+            <width>375</width>
+            <height>30</height>
+            <texturefocus>views/tripanel/listselect_fo.png</texturefocus>
+            <texturenofocus>settings/settings_radiobuttonoff.png</texturenofocus>
+            <label>$ADDON[pvr.vdr.vnsi 30113]</label>
+            <font>font16caps</font>
+            <textcolor>grey3</textcolor>
+            <onleft>10</onleft>
+            <onright>36</onright>
+            <onup>34</onup>
+          </control>
+          <control type="image">
+            <description>background image</description>
+            <posx>700</posx>
+            <posy>75</posy>
+            <width>740</width>
+            <height>670</height>
+            <texture background="true">$INFO[Container(9000).ListItem.Icon]</texture>
+          </control>
+          <control type="list" id ="36">
+            <posx>720</posx>
+            <posy>95</posy>
+            <width>650</width>
+            <height>630</height>
+            <onleft>33</onleft>
+            <onright>37</onright>
+            <viewtype label="30106">list</viewtype>
+            <pagecontrol>37</pagecontrol>
+            <scrolltime>200</scrolltime>
+            <itemlayout height="20" width="650">
+              <control type="image">
+                <posx>2</posx>
+                <posy>2</posy>
+                <width>18</width>
+                <height>18</height>
+                <aspectratio>stretch</aspectratio>
+                <colordiffuse>7790EE90</colordiffuse>
+                <texture>arrowright.png</texture>
+                <visible>ListItem.Property(IsWhitelist)</visible>
+              </control>
+              <control type="image">
+                <posx>2</posx>
+                <posy>2</posy>
+                <width>18</width>
+                <height>18</height>
+                <aspectratio>stretch</aspectratio>
+                <colordiffuse>77FF0000</colordiffuse>
+                <texture>arrowright.png</texture>
+                <visible>ListItem.Property(IsBlacklist)</visible>
+              </control>
+              <control type="label">
+                <posx>40</posx>
+                <posy>0</posy>
+                <width>550</width>
+                <height>20</height>
+                <font>Font_Reg10</font>
+                <align>posx</align>
+                <aligny>center</aligny>
+                <textcolor>grey2</textcolor>
+                <selectedcolor>selected</selectedcolor>
+                <info>ListItem.Label</info>
+              </control>
+            </itemlayout>
+            <focusedlayout height="20" width="650">
+              <control type="image">
+                <posx>0</posx>
+                <posy>0</posy>
+                <width>650</width>
+                <height>20</height>
+                <aspectratio>stretch</aspectratio>
+                <texture>views/tripanel/listselect_fo.png</texture>
+                <colordiffuse>$VAR[FocusTextureColorVar]</colordiffuse>
+                <visible>Control.HasFocus(36)</visible>
+              </control>
+              <control type="image">
+                <posx>2</posx>
+                <posy>2</posy>
+                <width>18</width>
+                <height>18</height>
+                <aspectratio>stretch</aspectratio>
+                <colordiffuse>7790EE90</colordiffuse>
+                <texture>arrowright.png</texture>
+                <visible>ListItem.Property(IsWhitelist)</visible>
+              </control>
+              <control type="image">
+                <posx>2</posx>
+                <posy>2</posy>
+                <width>18</width>
+                <height>18</height>
+                <aspectratio>stretch</aspectratio>
+                <colordiffuse>77FF0000</colordiffuse>
+                <texture>arrowright.png</texture>
+                <visible>ListItem.Property(IsBlacklist)</visible>
+              </control>
+              <control type="label">
+                <posx>40</posx>
+                <posy>0</posy>
+                <width>550</width>
+                <height>20</height>
+                <font>Font_Reg10</font>
+                <align>posx</align>
+                <aligny>center</aligny>
+                <textcolor>grey2</textcolor>
+                <selectedcolor>selected</selectedcolor>
+                <info>ListItem.Label</info>
+              </control>
+            </focusedlayout>
+          </control>
+          <control type="scrollbar" id="37">
+            <posx>1400</posx>
+            <posy>75</posy>
+            <width>25</width>
+            <height>630</height>
+            <onleft>36</onleft>
+            <showonepage>false</showonepage>
+            <orientation>vertical</orientation>
+          </control> 
+        </control>
       </control>
-	</control>
-    <include>Clock</include>
+    </control>
   </controls>
 </window>

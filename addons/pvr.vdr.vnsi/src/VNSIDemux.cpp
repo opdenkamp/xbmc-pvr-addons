@@ -121,6 +121,10 @@ DemuxPacket* cVNSIDemux::Read()
       p->iStreamId  = iStreamId;
       delete resp;
 
+      if (p->dts != DVD_NOPTS_VALUE)
+        m_CurrentDTS = p->dts;
+      else if (p->pts != DVD_NOPTS_VALUE)
+        m_CurrentDTS = p->pts;
       return p;
     }
     else if (iStreamId != -1 && resp->getMuxSerial() != m_MuxPacketSerial)
@@ -136,6 +140,13 @@ DemuxPacket* cVNSIDemux::Read()
   else if (resp->getOpCodeID() == VNSI_STREAM_BUFFERSTATS)
   {
     m_bTimeshift = resp->extract_U8();
+    m_BufferTimeStart = resp->extract_U32();
+    m_BufferTimeEnd = resp->extract_U32();
+  }
+  else if (resp->getOpCodeID() == VNSI_STREAM_REFTIME)
+  {
+    m_ReferenceTime = resp->extract_U32();
+    m_ReferenceDTS = (double)resp->extract_U64() * DVD_TIME_BASE / 1000000;
   }
 
   delete resp;
@@ -210,6 +221,9 @@ bool cVNSIDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
   m_channelinfo = channelinfo;
   m_streams.Clear();
   m_MuxPacketSerial = 0;
+  m_ReferenceTime = 0;
+  m_BufferTimeStart = 0;
+  m_BufferTimeEnd = 0;
 
   return true;
 }
@@ -230,6 +244,23 @@ bool cVNSIDemux::GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo)
   qualityinfo.dDolbyBitrate = 0;
 
   return true;
+}
+
+time_t cVNSIDemux::GetPlayingTime()
+{
+  time_t ret;
+  ret = m_ReferenceTime + (m_CurrentDTS - m_ReferenceDTS) / DVD_TIME_BASE;
+  return ret;
+}
+
+time_t cVNSIDemux::GetBufferTimeStart()
+{
+  return m_BufferTimeStart;
+}
+
+time_t cVNSIDemux::GetBufferTimeEnd()
+{
+  return m_BufferTimeEnd;
 }
 
 void cVNSIDemux::StreamChange(cResponsePacket *resp)

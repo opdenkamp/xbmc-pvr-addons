@@ -60,7 +60,7 @@ public:
   bool SeekTime(int64_t time);
   uint32_t GetSerial() { return m_MuxPacketSerial; }
   void SetSerial(uint32_t serial) { m_MuxPacketSerial = serial; }
-  void BufferStatus(bool &timeshift, int &start, int &current, int &end);
+  void BufferStatus(bool &timeshift, uint32_t &start, uint32_t &end);
   uint16_t GetError();
 
 protected:
@@ -78,10 +78,12 @@ protected:
   cPatPmtParser m_PatPmtParser;
   int m_OldPmtVersion;
   bool m_WaitIFrame;
-  int64_t m_FirstFrameDTS;
+  int64_t m_FirstFramePTS;
   cVideoBuffer *m_VideoBuffer;
   cMutex m_Mutex;
   uint32_t m_MuxPacketSerial;
   sPtsWrap m_PtsWrap;
   uint16_t m_Error;
+  bool m_SetRefTime;
+  time_t m_refTime, m_endTime, m_wrapTime;
 };

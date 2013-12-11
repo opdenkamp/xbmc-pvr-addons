@@ -23,7 +23,7 @@
 #define VNSI_COMMAND_H
 
 /** Current VNSI Protocol Version number */
-#define VNSI_PROTOCOLVERSION 4
+#define VNSI_PROTOCOLVERSION 5
 
 /** Packet types */
 #define VNSI_CHANNEL_REQUEST_RESPONSE 1
@@ -68,6 +68,11 @@
 #define VNSI_CHANNELGROUP_GETCOUNT 65
 #define VNSI_CHANNELGROUP_LIST     66
 #define VNSI_CHANNELGROUP_MEMBERS  67
+#define VNSI_CHANNELS_GETCAIDS     68
+#define VNSI_CHANNELS_GETWHITELIST 69
+#define VNSI_CHANNELS_GETBLACKLIST 70
+#define VNSI_CHANNELS_SETWHITELIST 71
+#define VNSI_CHANNELS_SETBLACKLIST 72
 
 /* OPCODE 80 - 99: VNSI network functions for timer access */
 #define VNSI_TIMER_GETCOUNT        80
@@ -83,6 +88,7 @@
 #define VNSI_RECORDINGS_GETLIST    102
 #define VNSI_RECORDINGS_RENAME     103
 #define VNSI_RECORDINGS_DELETE     104
+#define VNSI_RECORDINGS_GETEDL     105
 
 /* OPCODE 120 - 139: VNSI network functions for epg access and manipulating */
 #define VNSI_EPG_GETFORCHANNEL     120
@@ -107,6 +113,7 @@
 #define VNSI_STREAM_SIGNALINFO   5
 #define VNSI_STREAM_CONTENTINFO  6
 #define VNSI_STREAM_BUFFERSTATS  7
+#define VNSI_STREAM_REFTIME      8
 
 /** Scan packet types (server -> client) */
 #define VNSI_SCANNER_PERCENTAGE  1

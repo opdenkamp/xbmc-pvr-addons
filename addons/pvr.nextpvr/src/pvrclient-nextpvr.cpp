@@ -26,6 +26,7 @@
 
 #include "client.h"
 #include "pvrclient-nextpvr.h"
+#include "DialogRecordPref.h"
 
 #include "md5.h"
 
@@ -44,7 +45,7 @@ int g_iNextPVRXBMCBuild = 0;
 
 /* PVR client version (don't forget to update also the addon.xml and the Changelog.txt files) */
 #define PVRCLIENT_NEXTPVR_VERSION_STRING    "1.0.0.0"
-#define NEXTPVRC_MIN_VERSION_STRING         "2.5.9"
+#define NEXTPVRC_MIN_VERSION_STRING         "3.1.1"
 
 #define HTTP_OK 200
 #define HTTP_NOTFOUND 404
@@ -217,6 +218,21 @@ bool cPVRClientNextPVR::Connect()
                 {
                   m_supportsLiveTimeshift = true;
                 }
+
+                // load padding defaults
+                m_iDefaultPrePadding = 1;
+                m_iDefaultPostPadding = 2;
+                if ( settingsDoc.RootElement()->FirstChildElement("PrePadding") != NULL &&  settingsDoc.RootElement()->FirstChildElement("PrePadding")->FirstChild() != NULL)
+                {
+                  m_iDefaultPrePadding = atoi(settingsDoc.RootElement()->FirstChildElement("PrePadding")->FirstChild()->Value());
+                  m_iDefaultPostPadding = atoi( settingsDoc.RootElement()->FirstChildElement("PostPadding")->FirstChild()->Value());
+                }
+
+                m_recordingDirectories = "";
+                if ( settingsDoc.RootElement()->FirstChildElement("RecordingDirectories") != NULL &&  settingsDoc.RootElement()->FirstChildElement("RecordingDirectories")->FirstChild() != NULL)
+                {
+                  m_recordingDirectories += settingsDoc.RootElement()->FirstChildElement("RecordingDirectories")->FirstChild()->Value();
+                }
               }
             }
 
@@ -347,6 +363,10 @@ PVR_ERROR cPVRClientNextPVR::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
         {
           PVR_STRCPY(description, pListingNode->FirstChildElement("description")->FirstChild()->Value());
         }
+        else
+        {
+          description[0] = '\0';
+        }
 
         char start[32];
         strncpy(start, pListingNode->FirstChildElement("start")->FirstChild()->Value(), sizeof start);
@@ -371,6 +391,20 @@ PVR_ERROR cPVRClientNextPVR::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
           broadcast.iGenreType          = EPG_GENRE_USE_STRING;
           PVR_STRCPY(genre, pListingNode->FirstChildElement("genre")->FirstChild()->Value());
           broadcast.strGenreDescription = genre;
+        }
+        else
+        {
+          // genre type
+          if (pListingNode->FirstChildElement("genre_type") != NULL && pListingNode->FirstChildElement("genre_type")->FirstChild() != NULL)
+          {
+            broadcast.iGenreType  = atoi(pListingNode->FirstChildElement("genre_type")->FirstChild()->Value());
+          }
+
+          // genre subtype
+          if (pListingNode->FirstChildElement("genre_subtype") != NULL && pListingNode->FirstChildElement("genre_subtype")->FirstChild() != NULL)
+          {
+            broadcast.iGenreSubType  = atoi(pListingNode->FirstChildElement("genre_subtype")->FirstChild()->Value());
+          }
         }
 
         broadcast.bNotify             = false;
@@ -706,6 +740,11 @@ PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
         tag.recordingTime = atoi(pRecordingNode->FirstChildElement("start_time_ticks")->FirstChild()->Value());
         tag.iDuration = atoi(pRecordingNode->FirstChildElement("duration_seconds")->FirstChild()->Value());
 
+        if (pRecordingNode->FirstChildElement("playback_position") != NULL && pRecordingNode->FirstChildElement("playback_position")->FirstChild() != NULL)
+        {
+          tag.iLastPlayedPosition = atoi(pRecordingNode->FirstChildElement("playback_position")->FirstChild()->Value());
+        }
+
         CStdString strStream;
         strStream.Format("http://%s:%d/live?recording=%s", g_szHostname, g_iPort, tag.strRecordingId);
         strncpy(tag.strStreamURL, strStream.c_str(), sizeof(tag.strStreamURL)); 
@@ -791,6 +830,62 @@ PVR_ERROR cPVRClientNextPVR::RenameRecording(const PVR_RECORDING &recording)
   return PVR_ERROR_NO_ERROR;
 }
 
+PVR_ERROR cPVRClientNextPVR::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
+{
+  XBMC->Log(LOG_DEBUG, "SetRecordingLastPlayedPosition");
+  char request[512];
+  sprintf(request, "/service?method=recording.watched.set&recording_id=%s&position=%d", recording.strRecordingId, lastplayedposition);
+
+  CStdString response;
+  if (DoRequest(request, response) == HTTP_OK)
+  {
+    if (strstr(response, "<rsp stat=\"ok\">") == NULL)
+    {
+      XBMC->Log(LOG_DEBUG, "SetRecordingLastPlayedPosition failed");
+      return PVR_ERROR_FAILED;
+    }
+  }
+  return PVR_ERROR_NO_ERROR;
+}
+
+int cPVRClientNextPVR::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
+{
+  return recording.iLastPlayedPosition;
+}
+
+PVR_ERROR cPVRClientNextPVR::GetRecordingEdl(const PVR_RECORDING& recording, PVR_EDL_ENTRY entries[], int *size)
+{
+  XBMC->Log(LOG_DEBUG, "GetRecordingEdl");
+  char request[512];
+  sprintf(request, "/service?method=recording.edl&recording_id=%s", recording.strRecordingId);
+
+  CStdString response;
+  if (DoRequest(request, response) == HTTP_OK)
+  {
+    if (strstr(response, "<rsp stat=\"ok\">") != NULL)
+    {
+      TiXmlDocument doc;
+      if (doc.Parse(response) != NULL)
+      {
+        int index = 0;
+        TiXmlElement* commercialsNode = doc.RootElement()->FirstChildElement("commercials");
+        TiXmlElement* pCommercialNode = commercialsNode->FirstChildElement("commercial");
+        for( pCommercialNode; pCommercialNode; pCommercialNode=pCommercialNode->NextSiblingElement())
+        {          
+          PVR_EDL_ENTRY entry;
+          entry.start = atoi(pCommercialNode->FirstChildElement("start")->FirstChild()->Value()) * 1000;
+          entry.end = atoi(pCommercialNode->FirstChildElement("end")->FirstChild()->Value()) * 1000 ;
+          entry.type = PVR_EDL_TYPE_COMBREAK;
+          entries[index] = entry;
+          index++;
+        }
+        *size = index;
+        return PVR_ERROR_NO_ERROR;
+      }
+    }
+  }
+  return PVR_ERROR_FAILED;
+}
 
 /************************************************************/
 /** Timer handling */
@@ -799,6 +894,28 @@ int cPVRClientNextPVR::GetNumTimers(void)
 {
   int timerCount = 0;
   CStdString response;
+
+  // get list of recurring recordings
+  if (DoRequest("/service?method=recording.recurring.list", response) == HTTP_OK)
+  {
+    TiXmlDocument doc;
+    if (doc.Parse(response) != NULL)
+    {
+      TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recurrings");
+      if (recordingsNode != NULL)
+      {
+        TiXmlElement* pRecordingNode = recordingsNode->FirstChildElement("recurring");
+        for( pRecordingNode; pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
+        {
+          timerCount++;
+        }
+      }
+    }
+  }
+
+
+  // get list of pending recordings
+  response = "";
   if (DoRequest("/service?method=recording.list&filter=pending", response) == HTTP_OK)
   {
     TiXmlDocument doc;
@@ -822,6 +939,48 @@ int cPVRClientNextPVR::GetNumTimers(void)
 PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
 {
   CStdString response;
+
+  // first add the recurring recordings
+  if (DoRequest("/service?method=recording.recurring.list&filter=pending", response) == HTTP_OK)
+  {
+    TiXmlDocument doc;
+    if (doc.Parse(response) != NULL)
+    {
+      PVR_TIMER tag;
+      TiXmlElement* recurringsNode = doc.RootElement()->FirstChildElement("recurrings");
+      TiXmlElement* pRecurringNode = recurringsNode->FirstChildElement("recurring");
+      for( pRecurringNode; pRecurringNode; pRecurringNode=pRecurringNode->NextSiblingElement())
+      {
+        memset(&tag, 0, sizeof(tag));
+        tag.iClientIndex = 0xF000000 + atoi(pRecurringNode->FirstChildElement("id")->FirstChild()->Value());
+
+        tag.iClientChannelUid = 8101;
+
+        char strTitle[PVR_ADDON_NAME_STRING_LENGTH];
+        strncpy(strTitle, pRecurringNode->FirstChildElement("name")->FirstChild()->Value(), sizeof(strTitle)-1);
+        strncat(tag.strTitle, XBMC->GetLocalizedString(30054), sizeof(tag.strTitle) - 1);
+        strncat(tag.strTitle, " ", sizeof(tag.strTitle) - 1);
+        strncat(tag.strTitle, strTitle, sizeof(tag.strTitle) - 1);
+
+        //PVR_STRCPY(tag.strTitle, pRecurringNode->FirstChildElement("name")->FirstChild()->Value());
+        //tag.iClientChannelUid = atoi(pRecurringNode->FirstChildElement("channel_id")->FirstChild()->Value());
+        tag.state = PVR_TIMER_STATE_SCHEDULED;
+
+        tag.startTime = time(NULL) - 96000;
+        tag.endTime = time(NULL) - 86000;
+        
+        PVR_STRCPY(tag.strSummary, "summary");
+
+        tag.bIsRepeating = true;
+
+        // pass timer to xbmc
+        PVR->TransferTimerEntry(handle, &tag);
+      }
+    }
+  }
+
+  // next add the one-off recordings.
+  response = "";
   if (DoRequest("/service?method=recording.list&filter=pending", response) == HTTP_OK)
   {
     TiXmlDocument doc;
@@ -893,23 +1052,83 @@ PVR_ERROR cPVRClientNextPVR::GetTimerInfo(unsigned int timernumber, PVR_TIMER &t
 
 PVR_ERROR cPVRClientNextPVR::AddTimer(const PVR_TIMER &timerinfo)
 {
-  std::string encodedName = UriEncode(timerinfo.strTitle);
-  
-  // build request string
-  char request[1024];
-  snprintf(request, sizeof(request), "/service?method=recording.save&name=%s&channel=%d&time_t=%d&duration=%d", 
-    encodedName.c_str(),
-    timerinfo.iClientChannelUid, 
-    (int)timerinfo.startTime, 
-    (int)(timerinfo.endTime - timerinfo.startTime));
-
-  // ask NextPVR to schedule our timer
-  CStdString response;
-  if (DoRequest(request, response) == HTTP_OK)
+  // editing recording is not supported
+  if (timerinfo.iClientIndex != -1)
   {
-    if (strstr(response, "<rsp stat=\"ok\">"))
+    return PVR_ERROR_NOT_IMPLEMENTED;
+  }
+
+  std::string encodedName = UriEncode(timerinfo.strTitle);
+
+  // manual recording (iEpgUid == -1) or instant recording (timerinfo.startTime == 0)
+  if (timerinfo.startTime == 0 || timerinfo.iEpgUid == -1)
+  {
+    // build request
+    char request[1024]; 
+    snprintf(request, sizeof(request), "/service?method=recording.save&name=%s&channel=%d&time_t=%d&duration=%d", 
+          encodedName.c_str(),
+          timerinfo.iClientChannelUid, 
+          (int)timerinfo.startTime, 
+          (int)(timerinfo.endTime - timerinfo.startTime));
+
+    // send request to NextPVR
+    CStdString response;
+    if (DoRequest(request, response) == HTTP_OK)
     {
-      PVR->TriggerTimerUpdate();
+      if (strstr(response, "<rsp stat=\"ok\">"))
+      {
+        PVR->TriggerTimerUpdate();
+        return PVR_ERROR_NO_ERROR;
+      }
+    }
+  }
+  else
+  {
+    CDialogRecordPref vWindow(timerinfo.strTitle, timerinfo.strSummary, m_iDefaultPrePadding, m_iDefaultPostPadding, m_recordingDirectories);
+    if (vWindow.DoModal() == 1) // user hit ok
+    {
+      // build request string
+      char request[1024];
+      if (vWindow.RecordingType == 0)
+      {
+        // build one-off recording request
+        snprintf(request, sizeof(request), "/service?method=recording.save&name=%s&channel=%d&time_t=%d&duration=%d&pre_padding=%d&post_padding=%d&directory_id=%s", 
+          encodedName.c_str(),
+          timerinfo.iClientChannelUid, 
+          (int)timerinfo.startTime, 
+          (int)(timerinfo.endTime - timerinfo.startTime),
+          vWindow.PrePadding,
+          vWindow.PostPadding, 
+          vWindow.RecordingDirectory.c_str()
+          );
+      }
+      else
+      {
+        // build recurring recording request
+        snprintf(request, sizeof(request), "/service?method=recording.recurring.save&event_id=%d&recurring_type=%d&keep=%d&pre_padding=%d&post_padding=%d&directory_id=%s", 
+          timerinfo.iEpgUid,
+          vWindow.RecordingType,
+          vWindow.Keep,
+          vWindow.PrePadding,
+          vWindow.PostPadding, 
+          vWindow.RecordingDirectory.c_str()
+          );
+      }
+
+      // send request to NextPVR
+      CStdString response;
+      if (DoRequest(request, response) == HTTP_OK)
+      {
+        if (strstr(response, "<rsp stat=\"ok\">"))
+        {
+          PVR->TriggerTimerUpdate();
+          return PVR_ERROR_NO_ERROR;
+        }
+      }
+    }
+    else
+    {
+      // cancel
       return PVR_ERROR_NO_ERROR;
     }
   }
@@ -921,6 +1140,12 @@ PVR_ERROR cPVRClientNextPVR::DeleteTimer(const PVR_TIMER &timer, bool bForceDele
 {
   char request[512];
   sprintf(request, "/service?method=recording.delete&recording_id=%d", timer.iClientIndex);
+
+  // handle special-case for recurring recordings
+  if (timer.iClientIndex > 0xF000000)
+  {
+    sprintf(request, "/service?method=recording.recurring.delete&recurring_id=%d", (timer.iClientIndex - 0xF000000));
+  }
 
   CStdString response;
   if (DoRequest(request, response) == HTTP_OK)
@@ -952,11 +1177,27 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
   XBMC->Log(LOG_DEBUG, "OpenLiveStream(%d:%s) (oid=%d)", channelinfo.iChannelNumber, channelinfo.strChannelName, channelinfo.iUniqueId);
   if (strstr(channelinfo.strStreamURL, "live?channel") == NULL)
   {
+    if (m_pLiveShiftSource != NULL)
+    {
+      XBMC->Log(LOG_DEBUG, "OpenLiveStream() informing NextPVR of existing channel stream closing");
+
+      char request[512];
+      sprintf(request, "/service?method=channel.stop");
+      CStdString response;
+      DoRequest(request, response);
+
+      m_pLiveShiftSource->Close();
+      delete m_pLiveShiftSource;
+      m_pLiveShiftSource = NULL;
+    }
+
     if (!m_streamingclient->create())
     {
       XBMC->Log(LOG_ERROR, "Could not connect create streaming socket");
       return false;
     }
+
+    m_incomingStreamBuffer.Clear();
 
     if (!m_streamingclient->connect(g_szHostname, g_iPort))
     {
@@ -1042,7 +1283,7 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
 int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-  XBMC->Log(LOG_DEBUG, "ReadLiveStream");
+  //XBMC->Log(LOG_DEBUG, "ReadLiveStream");
 
   int read = iBufferSize;
 
@@ -1057,7 +1298,7 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
 
     static int total = 0;
     total += rc;
-    XBMC->Log(LOG_DEBUG, "ReadLiveStream read %d bytes. (total %d)", rc, total);
+    //XBMC->Log(LOG_DEBUG, "ReadLiveStream read %d bytes. (total %d)", rc, total);
 
     return rc;
   }
@@ -1080,7 +1321,7 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
         int read = m_streamingclient->receive((char *)buf, sizeof buf, 0);
         if (read > 0)
         {
-          XBMC->Log(LOG_DEBUG, "ReadLiveStream() added %d bytes to buffer. (now at %d bytes)", read, m_incomingStreamBuffer.getMaxReadSize());
+          //XBMC->Log(LOG_DEBUG, "ReadLiveStream() added %d bytes to buffer. (now at %d bytes)", read, m_incomingStreamBuffer.getMaxReadSize());
           // write it to incoming ring buffer
           m_incomingStreamBuffer.WriteData((char *)buf, read);
         }
@@ -1122,7 +1363,7 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
     m_currentLivePosition += read;
   }
 
-  XBMC->Log(LOG_DEBUG, "ReadLiveStream return %d bytes (%d bytes remaining in buffer)", read, m_incomingStreamBuffer.getMaxReadSize());
+  //XBMC->Log(LOG_DEBUG, "ReadLiveStream return %d bytes (%d bytes remaining in buffer)", read, m_incomingStreamBuffer.getMaxReadSize());
 
   return read;
 }
@@ -1133,12 +1374,21 @@ void cPVRClientNextPVR::CloseLiveStream(void)
 
   if (m_pLiveShiftSource)
   {
+    XBMC->Log(LOG_DEBUG, "Telling backend of live session closure");
+
+    char request[512];
+    sprintf(request, "/service?method=channel.stop");
+    CStdString response;
+    DoRequest(request, response);
+    
+    m_pLiveShiftSource->Close();
     delete m_pLiveShiftSource;
     m_pLiveShiftSource = NULL;
   }
 
   // Socket no longer required. Server will clean up when socket is closed.
-  m_streamingclient->close();
+  m_streamingclient->close(); 
+  XBMC->Log(LOG_DEBUG, "CloseLiveStream@exit");
 }
 
 
@@ -1242,7 +1492,7 @@ bool cPVRClientNextPVR::OpenRecordingInternal(long long seekOffset)
     return false;
   }
 
-  if (!m_streamingclient->connect("127.0.0.1", 8866))
+  if (!m_streamingclient->connect(g_szHostname, g_iPort))
   {
     XBMC->Log(LOG_ERROR, "Could not connect to NextPVR backend for streaming");
     return false;
@@ -1317,7 +1567,7 @@ bool cPVRClientNextPVR::OpenRecordingInternal(long long seekOffset)
 
 bool cPVRClientNextPVR::OpenRecordedStream(const PVR_RECORDING &recording)
 {
-  XBMC->Log(LOG_DEBUG, "OpenRecordedStream(%d:%s)", recording.strRecordingId, recording.strTitle);
+  XBMC->Log(LOG_DEBUG, "OpenRecordedStream(%s:%s)", recording.strRecordingId, recording.strTitle);
   
   m_currentRecordingLength = 0;
   m_currentRecordingPosition = 0;

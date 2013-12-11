@@ -19,15 +19,15 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "MythTV Backend Hostname or IP"
-msgstr "Hostname o indirizzo IP per il pannello di amministrazione di MythTV"
+msgstr "Nome host o indirizzo IP del backend MythTV"
 
 msgctxt "#30001"
 msgid "MythTV Backend Port"
-msgstr "Porta del pannello di amministrazione di MythTV"
+msgstr "Porta del backend MythTV"
 
 msgctxt "#30002"
 msgid "MythTV Database Username"
-msgstr "Username del database di MythTV"
+msgstr "Nome utente del database di MythTV"
 
 msgctxt "#30003"
 msgid "MythTV Database Password"
@@ -39,12 +39,12 @@ msgstr "Nome del database di MythTV"
 
 msgctxt "#30005"
 msgid "Include more debug information in the log file"
-msgstr "Includi maggiori informazioni di debug nel file di log"
+msgstr "Includi maggiori dettagli di debug nel file di log"
 
 msgctxt "#30006"
 msgid "Enable Live TV"
-msgstr "Attiva la TV Live"
+msgstr "Attiva la Diretta TV"
 
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
-msgstr "Consenti a TV Live di spostare gli spettacoli programmati"
+msgstr "La Diretta TV può spostare gli eventi programmati"

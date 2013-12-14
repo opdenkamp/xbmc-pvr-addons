@@ -64,3 +64,78 @@ msgstr ""
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr ""
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr ""
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr ""
+
+#Recording type
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr ""
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr ""
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr ""
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr ""
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr ""
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr ""
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr ""
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr ""
+
+
+#Keep count
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr ""
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr ""
+
+#Padding
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr ""
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr ""
+
+
+#Recording directory
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr ""
+
+msgctxt "#30135"
+msgid "Default"
+msgstr ""
+

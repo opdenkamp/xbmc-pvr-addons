@@ -2,157 +2,162 @@
   <defaultcontrol always="true">10</defaultcontrol>
   <onload>SetProperty(menu,osd)</onload>
   <allowoverlay>no</allowoverlay>
+  <views>36</views>
   <controls>
     <include>CommonBackground</include>
-	<control type="image">
-		<posx>0</posx>
-		<posy>100r</posy>
-		<width>1280</width>
-		<height>100</height>
-		<texture>floor.png</texture>
-		<include>VisibleFadeEffect</include>
-	</control>
-	<control type="group">
-	  <posx>90</posx>
-	  <posy>30</posy>
-	  <animation type="WindowOpen" reversible="false">
-		<effect type="zoom" start="80" end="100" center="640,360" easing="out" tween="back" time="300" />
-		<effect type="fade" start="0" end="100" time="300" />
-	  </animation>
-	  <animation type="WindowClose" reversible="false">
-		<effect type="zoom" start="100" end="80" center="640,360" easing="in" tween="back" time="300" />
-		<effect type="fade" start="100" end="0" time="300" />
-	  </animation>
-	  <control type="image">
-		<posx>5</posx>
-		<posy>5</posy>
-		<width>1090</width>
-		<height>630</height>
-		<texture border="15">ContentPanel.png</texture>
-		</control>
-	  <control type="image">
-		<posx>5</posx>
-		<posy>625</posy>
-		<width>1090</width>
-		<height>64</height>
-		<texture border="15">ContentPanelMirror.png</texture>
-	  </control>
-	  <control type="button">
-		<description>Close Window button</description>
-		<posx>980</posx>
-		<posy>11</posy>
-		<width>64</width>
-		<height>32</height>
-		<label>-</label>
-		<font>-</font>
-		<onclick>PreviousMenu</onclick>
-		<texturefocus>DialogCloseButton-focus.png</texturefocus>
-		<texturenofocus>DialogCloseButton.png</texturenofocus>
-		<onleft>1</onleft>
-		<onright>1</onright>
-		<onup>1</onup>
-		<ondown>1</ondown>
-		<visible>system.getbool(input.enablemouse)</visible>
-		<include>VisibleFadeEffect</include>
-	  </control>
-	  <control type="image">
-		<description>LOGO</description>
-		<posx>30</posx>
-		<posy>15</posy>
-		<width>220</width>
-		<height>80</height>
-		<aspectratio>keep</aspectratio>
-		<texture>Confluence_Logo.png</texture>
-	  </control>
+    <control type="image">
+      <left>0</left>
+      <top>100r</top>
+      <width>1280</width>
+      <height>100</height>
+      <texture>floor.png</texture>
+      <include>VisibleFadeEffect</include>
+    </control>
+    <control type="group">
+      <left>90</left>
+      <top>30</top>
+      <animation type="WindowOpen" reversible="false">
+        <effect type="zoom" start="80" end="100" center="640,360" easing="out" tween="back" time="300" />
+        <effect type="fade" start="0" end="100" time="300" />
+      </animation>
+      <animation type="WindowClose" reversible="false">
+        <effect type="zoom" start="100" end="80" center="640,360" easing="in" tween="back" time="300" />
+        <effect type="fade" start="100" end="0" time="300" />
+      </animation>
+      <control type="image">
+        <left>5</left>
+        <top>5</top>
+        <width>1090</width>
+        <height>630</height>
+        <texture border="15">ContentPanel.png</texture>
+      </control>
+      <control type="image">
+        <left>5</left>
+        <top>625</top>
+        <width>1090</width>
+        <height>64</height>
+        <texture border="15">ContentPanelMirror.png</texture>
+      </control>
+      <control type="button">
+        <description>Close Window button</description>
+        <left>980</left>
+        <top>11</top>
+        <width>64</width>
+        <height>32</height>
+        <label>-</label>
+        <font>-</font>
+        <onclick>PreviousMenu</onclick>
+        <texturefocus>DialogCloseButton-focus.png</texturefocus>
+        <texturenofocus>DialogCloseButton.png</texturenofocus>
+        <onleft>1</onleft>
+        <onright>1</onright>
+        <onup>1</onup>
+        <ondown>1</ondown>
+        <visible>system.getbool(input.enablemouse)</visible>
+        <include>VisibleFadeEffect</include>
+      </control>
+      <control type="image">
+        <description>LOGO</description>
+        <left>30</left>
+        <top>15</top>
+        <width>220</width>
+        <height>80</height>
+        <aspectratio>keep</aspectratio>
+        <texture>Confluence_Logo.png</texture>
+      </control>
       <control type="list" id="10">
         <defaultcontrol always="true">1</defaultcontrol>
-		<posx>10</posx>
-		<posy>90</posy>
-		<width>260</width>
-		<height>481</height>
-		<onleft>10</onleft>
-		<onright>11</onright>
-		<onup>10</onup>
-		<ondown>9000</ondown>
-		<pagecontrol>-</pagecontrol>
-		<scrolltime>300</scrolltime>
-		<itemlayout height="54" width="260">
-		  <control type="image">
-		    <posx>0</posx>
-		    <posy>0</posy>
-		    <width>260</width>
-		    <height>55</height>
-		    <texture border="5">MenuItemNF.png</texture>
-		  </control>
-		  <control type="label">
-		    <posx>250</posx>
-		    <posy>0</posy>
-		    <width>380</width>
-		    <height>55</height>
-		    <font>font24_title</font>
-		    <textcolor>grey3</textcolor>
-		    <align>right</align>
-		    <aligny>center</aligny>
-		    <label>$INFO[ListItem.Label]</label>
-		  </control>
-		</itemlayout>
-		<focusedlayout height="54" width="260">
-		  <control type="image">
-			<posx>0</posx>
-			<posy>0</posy>
-			<width>260</width>
-			<height>55</height>
-			<texture border="5">MenuItemFO.png</texture>
-		  </control>
-		  <control type="label">
-			<posx>250</posx>
-			<posy>0</posy>
-			<width>380</width>
-			<height>55</height>
-			<font>font24_title</font>
-			<textcolor>white</textcolor>
-			<align>right</align>
-			<aligny>center</aligny>
-			<label>$INFO[ListItem.Label]</label>
-		  </control>
-		</focusedlayout>
-		<content>
-         <item id="1">
-		   <label>$ADDON[pvr.vdr.vnsi 30100]</label>
-		   <onclick>SetProperty(menu,osd)</onclick>
-		 </item>
-		 <item id="2">
-		   <label>$ADDON[pvr.vdr.vnsi 30101]</label>
-		   <onclick>SetProperty(menu,setup)</onclick>
-		 </item>
+        <left>10</left>
+        <top>90</top>
+        <width>260</width>
+        <height>481</height>
+        <onleft>10</onleft>
+        <onright>11</onright>
+        <onup>10</onup>
+        <ondown>9000</ondown>
+        <pagecontrol>-</pagecontrol>
+        <scrolltime>300</scrolltime>
+        <itemlayout height="54" width="260">
+          <control type="image">
+            <left>0</left>
+            <top>0</top>
+            <width>260</width>
+            <height>55</height>
+            <texture border="5">MenuItemNF.png</texture>
+          </control>
+          <control type="label">
+            <left>250</left>
+            <top>0</top>
+            <width>380</width>
+            <height>55</height>
+            <font>font24_title</font>
+            <textcolor>grey3</textcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <label>$INFO[ListItem.Label]</label>
+          </control>
+        </itemlayout>
+        <focusedlayout height="54" width="260">
+          <control type="image">
+            <left>0</left>
+            <top>0</top>
+            <width>260</width>
+            <height>55</height>
+            <texture border="5">MenuItemFO.png</texture>
+          </control>
+          <control type="label">
+            <left>250</left>
+            <top>0</top>
+            <width>380</width>
+            <height>55</height>
+            <font>font24_title</font>
+            <textcolor>white</textcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <label>$INFO[ListItem.Label]</label>
+          </control>
+        </focusedlayout>
+        <content>
+          <item id="1">
+            <label>$ADDON[pvr.vdr.vnsi 30100]</label>
+            <onclick>SetProperty(menu,osd)</onclick>
+          </item>
+          <item id="2">
+            <label>$ADDON[pvr.vdr.vnsi 30101]</label>
+            <onclick>SetProperty(menu,setup)</onclick>
+          </item>
+          <item id="3">
+            <label>$ADDON[pvr.vdr.vnsi 30108]</label>
+            <onclick>SetProperty(menu,channels)</onclick>
+          </item>
         </content>
       </control>
       <control type="group" id="11">
-        <posx>268</posx>
-        <posy>10</posy>
+        <left>268</left>
+        <top>10</top>
         <control type="image">
           <description>Background</description>
-          <posx>0</posx>
-          <posy>0</posy>
+          <left>0</left>
+          <top>0</top>
           <width>790</width>
           <height>620</height>
           <texture border="5">black-back2.png</texture>
         </control>
         <control type="image">
           <description>Background Title</description>
-          <posx>0</posx>
-          <posy>0</posy>
+          <left>0</left>
+          <top>0</top>
           <width>790</width>
           <height>50</height>
           <aspectratio>stretch</aspectratio>
           <texture>GlassTitleBar.png</texture>
         </control>
-	    <control type="group" id="12">
-	      <visible>StringCompare(Window.Property(menu),osd)</visible>
-		  <control type="button" id="13">
+        <control type="group" id="12">
+          <visible>StringCompare(Window.Property(menu),osd)</visible>
+          <control type="button" id="13">
             <description>osd control label</description>
-            <posx>25</posx>
-            <posy>20</posy>
+            <left>25</left>
+            <top>20</top>
             <width>765</width>
             <height>30</height>
             <texturefocus border="5">MenuItemFO.png</texturefocus>
@@ -160,36 +165,22 @@
             <label>$ADDON[pvr.vdr.vnsi 30103]</label>
             <font>font16caps</font>
             <textcolor>white</textcolor>
-		    <onleft>10</onleft>
-          </control>
-		  <control type="label">
-            <description>not focused label</description>
-            <visible>Control.HasFocus(11)</visible>
-            <posx>300</posx>
-            <posy>30</posy>
-            <width>740</width>
-            <height>30</height>
-            <font>font16caps</font>
-            <label>$ADDON[pvr.vdr.vnsi 30103]</label>
-            <align>left</align>
-            <aligny>center</aligny>
-            <textcolor>white</textcolor>
-            <shadowcolor>black</shadowcolor>
+            <onleft>10</onleft>
           </control>
           <control type="renderaddon" id ="9">
-            <posx>5</posx>
-            <posy>50</posy>
+            <left>5</left>
+            <top>50</top>
             <width>780</width>
             <height>515</height>
           </control>
-	    </control>
-	    <control type="group" id="20">
-	      <visible>StringCompare(Window.Property(menu),setup)</visible>
-		  <defaultcontrol always="true">21</defaultcontrol>
-		  <control type="spincontrolex" id="21">
+        </control>
+        <control type="group" id="20">
+          <visible>StringCompare(Window.Property(menu),setup)</visible>
+          <defaultcontrol always="true">21</defaultcontrol>
+          <control type="spincontrolex" id="21">
             <description>Source Type</description>
-            <posx>10</posx>
-            <posy>50</posy>
+            <left>10</left>
+            <top>50</top>
             <width>770</width>
             <height>40</height>
             <font>font13</font>
@@ -200,12 +191,12 @@
             <aligny>center</aligny>
             <label>$ADDON[pvr.vdr.vnsi 30104]</label>
             <onleft>10</onleft>
-			<ondown>22</ondown>
-        </control>
-	    <control type="spincontrolex" id="22">
+            <ondown>22</ondown>
+          </control>
+          <control type="spincontrolex" id="22">
             <description>Source Type</description>
-            <posx>10</posx>
-            <posy>100</posy>
+            <left>10</left>
+            <top>100</top>
             <width>770</width>
             <height>40</height>
             <font>font13</font>
@@ -216,13 +207,13 @@
             <aligny>center</aligny>
             <label>$ADDON[pvr.vdr.vnsi 30105]</label>
             <onleft>10</onleft>
-			<onup>21</onup>
-			<ondown>23</ondown>
-        </control>
-        <control type="spincontrolex" id="23">
+            <onup>21</onup>
+            <ondown>23</ondown>
+          </control>
+          <control type="spincontrolex" id="23">
             <description>Source Type</description>
-            <posx>10</posx>
-            <posy>150</posy>
+            <left>10</left>
+            <top>150</top>
             <width>770</width>
             <height>40</height>
             <font>font13</font>
@@ -233,11 +224,240 @@
             <aligny>center</aligny>
             <label>$ADDON[pvr.vdr.vnsi 30106]</label>
             <onleft>10</onleft>
-			<onup>22</onup>
+            <onup>22</onup>
+          </control>
         </control>
-	    </control>
+        <control type="group" id="30">
+          <visible>StringCompare(Window.Property(menu),channels)</visible>
+          <defaultcontrol always="true">33</defaultcontrol>
+          <control type="label" id="31">
+            <description>Channels label</description>
+            <left>30</left>
+            <top>20</top>
+            <width>500</width>
+            <height>30</height>
+            <font>font16caps</font>
+            <label>$ADDON[pvr.vdr.vnsi 30111]</label>
+            <align>left</align>
+            <aligny>center</aligny>
+            <textcolor>white</textcolor>
+            <shadowcolor>black</shadowcolor>
+          </control>
+          <control type="image">
+            <left>730</left>
+            <top>20</top>
+            <width>30</width>
+            <height>30</height>
+            <aspectratio>stretch</aspectratio>
+            <colordiffuse>FFCC0000</colordiffuse>
+            <texture>radiobutton-nofocus.png</texture>
+            <visible>StringCompare(Window.Property(IsDirty),1)</visible>
+          </control>
+          <control type="image">
+            <left>730</left>
+            <top>20</top>
+            <width>30</width>
+            <height>30</height>
+            <aspectratio>stretch</aspectratio>
+            <colordiffuse>FF00FF00</colordiffuse>
+            <texture>radiobutton-nofocus.png</texture>
+            <visible>!StringCompare(Window.Property(IsDirty),1)</visible>
+          </control>
+          <control type="radiobutton" id="32">
+            <description>Is Radio</description>
+            <left>50</left>
+            <top>100</top>
+            <width>250</width>
+            <height>30</height>
+            <font>font16caps</font>
+            <textcolor>grey3</textcolor>
+            <focusedcolor>white</focusedcolor>
+            <texturefocus border="0,2,0,2">MenuItemFO.png</texturefocus>
+            <texturenofocus border="0,2,0,2">MenuItemNF.png</texturenofocus>
+            <label>$ADDON[pvr.vdr.vnsi 30112]</label>
+            <onleft>10</onleft>
+            <ondown>33</ondown>
+            <onright>36</onright>
+          </control>
+          <control type="button" id="33">
+            <description>providers</description>
+            <left>50</left>
+            <top>150</top>
+            <width>250</width>
+            <height>30</height>
+            <texturefocus border="5">MenuItemFO.png</texturefocus>
+            <texturenofocus border="5">MenuItemNF.png</texturenofocus>
+            <label>$ADDON[pvr.vdr.vnsi 30109]</label>
+            <font>font16caps</font>
+            <textcolor>grey3</textcolor>
+            <onleft>10</onleft>
+            <onright>36</onright>
+            <onup>32</onup>
+            <ondown>34</ondown>
+          </control>
+          <control type="button" id="34">
+            <description>channels</description>
+            <left>50</left>
+            <top>200</top>
+            <width>250</width>
+            <height>30</height>
+            <texturefocus border="5">MenuItemFO.png</texturefocus>
+            <texturenofocus border="5">MenuItemNF.png</texturenofocus>
+            <label>$ADDON[pvr.vdr.vnsi 30110]</label>
+            <font>font16caps</font>
+            <textcolor>grey3</textcolor>
+            <onleft>10</onleft>
+            <onright>36</onright>
+            <onup>33</onup>
+            <ondown>35</ondown>
+          </control>
+          <control type="button" id="35">
+            <description>save</description>
+            <left>50</left>
+            <top>250</top>
+            <width>250</width>
+            <height>30</height>
+            <texturefocus border="5">MenuItemFO.png</texturefocus>
+            <texturenofocus border="5">MenuItemNF.png</texturenofocus>
+            <label>$ADDON[pvr.vdr.vnsi 30113]</label>
+            <font>font16caps</font>
+            <textcolor>grey3</textcolor>
+            <onleft>10</onleft>
+            <onright>36</onright>
+            <onup>34</onup>
+          </control>
+          <control type="image">
+            <description>background image</description>
+            <left>320</left>
+            <top>50</top>
+            <width>440</width>
+            <height>540</height>
+            <texture border="20">DialogBack2.png</texture>
+          </control>
+          <control type="list" id ="36">
+            <left>340</left>
+            <top>70</top>
+            <width>400</width>
+            <height>500</height>
+            <onleft>33</onleft>
+            <onright>37</onright>
+            <viewtype label="30106">list</viewtype>
+            <pagecontrol>37</pagecontrol>
+            <scrolltime>200</scrolltime>
+            <itemlayout height="20" width="400">
+              <control type="image">
+                <left>0</left>
+                <top>0</top>
+                <width>400</width>
+                <height>20</height>
+                <aspectratio>stretch</aspectratio>
+                <texture border="5">MenuItemNF.png</texture>
+              </control>
+              <control type="image">
+                <left>2</left>
+                <top>2</top>
+                <width>18</width>
+                <height>18</height>
+                <aspectratio>stretch</aspectratio>
+                <colordiffuse>7790EE90</colordiffuse>
+                <texture>arrow-big-right.png</texture>
+                <visible>ListItem.Property(IsWhitelist)</visible>
+              </control>
+              <control type="image">
+                <left>2</left>
+                <top>2</top>
+                <width>18</width>
+                <height>18</height>
+                <aspectratio>stretch</aspectratio>
+                <colordiffuse>77FF0000</colordiffuse>
+                <texture>arrow-big-right.png</texture>
+                <visible>ListItem.Property(IsBlacklist)</visible>
+              </control>
+              <control type="label">
+                <left>40</left>
+                <top>0</top>
+                <width>340</width>
+                <height>20</height>
+                <font>font10</font>
+                <align>left</align>
+                <aligny>center</aligny>
+                <textcolor>grey2</textcolor>
+                <selectedcolor>selected</selectedcolor>
+                <info>ListItem.Label</info>
+              </control>
+            </itemlayout>
+            <focusedlayout height="20" width="400">
+              <control type="image">
+                <left>0</left>
+                <top>0</top>
+                <width>400</width>
+                <height>20</height>
+                <aspectratio>stretch</aspectratio>
+                <texture border="5">MenuItemNF.png</texture>
+                <visible>!Control.HasFocus(36)</visible>
+                <include>VisibleFadeEffect</include>
+              </control>
+              <control type="image">
+                <left>0</left>
+                <top>0</top>
+                <width>400</width>
+                <height>20</height>
+                <aspectratio>stretch</aspectratio>
+                <texture border="5">MenuItemFO.png</texture>
+                <visible>Control.HasFocus(36)</visible>
+                <include>VisibleFadeEffect</include>
+              </control>
+              <control type="image">
+                <left>2</left>
+                <top>2</top>
+                <width>18</width>
+                <height>18</height>
+                <aspectratio>stretch</aspectratio>
+                <colordiffuse>7790EE90</colordiffuse>
+                <texture>arrow-big-right.png</texture>
+                <visible>ListItem.Property(IsWhitelist)</visible>
+              </control>
+              <control type="image">
+                <left>2</left>
+                <top>2</top>
+                <width>18</width>
+                <height>18</height>
+                <aspectratio>stretch</aspectratio>
+                <colordiffuse>77FF0000</colordiffuse>
+                <texture>arrow-big-right.png</texture>
+                <visible>ListItem.Property(IsBlacklist)</visible>
+              </control>
+              <control type="label">
+                <left>40</left>
+                <top>0</top>
+                <width>340</width>
+                <height>20</height>
+                <font>font10</font>
+                <align>left</align>
+                <aligny>center</aligny>
+                <textcolor>grey2</textcolor>
+                <selectedcolor>selected</selectedcolor>
+                <info>ListItem.Label</info>
+              </control>
+            </focusedlayout>
+          </control>
+          <control type="scrollbar" id="37">
+            <left>760</left>
+            <top>50</top>
+            <width>25</width>
+            <height>540</height>
+            <texturesliderbackground border="0,14,0,14">ScrollBarV.png</texturesliderbackground>
+            <texturesliderbar border="0,14,0,14">ScrollBarV_bar.png</texturesliderbar>
+            <texturesliderbarfocus border="0,14,0,14">ScrollBarV_bar_focus.png</texturesliderbarfocus>
+            <textureslidernib>ScrollBarNib.png</textureslidernib>
+            <textureslidernibfocus>ScrollBarNib.png</textureslidernibfocus>
+            <onleft>36</onleft>
+            <showonepage>false</showonepage>
+            <orientation>vertical</orientation>
+          </control> 
+        </control>
       </control>
-	</control>
+    </control>
     <include>Clock</include>
   </controls>
 </window>

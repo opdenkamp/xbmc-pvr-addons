@@ -1,3 +1,11 @@
+v1.9.6
+- added dialog to set recurring recordings, including recurrence type, padding, number of recordings to keep, and recording directory
+- added support for EDL 
+- added support for retrieving and storing last playback position
+- now requires NextPVR 3.1.1 or higher
+- fixed a bug that could cause an EPG event with no description to have a copy of last show's description, or cause a crash if the user was unlucky.
+- more flexible approach to genre
+
 v1.9.5
 - add timeshift buffer functions
 

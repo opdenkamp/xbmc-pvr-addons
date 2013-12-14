@@ -88,7 +88,8 @@ public:
     FM_ThisEpisode                    = 0x040,
     FM_ThisSeries                     = 0x080,
     FM_ThisTime                       = 0x100,
-    FM_ThisDayAndTime                 = 0x200
+    FM_ThisDayAndTime                 = 0x200,
+    FM_ThisChannel                    = 0x400
   };
 
   MythRecordingRule();

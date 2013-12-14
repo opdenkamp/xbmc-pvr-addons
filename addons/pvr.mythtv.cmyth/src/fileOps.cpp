@@ -81,7 +81,7 @@ CStdString FileOps::GetChannelIconPath(const CStdString &remoteFilename)
   if (!XBMC->FileExists(localFilename, true))
   {
     CLockObject lock(m_lock);
-    FileOps::JobItem job(localFilename, remoteFilename, "");
+    FileOps::JobItem job(localFilename, remoteFilename, GetFolderNameByFileType(FileTypeChannelIcon));
     m_jobQueue.push_back(job);
     m_queueContent.Signal();
   }

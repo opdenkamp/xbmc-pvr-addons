@@ -192,6 +192,12 @@ public:
   unsigned int Filter() const;
   void SetFilter(unsigned int filter);
 
+  CStdString ProgramID() const;
+  void SetProgramID(const CStdString &programid);
+
+  CStdString SeriesID() const;
+  void SetSeriesID(const CStdString &seriesid);
+
 private:
   boost::shared_ptr<MythPointer<cmyth_recordingrule_t> > m_recordingrule_t;
 };

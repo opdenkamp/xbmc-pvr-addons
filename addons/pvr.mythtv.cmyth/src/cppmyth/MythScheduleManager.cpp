@@ -921,6 +921,8 @@ MythRecordingRule MythScheduleHelper1226::NewSingleRecord(MythEPGInfo &epgInfo)
     rule.SetCategory(epgInfo.Category());
     rule.SetDescription(epgInfo.Description());
     rule.SetCallsign(epgInfo.Callsign());
+    rule.SetProgramID(epgInfo.ProgramID());
+    rule.SetSeriesID(epgInfo.SeriesID());
   }
   else
   {
@@ -950,6 +952,8 @@ MythRecordingRule MythScheduleHelper1226::NewDailyRecord(MythEPGInfo &epgInfo)
     rule.SetCategory(epgInfo.Category());
     rule.SetDescription(epgInfo.Description());
     rule.SetCallsign(epgInfo.Callsign());
+    rule.SetProgramID(epgInfo.ProgramID());
+    rule.SetSeriesID(epgInfo.SeriesID());
   }
   else
   {
@@ -979,6 +983,8 @@ MythRecordingRule MythScheduleHelper1226::NewWeeklyRecord(MythEPGInfo &epgInfo)
     rule.SetCategory(epgInfo.Category());
     rule.SetDescription(epgInfo.Description());
     rule.SetCallsign(epgInfo.Callsign());
+    rule.SetProgramID(epgInfo.ProgramID());
+    rule.SetSeriesID(epgInfo.SeriesID());
   }
   else
   {
@@ -1009,6 +1015,8 @@ MythRecordingRule MythScheduleHelper1226::NewChannelRecord(MythEPGInfo &epgInfo)
     rule.SetDescription(epgInfo.Title());
     rule.SetCategory(epgInfo.Category());
     rule.SetCallsign(epgInfo.Callsign());
+    rule.SetProgramID(epgInfo.ProgramID());
+    rule.SetSeriesID(epgInfo.SeriesID());
   }
   else
   {
@@ -1039,6 +1047,8 @@ MythRecordingRule MythScheduleHelper1226::NewOneRecord(MythEPGInfo &epgInfo)
     rule.SetDescription(epgInfo.Title());
     rule.SetCategory(epgInfo.Category());
     rule.SetCallsign(epgInfo.Callsign());
+    rule.SetProgramID(epgInfo.ProgramID());
+    rule.SetSeriesID(epgInfo.SeriesID());
   }
   else
   {
@@ -1314,6 +1324,8 @@ MythRecordingRule MythScheduleHelper1309::NewDailyRecord(MythEPGInfo &epgInfo)
     rule.SetCategory(epgInfo.Category());
     rule.SetDescription(epgInfo.Description());
     rule.SetCallsign(epgInfo.Callsign());
+    rule.SetProgramID(epgInfo.ProgramID());
+    rule.SetSeriesID(epgInfo.SeriesID());
   }
   else
   {
@@ -1349,6 +1361,8 @@ MythRecordingRule MythScheduleHelper1309::NewWeeklyRecord(MythEPGInfo &epgInfo)
     rule.SetCategory(epgInfo.Category());
     rule.SetDescription(epgInfo.Description());
     rule.SetCallsign(epgInfo.Callsign());
+    rule.SetProgramID(epgInfo.ProgramID());
+    rule.SetSeriesID(epgInfo.SeriesID());
   }
   else
   {
@@ -1384,6 +1398,8 @@ MythRecordingRule MythScheduleHelper1309::NewChannelRecord(MythEPGInfo &epgInfo)
     rule.SetCategory(epgInfo.Category());
     rule.SetDescription(epgInfo.Description());
     rule.SetCallsign(epgInfo.Callsign());
+    rule.SetProgramID(epgInfo.ProgramID());
+    rule.SetSeriesID(epgInfo.SeriesID());
   }
   else
   {
@@ -1416,6 +1432,8 @@ MythRecordingRule MythScheduleHelper1309::NewOneRecord(MythEPGInfo &epgInfo)
     rule.SetCategory(epgInfo.Category());
     rule.SetDescription(epgInfo.Description());
     rule.SetCallsign(epgInfo.Callsign());
+    rule.SetProgramID(epgInfo.ProgramID());
+    rule.SetSeriesID(epgInfo.SeriesID());
   }
   else
   {

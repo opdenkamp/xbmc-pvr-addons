@@ -1117,60 +1117,14 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     if (node)
     {
       MythRecordingRule rule = node->GetRule();
+      RuleMetadata meta = m_scheduleManager->GetMetadata(rule);
       tag.iMarginEnd = rule.EndOffset();
       tag.iMarginStart = rule.StartOffset();
       tag.firstDay = it->second->RecordingStartTime();
-
-      // Then set bIsRepeating and iweekdays for repeating rules
-      time_t st = rule.StartTime();
-      switch (rule.Type())
-      {
-        case MythRecordingRule::RT_DailyRecord:      // (0.27) Replaces TimeslotRecord
-        case MythRecordingRule::RT_FindDailyRecord:  // (0.27) Obsolete. Kept for backward compatibility
-        case MythRecordingRule::RT_ChannelRecord:
-        case MythRecordingRule::RT_AllRecord:
-          tag.bIsRepeating = true;
-          tag.iWeekdays = 0x7F;
-          break;
-        case MythRecordingRule::RT_WeeklyRecord:     // (0.27) Replaces WeekslotRecord
-        case MythRecordingRule::RT_FindWeeklyRecord: // (0.27) Obsolete. Kept for backward compatibility
-          tag.bIsRepeating = true;
-          tag.iWeekdays = 1 << ((weekday(&st) + 6) % 7);
-          break;
-        default:
-          tag.bIsRepeating = false;
-          tag.iWeekdays = 0;
-          break;
-      }
-      // Define a marker for this type of rule
-      switch(rule.Type())
-      {
-        case MythRecordingRule::RT_DontRecord:
-          rulemarker = "(x)";
-          break;
-        case MythRecordingRule::RT_OverrideRecord:
-          rulemarker = "(o)";
-          break;
-        case MythRecordingRule::RT_OneRecord:
-          rulemarker = "(1)";
-          break;
-        case MythRecordingRule::RT_DailyRecord:
-        case MythRecordingRule::RT_FindDailyRecord:
-          rulemarker = "(d)";
-          break;
-        case MythRecordingRule::RT_ChannelRecord:
-          rulemarker = "(C)";
-          break;
-        case MythRecordingRule::RT_AllRecord:
-          rulemarker = "(A)";
-          break;
-        case MythRecordingRule::RT_WeeklyRecord:
-        case MythRecordingRule::RT_FindWeeklyRecord:
-          rulemarker = "(w)";
-          break;
-        default:
-          break;
-      }
+      tag.bIsRepeating = meta.isRepeating;
+      tag.iWeekdays = meta.weekDays;
+      if (*(meta.marker))
+        rulemarker.append("(").append(meta.marker).append(")");
     }
     else
     {

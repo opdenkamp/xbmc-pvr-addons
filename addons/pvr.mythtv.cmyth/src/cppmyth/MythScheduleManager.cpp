@@ -160,6 +160,10 @@ ScheduleList MythScheduleManager::GetUpcomingRecordings()
 
 MythScheduleManager::MSM_ERROR MythScheduleManager::ScheduleRecording(const MythRecordingRule &rule)
 {
+  // Don't schedule nil
+  if (rule.Type() == MythRecordingRule::RT_NotRecording)
+    return MSM_ERROR_FAILED;
+
   if (!m_db.AddRecordingRule(rule))
     return MSM_ERROR_FAILED;
 
@@ -656,6 +660,11 @@ void MythScheduleManager::Update()
   }
 }
 
+RuleMetadata MythScheduleManager::GetMetadata(const MythRecordingRule &rule) const
+{
+  return m_versionHelper->GetMetadata(rule);
+}
+
 MythRecordingRule MythScheduleManager::NewFromTemplate(MythEPGInfo &epgInfo)
 {
   return m_versionHelper->NewFromTemplate(epgInfo);
@@ -676,14 +685,14 @@ MythRecordingRule MythScheduleManager::NewWeeklyRecord(MythEPGInfo &epgInfo)
   return m_versionHelper->NewWeeklyRecord(epgInfo);
 }
 
-MythRecordingRule MythScheduleManager::NewChannelRecord(const CStdString &searchTitle)
+MythRecordingRule MythScheduleManager::NewChannelRecord(MythEPGInfo &epgInfo)
 {
-  return m_versionHelper->NewChannelRecord(searchTitle);
+  return m_versionHelper->NewChannelRecord(epgInfo);
 }
 
-MythRecordingRule MythScheduleManager::NewOneRecord(const CStdString &searchTitle)
+MythRecordingRule MythScheduleManager::NewOneRecord(MythEPGInfo &epgInfo)
 {
-  return m_versionHelper->NewOneRecord(searchTitle);
+  return m_versionHelper->NewOneRecord(epgInfo);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -698,7 +707,17 @@ bool MythScheduleHelperNoHelper::SameTimeslot(MythRecordingRule &first, MythReco
   return false;
 }
 
-MythRecordingRule MythScheduleHelperNoHelper::NewFromTemplate(MythEPGInfo& epgInfo)
+RuleMetadata MythScheduleHelperNoHelper::GetMetadata(const MythRecordingRule &rule) const
+{
+  RuleMetadata meta;
+  (void)rule;
+  meta.isRepeating = false;
+  meta.weekDays = 0;
+  meta.marker = "";
+  return meta;
+}
+
+MythRecordingRule MythScheduleHelperNoHelper::NewFromTemplate(MythEPGInfo &epgInfo)
 {
   (void)epgInfo;
   return MythRecordingRule();
@@ -722,15 +741,15 @@ MythRecordingRule MythScheduleHelperNoHelper::NewWeeklyRecord(MythEPGInfo &epgIn
   return MythRecordingRule();
 }
 
-MythRecordingRule MythScheduleHelperNoHelper::NewChannelRecord(const CStdString &searchTitle)
+MythRecordingRule MythScheduleHelperNoHelper::NewChannelRecord(MythEPGInfo &epgInfo)
 {
-  (void)searchTitle;
+  (void)epgInfo;
   return MythRecordingRule();
 }
 
-MythRecordingRule MythScheduleHelperNoHelper::NewOneRecord(const CStdString &searchTitle)
+MythRecordingRule MythScheduleHelperNoHelper::NewOneRecord(MythEPGInfo &epgInfo)
 {
-  (void)searchTitle;
+  (void)epgInfo;
   return MythRecordingRule();
 }
 
@@ -799,6 +818,58 @@ bool MythScheduleHelper1226::SameTimeslot(MythRecordingRule &first, MythRecordin
   return false;
 }
 
+RuleMetadata MythScheduleHelper1226::GetMetadata(const MythRecordingRule &rule) const
+{
+  RuleMetadata meta;
+  time_t st = rule.StartTime();
+  meta.isRepeating = false;
+  meta.weekDays = 0;
+  meta.marker = "";
+  switch (rule.Type())
+  {
+    case MythRecordingRule::RT_DailyRecord:
+    case MythRecordingRule::RT_FindDailyRecord:
+      meta.isRepeating = true;
+      meta.weekDays = 0x7F;
+      meta.marker = "d";
+      break;
+    case MythRecordingRule::RT_WeeklyRecord:
+    case MythRecordingRule::RT_FindWeeklyRecord:
+      meta.isRepeating = true;
+      meta.weekDays = 1 << ((weekday(&st) + 6) % 7);
+      meta.marker = "w";
+      break;
+    case MythRecordingRule::RT_ChannelRecord:
+      meta.isRepeating = true;
+      meta.weekDays = 0x7F;
+      meta.marker = "C";
+      break;
+    case MythRecordingRule::RT_AllRecord:
+      meta.isRepeating = true;
+      meta.weekDays = 0x7F;
+      meta.marker = "A";
+      break;
+    case MythRecordingRule::RT_OneRecord:
+      meta.isRepeating = false;
+      meta.weekDays = 0;
+      meta.marker = "1";
+      break;
+    case MythRecordingRule::RT_DontRecord:
+      meta.isRepeating = false;
+      meta.weekDays = 0;
+      meta.marker = "x";
+      break;
+    case MythRecordingRule::RT_OverrideRecord:
+      meta.isRepeating = false;
+      meta.weekDays = 0;
+      meta.marker = "o";
+      break;
+    default:
+      break;
+  }
+  return meta;
+}
+
 MythRecordingRule MythScheduleHelper1226::NewFromTemplate(MythEPGInfo &epgInfo)
 {
   MythRecordingRule rule;
@@ -862,7 +933,7 @@ MythRecordingRule MythScheduleHelper1226::NewSingleRecord(MythEPGInfo &epgInfo)
   return rule;
 }
 
-MythRecordingRule MythScheduleHelper1226::NewDailyRecord(MythEPGInfo& epgInfo)
+MythRecordingRule MythScheduleHelper1226::NewDailyRecord(MythEPGInfo &epgInfo)
 {
   MythRecordingRule rule = this->NewFromTemplate(epgInfo);
 
@@ -891,7 +962,7 @@ MythRecordingRule MythScheduleHelper1226::NewDailyRecord(MythEPGInfo& epgInfo)
   return rule;
 }
 
-MythRecordingRule MythScheduleHelper1226::NewWeeklyRecord(MythEPGInfo& epgInfo)
+MythRecordingRule MythScheduleHelper1226::NewWeeklyRecord(MythEPGInfo &epgInfo)
 {
   MythRecordingRule rule = this->NewFromTemplate(epgInfo);
 
@@ -920,30 +991,60 @@ MythRecordingRule MythScheduleHelper1226::NewWeeklyRecord(MythEPGInfo& epgInfo)
   return rule;
 }
 
-MythRecordingRule MythScheduleHelper1226::NewChannelRecord(const CStdString &searchTitle)
+MythRecordingRule MythScheduleHelper1226::NewChannelRecord(MythEPGInfo &epgInfo)
 {
-  // Backend use the description to find program by keywords or title
-  MythEPGInfo epgInfo;
   MythRecordingRule rule = this->NewFromTemplate(epgInfo);
+
   rule.SetType(MythRecordingRule::RT_ChannelRecord);
-  rule.SetSearchType(MythRecordingRule::ST_TitleSearch);
-  rule.SetSubtitle("");
-  rule.SetDescription(searchTitle);
+
+  if (!epgInfo.IsNull())
+  {
+    rule.SetSearchType(MythRecordingRule::ST_TitleSearch);
+    rule.SetChannelID(epgInfo.ChannelID());
+    rule.SetStartTime(epgInfo.StartTime());
+    rule.SetEndTime(epgInfo.EndTime());
+    rule.SetTitle(epgInfo.Title());
+    // Backend use the description to find program by keywords or title
+    rule.SetSubtitle("");
+    rule.SetDescription(epgInfo.Title());
+    rule.SetCategory(epgInfo.Category());
+    rule.SetCallsign(epgInfo.Callsign());
+  }
+  else
+  {
+    // Not feasible
+    rule.SetType(MythRecordingRule::RT_NotRecording);
+  }
   rule.SetDuplicateControlMethod(MythRecordingRule::DM_CheckSubtitleAndDescription);
   rule.SetCheckDuplicatesInType(MythRecordingRule::DI_InAll);
   rule.SetInactive(false);
   return rule;
 }
 
-MythRecordingRule MythScheduleHelper1226::NewOneRecord(const CStdString &searchTitle)
+MythRecordingRule MythScheduleHelper1226::NewOneRecord(MythEPGInfo &epgInfo)
 {
-  // Backend use the description to find program by keywords or title
-  MythEPGInfo epgInfo;
   MythRecordingRule rule = this->NewFromTemplate(epgInfo);
+
   rule.SetType(MythRecordingRule::RT_OneRecord);
-  rule.SetSearchType(MythRecordingRule::ST_TitleSearch);
-  rule.SetSubtitle("");
-  rule.SetDescription(searchTitle);
+
+  if (!epgInfo.IsNull())
+  {
+    rule.SetSearchType(MythRecordingRule::ST_TitleSearch);
+    rule.SetChannelID(epgInfo.ChannelID());
+    rule.SetStartTime(epgInfo.StartTime());
+    rule.SetEndTime(epgInfo.EndTime());
+    rule.SetTitle(epgInfo.Title());
+    // Backend use the description to find program by keywords or title
+    rule.SetSubtitle("");
+    rule.SetDescription(epgInfo.Title());
+    rule.SetCategory(epgInfo.Category());
+    rule.SetCallsign(epgInfo.Callsign());
+  }
+  else
+  {
+    // Not feasible
+    rule.SetType(MythRecordingRule::RT_NotRecording);
+  }
   rule.SetDuplicateControlMethod(MythRecordingRule::DM_CheckSubtitleAndDescription);
   rule.SetCheckDuplicatesInType(MythRecordingRule::DI_InAll);
   rule.SetInactive(false);
@@ -1128,5 +1229,201 @@ MythRecordingRule MythScheduleHelper1302::NewFromTemplate(MythEPGInfo &epgInfo)
 //// types are automatically converted to the suggested alternatives.
 ////
 
-// TODO
+RuleMetadata MythScheduleHelper1309::GetMetadata(const MythRecordingRule &rule) const
+{
+  RuleMetadata meta;
+  time_t st = rule.StartTime();
+  meta.isRepeating = false;
+  meta.weekDays = 0;
+  meta.marker = "";
+  switch (rule.Type())
+  {
+    case MythRecordingRule::RT_DailyRecord:
+    case MythRecordingRule::RT_FindDailyRecord:
+      meta.isRepeating = true;
+      meta.weekDays = 0x7F;
+      meta.marker = "d";
+      break;
+    case MythRecordingRule::RT_WeeklyRecord:
+    case MythRecordingRule::RT_FindWeeklyRecord:
+      meta.isRepeating = true;
+      meta.weekDays = 1 << ((weekday(&st) + 6) % 7);
+      meta.marker = "w";
+      break;
+    case MythRecordingRule::RT_ChannelRecord:
+      meta.isRepeating = true;
+      meta.weekDays = 0x7F;
+      meta.marker = "C";
+      break;
+    case MythRecordingRule::RT_AllRecord:
+      meta.isRepeating = true;
+      if ((rule.Filter() & MythRecordingRule::FM_ThisDayAndTime))
+      {
+        meta.weekDays = 1 << ((weekday(&st) + 6) % 7);
+        meta.marker = "w";
+      }
+      else if ((rule.Filter() & MythRecordingRule::FM_ThisTime))
+      {
+        meta.weekDays = 0x7F;
+        meta.marker = "d";
+      }
+      else
+      {
+        meta.weekDays = 0x7F;
+        meta.marker = "A";
+      }
+      break;
+    case MythRecordingRule::RT_OneRecord:
+      meta.isRepeating = false;
+      meta.weekDays = 0;
+      meta.marker = "1";
+      break;
+    case MythRecordingRule::RT_DontRecord:
+      meta.isRepeating = false;
+      meta.weekDays = 0;
+      meta.marker = "x";
+      break;
+    case MythRecordingRule::RT_OverrideRecord:
+      meta.isRepeating = false;
+      meta.weekDays = 0;
+      meta.marker = "o";
+      break;
+    default:
+      break;
+  }
+  return meta;
+}
 
+MythRecordingRule MythScheduleHelper1309::NewDailyRecord(MythEPGInfo &epgInfo)
+{
+  unsigned int filter;
+  MythRecordingRule rule = this->NewFromTemplate(epgInfo);
+
+  rule.SetType(MythRecordingRule::RT_AllRecord);
+  filter = MythRecordingRule::FM_ThisChannel + MythRecordingRule::FM_ThisTime;
+  rule.SetFilter(filter);
+
+  if (!epgInfo.IsNull())
+  {
+    rule.SetSearchType(MythRecordingRule::ST_NoSearch);
+    rule.SetChannelID(epgInfo.ChannelID());
+    rule.SetStartTime(epgInfo.StartTime());
+    rule.SetEndTime(epgInfo.EndTime());
+    rule.SetTitle(epgInfo.Title());
+    rule.SetSubtitle(epgInfo.Subtitle());
+    rule.SetCategory(epgInfo.Category());
+    rule.SetDescription(epgInfo.Description());
+    rule.SetCallsign(epgInfo.Callsign());
+  }
+  else
+  {
+    // No EPG! Create custom daily for this channel
+    rule.SetType(MythRecordingRule::RT_DailyRecord);
+    rule.SetFilter(MythRecordingRule::FM_ThisChannel);
+    // kManualSearch = http://www.gossamer-threads.com/lists/mythtv/dev/155150?search_string=kManualSearch;#155150
+    rule.SetSearchType(MythRecordingRule::ST_ManualSearch);
+  }
+  rule.SetDuplicateControlMethod(MythRecordingRule::DM_CheckSubtitleAndDescription);
+  rule.SetCheckDuplicatesInType(MythRecordingRule::DI_InAll);
+  rule.SetInactive(false);
+  return rule;
+}
+
+MythRecordingRule MythScheduleHelper1309::NewWeeklyRecord(MythEPGInfo &epgInfo)
+{
+  unsigned int filter;
+  MythRecordingRule rule = this->NewFromTemplate(epgInfo);
+
+  rule.SetType(MythRecordingRule::RT_AllRecord);
+  filter = MythRecordingRule::FM_ThisChannel + MythRecordingRule::FM_ThisDayAndTime;
+  rule.SetFilter(filter);
+
+  if (!epgInfo.IsNull())
+  {
+    rule.SetSearchType(MythRecordingRule::ST_NoSearch);
+    rule.SetChannelID(epgInfo.ChannelID());
+    rule.SetStartTime(epgInfo.StartTime());
+    rule.SetEndTime(epgInfo.EndTime());
+    rule.SetTitle(epgInfo.Title());
+    rule.SetSubtitle(epgInfo.Subtitle());
+    rule.SetCategory(epgInfo.Category());
+    rule.SetDescription(epgInfo.Description());
+    rule.SetCallsign(epgInfo.Callsign());
+  }
+  else
+  {
+    // No EPG! Create custom weekly for this channel
+    rule.SetType(MythRecordingRule::RT_WeeklyRecord);
+    rule.SetFilter(MythRecordingRule::FM_ThisChannel);
+    // kManualSearch = http://www.gossamer-threads.com/lists/mythtv/dev/155150?search_string=kManualSearch;#155150
+    rule.SetSearchType(MythRecordingRule::ST_ManualSearch);
+  }
+  rule.SetDuplicateControlMethod(MythRecordingRule::DM_CheckSubtitleAndDescription);
+  rule.SetCheckDuplicatesInType(MythRecordingRule::DI_InAll);
+  rule.SetInactive(false);
+  return rule;
+}
+
+MythRecordingRule MythScheduleHelper1309::NewChannelRecord(MythEPGInfo &epgInfo)
+{
+  unsigned int filter;
+  MythRecordingRule rule = this->NewFromTemplate(epgInfo);
+
+  rule.SetType(MythRecordingRule::RT_AllRecord);
+  filter = MythRecordingRule::FM_ThisChannel;
+  rule.SetFilter(filter);
+
+  if (!epgInfo.IsNull())
+  {
+    rule.SetSearchType(MythRecordingRule::ST_NoSearch);
+    rule.SetChannelID(epgInfo.ChannelID());
+    rule.SetStartTime(epgInfo.StartTime());
+    rule.SetEndTime(epgInfo.EndTime());
+    rule.SetTitle(epgInfo.Title());
+    rule.SetSubtitle(epgInfo.Subtitle());
+    rule.SetCategory(epgInfo.Category());
+    rule.SetDescription(epgInfo.Description());
+    rule.SetCallsign(epgInfo.Callsign());
+  }
+  else
+  {
+    // Not feasible
+    rule.SetType(MythRecordingRule::RT_NotRecording);
+  }
+  rule.SetDuplicateControlMethod(MythRecordingRule::DM_CheckSubtitleAndDescription);
+  rule.SetCheckDuplicatesInType(MythRecordingRule::DI_InAll);
+  rule.SetInactive(false);
+  return rule;
+}
+
+MythRecordingRule MythScheduleHelper1309::NewOneRecord(MythEPGInfo &epgInfo)
+{
+  unsigned int filter;
+  MythRecordingRule rule = this->NewFromTemplate(epgInfo);
+
+  rule.SetType(MythRecordingRule::RT_OneRecord);
+  filter = MythRecordingRule::FM_ThisEpisode;
+  rule.SetFilter(filter);
+
+  if (!epgInfo.IsNull())
+  {
+    rule.SetSearchType(MythRecordingRule::ST_NoSearch);
+    rule.SetChannelID(epgInfo.ChannelID());
+    rule.SetStartTime(epgInfo.StartTime());
+    rule.SetEndTime(epgInfo.EndTime());
+    rule.SetTitle(epgInfo.Title());
+    rule.SetSubtitle(epgInfo.Subtitle());
+    rule.SetCategory(epgInfo.Category());
+    rule.SetDescription(epgInfo.Description());
+    rule.SetCallsign(epgInfo.Callsign());
+  }
+  else
+  {
+    // Not feasible
+    rule.SetType(MythRecordingRule::RT_NotRecording);
+  }
+  rule.SetDuplicateControlMethod(MythRecordingRule::DM_CheckSubtitleAndDescription);
+  rule.SetCheckDuplicatesInType(MythRecordingRule::DI_InAll);
+  rule.SetInactive(false);
+  return rule;
+}

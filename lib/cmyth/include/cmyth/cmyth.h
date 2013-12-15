@@ -1855,6 +1855,40 @@ extern uint32_t cmyth_recordingrule_prefinput(cmyth_recordingrule_t rr);
 extern void cmyth_recordingrule_set_prefinput(cmyth_recordingrule_t rr, uint32_t prefinput);
 
 /**
+ * Retrieves the 'programid' field of a recording rule structure.
+ * Before forgetting the reference to this string the caller
+ * must call ref_release().
+ * \param rr
+ * \return success: programid
+ * \return failure: NULL
+ */
+extern char *cmyth_recordingrule_programid(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'programid' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param programid
+ */
+extern void cmyth_recordingrule_set_programid(cmyth_recordingrule_t rr, char *programid);
+
+/**
+ * Retrieves the 'seriesid' field of a recording rule structure.
+ * Before forgetting the reference to this string the caller
+ * must call ref_release().
+ * \param rr
+ * \return success: seriesid
+ * \return failure: NULL
+ */
+extern char *cmyth_recordingrule_seriesid(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'seriesid' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param seriesid
+ */
+extern void cmyth_recordingrule_set_seriesid(cmyth_recordingrule_t rr, char *seriesid);
+
+/**
  * Retrieves the 'autometadata' field of a recording rule structure.
  * \param rr
  * \return success: autometadata

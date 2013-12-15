@@ -481,6 +481,8 @@ struct cmyth_recordingrule {
 	uint32_t parentid;               //parent rule recordid
 	char* profile;
 	uint32_t prefinput;
+	char* programid;
+	char* seriesid;
 	uint8_t autometadata;            //DB version 1278
 	char* inetref;                   //DB version 1278
 	uint16_t season;                 //DB version 1278

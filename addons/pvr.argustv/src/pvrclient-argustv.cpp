@@ -121,7 +121,6 @@ bool cPVRClientArgusTV::Connect()
          usleep(1000000);
          if (attemps > 3)
          {
-           XBMC->QueueNotification(QUEUE_ERROR, "No connection to Argus TV server");
            return false;
          }
     }

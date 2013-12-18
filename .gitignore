@@ -33,6 +33,10 @@ missing
 *.pvr
 *.zip
 
+*.idb
+*.tlog
+*.lastbuildstate
+
 # Windows specific generated files
 *.exp
 *.lib

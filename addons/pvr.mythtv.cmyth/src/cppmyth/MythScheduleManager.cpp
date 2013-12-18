@@ -108,6 +108,7 @@ MythScheduleManager::MythScheduleManager()
   , m_db()
   , m_dbSchemaVersion(0)
   , m_versionHelper(new MythScheduleHelperNoHelper())
+  , m_showNotRecording(false)
 {
 }
 
@@ -115,6 +116,7 @@ MythScheduleManager::MythScheduleManager(MythConnection &con, MythDatabase &db)
   : m_con(con)
   , m_db(db)
   , m_dbSchemaVersion(0)
+  , m_showNotRecording(false)
 {
   this->Update();
 }
@@ -634,22 +636,25 @@ void MythScheduleManager::Update()
   }
 
   // Add missed programs (NOT RECORDING) to upcoming recordings. User could delete them as needed.
-  //ProgramInfoMap schedule = m_con.GetScheduledPrograms();
-  //for (ProgramInfoMap::iterator it = schedule.begin(); it != schedule.end(); ++it)
-  //{
-  //  if (m_recordingIndexByRuleId.count(it->second.RecordID()) == 0)
-  //  {
-  //    NodeById::const_iterator itr = m_rulesById.find(it->second.RecordID());
-  //    if (itr != m_rulesById.end() && !itr->second->HasOverrideRules())
-  //    {
-  //      boost::shared_ptr<MythProgramInfo> rec = boost::shared_ptr<MythProgramInfo>(new MythProgramInfo());
-  //      *rec = it->second;
-  //      unsigned int index = MakeIndex(it->second);
-  //      m_recordings.insert(RecordingList::value_type(index, rec));
-  //      m_recordingIndexByRuleId.insert(std::make_pair(it->second.RecordID(), index));
-  //    }
-  //  }
-  //}
+  if (m_showNotRecording)
+  {
+    ProgramInfoMap schedule = m_con.GetScheduledPrograms();
+    for (ProgramInfoMap::iterator it = schedule.begin(); it != schedule.end(); ++it)
+    {
+      if (m_recordingIndexByRuleId.count(it->second.RecordID()) == 0)
+      {
+        NodeById::const_iterator itr = m_rulesById.find(it->second.RecordID());
+        if (itr != m_rulesById.end() && !itr->second->HasOverrideRules())
+        {
+          boost::shared_ptr<MythProgramInfo> rec = boost::shared_ptr<MythProgramInfo>(new MythProgramInfo());
+          *rec = it->second;
+          unsigned int index = MakeIndex(it->second);
+          m_recordings.insert(RecordingList::value_type(index, rec));
+          m_recordingIndexByRuleId.insert(std::make_pair(it->second.RecordID(), index));
+        }
+      }
+    }
+  }
 
   if (g_bExtraDebug)
   {
@@ -693,6 +698,12 @@ MythRecordingRule MythScheduleManager::NewChannelRecord(MythEPGInfo &epgInfo)
 MythRecordingRule MythScheduleManager::NewOneRecord(MythEPGInfo &epgInfo)
 {
   return m_versionHelper->NewOneRecord(epgInfo);
+}
+
+bool MythScheduleManager::ToggleShowNotRecording()
+{
+  m_showNotRecording ^= true;
+  return m_showNotRecording;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

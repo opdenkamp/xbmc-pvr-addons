@@ -121,6 +121,8 @@ public:
   MythRecordingRule NewChannelRecord(MythEPGInfo &epgInfo);
   MythRecordingRule NewOneRecord(MythEPGInfo &epgInfo);
 
+  bool ToggleShowNotRecording();
+
 private:
   mutable PLATFORM::CMutex m_lock;
   MythConnection m_con;
@@ -145,6 +147,8 @@ private:
   NodeById m_rulesById;
   RecordingList m_recordings;
   RecordingIndexByRuleId m_recordingIndexByRuleId;
+
+  bool m_showNotRecording;
 };
 
 

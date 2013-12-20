@@ -171,6 +171,8 @@ namespace dvblinkremotehttp
   class HttpClient
   {
   public:
+    virtual ~HttpClient();
+    
     /**
       * Send a HTTP request.
       * @param[in] request A HttpWebRequest reference representing the HTTP request to be sent.

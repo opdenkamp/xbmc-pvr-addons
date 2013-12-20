@@ -262,12 +262,11 @@ class Socket
      *
      * \param data    Pointer to a character array of size buffersize. Used to store the received data.
      * \param buffersize    Size of the 'data' buffer
-     * \param minpacketsize    Do not return before at least 'minpacketsize' bytes are in the buffer.
      * \param from        Optional: pointer to a sockaddr struct that will get the address from which the data is received
      * \param fromlen    Optional, only required if 'from' is given: length of from struct
      * \return    Number of bytes received or SOCKET_ERROR
      */
-    int recvfrom ( char* data, const int buffersize, const int minpacketsize, struct sockaddr* from = NULL, socklen_t* fromlen = NULL) const;
+    int recvfrom ( char* data, const int buffersize, struct sockaddr* from = NULL, socklen_t* fromlen = NULL) const;
 
     bool set_non_blocking ( const bool );
 

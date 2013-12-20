@@ -78,7 +78,7 @@ bool Pvr2Wmc::IsServerDown()
 
 void Pvr2Wmc::UnLoading()
 {
-	bool res = _socketClient.GetBool("ClientGoingDown");			// returns true if server is up
+	_socketClient.GetBool("ClientGoingDown");			// returns true if server is up
 }
 
 const char *Pvr2Wmc::GetBackendVersion(void)

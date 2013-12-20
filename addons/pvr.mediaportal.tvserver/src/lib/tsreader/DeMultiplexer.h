@@ -53,7 +53,7 @@ public:
   void       OnNewChannel(CChannelInfo& info);
   void       SetFileReader(FileReader* reader);
   void RequestNewPat(void);
-  int ReadFromFile(bool isAudio, bool isVideo);
+  int ReadFromFile();
 
 private:
   unsigned long m_LastDataFromRtsp;

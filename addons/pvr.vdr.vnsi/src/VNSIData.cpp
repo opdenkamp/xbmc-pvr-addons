@@ -854,7 +854,7 @@ void *cVNSIData::Process()
       else if (vresp->getRequestID() == VNSI_STATUS_RECORDING)
       {
                           vresp->extract_U32(); // device currently unused
-        uint32_t on     = vresp->extract_U32();
+                          vresp->extract_U32(); // on (not used)
         char* str1      = vresp->extract_String();
         char* str2      = vresp->extract_String();
 

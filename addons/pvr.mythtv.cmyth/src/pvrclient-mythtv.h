@@ -158,4 +158,11 @@ private:
    * \see class MythProgramInfo , class MythEPGInfo
    */
   CStdString MakeProgramTitle(const CStdString &title, const CStdString &subtitle) const;
+
+  /**
+   *
+   * \brief Handle broadcast UID for MythTV program
+   */
+  int MakeBroadcastID(unsigned int chanid, time_t starttime) const;
+  void BreakBroadcastID(int broadcastid, unsigned int *chanid, time_t *starttime) const;
 };

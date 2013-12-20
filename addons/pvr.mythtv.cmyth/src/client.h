@@ -75,6 +75,12 @@ static inline struct tm *localtime_r(const time_t * clock, struct tm *result)
 
 #define MENUHOOK_REC_DELETE_AND_RERECORD   1
 #define MENUHOOK_KEEP_LIVETV_RECORDING     2
+#define MENUHOOK_SHOW_HIDE_NOT_RECORDING   3
+#define MENUHOOK_EPG_REC_CHAN_ALL_SHOWINGS 4
+#define MENUHOOK_EPG_REC_CHAN_WEEKLY       5
+#define MENUHOOK_EPG_REC_CHAN_DAILY        6
+#define MENUHOOK_EPG_REC_ONE_SHOWING       7
+#define MENUHOOK_EPG_REC_NEW_EPISODES      8
 
 #define DEFAULT_HANDLE_DEMUXING            false
 

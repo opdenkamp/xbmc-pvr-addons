@@ -228,7 +228,7 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
       CStdString description;
       CStdString category;
 
-      tag.iUniqueBroadcastId = (((int)(difftime(it->second.StartTime(), 0) / 60) & 0xFFFF) << 16) + (it->second.ChannelNumberInt() & 0xFFFF);
+      tag.iUniqueBroadcastId = MakeBroadcastID(it->second.ChannelID(), it->second.StartTime());
       tag.iChannelNumber = it->second.ChannelNumberInt();
       title = this->MakeProgramTitle(it->second.Title(), it->second.Subtitle());
       tag.strTitle = title;
@@ -1940,6 +1940,64 @@ PVR_ERROR PVRClientMythTV::CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_
     return PVR_ERROR_FAILED;
   }
 
+  if (menuhook.category == PVR_MENUHOOK_SETTING)
+  {
+    if (menuhook.iHookId == MENUHOOK_SHOW_HIDE_NOT_RECORDING && m_scheduleManager)
+    {
+      bool flag = m_scheduleManager->ToggleShowNotRecording();
+      UpdateSchedules();
+      CStdString info = (flag ? XBMC->GetLocalizedString(30310) : XBMC->GetLocalizedString(30311));
+      XBMC->QueueNotification(QUEUE_INFO, info.c_str());
+      return PVR_ERROR_NO_ERROR;
+    }
+  }
+
+  if (menuhook.category == PVR_MENUHOOK_EPG && item.cat == PVR_MENUHOOK_EPG)
+  {
+    time_t attime;
+    unsigned int chanid;
+    BreakBroadcastID(item.data.iEpgUid, &chanid, &attime);
+    MythEPGInfo epgInfo;
+    if (m_db.FindCurrentProgram(attime, chanid, epgInfo))
+    {
+      // Scheduling actions
+      if (m_scheduleManager)
+      {
+        MythRecordingRule rule;
+        switch(menuhook.iHookId)
+        {
+          case MENUHOOK_EPG_REC_CHAN_ALL_SHOWINGS:
+            rule = m_scheduleManager->NewChannelRecord(epgInfo);
+            break;
+          case MENUHOOK_EPG_REC_CHAN_WEEKLY:
+            rule = m_scheduleManager->NewWeeklyRecord(epgInfo);
+            break;
+          case MENUHOOK_EPG_REC_CHAN_DAILY:
+            rule = m_scheduleManager->NewDailyRecord(epgInfo);
+            break;
+          case MENUHOOK_EPG_REC_ONE_SHOWING:
+            rule = m_scheduleManager->NewOneRecord(epgInfo);
+            break;
+          case MENUHOOK_EPG_REC_NEW_EPISODES:
+            rule = m_scheduleManager->NewChannelRecord(epgInfo);
+            rule.SetFilter(rule.Filter() | MythRecordingRule::FM_FirstShowing);
+            break;
+          default:
+            return PVR_ERROR_NOT_IMPLEMENTED;
+        }
+        if (m_scheduleManager->ScheduleRecording(rule) == MythScheduleManager::MSM_ERROR_SUCCESS)
+          return PVR_ERROR_NO_ERROR;
+      }
+    }
+    else
+    {
+      XBMC->QueueNotification(QUEUE_WARNING, XBMC->GetLocalizedString(30312));
+      XBMC->Log(LOG_DEBUG, "%s - broadcast: %d chanid: %u attime: %lu", __FUNCTION__, item.data.iEpgUid, chanid, attime);
+      return PVR_ERROR_INVALID_PARAMETERS;
+    }
+    return PVR_ERROR_FAILED;
+  }
+
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -1973,4 +2031,40 @@ CStdString PVRClientMythTV::MakeProgramTitle(const CStdString &title, const CStd
   else
     epgtitle = title + SUBTITLE_SEPARATOR + subtitle;
   return epgtitle;
+}
+
+// Broacast ID is 32 bits integer and allows to identify a EPG item.
+// MythTV backend doesn't provide one. So we make it encoding time and channel
+// as below:
+// 31. . . . . . . . . . . . . . . 15. . . . . . . . . . . . . . 0
+// [   timecode (self-relative)   ][         channel Id          ]
+// Timecode is the count of minutes since epoch modulo 0xFFFF. Now therefore it
+// is usable for a period of +/- 32767 minutes (+/-22 days) around itself.
+
+int PVRClientMythTV::MakeBroadcastID(unsigned int chanid, time_t starttime) const
+{
+  int timecode = (int)(difftime(starttime, 0) / 60) & 0xFFFF;
+  return (int)((timecode << 16) | (chanid & 0xFFFF));
+}
+
+void PVRClientMythTV::BreakBroadcastID(int broadcastid, unsigned int* chanid, time_t* attime) const
+{
+  time_t now;
+  int ntc, ptc, distance;
+  struct tm epgtm;
+
+  now = time(NULL);
+  ntc = (int)(difftime(now, 0) / 60) & 0xFFFF;
+  ptc = (broadcastid >> 16) & 0xFFFF; // removes arithmetic bits
+  if (ptc > ntc)
+    distance = (ptc - ntc) < 0x8000 ? ptc - ntc : ptc - ntc - 0xFFFF;
+  else
+    distance = (ntc - ptc) < 0x8000 ? ptc - ntc : ptc - ntc + 0xFFFF;
+  localtime_r(&now, &epgtm);
+  epgtm.tm_min += distance;
+  // Time precision is minute, so we are looking for program started before next minute.
+  epgtm.tm_sec = 59;
+
+  *attime = mktime(&epgtm);
+  *chanid = (unsigned int)broadcastid & 0xFFFF;
 }

@@ -184,6 +184,18 @@ msgctxt "#30309"
 msgid "Not recording"
 msgstr ""
 
+msgctxt "#30310"
+msgid "Enabled"
+msgstr ""
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr ""
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr ""
+
 # Menu Hooks
 msgctxt "#30411"
 msgid "Delete and re-record"
@@ -191,4 +203,28 @@ msgstr ""
 
 msgctxt "#30412"
 msgid "Keep LiveTV recording"
+msgstr ""
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr ""
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr ""
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr ""
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr ""
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr ""
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
 msgstr ""

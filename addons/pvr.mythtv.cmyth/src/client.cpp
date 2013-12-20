@@ -321,6 +321,42 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   menuHookKeepLiveTVRec.iLocalizedStringId = 30412;
   PVR->AddMenuHook(&menuHookKeepLiveTVRec);
 
+  PVR_MENUHOOK menuhookSettingShowNR;
+  menuhookSettingShowNR.category = PVR_MENUHOOK_SETTING;
+  menuhookSettingShowNR.iHookId = MENUHOOK_SHOW_HIDE_NOT_RECORDING;
+  menuhookSettingShowNR.iLocalizedStringId = 30421;
+  PVR->AddMenuHook(&menuhookSettingShowNR);
+
+  PVR_MENUHOOK menuhookEpgRec1;
+  menuhookEpgRec1.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec1.iHookId = MENUHOOK_EPG_REC_CHAN_ALL_SHOWINGS;
+  menuhookEpgRec1.iLocalizedStringId = 30431;
+  PVR->AddMenuHook(&menuhookEpgRec1);
+
+  PVR_MENUHOOK menuhookEpgRec2;
+  menuhookEpgRec2.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec2.iHookId = MENUHOOK_EPG_REC_CHAN_WEEKLY;
+  menuhookEpgRec2.iLocalizedStringId = 30432;
+  PVR->AddMenuHook(&menuhookEpgRec2);
+
+  PVR_MENUHOOK menuhookEpgRec3;
+  menuhookEpgRec3.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec3.iHookId = MENUHOOK_EPG_REC_CHAN_DAILY;
+  menuhookEpgRec3.iLocalizedStringId = 30433;
+  PVR->AddMenuHook(&menuhookEpgRec3);
+
+  PVR_MENUHOOK menuhookEpgRec4;
+  menuhookEpgRec4.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec4.iHookId = MENUHOOK_EPG_REC_ONE_SHOWING;
+  menuhookEpgRec4.iLocalizedStringId = 30434;
+  PVR->AddMenuHook(&menuhookEpgRec4);
+
+  PVR_MENUHOOK menuhookEpgRec5;
+  menuhookEpgRec5.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec5.iHookId = MENUHOOK_EPG_REC_NEW_EPISODES;
+  menuhookEpgRec5.iLocalizedStringId = 30435;
+  PVR->AddMenuHook(&menuhookEpgRec5);
+
   XBMC->Log(LOG_DEBUG, "MythTV cmyth PVR-Client successfully created");
   m_CurStatus = ADDON_STATUS_OK;
   g_bCreated = true;

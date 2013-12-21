@@ -1061,6 +1061,33 @@ namespace ArgusTV
     return retval;
   }
 
+    /**
+   * \brief Retrieve an empty schedule from the server
+   */
+  int GetEmptySchedule(Json::Value& response)
+  {
+    int retval = -1;
+    XBMC->Log(LOG_DEBUG, "GetEmptySchedule");
+
+    retval = ArgusTVJSONRPC("ArgusTV/Scheduler/EmptySchedule/0/82", "", response);
+
+    if(retval >= 0)
+    {           
+      if( response.type() != Json::objectValue)
+      {
+        XBMC->Log(LOG_DEBUG, "Unknown response format. Expected Json::objectValue\n");
+        return -1;
+      }
+    }
+    else
+    {
+      XBMC->Log(LOG_DEBUG, "GetEmptySchedule failed. Return value: %i\n", retval);
+    }
+
+    return retval;
+  }
+
+
   /**
    * \brief Add a xbmc timer as a one time schedule
    */
@@ -1072,26 +1099,52 @@ namespace ArgusTV
     struct tm* convert = localtime(&starttime);
     struct tm tm_start = *convert;
 
-    // Format: ArgusTV/Scheduler/SaveSchedule
-    // argument: {"ChannelType":0,"IsActive":true,"IsOneTime":true,"KeepUntilMode":0,"KeepUntilValue":null,
-    //    "LastModifiedTime":"\/Date(1297889326000+0100)\/","Name":"Astro TV","PostRecordSeconds":null,
-    //    "PreRecordSeconds":null,"ProcessingCommands":[],"RecordingFileFormatId":null,
-    //    "Rules":[{"Arguments":["Astro TV"],"Type":"TitleEquals"},{"Arguments":["2011-02-17T00:00:00+01:00"],"Type":"OnDate"},{"Arguments":["00:45:00"],"Type":"AroundTime"},{"Arguments":["ed49a4ef-5777-40c4-80b8-715e4c87f1a6"],"Type":"Channels"}],
-    //    "ScheduleId":"00000000-0000-0000-0000-000000000000","SchedulePriority":0,"ScheduleType":82,"Version":0}
+    // Get empty schedule from the server
+    Json::Value newSchedule;
+    if (ArgusTV::GetEmptySchedule(newSchedule) < 0) return retval;
 
-    time_t now = time(NULL);
-    std::string modifiedtime = TimeTToWCFDate(mktime(localtime(&now)));
+    // Fill relevant members
     CStdString modifiedtitle = title;
     modifiedtitle.Replace("\"", "\\\"");
-    char arguments[1024];
-    snprintf( arguments, sizeof(arguments),
-      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"%s\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,\"Rules\":[{\"Arguments\":[\"%s\"],\"Type\":\"TitleEquals\"},{\"Arguments\":[\"%i-%02i-%02iT00:00:00\"],\"Type\":\"OnDate\"},{\"Arguments\":[\"%02i:%02i:%02i\"],\"Type\":\"AroundTime\"},{\"Arguments\":[\"%s\"],\"Type\":\"Channels\"}],\"ScheduleId\":\"00000000-0000-0000-0000-000000000000\",\"SchedulePriority\":0,\"ScheduleType\":82,\"Version\":0}",
-      lifetimeToKeepUntilMode(lifetime), lifetimeToKeepUntilValue(lifetime), modifiedtime.c_str(), modifiedtitle.c_str(), postrecordseconds, prerecordseconds, modifiedtitle.c_str(),
-      tm_start.tm_year + 1900, tm_start.tm_mon + 1, tm_start.tm_mday,
-      tm_start.tm_hour, tm_start.tm_min, tm_start.tm_sec,
-      channelid.c_str());
 
-    retval = ArgusTVJSONRPC("ArgusTV/Scheduler/SaveSchedule", arguments, response);
+    newSchedule["IsOneTime"] = Json::Value(true);
+    newSchedule["KeepUntilMode"] = Json::Value(lifetimeToKeepUntilMode(lifetime));
+    newSchedule["KeepUntilValue"] = Json::Value(lifetimeToKeepUntilValue(lifetime));
+    newSchedule["Name"] = Json::Value(modifiedtitle.c_str());
+    newSchedule["PostRecordSeconds"] = Json::Value(postrecordseconds);
+    newSchedule["PreRecordSeconds"] = Json::Value(prerecordseconds);
+
+    Json::Value rule(Json::objectValue);
+    rule["Arguments"] = Json::arrayValue;
+    rule["Arguments"].append(Json::Value(modifiedtitle.c_str()));
+    rule["Type"] = Json::Value("TitleEquals");
+    newSchedule["Rules"].append(rule);
+
+    char formatbuffer[256];
+    rule = Json::objectValue;
+    rule["Arguments"] = Json::arrayValue;
+    snprintf(formatbuffer, sizeof(formatbuffer), "%i-%02i-%02iT00:00:00", tm_start.tm_year + 1900, tm_start.tm_mon + 1, tm_start.tm_mday);
+    rule["Arguments"].append(Json::Value(formatbuffer));
+    rule["Type"] = Json::Value("OnDate");
+    newSchedule["Rules"].append(rule);
+
+    rule = Json::objectValue;
+    rule["Arguments"] = Json::arrayValue;
+    snprintf(formatbuffer, sizeof(formatbuffer), "%02i:%02i:%02i", tm_start.tm_hour, tm_start.tm_min, tm_start.tm_sec);
+    rule["Arguments"].append(Json::Value(formatbuffer));
+    rule["Type"] = Json::Value("AroundTime");
+    newSchedule["Rules"].append(rule);
+
+    rule = Json::objectValue;
+    rule["Arguments"] = Json::arrayValue;
+    rule["Arguments"].append(Json::Value(channelid.c_str()));
+    rule["Type"] = Json::Value("Channels");
+    newSchedule["Rules"].append(rule);
+
+    Json::FastWriter writer;
+    std::string tmparguments = writer.write(newSchedule);
+
+    retval = ArgusTVJSONRPC("ArgusTV/Scheduler/SaveSchedule", tmparguments.c_str(), response);
 
     if(retval >= 0)
     {
@@ -1126,28 +1179,44 @@ namespace ArgusTV
     recordingduration /= 60;
     int duration_hrs = recordingduration;
 
-    // Format: ArgusTV/Scheduler/SaveSchedule
-    // argument: {"ChannelType":0,"IsActive":true,"IsOneTime":true,"KeepUntilMode":0,"KeepUntilValue":null,
-    //    "LastModifiedTime":"\/Date(1307645182000+0100)\/","Name":"XBMC (manual) - blup","PostRecordSeconds":600,
-    //    "PreRecordSeconds":120,"ProcessingCommands":[],"RecordingFileFormatId":null,
-    //    "Rules":[{"Arguments":["2011-06-11T22:10:00", "01:13:00"],"Type":"ManualSchedule"},{"Arguments":["6a14caaf-5e39-4750-b7b7-eae8c741c094"],"Type":"Channels"}],
-    //    "ScheduleId":"00000000-0000-0000-0000-000000000000","SchedulePriority":0,"ScheduleType":82,"Version":0}
+    // Get empty schedule from the server
+    Json::Value newSchedule;
+    if (ArgusTV::GetEmptySchedule(newSchedule) < 0) return retval;
 
-    time_t now = time(NULL);
-    std::string modifiedtime = TimeTToWCFDate(mktime(localtime(&now)));
+    // Fill relevant members
     CStdString modifiedtitle = title;
     modifiedtitle.Replace("\"", "\\\"");
-    char arguments[1024];
-    snprintf( arguments, sizeof(arguments),
-      "{\"ChannelType\":0,\"IsActive\":true,\"IsOneTime\":true,\"KeepUntilMode\":\"%i\",\"KeepUntilValue\":\"%i\",\"LastModifiedTime\":\"%s\",\"Name\":\"%s (manual)\",\"PostRecordSeconds\":%i,\"PreRecordSeconds\":%i,\"ProcessingCommands\":[],\"RecordingFileFormatId\":null,"
-      "\"Rules\":[{\"Arguments\":[\"%i-%02i-%02iT%02i:%02i:%02i\", \"%02i:%02i:%02i\"],\"Type\":\"ManualSchedule\"},{\"Arguments\":[\"%s\"],\"Type\":\"Channels\"}],\"ScheduleId\":\"00000000-0000-0000-0000-000000000000\",\"SchedulePriority\":0,\"ScheduleType\":82,\"Version\":0}",
-      lifetimeToKeepUntilMode(lifetime), lifetimeToKeepUntilValue(lifetime), modifiedtime.c_str(), modifiedtitle.c_str(), postrecordseconds, prerecordseconds,
-      tm_start.tm_year + 1900, tm_start.tm_mon + 1, tm_start.tm_mday,
-      tm_start.tm_hour, tm_start.tm_min, tm_start.tm_sec,
-      duration_hrs, duration_min, duration_sec,
-      channelid.c_str());
 
-    retval = ArgusTVJSONRPC("ArgusTV/Scheduler/SaveSchedule", arguments, response);
+    newSchedule["IsOneTime"] = Json::Value(true);
+    newSchedule["KeepUntilMode"] = Json::Value(lifetimeToKeepUntilMode(lifetime));
+    newSchedule["KeepUntilValue"] = Json::Value(lifetimeToKeepUntilValue(lifetime));
+    newSchedule["Name"] = Json::Value(modifiedtitle.c_str());
+    newSchedule["PostRecordSeconds"] = Json::Value(postrecordseconds);
+    newSchedule["PreRecordSeconds"] = Json::Value(prerecordseconds);
+
+    Json::Value rule(Json::objectValue);
+    char formatbuffer[256];
+    rule["Arguments"] = Json::arrayValue;
+    snprintf(formatbuffer, sizeof(formatbuffer), "%i-%02i-%02iT%02i:%02i:%02i", 
+      tm_start.tm_year + 1900, tm_start.tm_mon + 1, tm_start.tm_mday,
+      tm_start.tm_hour, tm_start.tm_min, tm_start.tm_sec);
+    rule["Arguments"].append(Json::Value(formatbuffer));
+    snprintf(formatbuffer, sizeof(formatbuffer), "%02i:%02i:%02i",
+      duration_hrs, duration_min, duration_sec);
+    rule["Arguments"].append(Json::Value(formatbuffer));
+    rule["Type"] = Json::Value("ManualSchedule");
+    newSchedule["Rules"].append(rule);
+
+    rule = Json::objectValue;
+    rule["Arguments"] = Json::arrayValue;
+    rule["Arguments"].append(Json::Value(channelid.c_str()));
+    rule["Type"] = Json::Value("Channels");
+    newSchedule["Rules"].append(rule);
+
+    Json::FastWriter writer;
+    std::string tmparguments = writer.write(newSchedule);
+
+    retval = ArgusTVJSONRPC("ArgusTV/Scheduler/SaveSchedule", tmparguments, response);
 
     if(retval >= 0)
     {

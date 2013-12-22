@@ -205,18 +205,13 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
   if (!channel.bIsHidden)
   {
     EPGInfoMap EPG = m_db.GetGuide(channel.iUniqueId, iStart, iEnd);
-    EPGInfoMap::reverse_iterator prevIt = EPG.rbegin();
     // Transfer EPG for the given channel
     for (EPGInfoMap::reverse_iterator it = EPG.rbegin(); it != EPG.rend(); ++it)
     {
       EPG_TAG tag;
       memset(&tag, 0, sizeof(EPG_TAG));
-      // Fill the gap until previous start time
       tag.startTime = it->first;
-      if (it != prevIt)
-        tag.endTime = prevIt->first;
-      else
-        tag.endTime = it->second.EndTime();
+      tag.endTime = it->second.EndTime();
       // Reject bad entry
       if (tag.endTime <= tag.startTime)
         continue;
@@ -254,7 +249,6 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
       tag.iStarRating = 0;
 
       PVR->TransferEpgEntry(handle, &tag);
-      prevIt = it;
     }
   }
 

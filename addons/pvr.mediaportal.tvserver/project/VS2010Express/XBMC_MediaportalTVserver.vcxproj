@@ -179,6 +179,14 @@
     <ClInclude Include="..\..\src\utils.h" />
     <ClInclude Include="..\..\src\windows\WindowsUtils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml.in" />
+    <None Include="..\..\addon\changelog.txt" />
+    <None Include="..\..\addon\resources\genre_translation.xml" />
+    <None Include="..\..\addon\resources\language\English\strings.po" />
+    <None Include="..\..\addon\resources\settings.xml" />
+    <None Include="..\..\addon\resources\skins\skin.confluence\720p\DialogRecordSettings.xml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

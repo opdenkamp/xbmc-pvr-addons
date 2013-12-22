@@ -27,6 +27,12 @@
     <Filter Include="Header Files\lib%255ctsreader\windows">
       <UniqueIdentifier>{d246253c-65e8-4771-8007-8f6863e0234d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{12a093c6-9e77-40bf-b82e-400fe194aa32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\skin.confluence">
+      <UniqueIdentifier>{c3cf4b4c-0ddb-454c-a5fb-f5fe47344c2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Cards.cpp">
@@ -205,5 +211,25 @@
     <ClInclude Include="..\..\src\DateTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml.in">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\addon\changelog.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\addon\resources\genre_translation.xml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\addon\resources\settings.xml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\addon\resources\skins\skin.confluence\720p\DialogRecordSettings.xml">
+      <Filter>Resource Files\skin.confluence</Filter>
+    </None>
+    <None Include="..\..\addon\resources\language\English\strings.po">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -39,7 +39,7 @@ public:
   cPVRClientMediaPortal();
   ~cPVRClientMediaPortal();
 
-  /* VTP Listening Thread */
+  /* TVServerXBMC Listening Thread */
   static void* Process(void*);
 
   /* Server handling */

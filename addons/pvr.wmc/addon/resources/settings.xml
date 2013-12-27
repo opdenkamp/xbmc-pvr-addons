@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+  <setting id="host" type="text"   label="30000" default="127.0.0.1" />
+  <setting id="port" type="number" label="30002" default="9080"  />
+  <setting id="multiResume" type="bool" label="30016" default="true"  />
+  <setting id="signal" type="bool" label="30014" default="false"  />
+  <setting id="signal_throttle" type="number" label="30015" default="10"  />
+</settings>

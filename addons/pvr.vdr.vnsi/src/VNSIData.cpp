@@ -210,6 +210,11 @@ bool cVNSIData::GetChannelsList(ADDON_HANDLE handle, bool radio)
     XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
     return false;
   }
+  if (!vrp.add_U8(1)) // apply filter
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't add parameter to cRequestPacket", __FUNCTION__);
+    return false;
+  }
 
   cResponsePacket* vresp = ReadResult(&vrp);
   if (!vresp)
@@ -224,16 +229,18 @@ bool cVNSIData::GetChannelsList(ADDON_HANDLE handle, bool radio)
     memset(&tag, 0 , sizeof(tag));
 
     tag.iChannelNumber    = vresp->extract_U32();
-    char *strChannelName = vresp->extract_String();
+    char *strChannelName  = vresp->extract_String();
     strncpy(tag.strChannelName, strChannelName, sizeof(tag.strChannelName) - 1);
+    char *strProviderName = vresp->extract_String();
     tag.iUniqueId         = vresp->extract_U32();
-                            vresp->extract_U32(); // still here for compatibility
     tag.iEncryptionSystem = vresp->extract_U32();
-                            vresp->extract_U32(); // uint32_t vtype - currently unused
+    char *strCaids        = vresp->extract_String();
     tag.bIsRadio          = radio;
 
     PVR->TransferChannelEntry(handle, &tag);
     delete[] strChannelName;
+    delete[] strProviderName;
+    delete[] strCaids;
   }
 
   delete vresp;
@@ -744,6 +751,39 @@ PVR_ERROR cVNSIData::DeleteRecording(const PVR_RECORDING& recinfo)
   return PVR_ERROR_NO_ERROR;
 }
 
+PVR_ERROR cVNSIData::GetRecordingEdl(const PVR_RECORDING& recinfo, PVR_EDL_ENTRY edl[], int *size)
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_RECORDINGS_GETEDL))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  if (!vrp.add_U32(atoi(recinfo.strRecordingId)))
+    return PVR_ERROR_UNKNOWN;
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (vresp == NULL || vresp->noResponse())
+  {
+    delete vresp;
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  *size = 0;
+  while (!vresp->end() && *size < PVR_ADDON_EDL_LENGTH)
+  {
+    edl[*size].start = vresp->extract_S64();
+    edl[*size].end = vresp->extract_S64();
+    edl[*size].type = (PVR_EDL_TYPE)vresp->extract_S32();
+    (*size)++;
+  }
+
+  delete vresp;
+
+  return PVR_ERROR_NO_ERROR;
+}
+
 bool cVNSIData::OnResponsePacket(cResponsePacket* pkt)
 {
   return false;
@@ -934,6 +974,7 @@ bool cVNSIData::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GR
 
   vrp.add_String(group.strGroupName);
   vrp.add_U8(group.bIsRadio);
+  vrp.add_U8(1); // filter channels
 
   cResponsePacket* vresp = ReadResult(&vrp);
   if (vresp == NULL || vresp->noResponse())

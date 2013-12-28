@@ -122,6 +122,7 @@ struct sStreamPacket
   bool      streamChange;
   bool      pmtChange;
   uint32_t  serial;
+  uint32_t  reftime;
 };
 
 struct sPtsWrap

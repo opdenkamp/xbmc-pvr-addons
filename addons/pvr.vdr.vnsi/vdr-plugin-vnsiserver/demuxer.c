@@ -50,13 +50,14 @@ void cVNSIDemuxer::Open(const cChannel &channel, cVideoBuffer *videoBuffer)
   else
     m_WaitIFrame = false;
 
-  m_FirstFrameDTS = 0;
+  m_FirstFramePTS = 0;
 
   m_PtsWrap.m_Wrap = false;
   m_PtsWrap.m_NoOfWraps = 0;
   m_PtsWrap.m_ConfirmCount = 0;
   m_MuxPacketSerial = 0;
   m_Error = ERROR_DEMUX_NODATA;
+  m_SetRefTime = true;
 }
 
 void cVNSIDemuxer::Close()
@@ -88,7 +89,7 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
   packet->pmtChange = false;
 
   // read TS Packet from buffer
-  len = m_VideoBuffer->Read(&buf, TS_SIZE);
+  len = m_VideoBuffer->Read(&buf, TS_SIZE, m_endTime, m_wrapTime);
   // eof
   if (len == -2)
     return -2;
@@ -136,14 +137,21 @@ int cVNSIDemuxer::Read(sStreamPacket *packet)
     {
       if (m_WaitIFrame)
       {
-        m_FirstFrameDTS = packet->dts;
+        if (packet->pts != DVD_NOPTS_VALUE)
+          m_FirstFramePTS = packet->pts;
         m_WaitIFrame = false;
       }
 
-      if (packet->dts < m_FirstFrameDTS)
+      if (packet->pts < m_FirstFramePTS)
         return 0;
 
       packet->serial = m_MuxPacketSerial;
+      if (m_SetRefTime)
+      {
+        m_refTime = m_VideoBuffer->GetRefTime();
+        packet->reftime = m_refTime;
+        m_SetRefTime = false;
+      }
       return 1;
     }
     else if (error < 0)
@@ -316,9 +324,27 @@ bool cVNSIDemuxer::SeekTime(int64_t time)
   return true;
 }
 
-void cVNSIDemuxer::BufferStatus(bool &timeshift, int &start, int &current, int &end)
+void cVNSIDemuxer::BufferStatus(bool &timeshift, uint32_t &start, uint32_t &end)
 {
   timeshift = m_VideoBuffer->HasBuffer();
+
+  if (timeshift)
+  {
+    if (!m_wrapTime)
+    {
+      start = m_refTime;
+    }
+    else
+    {
+      start = m_endTime - (m_wrapTime - m_refTime);
+    }
+    end = m_endTime;
+  }
+  else
+  {
+    start = 0;
+    end = 0;
+  }
 }
 
 cTSStream *cVNSIDemuxer::GetFirstStream()
@@ -600,7 +626,7 @@ bool cVNSIDemuxer::GetTimeAtPos(off_t *pos, int64_t *time)
 
   m_VideoBuffer->SetPos(*pos);
   ResetParsers();
-  while (len = m_VideoBuffer->Read(&buf, TS_SIZE) == TS_SIZE)
+  while (len = m_VideoBuffer->Read(&buf, TS_SIZE, m_endTime, m_wrapTime) == TS_SIZE)
   {
     ts_pid = TsPid(buf);
     if (stream = FindStream(ts_pid))

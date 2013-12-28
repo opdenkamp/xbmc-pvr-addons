@@ -46,6 +46,7 @@ private:
   int             m_TemporalReference;
   int             m_TrLastTime;
   int             m_PicNumber;
+  int             m_FpsScale;
 
   int Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &complete);
   bool Parse_MPEG2Video_SeqStart(uint8_t *buf);

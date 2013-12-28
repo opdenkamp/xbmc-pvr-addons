@@ -57,6 +57,7 @@ cParserMPEG2Video::cParserMPEG2Video(int pID, cTSStream *stream, sPtsWrap *ptsWr
   m_Height            = 0;
   m_Width             = 0;
   m_Dar               = 0.0;
+  m_FpsScale          = 0;
   m_PesBufferInitialSize  = 80000;
   m_IsVideo = true;
   Reset();
@@ -93,8 +94,14 @@ void cParserMPEG2Video::Parse(sStreamPacket *pkt)
   {
     if (!m_NeedSPS && !m_NeedIFrame)
     {
-      int fpsScale = m_Stream->Rescale(m_FrameDuration, DVD_TIME_BASE, 90000);
-      bool streamChange = m_Stream->SetVideoInformation(fpsScale,DVD_TIME_BASE, m_Height, m_Width, m_Dar);
+      if (m_FpsScale == 0)
+      {
+        if (m_FrameDuration != DVD_NOPTS_VALUE)
+          m_FpsScale = m_Stream->Rescale(m_FrameDuration, DVD_TIME_BASE, 90000);
+        else
+          m_FpsScale = 40000;
+      }
+      bool streamChange = m_Stream->SetVideoInformation(m_FpsScale, DVD_TIME_BASE, m_Height, m_Width, m_Dar);
 
       pkt->id       = m_pID;
       pkt->size     = m_PesNextFramePtr;
@@ -148,13 +155,12 @@ int cParserMPEG2Video::Parse_MPEG2Video(uint32_t startcode, int buf_ptr, bool &c
       m_AuPrevDTS = m_AuDTS;
       if (buf_ptr - 4 >= m_PesTimePos)
       {
-
-        m_AuDTS = m_curDTS;
+        m_AuDTS = m_curDTS != DVD_NOPTS_VALUE ? m_curDTS : m_curPTS;
         m_AuPTS = m_curPTS;
       }
       else
       {
-        m_AuDTS = m_prevDTS;
+        m_AuDTS = m_prevDTS != DVD_NOPTS_VALUE ? m_prevDTS : m_prevPTS;;
         m_AuPTS = m_prevPTS;
       }
     }

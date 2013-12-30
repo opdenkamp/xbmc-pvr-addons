@@ -51,6 +51,8 @@ public:
       retVal = CodecDescriptor(CODEC->GetCodecByName("MP2"), strCodecName);
     else if (!strcmp(strCodecName, "MPEGTS"))
       retVal = CodecDescriptor(CODEC->GetCodecByName("MPEG2VIDEO"), strCodecName);
+    else if (!strcmp(strCodecName, "TEXTSUB"))
+      retVal = CodecDescriptor(CODEC->GetCodecByName("TEXT"), strCodecName);
     else
       retVal = CodecDescriptor(CODEC->GetCodecByName(strCodecName), strCodecName);
 

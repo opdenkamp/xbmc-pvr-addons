@@ -60,6 +60,12 @@ void cVNSIDemux::Abort()
   m_streams.Clear();
 }
 
+void cVNSIDemux::Close()
+{
+  m_streams.Clear();
+  cVNSISession::Close();
+}
+
 DemuxPacket* cVNSIDemux::Read()
 {
   if(ConnectionLost())
@@ -219,7 +225,6 @@ bool cVNSIDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
   }
 
   m_channelinfo = channelinfo;
-  m_streams.Clear();
   m_MuxPacketSerial = 0;
   m_ReferenceTime = 0;
   m_BufferTimeStart = 0;

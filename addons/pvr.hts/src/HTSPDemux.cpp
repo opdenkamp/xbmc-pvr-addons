@@ -68,6 +68,7 @@ void CHTSPDemux::Close()
   if (m_session->IsConnected() && m_subs > 0)
     SendUnsubscribe(m_subs);
   m_subs = 0;
+  m_streams.Clear();
 }
 
 void CHTSPDemux::SetSpeed(int speed)
@@ -400,8 +401,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
 void CHTSPDemux::ParseSubscriptionStop(htsmsg_t *m)
 {
   XBMC->Log(LOG_INFO, "%s - subscription ended on adapter %s", __FUNCTION__, m_SourceInfo.si_adapter.c_str());
-  CLockObject lock(m_mutex);
-  m_streams.Clear();
 
   /* reset the signal status */
   m_Quality.fe_status = "";

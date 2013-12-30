@@ -220,7 +220,6 @@ bool CHTSPDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
   else
   {
     m_channel = channelinfo.iUniqueId;
-    m_streams.Clear();
 
     return true;
   }

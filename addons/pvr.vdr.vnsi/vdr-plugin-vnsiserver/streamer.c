@@ -380,7 +380,7 @@ void cLiveStreamer::sendStreamChange()
     else if (stream->Type() == stAACLATM)
     {
       stream->GetAudioInformation(Channels, SampleRate, BitRate, BitsPerSample, BlockAlign);
-      resp->add_String("AACLATM");
+      resp->add_String("AAC_LATM");
       resp->add_String(stream->GetLanguage());
       resp->add_U32(Channels);
       resp->add_U32(SampleRate);

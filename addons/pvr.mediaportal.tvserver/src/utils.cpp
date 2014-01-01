@@ -210,7 +210,7 @@ namespace UTF8Util
   // FUNCTION: ConvertUTF8ToUTF16
   // DESC: Converts Unicode UTF-8 text to Unicode UTF-16 (Windows default).
   //----------------------------------------------------------------------------
-  CStdStringW ConvertUTF8ToUTF16(const char* pszTextUTF8)
+  std::wstring ConvertUTF8ToUTF16(const char* pszTextUTF8)
   {
     //
     // Special case of NULL or empty input string
@@ -258,8 +258,7 @@ namespace UTF8Util
     //
     // Allocate destination buffer to store UTF-16 string
     //
-    CStdStringW strUTF16;
-    WCHAR * pszUTF16 = strUTF16.GetBuffer( cchUTF16 );
+    WCHAR* pszUTF16 = new WCHAR[cchUTF16];
 
     //
     // Do the conversion from UTF-8 to UTF-16
@@ -278,11 +277,13 @@ namespace UTF8Util
     {
       DWORD dwErr = GetLastError();
       XBMC->Log(LOG_ERROR, "ConvertUTF8ToUTF16 failed lasterror == 0x%X.", dwErr);
+      delete[] pszUTF16;
       return L"";
     }
 
-    // Release internal CString buffer
-    strUTF16.ReleaseBuffer();
+    std::wstring strUTF16(pszUTF16);
+
+    delete[] pszUTF16;
 
     // Return resulting UTF16 string
     return strUTF16;
@@ -293,7 +294,7 @@ namespace UTF8Util
   // FUNCTION: ConvertUTF16ToUTF8
   // DESC: Converts Unicode UTF-16 (Windows default) text to Unicode UTF-8.
   //----------------------------------------------------------------------------
-  CStdStringA ConvertUTF16ToUTF8(const WCHAR * pszTextUTF16)
+  std::string ConvertUTF16ToUTF8(const WCHAR * pszTextUTF16)
   {
     //
     // Special case of NULL or empty input string
@@ -344,15 +345,14 @@ namespace UTF8Util
     {
       DWORD dwErr = GetLastError();
       XBMC->Log(LOG_ERROR, "ConvertUTF16ToUTF8 failed lasterror == 0x%X.", dwErr);
-      return L"";
+      return "";
     }
 
     //
     // Allocate destination buffer for UTF-8 string
     //
-    CStdStringA strUTF8;
     int cchUTF8 = cbUTF8; // sizeof(CHAR) = 1 byte
-    CHAR * pszUTF8 = strUTF8.GetBuffer( cchUTF8 );
+    char* pszUTF8 = new char[cchUTF8];
 
     //
     // Do the conversion from UTF-16 to UTF-8
@@ -372,11 +372,13 @@ namespace UTF8Util
     {
       DWORD dwErr = GetLastError();
       XBMC->Log(LOG_ERROR, "ConvertUTF16ToUTF8 failed lasterror == 0x%X.", dwErr);
-      return L"";
+      delete[] pszUTF8;
+      return "";
     }
 
     // Release internal CString buffer
-    strUTF8.ReleaseBuffer();
+    std::string strUTF8(pszUTF8);
+    delete[] pszUTF8;
 
     // Return resulting UTF-8 string
     return strUTF8;

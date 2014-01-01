@@ -23,7 +23,7 @@
 #include "platform/util/util.h"
 
 #ifdef TARGET_WINDOWS
-#include "platform/util/StdString.h"
+#include "os-dependent.h"
 #include "windows/WindowsUtils.h"
 #endif
 
@@ -63,7 +63,7 @@ std::string ToWindowsPath(const std::string& strFileName);
 #if defined(TARGET_WINDOWS)
 namespace UTF8Util
 {
-  CStdStringW ConvertUTF8ToUTF16(const char* pszTextUTF8);
-  CStdStringA ConvertUTF16ToUTF8(const WCHAR * pszTextUTF16);
+  std::wstring ConvertUTF8ToUTF16(const char* pszTextUTF8);
+  std::string  ConvertUTF16ToUTF8(const WCHAR* pszTextUTF16);
 }
 #endif

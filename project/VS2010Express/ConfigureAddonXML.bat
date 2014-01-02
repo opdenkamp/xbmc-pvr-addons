@@ -11,7 +11,7 @@ cd "%SCRIPT_PATH%..\..\addons"
 FOR /F "tokens=*" %%S IN ('dir /B "pvr.*"') DO (
   echo Configuring %%S
   cd "%%S\addon"
-  %SED% "s/@OS@/wingl windx/" addon.xml.in > addon.xml
+  %SED% -e "s/@OS@/wingl windx/" -e "s/@ARCHITECTURE@/x86/" addon.xml.in > addon.xml
   cd ..\..
 )
 

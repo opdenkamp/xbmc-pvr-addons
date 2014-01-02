@@ -49,16 +49,6 @@ namespace ADDON
     }
     
     /**
-     * Compares this stream based on a physical ID
-     * @param _iPhysicalId
-     * @return 
-     */
-    inline bool operator==(unsigned int _iPhysicalId) const
-    {
-      return iPhysicalId == _iPhysicalId;
-    }
-
-    /**
      * Compares this stream based on another stream
      * @param other
      * @return
@@ -148,18 +138,15 @@ namespace ADDON
     }
     
     /**
-     * Returns the stream with the specified physical ID
+     * Returns the stream with the specified physical ID, or null if no such 
+     * stream exists
      * @param iPhysicalId
      * @return
      */
     XbmcPvrStream* GetStreamById(unsigned int iPhysicalId) const
     {
-      stream_vector::iterator it = std::find(m_streamVector->begin(), 
-                                             m_streamVector->end(), iPhysicalId);
-      if (it != m_streamVector->end())
-        return &(*it);
-
-      return NULL;
+      int position = GetStreamId(iPhysicalId);
+      return position != -1 ? &m_streamVector->at(position) : NULL;
     }
 
     /**

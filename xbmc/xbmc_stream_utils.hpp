@@ -212,12 +212,15 @@ namespace ADDON
       {
         newStreamPosition = std::find(newStreams.begin(), newStreams.end(), *it);
 
-        // if the current stream no longer exists we clear it, otherwise we
-        // remove it from newStreams since we have it already
+        // if the current stream no longer exists we clear it, otherwise we 
+        // copy it and remove it from newStreams
         if (newStreamPosition == newStreams.end())
           it->Clear();
         else
+        {
+          *it = *newStreamPosition;
           newStreams.erase(newStreamPosition);
+        }
       }
 
       // replace cleared streams with new streams

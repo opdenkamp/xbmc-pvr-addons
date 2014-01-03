@@ -83,9 +83,6 @@ bool CHTSPDemux::SeekTime(int time, bool backward, double *startpts)
 
 bool CHTSPDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
 {
-  CLockObject lock(m_mutex);
-  if (!m_startedCondition.Wait(m_mutex, m_bIsOpen, STREAM_PROPS_TIMEOUT_MS))
-    return false;
   return m_streams.GetProperties(props);
 }
 
@@ -395,7 +392,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
   }
 
   m_bIsOpen = true;
-  m_startedCondition.Signal();
 }
 
 void CHTSPDemux::ParseSubscriptionStop(htsmsg_t *m)

@@ -28,96 +28,9 @@
 #include "platform/util/StdString.h"
 #include "libXBMC_codec.h"
 #include "client.h"
-
-class CodecDescriptor
-{
-public:
-  CodecDescriptor(void)
-  {
-    m_codec.codec_id   = XBMC_INVALID_CODEC_ID;
-    m_codec.codec_type = XBMC_CODEC_TYPE_UNKNOWN;
-  }
-
-  CodecDescriptor(xbmc_codec_t codec, const char* name) :
-    m_codec(codec),
-    m_strName(name) {}
-  virtual ~CodecDescriptor(void) {}
-
-  const std::string& Name(void) const  { return m_strName; }
-  xbmc_codec_t Codec(void) const { return m_codec; }
-
-  static CodecDescriptor GetCodecByName(const char* strCodecName)
-  {
-    CodecDescriptor retVal;
-    // some of Tvheadend's and VDR's codec names don't match ffmpeg's, so translate them to something ffmpeg understands
-    if (!strcmp(strCodecName, "MPEG2AUDIO"))
-      retVal = CodecDescriptor(CODEC->GetCodecByName("MP2"), strCodecName);
-    else if (!strcmp(strCodecName, "MPEGTS"))
-      retVal = CodecDescriptor(CODEC->GetCodecByName("MPEG2VIDEO"), strCodecName);
-    else
-      retVal = CodecDescriptor(CODEC->GetCodecByName(strCodecName), strCodecName);
-
-    return retVal;
-  }
-
-private:
-  xbmc_codec_t m_codec;
-  std::string  m_strName;
-};
+#include "xbmc_codec_descriptor.hpp"
 
 typedef std::vector<CodecDescriptor> CodecVector;
-
-typedef struct htsmsg htsmsg_t;
-
-template<typename T>
-class const_circular_iter :
-  public std::iterator< typename std::iterator_traits<T>::iterator_category,
-                        typename std::iterator_traits<T>::value_type,
-                        typename std::iterator_traits<T>::difference_type,
-                        typename std::iterator_traits<T>::pointer,
-                        typename std::iterator_traits<T>::reference>
-{
-protected:
-  T begin;
-  T end;
-  T iter;
-
-public:
-  typedef typename std::iterator_traits<T>::value_type      value_type;
-  typedef typename std::iterator_traits<T>::difference_type difference_type;
-  typedef typename std::iterator_traits<T>::pointer         pointer;
-  typedef typename std::iterator_traits<T>::reference       reference;
-
-  const_circular_iter(const const_circular_iter& src)     : begin(src.begin), end(src.end), iter(src.iter) {};
-  const_circular_iter(const T& b, const T& e)             : begin(b), end(e), iter(b) {};
-  const_circular_iter(const T& b, const T& e, const T& c) : begin(b), end(e), iter(c) {};
-  const_circular_iter<T>& operator++()
-  {
-    if(begin == end)
-      return(*this);
-    ++iter;
-    if (iter == end)
-      iter = begin;
-    return(*this);
-  }
-
-  const_circular_iter<T>& operator--()
-  {
-    if(begin == end)
-      return(*this);
-    if (iter == begin)
-      iter = end;
-    iter--;
-    return(*this);
-  }
-
-  reference operator*() const { return (*iter);  }
-  const pointer operator->() const { return &(*iter); }
-  bool operator==(const const_circular_iter<T>&  rhs) const { return (iter == rhs.iter); }
-  bool operator==(const T& rhs) const { return (iter == rhs); }
-  bool operator!=(const const_circular_iter<T>&  rhs) const { return ! operator==(rhs); }
-  bool operator!=(const T& rhs) const { return ! operator==(rhs); }
-};
 
 struct STag
 {

@@ -291,7 +291,7 @@ inline void HTSPSetDemuxStreamInfoLanguage(PVR_STREAM_PROPERTIES::PVR_STREAM &st
 
 void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
 {
-  vector<PVR_STREAM_PROPERTIES::PVR_STREAM> newStreams;
+  vector<XbmcPvrStream> newStreams;
 
   htsmsg_t       *streams;
   htsmsg_field_t *f;
@@ -316,12 +316,6 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
     const char* type;
     htsmsg_t*   sub;
 
-    if (newStreams.size() >= PVR_STREAM_MAX_STREAMS)
-    {
-      XBMC->Log(LOG_ERROR, "%s - max amount of streams reached", __FUNCTION__);
-      break;
-    }
-
     if (f->hmf_type != HMF_MAP)
       continue;
 
@@ -334,7 +328,7 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
       continue;
 
     bool bValidStream(true);
-    PVR_STREAM_PROPERTIES::PVR_STREAM newStream;
+    XbmcPvrStream newStream;
     m_streams.GetStreamData(index, &newStream);
 
     CodecDescriptor codecId = CodecDescriptor::GetCodecByName(type);
@@ -345,10 +339,13 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
 
       if (codecId.Codec().codec_type == XBMC_CODEC_TYPE_SUBTITLE)
       {
-        uint32_t composition_id = 0, ancillary_id = 0;
-        htsmsg_get_u32(sub, "composition_id", &composition_id);
-        htsmsg_get_u32(sub, "ancillary_id"  , &ancillary_id);
-        newStream.iIdentifier = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
+        if (!strcmp(type, "DVBSUB"))
+        {
+          uint32_t composition_id = 0, ancillary_id = 0;
+          htsmsg_get_u32(sub, "composition_id", &composition_id);
+          htsmsg_get_u32(sub, "ancillary_id"  , &ancillary_id);
+          newStream.iIdentifier = (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
+        }
         HTSPSetDemuxStreamInfoLanguage(newStream, sub);
       }
     }

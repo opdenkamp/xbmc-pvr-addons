@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6834B003-2511-4745-818D-F418E87DD941}</ProjectGuid>
-    <RootNamespace>pvrclient_demo</RootNamespace>
+    <RootNamespace>pvr.wmc</RootNamespace>
     <ProjectName>pvr.wmc</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -41,15 +41,13 @@
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetExt>.dll</TargetExt>
     <TargetName>XBMC_WMC_win32</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetExt>.pvr</TargetExt>
-    <TargetName>XBMC_Demo_win32</TargetName>
+    <TargetName>XBMC_WMC_win32</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -65,13 +63,10 @@
       <ShowProgress>LinkVerbose</ShowProgress>
     </Link>
     <PostBuildEvent>
-      <Command>if "$(ComputerName)" == "MORBO"  robocopy    $(TargetDir) "\\mediaserver\VDsoftware\pvr.wmc (gotham)\pvr.wmc"  /s /NP
-if "$(ComputerName)" == "SCARECROW"  robocopy $(TargetDir) d:\0\dev\repos\gotham\scarecrow420_xbmc\addons\pvr.wmc /s /NP
-if errorlevel 1 exit 0 else exit %errorlevel%</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>"$(SolutionDir)\ConfigureAddonXML.bat"</Command>
-    </PreBuildEvent>
+    <PreBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -80,7 +75,7 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDLL;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;TARGET_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>

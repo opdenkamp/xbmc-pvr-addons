@@ -350,8 +350,8 @@ PVR_ERROR cPVRClientNextPVR::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* listingsNode = doc.RootElement()->FirstChildElement("listings");
-      TiXmlElement* pListingNode = listingsNode->FirstChildElement("l");
-      for( pListingNode; pListingNode; pListingNode=pListingNode->NextSiblingElement())
+      TiXmlElement* pListingNode;
+      for( pListingNode = listingsNode->FirstChildElement("l"); pListingNode; pListingNode=pListingNode->NextSiblingElement())
       {
         memset(&broadcast, 0, sizeof(EPG_TAG));
 
@@ -436,8 +436,8 @@ int cPVRClientNextPVR::GetNumChannels(void)
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* channelsNode = doc.RootElement()->FirstChildElement("channels");
-      TiXmlElement* pChannelNode = channelsNode->FirstChildElement("channel");
-      for( pChannelNode; pChannelNode; pChannelNode=pChannelNode->NextSiblingElement())
+      TiXmlElement* pChannelNode;
+      for( pChannelNode = channelsNode->FirstChildElement("channel"); pChannelNode; pChannelNode=pChannelNode->NextSiblingElement())
       {
         m_iChannelCount++;
       }
@@ -540,8 +540,8 @@ PVR_ERROR cPVRClientNextPVR::GetChannels(ADDON_HANDLE handle, bool bRadio)
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* channelsNode = doc.RootElement()->FirstChildElement("channels");
-      TiXmlElement* pChannelNode = channelsNode->FirstChildElement("channel");
-      for( pChannelNode; pChannelNode; pChannelNode=pChannelNode->NextSiblingElement())
+      TiXmlElement* pChannelNode;
+      for( pChannelNode = channelsNode->FirstChildElement("channel"); pChannelNode; pChannelNode=pChannelNode->NextSiblingElement())
       {
         memset(&tag, 0, sizeof(PVR_CHANNEL));
         tag.iUniqueId = atoi(pChannelNode->FirstChildElement("id")->FirstChild()->Value());
@@ -597,8 +597,8 @@ int cPVRClientNextPVR::GetChannelGroupsAmount(void)
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* groupsNode = doc.RootElement()->FirstChildElement("groups");
-      TiXmlElement* pGroupNode = groupsNode->FirstChildElement("group");
-      for( pGroupNode; pGroupNode; pGroupNode=pGroupNode->NextSiblingElement())
+      TiXmlElement* pGroupNode;
+      for( pGroupNode = groupsNode->FirstChildElement("group"); pGroupNode; pGroupNode=pGroupNode->NextSiblingElement())
       {
         groups++;
       }
@@ -624,8 +624,8 @@ PVR_ERROR cPVRClientNextPVR::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* groupsNode = doc.RootElement()->FirstChildElement("groups");
-      TiXmlElement* pGroupNode = groupsNode->FirstChildElement("group");
-      for( pGroupNode; pGroupNode; pGroupNode=pGroupNode->NextSiblingElement())
+      TiXmlElement* pGroupNode;
+      for( pGroupNode = groupsNode->FirstChildElement("group"); pGroupNode; pGroupNode=pGroupNode->NextSiblingElement())
       {
         memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP));
         tag.bIsRadio = false;
@@ -660,8 +660,8 @@ PVR_ERROR cPVRClientNextPVR::GetChannelGroupMembers(ADDON_HANDLE handle, const P
     if (doc.Parse(response) != NULL)
     {
       TiXmlElement* channelsNode = doc.RootElement()->FirstChildElement("channels");
-      TiXmlElement* pChannelNode = channelsNode->FirstChildElement("channel");
-      for( pChannelNode; pChannelNode; pChannelNode=pChannelNode->NextSiblingElement())
+      TiXmlElement* pChannelNode;
+      for( pChannelNode = channelsNode->FirstChildElement("channel"); pChannelNode; pChannelNode=pChannelNode->NextSiblingElement())
       {
         memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
         strncpy(tag.strGroupName, group.strGroupName, sizeof(tag.strGroupName));
@@ -693,8 +693,8 @@ int cPVRClientNextPVR::GetNumRecordings(void)
       TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recordings");
       if (recordingsNode != NULL)
       {
-        TiXmlElement* pRecordingNode = recordingsNode->FirstChildElement("recording");
-        for( pRecordingNode; pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
+        TiXmlElement* pRecordingNode;
+        for( pRecordingNode = recordingsNode->FirstChildElement("recording"); pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
         {
           recordingCount++;
         }
@@ -717,8 +717,8 @@ PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
       PVR_RECORDING   tag;
 
       TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recordings");
-      TiXmlElement* pRecordingNode = recordingsNode->FirstChildElement("recording");
-      for( pRecordingNode; pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
+      TiXmlElement* pRecordingNode;
+      for( pRecordingNode = recordingsNode->FirstChildElement("recording"); pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
       {
         memset(&tag, 0, sizeof(PVR_RECORDING));
         
@@ -764,8 +764,8 @@ PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
       PVR_RECORDING   tag;
 
       TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recordings");
-      TiXmlElement* pRecordingNode = recordingsNode->FirstChildElement("recording");
-      for( pRecordingNode; pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
+      TiXmlElement* pRecordingNode;
+      for( pRecordingNode = recordingsNode->FirstChildElement("recording"); pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
       {
         memset(&tag, 0, sizeof(PVR_RECORDING));
         
@@ -869,8 +869,8 @@ PVR_ERROR cPVRClientNextPVR::GetRecordingEdl(const PVR_RECORDING& recording, PVR
       {
         int index = 0;
         TiXmlElement* commercialsNode = doc.RootElement()->FirstChildElement("commercials");
-        TiXmlElement* pCommercialNode = commercialsNode->FirstChildElement("commercial");
-        for( pCommercialNode; pCommercialNode; pCommercialNode=pCommercialNode->NextSiblingElement())
+        TiXmlElement* pCommercialNode;
+        for( pCommercialNode = commercialsNode->FirstChildElement("commercial"); pCommercialNode; pCommercialNode=pCommercialNode->NextSiblingElement())
         {          
           PVR_EDL_ENTRY entry;
           entry.start = atoi(pCommercialNode->FirstChildElement("start")->FirstChild()->Value()) * 1000;
@@ -904,8 +904,8 @@ int cPVRClientNextPVR::GetNumTimers(void)
       TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recurrings");
       if (recordingsNode != NULL)
       {
-        TiXmlElement* pRecordingNode = recordingsNode->FirstChildElement("recurring");
-        for( pRecordingNode; pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
+        TiXmlElement* pRecordingNode;
+        for( pRecordingNode = recordingsNode->FirstChildElement("recurring"); pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
         {
           timerCount++;
         }
@@ -924,8 +924,8 @@ int cPVRClientNextPVR::GetNumTimers(void)
       TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recordings");
       if (recordingsNode != NULL)
       {
-        TiXmlElement* pRecordingNode = recordingsNode->FirstChildElement("recording");
-        for( pRecordingNode; pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
+        TiXmlElement* pRecordingNode;
+        for( pRecordingNode = recordingsNode->FirstChildElement("recording"); pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
         {
           timerCount++;
         }
@@ -948,8 +948,8 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
     {
       PVR_TIMER tag;
       TiXmlElement* recurringsNode = doc.RootElement()->FirstChildElement("recurrings");
-      TiXmlElement* pRecurringNode = recurringsNode->FirstChildElement("recurring");
-      for( pRecurringNode; pRecurringNode; pRecurringNode=pRecurringNode->NextSiblingElement())
+      TiXmlElement* pRecurringNode;
+      for( pRecurringNode = recurringsNode->FirstChildElement("recurring"); pRecurringNode; pRecurringNode=pRecurringNode->NextSiblingElement())
       {
         memset(&tag, 0, sizeof(tag));
         tag.iClientIndex = 0xF000000 + atoi(pRecurringNode->FirstChildElement("id")->FirstChild()->Value());
@@ -989,8 +989,8 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
       PVR_TIMER tag;
 
       TiXmlElement* recordingsNode = doc.RootElement()->FirstChildElement("recordings");
-      TiXmlElement* pRecordingNode = recordingsNode->FirstChildElement("recording");
-      for( pRecordingNode; pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
+      TiXmlElement* pRecordingNode;
+      for( pRecordingNode = recordingsNode->FirstChildElement("recording"); pRecordingNode; pRecordingNode=pRecordingNode->NextSiblingElement())
       {
         memset(&tag, 0, sizeof(tag));
 
@@ -1317,7 +1317,6 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
 
       if (bufferMore)
       {
-        bool available = m_streamingclient->read_ready();
         int read = m_streamingclient->receive((char *)buf, sizeof buf, 0);
         if (read > 0)
         {

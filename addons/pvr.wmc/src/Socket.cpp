@@ -205,7 +205,6 @@ bool Socket::ReadResponses(int &code, vector<CStdString> &lines)
 	
 	bool readComplete = false;
 	CStdString bigString = "";
-	int attemptCnt = 0;
 
 	do
 	{

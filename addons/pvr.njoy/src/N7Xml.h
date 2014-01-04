@@ -37,8 +37,6 @@ public:
   ~N7Xml(void);
   int getChannelsAmount(void);
   PVR_ERROR requestChannelList(ADDON_HANDLE handle, bool bRadio);
-  PVR_ERROR requestEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
-  PVR_ERROR getSignal(PVR_SIGNAL_STATUS &qualityinfo);
   void list_channels(void);
 private:
   std::vector<PVRChannel> m_channels;

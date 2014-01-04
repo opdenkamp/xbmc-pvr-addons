@@ -404,7 +404,7 @@ int Socket::receive ( char* data, const unsigned int buffersize, const unsigned 
 }
 
 
-int Socket::recvfrom ( char* data, const int buffersize, const int minpacketsize, struct sockaddr* from, socklen_t* fromlen) const
+int Socket::recvfrom ( char* data, const int buffersize, struct sockaddr* from, socklen_t* fromlen) const
 {
   int status = ::recvfrom(_sd, data, buffersize, 0, from, fromlen);
 

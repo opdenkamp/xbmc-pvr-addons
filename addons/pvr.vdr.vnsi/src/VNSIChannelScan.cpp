@@ -507,7 +507,7 @@ bool cVNSIChannelScan::OnResponsePacket(cResponsePacket* resp)
   if (requestID == VNSI_SCANNER_PERCENTAGE)
   {
     uint32_t percent = resp->extract_U32();
-    if (percent >= 0 && percent <= 100)
+    if (percent <= 100)
       SetProgress(percent);
   }
   else if (requestID == VNSI_SCANNER_SIGNAL)

@@ -259,7 +259,7 @@ bool PVRDemoData::LoadDemoData(void)
         time_t timeNow = time(NULL);
         struct tm* now = localtime(&timeNow);
 
-        int delim = strTmp.Find(':');
+        CStdString::size_type delim = strTmp.Find(':');
         if (delim != CStdString::npos)
         {
           now->tm_hour = (int)strtol(strTmp.Left(delim), NULL, 0);

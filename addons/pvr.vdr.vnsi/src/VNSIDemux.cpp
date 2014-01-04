@@ -265,14 +265,14 @@ time_t cVNSIDemux::GetBufferTimeEnd()
 
 void cVNSIDemux::StreamChange(cResponsePacket *resp)
 {
-  std::vector<PVR_STREAM_PROPERTIES::PVR_STREAM> newStreams;
+  std::vector<XbmcPvrStream> newStreams;
 
   while (!resp->end())
   {
     uint32_t    pid = resp->extract_U32();
     const char* type  = resp->extract_String();
 
-    PVR_STREAM_PROPERTIES::PVR_STREAM newStream;
+    XbmcPvrStream newStream;
     m_streams.GetStreamData(pid, &newStream);
 
     CodecDescriptor codecId = CodecDescriptor::GetCodecByName(type);
@@ -342,12 +342,6 @@ void cVNSIDemux::StreamChange(cResponsePacket *resp)
     }
 
     delete[] type;
-
-    if (newStreams.size() >= PVR_STREAM_MAX_STREAMS)
-    {
-      XBMC->Log(LOG_ERROR, "%s - max amount of streams reached", __FUNCTION__);
-      break;
-    }
   }
 
   m_streams.UpdateStreams(newStreams);

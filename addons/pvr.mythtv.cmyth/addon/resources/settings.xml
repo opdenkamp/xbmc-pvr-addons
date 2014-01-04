@@ -8,6 +8,7 @@
     <setting id="db_name" type="text" label="30004" default="mythconverg" />
     <setting id="db_host" type="text" visible="false" />
     <setting id="db_port" type="number" option="int" visible="false" default="3306" />
+    <setting id="host_ether" type="text" label="30012" default="" />
     <setting id="extradebug" type="bool" label="30005" default="false" />
     <setting id="livetv" type="bool" label="30006" default="true" />
     <setting id="livetv_priority" type="bool" label="30007" default="true" />
@@ -25,5 +26,8 @@
     <setting id="rec_autorunjob2" type="bool" label="30030" enable="eq(-8,0)" default="false" />
     <setting id="rec_autorunjob3" type="bool" label="30031" enable="eq(-9,0)" default="false" />
     <setting id="rec_autorunjob4" type="bool" label="30032" enable="eq(-10,0)" default="false" />
+  </category>
+  <category label="30050">
+    <setting id="demuxing" type="bool" label="30052" default="false" />
   </category>
 </settings>

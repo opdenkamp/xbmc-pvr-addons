@@ -908,7 +908,7 @@ cmyth_mysql_get_chanlist(cmyth_database_t db, cmyth_chanlist_t *chanlist)
 	 * The is_audio_service (radio) flag is only available from the channel scan.
 	 * The subquery therefore get the flag from the most recent channel scan.
 	 */
-	const char *query_str = "SELECT c.chanid, c.channum, c.name, c.icon, c.visible, c.sourceid, c.mplexid, c.callsign, "
+	const char *query_str = "SELECT DISTINCT c.chanid, c.channum, c.name, c.icon, c.visible, c.sourceid, c.mplexid, c.callsign, "
 		"IFNULL(cs.is_audio_service, 0) AS is_audio_service "
 		"FROM channel c "
 		"LEFT JOIN (SELECT service_id, MAX(scanid) AS scanid FROM channelscan_channel GROUP BY service_id) s "
@@ -982,7 +982,7 @@ cmyth_mysql_get_recordingrules(cmyth_database_t db, cmyth_recordingrulelist_t *r
 			"subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod, dupin, recgroup, "
 			"storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | "
 			"(autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, parentid, profile, "
-			"prefinput, autometadata, inetref, season, episode , filter "
+			"prefinput, programid, seriesid, autometadata, inetref, season, episode , filter "
 			"FROM record ORDER BY recordid";
 	}
 	else {
@@ -991,7 +991,7 @@ cmyth_mysql_get_recordingrules(cmyth_database_t db, cmyth_recordingrulelist_t *r
 			"subtitle, recpriority, startoffset, endoffset, search, inactive, station, dupmethod, dupin, recgroup, "
 			"storagegroup, playgroup, autotranscode, (autouserjob1 | (autouserjob2 << 1) | (autouserjob3 << 2) | "
 			"(autouserjob4 << 3)), autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, parentid, profile, "
-			"prefinput "
+			"prefinput, programid, seriesid "
 			"FROM record ORDER BY recordid";
 	}
 
@@ -1053,12 +1053,14 @@ cmyth_mysql_get_recordingrules(cmyth_database_t db, cmyth_recordingrulelist_t *r
 		rr->parentid = safe_atol(row[27]);
 		rr->profile = ref_strdup(row[28]);
 		rr->prefinput = safe_atol(row[29]);
+		rr->programid = ref_strdup(row[30]);
+		rr->seriesid =ref_strdup(row[31]);
 		if (db->db_version >= 1278) {
-			rr->autometadata = safe_atoi(row[30]);
-			rr->inetref = ref_strdup(row[31]);
-			rr->season = safe_atoi(row[32]);
-			rr->episode = safe_atoi(row[33]);
-			rr->filter = safe_atol(row[34]);
+			rr->autometadata = safe_atoi(row[32]);
+			rr->inetref = ref_strdup(row[33]);
+			rr->season = safe_atoi(row[34]);
+			rr->episode = safe_atoi(row[35]);
+			rr->filter = safe_atol(row[36]);
 		}
 		else {
 			rr->autometadata = 0;
@@ -1097,18 +1099,18 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			"description, category, findtime, findday, station, subtitle, recpriority, startoffset, endoffset, "
 			"search, inactive, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, autouserjob1, "
 			"autouserjob2, autouserjob3, autouserjob4, autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, "
-			"parentid, profile, prefinput, autometadata, inetref, season, episode, filter) "
+			"parentid, profile, prefinput, programid, seriesid, autometadata, inetref, season, episode, filter) "
 			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TIME(?), MOD(DAYOFWEEK(?),7), "
-			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	}
 	else {
 		query_str = "INSERT INTO record (record.type, chanid, starttime, startdate, endtime, enddate, title, "
 			"description, category, findtime, findday, station, subtitle, recpriority, startoffset, endoffset, "
 			"search, inactive, dupmethod, dupin, recgroup, storagegroup, playgroup, autotranscode, autouserjob1, "
 			"autouserjob2, autouserjob3, autouserjob4, autocommflag, autoexpire, maxepisodes, maxnewest, transcoder, "
-			"parentid, profile, prefinput) "
+			"parentid, profile, prefinput, programid, seriesid) "
 			"VALUES (?, ?, TIME(?), DATE(?), TIME(?), DATE(?), ?, ?, ?, TIME(?), MOD(DAYOFWEEK(?),7), "
-			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?)";
+			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?, ?, ?)";
 	}
 
 	starttime = cmyth_timestamp_to_unixtime(rr->starttime);
@@ -1150,7 +1152,9 @@ cmyth_mysql_add_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			|| cmyth_mysql_query_param_uint32(query, rr->transcoder) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->parentid) < 0
 			|| cmyth_mysql_query_param_str(query, rr->profile) < 0
-			|| cmyth_mysql_query_param_uint32(query, rr->prefinput) < 0)
+			|| cmyth_mysql_query_param_uint32(query, rr->prefinput) < 0
+			|| cmyth_mysql_query_param_str(query, rr->programid) < 0
+			|| cmyth_mysql_query_param_str(query, rr->seriesid) < 0)
 			|| (db->db_version >= 1278
 				&& (cmyth_mysql_query_param_uint(query, rr->autometadata) < 0
 				|| cmyth_mysql_query_param_str(query, rr->inetref) < 0
@@ -1267,7 +1271,8 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			"station = ?, dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, "
 			"autotranscode = ?, autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, "
 			"autocommflag = ?, autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, "
-			"profile = ?, prefinput = ?, autometadata = ?, inetref = ?, season = ?, episode = ?, filter = ? "
+			"profile = ?, prefinput = ?, programid = ?, seriesid = ?, "
+			"autometadata = ?, inetref = ?, season = ?, episode = ?, filter = ? "
 			"WHERE recordid = ?";
 	}
 	else {
@@ -1278,7 +1283,7 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			"station = ?, dupmethod = ?, dupin = ?, recgroup = ?, storagegroup = ?, playgroup = ?, "
 			"autotranscode = ?, autouserjob1 = ?, autouserjob2 = ?, autouserjob3 = ?, autouserjob4 = ?, "
 			"autocommflag = ?, autoexpire = ?, maxepisodes = ?, maxnewest = ?, transcoder = ?, parentid = ?, "
-			"profile = ?, prefinput = ? "
+			"profile = ?, prefinput = ? , programid = ?, seriesid = ? "
 			"WHERE recordid = ?";
 	}
 	starttime = cmyth_timestamp_to_unixtime(rr->starttime);
@@ -1319,8 +1324,10 @@ cmyth_mysql_update_recordingrule(cmyth_database_t db, cmyth_recordingrule_t rr)
 			|| cmyth_mysql_query_param_uint(query, rr->maxnewest) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->transcoder) < 0
 			|| cmyth_mysql_query_param_uint32(query, rr->parentid) < 0
-			|| cmyth_mysql_query_param_str(query, rr->playgroup) < 0
-			|| cmyth_mysql_query_param_uint32(query, rr->prefinput) < 0)
+			|| cmyth_mysql_query_param_str(query, rr->profile) < 0
+			|| cmyth_mysql_query_param_uint32(query, rr->prefinput) < 0
+			|| cmyth_mysql_query_param_str(query, rr->programid) < 0
+			|| cmyth_mysql_query_param_str(query, rr->seriesid) < 0)
 			|| (db->db_version >= 1278
 				&& ( cmyth_mysql_query_param_uint(query, rr->autometadata) < 0
 				|| cmyth_mysql_query_param_str(query, rr->inetref) < 0
@@ -2318,9 +2325,7 @@ cmyth_mysql_get_recording_seek_offset(cmyth_database_t db, cmyth_proginfo_t prog
 	 */
 	const char *query_str1 = "SELECT mark,offset FROM recordedseek WHERE chanid = ? AND starttime = ? AND type = ? AND mark >= ? ORDER BY chanid ASC, starttime ASC, type ASC, mark ASC LIMIT 1;";
 	const char *query_str2 = "SELECT mark,offset FROM recordedseek WHERE chanid = ? AND starttime = ? AND type = ? AND mark <= ? ORDER BY chanid DESC, starttime DESC, type DESC, mark DESC LIMIT 1;";
-	int64_t next_mark = 0;
 	int64_t next_offset = 0;
-	int64_t prev_mark = 0;
 	int64_t prev_offset = 0;
 	uint8_t mask = 0;
 	time_t start_ts_dt;
@@ -2348,7 +2353,6 @@ cmyth_mysql_get_recording_seek_offset(cmyth_database_t db, cmyth_proginfo_t prog
 		return -1;
 	}
 	while ((row = mysql_fetch_row(res))) {
-		next_mark = safe_atoll(row[0]);
 		next_offset = safe_atoll(row[1]);
 		mask |= 1;
 	}
@@ -2371,7 +2375,6 @@ cmyth_mysql_get_recording_seek_offset(cmyth_database_t db, cmyth_proginfo_t prog
 		return -1;
 	}
 	while ((row = mysql_fetch_row(res))) {
-		prev_mark = safe_atoll(row[0]);
 		prev_offset = safe_atoll(row[1]);
 		mask |= 2;
 	}

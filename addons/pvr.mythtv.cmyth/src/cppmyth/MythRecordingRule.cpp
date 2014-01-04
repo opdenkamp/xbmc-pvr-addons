@@ -387,3 +387,29 @@ void MythRecordingRule::SetFilter(unsigned int filter)
 {
   cmyth_recordingrule_set_filter(*m_recordingrule_t, filter);
 }
+
+CStdString MythRecordingRule::ProgramID() const
+{
+  char *buf = cmyth_recordingrule_programid(*m_recordingrule_t);
+  CStdString retval(buf);
+  ref_release(buf);
+  return retval;
+}
+
+void MythRecordingRule::SetProgramID(const CStdString &programid)
+{
+  cmyth_recordingrule_set_programid(*m_recordingrule_t, const_cast<char*>(programid.c_str()));
+}
+
+CStdString MythRecordingRule::SeriesID() const
+{
+  char *buf = cmyth_recordingrule_seriesid(*m_recordingrule_t);
+  CStdString retval(buf);
+  ref_release(buf);
+  return retval;
+}
+
+void MythRecordingRule::SetSeriesID(const CStdString &seriesid)
+{
+  cmyth_recordingrule_set_seriesid(*m_recordingrule_t, const_cast<char*>(seriesid.c_str()));
+}

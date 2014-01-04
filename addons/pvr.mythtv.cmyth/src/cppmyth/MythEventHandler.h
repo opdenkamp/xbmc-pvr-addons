@@ -54,7 +54,7 @@ public:
   void RegisterObserver(MythEventObserver *observer);
 
   void Suspend();
-  void Resume();
+  void Resume(bool sendWOL = false);
 
   void PreventLiveChainUpdate();
   void AllowLiveChainUpdate();

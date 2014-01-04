@@ -32,6 +32,7 @@ using namespace ADDON;
  * and exported to the other source files.
  */
 CStdString   g_szMythHostname          = DEFAULT_HOST;                     ///< The Host name or IP of the mythtv server
+CStdString   g_szMythHostEther         = "";                               ///< The Host MAC address of the mythtv server
 int          g_iMythPort               = DEFAULT_PORT;                     ///< The mythtv Port (default is 6543)
 CStdString   g_szDBUser                = DEFAULT_DB_USER;                  ///< The mythtv sql username (default is mythtv)
 CStdString   g_szDBPassword            = DEFAULT_DB_PASSWORD;              ///< The mythtv sql password (default is mythtv)
@@ -52,6 +53,7 @@ bool         g_bRecAutoRunJob3         = false;
 bool         g_bRecAutoRunJob4         = false;
 bool         g_bRecAutoExpire          = false;
 int          g_iRecTranscoder          = 0;
+bool         g_bDemuxing               = DEFAULT_HANDLE_DEMUXING;
 
 ///* Client member variables */
 ADDON_STATUS m_CurStatus              = ADDON_STATUS_UNKNOWN;
@@ -65,6 +67,7 @@ PVRClientMythTV       *g_client       = NULL;
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
 CHelper_libXBMC_gui   *GUI            = NULL;
+CHelper_libXBMC_codec *CODEC          = NULL;
 
 extern "C" {
 
@@ -116,6 +119,15 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
   XBMC->Log(LOG_DEBUG, "Register handle @ libXBMC_gui...done");
+
+  CODEC = new CHelper_libXBMC_codec;
+  if (!CODEC->RegisterMe(hdl))
+  {
+    SAFE_DELETE(PVR);
+    SAFE_DELETE(XBMC);
+    SAFE_DELETE(GUI);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
 
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
   g_szUserPath   = pvrprops->strUserPath;
@@ -250,6 +262,24 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   if (!XBMC->GetSetting("rec_transcoder", &g_iRecTranscoder))
     g_iRecTranscoder = 0;
 
+  /* Read setting "demuxing" from settings.xml */
+  if (!XBMC->GetSetting("demuxing", &g_bDemuxing))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'demuxing' setting, falling back to '%b' as default", DEFAULT_HANDLE_DEMUXING);
+    g_bDemuxing = DEFAULT_HANDLE_DEMUXING;
+  }
+
+  /* Read setting "host_ether" from settings.xml */
+  if (XBMC->GetSetting("host_ether", buffer))
+    g_szMythHostEther = buffer;
+  else
+  {
+    /* If setting is unknown fallback to defaults */
+    g_szMythHostEther = "";
+  }
+  buffer[0] = 0;
+
   free (buffer);
 
   // Create our addon
@@ -259,6 +289,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   {
     XBMC->Log(LOG_ERROR, "Failed to connect to backend");
     SAFE_DELETE(g_client);
+    SAFE_DELETE(CODEC);
     SAFE_DELETE(GUI);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
@@ -290,6 +321,42 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   menuHookKeepLiveTVRec.iLocalizedStringId = 30412;
   PVR->AddMenuHook(&menuHookKeepLiveTVRec);
 
+  PVR_MENUHOOK menuhookSettingShowNR;
+  menuhookSettingShowNR.category = PVR_MENUHOOK_SETTING;
+  menuhookSettingShowNR.iHookId = MENUHOOK_SHOW_HIDE_NOT_RECORDING;
+  menuhookSettingShowNR.iLocalizedStringId = 30421;
+  PVR->AddMenuHook(&menuhookSettingShowNR);
+
+  PVR_MENUHOOK menuhookEpgRec1;
+  menuhookEpgRec1.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec1.iHookId = MENUHOOK_EPG_REC_CHAN_ALL_SHOWINGS;
+  menuhookEpgRec1.iLocalizedStringId = 30431;
+  PVR->AddMenuHook(&menuhookEpgRec1);
+
+  PVR_MENUHOOK menuhookEpgRec2;
+  menuhookEpgRec2.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec2.iHookId = MENUHOOK_EPG_REC_CHAN_WEEKLY;
+  menuhookEpgRec2.iLocalizedStringId = 30432;
+  PVR->AddMenuHook(&menuhookEpgRec2);
+
+  PVR_MENUHOOK menuhookEpgRec3;
+  menuhookEpgRec3.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec3.iHookId = MENUHOOK_EPG_REC_CHAN_DAILY;
+  menuhookEpgRec3.iLocalizedStringId = 30433;
+  PVR->AddMenuHook(&menuhookEpgRec3);
+
+  PVR_MENUHOOK menuhookEpgRec4;
+  menuhookEpgRec4.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec4.iHookId = MENUHOOK_EPG_REC_ONE_SHOWING;
+  menuhookEpgRec4.iLocalizedStringId = 30434;
+  PVR->AddMenuHook(&menuhookEpgRec4);
+
+  PVR_MENUHOOK menuhookEpgRec5;
+  menuhookEpgRec5.category = PVR_MENUHOOK_EPG;
+  menuhookEpgRec5.iHookId = MENUHOOK_EPG_REC_NEW_EPISODES;
+  menuhookEpgRec5.iLocalizedStringId = 30435;
+  PVR->AddMenuHook(&menuhookEpgRec5);
+
   XBMC->Log(LOG_DEBUG, "MythTV cmyth PVR-Client successfully created");
   m_CurStatus = ADDON_STATUS_OK;
   g_bCreated = true;
@@ -303,6 +370,12 @@ void ADDON_Destroy()
     delete g_client;
     g_client = NULL;
     g_bCreated = false;
+  }
+
+  if (CODEC)
+  {
+    delete(CODEC);
+    CODEC = NULL;
   }
 
   if (PVR)
@@ -411,6 +484,12 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     tmp_sDBName = g_szDBName;
     g_szDBName = (const char*)settingValue;
     if (tmp_sDBName != g_szDBName)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (str == "demuxing")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'demuxing' from %u to %u", g_bDemuxing, *(bool*)settingValue);
+    if (g_bDemuxing != *(bool*)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "extradebug")
@@ -550,7 +629,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
     pCapabilities->bSupportsTimers             = true;
 
     pCapabilities->bHandlesInputStream           = true;
-    pCapabilities->bHandlesDemuxing              = false;
+    pCapabilities->bHandlesDemuxing              = g_bDemuxing;
 
     pCapabilities->bSupportsRecordings           = true;
     pCapabilities->bSupportsRecordingPlayCount   = true;
@@ -562,12 +641,6 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   {
     return PVR_ERROR_FAILED;
   }
-}
-
-PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* props)
-{
-  (void)props;
-  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 const char *GetBackendName()
@@ -950,18 +1023,72 @@ long long LengthRecordedStream(void)
   return g_client->LengthRecordedStream();
 }
 
+/*******************************************/
+/** PVR Demux Functions                   **/
+
+PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
+{
+  if (g_client == NULL)
+    return PVR_ERROR_SERVER_ERROR;
+
+  return g_client->GetStreamProperties(pProperties);
+}
+
+void DemuxAbort(void)
+{
+  if (g_client != NULL)
+    g_client->DemuxAbort();
+}
+
+DemuxPacket* DemuxRead(void)
+{
+  if (g_client == NULL)
+    return NULL;
+
+  return g_client->DemuxRead();
+}
+
+void DemuxFlush(void)
+{
+  if (g_client != NULL)
+    g_client->DemuxFlush();
+}
+
+bool SeekTime(int time, bool backwards, double *startpts)
+{
+  if (g_client != NULL)
+    return g_client->SeekTime(time, backwards, startpts);
+  return false;
+}
+
+/*******************************************/
+/** PVR Timeshift Functions               **/
+
+time_t GetPlayingTime()
+{
+  if (g_client != NULL)
+    return g_client->GetPlayingTime();
+  return 0;
+}
+
+time_t GetBufferTimeStart()
+{
+  if (g_client != NULL)
+    return g_client->GetBufferTimeStart();
+  return 0;
+}
+
+time_t GetBufferTimeEnd()
+{
+  if (g_client != NULL)
+    return g_client->GetBufferTimeEnd();
+  return 0;
+}
 
 /*******************************************/
 /** Unused API Functions                  **/
 
-DemuxPacket* DemuxRead() { return NULL; }
-void DemuxAbort() {}
 void DemuxReset() {}
-void DemuxFlush() {}
 const char * GetLiveStreamURL(const PVR_CHANNEL &) { return ""; }
-bool SeekTime(int,bool,double*) { return false; }
 void SetSpeed(int) {};
-time_t GetPlayingTime() { return 0; }
-time_t GetBufferTimeStart() { return 0; }
-time_t GetBufferTimeEnd() { return 0; }
 } //end extern "C"

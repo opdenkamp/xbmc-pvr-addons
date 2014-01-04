@@ -105,7 +105,7 @@ int HttpPostClient::SendPostRequest(HttpWebRequest& request)
     sprintf(content_header, "Authorization: Basic %s\r\n",base64_encode((const char*)content_header,strlen(content_header)).c_str());
     buffer.append(content_header);
   }
-  sprintf(content_header,"Content-Length: %d\r\n",request.ContentLength);
+  sprintf(content_header,"Content-Length: %ld\r\n",request.ContentLength);
   buffer.append(content_header);
   buffer.append("\r\n");
   buffer.append(request.GetRequestData());

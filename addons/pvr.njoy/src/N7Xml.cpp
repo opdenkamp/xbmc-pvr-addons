@@ -123,14 +123,3 @@ PVR_ERROR N7Xml::requestChannelList(ADDON_HANDLE handle, bool bRadio)
 
   return PVR_ERROR_NO_ERROR;
 }
-
-PVR_ERROR N7Xml::requestEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
-{
-  return PVR_ERROR_NOT_IMPLEMENTED;
-}
-
-PVR_ERROR N7Xml::getSignal(PVR_SIGNAL_STATUS &qualityinfo)
-{
-  return PVR_ERROR_NOT_IMPLEMENTED;
-}
-

@@ -24,7 +24,7 @@ bool CCurlFile::Get(const std::string &strURL, std::string &strResult)
 
 std::string& Vu::Escape(std::string &s, std::string from, std::string to)
 { 
-  int pos = -1;
+  std::string::size_type pos = -1;
   while ( (pos = s.find(from, pos+1) ) != std::string::npos)         
     s.erase(pos, from.length()).insert(pos, to);        
 

@@ -86,7 +86,6 @@ bool CDialogRecordPref::OnInit()
   _spinRecordType->SetValue(0);
 
   // init keep count
-  char *msg = XBMC->GetLocalizedString(30131);
   _spinKeepCount = GUI->Control_getSpin(_window, SPIN_CONTROL_KEEP_COUNT);
   _spinKeepCount->AddLabel(XBMC->GetLocalizedString(30131), 0); // keep all recordings
   for (int i=1; i<31; i++)

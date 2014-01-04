@@ -296,6 +296,8 @@ namespace dvblinkremote
   class IDVBLinkRemoteConnection
   {
   public:
+    virtual ~IDVBLinkRemoteConnection();
+    
     /**
       * Gets a list of all available channels.
       * @param[in]      request   A constant GetChannelsRequest reference representing the get channel request criterias.

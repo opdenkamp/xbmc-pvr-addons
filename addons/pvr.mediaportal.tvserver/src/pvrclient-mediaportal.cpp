@@ -96,6 +96,11 @@ string cPVRClientMediaPortal::SendCommand(string command)
           return "";
         }
       }
+      else
+      {
+        XBMC->Log(LOG_ERROR, "SendCommand2: reconnect failed.");
+        return "";
+      }
     }
   }
 
@@ -116,6 +121,7 @@ bool cPVRClientMediaPortal::SendCommand2(string command, vector<string>& lines)
   {
     if ( !m_tcpclient->is_valid() )
     {
+      TRACE("SendCommand2: connection lost, attempt to reconnect...");
       // Connection lost, try to reconnect
       if ( Connect() == ADDON_STATUS_OK )
       {
@@ -125,6 +131,11 @@ bool cPVRClientMediaPortal::SendCommand2(string command, vector<string>& lines)
           XBMC->Log(LOG_ERROR, "SendCommand2('%s') failed.", command.c_str());
           return false;
         }
+      }
+      else
+      {
+        XBMC->Log(LOG_ERROR, "SendCommand2: reconnect failed.");
+        return false;
       }
     }
   }
@@ -557,7 +568,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
     baseCommand = "ListRadioChannels";
     if (g_szRadioGroup.empty())
     {
-      XBMC->Log(LOG_DEBUG, "GetChannels(radio) all channels");
+      TRACE("GetChannels(radio) all channels");
     }
     else
     {
@@ -571,7 +582,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
     baseCommand = "ListTVChannels";
     if (g_szTVGroup.empty())
     {
-      XBMC->Log(LOG_DEBUG, "GetChannels(tv) all channels");
+      TRACE("GetChannels(tv) all channels");
     }
     else
     {
@@ -659,6 +670,8 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
         string strIconName;
         string strIconBaseName;
 
+        TRACE("Checking for a channel thumbnail for channel %s in %s", channel.Name(), strThumbPath.c_str());
+
         strIconBaseName = strThumbPath + ToThumbFileName(channel.Name());
 
         for (int i=0; i < ciExtCount; i++)
@@ -667,6 +680,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
           if ( OS::CFile::Exists(strIconName) )
           {
             PVR_STRCPY(tag.strIconPath, strIconName.c_str());
+            TRACE("Found channel thumb: %s", tag.strIconPath);
             break;
           }
         }
@@ -678,6 +692,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
       if(channel.IsWebstream())
       {
+        TRACE("Channel '%s' has a webstream: %s", channel.Name(), channel.URL());
         PVR_STRCPY(tag.strStreamURL, channel.URL());
         PVR_STRCLR(tag.strInputFormat);
       }
@@ -1445,6 +1460,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
     if(timeshiftfields.size()<4)
     {
+      TRACE("OpenLiveStream: Field count mismatch (<4). Data: %s\n", result.c_str());
       m_iCurrentChannel = -1;
       return false;
     }
@@ -1457,7 +1473,14 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
     //[5] = tsbuffer file nr (TVServerXBMC build >= 110)
 
     m_PlaybackURL = timeshiftfields[0];
-    XBMC->Log(LOG_NOTICE, "Channel stream URL: %s, timeshift buffer: %s", m_PlaybackURL.c_str(), timeshiftfields[2].c_str());
+    if (g_eStreamingMethod == TSReader)
+    {
+      XBMC->Log(LOG_NOTICE, "Channel timeshift buffer: %s", timeshiftfields[2].c_str());
+    }
+    else
+    {
+      XBMC->Log(LOG_NOTICE, "Channel stream URL: %s", m_PlaybackURL.c_str());
+    }
 
     if (g_iSleepOnRTSPurl > 0)
     {
@@ -1530,6 +1553,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
 
         if ( m_tsreader->Open(timeshiftfields[2].c_str()) != S_OK )
         {
+          XBMC->Log(LOG_ERROR, "Cannot open timeshift buffer %s", timeshiftfields[2].c_str());
           SAFE_DELETE(m_tsreader);
           return false;
         }
@@ -1539,6 +1563,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         // use the RTSP url and live555
         if ( m_tsreader->Open(timeshiftfields[0].c_str()) != S_OK)
         {
+          XBMC->Log(LOG_ERROR, "Cannot open channel url %s", timeshiftfields[0].c_str());
           SAFE_DELETE(m_tsreader);
           return false;
         }
@@ -1550,6 +1575,8 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
     m_iCurrentChannel = (int) channelinfo.iUniqueId;
     m_iCurrentCard = atoi(timeshiftfields[3].c_str());
   }
+  XBMC->Log(LOG_NOTICE, "OpenLiveStream: success for channel id %i (%s) on card %i", m_iCurrentChannel, channelinfo.strChannelName, m_iCurrentCard);
+
   return true;
 }
 
@@ -1562,10 +1589,16 @@ int cPVRClientMediaPortal::ReadLiveStream(unsigned char *pBuffer, unsigned int i
 
   //XBMC->Log(LOG_DEBUG, "->ReadLiveStream(buf_size=%i)", buf_size);
   if (g_eStreamingMethod != TSReader)
+  {
+    TRACE("ReadLiveStream: this function should not be called in FFMPEG/RTSP mode. Use 'Reset the PVR database' to re-read the channel list");
     return 0;
+  }
 
   if (!m_tsreader)
+  {
+    XBMC->Log(LOG_ERROR, "ReadLiveStream: failed. No open TSReader");
     return -1;
+  }
 
   while (read_done < (unsigned long) iBufferSize)
   {
@@ -1583,7 +1616,7 @@ int cPVRClientMediaPortal::ReadLiveStream(unsigned char *pBuffer, unsigned int i
     {
       if (read_timeouts > 50)
       {
-        XBMC->Log(LOG_NOTICE, "No data in 2 seconds");
+        XBMC->Log(LOG_NOTICE, "XBMC requested %u bytes, but the TSReader got only %ul bytes in 2 seconds", iBufferSize, read_done);
         read_timeouts = 0;
         return read_done;
       }
@@ -1627,6 +1660,7 @@ long long cPVRClientMediaPortal::SeekLiveStream(long long iPosition, int iWhence
 {
   if (g_eStreamingMethod == ffmpeg || !m_tsreader)
   {
+    TRACE("SeekLiveStream: is not supported in FFMPEG/RTSP mode.");
     return -1;
   }
 
@@ -1668,6 +1702,7 @@ bool cPVRClientMediaPortal::SwitchChannel(const PVR_CHANNEL &channel)
     {
       // Close existing live stream before opening a new one.
       // This is slower, but it helps XBMC playback when the streams change types (e.g. SD->HD)
+      TRACE("Fast channel switching is disabled. Closing the existing live stream first");
       CloseLiveStream();
     }
 

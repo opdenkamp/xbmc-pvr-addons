@@ -59,7 +59,6 @@ std::string ToWindowsPath(const std::string& strFileName);
 #  define UNUSED(x)  /* x */
 #endif
 
-
 #if defined(TARGET_WINDOWS)
 namespace UTF8Util
 {
@@ -67,3 +66,10 @@ namespace UTF8Util
   std::string  ConvertUTF16ToUTF8(const WCHAR* pszTextUTF16);
 }
 #endif
+
+/* Addon-specific debug tracing */
+extern bool             g_bDebug;
+#define TRACE(...) if (g_bDebug) \
+  XBMC->Log(LOG_NOTICE, __VA_ARGS__ ); \
+else \
+  XBMC->Log(LOG_DEBUG, __VA_ARGS__ );

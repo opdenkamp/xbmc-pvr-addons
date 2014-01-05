@@ -62,7 +62,11 @@ msgctxt "#30010"
 msgid "Wait time after tuning a channel (ms)"
 msgstr ""
 
-#empty strings from id 30011 to 30014
+msgctxt "#30011"
+msgid "Enable debugging"
+msgstr ""
+
+#empty strings from id 30012 to 30014
 
 msgctxt "#30015"
 msgid "Streaming method"

@@ -46,6 +46,7 @@ std::string      g_szSMBpassword        = DEFAULT_SMBPASSWORD;           ///< Wi
 eStreamingMethod g_eStreamingMethod     = TSReader;
 bool             g_bFastChannelSwitch   = true;                          ///< Don't stop an existing timeshift on a channel switch
 bool             g_bUseRTSP             = false;                         ///< Use RTSP streaming when using the tsreader
+bool             g_bDebug               = false;                         ///< Enable addon debug logging
 
 /* Client member variables */
 ADDON_STATUS           m_CurStatus    = ADDON_STATUS_UNKNOWN;
@@ -199,6 +200,14 @@ void ADDON_ReadSettings(void)
     g_iConnectTimeout = DEFAULT_TIMEOUT;
   }
 
+  /* Read setting "debug" from settings.xml */
+  if (!XBMC->GetSetting("debug", &g_bDebug))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'debug' setting, falling back to 'false' as default");
+    g_bDebug = false;
+  }
+
   /* MediaPortal settings */
   /***********************/
 
@@ -311,7 +320,7 @@ void ADDON_ReadSettings(void)
   XBMC->Log(LOG_DEBUG, "settings: readgenre=%i, sleeponrtspurl=%i", (int) g_bReadGenre, g_iSleepOnRTSPurl);
   XBMC->Log(LOG_DEBUG, "settings: resolvertsphostname=%i", (int) g_bResolveRTSPHostname);
   XBMC->Log(LOG_DEBUG, "settings: fastchannelswitch=%i", (int) g_bFastChannelSwitch);
-  XBMC->Log(LOG_DEBUG, "settings: smb user='%s', pass=%s", g_szSMBusername.c_str(), (g_szSMBpassword.length() > 0 ? "<set>" : "<empty>"));
+  XBMC->Log(LOG_DEBUG, "settings: smb user='%s', pass=%s, debug=%i", g_szSMBusername.c_str(), (g_szSMBpassword.length() > 0 ? "<set>" : "<empty>"), (int) g_bDebug);
 }
 
 //-- SetSetting ---------------------------------------------------------------
@@ -415,6 +424,11 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   {
     XBMC->Log(LOG_INFO, "Changed setting 'usertsp' from %u to %u", g_bUseRTSP, *(bool*) settingValue);
     g_bUseRTSP = *(bool*) settingValue;
+  }
+  else if (str == "debug")
+  {
+    XBMC->Log(LOG_INFO, "Changed setting 'debug' from %u to %u", g_bRadioEnabled, *(bool*) settingValue);
+    g_bDebug = *(bool*) settingValue;
   }
 
   return ADDON_STATUS_OK;

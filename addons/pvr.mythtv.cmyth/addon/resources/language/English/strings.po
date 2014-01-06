@@ -126,6 +126,14 @@ msgctxt "#30049"
 msgid "Recording template"
 msgstr ""
 
+msgctxt "#30050"
+msgid "Advanced"
+msgstr ""
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr ""
+
 # Systeminformation labels
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"

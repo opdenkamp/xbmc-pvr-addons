@@ -39,6 +39,7 @@ PVRClientMythTV::PVRClientMythTV()
  , m_connectionString("")
  , m_categories()
  , m_channelGroups()
+ , m_demux(NULL)
 {
 }
 
@@ -60,6 +61,12 @@ PVRClientMythTV::~PVRClientMythTV()
   {
     delete m_scheduleManager;
     m_scheduleManager = NULL;
+  }
+
+  if (m_demux)
+  {
+    delete m_demux;
+    m_demux = NULL;
   }
 }
 
@@ -256,9 +263,10 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
     XBMC->Log(LOG_DEBUG, "%s - radio: %s", __FUNCTION__, (bRadio ? "true" : "false"));
 
   LoadChannelsAndChannelGroups();
+  m_PVRChannelUidById.clear();
 
-  // Create a set<channum, callsign> to merge channels with same channum and callsign
-  std::set<std::pair<CStdString, CStdString> > channelIdentifiers;
+  // Create a map<(channum, callsign), chanid> to merge channels with same channum and callsign
+  std::map<std::pair<CStdString, CStdString>, unsigned int> channelIdentifiers;
 
   // Transfer channels of the requested type (radio / tv)
   for (ChannelIdMap::iterator it = m_channelsById.begin(); it != m_channelsById.end(); ++it)
@@ -266,13 +274,18 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
     if (it->second.IsRadio() == bRadio && !it->second.IsNull())
     {
       // Skip channels with same channum and callsign
-      std::pair<CStdString, CStdString> channelIdentifier = make_pair(it->second.Number(), it->second.Callsign());
-      if (channelIdentifiers.find(channelIdentifier) != channelIdentifiers.end())
+      std::pair<CStdString, CStdString> channelIdentifier = std::make_pair(it->second.Number(), it->second.Callsign());
+      std::map<std::pair<CStdString, CStdString>, unsigned int>::iterator itm = channelIdentifiers.find(channelIdentifier);
+      if (itm != channelIdentifiers.end())
       {
         XBMC->Log(LOG_DEBUG, "%s - skipping channel: %d", __FUNCTION__, it->second.ID());
+        // Map channel with merged channel
+        m_PVRChannelUidById.insert(std::make_pair(it->first, itm->second));
         continue;
       }
-      channelIdentifiers.insert(channelIdentifier);
+      channelIdentifiers.insert(std::make_pair(channelIdentifier, it->first));
+      // Map channel to itself
+      m_PVRChannelUidById.insert(std::make_pair(it->first, it->first));
 
       PVR_CHANNEL tag;
       memset(&tag, 0, sizeof(PVR_CHANNEL));
@@ -370,7 +383,7 @@ PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR
       memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
 
       tag.iChannelNumber = channelNumber++;
-      tag.iChannelUniqueId = channelIt->second.ID();
+      tag.iChannelUniqueId = FindPVRChannelUid(channelIt->second.ID());
       PVR_STRCPY(tag.strGroupName, group.strGroupName);
       PVR->TransferChannelGroupMember(handle, &tag);
     }
@@ -393,6 +406,14 @@ void PVRClientMythTV::LoadChannelsAndChannelGroups()
     m_channelsByNumber.insert(std::make_pair(channelIt->second.Number(), channelIt->second));
 
   m_channelGroups = m_db.GetChannelGroups();
+}
+
+int PVRClientMythTV::FindPVRChannelUid(int channelId) const
+{
+  PVRChannelMap::const_iterator it = m_PVRChannelUidById.find(channelId);
+  if (it != m_PVRChannelUidById.end())
+    return it->second;
+  return -1; // PVR dummy channel UID
 }
 
 void PVRClientMythTV::UpdateRecordings()
@@ -933,7 +954,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     CStdString rulemarker = "";
     tag.startTime = it->second->StartTime();
     tag.endTime = it->second->EndTime();
-    tag.iClientChannelUid = it->second->ChannelID();
+    tag.iClientChannelUid = FindPVRChannelUid(it->second->ChannelID());
     tag.iPriority = it->second->Priority();
     int genre = m_categories.Category(it->second->Category());
     tag.iGenreSubType = genre & 0x0F;
@@ -944,60 +965,14 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     if (node)
     {
       MythRecordingRule rule = node->GetRule();
+      RuleMetadata meta = m_scheduleManager->GetMetadata(rule);
       tag.iMarginEnd = rule.EndOffset();
       tag.iMarginStart = rule.StartOffset();
       tag.firstDay = it->second->RecordingStartTime();
-
-      // Then set bIsRepeating and iweekdays for repeating rules
-      time_t st = rule.StartTime();
-      switch (rule.Type())
-      {
-        case MythRecordingRule::RT_DailyRecord:      // (0.27) Replaces TimeslotRecord
-        case MythRecordingRule::RT_FindDailyRecord:  // (0.27) Obsolete. Kept for backward compatibility
-        case MythRecordingRule::RT_ChannelRecord:
-        case MythRecordingRule::RT_AllRecord:
-          tag.bIsRepeating = true;
-          tag.iWeekdays = 0x7F;
-          break;
-        case MythRecordingRule::RT_WeeklyRecord:     // (0.27) Replaces WeekslotRecord
-        case MythRecordingRule::RT_FindWeeklyRecord: // (0.27) Obsolete. Kept for backward compatibility
-          tag.bIsRepeating = true;
-          tag.iWeekdays = 1 << ((weekday(&st) + 6) % 7);
-          break;
-        default:
-          tag.bIsRepeating = false;
-          tag.iWeekdays = 0;
-          break;
-      }
-      // Define a marker for this type of rule
-      switch(rule.Type())
-      {
-        case MythRecordingRule::RT_DontRecord:
-          rulemarker = "(x)";
-          break;
-        case MythRecordingRule::RT_OverrideRecord:
-          rulemarker = "(o)";
-          break;
-        case MythRecordingRule::RT_OneRecord:
-          rulemarker = "(1)";
-          break;
-        case MythRecordingRule::RT_DailyRecord:
-        case MythRecordingRule::RT_FindDailyRecord:
-          rulemarker = "(d)";
-          break;
-        case MythRecordingRule::RT_ChannelRecord:
-          rulemarker = "(C)";
-          break;
-        case MythRecordingRule::RT_AllRecord:
-          rulemarker = "(A)";
-          break;
-        case MythRecordingRule::RT_WeeklyRecord:
-        case MythRecordingRule::RT_FindWeeklyRecord:
-          rulemarker = "(w)";
-          break;
-        default:
-          break;
-      }
+      tag.bIsRepeating = meta.isRepeating;
+      tag.iWeekdays = meta.weekDays;
+      if (*(meta.marker))
+        rulemarker.append("(").append(meta.marker).append(")");
     }
     else
     {
@@ -1404,6 +1379,8 @@ bool PVRClientMythTV::OpenLiveStream(const PVR_CHANNEL &channel)
 
             if (m_rec.SpawnLiveTV((*channelByNumberIt).second))
             {
+              if(g_bDemuxing)
+                m_demux = new Demux(m_rec);
               XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
               return true;
             }
@@ -1449,6 +1426,11 @@ void PVRClientMythTV::CloseLiveStream()
   m_pEventHandler->DisablePlayback();
   m_pEventHandler->AllowLiveChainUpdate();
 
+  if (m_demux)
+  {
+    delete m_demux;
+    m_demux = NULL;
+  }
   // Resume fileOps
   m_fileOps->Resume();
 
@@ -1506,6 +1488,11 @@ bool PVRClientMythTV::SwitchChannel(const PVR_CHANNEL &channelinfo)
   m_pEventHandler->SetRecordingListener("", m_file);
   m_pEventHandler->SetRecorder(m_rec);
   m_pEventHandler->AllowLiveChainUpdate();
+  if (m_demux)
+  {
+    delete m_demux;
+    m_demux = NULL;
+  }
   // Try to reopen live stream
   if (retval)
     retval = OpenLiveStream(channelinfo);
@@ -1586,6 +1573,33 @@ PVR_ERROR PVRClientMythTV::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
     XBMC->Log(LOG_DEBUG, "%s - Done", __FUNCTION__);
 
   return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR PVRClientMythTV::GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
+{
+  return m_demux && m_demux->GetStreamProperties(pProperties) ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
+}
+
+void PVRClientMythTV::DemuxAbort(void)
+{
+  if (m_demux)
+    m_demux->Abort();
+}
+
+void PVRClientMythTV::DemuxFlush(void)
+{
+  if (m_demux)
+    m_demux->Flush();
+}
+
+DemuxPacket* PVRClientMythTV::DemuxRead(void)
+{
+  return m_demux ? m_demux->Read() : NULL;
+}
+
+bool PVRClientMythTV::SeekTime(int time, bool backwards, double* startpts)
+{
+  return m_demux ? m_demux->SeekTime(time, backwards, startpts) : false;
 }
 
 bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)

@@ -72,6 +72,8 @@ static inline struct tm *localtime_r(const time_t * clock, struct tm *result)
 
 #define SUBTITLE_SEPARATOR " - "
 
+#define DEFAULT_HANDLE_DEMUXING            false
+
 /*!
  * @brief PVR macros for string exchange
  */
@@ -110,6 +112,7 @@ extern bool         g_bRecAutoRunJob3;
 extern bool         g_bRecAutoRunJob4;
 extern bool         g_bRecAutoExpire;
 extern int          g_iRecTranscoder;
+extern bool         g_bDemuxing;
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr   *PVR;

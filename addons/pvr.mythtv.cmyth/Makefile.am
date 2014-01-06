@@ -33,4 +33,16 @@ libmythtvcmyth_addon_la_SOURCES = src/client.cpp \
                                   src/cppmyth/MythRecordingRule.cpp \
                                   src/cppmyth/MythTimestamp.cpp \
                                   src/cppmyth/MythEPGInfo.cpp \
-                                  src/cppmyth/MythScheduleManager.cpp
+                                  src/cppmyth/MythScheduleManager.cpp \
+                                  src/demux.cpp \
+                                  src/demuxer/debug.cpp \
+                                  src/demuxer/elementaryStream.cpp \
+                                  src/demuxer/tsDemuxer.cpp \
+                                  src/demuxer/bitstream.cpp \
+                                  src/demuxer/ES_MPEGVideo.cpp \
+                                  src/demuxer/ES_MPEGAudio.cpp \
+                                  src/demuxer/ES_h264.cpp \
+                                  src/demuxer/ES_AAC.cpp \
+                                  src/demuxer/ES_AC3.cpp \
+                                  src/demuxer/ES_Subtitle.cpp \
+                                  src/demuxer/ES_Teletext.cpp

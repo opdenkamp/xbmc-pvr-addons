@@ -1,3 +1,11 @@
+v1.9.13
+- Added demuxer (optional)
+     - Faster channel switching
+- Fixed compatibility with MythTV 0.27 backend
+     - Fixed channel icon download
+     - Fixed schedule management
+- Fixed recognizing merged channels
+
 v1.6.12
 - Fixed crash when reconnecting to the backend
 - Fixed setting bookmarks when using MythTV 0.27 backend

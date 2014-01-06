@@ -292,7 +292,48 @@ cmyth_recorder_get_framerate(cmyth_recorder_t rec,
 int64_t
 cmyth_recorder_get_frames_written(cmyth_recorder_t rec)
 {
-	return (int64_t) -ENOSYS;
+	int r, err, count;
+	int64_t ret;
+	char msg[256];
+
+	if (!rec || !rec->rec_conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
+			  __FUNCTION__);
+		return (int64_t) -EINVAL;
+	}
+
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
+
+	if (rec->rec_conn->conn_version >= 66)
+	{
+		snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_FRAMES_WRITTEN", rec->rec_id);
+
+		if ((r = cmyth_send_message(rec->rec_conn, msg)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_send_message() failed (%d)\n",
+				  __FUNCTION__, r);
+			ret = r;
+			goto fail;
+		}
+
+		count = cmyth_rcv_length(rec->rec_conn);
+		if ((r = cmyth_rcv_int64(rec->rec_conn, &err, &ret, count)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_rcv_int64() failed (%d)\n",
+				  __FUNCTION__, r);
+			ret = err;
+			goto fail;
+		}
+	}
+	else
+	{
+		ret = (int64_t) -EPERM;
+	}
+
+fail:
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
+
+	return ret;
 }
 
 /*
@@ -318,7 +359,7 @@ cmyth_recorder_get_free_space(cmyth_recorder_t rec)
 }
 
 /*
- * cmyth_recorder_get_key_frame()
+ * cmyth_recorder_get_keyframe_pos()
  *
  * Scope: PUBLIC
  *
@@ -336,7 +377,48 @@ cmyth_recorder_get_free_space(cmyth_recorder_t rec)
 int64_t
 cmyth_recorder_get_keyframe_pos(cmyth_recorder_t rec, uint32_t keynum)
 {
-	return (int64_t) -ENOSYS;
+	int r, err, count;
+	int64_t ret;
+	char msg[256];
+
+	if (!rec || !rec->rec_conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
+			  __FUNCTION__);
+		return (int64_t) -EINVAL;
+	}
+
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
+
+	if (rec->rec_conn->conn_version >= 66)
+	{
+		snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]GET_KEYFRAME_POS[]:[]%"PRIu32, rec->rec_id, keynum);
+
+		if ((r = cmyth_send_message(rec->rec_conn, msg)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_send_message() failed (%d)\n",
+				  __FUNCTION__, r);
+			ret = r;
+			goto fail;
+		}
+
+		count = cmyth_rcv_length(rec->rec_conn);
+		if ((r = cmyth_rcv_int64(rec->rec_conn, &err, &ret, count)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_rcv_int64() failed (%d)\n",
+				  __FUNCTION__, r);
+			ret = err;
+			goto fail;
+		}
+	}
+	else
+	{
+		ret = (int64_t) -EPERM;
+	}
+
+fail:
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
+
+	return ret;
 }
 
 /*
@@ -352,16 +434,75 @@ cmyth_recorder_get_keyframe_pos(cmyth_recorder_t rec, uint32_t keynum)
  *
  * Return Value:
  *
- * Success: 0
- *
- * Failure: -(ERRNO)
+ * Success: A non-NULL, held cmyth_posmap_t
+ * Failure: A NULL pointer
  */
 cmyth_posmap_t
-cmyth_recorder_get_position_map(cmyth_recorder_t rec,
-				uint32_t start,
-				uint32_t end)
+cmyth_recorder_get_position_map(cmyth_recorder_t rec, uint32_t start, uint32_t end)
 {
-	return NULL;
+	int err, count, consumed;
+	cmyth_posmap_t ret = NULL;
+	char msg[256];
+	char tmp[1024];
+
+	if (!rec || !rec->rec_conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
+
+	if (rec->rec_conn->conn_version >= 43)
+	{
+		snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]FILL_POSITION_MAP[]:[]%"PRIu32"[]:[]%"PRIu32, rec->rec_id, start, end);
+
+		if ((err = cmyth_send_message(rec->rec_conn, msg)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_send_message() failed (%d)\n",
+				  __FUNCTION__, err);
+			goto fail;
+		}
+
+		count = cmyth_rcv_length(rec->rec_conn);
+		if (count < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+			"%s: cmyth_rcv_length() failed (%d)\n",
+			__FUNCTION__, count);
+			goto fail;
+		}
+
+		ret = cmyth_posmap_create();
+		if (ret == NULL) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_posmap_create() failed\n",
+				  __FUNCTION__);
+			goto fail;
+		}
+
+		if (count > 2) {
+			consumed = cmyth_rcv_posmap(rec->rec_conn, &err, ret, count);
+			count -= consumed;
+			if (err) {
+				cmyth_dbg(CMYTH_DBG_ERROR,
+				"%s: cmyth_rcv_posmap() failed (%d)\n",
+				__FUNCTION__, err);
+				ref_release(ret);
+				ret = NULL;
+			}
+		}
+		err = 0;
+		while(count > 0 && err == 0) {
+			consumed = cmyth_rcv_data(rec->rec_conn, &err, (unsigned char*)tmp, sizeof(tmp) - 1, count);
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s: leftover data: count %i, read %i, errno %i\n", __FUNCTION__, count, consumed, err);
+			count -= consumed;
+		}
+	}
+
+fail:
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
+
+	return ret;
 }
 
 /*
@@ -377,14 +518,75 @@ cmyth_recorder_get_position_map(cmyth_recorder_t rec,
  *
  * Return Value:
  *
- * Success: 0
- *
- * Failure: -(ERRNO)
+ * Success: A non-NULL, held cmyth_posmap_t
+ * Failure: A NULL pointer
  */
 cmyth_posmap_t
 cmyth_recorder_get_duration_map(cmyth_recorder_t rec, uint32_t start, uint32_t end)
 {
-	return NULL;
+	int err, count, consumed;
+	cmyth_posmap_t ret = NULL;
+	char msg[256];
+	char tmp[1024];
+
+	if (!rec || !rec->rec_conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no recorder connection\n",
+			  __FUNCTION__);
+		return NULL;
+	}
+
+	pthread_mutex_lock(&rec->rec_conn->conn_mutex);
+
+	if (rec->rec_conn->conn_version >= 77)
+	{
+		snprintf(msg, sizeof(msg), "QUERY_RECORDER %"PRIu32"[]:[]FILL_DURATION_MAP[]:[]%"PRIu32"[]:[]%"PRIu32, rec->rec_id, start, end);
+
+		if ((err = cmyth_send_message(rec->rec_conn, msg)) < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_send_message() failed (%d)\n",
+				  __FUNCTION__, err);
+			goto fail;
+		}
+
+		count = cmyth_rcv_length(rec->rec_conn);
+		if (count < 0) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+			"%s: cmyth_rcv_length() failed (%d)\n",
+			__FUNCTION__, count);
+			goto fail;
+		}
+
+		ret = cmyth_posmap_create();
+		if (ret == NULL) {
+			cmyth_dbg(CMYTH_DBG_ERROR,
+				  "%s: cmyth_posmap_create() failed\n",
+				  __FUNCTION__);
+			goto fail;
+		}
+
+		if (count > 2) {
+			consumed = cmyth_rcv_posmap(rec->rec_conn, &err, ret, count);
+			count -= consumed;
+			if (err) {
+				cmyth_dbg(CMYTH_DBG_ERROR,
+				"%s: cmyth_rcv_posmap() failed (%d)\n",
+				__FUNCTION__, err);
+				ref_release(ret);
+				ret = NULL;
+			}
+		}
+		err = 0;
+		while(count > 0 && err == 0) {
+			consumed = cmyth_rcv_data(rec->rec_conn, &err, (unsigned char*)tmp, sizeof(tmp) - 1, count);
+			cmyth_dbg(CMYTH_DBG_ERROR, "%s: leftover data: count %i, read %i, errno %i\n", __FUNCTION__, count, consumed, err);
+			count -= consumed;
+		}
+	}
+
+fail:
+	pthread_mutex_unlock(&rec->rec_conn->conn_mutex);
+
+	return ret;
 }
 
 /*

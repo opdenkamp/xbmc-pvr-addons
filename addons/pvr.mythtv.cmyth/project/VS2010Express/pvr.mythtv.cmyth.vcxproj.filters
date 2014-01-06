@@ -44,6 +44,40 @@
     <ClCompile Include="..\..\src\cppmyth\MythScheduleManager.cpp">
       <Filter>cppmyth</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\elementaryStream.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\ES_AAC.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\ES_AC3.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\ES_h264.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\ES_MPEGAudio.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\ES_MPEGVideo.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\ES_Subtitle.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\ES_Teletext.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\tsDemuxer.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demuxer\bitstream.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demux.cpp" />
+    <ClCompile Include="..\..\src\demuxer\debug.cpp">
+      <Filter>demuxer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
@@ -94,6 +128,49 @@
     <ClInclude Include="..\..\src\cppmyth\MythScheduleManager.h">
       <Filter>cppmyth</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\ES_Teletext.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\elementaryStream.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\ES_AAC.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\ES_AC3.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\ES_h264.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\ES_MPEGAudio.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\ES_MPEGVideo.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\ES_Subtitle.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\tsDemuxer.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\tsPacket.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\tsTable.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\bitstream.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demuxer\common.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\demux.h" />
+    <ClInclude Include="..\..\src\demuxer\debug.h">
+      <Filter>demuxer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cppmyth">
@@ -110,6 +187,9 @@
     </Filter>
     <Filter Include="addon\resources\language\English">
       <UniqueIdentifier>{3ba85d2f-45bc-4080-8895-55949f7f52a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="demuxer">
+      <UniqueIdentifier>{af26b031-f1b0-4eed-bdb7-1e12feef27d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

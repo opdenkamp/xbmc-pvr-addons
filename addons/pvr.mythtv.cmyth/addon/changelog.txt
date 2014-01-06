@@ -1,3 +1,16 @@
+v1.9.14
+- Added demuxer (optional)
+     - Improved timeshifting (GetPlayingTime, GetBufferStart/EndTime)
+     - Faster channel switching
+- Added possibility to start backend using Wake-on-LAN
+- Added client actions
+     - Toogle visibility of recordings that are in state 'Not recording'
+     - Create special recording rules (series recording)
+- Fixed compatibility with MythTV 0.27 backend
+     - Fixed channel icon download
+     - Fixed schedule management
+- Fixed recognizing merged channels
+
 v1.9.13
 - add timeshift buffer functions
 

@@ -41,6 +41,7 @@ public:
 protected:
 
   void OnReconnect();
+  void GetLength();
 
 private:
 

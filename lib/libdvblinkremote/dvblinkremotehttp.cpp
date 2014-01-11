@@ -76,3 +76,7 @@ std::string& HttpWebResponse::GetResponseData()
 {
   return m_responseData;
 }
+
+HttpClient::~HttpClient()
+{
+}

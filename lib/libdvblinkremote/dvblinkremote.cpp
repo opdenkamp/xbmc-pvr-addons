@@ -26,6 +26,10 @@
 
 using namespace dvblinkremote;
 
+IDVBLinkRemoteConnection::~IDVBLinkRemoteConnection()
+{
+}
+
 IDVBLinkRemoteConnection* DVBLinkRemote::Connect(dvblinkremotehttp::HttpClient& httpClient, const std::string& hostAddress, const long port) 
 {
   return new DVBLinkRemoteCommunication(httpClient, hostAddress, port);

@@ -13,6 +13,7 @@
     library_linux="XBMC_WMC.pvr"
     library_wingl="XBMC_WMC_win32.dll"
     library_osx="XBMC_WMC.pvr"
+    library_freebsd="XBMC_WMC.pvr"
     library_windx="XBMC_WMC_win32.dll"
     library_android="libXBMC_WMC.so" />
   <extension point="xbmc.addon.metadata">

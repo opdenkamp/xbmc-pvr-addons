@@ -294,7 +294,7 @@ extern "C" {
 		pCapabilities->bSupportsTimers             = true;
 		pCapabilities->bSupportsTV                 = true;
 		pCapabilities->bSupportsRadio              = false;
-		pCapabilities->bSupportsChannelGroups      = false;
+		pCapabilities->bSupportsChannelGroups      = true;
 		pCapabilities->bHandlesInputStream         = true;
 		pCapabilities->bHandlesDemuxing            = false;
 		pCapabilities->bSupportsChannelScan        = false;

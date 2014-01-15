@@ -176,25 +176,29 @@ PVR_ERROR Pvr2Wmc::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 int Pvr2Wmc::GetChannelGroupsAmount(void)
 {
-	//return _groups.size(); !!!
-	return 1;
+	return _socketClient.GetInt("GetChannelGroupCount");
 }
 
 PVR_ERROR Pvr2Wmc::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
-	for (unsigned int iGroupPtr = 0; iGroupPtr < _groups.size(); iGroupPtr++)
-	{
-		PVR_CHANNELGroup &group = _groups.at(iGroupPtr);
-		if (group.bRadio == bRadio)
-		{
-			PVR_CHANNEL_GROUP xbmcGroup;
-			memset(&xbmcGroup, 0, sizeof(PVR_CHANNEL_GROUP));
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
 
-			xbmcGroup.bIsRadio = bRadio;
-			strncpy(xbmcGroup.strGroupName, group.strGroupName.c_str(), sizeof(xbmcGroup.strGroupName) - 1);
+	CStdString request;
+	request.Format("GetChannelGroups|%s", bRadio ? "True" : "False");
+	vector<CStdString> results = _socketClient.GetVector(request);
 
-			PVR->TransferChannelGroup(handle, &xbmcGroup);
-		}
+	FOREACH(response, results)
+	{ 
+		PVR_CHANNEL_GROUP xGroup;
+		memset(&xGroup, 0, sizeof(PVR_CHANNEL_GROUP));
+
+		vector<CStdString> v = split(*response, "|");
+
+		xGroup.bIsRadio = bRadio;
+		strncpy(xGroup.strGroupName, v[0].c_str(), sizeof(xGroup.strGroupName) - 1);
+
+		PVR->TransferChannelGroup(handle, &xGroup);
 	}
 
 	return PVR_ERROR_NO_ERROR;
@@ -202,27 +206,25 @@ PVR_ERROR Pvr2Wmc::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 
 PVR_ERROR Pvr2Wmc::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 {
-	for (unsigned int iGroupPtr = 0; iGroupPtr < _groups.size(); iGroupPtr++)
-	{
-		PVR_CHANNELGroup &myGroup = _groups.at(iGroupPtr);
-		if (!strcmp(myGroup.strGroupName.c_str(),group.strGroupName))
-		{
-			for (unsigned int iChannelPtr = 0; iChannelPtr < myGroup.members.size(); iChannelPtr++)
-			{
-				int iId = myGroup.members.at(iChannelPtr) - 1;
-				if (iId < 0 || iId > (int)_channels.size() - 1)
-					continue;
-				PVR_CHANNEL &channel = _channels.at(iId);
-				PVR_CHANNEL_GROUP_MEMBER xbmcGroupMember;
-				memset(&xbmcGroupMember, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
 
-				strncpy(xbmcGroupMember.strGroupName, group.strGroupName, sizeof(xbmcGroupMember.strGroupName) - 1);
-				xbmcGroupMember.iChannelUniqueId = channel.iUniqueId;
-				xbmcGroupMember.iChannelNumber   = channel.iChannelNumber;
+	CStdString request;
+	request.Format("GetChannelGroupMembers|%s|%s", group.bIsRadio ? "True" : "False", group.strGroupName);
+	vector<CStdString> results = _socketClient.GetVector(request);
 
-				PVR->TransferChannelGroupMember(handle, &xbmcGroupMember);
-			}
-		}
+	FOREACH(response, results)
+	{ 
+		PVR_CHANNEL_GROUP_MEMBER xGroupMember;
+		memset(&xGroupMember, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+
+		vector<CStdString> v = split(*response, "|");
+
+		strncpy(xGroupMember.strGroupName, group.strGroupName, sizeof(xGroupMember.strGroupName) - 1);
+		xGroupMember.iChannelUniqueId = strtoul(v[0].c_str(), 0, 10);					// convert to unsigned int
+		xGroupMember.iChannelNumber   =  atoi(v[1].c_str());
+
+		PVR->TransferChannelGroupMember(handle, &xGroupMember);
 	}
 
 	return PVR_ERROR_NO_ERROR;

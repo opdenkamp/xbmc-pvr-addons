@@ -84,7 +84,7 @@ enum SocketFamily
 
 enum SocketDomain
 {
-  #if defined TARGET_LINUX || defined TARGET_DARWIN
+  #if defined TARGET_LINUX || defined TARGET_DARWIN || defined TARGET_FREEBSD
     pf_unix  = PF_UNIX,
     pf_local = PF_LOCAL,
   #endif

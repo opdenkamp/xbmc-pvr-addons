@@ -586,72 +586,95 @@ void Socket::SetTimeOut(int tSec)
 	_timeout = tSec;
 }
 
-std::vector<CStdString> Socket::GetVector(const CStdString &request)
+std::vector<CStdString> Socket::GetVector(const CStdString &request, bool allowRetry)
 {
+	int maxAttempts = 3;
+	int sleepAttempts = 1000;
+
 	PLATFORM::CLockObject lock(m_mutex);						// only process one request at a time
 
 	int code;
 	std::vector<CStdString> reponses;
 
-	if (!create())												// create the socket
+	int cntAttempts = 1;
+	while (cntAttempts <= maxAttempts)
 	{
-		XBMC->Log(LOG_ERROR, "Socket::GetVector> error could not create socket");
-		reponses.push_back("SocketError");						// set a SocketError message (not fatal)
-	}
-	else														// socket created OK
-	{
-		if (!connect(_serverName, (unsigned short)_port))		// if this fails, it is likely due to server down
-		{
-			XBMC->Log(LOG_ERROR, "Socket::GetVector> Server is down");
-			reponses.push_back("ServerDown");					// set a server down error message (not fatal)
-		}
-		else													// connected to server
-		{
-			int bytesSent = SendRequest(request.c_str());		// send request to server
+		XBMC->Log(LOG_DEBUG, "Socket::GetVector> Send request \"%s\"", request.c_str());
+		reponses.clear();
 
-			if (bytesSent > 0)									// if request was sent successfully
+		if (!create())												// create the socket
+		{
+			XBMC->Log(LOG_ERROR, "Socket::GetVector> error could not create socket");
+			reponses.push_back("SocketError");						// set a SocketError message (not fatal)
+		}
+		else														// socket created OK
+		{
+			if (!connect(_serverName, (unsigned short)_port))		// if this fails, it is likely due to server down
 			{
-				if (!ReadResponses(code, reponses))
+				XBMC->Log(LOG_ERROR, "Socket::GetVector> Server is down");
+				reponses.push_back("ServerDown");					// set a server down error message (not fatal)
+			}
+			else													// connected to server
+			{
+				int bytesSent = SendRequest(request.c_str());		// send request to server
+
+				if (bytesSent > 0)									// if request was sent successfully
 				{
-					XBMC->Log(LOG_ERROR, "Socket::GetVector> error getting responses");
-					reponses.clear();
+					if (!ReadResponses(code, reponses))
+					{
+						XBMC->Log(LOG_ERROR, "Socket::GetVector> error getting responses");
+						reponses.clear();
+						reponses.push_back("SocketError");			
+					}
+					else
+					{
+						break;
+					}
+				}
+				else												// error sending request
+				{
+					XBMC->Log(LOG_ERROR, "Socket::GetVector> error sending server request");
 					reponses.push_back("SocketError");			
 				}
 			}
-			else												// error sending request
-			{
-				XBMC->Log(LOG_ERROR, "Socket::GetVector> error sending server request");
-				reponses.push_back("SocketError");			
-			}
 		}
+
+		if (!allowRetry)
+		{
+			break;
+		}
+
+		cntAttempts++;
+		XBMC->Log(LOG_DEBUG, "Socket::GetVector> Retrying in %ims", sleepAttempts);
+		usleep(sleepAttempts);
 	}
 
 	close();													// close socket
 	return reponses;											// return responses
 }
 
-CStdString Socket::GetString(const CStdString &request)
+CStdString Socket::GetString(const CStdString &request, bool allowRetry)
 {
-	std::vector<CStdString> result = GetVector(request);
+	std::vector<CStdString> result = GetVector(request, allowRetry);
 	return result[0];
 }
 
-bool Socket::GetBool(const CStdString &request)
+bool Socket::GetBool(const CStdString &request, bool allowRetry)
 {
-	return GetString(request) == "True";
+	return GetString(request, allowRetry) == "True";
 }
 
 
-int Socket::GetInt(const CStdString &request)
+int Socket::GetInt(const CStdString &request, bool allowRetry)
 {
-	CStdString valStr = GetString(request);
+	CStdString valStr = GetString(request, allowRetry);
 	long val = strtol(valStr, 0, 10);
 	return val;
 }
 
-long long Socket::GetLL(const CStdString &request)
+long long Socket::GetLL(const CStdString &request, bool allowRetry)
 {
-	CStdString valStr = GetString(request);
+	CStdString valStr = GetString(request, allowRetry);
 #ifdef TARGET_WINDOWS
 		long long val = _strtoi64(valStr, 0, 10);
 #else

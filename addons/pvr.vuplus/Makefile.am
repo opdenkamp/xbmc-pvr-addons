@@ -15,6 +15,7 @@ LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la
 include ../Makefile.include.am
 
 libvuplus_addon_la_SOURCES = src/client.cpp \
-                             src/VuData.cpp 
+                             src/VuData.cpp \
+                             src/TimeshiftBuffer.cpp
 libvuplus_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

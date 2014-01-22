@@ -1,3 +1,9 @@
+1.9.10
+- add: timeshift support (based on Manuel Mausz DVBViewer Timeshift support)
+- remove: implementation for lastplayedposition (XBMC handles this now)
+- remove: loading of channel data from HDD
+- change: handling of EPG 
+
 1.9.9
 - add timeshift buffer functions
 
@@ -6,6 +12,9 @@
 
 1.7.8
 - fix: typo in settings.xml
+- fix: typos in language files 
+- fix: typo in settings.xml
+- fix: (temporarily) disable the deviceinfo API call to openwebif as it is currently broken in openwebif
 
 1.7.7
 - Bump after PVR API version bump

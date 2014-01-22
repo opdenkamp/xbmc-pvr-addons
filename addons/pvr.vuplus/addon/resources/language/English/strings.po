@@ -65,18 +65,6 @@ msgctxt "#30013"
 msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
 msgstr ""
 
-msgctxt "#30014"
-msgid "Folder for channeldata"
-msgstr ""
-
-msgctxt "#30015"
-msgid "Check for bouquett updates"
-msgstr ""
-
-msgctxt "#30016"
-msgid "Check for channel updates"
-msgstr ""
-
 msgctxt "#30017"
 msgid "Use only the DVB boxes' current recording path"
 msgstr ""
@@ -119,6 +107,18 @@ msgstr ""
 
 msgctxt "#30027"
 msgid "Fetch picons from webinterface"
+msgstr ""
+
+msgctxt "#30028"
+msgid "Use https"
+msgstr ""
+
+msgctxt "#30100"
+msgid "Enable Timeshift"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Timeshift buffer path"
 msgstr ""
 
 #empty strings from id 30028 to 30499

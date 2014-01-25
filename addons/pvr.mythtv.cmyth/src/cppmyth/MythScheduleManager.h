@@ -36,6 +36,13 @@ typedef std::vector<MythRecordingRule> OverrideRuleList;
 // Schedule element is pair < index of schedule , program info of schedule >
 typedef std::vector<std::pair<unsigned int, boost::shared_ptr<MythProgramInfo> > > ScheduleList;
 
+typedef struct
+{
+  bool        isRepeating;
+  int         weekDays;
+  const char* marker;
+} RuleMetadata;
+
 class MythRecordingRuleNode
 {
 public:
@@ -97,20 +104,24 @@ public:
     VersionHelper() {}
     virtual ~VersionHelper();
     virtual bool SameTimeslot(MythRecordingRule &first, MythRecordingRule &second) const = 0;
+    virtual RuleMetadata GetMetadata(const MythRecordingRule &rule) const = 0;
     virtual MythRecordingRule NewFromTemplate(MythEPGInfo &epgInfo) = 0;
     virtual MythRecordingRule NewSingleRecord(MythEPGInfo &epgInfo) = 0;
     virtual MythRecordingRule NewDailyRecord(MythEPGInfo &epgInfo) = 0;
     virtual MythRecordingRule NewWeeklyRecord(MythEPGInfo &epgInfo) = 0;
-    virtual MythRecordingRule NewChannelRecord(const CStdString &searchTitle) = 0;
-    virtual MythRecordingRule NewOneRecord(const CStdString &searchTitle) = 0;
+    virtual MythRecordingRule NewChannelRecord(MythEPGInfo &epgInfo) = 0;
+    virtual MythRecordingRule NewOneRecord(MythEPGInfo &epgInfo) = 0;
   };
 
+  RuleMetadata GetMetadata(const MythRecordingRule &rule) const;
   MythRecordingRule NewFromTemplate(MythEPGInfo &epgInfo);
   MythRecordingRule NewSingleRecord(MythEPGInfo &epgInfo);
   MythRecordingRule NewDailyRecord(MythEPGInfo &epgInfo);
   MythRecordingRule NewWeeklyRecord(MythEPGInfo &epgInfo);
-  MythRecordingRule NewChannelRecord(const CStdString &searchTitle);
-  MythRecordingRule NewOneRecord(const CStdString &searchTitle);
+  MythRecordingRule NewChannelRecord(MythEPGInfo &epgInfo);
+  MythRecordingRule NewOneRecord(MythEPGInfo &epgInfo);
+
+  bool ToggleShowNotRecording();
 
 private:
   mutable PLATFORM::CMutex m_lock;
@@ -136,6 +147,8 @@ private:
   NodeById m_rulesById;
   RecordingList m_recordings;
   RecordingIndexByRuleId m_recordingIndexByRuleId;
+
+  bool m_showNotRecording;
 };
 
 
@@ -152,12 +165,13 @@ inline MythScheduleManager::VersionHelper::~VersionHelper() {
 class MythScheduleHelperNoHelper : public MythScheduleManager::VersionHelper {
 public:
   virtual bool SameTimeslot(MythRecordingRule &first, MythRecordingRule &second) const;
+  virtual RuleMetadata GetMetadata(const MythRecordingRule &rule) const;
   virtual MythRecordingRule NewFromTemplate(MythEPGInfo &epgInfo);
   virtual MythRecordingRule NewSingleRecord(MythEPGInfo &epgInfo);
   virtual MythRecordingRule NewDailyRecord(MythEPGInfo &epgInfo);
   virtual MythRecordingRule NewWeeklyRecord(MythEPGInfo &epgInfo);
-  virtual MythRecordingRule NewChannelRecord(const CStdString &searchTitle);
-  virtual MythRecordingRule NewOneRecord(const CStdString &searchTitle);
+  virtual MythRecordingRule NewChannelRecord(MythEPGInfo &epgInfo);
+  virtual MythRecordingRule NewOneRecord(MythEPGInfo &epgInfo);
 };
 
 // Base 0.24
@@ -168,12 +182,13 @@ public:
   MythScheduleHelper1226(MythDatabase &db) : m_db(db) {
   }
   virtual bool SameTimeslot(MythRecordingRule &first, MythRecordingRule &second) const;
+  virtual RuleMetadata GetMetadata(const MythRecordingRule &rule) const;
   virtual MythRecordingRule NewFromTemplate(MythEPGInfo &epgInfo);
   virtual MythRecordingRule NewSingleRecord(MythEPGInfo &epgInfo);
   virtual MythRecordingRule NewDailyRecord(MythEPGInfo &epgInfo);
   virtual MythRecordingRule NewWeeklyRecord(MythEPGInfo &epgInfo);
-  virtual MythRecordingRule NewChannelRecord(const CStdString &searchTitle);
-  virtual MythRecordingRule NewOneRecord(const CStdString &searchTitle);
+  virtual MythRecordingRule NewChannelRecord(MythEPGInfo &epgInfo);
+  virtual MythRecordingRule NewOneRecord(MythEPGInfo &epgInfo);
 protected:
   MythDatabase m_db;
 };
@@ -206,8 +221,9 @@ public:
 
   MythScheduleHelper1309(MythDatabase &db) : MythScheduleHelper1302(db) {
   }
-  //virtual bool SameTimeslot(MythRecordingRule &first, MythRecordingRule &second) const;
-  //virtual MythRecordingRule NewSingleRecord() const;
-  //virtual MythRecordingRule NewDailyRecord() const;
-  //virtual MythRecordingRule NewWeeklyRecord() const;
+  virtual RuleMetadata GetMetadata(const MythRecordingRule &rule) const;
+  virtual MythRecordingRule NewDailyRecord(MythEPGInfo &epgInfo);
+  virtual MythRecordingRule NewWeeklyRecord(MythEPGInfo &epgInfo);
+  virtual MythRecordingRule NewChannelRecord(MythEPGInfo &epgInfo);
+  virtual MythRecordingRule NewOneRecord(MythEPGInfo &epgInfo);
 };

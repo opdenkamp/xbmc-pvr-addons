@@ -508,7 +508,7 @@ cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 	ret = 0;
 	while(file->file_pos < file->file_req) {
 		c = file->file_req - file->file_pos;
-		if(c > sizeof(msg))
+		if (c > (int64_t)sizeof(msg))
 			c = sizeof(msg);
 
 		if ((ret = cmyth_file_get_block(file, msg, (size_t)c)) < 0)

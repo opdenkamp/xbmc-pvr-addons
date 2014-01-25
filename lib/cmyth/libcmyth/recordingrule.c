@@ -73,6 +73,10 @@ cmyth_recordingrule_destroy(cmyth_recordingrule_t rr)
 		ref_release(rr->profile);
 	if (rr->inetref)
 		ref_release(rr->inetref);
+	if (rr->programid)
+		ref_release(rr->programid);
+	if (rr->seriesid)
+		ref_release(rr->seriesid);
 }
 
 /*
@@ -236,6 +240,8 @@ cmyth_recordingrule_init(void)
 	cmyth_recordingrule_set_parentid(rr, 0);
 	cmyth_recordingrule_set_profile(rr, "Default");
 	cmyth_recordingrule_set_prefinput(rr, 0);
+	cmyth_recordingrule_set_programid(rr, "");
+	cmyth_recordingrule_set_seriesid(rr, "");
 	cmyth_recordingrule_set_autometadata(rr, 0);
 	cmyth_recordingrule_set_inetref(rr, "");
 	cmyth_recordingrule_set_season(rr, 0);
@@ -297,6 +303,8 @@ cmyth_recordingrule_dup(cmyth_recordingrule_t rule) {
 	cmyth_recordingrule_set_parentid(rr, rule->parentid);
 	cmyth_recordingrule_set_profile(rr, rule->profile);
 	cmyth_recordingrule_set_prefinput(rr, rule->prefinput);
+	cmyth_recordingrule_set_programid(rr, rule->programid);
+	cmyth_recordingrule_set_seriesid(rr, rule->seriesid);
 	cmyth_recordingrule_set_autometadata(rr, rule->autometadata);
 	cmyth_recordingrule_set_inetref(rr, rule->inetref);
 	cmyth_recordingrule_set_season(rr, rule->season);
@@ -775,6 +783,40 @@ void
 cmyth_recordingrule_set_prefinput(cmyth_recordingrule_t rr, uint32_t prefinput)
 {
 	rr->prefinput = prefinput;
+}
+
+char *
+cmyth_recordingrule_programid(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return NULL;
+	}
+	return ref_hold(rr->programid);
+}
+
+void
+cmyth_recordingrule_set_programid(cmyth_recordingrule_t rr, char *programid)
+{
+	if (rr->programid)
+		ref_release(rr->programid);
+	rr->programid = ref_strdup(programid);
+}
+
+char *
+cmyth_recordingrule_seriesid(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return NULL;
+	}
+	return ref_hold(rr->seriesid);
+}
+
+void
+cmyth_recordingrule_set_seriesid(cmyth_recordingrule_t rr, char *seriesid)
+{
+	if (rr->seriesid)
+		ref_release(rr->seriesid);
+	rr->seriesid = ref_strdup(seriesid);
 }
 
 uint8_t

@@ -799,12 +799,20 @@ extern cmyth_keyframe_t cmyth_keyframe_create(void);
 
 extern char *cmyth_keyframe_string(cmyth_keyframe_t kf);
 
+extern uint32_t cmyth_keyframe_number(cmyth_keyframe_t kf);
+
+extern int64_t cmyth_keyframe_pos(cmyth_keyframe_t kf);
+
 /*
  * -----------------------------------------------------------------
  * Position Map Operations
  * -----------------------------------------------------------------
  */
 extern cmyth_posmap_t cmyth_posmap_create(void);
+
+extern int cmyth_posmap_count(cmyth_posmap_t pm);
+
+extern cmyth_keyframe_t cmyth_posmap_keyframe(cmyth_posmap_t pm, int index);
 
 /*
  * -----------------------------------------------------------------
@@ -936,7 +944,7 @@ extern uint16_t cmyth_proginfo_episode(cmyth_proginfo_t prog);
  * \param prog proginfo handle
  * \return null-terminated string
  */
-extern char *proginfo_syndicated_episode(cmyth_proginfo_t prog);
+extern char *cmyth_proginfo_syndicated_episode(cmyth_proginfo_t prog);
 
 /**
  * Retrieve the category of a program.
@@ -1845,6 +1853,40 @@ extern uint32_t cmyth_recordingrule_prefinput(cmyth_recordingrule_t rr);
  * \param prefinput
  */
 extern void cmyth_recordingrule_set_prefinput(cmyth_recordingrule_t rr, uint32_t prefinput);
+
+/**
+ * Retrieves the 'programid' field of a recording rule structure.
+ * Before forgetting the reference to this string the caller
+ * must call ref_release().
+ * \param rr
+ * \return success: programid
+ * \return failure: NULL
+ */
+extern char *cmyth_recordingrule_programid(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'programid' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param programid
+ */
+extern void cmyth_recordingrule_set_programid(cmyth_recordingrule_t rr, char *programid);
+
+/**
+ * Retrieves the 'seriesid' field of a recording rule structure.
+ * Before forgetting the reference to this string the caller
+ * must call ref_release().
+ * \param rr
+ * \return success: seriesid
+ * \return failure: NULL
+ */
+extern char *cmyth_recordingrule_seriesid(cmyth_recordingrule_t rr);
+
+/**
+ * Set the 'seriesid' field of the recording rule structure 'rr'.
+ * \param rr
+ * \param seriesid
+ */
+extern void cmyth_recordingrule_set_seriesid(cmyth_recordingrule_t rr, char *seriesid);
 
 /**
  * Retrieves the 'autometadata' field of a recording rule structure.

@@ -21,6 +21,7 @@
 #include "cppmyth.h"
 #include "fileOps.h"
 #include "categories.h"
+#include "demux.h"
 
 #include <xbmc_pvr_types.h>
 #include <platform/threads/mutex.h>
@@ -81,6 +82,16 @@ public:
   long long LengthLiveStream();
   PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
 
+  PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties);
+  void DemuxAbort(void);
+  void DemuxFlush(void);
+  DemuxPacket* DemuxRead(void);
+  bool SeekTime(int time, bool backwards, double *startpts);
+
+  time_t GetPlayingTime();
+  time_t GetBufferTimeStart();
+  time_t GetBufferTimeEnd();
+
   // Recording playback
   bool OpenRecordedStream(const PVR_RECORDING &recinfo);
   void CloseRecordedStream();
@@ -117,7 +128,13 @@ private:
   ChannelIdMap m_channelsById;
   ChannelNumberMap m_channelsByNumber;
   ChannelGroupMap m_channelGroups;
+  typedef std::map<int, int> PVRChannelMap;
+  PVRChannelMap m_PVRChannelUidById;
   void LoadChannelsAndChannelGroups();
+  int FindPVRChannelUid(int channelId) const;
+
+  // Demuxer TS
+  Demux *m_demux;
 
   // Recordings
   ProgramInfoMap m_recordings;
@@ -141,4 +158,11 @@ private:
    * \see class MythProgramInfo , class MythEPGInfo
    */
   CStdString MakeProgramTitle(const CStdString &title, const CStdString &subtitle) const;
+
+  /**
+   *
+   * \brief Handle broadcast UID for MythTV program
+   */
+  int MakeBroadcastID(unsigned int chanid, time_t starttime) const;
+  void BreakBroadcastID(int broadcastid, unsigned int *chanid, time_t *starttime) const;
 };

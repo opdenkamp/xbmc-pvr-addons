@@ -247,8 +247,17 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   
   dvblinkclient = new DVBLinkClient(XBMC,PVR, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword, g_bUseTimeshift, g_szTimeShiftBufferPath);
 
-  m_CurStatus = ADDON_STATUS_OK;
-  m_bCreated = true;
+  
+  if (dvblinkclient->GetStatus())
+  {
+    m_CurStatus = ADDON_STATUS_OK;
+    m_bCreated = true;
+  }
+  else
+  {
+    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+  }
+
   return m_CurStatus;
 }
 
@@ -462,8 +471,13 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 {
  if (dvblinkclient)
  {
-   dvblinkclient->GetDriveSpace(iTotal, iUsed);
-   return PVR_ERROR_NO_ERROR;
+   if (dvblinkclient->GetStatus())    
+   {
+     dvblinkclient->GetDriveSpace(iTotal, iUsed);
+     return PVR_ERROR_NO_ERROR;
+   }
+   else
+     return PVR_ERROR_SERVER_ERROR;
  }
   return PVR_ERROR_SERVER_ERROR;
 }
@@ -471,7 +485,12 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
   if (dvblinkclient)
-    return dvblinkclient->GetEPGForChannel(handle, channel, iStart, iEnd);
+  {
+    if (dvblinkclient->GetStatus())    
+      return dvblinkclient->GetEPGForChannel(handle, channel, iStart, iEnd);
+    else
+      return PVR_ERROR_SERVER_ERROR;
+  }	  
 
   return PVR_ERROR_SERVER_ERROR;
 }
@@ -479,7 +498,12 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
 int GetChannelsAmount(void)
 {
   if (dvblinkclient)
-    return dvblinkclient->GetChannelsAmount();
+  {
+    if (dvblinkclient->GetStatus())
+      return dvblinkclient->GetChannelsAmount();
+    else
+      return PVR_ERROR_SERVER_ERROR;
+  }
 
   return -1;
 }
@@ -487,7 +511,12 @@ int GetChannelsAmount(void)
 PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
   if (dvblinkclient)
-    return dvblinkclient->GetChannels(handle, bRadio);
+  {
+    if (dvblinkclient->GetStatus())
+      return dvblinkclient->GetChannels(handle, bRadio);	
+    else
+      return PVR_ERROR_SERVER_ERROR;
+  }
 
   return PVR_ERROR_SERVER_ERROR;
 }

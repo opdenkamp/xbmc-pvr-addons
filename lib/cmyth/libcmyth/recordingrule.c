@@ -55,6 +55,10 @@ cmyth_recordingrule_destroy(cmyth_recordingrule_t rr)
 		ref_release(rr->description);
 	if (rr->category)
 		ref_release(rr->category);
+	if (rr->subtitle)
+		ref_release(rr->subtitle);
+	if (rr->callsign)
+		ref_release(rr->callsign);
 	if (rr->recgroup)
 		ref_release(rr->recgroup);
 	if (rr->storagegroup)
@@ -69,6 +73,10 @@ cmyth_recordingrule_destroy(cmyth_recordingrule_t rr)
 		ref_release(rr->profile);
 	if (rr->inetref)
 		ref_release(rr->inetref);
+	if (rr->programid)
+		ref_release(rr->programid);
+	if (rr->seriesid)
+		ref_release(rr->seriesid);
 }
 
 /*
@@ -102,21 +110,7 @@ cmyth_recordingrule_create(void)
 	}
 	ref_set_destroy(ret, (ref_destroy_t)cmyth_recordingrule_destroy);
 
-	ret->starttime = cmyth_timestamp_create();
-	if (!ret->starttime) {
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: cmyth_timestamp_create() failed\n", __FUNCTION__);
-		goto err;
-	}
-	ret->endtime = cmyth_timestamp_create();
-	if (!ret->endtime) {
-		cmyth_dbg(CMYTH_DBG_DEBUG, "%s: cmyth_timestamp_create() failed\n", __FUNCTION__);
-		goto err;
-	}
 	return ret;
-
-	err:
-	ref_release(ret);
-	return NULL;
 }
 
 /*
@@ -223,7 +217,7 @@ cmyth_recordingrule_init(void)
 	cmyth_recordingrule_set_endtime(rr, 0);
 	cmyth_recordingrule_set_title(rr, "");
 	cmyth_recordingrule_set_description(rr, "");
-	cmyth_recordingrule_set_type(rr, RRULE_DONT_RECORD);
+	cmyth_recordingrule_set_type(rr, RRULE_NOT_RECORDING);
 	cmyth_recordingrule_set_category(rr, "");
 	cmyth_recordingrule_set_subtitle(rr, "");
 	cmyth_recordingrule_set_recpriority(rr, 0);
@@ -243,13 +237,79 @@ cmyth_recordingrule_init(void)
 	cmyth_recordingrule_set_maxepisodes(rr, 0);
 	cmyth_recordingrule_set_maxnewest(rr, 0);
 	cmyth_recordingrule_set_transcoder(rr, 0);
-        cmyth_recordingrule_set_profile(rr, "Default");
+	cmyth_recordingrule_set_parentid(rr, 0);
+	cmyth_recordingrule_set_profile(rr, "Default");
 	cmyth_recordingrule_set_prefinput(rr, 0);
+	cmyth_recordingrule_set_programid(rr, "");
+	cmyth_recordingrule_set_seriesid(rr, "");
 	cmyth_recordingrule_set_autometadata(rr, 0);
 	cmyth_recordingrule_set_inetref(rr, "");
 	cmyth_recordingrule_set_season(rr, 0);
 	cmyth_recordingrule_set_episode(rr, 0);
 	cmyth_recordingrule_set_filter(rr, 0);
+	return rr;
+}
+/*
+ * cmyth_recordingrule_dup()
+ *
+ * Scope: PUBLIC
+ *
+ * Description
+ *
+ * Duplicate a recording rule.
+ * Before forgetting the reference to this recording schedule structure
+ * the caller must call ref_release().
+ *
+ * Return Value:
+ *
+ * Success: A non-NULL cmyth_recordingrule_t (this type is a pointer)
+ *
+ * Failure: NULL
+ */
+cmyth_recordingrule_t
+cmyth_recordingrule_dup(cmyth_recordingrule_t rule) {
+	cmyth_recordingrule_t rr = cmyth_recordingrule_create();
+	if (!rr) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: cmyth_recordingrule_create failed\n", __FUNCTION__);
+		return NULL;
+	}
+	cmyth_recordingrule_set_recordid(rr, rule->recordid);
+	cmyth_recordingrule_set_chanid(rr, rule->chanid);
+	cmyth_recordingrule_set_callsign(rr, rule->callsign);
+	cmyth_recordingrule_set_starttime(rr, cmyth_timestamp_to_unixtime(rule->starttime));
+	cmyth_recordingrule_set_endtime(rr, cmyth_timestamp_to_unixtime(rule->endtime));
+	cmyth_recordingrule_set_title(rr, rule->title);
+	cmyth_recordingrule_set_description(rr, rule->description);
+	cmyth_recordingrule_set_type(rr, rule->type);
+	cmyth_recordingrule_set_category(rr, rule->category);
+	cmyth_recordingrule_set_subtitle(rr, rule->subtitle);
+	cmyth_recordingrule_set_recpriority(rr, rule->recpriority);
+	cmyth_recordingrule_set_startoffset(rr, rule->startoffset);
+	cmyth_recordingrule_set_endoffset(rr, rule->endoffset);
+	cmyth_recordingrule_set_searchtype(rr, rule->searchtype);
+	cmyth_recordingrule_set_inactive(rr, rule->inactive);
+	cmyth_recordingrule_set_dupmethod(rr, rule->dupmethod);
+	cmyth_recordingrule_set_dupin(rr, rule->dupin);
+	cmyth_recordingrule_set_recgroup(rr, rule->recgroup);
+	cmyth_recordingrule_set_storagegroup(rr, rule->storagegroup);
+	cmyth_recordingrule_set_playgroup(rr, rule->playgroup);
+	cmyth_recordingrule_set_autotranscode(rr, rule->autotranscode);
+	cmyth_recordingrule_set_userjobs(rr, rule->userjobs);
+	cmyth_recordingrule_set_autocommflag(rr, rule->autocommflag);
+	cmyth_recordingrule_set_autoexpire(rr, rule->autoexpire);
+	cmyth_recordingrule_set_maxepisodes(rr, rule->maxepisodes);
+	cmyth_recordingrule_set_maxnewest(rr, rule->maxnewest);
+	cmyth_recordingrule_set_transcoder(rr, rule->transcoder);
+	cmyth_recordingrule_set_parentid(rr, rule->parentid);
+	cmyth_recordingrule_set_profile(rr, rule->profile);
+	cmyth_recordingrule_set_prefinput(rr, rule->prefinput);
+	cmyth_recordingrule_set_programid(rr, rule->programid);
+	cmyth_recordingrule_set_seriesid(rr, rule->seriesid);
+	cmyth_recordingrule_set_autometadata(rr, rule->autometadata);
+	cmyth_recordingrule_set_inetref(rr, rule->inetref);
+	cmyth_recordingrule_set_season(rr, rule->season);
+	cmyth_recordingrule_set_episode(rr, rule->episode);
+	cmyth_recordingrule_set_filter(rr, rule->filter);
 	return rr;
 }
 
@@ -678,6 +738,21 @@ cmyth_recordingrule_set_transcoder(cmyth_recordingrule_t rr, uint32_t transcoder
 	rr->transcoder = transcoder;
 }
 
+uint32_t
+cmyth_recordingrule_parentid(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return 0;
+	}
+	return rr->parentid;
+}
+
+void
+cmyth_recordingrule_set_parentid(cmyth_recordingrule_t rr, uint32_t parentid)
+{
+	rr->parentid = parentid;
+}
+
 char *
 cmyth_recordingrule_profile(cmyth_recordingrule_t rr)
 {
@@ -708,6 +783,40 @@ void
 cmyth_recordingrule_set_prefinput(cmyth_recordingrule_t rr, uint32_t prefinput)
 {
 	rr->prefinput = prefinput;
+}
+
+char *
+cmyth_recordingrule_programid(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return NULL;
+	}
+	return ref_hold(rr->programid);
+}
+
+void
+cmyth_recordingrule_set_programid(cmyth_recordingrule_t rr, char *programid)
+{
+	if (rr->programid)
+		ref_release(rr->programid);
+	rr->programid = ref_strdup(programid);
+}
+
+char *
+cmyth_recordingrule_seriesid(cmyth_recordingrule_t rr)
+{
+	if (!rr) {
+		return NULL;
+	}
+	return ref_hold(rr->seriesid);
+}
+
+void
+cmyth_recordingrule_set_seriesid(cmyth_recordingrule_t rr, char *seriesid)
+{
+	if (rr->seriesid)
+		ref_release(rr->seriesid);
+	rr->seriesid = ref_strdup(seriesid);
 }
 
 uint8_t

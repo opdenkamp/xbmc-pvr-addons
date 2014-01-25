@@ -31,6 +31,7 @@ extern "C" {
 
 class MythProgramInfo;
 class MythChannel;
+class MythFile;
 
 template <class T> class MythPointer;
 
@@ -60,13 +61,20 @@ public:
   int ReadLiveTV(void *buffer, unsigned int length);
   long long LiveTVSeek(long long offset, int whence);
   long long LiveTVDuration();
+  int GetLiveTVChainLast();
+  MythProgramInfo GetLiveTVChainProgram(int index);
+  MythFile GetLiveTVChainFile(int index);
 
   bool Stop();
+
+  bool IsLiveRecording();
+  bool SetLiveRecording(bool recording);
 
 private:
   boost::shared_ptr<MythPointerThreadSafe<cmyth_recorder_t> > m_recorder_t;
   boost::shared_ptr<int> m_liveChainUpdated;
   MythConnection m_conn;
+  bool m_liveRecording;
 
   static void prog_update_callback(cmyth_proginfo_t prog);
 };

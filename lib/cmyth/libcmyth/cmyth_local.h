@@ -62,6 +62,7 @@ typedef int cmyth_socket_t;
 #define CMYTH_INT16_LEN (sizeof("-65536") - 1)
 #define CMYTH_INT8_LEN (sizeof("-256") - 1)
 #define CMYTH_TIMESTAMP_LEN (sizeof("YYYY-MM-DDTHH:MM:SS") - 1)
+#define CMYTH_TIMESTAMP_UTC_LEN (sizeof("YYYY-MM-DDTHH:MM:SSZ") - 1)
 #define CMYTH_TIMESTAMP_NUMERIC_LEN (sizeof("YYYYMMDDHHMMSS") - 1)
 #define CMYTH_DATESTAMP_LEN (sizeof("YYYY-MM-DD") - 1)
 #define CMYTH_UTC_LEN (sizeof("1240120680") - 1)
@@ -187,6 +188,7 @@ struct cmyth_timestamp {
 	unsigned long timestamp_minute;
 	unsigned long timestamp_second;
 	int timestamp_isdst;
+	int timestamp_isutc;
 };
 
 struct cmyth_proginfo {
@@ -195,6 +197,7 @@ struct cmyth_proginfo {
 	char *proginfo_description;
 	uint16_t proginfo_season;    /* new in V67 */
 	uint16_t proginfo_episode;    /* new in V67 */
+	char *proginfo_syndicated_episode; /* new in V76 */
 	char *proginfo_category;
 	uint32_t proginfo_chanId;
 	char *proginfo_chanstr;
@@ -213,7 +216,7 @@ struct cmyth_proginfo {
 	uint32_t proginfo_source_id; /* ??? in V8 */
 	uint32_t proginfo_card_id;   /* ??? in V8 */
 	uint32_t proginfo_input_id;  /* ??? in V8 */
-	int8_t proginfo_rec_priority;  /* ??? in V8 */
+	int32_t proginfo_rec_priority;  /* ??? in V8 */
 	int8_t proginfo_rec_status; /* ??? in V8 */
 	uint32_t proginfo_record_id;  /* ??? in V8 */
 	uint8_t proginfo_rec_type;   /* ??? in V8 */
@@ -239,13 +242,15 @@ struct cmyth_proginfo {
 	char *proginfo_host;
 	uint32_t proginfo_version;
 	char *proginfo_playgroup; /* new in v18 */
-	int8_t proginfo_recpriority_2;  /* new in V25 */
+	int32_t proginfo_recpriority_2;  /* new in V25 */
 	uint32_t proginfo_parentid; /* new in V31 */
 	char *proginfo_storagegroup; /* new in v32 */
 	uint16_t proginfo_audioproperties; /* new in v35 */
 	uint16_t proginfo_videoproperties; /* new in v35 */
 	uint16_t proginfo_subtitletype; /* new in v35 */
 	uint16_t proginfo_year; /* new in v43 */
+	uint16_t proginfo_partnumber; /* new in V76 */
+	uint16_t proginfo_parttotal; /* new in V76 */
 };
 
 struct cmyth_proglist {
@@ -273,7 +278,7 @@ extern int cmyth_rcv_string(cmyth_conn_t conn,
 extern int cmyth_rcv_okay(cmyth_conn_t conn);
 
 #define cmyth_rcv_feedback __cmyth_rcv_feedback
-extern int cmyth_rcv_feedback(cmyth_conn_t conn, char *fb);
+extern int cmyth_rcv_feedback(cmyth_conn_t conn, char *fb, int fblen);
 
 #define cmyth_rcv_version __cmyth_rcv_version
 extern int cmyth_rcv_version(cmyth_conn_t conn, uint32_t *vers);
@@ -305,7 +310,7 @@ extern int cmyth_rcv_uint16(cmyth_conn_t conn, int *err, uint16_t *buf, int coun
 extern int cmyth_rcv_uint32(cmyth_conn_t conn, int *err, uint32_t *buf, int count);
 
 #define cmyth_rcv_data __cmyth_rcv_data
-extern int cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int count);
+extern int cmyth_rcv_data(cmyth_conn_t conn, int *err, unsigned char *buf, int buflen, int count);
 
 #define cmyth_rcv_timestamp __cmyth_rcv_timestamp
 extern int cmyth_rcv_timestamp(cmyth_conn_t conn, int *err,
@@ -335,6 +340,11 @@ extern int cmyth_rcv_proglist(cmyth_conn_t conn, int *err,
 extern int cmyth_rcv_keyframe(cmyth_conn_t conn, int *err,
 			      cmyth_keyframe_t buf,
 			      int count);
+
+#define cmyth_rcv_posmap __cmyth_rcv_posmap
+extern int cmyth_rcv_posmap(cmyth_conn_t conn, int *err,
+			    cmyth_posmap_t buf,
+			    int count);
 
 #define cmyth_rcv_freespace __cmyth_rcv_freespace
 extern int cmyth_rcv_freespace(cmyth_conn_t conn, int *err,
@@ -421,6 +431,7 @@ struct cmyth_channel {
 	char *name;
 	char *icon;
 	uint8_t visible;
+	uint8_t radio;
 	uint32_t sourceid;
 	uint32_t multiplex;
 };
@@ -467,13 +478,16 @@ struct cmyth_recordingrule {
 	uint32_t maxepisodes;            //range 0,100
 	uint8_t maxnewest;               //bool
 	uint32_t transcoder;             //recordingprofiles id
+	uint32_t parentid;               //parent rule recordid
 	char* profile;
 	uint32_t prefinput;
+	char* programid;
+	char* seriesid;
 	uint8_t autometadata;            //DB version 1278
 	char* inetref;                   //DB version 1278
 	uint16_t season;                 //DB version 1278
 	uint16_t episode;                //DB version 1278
-	uint32_t filter;		 //DB version 1276
+	uint32_t filter;                 //DB version 1276
 	};
 
 struct cmyth_recordingrulelist {
@@ -508,5 +522,42 @@ extern cmyth_storagegroup_file_t cmyth_storagegroup_file_create(void);
 
 #define cmyth_storagegroup_filelist_create __cmyth_storagegroup_filelist_create
 extern cmyth_storagegroup_filelist_t cmyth_storagegroup_filelist_create(void);
+
+/*
+ * From epginfo.c
+ */
+struct cmyth_epginfo {
+	uint32_t chanid;
+	char* callsign;
+	char* channame;
+	uint32_t sourceid;
+	char* title;
+	char* subtitle;
+	char* description;
+	time_t starttime;
+	time_t endtime;
+	char* programid;
+	char* seriesid;
+	char* category;
+	char* category_type;
+	uint32_t channum;
+};
+
+struct cmyth_epginfolist {
+	cmyth_epginfo_t *epginfolist_list;
+	int epginfolist_count;
+};
+
+#define cmyth_epginfo_create __cmyth_epginfo_create
+extern cmyth_epginfo_t cmyth_epginfo_create(void);
+
+#define cmyth_epginfolist_create __cmyth_epginfolist_create
+extern cmyth_epginfolist_t cmyth_epginfolist_create(void);
+
+/*
+ * From mythtv_mysql.c
+ */
+#define cmyth_mysql_escape_chars __cmyth_mysql_escape_chars
+extern char *cmyth_mysql_escape_chars(cmyth_database_t db, char * string);
 
 #endif /* __CMYTH_LOCAL_H */

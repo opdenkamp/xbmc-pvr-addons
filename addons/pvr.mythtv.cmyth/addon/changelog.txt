@@ -1,3 +1,31 @@
+v1.9.13
+- Added demuxer (optional)
+     - Faster channel switching
+- Fixed compatibility with MythTV 0.27 backend
+     - Fixed channel icon download
+     - Fixed schedule management
+- Fixed recognizing merged channels
+
+v1.6.12
+- Fixed crash when reconnecting to the backend
+- Fixed setting bookmarks when using MythTV 0.27 backend
+- Fixed usage of priority values (>256)
+- Fixed remaining time zone issues by using UTC based timestamps
+- Schedule management refactoring
+     - Fixed recording rule deletion
+     - Fixed handling of backend version specific varieties
+     - Fixed failed mappings due to gaps in the EPG
+     - Various smaller improvements and bug fixes
+- Improved start of Live TV playback
+
+v1.6.11
+- Added support for MythTV protocol 76 and 77 (MythTV 0.27)
+- Allow the backend to shutdown (by using monitor and playback connections)
+- Reduced startup time (Faster loading of channels)
+- Fixed start time for instant recordings
+- Fixed several smaller memory and multithreading issues
+- Refactored & cleaned up libcmyth (epginfo)
+
 v1.6.10
 - Fixed crash when setting up Live TV (in rare cases)
 - Fixed issue with not updated recording list (Daylight Saving Time)

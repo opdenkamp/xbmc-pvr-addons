@@ -34,6 +34,18 @@ extern "C" {
 
 #ifdef __WINDOWS__
 #define strdup _strdup // # strdup is POSIX, _strdup should be used instead
+
+static inline struct tm *localtime_r(const time_t * clock, struct tm *result)
+{
+	struct tm *data;
+	if (!clock || !result)
+		return NULL;
+	data = localtime(clock);
+	if (!data)
+		return NULL;
+	memcpy(result, data, sizeof(*result));
+	return result;
+}
 #endif
 
 #define TCP_RCV_BUF_CONTROL_SIZE           128000 // Inherited from MythTV's MythSocket class
@@ -59,6 +71,8 @@ extern "C" {
 #define DEFAULT_RECORD_TEMPLATE            1
 
 #define SUBTITLE_SEPARATOR " - "
+
+#define DEFAULT_HANDLE_DEMUXING            false
 
 /*!
  * @brief PVR macros for string exchange
@@ -98,6 +112,7 @@ extern bool         g_bRecAutoRunJob3;
 extern bool         g_bRecAutoRunJob4;
 extern bool         g_bRecAutoExpire;
 extern int          g_iRecTranscoder;
+extern bool         g_bDemuxing;
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr   *PVR;

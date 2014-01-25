@@ -33,7 +33,7 @@ class MythChannel
 {
 public:
   MythChannel();
-  MythChannel(cmyth_channel_t cmyth_channel, bool isRadio);
+  MythChannel(cmyth_channel_t cmyth_channel);
 
   bool IsNull() const;
 
@@ -44,11 +44,10 @@ public:
   CStdString Callsign();
   CStdString Icon();
   bool Visible();
-  bool IsRadio() const;
+  bool IsRadio();
   unsigned int SourceID();
   unsigned int MultiplexID();
 
 private:
   boost::shared_ptr<MythPointer<cmyth_channel_t> > m_channel_t;
-  bool m_radio;
 };

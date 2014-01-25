@@ -618,10 +618,10 @@ cmyth_proglist_sort(cmyth_proglist_t pl, int count, cmyth_proglist_sort_t sort)
 
 	switch (sort) {
 		case MYTHTV_SORT_DATE_RECORDED:	/* Default Date Recorded */
-			qsort((cmyth_proginfo_t)pl->proglist_list, count, sizeof(pl->proglist_list) , recorded_compare);
+			qsort((cmyth_proginfo_t)pl->proglist_list, count, pl->proglist_count, recorded_compare);
 			break;
 		case MYTHTV_SORT_ORIGINAL_AIRDATE: /*Default Date Recorded */
-			qsort((cmyth_proginfo_t)pl->proglist_list, count, sizeof(pl->proglist_list) , airdate_compare);
+			qsort((cmyth_proginfo_t)pl->proglist_list, count, pl->proglist_count, airdate_compare);
 			break;
 		default:
 			printf("Unsupported MythTV sort type\n");

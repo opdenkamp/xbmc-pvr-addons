@@ -23,13 +23,11 @@
 
 MythFile::MythFile()
   : m_file_t(new MythPointer<cmyth_file_t>())
-  , m_conn(MythConnection())
 {
 }
 
-MythFile::MythFile(cmyth_file_t myth_file, MythConnection conn)
+MythFile::MythFile(cmyth_file_t myth_file)
   : m_file_t(new MythPointer<cmyth_file_t>())
-  , m_conn(conn)
 {
   *m_file_t = myth_file;
 }
@@ -43,9 +41,8 @@ bool MythFile::IsNull() const
 
 unsigned long long MythFile::Length()
 {
-  unsigned long long retval = 0;
-  retval = cmyth_file_length(*m_file_t);
-  return retval;
+  int64_t length = cmyth_file_length(*m_file_t);
+  return length > 0 ? length : 0;
 }
 
 void MythFile::UpdateLength(unsigned long long length)

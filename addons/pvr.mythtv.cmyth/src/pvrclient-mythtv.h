@@ -21,37 +21,10 @@
 #include "cppmyth.h"
 #include "fileOps.h"
 #include "categories.h"
+#include "demux.h"
 
 #include <xbmc_pvr_types.h>
 #include <platform/threads/mutex.h>
-
-class RecordingRule : public MythRecordingRule, public std::vector<std::pair<PVR_TIMER, MythProgramInfo> >
-{
-public:
-  RecordingRule(const MythRecordingRule &rule);
-  RecordingRule& operator=(const MythRecordingRule &rule);
-  bool operator==(const unsigned int &id);
-
-  RecordingRule* GetParent() const;
-  void SetParent(RecordingRule &parent);
-
-  bool HasOverrideRules() const;
-  std::vector<RecordingRule*> GetOverrideRules() const;
-  void AddOverrideRule(RecordingRule &overrideRule);
-
-  bool SameTimeslot(RecordingRule &rule) const;
-
-  void push_back(std::pair<PVR_TIMER, MythProgramInfo> &_val);
-
-private:
-  void SaveTimerString(PVR_TIMER &timer);
-
-  RecordingRule* m_parent;
-  std::vector<RecordingRule*> m_overrideRules;
-  std::vector<boost::shared_ptr<CStdString> > m_stringStore;
-};
-
-typedef std::vector<RecordingRule> RecordingRuleList;
 
 class PVRClientMythTV : public MythEventObserver
 {
@@ -79,14 +52,17 @@ public:
   PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group);
 
   // Recordings
+  void UpdateRecordings();
   int GetRecordingsAmount(void);
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
+  PVR_ERROR DeleteAndForgetRecording(const PVR_RECORDING &recording);
   PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
   PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
   int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
 
   // Timers
+  void UpdateSchedules();
   int GetTimersAmount();
   PVR_ERROR GetTimers(ADDON_HANDLE handle);
   PVR_ERROR AddTimer(const PVR_TIMER &timer);
@@ -102,6 +78,12 @@ public:
   long long SeekLiveStream(long long iPosition, int iWhence);
   long long LengthLiveStream();
   PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
+
+  PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties);
+  void DemuxAbort(void);
+  void DemuxFlush(void);
+  DemuxPacket* DemuxRead(void);
+  bool SeekTime(int time, bool backwards, double *startpts);
 
   // Recording playback
   bool OpenRecordedStream(const PVR_RECORDING &recinfo);
@@ -126,6 +108,7 @@ private:
   FileOps *m_fileOps;
   PLATFORM::CMutex m_lock;
   MythFile m_file;
+  MythScheduleManager *m_scheduleManager;
 
   CStdString m_backendName;
   CStdString m_backendVersion;
@@ -138,7 +121,13 @@ private:
   ChannelIdMap m_channelsById;
   ChannelNumberMap m_channelsByNumber;
   ChannelGroupMap m_channelGroups;
+  typedef std::map<int, int> PVRChannelMap;
+  PVRChannelMap m_PVRChannelUidById;
   void LoadChannelsAndChannelGroups();
+  int FindPVRChannelUid(int channelId) const;
+
+  // Demuxer TS
+  Demux *m_demux;
 
   // Recordings
   ProgramInfoMap m_recordings;
@@ -146,10 +135,19 @@ private:
   void EventUpdateRecordings();
   void ForceUpdateRecording(ProgramInfoMap::iterator it);
   int FillRecordings();
+  MythChannel FindRecordingChannel(MythProgramInfo &programInfo);
+  bool IsMyLiveTVRecording(MythProgramInfo &programInfo);
+  bool KeepLiveTVRecording(MythProgramInfo &programInfo, bool keep);
 
   // Timers
-  RecordingRuleList m_recordingRules;
-  void PVRtoMythRecordingRule(const PVR_TIMER timer, MythRecordingRule &rule);
+  MythRecordingRule PVRtoMythRecordingRule(const PVR_TIMER &timer);
+  std::map<unsigned int, boost::shared_ptr<PVR_TIMER> > m_PVRtimerMemorandum;
 
-  CStdString GetArtWork(FileOps::FileType storageGroup, const CStdString &shwTitle);
+  /**
+   * \brief Returns full title of MythTV program
+   *
+   * Make formatted title based on original title and subtitle of program.
+   * \see class MythProgramInfo , class MythEPGInfo
+   */
+  CStdString MakeProgramTitle(const CStdString &title, const CStdString &subtitle) const;
 };

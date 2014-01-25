@@ -98,3 +98,21 @@ cmyth_keyframe_string(cmyth_keyframe_t kf)
 	strcat(ret, pos);
 	return ret;
 }
+
+uint32_t
+cmyth_keyframe_number(cmyth_keyframe_t kf)
+{
+	if (kf)
+		return kf->keyframe_number;
+	else
+		return 0;
+}
+
+int64_t
+cmyth_keyframe_pos(cmyth_keyframe_t kf)
+{
+	if (kf)
+		return kf->keyframe_pos;
+	else
+		return 0;
+}

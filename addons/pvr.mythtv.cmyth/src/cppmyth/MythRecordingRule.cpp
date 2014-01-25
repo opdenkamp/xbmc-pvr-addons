@@ -40,6 +40,11 @@ bool MythRecordingRule::IsNull() const
   return *m_recordingrule_t == NULL;
 }
 
+MythRecordingRule MythRecordingRule::DuplicateRecordingRule() const
+{
+  return MythRecordingRule(cmyth_recordingrule_dup(*m_recordingrule_t));
+}
+
 unsigned int MythRecordingRule::RecordID() const
 {
   return cmyth_recordingrule_recordid(*m_recordingrule_t);
@@ -361,4 +366,50 @@ unsigned int MythRecordingRule::Transcoder() const
 void MythRecordingRule::SetTranscoder(unsigned int transcoder)
 {
   cmyth_recordingrule_set_transcoder(*m_recordingrule_t, transcoder);
+}
+
+unsigned int MythRecordingRule::ParentID() const
+{
+  return cmyth_recordingrule_parentid(*m_recordingrule_t);
+}
+
+void MythRecordingRule::SetParentID(unsigned int parentid)
+{
+  cmyth_recordingrule_set_parentid(*m_recordingrule_t, parentid);
+}
+
+unsigned int MythRecordingRule::Filter() const
+{
+  return cmyth_recordingrule_filter(*m_recordingrule_t);
+}
+
+void MythRecordingRule::SetFilter(unsigned int filter)
+{
+  cmyth_recordingrule_set_filter(*m_recordingrule_t, filter);
+}
+
+CStdString MythRecordingRule::ProgramID() const
+{
+  char *buf = cmyth_recordingrule_programid(*m_recordingrule_t);
+  CStdString retval(buf);
+  ref_release(buf);
+  return retval;
+}
+
+void MythRecordingRule::SetProgramID(const CStdString &programid)
+{
+  cmyth_recordingrule_set_programid(*m_recordingrule_t, const_cast<char*>(programid.c_str()));
+}
+
+CStdString MythRecordingRule::SeriesID() const
+{
+  char *buf = cmyth_recordingrule_seriesid(*m_recordingrule_t);
+  CStdString retval(buf);
+  ref_release(buf);
+  return retval;
+}
+
+void MythRecordingRule::SetSeriesID(const CStdString &seriesid)
+{
+  cmyth_recordingrule_set_seriesid(*m_recordingrule_t, const_cast<char*>(seriesid.c_str()));
 }

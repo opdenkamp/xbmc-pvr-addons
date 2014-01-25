@@ -52,6 +52,7 @@ bool         g_bRecAutoRunJob3         = false;
 bool         g_bRecAutoRunJob4         = false;
 bool         g_bRecAutoExpire          = false;
 int          g_iRecTranscoder          = 0;
+bool         g_bDemuxing               = DEFAULT_HANDLE_DEMUXING;
 
 ///* Client member variables */
 ADDON_STATUS m_CurStatus              = ADDON_STATUS_UNKNOWN;
@@ -230,27 +231,32 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     XBMC->Log(LOG_ERROR, "Couldn't get 'rec_template_provider' setting, falling back to '%i' as default", DEFAULT_RECORD_TEMPLATE);
     g_iRecTemplateType = DEFAULT_RECORD_TEMPLATE;
   }
-  /* Get internal template settings when selected (0) */
-  if (g_iRecTemplateType == 0)
+  /* Get internal template settings */
+  if (!XBMC->GetSetting("rec_autometadata", &g_bRecAutoMetadata))
+    g_bRecAutoMetadata = true;
+  if (!XBMC->GetSetting("rec_autocommflag", &g_bRecAutoCommFlag))
+    g_bRecAutoCommFlag = false;
+  if (!XBMC->GetSetting("rec_autotranscode", &g_bRecAutoTranscode))
+    g_bRecAutoTranscode = false;
+  if (!XBMC->GetSetting("rec_autorunjob1", &g_bRecAutoRunJob1))
+    g_bRecAutoRunJob1 = false;
+  if (!XBMC->GetSetting("rec_autorunjob2", &g_bRecAutoRunJob2))
+    g_bRecAutoRunJob2 = false;
+  if (!XBMC->GetSetting("rec_autorunjob3", &g_bRecAutoRunJob3))
+    g_bRecAutoRunJob3 = false;
+  if (!XBMC->GetSetting("rec_autorunjob4", &g_bRecAutoRunJob4))
+    g_bRecAutoRunJob4 = false;
+  if (!XBMC->GetSetting("rec_autoexpire", &g_bRecAutoExpire))
+    g_bRecAutoExpire = false;
+  if (!XBMC->GetSetting("rec_transcoder", &g_iRecTranscoder))
+    g_iRecTranscoder = 0;
+
+  /* Read setting "demuxing" from settings.xml */
+  if (!XBMC->GetSetting("demuxing", &g_bDemuxing))
   {
-    if (!XBMC->GetSetting("rec_autometadata", &g_bRecAutoMetadata))
-      g_bRecAutoMetadata = true;
-    if (!XBMC->GetSetting("rec_autocommflag", &g_bRecAutoCommFlag))
-      g_bRecAutoCommFlag = false;
-    if (!XBMC->GetSetting("rec_autotranscode", &g_bRecAutoTranscode))
-      g_bRecAutoTranscode = false;
-    if (!XBMC->GetSetting("rec_autorunjob1", &g_bRecAutoRunJob1))
-      g_bRecAutoRunJob1 = false;
-    if (!XBMC->GetSetting("rec_autorunjob2", &g_bRecAutoRunJob2))
-      g_bRecAutoRunJob2 = false;
-    if (!XBMC->GetSetting("rec_autorunjob3", &g_bRecAutoRunJob3))
-      g_bRecAutoRunJob3 = false;
-    if (!XBMC->GetSetting("rec_autorunjob4", &g_bRecAutoRunJob4))
-      g_bRecAutoRunJob4 = false;
-    if (!XBMC->GetSetting("rec_autoexpire", &g_bRecAutoExpire))
-      g_bRecAutoExpire = false;
-    if (!XBMC->GetSetting("rec_transcoder", &g_iRecTranscoder))
-      g_iRecTranscoder = 0;
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'demuxing' setting, falling back to '%b' as default", DEFAULT_HANDLE_DEMUXING);
+    g_bDemuxing = DEFAULT_HANDLE_DEMUXING;
   }
 
   free (buffer);
@@ -383,23 +389,23 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     if (tmp_sDBName != g_szDBName)
       return ADDON_STATUS_NEED_RESTART;
   }
+  else if (str == "demuxing")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'demuxing' from %u to %u", g_bDemuxing, *(bool*)settingValue);
+    if (g_bDemuxing != *(bool*)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
+  }
   else if (str == "extradebug")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'extra debug' from %u to %u", g_bExtraDebug, *(bool*)settingValue);
     if (g_bExtraDebug != *(bool*)settingValue)
-    {
      g_bExtraDebug = *(bool*)settingValue;
-      return ADDON_STATUS_OK;
-    }
   }
   else if (str == "livetv")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'livetv' from %u to %u", g_bLiveTV, *(bool*)settingValue);
     if (g_bLiveTV != *(bool*)settingValue)
-    {
       g_bLiveTV = *(bool*)settingValue;
-      return ADDON_STATUS_OK;
-    }
   }
   else if (str == "livetv_priority")
   {
@@ -408,8 +414,67 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     {
       g_bLiveTVPriority = *(bool*)settingValue;
       g_client->SetLiveTVPriority(g_bLiveTVPriority);
-      return ADDON_STATUS_OK;
     }
+  }
+  else if (str == "rec_template_provider")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_template_provider' from %u to %u", g_iRecTemplateType, *(int*)settingValue);
+    if (g_iRecTemplateType != *(int*)settingValue)
+      g_iRecTemplateType = *(int*)settingValue;
+  }
+  else if (str == "rec_autometadata")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autometadata' from %u to %u", g_bRecAutoMetadata, *(bool*)settingValue);
+    if (g_bRecAutoMetadata != *(bool*)settingValue)
+      g_bRecAutoMetadata = *(bool*)settingValue;
+  }
+  else if (str == "rec_autocommflag")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autocommflag' from %u to %u", g_bRecAutoCommFlag, *(bool*)settingValue);
+    if (g_bRecAutoCommFlag != *(bool*)settingValue)
+      g_bRecAutoCommFlag = *(bool*)settingValue;
+  }
+  else if (str == "rec_autotranscode")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autotranscode' from %u to %u", g_bRecAutoTranscode, *(bool*)settingValue);
+    if (g_bRecAutoTranscode != *(bool*)settingValue)
+      g_bRecAutoTranscode = *(bool*)settingValue;
+  }
+  else if (str == "rec_transcoder")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_transcoder' from %u to %u", g_iRecTranscoder, *(int*)settingValue);
+    if (g_iRecTranscoder != *(int*)settingValue)
+      g_iRecTranscoder = *(int*)settingValue;
+  }
+  else if (str == "rec_autorunjob1")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autorunjob1' from %u to %u", g_bRecAutoRunJob1, *(bool*)settingValue);
+    if (g_bRecAutoRunJob1 != *(bool*)settingValue)
+      g_bRecAutoRunJob1 = *(bool*)settingValue;
+  }
+  else if (str == "rec_autorunjob2")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autorunjob2' from %u to %u", g_bRecAutoRunJob2, *(bool*)settingValue);
+    if (g_bRecAutoRunJob2 != *(bool*)settingValue)
+      g_bRecAutoRunJob2 = *(bool*)settingValue;
+  }
+  else if (str == "rec_autorunjob3")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autorunjob3' from %u to %u", g_bRecAutoRunJob3, *(bool*)settingValue);
+    if (g_bRecAutoRunJob3 != *(bool*)settingValue)
+      g_bRecAutoRunJob3 = *(bool*)settingValue;
+  }
+  else if (str == "rec_autorunjob4")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autorunjob4' from %u to %u", g_bRecAutoRunJob4, *(bool*)settingValue);
+    if (g_bRecAutoRunJob4 != *(bool*)settingValue)
+      g_bRecAutoRunJob4 = *(bool*)settingValue;
+  }
+  else if (str == "rec_autoexpire")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'rec_autoexpire' from %u to %u", g_bRecAutoExpire, *(bool*)settingValue);
+    if (g_bRecAutoExpire != *(bool*)settingValue)
+      g_bRecAutoExpire = *(bool*)settingValue;
   }
   return ADDON_STATUS_OK;
 }
@@ -455,7 +520,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
     pCapabilities->bSupportsTimers             = true;
 
     pCapabilities->bHandlesInputStream           = true;
-    pCapabilities->bHandlesDemuxing              = false;
+    pCapabilities->bHandlesDemuxing              = g_bDemuxing;
 
     pCapabilities->bSupportsRecordings           = true;
     pCapabilities->bSupportsRecordingPlayCount   = true;
@@ -466,12 +531,6 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   {
     return PVR_ERROR_FAILED;
   }
-}
-
-PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* props)
-{
-  (void)props;
-  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 const char *GetBackendName()
@@ -845,16 +904,49 @@ long long LengthRecordedStream(void)
   return g_client->LengthRecordedStream();
 }
 
+/*******************************************/
+/** PVR Demux Functions                   **/
+
+PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
+{
+  if (g_client == NULL)
+    return PVR_ERROR_SERVER_ERROR;
+
+  return g_client->GetStreamProperties(pProperties);
+}
+
+void DemuxAbort(void)
+{
+  if (g_client != NULL)
+    g_client->DemuxAbort();
+}
+
+DemuxPacket* DemuxRead(void)
+{
+  if (g_client == NULL)
+    return NULL;
+
+  return g_client->DemuxRead();
+}
+
+void DemuxFlush(void)
+{
+  if (g_client != NULL)
+    g_client->DemuxFlush();
+}
+
+bool SeekTime(int time, bool backwards, double *startpts)
+{
+  if (g_client != NULL)
+    return g_client->SeekTime(time, backwards, startpts);
+  return false;
+}
 
 /*******************************************/
 /** Unused API Functions                  **/
 
-DemuxPacket* DemuxRead() { return NULL; }
-void DemuxAbort() {}
 void DemuxReset() {}
-void DemuxFlush() {}
 const char * GetLiveStreamURL(const PVR_CHANNEL &) { return ""; }
-bool SeekTime(int,bool,double*) { return false; }
 void SetSpeed(int) {};
 
 } //end extern "C"

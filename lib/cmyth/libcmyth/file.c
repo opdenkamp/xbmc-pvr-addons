@@ -322,7 +322,7 @@ cmyth_file_get_block(cmyth_file_t file, char *buf, int32_t len)
 {
 	struct timeval tv;
 	fd_set fds;
-	int ret;
+	int32_t ret;
 
 	if (file == NULL || file->file_data == NULL)
 		return -EINVAL;
@@ -418,11 +418,11 @@ cmyth_file_request_block(cmyth_file_t file, int32_t len)
 		 "QUERY_FILETRANSFER %"PRIu32"[]:[]REQUEST_BLOCK[]:[]%"PRId32,
 		 file->file_id, len);
 
-	if ((err = cmyth_send_message(file->file_control, msg)) < 0) {
+	if ((r = cmyth_send_message(file->file_control, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 
@@ -508,7 +508,7 @@ cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 	ret = 0;
 	while(file->file_pos < file->file_req) {
 		c = file->file_req - file->file_pos;
-		if(c > sizeof(msg))
+		if (c > (int64_t)sizeof(msg))
 			c = sizeof(msg);
 
 		if ((ret = cmyth_file_get_block(file, msg, (size_t)c)) < 0)
@@ -540,11 +540,11 @@ cmyth_file_seek(cmyth_file_t file, int64_t offset, int8_t whence)
 			 (int32_t)(file->file_pos & 0xffffffff));
 	}
 
-	if ((err = cmyth_send_message(file->file_control, msg)) < 0) {
+	if ((r = cmyth_send_message(file->file_control, msg)) < 0) {
 		cmyth_dbg(CMYTH_DBG_ERROR,
 			  "%s: cmyth_send_message() failed (%d)\n",
-			  __FUNCTION__, err);
-		ret = err;
+			  __FUNCTION__, r);
+		ret = r;
 		goto out;
 	}
 

@@ -104,8 +104,14 @@ case "${host}" in
     ARCH_DEFINES="-DTARGET_POSIX -DTARGET_DARWIN -D_LINUX"
     DYN_LIB_EXT="dylib"
     ;;
-  *-freebsd*)
+  amd64-*-freebsd*)
     OS="freebsd"
+    ARCHITECTURE="x86_64"
+    ARCH_DEFINES="-DTARGET_POSIX -DTARGET_FREEBSD -D_LINUX"
+    ;;
+  i386-*-freebsd*)
+    OS="freebsd"
+    ARCHITECTURE="i486"
     ARCH_DEFINES="-DTARGET_POSIX -DTARGET_FREEBSD -D_LINUX"
     ;;
 esac

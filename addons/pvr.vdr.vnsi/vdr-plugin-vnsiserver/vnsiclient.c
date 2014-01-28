@@ -205,7 +205,7 @@ void cVNSIClient::TimerChange()
   }
 }
 
-void cVNSIClient::ChannelChange()
+void cVNSIClient::ChannelsChange()
 {
   cMutexLock lock(&m_msgLock);
 

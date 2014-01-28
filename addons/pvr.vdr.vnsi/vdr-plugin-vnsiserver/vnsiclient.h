@@ -83,7 +83,7 @@ public:
   cVNSIClient(int fd, unsigned int id, const char *ClientAdr);
   virtual ~cVNSIClient();
 
-  void ChannelChange();
+  void ChannelsChange();
   void RecordingsChange();
   void TimerChange();
   void EpgChange();

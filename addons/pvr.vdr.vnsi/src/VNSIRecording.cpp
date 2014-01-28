@@ -94,7 +94,11 @@ int cVNSIRecording::Read(unsigned char* buf, uint32_t buf_size)
   }
 
   if (m_currentPlayingRecordPosition >= m_currentPlayingRecordBytes)
-    return 0;
+  {
+    GetLength();
+    if (m_currentPlayingRecordPosition >= m_currentPlayingRecordBytes)
+      return 0;
+  }
 
   cRequestPacket vrp;
   if (!vrp.init(VNSI_RECSTREAM_GETBLOCK) ||
@@ -177,4 +181,18 @@ long long cVNSIRecording::Length(void)
 void cVNSIRecording::OnReconnect()
 {
   OpenRecording(m_recinfo);
+}
+
+void cVNSIRecording::GetLength()
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_RECSTREAM_GETLENGTH))
+    return;
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (!vresp)
+    return;
+
+  m_currentPlayingRecordBytes = vresp->extract_U64();
+  delete vresp;
 }

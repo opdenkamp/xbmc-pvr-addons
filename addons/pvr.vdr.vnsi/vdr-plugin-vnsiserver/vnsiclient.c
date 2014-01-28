@@ -205,7 +205,7 @@ void cVNSIClient::TimerChange()
   }
 }
 
-void cVNSIClient::ChannelChange()
+void cVNSIClient::ChannelsChange()
 {
   cMutexLock lock(&m_msgLock);
 
@@ -448,6 +448,10 @@ bool cVNSIClient::processRequest(cRequestPacket* req)
 
     case VNSI_RECSTREAM_GETIFRAME:
       result = processRecStream_GetIFrame();
+      break;
+
+    case VNSI_RECSTREAM_GETLENGTH:
+      result = processRecStream_GetLength();
       break;
 
 
@@ -934,6 +938,23 @@ bool cVNSIClient::processRecStream_GetIFrame() /* OPCODE 45 */
   return true;
 }
 
+bool cVNSIClient::processRecStream_GetLength() /* OPCODE 46 */
+{
+  uint64_t length = 0;
+
+  if (m_RecPlayer)
+  {
+    m_RecPlayer->reScan();
+    length = m_RecPlayer->getLengthBytes();
+  }
+
+  m_resp->add_U64(length);
+
+  m_resp->finalise();
+  m_socket.write(m_resp->getPtr(), m_resp->getLen());
+
+  return true;
+}
 
 /** OPCODE 60 - 79: VNSI network functions for channel access */
 

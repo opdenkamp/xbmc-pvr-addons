@@ -21,3 +21,8 @@ VDR Plugin 'vnsiserver' Revision History
 - bump protocol to XBMC to 5
 - suffix plugin with version of protocol: vnsiserver5
 - this version is compatible with XBMC 13
+
+2014-01-08: Version 0.9.4
+
+- update length of recorings in progress
+  while playing

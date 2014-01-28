@@ -200,7 +200,13 @@ int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
     amount = m_totalLength;
 
   if (position >= m_totalLength)
-    return 0;
+  {
+    reScan();
+    if (position >= m_totalLength)
+    {
+      return 0;
+    }
+  }
 
   if ((position + amount) > m_totalLength)
     amount = m_totalLength - position;
@@ -216,16 +222,19 @@ int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
   }
 
   // segment not found / invalid position
-  if (segmentNumber == -1) return 0;
+  if (segmentNumber == -1)
+    return 0;
 
   // open file (if not already open)
-  if (!openFile(segmentNumber)) return 0;
+  if (!openFile(segmentNumber))
+    return 0;
 
   // work out position in current file
   uint64_t filePosition = position - m_segments[segmentNumber]->start;
 
   // seek to position
-  if(lseek(m_file, filePosition, SEEK_SET) == -1) {
+  if(lseek(m_file, filePosition, SEEK_SET) == -1)
+  {
     ERRORLOG("unable to seek to position: %lu", filePosition);
     return 0;
   }
@@ -237,7 +246,8 @@ int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
   if ((bytes_read == 0) && (position < m_totalLength))
     bytes_read += getBlock(buffer, position+1 , amount);
 
-  if(bytes_read <= 0) {
+  if(bytes_read <= 0)
+  {
     return 0;
   }
 
@@ -254,7 +264,8 @@ int cRecPlayer::getBlock(unsigned char* buffer, uint64_t position, int amount)
 
 uint64_t cRecPlayer::positionFromFrameNumber(uint32_t frameNumber)
 {
-  if (!m_indexFile) return 0;
+  if (!m_indexFile)
+    return 0;
 #if VDRVERSNUM < 10703
   unsigned char retFileNumber;
   int retFileOffset;

@@ -61,6 +61,7 @@
 #define VNSI_RECSTREAM_POSTOFRAME  43
 #define VNSI_RECSTREAM_FRAMETOPOS  44
 #define VNSI_RECSTREAM_GETIFRAME   45
+#define VNSI_RECSTREAM_GETLENGTH   46
 
 /* OPCODE 60 - 79: VNSI network functions for channel access */
 #define VNSI_CHANNELS_GETCOUNT     61

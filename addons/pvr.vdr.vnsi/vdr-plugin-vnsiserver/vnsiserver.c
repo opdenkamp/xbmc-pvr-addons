@@ -263,7 +263,7 @@ void cVNSIServer::Action(void)
           Channels.SetModified((modified == CHANNELSMOD_USER) ? true : false);
           INFOLOG("Requesting clients to reload channel list");
           for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
-            (*i)->ChannelChange();
+            (*i)->ChannelsChange();
         }
         chanTimer.Set(5000);
       }

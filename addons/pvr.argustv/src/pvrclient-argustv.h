@@ -29,6 +29,7 @@
 #include "guideprogram.h"
 
 #include "KeepAliveThread.h"
+#include "EventsThread.h"
 
 class CTsReader;
 
@@ -128,6 +129,7 @@ private:
   int                     m_signalqualityInterval;
   CTsReader*              m_tsreader;
   CKeepAliveThread        m_keepalive;
+  CEventsThread           m_eventmonitor;
 #if defined(ATV_DUMPTS)
   char ofn[25];
   int ofd;

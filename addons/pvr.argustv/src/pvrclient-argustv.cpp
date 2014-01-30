@@ -133,6 +133,15 @@ bool cPVRClientArgusTV::Connect()
 //    XBMC->QueueNotification(QUEUE_ERROR, "Share errors: see xbmc.log");
 //  }
 
+  // Start service events monitor
+  m_eventmonitor.Connect();
+  if (!m_eventmonitor.IsRunning()) 
+  {
+    if(!m_eventmonitor.CreateThread()) 
+    {
+      XBMC->Log(LOG_ERROR, "Start service monitor thread failed.");
+    }
+  }
   m_bConnected = true;
   return true;
 }
@@ -142,6 +151,15 @@ void cPVRClientArgusTV::Disconnect()
   string result;
 
   XBMC->Log(LOG_INFO, "Disconnect");
+
+  // Stop service events monitor
+  if (m_eventmonitor.IsRunning()) 
+  {
+    if (!m_eventmonitor.StopThread())
+    {
+      XBMC->Log(LOG_ERROR, "Stop service monitor thread failed.");
+    }
+  }
 
   if (m_bTimeShiftStarted)
   {

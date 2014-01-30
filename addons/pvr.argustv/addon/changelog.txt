@@ -1,5 +1,7 @@
+v1.9.173 (30-01-2014)
+- added service events monitor
 v1.9.172 (23-12-2013)
-- base new timers on templates retrieved from ARGUS TV server.
+- base new timers on templates retrieved from ARGUS TV server
 v1.9.171 (11-12-2013)
 - removed redundant notification
 v1.9.170 (28-09-2013)

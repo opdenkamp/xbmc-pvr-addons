@@ -267,10 +267,10 @@ AC_CONFIG_FILES([Makefile \
                  lib/jsoncpp/Makefile \
                  lib/libhts/Makefile \
                  lib/tinyxml/Makefile \
+                 lib/tinyxml2/Makefile \
                  lib/cmyth/Makefile \
                  lib/cmyth/libcmyth/Makefile \
                  lib/cmyth/librefmem/Makefile \
-                 lib/tinyxml2/Makefile \
                  lib/libdvblinkremote/Makefile \
                  addons/Makefile \
                  addons/pvr.demo/Makefile \

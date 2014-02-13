@@ -418,18 +418,6 @@ const char* GetMininumPVRAPIVersion(void)
   return strMinApiVersion;
 }
 
-const char* GetGUIAPIVersion(void)
-{
-  static const char *strGuiApiVersion = XBMC_GUI_API_VERSION;
-  return strGuiApiVersion;
-}
-
-const char* GetMininumGUIAPIVersion(void)
-{
-  static const char *strMinGuiApiVersion = XBMC_GUI_MIN_API_VERSION;
-  return strMinGuiApiVersion;
-}
-
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
   pCapabilities->bSupportsEPG                = true;
@@ -619,10 +607,6 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
   return PVR_ERROR_FAILED; 
 }
 
-PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) 
-{ 
-  return PVR_ERROR_NOT_IMPLEMENTED;
-}
 
 int GetCurrentClientChannel(void)
 {
@@ -656,7 +640,7 @@ PVR_ERROR DialogChannelScan(void)
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }

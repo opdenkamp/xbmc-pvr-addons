@@ -84,6 +84,7 @@
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\epg.cpp" />
     <ClCompile Include="..\..\src\argustvrpc.cpp" />
+    <ClCompile Include="..\..\src\EventsThread.cpp" />
     <ClCompile Include="..\..\src\guideprogram.cpp" />
     <ClCompile Include="..\..\src\KeepAliveThread.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\FileReader.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\epg.h" />
     <ClInclude Include="..\..\src\argustvrpc.h" />
+    <ClInclude Include="..\..\src\EventsThread.h" />
     <ClInclude Include="..\..\src\guideprogram.h" />
     <ClInclude Include="..\..\src\KeepAliveThread.h" />
     <ClInclude Include="..\..\src\lib\tsreader\FileReader.h" />

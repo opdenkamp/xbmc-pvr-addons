@@ -83,6 +83,14 @@ namespace ArgusTV
     NotSupported = 99
   };
 
+  enum ServiceEventGroups {
+    SystemEvents = 0x01,
+    GuideEvents = 0x02,
+    ScheduleEvents = 0x04,
+    RecordingEvents = 0x08,
+    AllEvents = 0x0F
+  };
+
   /**
    * \brief Do some internal housekeeping at the start
    */
@@ -318,7 +326,7 @@ namespace ArgusTV
    */
   int RequestTVChannelGroups(Json::Value& response);
 
-    /*
+  /*
    * \brief Get the list with Radio channel groups from 4TR
    */
   int RequestRadioChannelGroups(Json::Value& response);
@@ -334,6 +342,21 @@ namespace ArgusTV
    * \param channelGUID GUID of the channel
    */
   std::string GetChannelLogo(const std::string& channelGUID);
+
+  /*
+   * \brief Subscribe to ARGUS TV service events
+   */
+  int SubscribeServiceEvents(int eventGroups, Json::Value& response);
+
+  /*
+   * \brief Unsubscribe from ARGUS TV service events
+   */
+  int UnsubscribeServiceEvents(const std::string& monitorId);
+
+  /*
+   * \brief Retrieve the ARGUS TV service events
+   */
+  int GetServiceEvents(const std::string& monitorId, Json::Value& response);
 
   /*
    * \brief Convert a XBMC Lifetime value to the 4TR keepUntilMode setting

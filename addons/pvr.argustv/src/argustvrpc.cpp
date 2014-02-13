@@ -1293,6 +1293,81 @@ namespace ArgusTV
     return retval;
   }
 
+  /*
+   * \brief Subscribe to ARGUS TV service events
+   */
+  int SubscribeServiceEvents(int eventGroups, Json::Value& response)
+  {
+    XBMC->Log(LOG_DEBUG, "SubscribeServiceEvents");
+    int retval = E_FAILED;
+
+    char command[256];
+    snprintf(command, 256, "ArgusTV/Core/SubscribeServiceEvents/%d" , eventGroups);
+    retval = ArgusTVJSONRPC(command, "", response);
+
+    if(retval >= 0)
+    {           
+      if (response.type() != Json::stringValue)
+      {
+        retval = E_FAILED;
+        XBMC->Log(LOG_NOTICE, "SubscribeServiceEvents did not return a Json::stringValue [%d].", response.type());
+      }
+    }
+    else
+    {
+      XBMC->Log(LOG_ERROR, "SubscribeServiceEvents remote call failed.");
+    }
+    return retval;
+  }
+
+  /*
+   * \brief Unsubscribe from ARGUS TV service events
+   */
+  int UnsubscribeServiceEvents(const std::string& monitorId)
+  {
+    XBMC->Log(LOG_DEBUG, "UnsubscribeServiceEvents from %s", monitorId.c_str());
+    int retval = E_FAILED;
+
+    char command[256];
+    snprintf(command, 256, "ArgusTV/Core/UnsubscribeServiceEvents/%s" , monitorId.c_str());
+    std::string dummy;
+    retval = ArgusTVRPC(command, "", dummy);
+
+    if (retval < 0)
+    {
+      XBMC->Log(LOG_ERROR, "UnsubscribeServiceEvents remote call failed.");
+    }
+    return retval;
+  }
+
+  /*
+   * \brief Retrieve the ARGUS TV service events
+   */
+  int GetServiceEvents(const std::string& monitorId, Json::Value& response)
+  {
+    XBMC->Log(LOG_DEBUG, "GetServiceEvents");
+    int retval = E_FAILED;
+
+    char command[256];
+    snprintf(command, 256, "ArgusTV/Core/GetServiceEvents/%s" , monitorId.c_str());
+    retval = ArgusTVJSONRPC(command, "", response);
+
+    if(retval >= 0)
+    {           
+      if (response.type() != Json::objectValue)
+      {
+        retval = E_FAILED;
+        XBMC->Log(LOG_NOTICE, "GetServiceEvents did not return a Json::objectValue [%d].", response.type());
+      }
+    }
+    else
+    {
+      XBMC->Log(LOG_ERROR, "GetServiceEvents remote call failed.");
+    }
+    return retval;
+  }
+
+
   /**
    * \brief Convert a XBMC Lifetime value to the 4TR keepUntilMode setting
    * \param lifetime the XBMC lifetime value (in days) 

@@ -258,7 +258,7 @@ namespace ArgusTV
   }
 
   /*
-   * \brief Get the list with channel groups from 4TR
+   * \brief Get the list with channel groups from ARGUS
    * \param channelType The channel type (Television or Radio)
    */
   int RequestChannelGroups(enum ChannelType channelType, Json::Value& response)
@@ -296,7 +296,7 @@ namespace ArgusTV
   }
 
   /*
-   * \brief Get the list with channels for the given channel group from 4TR
+   * \brief Get the list with channels for the given channel group from ARGUS
    * \param channelGroupId GUID of the channel group
    */
   int RequestChannelGroupMembers(const std::string& channelGroupId, Json::Value& response)
@@ -328,7 +328,7 @@ namespace ArgusTV
   }
     
   /*
-   * \brief Get the list with TV channel groups from 4TR
+   * \brief Get the list with TV channel groups from ARGUS
    */
   int RequestTVChannelGroups(Json::Value& response)
   {
@@ -336,7 +336,7 @@ namespace ArgusTV
   }
     
   /*
-   * \brief Get the list with Radio channel groups from 4TR
+   * \brief Get the list with Radio channel groups from ARGUS
    */
   int RequestRadioChannelGroups(Json::Value& response)
   {
@@ -344,7 +344,7 @@ namespace ArgusTV
   }
 
   /*
-   * \brief Get the list with channels from 4TR
+   * \brief Get the list with channels from ARGUS
    * \param channelType The channel type (Television or Radio)
    */
   int GetChannelList(enum ChannelType channelType, Json::Value& response)
@@ -1107,7 +1107,6 @@ namespace ArgusTV
     CStdString modifiedtitle = title;
     modifiedtitle.Replace("\"", "\\\"");
 
-    newSchedule["IsOneTime"] = Json::Value(true);
     newSchedule["KeepUntilMode"] = Json::Value(lifetimeToKeepUntilMode(lifetime));
     newSchedule["KeepUntilValue"] = Json::Value(lifetimeToKeepUntilValue(lifetime));
     newSchedule["Name"] = Json::Value(modifiedtitle.c_str());
@@ -1369,7 +1368,42 @@ namespace ArgusTV
 
 
   /**
-   * \brief Convert a XBMC Lifetime value to the 4TR keepUntilMode setting
+   * \brief Get the upcoming recordings for a given schedule
+   */
+  int GetUpcomingRecordingsForSchedule(const std::string& scheduleid, Json::Value& response)
+  {
+    int retval = -1;
+
+    XBMC->Log(LOG_DEBUG, "GetUpcomingRecordingsForSchedule");
+
+    char command[256];
+    snprintf(command, 256, "ArgusTV/Control/UpcomingRecordingsForSchedule/%s?includeCancelled=true" , scheduleid.c_str());
+
+    retval = ArgusTVJSONRPC(command, "", response);
+
+    if (retval < 0)
+    {
+      XBMC->Log(LOG_DEBUG, "GetUpcomingRecordingsForSchedule failed. Return value: %i\n", retval);
+    }
+    else
+    {
+      if( response.type() == Json::arrayValue)
+      {
+        int size = response.size();
+        return size;
+      }
+      else
+      {
+        XBMC->Log(LOG_DEBUG, "Unknown response format %d. Expected Json::arrayValue\n", response.type());
+        return -1;
+      }
+    }
+
+    return retval;
+  }
+
+  /**
+   * \brief Convert a XBMC Lifetime value to the ARGUS keepUntilMode setting
    * \param lifetime the XBMC lifetime value (in days) 
    */
   int lifetimeToKeepUntilMode(int lifetime)
@@ -1384,7 +1418,7 @@ namespace ArgusTV
   }
 
   /**
-   * \brief Convert a XBMC Lifetime value to the 4TR keepUntilValue setting
+   * \brief Convert a XBMC Lifetime value to the ARGUS keepUntilValue setting
    * \param lifetime the XBMC lifetime value (in days) 
    */
   int lifetimeToKeepUntilValue(int lifetime)

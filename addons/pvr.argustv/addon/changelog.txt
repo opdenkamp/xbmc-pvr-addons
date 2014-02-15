@@ -1,3 +1,6 @@
+v1.9.176 (22-04-2014)
+- improved timer conflicts detection
+- fix threads on OS X
 v1.9.175 (17-03-2014)
 - Updated language files from Transifex
 v1.9.174 (03-03-2014)

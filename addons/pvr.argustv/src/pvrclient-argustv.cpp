@@ -1,4 +1,6 @@
 /*
+ *      Copyright (C) 2014 Fred Hoogduin
+ *      based on original work
  *      Copyright (C) 2010 Marcel Groothuis
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -54,6 +56,8 @@ cPVRClientArgusTV::cPVRClientArgusTV()
   m_tsreader               = NULL;
   m_epg_id_offset          = 0;
   m_iCurrentChannel        = -1;
+  m_keepalive              = new CKeepAliveThread();
+  m_eventmonitor           = new CEventsThread();
   m_TVChannels.clear();
   m_RadioChannels.clear();
   // due to lack of static constructors, we initialize manually
@@ -72,6 +76,8 @@ cPVRClientArgusTV::~cPVRClientArgusTV()
   {
     CloseLiveStream();
   }
+  delete m_keepalive;
+  delete m_eventmonitor;
   // Free allocated memory for Channels
   FreeChannels(m_TVChannels);
   FreeChannels(m_RadioChannels);
@@ -134,10 +140,10 @@ bool cPVRClientArgusTV::Connect()
 //  }
 
   // Start service events monitor
-  m_eventmonitor.Connect();
-  if (!m_eventmonitor.IsRunning()) 
+  m_eventmonitor->Connect();
+  if (!m_eventmonitor->IsRunning()) 
   {
-    if(!m_eventmonitor.CreateThread()) 
+    if(!m_eventmonitor->CreateThread()) 
     {
       XBMC->Log(LOG_ERROR, "Start service monitor thread failed.");
     }
@@ -153,9 +159,9 @@ void cPVRClientArgusTV::Disconnect()
   XBMC->Log(LOG_INFO, "Disconnect");
 
   // Stop service events monitor
-  if (m_eventmonitor.IsRunning()) 
+  if (m_eventmonitor->IsRunning()) 
   {
-    if (!m_eventmonitor.StopThread())
+    if (!m_eventmonitor->StopThread())
     {
       XBMC->Log(LOG_ERROR, "Stop service monitor thread failed.");
     }
@@ -927,7 +933,7 @@ PVR_ERROR cPVRClientArgusTV::GetTimers(ADDON_HANDLE handle)
 
 PVR_ERROR cPVRClientArgusTV::AddTimer(const PVR_TIMER &timerinfo)
 {
-  XBMC->Log(LOG_DEBUG, "AddTimer(start @ %d, end @ %d)", timerinfo.startTime, timerinfo.endTime);
+  XBMC->Log(LOG_DEBUG, "AddTimer(title %s, start @ %d, end @ %d)", timerinfo.strTitle, timerinfo.startTime, timerinfo.endTime);
 
   // re-synthesize the ARGUS TV channel GUID
   cChannel* pChannel = FetchChannel(timerinfo.iClientChannelUid);
@@ -939,16 +945,47 @@ PVR_ERROR cPVRClientArgusTV::AddTimer(const PVR_TIMER &timerinfo)
     return PVR_ERROR_SERVER_ERROR;
   }
 
+  XBMC->Log(LOG_DEBUG, "%s: XBMC channel %d translated to ARGUS channel %s.", __FUNCTION__,
+    timerinfo.iClientChannelUid, pChannel->Guid().c_str());
+
+  // Try to get original EPG data from ARGUS
+  struct tm* convert = localtime(&timerinfo.startTime);
+  struct tm tm_start = *convert;
+  convert = localtime(&timerinfo.endTime);
+  struct tm tm_end = *convert;
+
+  Json::Value epgResponse;
+  XBMC->Log(LOG_DEBUG, "%s: Getting EPG Data for ARGUS TV channel %s", __FUNCTION__, pChannel->GuideChannelID().c_str());
+  int retval = ArgusTV::GetEPGData(pChannel->GuideChannelID(), tm_start, tm_end, epgResponse);
+
+  std::string programTitle = timerinfo.strTitle;
+  if (retval >= 0)
+  {
+    XBMC->Log(LOG_DEBUG, "%s: Getting EPG Data for ARGUS TV channel %s returned %d entries.", __FUNCTION__, pChannel->GuideChannelID().c_str(), epgResponse.size());
+    if (epgResponse.size() > 0)
+    {
+      programTitle = epgResponse[0u]["Title"].asString();
+    }
+  }
+  else
+  {
+    XBMC->Log(LOG_DEBUG, "%s: Getting EPG Data for ARGUS TV channel %s failed.", __FUNCTION__, pChannel->GuideChannelID().c_str());
+  }
+
   Json::Value addScheduleResponse;
   time_t starttime = timerinfo.startTime;
   if (starttime == 0) starttime = time(NULL);
-  int retval = ArgusTV::AddOneTimeSchedule(pChannel->Guid(), starttime, timerinfo.strTitle, timerinfo.iMarginStart * 60, timerinfo.iMarginEnd * 60, timerinfo.iLifetime, addScheduleResponse);
+  retval = ArgusTV::AddOneTimeSchedule(pChannel->Guid(), starttime, programTitle, timerinfo.iMarginStart * 60, timerinfo.iMarginEnd * 60, timerinfo.iLifetime, addScheduleResponse);
   if (retval < 0) 
   {
     return PVR_ERROR_SERVER_ERROR;
   }
 
   std::string scheduleid = addScheduleResponse["ScheduleId"].asString();
+
+  XBMC->Log(LOG_DEBUG, "%s: ARGUS one-time schedule added with id %s.", __FUNCTION__,
+    scheduleid.c_str());
+
 
   // Ok, we created a schedule, but did that lead to an upcoming recording?
   Json::Value upcomingProgramsResponse;
@@ -1171,9 +1208,9 @@ bool cPVRClientArgusTV::_OpenLiveStream(const PVR_CHANNEL &channelinfo)
     XBMC->Log(LOG_INFO, "Live stream file: %s", filename.c_str());
     m_bTimeShiftStarted = true;
     m_iCurrentChannel = channelinfo.iUniqueId;
-    if (!m_keepalive.IsRunning())
+    if (!m_keepalive->IsRunning())
     {
-      if (!m_keepalive.CreateThread())
+      if (!m_keepalive->CreateThread())
       {
         XBMC->Log(LOG_ERROR, "Start keepalive thread failed.");
       }
@@ -1315,9 +1352,9 @@ void cPVRClientArgusTV::CloseLiveStream()
   string result;
   XBMC->Log(LOG_INFO, "CloseLiveStream");
 
-  if (m_keepalive.IsRunning())
+  if (m_keepalive->IsRunning())
   {
-    if (!m_keepalive.StopThread())
+    if (!m_keepalive->StopThread())
     {
       XBMC->Log(LOG_ERROR, "Stop keepalive thread failed.");
     }

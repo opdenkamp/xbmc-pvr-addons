@@ -97,7 +97,7 @@ namespace ArgusTV
   void Initialize(void);
 
   /**
-   * \brief Send a REST command to 4TR and return the JSON response string
+   * \brief Send a REST command to ARGUS and return the JSON response string
    * \param command       The command string url (starting from "ArgusTV/")
    * \param json_response Reference to a std::string used to store the json response string
    * \return 0 on ok, -1 on a failure
@@ -105,7 +105,7 @@ namespace ArgusTV
   int ArgusTVRPC(const std::string& command, const std::string& arguments, std::string& json_response);
 
   /**
-   * \brief Send a REST command to 4TR and return the JSON response 
+   * \brief Send a REST command to ARGUS and return the JSON response 
    * \param command       The command string url (starting from "ArgusTV/")
    * \param json_response Reference to a Json::Value used to store the parsed Json value
    * \return 0 on ok, -1 on a failure
@@ -113,7 +113,7 @@ namespace ArgusTV
   int ArgusTVJSONRPC(const std::string& command, const std::string& arguments, Json::Value& json_response);
 
   /**
-   * \brief Send a REST command to 4TR, write the response to a file and return the filename
+   * \brief Send a REST command to ARGUS, write the response to a file and return the filename
    * \param command       The command string url (starting from "ArgusTV/")
    * \param newfilename   Reference to a std::string used to store the output file name
    * \param htt_presponse Reference to a long used to store the HTTP response code
@@ -190,7 +190,7 @@ namespace ArgusTV
 
   /**
    * \brief Fetch the EPG data for the given guidechannel id
-   * \param guidechannel_id  String containing the 4TR guidechannel_id (not the channel_id)
+   * \param guidechannel_id  String containing the ARGUS guidechannel_id (not the channel_id)
    * \param epg_start        Start from this date
    * \param epg_stop         Until this date
    */
@@ -321,18 +321,23 @@ namespace ArgusTV
    */
   int GetUpcomingProgramsForSchedule(const Json::Value& schedule, Json::Value& response);
 
+  /**
+   * \brief Get the upcoming recordings for a given schedule
+   */
+  int GetUpcomingRecordingsForSchedule(const std::string& scheduleid, Json::Value& response);
+
   /*
-   * \brief Get the list with TV channel groups from 4TR
+   * \brief Get the list with TV channel groups from ARGUS
    */
   int RequestTVChannelGroups(Json::Value& response);
 
   /*
-   * \brief Get the list with Radio channel groups from 4TR
+   * \brief Get the list with Radio channel groups from ARGUS
    */
   int RequestRadioChannelGroups(Json::Value& response);
 
   /*
-   * \brief Get the list with channels for the given channel group from 4TR
+   * \brief Get the list with channels for the given channel group from ARGUS
    * \param channelGroupId GUID of the channel group
    */
   int RequestChannelGroupMembers(const std::string& channelGroupId, Json::Value& response);
@@ -359,13 +364,13 @@ namespace ArgusTV
   int GetServiceEvents(const std::string& monitorId, Json::Value& response);
 
   /*
-   * \brief Convert a XBMC Lifetime value to the 4TR keepUntilMode setting
+   * \brief Convert a XBMC Lifetime value to the ARGUS keepUntilMode setting
    * \param lifetime the XBMC lifetime value (in days) 
    */
   int lifetimeToKeepUntilMode(int lifetime);
 
   /*
-   * \brief Convert a XBMC Lifetime value to the 4TR keepUntilValue setting
+   * \brief Convert a XBMC Lifetime value to the ARGUS keepUntilValue setting
    * \param lifetime the XBMC lifetime value (in days) 
    */
   int lifetimeToKeepUntilValue(int lifetime);

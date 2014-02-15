@@ -368,6 +368,15 @@ void cVNSIClient::OsdStatusMessage(const char *Message)
   }
 }
 
+void cVNSIClient::ChannelChange(const cChannel *Channel)
+{
+  cMutexLock lock(&m_msgLock);
+  if (m_isStreaming && m_Streamer)
+  {
+    m_Streamer->RetuneChannel(Channel);
+  }
+}
+
 bool cVNSIClient::processRequest(cRequestPacket* req)
 {
   cMutexLock lock(&m_msgLock);

@@ -81,6 +81,9 @@ private:
   cVideoInput       m_VideoInput;
   int               m_Priority;
   uint8_t           m_Timeshift;
+  cCondVar          m_Event;
+  cMutex            m_Mutex;
+  bool              m_IsRetune;
 
 protected:
   virtual void Action(void);
@@ -98,6 +101,7 @@ public:
   bool IsAudioOnly() { return m_IsAudioOnly; }
   bool IsMPEGPS() { return m_IsMPEGPS; }
   bool SeekTime(int64_t time, uint32_t &serial);
+  void RetuneChannel(const cChannel *channel);
 };
 
 #endif  // VNSI_RECEIVER_H

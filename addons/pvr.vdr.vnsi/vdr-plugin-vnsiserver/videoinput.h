@@ -33,17 +33,18 @@ class cVideoInput : public cThread
 friend class cLivePatFilter;
 friend class cLiveReceiver;
 public:
-  cVideoInput();
+  cVideoInput(cCondVar &condVar, cMutex &mutex, bool &retune);
   virtual ~cVideoInput();
   bool Open(const cChannel *channel, int priority, cVideoBuffer *videoBuffer);
   void Close();
+  bool IsOpen();
 
 protected:
   virtual void Action(void);
   void PmtChange(int pidChange);
   cChannel *PmtChannel();
   void Receive(uchar *data, int length);
-  void Attach(bool on);
+  void Retune();
   cDevice          *m_Device;
   cLivePatFilter   *m_PatFilter;
   cLiveReceiver    *m_Receiver;
@@ -53,4 +54,7 @@ protected:
   int               m_Priority;
   bool              m_PmtChange;
   bool              m_SeenPmt;
+  cCondVar          &m_Event;
+  cMutex            &m_Mutex;
+  bool              &m_IsRetune;
 };

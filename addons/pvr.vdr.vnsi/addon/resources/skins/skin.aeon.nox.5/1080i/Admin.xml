@@ -1,0 +1,468 @@
+<window>
+  <defaultcontrol always="true">10</defaultcontrol>
+  <onload>SetProperty(menu,osd)</onload>
+  <allowoverlay>no</allowoverlay>
+  <views>36</views>
+  <controls>
+    <include>CommonBackground</include>
+    <include>Topbar</include>
+    <control type="label">
+      <posx>1920</posx>
+      <width>900</width>
+      <height>90</height>
+      <font>font13_title</font>
+      <textoffsetx>15</textoffsetx>
+      <textcolor>grey2</textcolor>
+      <align>right</align>
+      <aligny>top</aligny>
+      <textoffsety>-4</textoffsety>
+      <label>Controlling OSD - press info to exit</label>
+      <label>$ADDON[pvr.vdr.vnsi 30103]</label>
+      <visible>StringCompare(Window.Property(menu),osd) +
+        ControlGroup(12).HasFocus()</visible>
+    </control>
+    <control type="group">
+      <posx>0</posx>
+      <posy>128</posy>
+      <include>Window_OpenClose_Animation</include>
+      <include>SystemLeftPanel</include>
+      <control type="panel" id="10">
+        <posx>82</posx>
+        <posy>32</posy>
+        <width>356</width>
+        <height>720</height>
+        <onleft>61</onleft>
+        <onright condition="!StringCompare(Window.Property(menu),channels)">11</onright>
+        <onright condition="StringCompare(Window.Property(menu),channels)">38</onright>
+        <onup>10</onup>
+        <ondown>10</ondown>
+        <pagecontrol>61</pagecontrol>
+        <scrolltime tween="quadratic">300</scrolltime>
+        <itemlayout height="90" width="356">
+          <control type="image">
+            <posy>30</posy>
+            <width>356</width>
+            <height>60</height>
+            <texture border="1">separator2.png</texture>
+          </control>
+          <control type="label">
+            <posx>356</posx>
+            <posy>0</posy>
+            <width>356</width>
+            <height>90</height>
+            <font>font15</font>
+            <textoffsetx>20</textoffsetx>
+            <textcolor>grey2</textcolor>
+            <selectedcolor>selected</selectedcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <label>$INFO[ListItem.Label]</label>
+          </control>
+        </itemlayout>
+        <focusedlayout height="90" width="356">
+          <control type="image">
+            <posy>30</posy>
+            <width>356</width>
+            <height>60</height>
+            <texture border="1">separator2.png</texture>
+          </control>
+          <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>356</width>
+            <height>90</height>
+            <texture border="4">listselect_fo.png</texture>
+            <visible>Control.HasFocus(10)</visible>
+            <include>VisibleFadeEffect</include>
+          </control>
+          <control type="label">
+            <posx>356</posx>
+            <posy>0</posy>
+            <width>356</width>
+            <height>90</height>
+            <font>font15</font>
+            <textoffsetx>20</textoffsetx>
+            <textcolor>white</textcolor>
+            <selectedcolor>selected</selectedcolor>
+            <align>right</align>
+            <aligny>center</aligny>
+            <label>$INFO[ListItem.Label]</label>
+            <animation effect="fade" start="100" end="70"
+              time="300" tween="sine" easing="inout" condition="!Control.HasFocus(10)">Conditional
+            </animation>
+          </control>
+        </focusedlayout>
+        <content>
+          <item id="1">
+            <label>$ADDON[pvr.vdr.vnsi 30100]</label>
+            <onclick>SetProperty(menu,osd)</onclick>
+          </item>
+          <item id="2">
+            <label>$ADDON[pvr.vdr.vnsi 30101]</label>
+            <onclick>SetProperty(menu,setup)</onclick>
+          </item>
+          <item id="3">
+            <label>$ADDON[pvr.vdr.vnsi 30108]</label>
+            <onclick>SetProperty(menu,channels)</onclick>
+          </item>
+        </content>
+      </control>
+      <control type="scrollbar" id="61">
+        <posx>68</posx>
+        <posy>32</posy>
+        <width>8</width>
+        <height>720</height>
+        <onleft>11</onleft>
+        <onright>10</onright>
+        <ondown>61</ondown>
+        <onup>61</onup>
+        <showonepage>false</showonepage>
+        <texturesliderbackground>-</texturesliderbackground>
+        <texturesliderbar colordiffuse="55ffffff"
+          border="1">scrollbar/texturesliderbar2.png</texturesliderbar>
+        <texturesliderbarfocus border="1">scrollbar/texturesliderbar2.png
+        </texturesliderbarfocus>
+      </control>
+      <control type="image">
+        <description>LOGO</description>
+        <posx>82</posx>
+        <posy>752</posy>
+        <width>356</width>
+        <height>120</height>
+        <aspectratio>keep</aspectratio>
+        <texture>aeon-nox-logo.png</texture>
+      </control>
+      <include>SystemRightPanel</include>
+      <control type="group" id="11">
+        <control type="grouplist" id="12">
+          <description>control area</description>
+          <posx>522</posx>
+          <posy>32</posy>
+          <width>1316</width>
+          <height>840</height>
+          <itemgap>0</itemgap>
+          <pagecontrol>60</pagecontrol>
+          <onleft>10</onleft>
+          <onright>60</onright>
+          <onup>12</onup>
+          <ondown>12</ondown>
+          <visible>StringCompare(Window.Property(menu),osd)</visible>
+          <control type="button" id="13"> 
+            <description>osd control label</description> 
+            <width>1316</width> 
+            <height>90</height> 
+            <font>font15</font> 
+            <textcolor>grey2</textcolor> 
+            <textoffsetx>30</textoffsetx> 
+            <focusedcolor>white</focusedcolor> 
+            <invalidcolor>invalid</invalidcolor> 
+            <texturefocus border="3">listselect_fo.png</texturefocus> 
+            <texturenofocus border="1">separator5.png</texturenofocus> 
+            <label>$ADDON[pvr.vdr.vnsi 30103]</label>
+          </control>
+          <control type="renderaddon" id="9">
+            <posx>0</posx>
+            <posy>90</posy>
+            <width>1316</width>
+            <height>750</height>
+            <align>center</align>
+            <aligny>center</aligny>
+          </control>
+        </control>
+        <control type="grouplist" id="20">
+          <description>control area</description>
+          <posx>522</posx>
+          <posy>32</posy>
+          <width>1316</width>
+          <height>840</height>
+          <itemgap>0</itemgap>
+          <pagecontrol>60</pagecontrol>
+          <onleft>10</onleft>
+          <onright>60</onright>
+          <onup>20</onup>
+          <ondown>20</ondown>
+          <visible>StringCompare(Window.Property(menu),setup)</visible>
+          <include>SettingsFadeEffect</include>
+          <control type="spincontrolex" id="21">
+            <description>Source Type</description>
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1316</width>
+            <height>90</height>
+            <font>font15</font>
+            <textcolor>grey2</textcolor>
+            <textoffsetx>30</textoffsetx>
+            <focusedcolor>white</focusedcolor>
+            <texturefocus border="3">listselect_fo.png
+            </texturefocus>
+            <texturenofocus border="1">separator5.png
+            </texturenofocus>
+            <aligny>center</aligny>
+            <reverse>yes</reverse>
+            <spinposx>10</spinposx>
+            <label>$ADDON[pvr.vdr.vnsi 30104]</label>
+          </control>
+          <control type="spincontrolex" id="22">
+            <description>Source Type</description>
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1316</width>
+            <height>90</height>
+            <font>font15</font>
+            <textcolor>grey2</textcolor>
+            <textoffsetx>30</textoffsetx>
+            <focusedcolor>white</focusedcolor>
+            <texturefocus border="3">listselect_fo.png
+            </texturefocus>
+            <texturenofocus border="1">separator5.png
+            </texturenofocus>
+            <aligny>center</aligny>
+            <reverse>yes</reverse>
+            <spinposx>10</spinposx>
+            <label>$ADDON[pvr.vdr.vnsi 30105]</label>
+          </control>
+          <control type="spincontrolex" id="23">
+            <description>Source Type</description>
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1316</width>
+            <height>90</height>
+            <font>font15</font>
+            <textcolor>grey2</textcolor>
+            <textoffsetx>30</textoffsetx>
+            <focusedcolor>white</focusedcolor>
+            <texturefocus border="3">listselect_fo.png
+            </texturefocus>
+            <texturenofocus border="1">separator5.png
+            </texturenofocus>
+            <aligny>center</aligny>
+            <reverse>yes</reverse>
+            <spinposx>10</spinposx>
+            <label>$ADDON[pvr.vdr.vnsi 30106]</label>
+          </control>
+        </control>
+        <control type="group" id="30">
+          <include>SettingsFadeEffect</include>
+          <visible>StringCompare(Window.Property(menu),channels)</visible>
+          <control type="radiobutton" id="31">
+            <description>Channels label</description>
+            <posx>522</posx>
+            <posy>32</posy>
+            <width>658</width>
+            <height>90</height>
+            <font>font15</font>
+            <textcolor>grey2</textcolor>
+            <textoffsetx>30</textoffsetx>
+            <focusedcolor>white</focusedcolor>
+            <texturefocus border="3">listselect_fo.png
+            </texturefocus>
+            <texturenofocus border="1">separator5.png
+            </texturenofocus>
+            <label>$ADDON[pvr.vdr.vnsi 30111]</label>
+            <selected>StringCompare(Window.Property(IsDirty),1)</selected>
+          </control>
+          <control type="grouplist" id ="38">
+            <description>control area</description>
+            <posx>522</posx>
+            <posy>182</posy>
+            <width>658</width>
+            <height>390</height>
+            <itemgap>0</itemgap>
+            <pagecontrol>60</pagecontrol>
+            <onleft>10</onleft>
+            <onright>36</onright>
+            <onup>38</onup>
+            <ondown>38</ondown>
+            <control type="radiobutton" id="32">
+              <description>Is Radio</description>
+              <width>658</width>
+              <height>90</height>
+              <font>font15</font>
+              <textcolor>grey2</textcolor>
+              <textoffsetx>30</textoffsetx>
+              <focusedcolor>white</focusedcolor>
+              <texturefocus border="3">listselect_fo.png
+              </texturefocus>
+              <texturenofocus border="1">separator5.png
+              </texturenofocus>
+              <label>$ADDON[pvr.vdr.vnsi 30112]</label>
+            </control>
+            <control type="button" id="33">
+              <description>providers</description>
+              <width>658</width>
+              <height>90</height>
+              <font>font15</font>
+              <textcolor>grey2</textcolor>
+              <textoffsetx>30</textoffsetx>
+              <focusedcolor>white</focusedcolor>
+              <texturefocus border="3">listselect_fo.png
+              </texturefocus>
+              <texturenofocus border="1">separator5.png
+              </texturenofocus>
+              <label>$ADDON[pvr.vdr.vnsi 30109]</label>
+            </control>
+            <control type="button" id="34">
+              <description>channels</description>
+              <width>658</width>
+              <height>90</height>
+              <font>font15</font>
+              <textcolor>grey2</textcolor>
+              <textoffsetx>30</textoffsetx>
+              <focusedcolor>white</focusedcolor>
+              <texturefocus border="3">listselect_fo.png
+              </texturefocus>
+              <texturenofocus border="1">separator5.png
+              </texturenofocus>
+              <label>$ADDON[pvr.vdr.vnsi 30110]</label>
+            </control>
+            <control type="button" id="35">
+              <description>save</description>
+              <width>658</width>
+              <height>90</height>
+              <font>font15</font>
+              <textcolor>grey2</textcolor>
+              <textoffsetx>30</textoffsetx>
+              <focusedcolor>white</focusedcolor>
+              <texturefocus border="3">listselect_fo.png
+              </texturefocus>
+              <texturenofocus border="1">separator5.png
+              </texturenofocus>
+              <label>$ADDON[pvr.vdr.vnsi 30113]</label>
+            </control>
+          </control>
+          <control type="image">
+            <posy>32</posy>
+            <posx>1178</posx>
+            <width>2</width>
+            <height>840</height>
+            <texture border="1">separator3.png</texture>
+          </control>
+          <control type="list" id="36">
+            <posx>1180</posx>
+            <posy>32</posy>
+            <width>658</width>
+            <height>840</height>
+            <onup>36</onup>
+            <onleft>38</onleft>
+            <onright>37</onright>
+            <ondown>36</ondown>
+            <pagecontrol>37</pagecontrol>
+            <scrolltime tween="quadratic" easing="out">200
+            </scrolltime>
+            <itemlayout height="60">
+              <control type="image">
+                <width>658</width>
+                <height>60</height>
+                <texture border="1">separator2.png</texture>
+              </control>
+              <control type="label">
+                <width>658</width>
+                <height>60</height>
+                <font>font14</font>
+                <align>left</align>
+                <textoffsetx>15</textoffsetx>
+                <textcolor>grey2</textcolor>
+                <selectedcolor>grey2</selectedcolor>
+                <info>ListItem.Label</info>
+              </control>
+              <control type="image">
+                <posx>594</posx>
+                <posy>-2</posy>
+                <width>64</width>
+                <height>64</height>
+                <colordiffuse>FF04B431</colordiffuse>
+                <texture>android/btn_radio_on_holo_dark.png</texture>
+                <visible>ListItem.Property(IsWhitelist)</visible>
+              </control>
+              <control type="image">
+                <posx>594</posx>
+                <posy>-2</posy>
+                <width>64</width>
+                <height>64</height>
+                <colordiffuse>FFB20000</colordiffuse>
+                <texture>android/btn_radio_on_holo_dark.png</texture>
+                <visible>ListItem.Property(IsBlacklist)</visible>
+              </control>
+              <control type="image">
+                <posx>594</posx>
+                <posy>-2</posy>
+                <width>64</width>
+                <height>64</height>
+                <texture>android/btn_radio_off_holo_dark.png</texture>
+              </control>
+            </itemlayout>
+            <focusedlayout height="60">
+              <control type="image">
+                <width>1316</width>
+                <height>60</height>
+                <texture border="1">separator2.png</texture>
+              </control>
+              <control type="image">
+                <width>658</width>
+                <height>60</height>
+                <texture border="5">listselect_fo.png</texture>
+                <visible>Control.HasFocus(36)</visible>
+                <include>VisibleFadeEffect</include>
+              </control>
+              <control type="label">
+                <width>658</width>
+                <height>60</height>
+                <font>font14</font>
+                <align>left</align>
+                <textcolor>white</textcolor>
+                <textoffsetx>15</textoffsetx>
+                <selectedcolor>white</selectedcolor>
+                <info>ListItem.Label</info>
+                <animation effect="fade" start="100" end="70"
+                  time="300" tween="sine" easing="inout" condition="!Control.HasFocus(36)">Conditional
+                </animation>
+              </control>
+              <control type="image">
+                <posx>594</posx>
+                <posy>-2</posy>
+                <width>64</width>
+                <height>64</height>
+                <colordiffuse>FF04B431</colordiffuse>
+                <texture>android/btn_radio_on_holo_dark.png</texture>
+                <visible>ListItem.Property(IsWhitelist)</visible>
+              </control>
+              <control type="image">
+                <posx>594</posx>
+                <posy>-2</posy>
+                <width>64</width>
+                <height>64</height>
+                <colordiffuse>FFB20000</colordiffuse>
+                <texture>android/btn_radio_on_holo_dark.png</texture>
+                <visible>ListItem.Property(IsBlacklist)</visible>
+              </control>
+              <control type="image">
+                <posx>594</posx>
+                <posy>-2</posy>
+                <width>64</width>
+                <height>64</height>
+                <texture>android/btn_radio_off_holo_dark.png</texture>
+              </control>
+            </focusedlayout>
+          </control>
+          <control type="scrollbar" id="37">
+            <posx>1841</posx>
+            <posy>32</posy>
+            <width>8</width>
+            <height>840</height>
+            <onleft>36</onleft>
+            <onright>10</onright>
+            <ondown>37</ondown>
+            <onup>37</onup>
+            <showonepage>false</showonepage>
+            <texturesliderbackground>-</texturesliderbackground>
+            <texturesliderbar colordiffuse="55ffffff"
+              border="1">scrollbar/texturesliderbar2.png</texturesliderbar>
+            <texturesliderbarfocus border="1">scrollbar/texturesliderbar2.png
+            </texturesliderbarfocus>
+          </control>
+        </control>
+      </control>
+    </control>
+    <include>BehindDialogFadeOut</include>
+  </controls>
+</window>

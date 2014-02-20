@@ -412,7 +412,7 @@ bool cVideoInput::Open(const cChannel *channel, int priority, cVideoBuffer *vide
   m_VideoBuffer = videoBuffer;
   m_Channel = channel;
   m_Priority = priority;
-  m_Device = cDevice::GetDevice(m_Channel, m_Priority, true);
+  m_Device = cDevice::GetDevice(m_Channel, m_Priority, false);
 
   if (m_Device != NULL)
   {

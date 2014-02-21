@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
@@ -91,11 +90,11 @@ msgstr "Přehrávání"
 
 msgctxt "#30050"
 msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Vaše verze TVServerXBMC '%s' je příliš stará. Aktualizujte prosím na '%s', nebo novější."
+msgstr "vaše verze TVServerXBMC '%s' je příliš stará. Aktualizujte prosím na '%s', nebo novější."
 
 msgctxt "#30051"
 msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Vaše verze TVServerXBMC je příliš stará. Aktualizujte prosím na '%s', nebo novější."
+msgstr "vaše verze TVServerXBMC je příliš stará. Aktualizujte prosím na '%s', nebo novější."
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."

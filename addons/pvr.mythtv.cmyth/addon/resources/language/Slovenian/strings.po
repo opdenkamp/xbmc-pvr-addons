@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,131 @@ msgstr "Vključi TV v živo"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Dovoli TV v živo, da premika nastavljena snemanja"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Reševanje prekrivanj"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Predvajaj TV v živo, če se snemanje začne kasneje"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Začni snemanje in ustavi TV v živo"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Predvajaj TV v živo in prekliči snemanje"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Splošno"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Ponudnik predlog"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Notranji"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Notranja predloga"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Samodejno poizvedi metapodatke"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Označi oglase v novih posnetkih"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Pretvori nove posnetke"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Zaženi uporabniško opravilo #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Zaženi uporabniško opravilo #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Zaženi uporabniško opravilo #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Zaženi uporabniško opravilo #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Pretvornik"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Ali dovolite posnetkom, da potečejo?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Predloga snemanja"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Različica protokola: %i - Različica baze: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "S hrbtenico MythTV se ni bilo mogoče povezati"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Z bazo MythTV se ni bilo mogoče povezati"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Povezava s hrbtenico MythTV je bila izgubljena"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Povezava z MythTv je obnovljena"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Hrbtenica MythTV se ne odziva"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Program ni na voljo"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Snemalnik ni na voljo"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Preklic snemanja: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Ustavljam TV v živo zaradi prekrivanja: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Ne snemam"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Izbriši in ponovno snemaj"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Obdrži posnetke"

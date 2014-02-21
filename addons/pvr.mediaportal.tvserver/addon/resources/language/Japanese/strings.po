@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
@@ -32,6 +31,10 @@ msgstr "Free-to-air のみ"
 msgctxt "#30003"
 msgid "Include Radio"
 msgstr "ラジオも含める"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "高速チャンネルスイッチ（タイムシフトは止めない）"
 
 msgctxt "#30005"
 msgid "Connect timeout (s)"

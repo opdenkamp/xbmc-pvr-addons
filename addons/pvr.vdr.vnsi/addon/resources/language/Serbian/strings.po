@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -17,6 +16,10 @@ msgstr ""
 "Language: sr\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Истек времена за повезивање (с)"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "Država"
@@ -28,3 +31,7 @@ msgstr "Tip:"
 msgctxt "#30039"
 msgid "Running"
 msgstr "Pokretanje"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Konfiguracija"

@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -69,10 +68,13 @@ msgctxt "#30054"
 msgid "[RECUR]"
 msgstr ""
 
+#empty strings from id 30055 to 30099
+
 msgctxt "#30100"
 msgid "Add Timer"
 msgstr ""
 
+#empty strings from id 30101 to 30119
 #Recording type
 
 msgctxt "#30120"
@@ -107,7 +109,7 @@ msgctxt "#30127"
 msgid "Record Season (Weekends, this timeslot)"
 msgstr ""
 
-
+#empty strings from id 30128 to 30129
 #Keep count
 
 msgctxt "#30130"
@@ -128,7 +130,6 @@ msgctxt "#30133"
 msgid "Pre-Padding (minutes)"
 msgstr ""
 
-
 #Recording directory
 
 msgctxt "#30134"
@@ -138,4 +139,3 @@ msgstr ""
 msgctxt "#30135"
 msgid "Default"
 msgstr ""
-

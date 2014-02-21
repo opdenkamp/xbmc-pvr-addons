@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
@@ -17,6 +16,150 @@ msgstr ""
 "Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "MediaPortal naziv računala"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "Mediaportal XBMC dodatak ulaz"
+
+msgctxt "#30002"
+msgid "Free-to-air only"
+msgstr "Samo nekôdirani"
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "Uključi radio"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "Brzo prebacivanje programa (ne zaustavljaj vremensko premotavanje)"
+
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "Istek vremena povezivanja (sekundi)"
+
+msgctxt "#30006"
+msgid "Import only TV Channels from group"
+msgstr "Uvezi samo TV programe iz grupe"
+
+msgctxt "#30007"
+msgid "Import only Radio Channels from group"
+msgstr "Uvezi samo radijske programe iz grupe"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "Pretvori naziv računala u IP adresu"
+
+msgctxt "#30009"
+msgid "EPG: Read genre strings (slow)"
+msgstr "Elektronski programski vodič (EPG): Čitaj slog sa žanrom (sporije)"
+
+msgctxt "#30010"
+msgid "Wait time after tuning a channel (ms)"
+msgstr "Vrijeme čekanja nakon pronalaska programa (ms)"
+
+msgctxt "#30015"
+msgid "Streaming method"
+msgstr "Način stremanja"
+
+msgctxt "#30016"
+msgid "Windows user account (SMB)"
+msgstr "Windows korisnički račun (SMB)"
+
+msgctxt "#30017"
+msgid "Windows password (SMB)"
+msgstr "Windows lozinka (SMB)"
+
+msgctxt "#30018"
+msgid "Use RTSP streaming"
+msgstr "Koristi RTSP stremanje"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Povezivanje"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
+
 msgctxt "#30042"
 msgid "Playback"
 msgstr "Reprodukcija"
+
+msgctxt "#30050"
+msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Vaš TVServerXBMC inačice '%s' je zastario. Nadogradite ga na '%s' ili noviju inačicu!"
+
+msgctxt "#30051"
+msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgstr "Inačica vašeg TVServerXBMC je prestara. Nadogradite ga na '%s' ili noviju inačicu!"
+
+msgctxt "#30052"
+msgid "Recording playback failed. Empty URL of filename."
+msgstr "Reprodukcija snimke nije uspjela. Prazan URL ili naziv datoteke."
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "Sve kartice su zauzete"
+
+msgctxt "#30061"
+msgid "Channel is scrambled"
+msgstr "Program je kôdiran"
+
+msgctxt "#30062"
+msgid "No video or audio detected"
+msgstr "Slika ili zvuk nisu otkriveni"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "Signal nije pronađen"
+
+msgctxt "#30064"
+msgid "Unknown error"
+msgstr "Nepoznata greška"
+
+msgctxt "#30065"
+msgid "Unable to start graph"
+msgstr "Nemoguće pokretanje grafa"
+
+msgctxt "#30066"
+msgid "Unknown channel"
+msgstr "Nepoznati program"
+
+msgctxt "#30067"
+msgid "No tuning details"
+msgstr "Nema pojedinosti o prijemu"
+
+msgctxt "#30068"
+msgid "Channel is not mapped to any card"
+msgstr "Program nije dodijeljen niti jednoj kartici"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "Kartica je onemogućena"
+
+msgctxt "#30070"
+msgid "Connection to slave failed"
+msgstr "Povezivanje na alternativnu karticu nije uspjelo"
+
+msgctxt "#30071"
+msgid "Not the owner"
+msgstr "Nije vlasnik"
+
+msgctxt "#30072"
+msgid "Graph building failed"
+msgstr "Neuspjela izgradnja grafa"
+
+msgctxt "#30073"
+msgid "SW Encoder missing"
+msgstr "Nedostaje softverski enkôder"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "Ne slobodnog prostora na disku"
+
+msgctxt "#30075"
+msgid "No PMT found"
+msgstr "PMT nije pronađen"

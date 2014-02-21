@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
-# Addon version: 1.6.6
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
@@ -19,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "VU+ hostname or IP address"
-msgstr "VU+ שם מארח או כתובת IP"
+msgstr "שם מארח או כתובת IP של VU+‎"
 
 msgctxt "#30002"
 msgid "Streaming Port"
@@ -108,6 +107,10 @@ msgstr "תמשוך רק תוכנית זרה אחת"
 msgctxt "#30026"
 msgid "TV-Bouquet"
 msgstr "תוכנית זרה"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "קבלת ה־picons ממנשק הדפדפן"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

@@ -1,8 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -26,33 +25,49 @@ msgid "Webinterface Port"
 msgstr "פורט ממשק אינטרנט"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "פורט הזרמה"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "פורט הקלטה"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "שם משתמש"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
-msgstr "סיסמא"
+msgstr "סיסמה"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "טען את הערוצים מהקובץ favourites.xml במקום channels.dat"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "השתמש במועדפים במקום רשימת ערוצים"
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "השתמש בקובץ מועדפים מקומי"
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "סמן את הקובץ favourites.xml"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "אפשר תזוזה בזמן"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "נתיב חוצץ תזוזה בזמן"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "השתמש בהזרמת RTSP לשידור חי"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "כללי"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "מתקדם"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
 msgstr "אין אפשרות להתחבר לשירות ההקלטה"
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "נחוצה גרסת שירות הקלטה 1.%d או גבוהה יותר"
+msgid "Recording Service version %s or higher required"
+msgstr "נדרשת לפחות גרסת שירות הקלטות %s"

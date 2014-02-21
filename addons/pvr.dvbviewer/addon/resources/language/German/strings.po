@@ -1,8 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -19,40 +18,56 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "DVBViewer Recording Service IP Address"
-msgstr "DVBViewer Aufnahme Service IP Addresse"
+msgstr "IP-Adresse des DVBViewer-Aufnahmedienstes"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
-msgstr "Webinterface Port"
+msgstr "Weboberfläche Port"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "Streaming Port"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "Port für Aufnahmen"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "Benutzername"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Passwort"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Lade Kanäle aus favourites.xml an Stelle von channels.dat"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Favoriten anstelle einer Kanalliste verwenden"
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Lokale Favoritendatei verwenden"
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
-msgstr "Wähle die favourites.xml Datei"
+msgstr "Wähle die favourites.xml-Datei"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Timeshift aktivieren"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Timeshift Puffer-Pfad"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "RTSP-Streaming für Live TV verwenden"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Allgemein"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Erweitert"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
-msgstr "Kann keine Verbindung mit dem Aufnahme Service herstellen."
+msgstr "Kann keine Verbindung mit dem Aufzeichnungsdienst herstellen"
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "Aufnhame Service Version 1.%d oder höher erforderlich"
+msgid "Recording Service version %s or higher required"
+msgstr "Aufzeichnungsdienst in Version %s oder höher wird benötigt"

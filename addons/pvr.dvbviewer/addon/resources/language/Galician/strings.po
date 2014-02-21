@@ -1,8 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -26,33 +25,49 @@ msgid "Webinterface Port"
 msgstr "Porto de Webinterface"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "Porto do fluxo"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "Porto das gravacións"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "Nome de usuario"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Contrasinal"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Cargar as canles dende favourites.xml no lugar de channels.dat"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Usar os favoritos no canto da listaxe de canles"
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Usar o ficheiro de favoritos locales"
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Seleccionar o ficheiro favourites.xml"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Habilitar Timeshift"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Camiño do búfer do Timeshift"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Usar a transmisión RTSP para a TV ao vivo"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Xeral"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Avanzado"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
 msgstr "Non se puido conectar ao servizo de gravación"
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "Requírese a versión 1.%d ou superior do servizo de gravación"
+msgid "Recording Service version %s or higher required"
+msgstr "Requírese a versión %s ou superior do servizo"

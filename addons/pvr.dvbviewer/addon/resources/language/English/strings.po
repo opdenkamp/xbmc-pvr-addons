@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.8.10
 # Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
@@ -35,6 +34,8 @@ msgctxt "#30003"
 msgid "Password"
 msgstr ""
 
+#empty strings from id 30004 to 30009
+
 msgctxt "#30010"
 msgid "Use favourites instead of channel list"
 msgstr ""
@@ -47,6 +48,8 @@ msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr ""
 
+#empty strings from id 30013 to 30019
+
 msgctxt "#30020"
 msgid "Enable Timeshift"
 msgstr ""
@@ -55,11 +58,13 @@ msgctxt "#30021"
 msgid "Timeshift buffer path"
 msgstr ""
 
+#empty strings from id 30022 to 30029
+
 msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr ""
 
-# sections
+#empty strings from id 30031 to 30099
 
 msgctxt "#30100"
 msgid "General"
@@ -69,6 +74,7 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr ""
 
+#empty strings from id 30102 to 30499
 #notifications
 
 msgctxt "#30500"

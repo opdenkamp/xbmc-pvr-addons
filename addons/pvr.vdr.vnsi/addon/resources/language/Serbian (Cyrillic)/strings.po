@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -28,3 +27,7 @@ msgstr "Тип:"
 msgctxt "#30039"
 msgid "Running"
 msgstr "Покретање"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Конфигурација"

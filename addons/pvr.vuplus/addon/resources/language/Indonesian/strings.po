@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
-# Addon version: 1.6.6
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
@@ -25,6 +24,26 @@ msgctxt "#30004"
 msgid "Password"
 msgstr "Password"
 
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Timeout response dalam deti"
+
 msgctxt "#30018"
 msgid "General"
 msgstr "Umum"
+
+msgctxt "#30019"
+msgid "Channels"
+msgstr "Saluran"
+
+msgctxt "#30020"
+msgid "Advanced"
+msgstr "Tingkat Lanjut"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Terputus dari '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Tersambung lagi pada '%s'"

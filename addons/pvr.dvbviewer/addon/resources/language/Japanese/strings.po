@@ -1,8 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -26,33 +25,33 @@ msgid "Webinterface Port"
 msgstr "Web インターフェースのポート番号"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "ストリーミングのポート番号"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "録画のポート番号"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "ユーザー名"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "パスワード"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "channels.dat からではなく favourites.xml からチャンネルを読み込む"
-
-msgctxt "#30007"
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "favourites.xml ファイルを選択"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "タイムシフトを有効"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "タイムシフト用バッファのパス"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "一般"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "高度な設定"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
 msgstr "録画サービスに接続できません"
-
-msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "録画サービス 1.%d またはそれ以上のバージョンが必要です"

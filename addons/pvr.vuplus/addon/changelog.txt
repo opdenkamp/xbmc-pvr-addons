@@ -1,3 +1,6 @@
+1.9.10
+- updated language files from Transifex
+
 1.9.9
 - add timeshift buffer functions
 

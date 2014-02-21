@@ -1,8 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -26,33 +25,33 @@ msgid "Webinterface Port"
 msgstr "Puerto interface web"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "Puerto streaming"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "Puerto de Grabaciones"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "Usuario"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Contraseña"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Cargar canales de favourites.xml en lugar de hacerlo de channels.dat"
-
-msgctxt "#30007"
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Elegir el archivo favourites.xml"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Activar Timeshift"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Ruta del buffer de Timeshift"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "General"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Avanzado"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
 msgstr "No se puede conectar con el Servicio de Grabación"
-
-msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "Versión del Servicio de Grabación requerida 1.%d o superior"

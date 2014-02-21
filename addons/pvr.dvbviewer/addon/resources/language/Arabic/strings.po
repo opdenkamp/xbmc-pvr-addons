@@ -1,8 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -17,10 +16,18 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-msgctxt "#30004"
+msgctxt "#30002"
 msgid "Username"
 msgstr "اسم المستخدم"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "كلمة المرور"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "عام"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "منقدم"

@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: ARGUS TV client
 # Addon id: pvr.argustv
-# Addon version: 1.6.163
 # Addon Provider: Fred Hoogduin, Marcel Groothuis
 msgid ""
 msgstr ""
@@ -16,6 +15,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "ARGUS TV Hostname"
+msgstr "Nom de màquina de l'ARGUS TV"
+
+msgctxt "#30001"
+msgid "ARGUS TV webserver port"
+msgstr "Port del servidor web de l'ARGUS TV"
 
 msgctxt "#30002"
 msgid "Include Radio"
@@ -32,3 +39,7 @@ msgstr "Compte d'usuari del Windows"
 msgctxt "#30005"
 msgid "Password"
 msgstr "Contrasenya"
+
+msgctxt "#30006"
+msgid "Delay after tuning (ms)"
+msgstr "Retard després de sintonitzar un canal (ms)"

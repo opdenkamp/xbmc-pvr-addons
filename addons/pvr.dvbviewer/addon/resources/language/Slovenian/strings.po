@@ -1,8 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -26,33 +25,49 @@ msgid "Webinterface Port"
 msgstr "Vrata spletnega vmesnika"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "Vrata za pretakanje"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "Vrata posnetkov"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "Uporabniško ime"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Geslo"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Naloži programe iz favourites.xml namesto iz channels.dat"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Uporabi priljubljene namesto seznama programov"
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Uporabi krajevno datoteko priljubljenih"
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Izberi datoteko favourites.xml"
 
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Omogoči časovni zamik"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Pot medpomnenja časovnega zamika"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Za TV v živo uporabi pretakanje RTSP"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Splošno"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Napredno"
+
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
-msgstr "Ni se mogoče povezati s storitvijo DVBViewer"
+msgstr "S storitvijo DVBViewer se ni mogoče povezati"
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "Potrebna je storitev DVBViewer različice 1.%d ali novejše"
+msgid "Recording Service version %s or higher required"
+msgstr "Potrebna je storitev DVBViewer različice %s ali novejše"

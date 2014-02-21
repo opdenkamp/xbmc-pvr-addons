@@ -1,8 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -26,33 +25,33 @@ msgid "Webinterface Port"
 msgstr "Port webového rozhraní"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "Port proudového vysílání"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "Port nahrávání"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "Uživatelské jméno"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Heslo"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Načíst kanály z favourites.xml místo channels.dat"
-
-msgctxt "#30007"
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Vyberte soubor favourites.xml"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Povolit časový posun"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Cesta k zásobníku časového posunu"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Obecné"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Pokročilé"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
 msgstr "Nelze se spojit se službou nahrávání"
-
-msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "Vyžadována služba nahrávání verze 1.%d nebo novější"

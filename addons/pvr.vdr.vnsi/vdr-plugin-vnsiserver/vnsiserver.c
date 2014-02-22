@@ -39,8 +39,6 @@
 #include <sys/stat.h>
 
 #include <vdr/plugin.h>
-#include <vdr/shutdown.h>
-#include <vdr/videodir.h>
 
 #include "vnsi.h"
 #include "vnsiserver.h"
@@ -75,44 +73,6 @@ cVNSIServer::cVNSIServer(int listenPort) : cThread("VDR VNSI Server")
 {
   m_ServerPort  = listenPort;
 
-  if(*VNSIServerConfig.ConfigDirectory)
-  {
-    m_AllowedHostsFile = cString::sprintf("%s/" ALLOWED_HOSTS_FILE, *VNSIServerConfig.ConfigDirectory);
-  }
-  else
-  {
-    ERRORLOG("cVNSIServer: missing ConfigDirectory!");
-    m_AllowedHostsFile = cString::sprintf("/video/" ALLOWED_HOSTS_FILE);
-  }
-
-  VNSIChannelFilter.Load();
-  VNSIChannelFilter.SortChannels();
-
-  m_ServerFD = socket(AF_INET, SOCK_STREAM, 0);
-  if(m_ServerFD == -1)
-    return;
-
-  fcntl(m_ServerFD, F_SETFD, fcntl(m_ServerFD, F_GETFD) | FD_CLOEXEC);
-
-  int one = 1;
-  setsockopt(m_ServerFD, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(int));
-
-  struct sockaddr_in s;
-  memset(&s, 0, sizeof(s));
-  s.sin_family = AF_INET;
-  s.sin_port = htons(m_ServerPort);
-
-  int x = bind(m_ServerFD, (struct sockaddr *)&s, sizeof(s));
-  if (x < 0)
-  {
-    close(m_ServerFD);
-    INFOLOG("Unable to start VNSI Server, port already in use ?");
-    m_ServerFD = -1;
-    return;
-  }
-
-  listen(m_ServerFD, 10);
-
   Start();
 
   INFOLOG("VNSI Server started");
@@ -122,12 +82,7 @@ cVNSIServer::cVNSIServer(int listenPort) : cThread("VDR VNSI Server")
 
 cVNSIServer::~cVNSIServer()
 {
-  Cancel(-1);
-  for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
-  {
-    delete (*i);
-  }
-  m_clients.erase(m_clients.begin(), m_clients.end());
+  m_Status.Shutdown();
   Cancel();
   INFOLOG("VNSI Server stopped");
 }
@@ -179,7 +134,7 @@ void cVNSIServer::NewClientConnected(int fd)
 
   INFOLOG("Client with ID %d connected: %s", m_IdCnt, cxSocket::ip2txt(sin.sin_addr.s_addr, sin.sin_port, buf));
   cVNSIClient *connection = new cVNSIClient(fd, m_IdCnt, cxSocket::ip2txt(sin.sin_addr.s_addr, sin.sin_port, buf));
-  m_clients.push_back(connection);
+  m_Status.AddClient(connection);
   m_IdCnt++;
 }
 
@@ -188,41 +143,44 @@ void cVNSIServer::Action(void)
   fd_set fds;
   struct timeval tv;
 
-  cTimeMs chanTimer(0);
-
-  // get initial state of the recordings
-  int recState = -1;
-  Recordings.StateChanged(recState);
-
-  // get initial state of the timers
-  int timerState = -1;
-  Timers.Modified(timerState);
-
-  // last update of epg
-  time_t epgUpdate = cSchedules::Modified();
-
-  // delete old timeshift file
-  cString cmd;
-  struct stat sb;
-  if ((*TimeshiftBufferDir) && stat(TimeshiftBufferDir, &sb) == 0 && S_ISDIR(sb.st_mode))
+  if(*VNSIServerConfig.ConfigDirectory)
   {
-    if (TimeshiftBufferDir[strlen(TimeshiftBufferDir)-1] == '/')
-      cmd = cString::sprintf("rm -f %s*.vnsi", TimeshiftBufferDir);
-    else
-      cmd = cString::sprintf("rm -f %s/*.vnsi", TimeshiftBufferDir);
+    m_AllowedHostsFile = cString::sprintf("%s/" ALLOWED_HOSTS_FILE, *VNSIServerConfig.ConfigDirectory);
   }
   else
   {
-#if VDRVERSNUM >= 20102
-    cmd = cString::sprintf("rm -f %s/*.vnsi", cVideoDirectory::Name());
-#else
-    cmd = cString::sprintf("rm -f %s/*.vnsi", VideoDirectory);
-#endif
+    ERRORLOG("cVNSIServer: missing ConfigDirectory!");
+    m_AllowedHostsFile = cString::sprintf("/video/" ALLOWED_HOSTS_FILE);
   }
-  int ret = system(cmd);
 
-  // set thread priority
-  SetPriority(1);
+  VNSIChannelFilter.Load();
+  VNSIChannelFilter.SortChannels();
+  m_Status.Start();
+
+  m_ServerFD = socket(AF_INET, SOCK_STREAM, 0);
+  if(m_ServerFD == -1)
+    return;
+
+  fcntl(m_ServerFD, F_SETFD, fcntl(m_ServerFD, F_GETFD) | FD_CLOEXEC);
+
+  int one = 1;
+  setsockopt(m_ServerFD, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(int));
+
+  struct sockaddr_in s;
+  memset(&s, 0, sizeof(s));
+  s.sin_family = AF_INET;
+  s.sin_port = htons(m_ServerPort);
+
+  int x = bind(m_ServerFD, (struct sockaddr *)&s, sizeof(s));
+  if (x < 0)
+  {
+    close(m_ServerFD);
+    INFOLOG("Unable to start VNSI Server, port already in use ?");
+    m_ServerFD = -1;
+    return;
+  }
+
+  listen(m_ServerFD, 10);
 
   while (Running())
   {
@@ -240,68 +198,6 @@ void cVNSIServer::Action(void)
     }
     if (r == 0)
     {
-      // remove disconnected clients
-      for (ClientList::iterator i = m_clients.begin(); i != m_clients.end();)
-      {
-        if (!(*i)->Active())
-        {
-          INFOLOG("Client with ID %u seems to be disconnected, removing from client list", (*i)->GetID());
-          delete (*i);
-          i = m_clients.erase(i);
-        }
-        else {
-          i++;
-        }
-      }
-
-      // trigger clients to reload the modified channel list
-      if(m_clients.size() > 0 && chanTimer.TimedOut())
-      {
-        int modified = Channels.Modified();
-        if (modified)
-        {
-          Channels.SetModified((modified == CHANNELSMOD_USER) ? true : false);
-          INFOLOG("Requesting clients to reload channel list");
-          for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
-            (*i)->ChannelsChange();
-        }
-        chanTimer.Set(5000);
-      }
-
-      // reset inactivity timeout as long as there are clients connected
-      if(m_clients.size() > 0) {
-        ShutdownHandler.SetUserInactiveTimeout();
-      }
-
-      // update recordings
-      if(Recordings.StateChanged(recState))
-      {
-        INFOLOG("Recordings state changed (%i)", recState);
-        INFOLOG("Requesting clients to reload recordings list");
-        for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
-          (*i)->RecordingsChange();
-      }
-
-      // update timers
-      if(Timers.Modified(timerState))
-      {
-        INFOLOG("Timers state changed (%i)", timerState);
-        INFOLOG("Requesting clients to reload timers");
-        for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
-        {
-         (*i)->TimerChange();
-        }
-      }
-
-      // update epg
-      if((cSchedules::Modified() > epgUpdate + 10) || time(NULL) > epgUpdate + 300)
-      {
-        for (ClientList::iterator i = m_clients.begin(); i != m_clients.end(); i++)
-        {
-         (*i)->EpgChange();
-        }
-        epgUpdate = cSchedules::Modified();
-      }
       continue;
     }
 

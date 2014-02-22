@@ -661,6 +661,7 @@ bool cVNSIClient::process_EnableStatusInterface()
   bool enabled = m_req->extract_U8();
 
   SetStatusInterface(enabled);
+  SetPriority(1);
 
   m_resp->add_U32(VNSI_RET_OK);
   m_resp->finalise();

@@ -90,7 +90,7 @@ OBJS = vnsi.o bitstream.o vnsiclient.o config.o cxsocket.o parser.o parser_AAC.o
        parser_AC3.o parser_DTS.o parser_h264.o parser_MPEGAudio.o parser_MPEGVideo.o \
        parser_Subtitle.o parser_Teletext.o streamer.o recplayer.o requestpacket.o responsepacket.o \
        vnsiserver.o hash.o recordingscache.o setup.o vnsiosd.o demuxer.o videobuffer.o \
-       videoinput.o channelfilter.o
+       videoinput.o channelfilter.o status.o
 
 ### The main target:
 

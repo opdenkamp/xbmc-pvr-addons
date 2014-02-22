@@ -26,10 +26,10 @@
 #ifndef VNSI_SERVER_H
 #define VNSI_SERVER_H
 
-#include <list>
 #include <vdr/thread.h>
 
 #include "config.h"
+#include "status.h"
 
 class cVNSIClient;
 
@@ -37,15 +37,13 @@ class cVNSIServer : public cThread
 {
 protected:
 
-  typedef std::list<cVNSIClient*> ClientList;
-
   virtual void Action(void);
   void NewClientConnected(int fd);
 
   int           m_ServerPort;
   int           m_ServerFD;
   cString       m_AllowedHostsFile;
-  ClientList    m_clients;
+  cVNSIStatus   m_Status;
 
   static unsigned int m_IdCnt;
 

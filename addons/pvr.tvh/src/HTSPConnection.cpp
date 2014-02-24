@@ -47,6 +47,7 @@ CHTSPResponse::CHTSPResponse ()
 CHTSPResponse::~CHTSPResponse ()
 {
   if (m_msg) htsmsg_destroy(m_msg);
+  Set(NULL); // ensure signal is sent
 }
 
 void CHTSPResponse::Set ( htsmsg_t *msg )
@@ -172,10 +173,15 @@ const char *CHTSPConnection::GetServerString ( void )
 void CHTSPConnection::Disconnect ( void )
 {
   CLockObject lock(m_mutex);
+
+  /* Close socket */
   if (m_socket) {
     m_socket->Shutdown();
     m_socket->Close();
   }
+
+  /* Signal all waiters and erase messages */
+  m_messages.clear();
 }
 
 /*
@@ -320,6 +326,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg )
   /* Send Message (bypass TX check) */
   if (!SendMessage0(method, msg))
   {
+    m_messages.erase(seq);
     tvherror("failed to transmit");
     return NULL;
   }

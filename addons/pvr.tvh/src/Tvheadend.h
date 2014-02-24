@@ -365,6 +365,10 @@ public:
   {
     return m_conn.IsConnected();
   }
+  void Disconnect ( void )
+  {
+    m_conn.Disconnect();
+  }
 
   /*
    * Demuxer (pass-thru)

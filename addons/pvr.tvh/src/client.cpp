@@ -205,8 +205,8 @@ ADDON_STATUS ADDON_SetSetting
   {\
     if (!strcmp(var.c_str(), (const char*)settingValue))\
     {\
-      tvhinfo("update %s from '%s' to '%s'",\
-              settingName, var.c_str(), settingValue);\
+      tvhdebug("update %s from '%s' to '%s'",\
+               settingName, var.c_str(), settingValue);\
       return act;\
     }\
     return ADDON_STATUS_OK;\
@@ -217,8 +217,8 @@ ADDON_STATUS ADDON_SetSetting
   {\
     if (var != *(int*)settingValue)\
     {\
-      tvhinfo("update %s from '%d' to '%d'",\
-              settingName, var, *(int*)settingValue);\
+      tvhdebug("update %s from '%d' to '%d'",\
+               settingName, var, *(int*)settingValue);\
       return act;\
     }\
     return ADDON_STATUS_OK;\
@@ -253,6 +253,15 @@ void ADDON_FreeSettings()
 void ADDON_Announce
   (const char *flag, const char *sender, const char *message, const void *data)
 {
+  tvhdebug("Announce(flag=%s, sender=%s, message=%s)", flag, sender, message);
+
+  /* XBMC/System */
+  if (!strcmp(sender, "xbmc") && !strcmp(flag, "System"))
+  {
+    /* Wake - close connection (it'll most likely need remaking) */
+    if (!strcmp("OnWake", message))
+      tvh->Disconnect();
+  }
 }
 
 /* **************************************************************************

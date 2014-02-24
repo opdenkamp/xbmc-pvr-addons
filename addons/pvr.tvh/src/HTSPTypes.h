@@ -226,6 +226,16 @@ struct SQuality
   uint32_t    fe_signal;
   uint32_t    fe_ber;
   uint32_t    fe_unc;
+  
+  SQuality() { Clear(); }
+  void Clear ()
+  {
+    fe_status.clear();
+    fe_snr    = 0;
+    fe_signal = 0;
+    fe_ber    = 0;
+    fe_unc    = 0;
+  }
 };
 
 struct SSourceInfo
@@ -235,6 +245,16 @@ struct SSourceInfo
   std::string si_mux;
   std::string si_provider;
   std::string si_service;
+
+  SSourceInfo() { Clear(); }
+  void Clear ()
+  {
+    si_adapter.clear();
+    si_network.clear();
+    si_mux.clear();
+    si_provider.clear();
+    si_service.clear();
+  }
 };
 
 

@@ -200,6 +200,24 @@ PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *streams )
 
 PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
 {
+  CLockObject lock(m_mutex);
+  
+  strncpy(sig.strAdapterName,   m_sourceInfo.si_adapter.c_str(),
+          sizeof(sig.strAdapterName));
+  strncpy(sig.strAdapterStatus, m_signalInfo.fe_status.c_str(),
+          sizeof(sig.strAdapterStatus));
+  strncpy(sig.strServiceName,   m_sourceInfo.si_service.c_str(),
+          sizeof(sig.strServiceName));
+  strncpy(sig.strProviderName,  m_sourceInfo.si_provider.c_str(),
+          sizeof(sig.strProviderName));
+  strncpy(sig.strMuxName,       m_sourceInfo.si_mux.c_str(),
+          sizeof(sig.strMuxName));
+  
+  sig.iSNR      = m_signalInfo.fe_snr;
+  sig.iSignal   = m_signalInfo.fe_signal;
+  sig.iBER      = m_signalInfo.fe_ber;
+  sig.iUNC      = m_signalInfo.fe_unc;
+
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -211,6 +229,10 @@ bool CHTSPDemuxer::SendSubscribe ( bool force )
 {
   int err;
   htsmsg_t *m;
+
+  /* Reset status */
+  m_signalInfo.Clear();
+  m_sourceInfo.Clear();
 
   /* Build message */
   m = htsmsg_create_map();
@@ -534,7 +556,7 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
   m_pktBuffer.Push(pkt);
 
   /* Source data */
-  ParseSourceInfo(m);
+  ParseSourceInfo(htsmsg_get_map(m, "sourceinfo"));
 
   /* Signal */
   m_started = true;
@@ -543,13 +565,41 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
 
 void CHTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
 {
+  const char *str;
+  
+  /* Ignore */
+  if (!m) return;
+  
+  tvhdebug("sourceInfo:");
+  if ((str = htsmsg_get_str(m, "adapter")) != NULL)
+  {
+    tvhdebug("  adapter : %s", str);
+    m_sourceInfo.si_adapter  = str;
+  }
+  if ((str = htsmsg_get_str(m, "network")) != NULL)
+  {
+    tvhdebug("  network : %s", str);
+    m_sourceInfo.si_network  = str;
+  }
+  if ((str = htsmsg_get_str(m, "mux")) != NULL)
+  {
+    tvhdebug("  mux     : %s", str);
+    m_sourceInfo.si_mux      = str;
+  }
+  if ((str = htsmsg_get_str(m, "provider")) != NULL)
+  {
+    tvhdebug("  provider : %s", str);
+    m_sourceInfo.si_provider = str;
+  }
+  if ((str = htsmsg_get_str(m, "service")) != NULL)
+  {
+    tvhdebug("  service : %s", str);
+    m_sourceInfo.si_service  = str;
+  }
 }
 
-void CHTSPDemuxer::ParseSubscriptionStop ( htsmsg_t *m )
+void CHTSPDemuxer::ParseSubscriptionStop ( htsmsg_t *_unused(m) )
 {
-  /* Reset signal */
-
-  /* Reset source */
 }
 
 void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
@@ -571,11 +621,11 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
     tvhdebug("recv speed %d", u32);
 }
 
-void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *m )
+void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *_unused(m) )
 {
 }
 
-void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *m )
+void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
 {
   map<int,int>::iterator it;
   tvhdebug("stats:");
@@ -585,6 +635,39 @@ void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *m )
 
 void CHTSPDemuxer::ParseSignalStatus ( htsmsg_t *m )
 {
+  uint32_t u32;
+  const char *str;
+
+  /* Reset */
+  m_signalInfo.Clear();
+
+  /* Parse */
+  tvhdebug("signalStatus:");
+  if ((str = htsmsg_get_str(m, "feStatus")) != NULL)
+  {
+    tvhdebug("  status : %s", str);
+    m_signalInfo.fe_status = str;
+  }
+  if (!htsmsg_get_u32(m, "feSNR", &u32))
+  {
+    tvhdebug("  snr    : %d", u32);
+    m_signalInfo.fe_snr    = u32;
+  }
+  if (!htsmsg_get_u32(m, "feBER", &u32))
+  {
+    tvhdebug("  ber    : %d", u32);
+    m_signalInfo.fe_ber    = u32;
+  }
+  if (!htsmsg_get_u32(m, "feUNC", &u32))
+  {
+    tvhdebug("  unc    : %d", u32);
+    m_signalInfo.fe_unc    = u32;
+  }
+  if (!htsmsg_get_u32(m, "feSignal", &u32))
+  {
+    tvhdebug("  signal    : %d", u32);
+    m_signalInfo.fe_signal = u32;
+  }
 }
 
 void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )

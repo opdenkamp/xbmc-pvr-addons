@@ -202,6 +202,8 @@ private:
   std::map<int,int>                       m_streamStat;
   int64_t                                 m_seekTime;
   PLATFORM::CCondition<volatile int64_t>  m_seekCond;
+  SSourceInfo                             m_sourceInfo;
+  SQuality                                m_signalInfo;
   
   void         Close0         ( void );
   void         Abort0         ( void );

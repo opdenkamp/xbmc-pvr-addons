@@ -60,7 +60,8 @@ void CHTSPVFS::Connected ( void )
   }
 }
 
-bool CHTSPVFS::ProcessMessage ( const char *method, htsmsg_t *m )
+bool CHTSPVFS::ProcessMessage
+  ( const char *_unused(method), htsmsg_t *_unused(m) )
 {
   return false;
 }

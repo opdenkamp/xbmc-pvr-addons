@@ -192,7 +192,8 @@ bool ADDON_HasSettings()
   return true;
 }
 
-unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet)
+unsigned int ADDON_GetSettings
+  (ADDON_StructSetting ***_unused(sSet))
 {
   return 0;
 }
@@ -251,7 +252,8 @@ void ADDON_FreeSettings()
 }
 
 void ADDON_Announce
-  (const char *flag, const char *sender, const char *message, const void *data)
+  (const char *flag, const char *sender, const char *message, 
+   const void *_unused(data))
 {
   tvhdebug("Announce(flag=%s, sender=%s, message=%s)", flag, sender, message);
 
@@ -346,13 +348,14 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
  * *************************************************************************/
 
 #ifdef OPENELEC_32
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook)
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK &_unused(menuhook))
 {
   return PVR_ERROR_NO_ERROR;
 }
 #else
 PVR_ERROR CallMenuHook
-  (const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &data)
+  (const PVR_MENUHOOK &_unused(menuhook),
+   const PVR_MENUHOOK_DATA &_unused(data))
 {
   return PVR_ERROR_NO_ERROR;
 }
@@ -570,28 +573,84 @@ long long LengthRecordedStream(void)
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 
 /* Recording History */
-PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) { return PVR_ERROR_NOT_IMPLEMENTED; }
-int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
-
-/* Channel Management */
-PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR RenameChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-
-/* What's this?? */
-void PauseStream(bool bPaused) {}
-time_t GetPlayingTime() { return 0; }
-time_t GetBufferTimeStart() { return 0; }
-time_t GetBufferTimeEnd() { return 0; }
+PVR_ERROR SetRecordingPlayCount
+  (const PVR_RECORDING &_unused(recording), int _unused(count))
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+PVR_ERROR SetRecordingLastPlayedPosition  
+  (const PVR_RECORDING &_unused(recording), int _unused(lastplayedposition))
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+int GetRecordingLastPlayedPosition(const PVR_RECORDING &_unused(recording))
+{
+  return -1;
 }
 
-/* Live stream (VFS interface) */
-int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0; }
-long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */) { return -1; }
-long long PositionLiveStream(void) { return -1; }
-long long LengthLiveStream(void) { return -1; }
-const char * GetLiveStreamURL(const PVR_CHANNEL &channel) { return ""; }
+/* Channel Management */
+PVR_ERROR DialogChannelScan(void)
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+PVR_ERROR DeleteChannel(const PVR_CHANNEL &_unused(channel))
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+PVR_ERROR RenameChannel(const PVR_CHANNEL &_unused(channel))
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+PVR_ERROR MoveChannel(const PVR_CHANNEL &_unused(channel))
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &_unused(channel))
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+PVR_ERROR DialogAddChannel(const PVR_CHANNEL &_unused(channel))
+{
+  return PVR_ERROR_NOT_IMPLEMENTED;
+}
+
+/* Timeshift?? - not sure if we can use these? */
+void PauseStream(bool _unused(bPaused))
+{
+}
+time_t GetPlayingTime()
+{
+  return 0;
+}
+time_t GetBufferTimeStart()
+{
+  return 0;
+}
+time_t GetBufferTimeEnd()
+{
+  return 0; }
+}
+
+/* Live stream (VFS interface - not relevant) */
+int ReadLiveStream
+  (unsigned char *_unused(pBuffer), unsigned int _unused(iBufferSize))
+{
+  return 0;
+}
+long long SeekLiveStream
+  (long long _unused(iPosition), int _unused(iWhence))
+{
+  return -1;
+}
+long long PositionLiveStream(void)
+{
+  return -1;
+}
+long long LengthLiveStream(void)
+{
+  return -1;
+}
+const char * GetLiveStreamURL(const PVR_CHANNEL &_unused(channel))
+{
+  return "";
+}

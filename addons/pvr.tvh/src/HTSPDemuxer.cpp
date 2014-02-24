@@ -135,7 +135,8 @@ void CHTSPDemuxer::Abort ( void )
   Abort0();
 }
 
-bool CHTSPDemuxer::Seek ( int time, bool backwards, double *startpts )
+bool CHTSPDemuxer::Seek 
+  ( int time, bool _unused(backwards), double *startpts )
 {
   htsmsg_t *m;
 
@@ -554,7 +555,6 @@ void CHTSPDemuxer::ParseSubscriptionStop ( htsmsg_t *m )
 void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
 {
   CLockObject lock(m_conn.Mutex());
-  uint32_t u32;
   int64_t s64;
   if (htsmsg_get_s64(m, "time", &s64)) {
     m_seekTime = -1;

@@ -100,7 +100,7 @@ int CTvheadend::GetTagCount ( void )
   return m_tags.size();
 }
 
-PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool radio )
+PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool _unused(radio) )
 {
   CLockObject lock(m_mutex);
   STags::iterator it;
@@ -459,7 +459,8 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
-PVR_ERROR CTvheadend::DeleteTimer ( const PVR_TIMER &timer, bool force )
+PVR_ERROR CTvheadend::DeleteTimer
+  ( const PVR_TIMER &timer, bool _unused(force) )
 {
   return SendDvrDelete(timer.iClientIndex, "cancelDvrEntry");
 }
@@ -635,6 +636,8 @@ void CTvheadend::SyncCompleted ( void )
     tit++;
   }
   PVR->TriggerChannelGroupsUpdate();
+  if (update)
+    tvhinfo("tags updated");
 
   /* Channels */
   update = false;
@@ -648,6 +651,8 @@ void CTvheadend::SyncCompleted ( void )
     cit++;
   }
   PVR->TriggerChannelUpdate();
+  if (update)
+    tvhinfo("channels updated");
 
   /* Recordings */
   update = false;
@@ -662,6 +667,8 @@ void CTvheadend::SyncCompleted ( void )
   }
   PVR->TriggerRecordingUpdate();
   PVR->TriggerTimerUpdate();
+  if (update)
+    tvhinfo("recordings updated");
 
   /* Events */
   update = false;
@@ -690,6 +697,8 @@ void CTvheadend::SyncCompleted ( void )
 #if TODO_FIXME
   PVR->TriggerEventUpdate();
 #endif
+  if (update)
+    tvhinfo("epg updated");
 }
 
 void CTvheadend::ParseTagUpdate ( htsmsg_t *msg )
@@ -1009,12 +1018,6 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
   if (!htsmsg_get_s64(msg, "firstAired", &s64))
     evt.aired   = s64;
 
-#if 0
-  tvhdebug("event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
-           evt.id, evt.channel, (int)evt.start, (int)evt.stop,
-           evt.title.c_str(), evt.desc.c_str());
-#endif
-
   return true;
 }
 
@@ -1049,13 +1052,17 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
   UPDATE(evt.aired,    tmp.aired);
 
   /* Update */
-#if TODO_FIXME
   if (update)
   {
+    tvhdebug("event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
+             evt.id, evt.channel, (int)evt.start, (int)evt.stop,
+             evt.title.c_str(), evt.desc.c_str());
+
+#if TODO_FIXME
     if (m_asyncComplete)
       PVR->TriggerEventUpdate();
-  }
 #endif
+  }
 }
 
 void CTvheadend::ParseEventDelete ( htsmsg_t *msg )

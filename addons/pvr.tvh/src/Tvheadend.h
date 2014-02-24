@@ -40,6 +40,11 @@ extern "C" {
 }
 
 /*
+ * Miscellaneous
+ */
+#define _unused(x) x __attribute__((unused))
+
+/*
  * Configuration defines
  */
 #define HTSP_API_VERSION  12

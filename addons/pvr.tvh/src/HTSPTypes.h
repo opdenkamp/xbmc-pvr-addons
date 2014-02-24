@@ -36,6 +36,14 @@ typedef enum {
   DVR_PRIO_UNIMPORTANT
 } dvr_prio_t;
 
+typedef enum {
+  DVR_ACTION_TYPE_CUT,
+  DVR_ACTION_TYPE_MUTE,
+  DVR_ACTION_TYPE_SCENE,
+  DVR_ACTION_TYPE_COMBREAK,
+  
+} dvr_action_type_t;
+
 struct STag
 {
   bool             del;

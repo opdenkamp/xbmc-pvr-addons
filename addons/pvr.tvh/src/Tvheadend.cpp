@@ -334,6 +334,80 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
 PVR_ERROR CTvheadend::GetRecordingEdl
   ( const PVR_RECORDING &rec, PVR_EDL_ENTRY edl[], int *num )
 {
+  /* Not supported */
+  if (m_conn.GetProtocol() < 12)
+    return PVR_ERROR_NOT_IMPLEMENTED;
+  
+  CLockObject lock(m_mutex);
+  htsmsg_t *list;
+  htsmsg_field_t *f;
+  int idx;
+  
+  /* Build request */
+  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_add_u32(m, "id", atoi(rec.strRecordingId));
+
+  /* Send and Wait */
+  if ((m = m_conn.SendAndWait("getDvrCutpoints", m)) == NULL)
+  {
+    tvherror("failed to update DVR entry");
+    return PVR_ERROR_SERVER_ERROR;
+  }
+
+  /* Validate */
+  if (!(list = htsmsg_get_list(m, "cutpoints")))
+  {
+    tvherror("malformed getDvrCutpoints response");
+    return PVR_ERROR_FAILED;
+  }
+
+  /* Process */
+  idx = 0;
+  HTSMSG_FOREACH(f, list)
+  {
+    uint32_t start, end, type;
+
+    if (f->hmf_type != HMF_MAP)
+      continue;
+  
+    /* Full */
+    if (idx >= *num)
+      break;
+
+    /* Get fields */
+    if (htsmsg_get_u32(&f->hmf_msg, "start", &start) ||
+        htsmsg_get_u32(&f->hmf_msg, "end",   &end)   ||
+        htsmsg_get_u32(&f->hmf_msg, "type",  &type))
+    {
+      tvherror("malformed EDL entry, will ignore");
+      continue;
+    }
+
+    /* Build entry */
+    edl[idx].start = start;
+    edl[idx].end   = end;
+    switch (type)
+    {
+      case DVR_ACTION_TYPE_CUT:
+        edl[idx].type = PVR_EDL_TYPE_CUT;
+        break;
+      case DVR_ACTION_TYPE_MUTE:
+        edl[idx].type = PVR_EDL_TYPE_MUTE;
+        break;
+      case DVR_ACTION_TYPE_SCENE:
+        edl[idx].type = PVR_EDL_TYPE_SCENE;
+        break;
+      case DVR_ACTION_TYPE_COMBREAK:
+      default:
+        edl[idx].type = PVR_EDL_TYPE_COMBREAK;
+        break;
+    }
+    idx++;
+      
+    tvhdebug("edl start:%d end:%d action:%d", start, end, type);
+  }
+  
+  *num = idx;
   return PVR_ERROR_NO_ERROR;
 }
 #endif

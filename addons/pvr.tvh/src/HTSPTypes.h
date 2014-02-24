@@ -67,7 +67,8 @@ struct SChannel
 {
   bool             del;
   int              id;
-  int              event;
+  int              now;
+  int              next;
   int              num;
   bool             radio;
   int              caid;
@@ -79,7 +80,8 @@ struct SChannel
   {
     del   = false;
     id    = 0;
-    event = 0;
+    now   = 0;
+    next  = 0;
     num   = 0;
     radio = false;
     caid  = 0;

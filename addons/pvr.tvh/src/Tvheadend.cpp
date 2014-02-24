@@ -882,7 +882,9 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
 
   /* EPG info */
   if (!htsmsg_get_u32(msg, "eventId", &u32))
-    UPDATE(channel.event, u32);
+    UPDATE(channel.now,  u32);
+  if (!htsmsg_get_u32(msg, "nextEventId", &u32))
+    UPDATE(channel.next, u32);
 
   /* Services */
   if ((list = htsmsg_get_list(msg, "services")) != NULL)

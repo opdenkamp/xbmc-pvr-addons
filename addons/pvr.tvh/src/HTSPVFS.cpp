@@ -249,7 +249,7 @@ void CHTSPVFS::SendFileClose ( void )
 ssize_t CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
 {
   htsmsg_t *m;
-  ssize_t ret = -1;
+  int64_t ret = -1;
 
   /* Build Message */
   m = htsmsg_create_map();

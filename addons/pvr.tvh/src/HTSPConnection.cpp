@@ -204,7 +204,7 @@ bool CHTSPConnection::ReadMessage ( void )
   cnt = 0;
   while (cnt < len)
   {
-    r = m_socket->Read(buf + cnt, len - cnt, g_iResponseTimeout * 1000);
+    r = m_socket->Read((char*)buf + cnt, len - cnt, g_iResponseTimeout * 1000);
     if (r < 0)
     {
       tvherror("failed to read packet (%s)",

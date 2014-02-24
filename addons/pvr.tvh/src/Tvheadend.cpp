@@ -276,7 +276,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
   CLockObject lock(m_mutex);
   SRecordings::const_iterator rit;
   SChannels::const_iterator cit;
-  CStdString strfmt;
+  char buf[128];
 
   for (rit = m_recordings.begin(); rit != m_recordings.end(); rit++)
   {
@@ -295,8 +295,8 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
     // TODO: do I care!
 
     /* ID */
-    strfmt.Format("%i", rit->second.id);
-    strncpy(rec.strRecordingId, strfmt.c_str(), sizeof(rec.strRecordingId));
+    snprintf(buf, sizeof(buf), "%i", rit->second.id);
+    strncpy(rec.strRecordingId, buf, sizeof(rec.strRecordingId));
     
     /* Title */
     strncpy(rec.strTitle, rit->second.title.c_str(), sizeof(rec.strTitle));

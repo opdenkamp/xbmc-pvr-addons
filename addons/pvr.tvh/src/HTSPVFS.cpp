@@ -129,29 +129,34 @@ int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
     m = htsmsg_create_map();
     htsmsg_add_u32(m, "id",   m_fileId);
     htsmsg_add_s64(m, "size", m_buffer.free());
+
+    tvhdebug("fileRead id=%d size=%lld",
+             m_fileId, (long long)m_buffer.free());
     
     /* Send */
     m = m_conn.SendAndWait("fileRead", m);
     if (m == NULL)
     {
-      tvherror("failed to read vfs data");
+      tvherror("fileRead failed to send");
       return -1;
     }
 
     /* Process */
     if (htsmsg_get_bin(m, "data", &buf, &len))
     {
-      tvherror("malformed fileRead response");
       htsmsg_destroy(m);
+      tvherror("fileRead malformed response");
       return -1;
     }
 
     /* Store */
     if (m_buffer.write((unsigned char*)buf, len) != (ssize_t)len)
     {
+      htsmsg_destroy(m);
       tvherror("vfs partial buffer write");
       return -1;
     }
+    htsmsg_destroy(m);
   }
 
   /* Read */
@@ -185,17 +190,21 @@ long long CHTSPVFS::Size ( void )
   /* Build */
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
+
+  tvhdebug("fileStat id=%d", m_fileId);
   
   /* Send */
   if ((m = m_conn.SendAndWait("fileStat", m)) == NULL)
   {
-    tvherror("failed to stat vfs file");
+    tvherror("fileStat failed");
     return -1;
   }
 
   /* Process */
   if (htsmsg_get_s64(m, "size", &ret))
-    tvherror("malformed fileStat response");
+    tvherror("fileStat malformed response");
+  else
+    tvhdebug("fileStat size=%lld", (long long)ret);
   htsmsg_destroy(m);
 
   return ret;
@@ -213,6 +222,8 @@ bool CHTSPVFS::SendFileOpen ( bool force )
   m = htsmsg_create_map();
   htsmsg_add_str(m, "file", m_path.c_str());
 
+  tvhdebug("fileOpen file=%s", m_path.c_str());
+
   /* Send */
   if (force)
     m = m_conn.SendAndWait0("fileOpen", m);
@@ -220,13 +231,14 @@ bool CHTSPVFS::SendFileOpen ( bool force )
     m = m_conn.SendAndWait("fileOpen", m);
   if (m == NULL)
   {
-    tvherror("failed to send fileOpen");
+    tvherror("fileOpen failed");
     return false;
   }
 
   /* Get ID */
   htsmsg_get_u32(m, "id", &m_fileId);
   htsmsg_destroy(m);
+  tvhdebug("fileOpen success id=%d", m_fileId);
 
   /* Log */
   return m_fileId > 0;
@@ -239,6 +251,8 @@ void CHTSPVFS::SendFileClose ( void )
   /* Build */
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
+
+  tvhdebug("fileClose id=%d", m_fileId);
   
   /* Send */
   m = m_conn.SendAndWait("fileClose", m);
@@ -261,6 +275,9 @@ ssize_t CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   else if (whence == SEEK_END)
     htsmsg_add_str(m, "whence", "SEEK_END");
 
+  tvhdebug("fileSeek id=%d whence=%d pos=%lld",
+           m_fileId, whence, (long long)pos);
+
   /* Send */
   if (force)
     m = m_conn.SendAndWait0("fileSeek", m);
@@ -280,9 +297,12 @@ ssize_t CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   /* Update */
   if (ret > 0)
   {
+    tvhdebug("fileSeek offset=%lld", (long long)ret);
     m_offset = ret;
     m_buffer.reset();
   }
+  else
+    tvherror("fileSeek failed");
 
   return ret;
 }

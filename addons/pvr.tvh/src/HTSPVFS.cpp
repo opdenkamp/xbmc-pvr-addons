@@ -295,7 +295,7 @@ ssize_t CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   htsmsg_destroy(m);
   
   /* Update */
-  if (ret > 0)
+  if (ret >= 0)
   {
     tvhdebug("fileSeek offset=%lld", (long long)ret);
     m_offset = ret;

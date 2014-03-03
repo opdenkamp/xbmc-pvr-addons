@@ -1,0 +1,121 @@
+# XBMC Media Center language file
+# Addon Name: VU+ / Enigma2 Client
+# Addon id: pvr.vuplus
+# Addon Provider: Joerg Dembski
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Tamil (India) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ta_IN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ta_IN\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "VU+ hostname or IP address"
+msgstr "VU+ பின்தள புரவலன் பெயர் அல்லது ஐபி"
+
+msgctxt "#30002"
+msgid "Streaming Port"
+msgstr "துறை"
+
+msgctxt "#30003"
+msgid "Username"
+msgstr "பயனர்பெயர்"
+
+msgctxt "#30004"
+msgid "Password"
+msgstr "அடையாளச் சொல்"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "எத்தனை நொடியில் பதில் எதிபார்ப்பை முடித்தல்"
+
+msgctxt "#30008"
+msgid "Icon Path"
+msgstr "படவுரு பாதை"
+
+msgctxt "#30010"
+msgid "Update Interval in minutes"
+msgstr "இடைவெளியை நிமிடங்களில் புதுப்பிக்க"
+
+msgctxt "#30011"
+msgid "Automatic Timerlist Cleanup"
+msgstr "தானியங்கி டைமர் பட்டியல் துப்புரவு"
+
+msgctxt "#30012"
+msgid "Webinterface Port"
+msgstr "வலை இடைமுக முனையம்"
+
+msgctxt "#30013"
+msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "Channelswitch முன் Zap (அதாவது ஒற்றை வானொலி பெட்டிகலுக்காக)"
+
+msgctxt "#30014"
+msgid "Folder for channeldata"
+msgstr "சேனல் தரவு கோப்புறை"
+
+msgctxt "#30015"
+msgid "Check for bouquett updates"
+msgstr "Bouquett புதுப்பித்தல் எதாவது உள்ளத என்று பார்"
+
+msgctxt "#30016"
+msgid "Check for channel updates"
+msgstr "சேனல் புதுப்பித்தல் எதாவது உள்ளத என்று பார்"
+
+msgctxt "#30017"
+msgid "Use only the DVB boxes' current recording path"
+msgstr "DVB பெட்டிக்கான 'தற்போதைய பதிவு பாதை மட்டுமே பயன்படுத்த"
+
+msgctxt "#30018"
+msgid "General"
+msgstr "பொதுவானவை"
+
+msgctxt "#30019"
+msgid "Channels"
+msgstr "சேனல்கள்"
+
+msgctxt "#30020"
+msgid "Advanced"
+msgstr "மேம்பட்ட"
+
+msgctxt "#30021"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30022"
+msgid "Recordings / Timer"
+msgstr "பதிவகள் / நேரம்"
+
+msgctxt "#30023"
+msgid "Recording folder on the receiver"
+msgstr "அலைவாங்கியில் உள்ள பதிவு கோப்புறை"
+
+msgctxt "#30024"
+msgid "Send DeepStandby-Command"
+msgstr "ஆழ் காத்திரு கட்டளை அனுப்ப"
+
+msgctxt "#30025"
+msgid "Fetch only one TV bouquet"
+msgstr "ஒரே ஒரு தொலைக்காட்சி bouquet எடுக்க"
+
+msgctxt "#30026"
+msgid "TV-Bouquet"
+msgstr "தொலைக்காட்சி-Bouquet"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "இணைய இடைமுகத்திலிருந்து சின்னங்கள் எடுக்க"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "'%s' இருந்து துண்டிக்கப்பட்டது"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "'%s' க்கு மறுஇணைப்பு"

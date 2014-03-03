@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -19,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "NextPVR Hostname"
-msgstr "Nom de màquine del NextPVR"
+msgstr "Nom de màquina del NextPVR"
 
 msgctxt "#30001"
 msgid "NextPVR Port (usually 8866 or 7799)"
@@ -29,14 +28,38 @@ msgctxt "#30002"
 msgid "NextPVR PinCode"
 msgstr "Codi PIN del NextPVR"
 
+msgctxt "#30003"
+msgid "Enable TimeShift with Live TV"
+msgstr "Habilita els salts en el temps amb la televisió en directe"
+
 msgctxt "#30040"
 msgid "Connection"
 msgstr "Connexió"
 
+msgctxt "#30041"
+msgid "Advanced"
+msgstr "Avançat"
+
 msgctxt "#30050"
 msgid "NextPVR server is too old."
-msgstr "El servidor NextPVR és massa antic"
+msgstr "El servidor NextPVR és massa antic."
+
+msgctxt "#30051"
+msgid "Upgrade to '%s' or higher!"
+msgstr "Actualitzeu a '%s' o superior!"
 
 msgctxt "#30052"
 msgid "Connection failed. Incorrect PIN?"
 msgstr "Ha fallat la connexió. PIN incorrecte?"
+
+msgctxt "#30053"
+msgid "Tuner no longer available"
+msgstr "El sintonitzador ja no està disponible"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Mantenir"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Per defecte"

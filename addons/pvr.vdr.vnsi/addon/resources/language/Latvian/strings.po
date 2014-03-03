@@ -1,0 +1,93 @@
+# XBMC Media Center language file
+# Addon Name: VDR VNSI Client
+# Addon id: pvr.vdr.vnsi
+# Addon Provider: FernetMenta, Team XBMC
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Latvian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/lv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "VDR saimniekvārds vai IP"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Prioritāte"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "TV kanāli"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "HD kanāli"
+
+msgctxt "#30017"
+msgid "Country"
+msgstr "Valsts"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Satelīts"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "ATSC tips"
+
+msgctxt "#30024"
+msgid "Back"
+msgstr "Atpakaļ"
+
+msgctxt "#30026"
+msgid "Type:"
+msgstr "Tips:"
+
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Ierīce:"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Analogā TV"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Nesējfrekvence:"
+
+msgctxt "#30039"
+msgid "Running"
+msgstr "Darbojas"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Apturēts"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Pabeigts"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Iestatīšana"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR admins"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanāli"

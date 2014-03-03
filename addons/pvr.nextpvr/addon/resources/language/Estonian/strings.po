@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -28,3 +27,39 @@ msgstr "NextPVR port (tavaliselt 8866 või 7799)"
 msgctxt "#30002"
 msgid "NextPVR PinCode"
 msgstr "NextPVR PinCode"
+
+msgctxt "#30003"
+msgid "Enable TimeShift with Live TV"
+msgstr "Luba TV ajanihutus"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Ühendus"
+
+msgctxt "#30041"
+msgid "Advanced"
+msgstr "Põhjalikumad seaded"
+
+msgctxt "#30050"
+msgid "NextPVR server is too old."
+msgstr "NextPVR server on liiga vana."
+
+msgctxt "#30051"
+msgid "Upgrade to '%s' or higher!"
+msgstr "Uuenda versioonile '%s' või uuemale!"
+
+msgctxt "#30052"
+msgid "Connection failed. Incorrect PIN?"
+msgstr "Ühendus nurjus. Vale PIN?"
+
+msgctxt "#30053"
+msgid "Tuner no longer available"
+msgstr "Tüüner ei ole enam saadaval"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Jäta alles"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Vaikimisi"

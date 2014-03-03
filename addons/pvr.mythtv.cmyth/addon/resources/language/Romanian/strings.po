@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,143 @@ msgstr "Activează Live TV"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Permite Live TV să mute serialele planificate"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Conflict"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Prefera Live TV atunci când înregistrarea are slot pentru mai târziu"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Prefera înregistrarea și oprește Live TV "
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Prefera Live TV și anulează înregistrările conflictuale "
+
+msgctxt "#30019"
+msgid "General"
+msgstr "General"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Folosește format predefinit"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Intern"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Format predefinit intern"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Caută automat metadata"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Marchează înregistrările noi"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Transcode înregistrările noi"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Rulează jobul utilizatorului # 1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Rulează jobul utilizatorului # 2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Rulează jobul utilizatorului # 3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Rulează jobul utilizatorului # 4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Transcoder"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Permite expirarea înregistrării?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Inregistrare în format predefinit"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Avansat"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Versiunea protocolului: %i - Versiunea bazei de date: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Conexiunea la MythTV backend eșuată"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Conexiunea la baza de date MythTV eșuată"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Conexiunea la MythTV backend pierdută "
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Conexiunea la MythTV backend restabilită "
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Nici un răspuns de la MythTV backend"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Canal indisponibil"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Înregistrare indisponibila"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr " Anulează înregistrările conflictuale: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Oprește Live TV datorită înregistrărilor conflictuale: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Nu inregistraza"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Activat"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Dezactivat"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Sterge si reinregistraza"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Pastreaza inregistrarea TV"

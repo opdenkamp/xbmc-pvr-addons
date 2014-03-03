@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -17,6 +16,46 @@ msgstr ""
 "Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
+msgctxt "#30000"
+msgid "NextPVR Hostname"
+msgstr "NextPVR naziv računala"
+
+msgctxt "#30001"
+msgid "NextPVR Port (usually 8866 or 7799)"
+msgstr "NextPVR ulaz (uobičajen 8866 ili 7799)"
+
+msgctxt "#30002"
+msgid "NextPVR PinCode"
+msgstr "NextPVR PIN kôd"
+
+msgctxt "#30003"
+msgid "Enable TimeShift with Live TV"
+msgstr "Omogućiti vremensko premotavanje za TV programe"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Povezivanje"
+
 msgctxt "#30041"
 msgid "Advanced"
 msgstr "Napredno"
+
+msgctxt "#30050"
+msgid "NextPVR server is too old."
+msgstr "NextPVR poslužitelj je zastario."
+
+msgctxt "#30051"
+msgid "Upgrade to '%s' or higher!"
+msgstr "Nadogradi na '%s' ili više!"
+
+msgctxt "#30052"
+msgid "Connection failed. Incorrect PIN?"
+msgstr "Neuspješno povezivanje. Pogrešan PIN?"
+
+msgctxt "#30053"
+msgid "Tuner no longer available"
+msgstr "Prijemnik više nije dostupan"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Zadano"

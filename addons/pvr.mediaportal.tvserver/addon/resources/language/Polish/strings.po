@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
@@ -23,7 +22,7 @@ msgstr "Nazwa hosta Mediaportal "
 
 msgctxt "#30001"
 msgid "Mediaportal XBMC plugin Port"
-msgstr "Port pluginu Mediaportal XBMC"
+msgstr "Port dodatku Mediaportal XBMC"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -99,11 +98,11 @@ msgstr "Twoja wersja TVServerXBMC jest zbyt stara. Zaktualizują ją do '%s' lub
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
-msgstr "Odtwarzanie nagrania nie powiodło się. Adres URL lub nazwa pliku są puste."
+msgstr "Odtwarzanie nagrania nie powiodło się. Adres URL lub nazwa pliku są nieprawidłowe."
 
 msgctxt "#30060"
 msgid "All cards are busy"
-msgstr "Wszystkie karty są zajęty"
+msgstr "Wszystkie karty są zajęte"
 
 msgctxt "#30061"
 msgid "Channel is scrambled"
@@ -155,7 +154,7 @@ msgstr "Budowanie grafiki nie powiodło się"
 
 msgctxt "#30073"
 msgid "SW Encoder missing"
-msgstr "Brak dekoder SW"
+msgstr "Brak dekodera programowego"
 
 msgctxt "#30074"
 msgid "No free disk space"

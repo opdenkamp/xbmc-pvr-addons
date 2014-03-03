@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,23 @@ msgstr "라이브 TV 사용"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "라이브 TV가 예약된 프로그램을 이동하도록 허용"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "일반"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "고급"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "채널 사용할 수 없음"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "사용함"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "사용 안 함"

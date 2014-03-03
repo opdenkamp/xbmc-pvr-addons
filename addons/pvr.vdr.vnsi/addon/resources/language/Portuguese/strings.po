@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -43,7 +42,7 @@ msgstr "Permitir mensagens VDR"
 
 msgctxt "#30006"
 msgid "Read recordings from directory"
-msgstr "Ler gravações a partir do directório"
+msgstr "Ler gravações a partir da pasta"
 
 msgctxt "#30007"
 msgid "VDR recordings directory"
@@ -204,3 +203,67 @@ msgstr "A ligação ao servidor VDR foi restabelecida"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Criar automaticamente grupos de canais no servidor"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Requisitar Ver Mais Tarde"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "Interface VDR"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Configuração"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Controlando interface - premir info para sair"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Seleccione para controlar a interface"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Modo de Ver Mais Tarde"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Buffer de Ver Mais Tarde (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Buffer de Ver Mais Tarde (Ficheiro) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "Admin VDR"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Canais"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Lista de fornecedores permitidos"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Canais interditos"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtros de canais"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Canais de Rádio"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Guardar filtros"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Fornecedor Desconhecido"

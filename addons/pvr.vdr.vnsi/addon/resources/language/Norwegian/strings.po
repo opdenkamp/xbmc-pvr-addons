@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -17,18 +16,202 @@ msgstr ""
 "Language: no\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "VDR Hostname eller IP"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "VNSI Port"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Prioritet"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Konvertering av tegnsett"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Tidsavbrudd ved tilkobling (i s)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Tillat VDR meldinger"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Les opptak fra mappe"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Mappe for VDR-opptak"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Kanalsøk"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Kanalsøk - innstillinger"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Start kanalsøk"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Kildetype"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "TV-kanaler"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Radio-kanaler"
+
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "FTA-kanaler"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Krypterte kanaler"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "HD-kanaler"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "Land"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Kabel-invertering"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Kabelens symbolhastighet"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Kabelmodulasjon"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Terr-invertering"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Satellitt"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "ATSC-type"
 
 msgctxt "#30024"
 msgid "Back"
 msgstr "Tilbake"
 
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Kanalsøk - utfører... %i %%"
+
 msgctxt "#30026"
 msgid "Type:"
 msgstr "Type:"
 
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Enhet:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Skann: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Signal: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Nye kanaler: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Alle kanaler: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Analog TV"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Analog Radio"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Transponder:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Nye kanaler"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Kanalsøk - fullført"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Ingen enhet tilgjengelig - avslutter"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Ingen DVB-S2 enhet tilgjengelig - faller tilbake til DVB-S"
+
 msgctxt "#30039"
 msgid "Running"
 msgstr "Kjører"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Stoppet"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Fullført"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Kanalsøk - avbrutt"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Kanalsøk - mislyktes"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Mistet tilkoblingen til VDR-tjeneren"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "Tilkobling til VDR-tjener gjenopprettet"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Opprett automatisk kanalgrupper på tjeneren"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Konfigurasjon"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanaler"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radio Channels"

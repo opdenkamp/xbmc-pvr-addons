@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,131 @@ msgstr "Включить Live TV"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Разрешить Live TV переключаться на запланированные шоу"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Обработка конфликтов"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Предпочесть Live TV, при записи через медленный слот"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Предпочесть запись и остановку Live TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Предпочесть Live TV и отменить конфликтную запись"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Основное"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Шаблон поставщика"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Внутренний"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Внутренний шаблон"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Автопоиск метаданных"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Новые записи отмечать как Коммерческие"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Перекодировать новые записи"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Запустить задачу №1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Запустить задачу №2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Запустить задачу №3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Запустить задачу №4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Кодировщик"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Разрешить окончание записи?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Шаблон записи"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Дополнительно"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Версия протокола: %i - версия Базы данных: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Сбой соединения с внутренним интерфейсом MythTV"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Сбой соединения с базой данных MythTV"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Разрыв связи с внутренним интерфейсом MythTV"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Связь с MythTV восстановлена"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Внутренний интерфейс MythTV не отвечает"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Канал недоступен"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Устройство записи недоступно"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Отменяется конфликтная запись: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Остановка Live TV из-за конфликта записи: %s"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Вкл."
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Откл."

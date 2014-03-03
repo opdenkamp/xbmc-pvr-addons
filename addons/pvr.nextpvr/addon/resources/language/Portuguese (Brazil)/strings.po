@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -19,15 +18,15 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "NextPVR Hostname"
-msgstr "Hostname NextPVR"
+msgstr "Hostname do NextPVR"
 
 msgctxt "#30001"
 msgid "NextPVR Port (usually 8866 or 7799)"
-msgstr "NextPVR Porta (usualmente 8866 ou 7799)"
+msgstr "Porta do NextPVR (normalmente 8866 ou 7799"
 
 msgctxt "#30002"
 msgid "NextPVR PinCode"
-msgstr "Pincode NextPVR"
+msgstr "Pincode do NextPVR"
 
 msgctxt "#30003"
 msgid "Enable TimeShift with Live TV"
@@ -43,7 +42,7 @@ msgstr "Avançado"
 
 msgctxt "#30050"
 msgid "NextPVR server is too old."
-msgstr "NextPVR server é muito antigo."
+msgstr "O servidor NextPVR é muito antigo."
 
 msgctxt "#30051"
 msgid "Upgrade to '%s' or higher!"
@@ -51,8 +50,72 @@ msgstr "Atualizar para '%s' ou superior!"
 
 msgctxt "#30052"
 msgid "Connection failed. Incorrect PIN?"
-msgstr "Conexão falhou. PIN incorreto"
+msgstr "A conexão falhou. PIN incorreto?"
 
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Sintonizador não está disponível"
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Adicionar Agendamento"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Tipos de gravação"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Gravação Única"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Gravar Temporada (Novos episódios neste canal)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Gravar Temporada (Todos os episódios neste canal)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Gravar Temporada (Diariamente, neste intervalo de tempo)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Gravar Temporada (Semanalmente, neste intervalo de tempo)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Gravar Temporada (De Segunda até Sexta-feira, neste intervalo de tempo)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Gravar Temporada (Final de semana, neste intervalo de tempo)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Manter"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Todas as gravações"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Pré-preenchimento (minutos)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Pré-preenchimento (minutos)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Diretório para as Gravações"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Padrão"

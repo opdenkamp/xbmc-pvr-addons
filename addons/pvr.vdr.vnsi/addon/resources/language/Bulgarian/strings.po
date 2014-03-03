@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -16,6 +15,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Таймаут при свързване (с)"
 
 msgctxt "#30012"
 msgid "TV channels"
@@ -40,3 +43,11 @@ msgstr "Тип:"
 msgctxt "#30039"
 msgid "Running"
 msgstr "Изпълнява се"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Настройване"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Канали"

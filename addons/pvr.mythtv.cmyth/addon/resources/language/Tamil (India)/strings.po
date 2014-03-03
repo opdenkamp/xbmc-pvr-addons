@@ -1,0 +1,177 @@
+# XBMC Media Center language file
+# Addon Name: MythTV cmyth PVR Client
+# Addon id: pvr.mythtv.cmyth
+# Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Tamil (India) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ta_IN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ta_IN\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "MythTV Backend Hostname or IP"
+msgstr "MythTV பின்தள புரவலன் பெயர் அல்லது ஐபி"
+
+msgctxt "#30001"
+msgid "MythTV Backend Port"
+msgstr "MythTV பின்தள போர்ட்"
+
+msgctxt "#30002"
+msgid "MythTV Database Username"
+msgstr "MythTV தரவுத்தள பயனர்பெயர்"
+
+msgctxt "#30003"
+msgid "MythTV Database Password"
+msgstr "MythTV தரவுத்தள கடவுச்சொல்"
+
+msgctxt "#30004"
+msgid "MythTV Database Databasename"
+msgstr "MythTV தரவுத்தளம் தரவுத்தள பெயர்"
+
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "பதிவு கோப்பில் இன்னும் பிழைத்திருத்த தகவல் சேர்க்கவும்"
+
+msgctxt "#30006"
+msgid "Enable Live TV"
+msgstr "நேரடி தொலைக்காட்சி செயல்படுத்து"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "அட்டவணைப்படுத்தப்பட்ட நிகழ்ச்சிகள் நகர்த்த நேரடி தொலைக்காட்சி அனுமதி கொடு"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "மோதல் கையாளுதல்"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "பதிவு செய்தல் ஸ்லாட் உள்ள போதும் நேரடி தொலைக்காட்சியை விரும்பு"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "நேரடி தொலைக்காட்சி நிறுத்திவிட்டு பதிவு செய்தலை விரும்பு"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "முரண்பட்ட பதிவு ரத்து செய்துவிட்டு நேரடி தொலைக்காட்சியை விரும்பு"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "பொதுவானவை"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "வார்ப்புரு வழங்குநர்"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "உள்ளக"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "உள் வார்ப்புரு"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "தானாக மெட்டாடேட்டா பூட்டிடு"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "வணிக கொடி புதிய பதிவுகள்"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "புதிய பதிவுகள் ட்ரான்ஸ்கோட்"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "பயனர் வேலை # 1 ஓட்டு"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "பயனர் வேலை # 2 ஓட்டு"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "பயனர் வேலை # 3 ஓட்டு"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "பயனர் வேலை # 4 ஓட்டு"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "டிரான்ஸ்கோடர்"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "பதிவுகள் காலாவதியாகும்வரை அனுமதி?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "பதிவு வார்ப்புரு"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "மேம்பட்ட"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "நெறிமுறை பதிப்பு: %i - தரவுத்தள பதிப்பு: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "பின்தளத்தில் MythTV இணைக்க முடியவில்லை"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "MythTV தரவுத்தளம் இணைக்க முடியவில்லை"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "MythTV பின்தள இணைப்பு இழந்தது"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "மீண்டும் MythTV இணைக்கப்பட்டுள்ளது"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "MythTV பின்தளத்தில் இருந்து எந்த பதிலும் வரவில்லை"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "சேனல் கிடைக்கவில்லை"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "ரெக்கார்டர் கிடைக்கவில்லை"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "முரண்பட்ட பதிவு ரத்து செய் : %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "முரண்பட்ட பதிவு காரணமாக நேரடி தொலைக்காட்சி நிறுத்தப்படுடுகின்றது: %s"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "செயல்படுத்தபட்டுள்ளது"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "முடக்கப்பட்டன"

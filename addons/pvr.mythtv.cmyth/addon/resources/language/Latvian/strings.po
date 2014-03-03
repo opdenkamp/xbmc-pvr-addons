@@ -1,0 +1,93 @@
+# XBMC Media Center language file
+# Addon Name: MythTV cmyth PVR Client
+# Addon id: pvr.mythtv.cmyth
+# Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Latvian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/lv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+
+msgctxt "#30000"
+msgid "MythTV Backend Hostname or IP"
+msgstr "MythTV aizmugursistēmas saimniekvārds vai IP"
+
+msgctxt "#30006"
+msgid "Enable Live TV"
+msgstr "Ieslēgt tiešraides TV"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "Atļaut tiešraides TV pārcelt ieplānotus raidījumus"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Konfliktu apstrāde"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Dot priekšroku tiešraides TV, ja ierakstam ir vēlāks laiks"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Dot priekšroku ierakstam un apturēt tiešraides TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Dot priekšroku tiešraides TV un atcelt konfliktējošo ierakstu"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Vispārīgi"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Iekšējs"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Pārkodētājs"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Papildus"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Zudis savienojums ar MythTV aizmugursistēmu"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Savienojums ar MythTV atjaunots"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "MythTV aizmugursistēma neatbild."
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Aptur tiešraides TV, jo konfliktē ar ierakstu: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Neieraksta"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Ieslēgts"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Paturēt tiešraides TV ierakstu"

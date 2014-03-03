@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
-# Addon version: 1.6.6
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
@@ -108,6 +107,10 @@ msgstr "仅获取一个电视频道组"
 msgctxt "#30026"
 msgid "TV-Bouquet"
 msgstr "电视频道组"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "从Web界面获取picons"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

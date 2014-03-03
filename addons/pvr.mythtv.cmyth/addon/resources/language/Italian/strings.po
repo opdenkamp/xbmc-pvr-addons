@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,143 @@ msgstr "Attiva la TV Live"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Consenti a TV Live di spostare gli spettacoli programmati"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Gestione conflitto"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Preferisci la TV dal Vivo quando la registrazione è spostata"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Preferisci la registrazione e ferma la TV dal Vivo"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Preferisci Live TV e cancella le registrazioni incompatibili"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Menu"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Fornitore modello"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Interno"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Modello interno"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Guarda automaticamente i Metadata"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Nuove registrazioni bandiere commerciali"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Transcodifica nuove registrazioni"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Esegui Processo User #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Esegui Processo User #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Esegui Processo User #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Esegui Processo User #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Transcodificatore"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Permetti alle registrazioni di scadere?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Modello registrazione"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Avanzate"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Versione Protocollo: %i - Versione Database: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Impossibile connettersi al backend di MythTV"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Impossibile connettersi al database di MythTV"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Connessione al backend MythTV persa"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Connessione a MythTV ripristinata"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Nessuna risposta dal backend di MythTV"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Canale non disponibile"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Registratore non disponibile"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Eliminazione delle registrazioni incompatibili: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Blocco di Live TV a causa di registrazioni incompatibili: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Nessuna registrazione in corso"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Abilitato"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Disabilitato"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Elimina e registra di nuovo"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Mantieni le registrazioni della LiveTV"

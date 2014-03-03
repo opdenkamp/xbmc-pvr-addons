@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
-# Addon version: 1.6.6
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
@@ -52,6 +51,10 @@ msgstr "타임시프트 자동 정리"
 msgctxt "#30012"
 msgid "Webinterface Port"
 msgstr "웹인터페이스 포트"
+
+msgctxt "#30013"
+msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "채널변경전 삭제 (Single Tuner boxes등을 위해)"
 
 msgctxt "#30014"
 msgid "Folder for channeldata"
@@ -104,6 +107,10 @@ msgstr "하나의 TV 묶음만 가져오기"
 msgctxt "#30026"
 msgid "TV-Bouquet"
 msgstr "TV 묶음"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "웹인터페이스로 부터 아이콘들을 가져옴"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

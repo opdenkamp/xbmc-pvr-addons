@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -56,3 +55,7 @@ msgstr "接続に失敗。PIN が間違っていませんか？"
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "チューナーがみつかりません"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "デフォルト"

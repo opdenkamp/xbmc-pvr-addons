@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -25,9 +24,29 @@ msgctxt "#30001"
 msgid "VNSI Port"
 msgstr "VNSI ポート"
 
+msgctxt "#30002"
+msgid "Priority"
+msgstr "優先順位"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "文字セット変換"
+
 msgctxt "#30004"
 msgid "Connect timeout (s)"
 msgstr "接続タイムアウト (秒)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "VDRのメッセージを許可する"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "ディレクトリから録画を読む"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "VDR録画のディレクトリ"
 
 msgctxt "#30008"
 msgid "Channel search"
@@ -69,6 +88,10 @@ msgctxt "#30017"
 msgid "Country"
 msgstr "国"
 
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "衛星"
+
 msgctxt "#30023"
 msgid "ATSC Type"
 msgstr "ATSCタイプ"
@@ -97,6 +120,14 @@ msgctxt "#30029"
 msgid "Signal: %i %%"
 msgstr "シグナル：%i %%"
 
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "新規チャンネル: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "全チャンネル:　%i"
+
 msgctxt "#30032"
 msgid "Analog TV"
 msgstr "アナログTV"
@@ -105,9 +136,21 @@ msgctxt "#30033"
 msgid "Analog Radio"
 msgstr "アナログラジオ"
 
+msgctxt "#30035"
+msgid "New channels"
+msgstr "新規チャンネル"
+
 msgctxt "#30036"
 msgid "Channel search - Finished"
 msgstr "チャンネル検索 - 完了"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "利用可能なデバイスがありません - 出ます"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "DVB-S2のデバイスが見つかりませんーDVB-Sへフォールバックしようとしています"
 
 msgctxt "#30039"
 msgid "Running"
@@ -136,3 +179,47 @@ msgstr "VDRサーバとの接続が切断されました"
 msgctxt "#30045"
 msgid "Connection to VDR Server restored"
 msgstr "VDRサーバとの接続が復活しました"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "サーバ上で自動的にチャネルグループを作成する"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "タイムシフトを要求する"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "設定"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "OSDを制御する - 終了するのには「Ｉｎｆｏ］を押して下さい"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "OSDを制御するため選択してください"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "タイムシフトモード"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "タイムシフトバッファー(ＲＡＭ)ｘ100ＭＢ"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "タイムシフトバッファー(ファイル)　ｘ　1ＧＢ"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR管理"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "チャンネル"

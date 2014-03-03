@@ -1,0 +1,209 @@
+# XBMC Media Center language file
+# Addon Name: VDR VNSI Client
+# Addon id: pvr.vdr.vnsi
+# Addon Provider: FernetMenta, Team XBMC
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Vietnamese (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "Tên miền hoặc IP VDR"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "Cổng VNSI"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Mức quan trọng"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Chuyển đổi bộ ký tự"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Thời gian chờ kết nối (s)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Cho phép các thông điệp VDR"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Đọc các bản thu từ thư mục"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Thư mục lưu chương trình thu VDR"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Tìm kênh"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Dò kênh - Cài đặt"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Bắt đầu dò kênh"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Kiểu nguồn"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "Kênh TV"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Kênh Radio"
+
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Kênh FTA"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Kênh mã hoá"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "Kênh HD"
+
+msgctxt "#30017"
+msgid "Country"
+msgstr "Quốc gia"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Đảo cáp"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Cable Symbolrate"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Điều biến cáp"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Đảo Terr"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Vệ tinh"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "Kiểu ATSC"
+
+msgctxt "#30024"
+msgid "Back"
+msgstr "Lùi"
+
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Dò kênh - Đang chạy... %i %%"
+
+msgctxt "#30026"
+msgid "Type:"
+msgstr "Thể loại"
+
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Thiết bị:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Quét: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Tín hiêu: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Kênh mới: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Tất cả kênh: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "TV analog"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Radio analog"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Bộ tiếp sóng:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Kênh mới"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Dò kênh - Đã xong"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Thiết bị không dùng được hoặc không tồn tại"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Không có thiết bị DVB-S2 - đang thử lại với DVB-S"
+
+msgctxt "#30039"
+msgid "Running"
+msgstr "Đang chạy"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Đã dừng"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Đã xong"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Dò kênh - Đã hủy"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Dò kênh - Lỗi"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Mất kết nối tới máy chủ VDR"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "Đã khôi phục lại kết nối tới máy chủ VDR"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Tạo các nhóm kênh tự động trên máy chủ"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kênh"

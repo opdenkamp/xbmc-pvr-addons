@@ -1,0 +1,73 @@
+# XBMC Media Center language file
+# Addon Name: MediaPortal PVR Client
+# Addon id: pvr.mediaportal.tvserver
+# Addon Provider: Marcel Groothuis
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Latvian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/lv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "Mediaportal saimniekvārds"
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "Iekļaut radio"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "Pārvērst saimniekvārdu uz IP adresi"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Savienojums"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
+
+msgctxt "#30042"
+msgid "Playback"
+msgstr "Atskaņošana"
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "Visas kartes ir aizņemtas"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "Signāls nav atrasts"
+
+msgctxt "#30064"
+msgid "Unknown error"
+msgstr "Nezināma kļūda"
+
+msgctxt "#30066"
+msgid "Unknown channel"
+msgstr "Nezināms kanāls"
+
+msgctxt "#30067"
+msgid "No tuning details"
+msgstr "Nav uztveršanas detaļas"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "Karte ir izslēgta"
+
+msgctxt "#30071"
+msgid "Not the owner"
+msgstr "Nav īpašnieks"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "Diskā nav brīvas vietas"

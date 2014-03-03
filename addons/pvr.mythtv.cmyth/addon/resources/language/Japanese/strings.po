@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -44,3 +43,107 @@ msgstr "ログファイルに更に詳しいデバッグ情報を含める"
 msgctxt "#30006"
 msgid "Enable Live TV"
 msgstr "Live TV を有効に"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "Live Tvがスケジュールされたショーの移動を許可する"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "コンフリクトの処理"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "一般"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "内部"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "内部テンプレート"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "メタデータを自動でロック"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "新しい録音をトランスコード"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "ユーザージョブ #1 を実行"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "ユーザージョブ #2 を実行"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "ユーザージョブ #3 を実行"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "ユーザージョブ #4 を実行"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "トランスコーダー"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "録音の期限切れを許可しますか？"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "録画のテンプレート"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "高度な設定"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "プロトコルのバージョン: %i - データベースのバージョン: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "MythTV backendの接続に失敗しました。"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "MythTV データベースの接続に失敗しました。"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "MythTVバックエンドの接続を失った"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "MythTVの接続が復元された"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "MythTVバックエンドから応答がありません"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "チャンネル利用不可"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "レコーダーが使用できない"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "LCD有効"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "無効"

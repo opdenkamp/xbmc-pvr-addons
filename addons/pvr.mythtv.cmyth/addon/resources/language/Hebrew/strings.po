@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,143 @@ msgstr "אפשר ממשק טלוויזיה "
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "אפשר לממשק טלוויזיה להזיז תכניות מתוזמנות"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "טיפול בהתנגשויות"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "העדף טלוויזיה חיה כאשר קיים שידור חוזר להקלטה"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "העדף הקלטה ועצירה של שידור חי"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "העדף שידור חי ובטל התנגשויות הקלטה"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "כללי"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "ספק תבניות"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "פנימי"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "תבנית פנימית"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "חיפוש אוטומטי של פרטי על"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "סמן פרסומות בהקלטות חדשות"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "קודד מחדש הקלטות חדשות"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "הרץ משימת משתמש #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "הרץ משימת משתמש #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "הרץ משימת משתמש #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "הרץ משימת משתמש #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "מקודד מחדש"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "אפשר פקיעת תוקף הקלטות?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "תבנית הקלטה"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "מתקדם"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "גרסת פרוטוקול: %i - גרסת מסד נתונים: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "ההתחברות למנגנון של MythTV נכשל"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "ההתחברות למסד הנתונים של MythTV נכשל"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "החיבור למנגנון של MythTV נקטע"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "החיבור למנגנון של MythTV שוחזר"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "לא התקבלה תגובה מהמנגנון של MythTV"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "ערוץ לא זמין"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "המקליט אינו זמין"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "ביטול התנגשויות בהקלטה: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "מפסיק טלוויזיה חיה עקב תעדוף הקלטה: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "לא מקליט"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "פעיל"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "מנוטרל"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "מחק והקלט שוב"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "השאר הקלטה"

@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -204,3 +203,19 @@ msgstr "Установлена связь с сервером VDR"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Автоматически создать на сервере группы каналов"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "Экранное меню VDR"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Настройка"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Каналы"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Радиостанции"

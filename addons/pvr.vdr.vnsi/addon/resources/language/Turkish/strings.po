@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -17,6 +16,38 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "VNSI Portu"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Öncelik"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Bağlantı süresi doldu (s)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "VDR İletilerine İzin Ver"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "VDR kayıtları dizini"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Kanal arama"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Kanal arama - Ayarlar"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Kanal aramayı başlat"
+
 msgctxt "#30012"
 msgid "TV channels"
 msgstr "TV kanalları"
@@ -25,9 +56,25 @@ msgctxt "#30013"
 msgid "Radio channels"
 msgstr "Radyo kanalları"
 
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "FTA kanalları"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "HD kanallar"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "Ülke"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Uydu"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "ATSC Tipi"
 
 msgctxt "#30024"
 msgid "Back"
@@ -37,6 +84,74 @@ msgctxt "#30026"
 msgid "Type:"
 msgstr "Tür:"
 
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Aygıt:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Tara: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Sinyal: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Yeni kanallar: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Tüm kanallar: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Analog TV"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Analog Radyo"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Yeni kanallar"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Kanal araması - Tamamlandı"
+
 msgctxt "#30039"
 msgid "Running"
 msgstr "Çalışıyor"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Durduruldu"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Tamamlandı"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Kanal araması - İptal Edidi"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Kanal araması - Hata"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "VDR Sunucusun bağlantısı kaybedildi"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Yapılandırma"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanallar"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radyo Kanalları"

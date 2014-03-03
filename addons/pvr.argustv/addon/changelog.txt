@@ -1,3 +1,5 @@
+v1.9.174 (03-03-2014)
+- Updated language files from Transifex
 v1.9.173 (30-01-2014)
 - added service events monitor
 v1.9.172 (23-12-2013)

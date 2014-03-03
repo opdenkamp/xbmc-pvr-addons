@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -56,3 +55,67 @@ msgstr "Αποτυχία σύνδεσης. Λανθασμένο PIN;"
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Ο δέκτης (tuner) δεν είναι πλέον διαθέσιμος"
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[ΕΠΑΝΑΛΗΨΗ]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Προσθήκη Χρονοδιακόπτη"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Τύπος Εγγραφής"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Εγγραφή Μία Φορά"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Εγγραφή Κύκλου (ΝΕΑ επεισόδια σε αυτό το κανάλι)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Εγγραφή Κύκλου (Όλα τα επεισόδια σε αυτό το κανάλι)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Εγγραφή Κύκλου (Καθημερινά, τέτοια ώρα)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Εγγραφή Κύκλου (Εβδομαδιαία, τέτοια ώρα)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Εγγραφή Κύκλου (Δευτέρα-Παρασκευή, τέτοια ώρα)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Εγγραφή Κύκλου (Σαββατοκύριακα, τέτοια ώρα)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Διατήρηση"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Όλες οι Εγγραφές"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Πρώιμη Έναρξη Εγγραφής (λεπτά)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Πρώιμη Έναρξη Εγγραφής (λεπτά)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Φάκελος Εγγραφών"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Προεπιλογή"

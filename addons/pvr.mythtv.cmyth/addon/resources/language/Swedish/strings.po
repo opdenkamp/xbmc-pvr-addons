@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,143 @@ msgstr "Aktivera direktsänd TV"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Tillåt direktsänd TV att flytta schemalagda program"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Konflikthantering"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Föredra direktsänd TV när inspelning har ett senare tillfälle"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Föredra inspelning och stoppa direktsänd TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Föredra direktsänd TV och avbryt inspelning i konflikt"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Allmänt"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Mall-leverantör"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Intern"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Intern mall"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Slå automatiskt upp metadata"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Raklamflagga nya inspelningar"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Omkoda nya inspelningar"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Kör användarjobb #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Kör användarjobb #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Kör användarjobb #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Kör användarjobb #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Omkodning"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Tillåt inspelningar att gå ut?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Inspelningsmall"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Avancerad"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Protokollversion: %i - Databasversion: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Kunde inte ansluta till MythTV backend"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Kunde inte ansluta till MythTV databas"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Anslutning till MythTV backend förlorad"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Anslutning till MythTV återställd"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Inget svar från MythTV backend"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Kanal otillgänglig"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Inspelare inte tillgänglig"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Avbryter inspelning med konflikt: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Stoppar direktsänd TV pga konflikt med inspelning: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Spelar inte in"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Aktiverad"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Inaktiverad"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Ta bort och spela in på nytt"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Fortsätt spela in direktsänd TV"

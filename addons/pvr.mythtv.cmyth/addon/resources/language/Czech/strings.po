@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,131 @@ msgstr "Povolit Live TV"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Povolit Live TV přesovat naplánované pořady"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Řešení konfliktů"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Upřednostnit živé vysílání pokud má nahrávka pozdější slot"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Upřednostnit nahrávku a zastavit živé vysílání"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Upřednostnit živé vysílání a zrušit konfliktní nahrávku"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Obecné"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Poskytovatel šablon"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Interní"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Interní šablona"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Automaticky vyhledat metadata"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Označit reklamy v nových nahrávkách"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Překódovat nové nahrávky"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Spustit úlohu uživatele č. 1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Spustit úlohu uživatele č. 2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Spustit úlohu uživatele č. 3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Spustit úlohu uživatele č. 4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Převaděč"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Umožnit aby nahrávky vypršely?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Šablona nahrávání"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Pokročilé"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Verze protokolu: %i - Verze databáze: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Selhalo spojení s podpůrnou vrstvou MythTV"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Selhalo spojení s databází MythTV"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Spojení s podpůrnou vrstvou MythTV ztraceno"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Spojení s MythTV obnoveno"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Žádná odpověď od podpůrné vrstvy MythTV"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Kanál je nedostupný"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Rekordér není dostupný"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Ruším konfliktní nahrávku: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Zastavuji živé vysílání kvůli konfliktu s nahrávkou: %s"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Povoleno"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Zakázáno"

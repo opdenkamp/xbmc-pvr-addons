@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -31,7 +30,7 @@ msgstr "Prioriteit"
 
 msgctxt "#30003"
 msgid "Character Set Conversion"
-msgstr "Character Set Conversie"
+msgstr "Characterset Conversie"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
@@ -39,7 +38,7 @@ msgstr "Connectie timeout (s)"
 
 msgctxt "#30005"
 msgid "Allow VDR Messages"
-msgstr "Berichten vanuit VDR toestaan"
+msgstr "VDR-berichten toestaan"
 
 msgctxt "#30006"
 msgid "Read recordings from directory"
@@ -55,7 +54,7 @@ msgstr "Kanalen scannen"
 
 msgctxt "#30009"
 msgid "Channel search - Settings"
-msgstr "Kanalen scan - opties"
+msgstr "Kanalen scan - Settings"
 
 msgctxt "#30010"
 msgid "Start Channel search"
@@ -204,3 +203,67 @@ msgstr "Connectie naar VDR Server Hervat"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Automatisch Kanaal Groepen maken op de server"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Vraag Timeshift aan"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Setup"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "OSD Beheren - Druk info om te sluiten"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Selecteer om de OSD te beheren"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Timeshift modus"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Timeshift Buffer (RAM)x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Timeshift Buffer (Bestand) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Beheer"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanalen"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Provider Whitelist"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Kanaal blacklijst"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Kanalen filters"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radio kanalen"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Filters opslaan"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Provider onbekend"

@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -56,3 +55,11 @@ msgstr "Connexion impossible. Code Pin incorrect ?"
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Le tuner n'est plus disponible"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Conserver"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Défaut"

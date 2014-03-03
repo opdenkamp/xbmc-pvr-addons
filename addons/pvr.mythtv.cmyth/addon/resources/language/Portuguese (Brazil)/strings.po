@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,179 @@ msgstr "Ativar TV ao Vivo"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Permitir TV ao Vivo mover-se para programação agendada"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Tratamento de conflitos"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Preferir TV ao vivo quando gravando possuir slot para mais tarde"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Preferir gravar e interromper TV ao Vivo"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Preferir TV ao vivo e cancelar gravações conflitantes"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "Endereço Ethernet MythTV Backend (WOL)"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Geral"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Fornecedor de Modelo"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Interno"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Modelo interno"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Automaticamente procure pelos metadados"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Sinalizador de comercial em novas gravações"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Transcodifique novas gravações"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Executar o trabalho usuário #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Executar o trabalho usuário #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Executar o trabalho usuário #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Executar o trabalho usuário #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Transcoder"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Permitir gravações expirar?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Gravando modelo"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Avançado"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Ativar demuxing MPEG-TS"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Versão do Protocolo: %i - Versão do Banco de Dados: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Falha ao conectar ao backend do MythTV"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Falha ao conectar a base de dados do MythTV"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Conexão para Backend MythTV perdida"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Conexão para MythTV restaurada"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Nenhuma resposta do backend do MythTV"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Canal indisponível"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Gravador indisponível"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Cancelando gravações conflitantes %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Interrompendo TV ao Vivo em função de conflitos na gravação %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Não está gravando"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Ativado"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Desabilitado"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Nenhuma transmissão encontrada"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Deletar e regravar"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Manter gravação de TV ao Vivo"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Mostrar/ocultar regras com estatus \"Sem gravação\""
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Gravar toda a programação (neste canal)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Gravar esta programação toda semana"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Gravar esta programação todo dia"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Gravar programação atual (todos os canais)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Gravar todos os novos episódios (neste canal)"

@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,143 @@ msgstr "Aktiver TV"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Tillad direkte TV at flytte planlagte programmer"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Konflikthåndtering"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Foretræk live TV når optagelse er senere"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Foretræk optagelse og stop Live TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Foretræk Live TV og aflys modstridende optagelser"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Generelt"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Skabelonleverandør"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Intern"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Intern skabelon"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Automatisk fundne Metadata"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Marker nye optagelser kommercielt"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Transkod nye optagelser"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Kør brugerjob #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Kør brugerjob #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Kør brugerjob #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Kør brugerjob #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Transkoder"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Tillad at optagelser udløber"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Optagelsesskabelon"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Udvidet"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Protokolversion: %i - Databaseversion: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Forbindelse til MythTV backend mislykket"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Forbindelse til MythTV database mislykket"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Forbindelse til MythTV backend mistet"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Forbindelse til MythTV genoprettet"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Inden reaktion fra MythTV backend"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Kanal utilgængelig"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Optager ikke tilgængelig"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Aflys modstridende optagelse: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Stopper Live TV på grund af modstridende optagelse: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Optager ikke"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Aktiveret"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Deaktiveret"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Slet og optag på ny"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Gem LiveTV optagelse"

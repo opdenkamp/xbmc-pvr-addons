@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -204,3 +203,47 @@ msgstr "与VDR服务器的连接已恢复"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "自动在服务器上创建频道组"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "请求时光平移"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "设置"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "控制OSD - 按info退出"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "选择控制OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "时光平移模式"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "时光平移缓存（RAM）x100MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "时光平移缓存（文件）x1GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR管理"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "频道"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "电台频道"

@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
@@ -204,3 +203,43 @@ msgstr "Forbindelsen er genoprettet til VDR server"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Opret automatisk en kanalgruppe på serveren"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Ønsk tidsforskydning"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Opsætning"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Kontrollere OSD - tryk på info for at forlade"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Vælg for at kontrollere OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Tidsforskydningstilstand"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Tidsforskydningsbuffer (RAM) X 100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Tidsforskyningsbuffer (Fil) X 1 Gb"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Administration"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanaler"

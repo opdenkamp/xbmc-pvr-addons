@@ -1,0 +1,61 @@
+# XBMC Media Center language file
+# Addon Name: NextPVR PVR Client
+# Addon id: pvr.nextpvr
+# Addon Provider: Graeme Blackley
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Tamil (India) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ta_IN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ta_IN\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "NextPVR Hostname"
+msgstr "NextPVR புரவன்பெயர்"
+
+msgctxt "#30001"
+msgid "NextPVR Port (usually 8866 or 7799)"
+msgstr "NextPVR முணையம் (பொதுவாக 8866 அல்லது 7799)"
+
+msgctxt "#30002"
+msgid "NextPVR PinCode"
+msgstr "NextPVR பின்கோடு"
+
+msgctxt "#30003"
+msgid "Enable TimeShift with Live TV"
+msgstr "நேரடி டிவி காண நேர மாற்றத்தை செயல்படுத்து"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "இணைப்பு"
+
+msgctxt "#30041"
+msgid "Advanced"
+msgstr "மேம்பட்ட"
+
+msgctxt "#30050"
+msgid "NextPVR server is too old."
+msgstr "NextPVR சேவையகம் மிகவும் பழமையானது."
+
+msgctxt "#30051"
+msgid "Upgrade to '%s' or higher!"
+msgstr "'%s' அல்லது அதற்கு மேல் மேம்படுத்து!"
+
+msgctxt "#30052"
+msgid "Connection failed. Incorrect PIN?"
+msgstr "இணைப்பு தோல்வியுற்றது. தவறான PIN?"
+
+msgctxt "#30053"
+msgid "Tuner no longer available"
+msgstr "வானொலி இனி கிடைக்காது"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "இயல்புநிலை"

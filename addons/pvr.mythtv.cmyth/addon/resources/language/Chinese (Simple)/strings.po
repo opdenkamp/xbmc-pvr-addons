@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,143 @@ msgstr "启用直播电视"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "允许直播电视移动预定节目"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "冲突处理"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "当录像推迟时继续直播电视"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "停止直播电视以继续录像"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "取消冲突录像以继续直播电视"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "常用"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "模板来源"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "内置"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "内置模板"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "自动查找元数据"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "标记新录像"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "转码新录像"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "运行用户任务#1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "运行用户任务#2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "运行用户任务#3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "运行用户任务#4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "转码器"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "允许录像到期？"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "录像模板"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "高级"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "协议版本：%i - 数据库版本：%i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "连接MythTV后端失败"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "连接MythTV数据库失败"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "MythTV后端连接丢失"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "MythTV连接已恢复"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "MythTV后端无响应"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "频道不可用"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "录像机不可用"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "正取消冲突录像：%s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "停止直播电视于冲突录像：%s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "未录制"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "开启"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "关闭"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "删除重新录制"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "保留直播电视录制"

@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
@@ -48,3 +47,19 @@ msgstr "Овозможи Live TV"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Дозволи Live TV да преместува планирани шоуа"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Општо"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Напредно"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Овозможено"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Оневозможено"

@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -17,6 +16,14 @@ msgstr ""
 "Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Връзка"
+
 msgctxt "#30041"
 msgid "Advanced"
 msgstr "Допълнителни"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Стандартна"

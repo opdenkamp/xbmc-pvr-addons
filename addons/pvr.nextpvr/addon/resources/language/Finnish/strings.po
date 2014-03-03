@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -17,6 +16,10 @@ msgstr ""
 "Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30001"
+msgid "NextPVR Port (usually 8866 or 7799)"
+msgstr "NextPVR-portti (yleensä 8866 tai 7799)"
+
 msgctxt "#30040"
 msgid "Connection"
 msgstr "Yhteys"
@@ -24,3 +27,15 @@ msgstr "Yhteys"
 msgctxt "#30041"
 msgid "Advanced"
 msgstr "Lisäasetukset"
+
+msgctxt "#30050"
+msgid "NextPVR server is too old."
+msgstr "NextPVR-palvelin on liian vanha."
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Säilytä"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Oletus"

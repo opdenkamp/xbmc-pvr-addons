@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -56,3 +55,67 @@ msgstr "Povezava ni uspela. Napačen PIN?"
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Sprejemnik ni več na voljo"
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[PONOV]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Dodaj časovnik"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Tip snemanja"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Posnemi enkrat"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Posnemi sezono (NOVE epizode na tem programu)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Posnemi sezono (vse epizode na tem programu)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Posnemi sezono (dnevno, isti čas)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Posnemi sezono (tedensko, isti čas)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Posnemi sezono (ponedeljek-petek, isti čas)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Posnemi sezono (vikendi, isti čas)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Obdrži"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Vsi posnetki"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Predčasni začetek (minute)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Predčasni začetek (minute)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Mapa posnetkov"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Privzeto"

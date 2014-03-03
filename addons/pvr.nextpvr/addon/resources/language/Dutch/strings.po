@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -56,3 +55,67 @@ msgstr "Connectie Gefaald. Verkeerde Pincode?"
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Tuner niet langer beschikbaar"
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Timer toevoegen"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Opname type"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Eenmaal opnemen"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Neem seizoen op (NIEUWE afleveringen op dit kanaal)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Neem seizoen op (alle afleveringen op dit kanaal)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Seizoen opnemen (dagelijks, dit tijdvenster)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Seizoen opnemen (wekelijks, dit tijdsvenster)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Seizoen opnemen (maandag-vrijdag, dit tijdvenster)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Seizoen opnemen (Weekenden, dit tijdsvenster)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Behouden"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Alle opnames"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Pre-padding (minuten)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Pre-Padding (minuten)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Opname locatie"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Standaard"

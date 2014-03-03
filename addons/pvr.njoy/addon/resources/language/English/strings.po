@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: Njoy N7 PVR Client
 # Addon id: pvr.njoy
-# Addon version: 1.6.2
 # Addon Provider: Team XBMC
 msgid ""
 msgstr ""

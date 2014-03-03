@@ -1,7 +1,6 @@
 # XBMC Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
-# Addon version: 1.6.3
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
@@ -56,3 +55,7 @@ msgstr "התחברות נכשלה.ססמה שגויה?"
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "מקלט אינו זמין יותר"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "ברירת מחדל"

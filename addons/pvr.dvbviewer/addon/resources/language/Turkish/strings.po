@@ -1,8 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -17,10 +16,58 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgctxt "#30004"
+msgctxt "#30000"
+msgid "DVBViewer Recording Service IP Address"
+msgstr "DVBViewer Kayıt Servisi IP Adresi"
+
+msgctxt "#30001"
+msgid "Webinterface Port"
+msgstr "Web arayüzü Portu"
+
+msgctxt "#30002"
 msgid "Username"
 msgstr "Kullanıcı Adı"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Parola"
+
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Kanal listeleri yerine favorileri kullan"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Yerel favoriler dosyasını kullan"
+
+msgctxt "#30012"
+msgid "Select the favourites.xml file"
+msgstr "favourites.xml dosyasını seç"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Zaman Kaydırma Aktif"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Zaman Kaydırma tampon bellek yolu"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Canlı TV için RTSP akışını kullan"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Genel"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Gelişmiş"
+
+msgctxt "#30500"
+msgid "Can't connect to the Recording Service"
+msgstr "Kayıt Servisi'ne bağlanılamıyor"
+
+msgctxt "#30501"
+msgid "Recording Service version %s or higher required"
+msgstr "Kayıt Servisi'nin %s veya daha yüksek sürümü gerekiyor"

@@ -304,5 +304,5 @@ ssize_t CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   else
     tvherror("fileSeek failed");
 
-  return ret;
+  return (ssize_t)ret;
 }

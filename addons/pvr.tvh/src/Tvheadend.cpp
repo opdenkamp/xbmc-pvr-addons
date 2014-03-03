@@ -306,8 +306,8 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
     strncpy(rec.strPlot, rit->second.description.c_str(), sizeof(rec.strPlot));
   
     /* Time/Duration */
-    rec.recordingTime = rit->second.start;
-    rec.iDuration     = rit->second.stop - rit->second.start;
+    rec.recordingTime = (time_t)rit->second.start;
+    rec.iDuration     = (time_t)(rit->second.stop - rit->second.start);
 
     /* Directory */
     if (rit->second.path != "")
@@ -451,8 +451,8 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
 
     tmr.iClientIndex      = rit->second.id;
     tmr.iClientChannelUid = rit->second.channel;
-    tmr.startTime         = rit->second.start;
-    tmr.endTime           = rit->second.stop;
+    tmr.startTime         = (time_t)rit->second.start;
+    tmr.endTime           = (time_t)rit->second.stop;
     strncpy(tmr.strTitle, rit->second.title.c_str(), 
             sizeof(tmr.strTitle) - 1);
     strncpy(tmr.strSummary, rit->second.description.c_str(),
@@ -1118,8 +1118,8 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
 
   evt.id      = id;
   evt.channel = channel;
-  evt.start   = start;
-  evt.stop    = stop;
+  evt.start   = (time_t)start;
+  evt.stop    = (time_t)stop;
   evt.title   = str ? str : "";
 
   if ((str = htsmsg_get_str(msg, "summary")) != NULL)
@@ -1141,7 +1141,7 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
   if (!htsmsg_get_u32(msg, "ageRating", &u32))
     evt.age     = u32;
   if (!htsmsg_get_s64(msg, "firstAired", &s64))
-    evt.aired   = s64;
+    evt.aired   = (time_t)s64;
 
   return true;
 }

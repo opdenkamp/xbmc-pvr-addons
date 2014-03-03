@@ -42,7 +42,11 @@ extern "C" {
 /*
  * Miscellaneous
  */
+#if defined(__GNUC__)
 #define _unused(x) x __attribute__((unused))
+#else
+#define _unused(x) x
+#endif
 
 /*
  * Configuration defines

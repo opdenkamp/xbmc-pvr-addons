@@ -40,7 +40,8 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 CTvheadend::CTvheadend()
-  : m_dmx(m_conn), m_vfs(m_conn), m_asyncComplete(false)
+  : m_dmx(m_conn), m_vfs(m_conn), m_asyncState(ASYNC_NONE),
+    m_asyncComplete(false)
 {
 }
 
@@ -601,6 +602,7 @@ void CTvheadend::Disconnected ( void )
 {
   CLockObject lock(m_mutex);
   m_asyncComplete = false;
+  m_asyncState    = ASYNC_NONE;
 }
 
 bool CTvheadend::Connected ( void )
@@ -620,9 +622,13 @@ bool CTvheadend::Connected ( void )
     tit->second.del = true;
 
   /* Request Async data */
+  m_asyncComplete = false;
+  m_asyncState    = ASYNC_NONE;
   msg = htsmsg_create_map();
   htsmsg_add_u32(msg, "epg",        1);
+  // TODO: the above needs to be optional
   //htsmsg_add_u32(msg, "epgMaxTime", 0);
+  //htsmsg_add_s64(msg, "lastUpdate", 0);
   if ((msg = m_conn.SendAndWait0("enableAsyncMetadata", msg)) == NULL)
   {
     tvherror("failed to request async updates");
@@ -689,14 +695,24 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
 
 void CTvheadend::SyncCompleted ( void )
 {
+  /* The complete calls are probably redundant, but its a safety feature */
+  SyncChannelsCompleted();
+  SyncDvrCompleted();
+  SyncEpgCompleted();
+  m_asyncComplete = true;
+  m_asyncState    = ASYNC_DONE;
+  m_asyncCond.Broadcast();
+}
+
+void CTvheadend::SyncChannelsCompleted ( void )
+{
+  /* Already done */
+  if (m_asyncComplete || m_asyncState > ASYNC_CHN)
+    return;
+
   bool update;
   SChannels::iterator   cit = m_channels.begin();
   STags::iterator       tit = m_tags.begin();
-  SRecordings::iterator rit = m_recordings.begin();
-  SSchedules::iterator  sit = m_schedules.begin();
-  SEvents::iterator     eit;
-  m_asyncComplete = true;
-  m_asyncCond.Broadcast();
 
   /* Tags */
   update = false;
@@ -727,6 +743,19 @@ void CTvheadend::SyncCompleted ( void )
   PVR->TriggerChannelUpdate();
   if (update)
     tvhinfo("channels updated");
+  
+  /* Next */
+  m_asyncState = ASYNC_DVR;
+}
+
+void CTvheadend::SyncDvrCompleted ( void )
+{
+  /* Done */
+  if (m_asyncComplete || m_asyncState > ASYNC_DVR)
+    return;
+
+  bool update;
+  SRecordings::iterator rit = m_recordings.begin();
 
   /* Recordings */
   update = false;
@@ -743,6 +772,20 @@ void CTvheadend::SyncCompleted ( void )
   PVR->TriggerTimerUpdate();
   if (update)
     tvhinfo("recordings updated");
+
+  /* Next */
+  m_asyncState = ASYNC_EPG;
+}
+
+void CTvheadend::SyncEpgCompleted ( void )
+{
+  /* Done */
+  if (m_asyncComplete || m_asyncState > ASYNC_EPG)
+    return;
+  
+  bool update;
+  SSchedules::iterator  sit = m_schedules.begin();
+  SEvents::iterator     eit;
 
   /* Events */
   update = false;
@@ -823,7 +866,7 @@ void CTvheadend::ParseTagUpdate ( htsmsg_t *msg )
   {
     tvhdebug("tag updated id:%u, name:%s",
               tag.id, tag.name.c_str());
-    if (m_asyncComplete)
+    if (m_asyncState > ASYNC_CHN)
       PVR->TriggerChannelGroupsUpdate();
   }
 }
@@ -917,7 +960,7 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
   if (update) {
     tvhdebug("channel update id:%u, name:%s",
               channel.id, channel.name.c_str());
-    if (m_asyncComplete)
+    if (m_asyncState > ASYNC_CHN)
       PVR->TriggerChannelUpdate();
   }
 }
@@ -945,6 +988,9 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
   const char *state, *str;
   uint32_t id, channel;
   int64_t start, stop;
+
+  /* Channels must be complete */
+  SyncChannelsCompleted();
 
   /* Validate */
   if (htsmsg_get_u32(msg, "id",      &id)      ||
@@ -1021,7 +1067,7 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
              rec.id, state, rec.title.c_str(), rec.description.c_str(),
              rec.error.c_str());
 
-    if (m_asyncComplete)
+    if (m_asyncState > ASYNC_DVR)
     {
       PVR->TriggerTimerUpdate();
       if (rec.state == PVR_TIMER_STATE_RECORDING)
@@ -1055,6 +1101,9 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
   const char *str;
   uint32_t u32, id, channel;
   int64_t s64, start, stop;
+
+  /* Recordings complete */
+  SyncDvrCompleted();
 
   /* Validate */
   if (htsmsg_get_u32(msg, "eventId",   &id)      ||
@@ -1135,7 +1184,7 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
              evt.title.c_str(), evt.desc.c_str());
 
 #if TODO_FIXME
-    if (m_asyncComplete)
+    if (m_asyncState > ASYNC_EPG)
       PVR->TriggerEventUpdate();
 #endif
   }

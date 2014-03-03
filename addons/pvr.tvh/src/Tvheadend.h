@@ -321,6 +321,13 @@ private:
   SRecordings                 m_recordings;
   SSchedules                  m_schedules;
 
+  enum {
+    ASYNC_NONE = 0,
+    ASYNC_CHN  = 1,
+    ASYNC_DVR  = 2,
+    ASYNC_EPG  = 3,
+    ASYNC_DONE = 4
+  }                           m_asyncState;
   bool                        m_asyncComplete;
   PLATFORM::CCondition<bool>  m_asyncCond;
   
@@ -336,7 +343,10 @@ private:
   /*
    * Channel/Tags/Recordings/Events
    */
-  void SyncCompleted        ( void );
+  void SyncChannelsCompleted ( void );
+  void SyncDvrCompleted      ( void );
+  void SyncEpgCompleted      ( void );
+  void SyncCompleted         ( void );
   void ParseTagUpdate       ( htsmsg_t *m );
   void ParseTagDelete       ( htsmsg_t *m );
   void ParseChannelUpdate   ( htsmsg_t *m );

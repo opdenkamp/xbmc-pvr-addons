@@ -46,7 +46,7 @@ using namespace PLATFORM;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
   : m_conn(conn), m_opened(false), m_started(false), m_chnId(0), m_subId(0),
-    m_speed(1000)
+    m_speed(1000), m_pktBuffer((size_t)-1)
 {
 }
 

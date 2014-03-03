@@ -124,7 +124,7 @@ PVR_ERROR CTvheadend::GetTagMembers
   ( ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group )
 {
   CLockObject lock(m_mutex);
-  vector<int>::iterator it;
+  vector<uint32_t>::iterator it;
   SChannels::iterator cit;
   STags::iterator     tit = m_tags.begin();
   while (tit != m_tags.end())

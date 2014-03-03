@@ -46,11 +46,11 @@ typedef enum {
 
 struct STag
 {
-  bool             del;
-  int              id;
-  std::string      name;
-  std::string      icon;
-  std::vector<int> channels;
+  bool                  del;
+  uint32_t              id;
+  std::string           name;
+  std::string           icon;
+  std::vector<uint32_t> channels;
 
   STag() { Clear(); }
   void Clear()
@@ -66,12 +66,12 @@ struct STag
 struct SChannel
 {
   bool             del;
-  int              id;
-  int              now;
-  int              next;
-  int              num;
+  uint32_t         id;
+  uint32_t         now;
+  uint32_t         next;
+  uint32_t         num;
   bool             radio;
-  int              caid;
+  uint32_t         caid;
   std::string      name;
   std::string      icon;
 
@@ -97,8 +97,8 @@ struct SChannel
 struct SRecording
 {
   bool             del;
-  int              id;
-  int              channel;
+  uint32_t         id;
+  uint32_t         channel;
   int64_t          start;
   int64_t          stop;
   std::string      title;
@@ -138,18 +138,18 @@ struct SRecording
 struct SEvent
 {
   bool        del;
-  int         id;
-  int         next;
-  int         channel;
-  int         content;
+  uint32_t    id;
+  uint32_t    next;
+  uint32_t    channel;
+  uint32_t    content;
   time_t      start;
   time_t      stop;
-  int         stars;
-  int         age;
+  uint32_t    stars;
+  uint32_t    age;
   time_t      aired;
-  int         season;
-  int         episode;
-  int         part;
+  uint32_t    season;
+  uint32_t    episode;
+  uint32_t    part;
   std::string title;
   std::string subtitle;
   std::string desc;
@@ -178,15 +178,15 @@ struct SEvent
   }
 };
 
-typedef std::map<int, SChannel>   SChannels;
-typedef std::map<int, STag>       STags;
-typedef std::map<int, SEvent>     SEvents;
-typedef std::map<int, SRecording> SRecordings;
+typedef std::map<uint32_t, SChannel>   SChannels;
+typedef std::map<uint32_t, STag>       STags;
+typedef std::map<uint32_t, SEvent>     SEvents;
+typedef std::map<uint32_t, SRecording> SRecordings;
 
 struct SSchedule
 {
-  bool    del;
-  int     channel;
+  bool     del;
+  uint32_t channel;
   SEvents events;
 
   SSchedule() { Clear(); }

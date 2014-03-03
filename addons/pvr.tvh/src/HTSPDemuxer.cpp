@@ -58,7 +58,7 @@ void CHTSPDemuxer::Connected ( void )
 {
   /* Re-subscribe */
   if (m_opened) {
-    tvhdebug("re-starting stream");
+    tvhdebug("demux re-starting stream");
     SendSubscribe(true);
     SendSpeed(true);
   }
@@ -91,6 +91,7 @@ void CHTSPDemuxer::Abort0 ( void )
 bool CHTSPDemuxer::Open ( const PVR_CHANNEL &chn )
 {
   CLockObject lock(m_conn.Mutex());
+  tvhdebug("demux open");
 
   /* Close current stream */
   Close0();
@@ -111,13 +112,18 @@ void CHTSPDemuxer::Close ( void )
 {
   CLockObject lock(m_conn.Mutex());
   Close0();
+  tvhdebug("demux close");
 }
 
 DemuxPacket *CHTSPDemuxer::Read ( void )
 {
   DemuxPacket *pkt = NULL;
-  if (m_pktBuffer.Pop(pkt, 1000))
+  if (m_pktBuffer.Pop(pkt, 1000)) {
+    tvhtrace("demux read idx :%d pts %lf len %lld",
+             pkt->iStreamId, pkt->pts, (long long)pkt->iSize);
     return pkt;
+  }
+  tvhtrace("demux read nothing");
   
   return PVR->AllocateDemuxPacket(0);
 }
@@ -125,12 +131,14 @@ DemuxPacket *CHTSPDemuxer::Read ( void )
 void CHTSPDemuxer::Flush ( void )
 {
   DemuxPacket *pkt;
+  tvhdebug("demux flush");
   while (m_pktBuffer.Pop(pkt))
     PVR->FreeDemuxPacket(pkt);
 }
 
 void CHTSPDemuxer::Abort ( void )
 {
+  tvhdebug("demux abort");
   CLockObject lock(m_conn.Mutex());
   Abort0();
 }
@@ -143,6 +151,8 @@ bool CHTSPDemuxer::Seek
   CLockObject lock(m_conn.Mutex());
   if (!m_subId)
     return false;
+
+  tvhdebug("demux seek %d", time);
 
   /* Clear */
   m_seekTime = 0;
@@ -242,14 +252,14 @@ bool CHTSPDemuxer::SendSubscribe ( bool force )
   htsmsg_add_u32(m, "normts",          1);
 
   /* Send and Wait for response */
-  tvhdebug("subscribe to %08x", m_chnId);
+  tvhdebug("demux subscribe to %08x", m_chnId);
   if (force)
     m = m_conn.SendAndWait0("subscribe", m);
   else
     m = m_conn.SendAndWait("subscribe", m);
   if (m == NULL)
   {
-    tvhdebug("failed to send subscribe");
+    tvhdebug("demux failed to send subscribe");
     return false;
   }
 
@@ -258,11 +268,11 @@ bool CHTSPDemuxer::SendSubscribe ( bool force )
   htsmsg_destroy(m);
   if (err)
   {
-    tvhdebug("failed to subscribe");
+    tvhdebug("demux failed to subscribe");
     return false;
   }
 
-  tvhdebug("succesfully subscribed to %08x", m_chnId);
+  tvhdebug("demux succesfully subscribed to %08x", m_chnId);
   return true;
 }
 
@@ -276,10 +286,10 @@ void CHTSPDemuxer::SendUnsubscribe ( void )
   htsmsg_add_u32(m, "subscriptionId", m_subId);
 
   /* Send and Wait */
-  tvhdebug("unsubcribe from %d", m_subId);
+  tvhdebug("demux unsubcribe from %d", m_subId);
   if ((m = m_conn.SendAndWait("unsubscribe", m)) == NULL)
   {
-    tvhdebug("failed to send unsubcribe");
+    tvhdebug("demux failed to send unsubcribe");
     return;
   }
 
@@ -288,11 +298,11 @@ void CHTSPDemuxer::SendUnsubscribe ( void )
   htsmsg_destroy(m);
   if (err)
   {
-    tvhdebug("failed to unsubcribe");
+    tvhdebug("demux failed to unsubcribe");
     return;
   }
 
-  tvhdebug("succesfully unsubscribed %d", m_subId);
+  tvhdebug("demux succesfully unsubscribed %d", m_subId);
 }
 
 void CHTSPDemuxer::SendSpeed ( bool force )
@@ -303,7 +313,7 @@ void CHTSPDemuxer::SendSpeed ( bool force )
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "subscriptionId", m_subId);
   htsmsg_add_s32(m, "speed",          m_speed / 10);
-  tvhdebug("send speed %d", m_speed / 10);
+  tvhdebug("demux send speed %d", m_speed / 10);
 
   /* Send and Wait */
   if (force)
@@ -352,7 +362,7 @@ bool CHTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
   else if (!strcmp("subscriptionSpeed", method))
     ParseSubscriptionSpeed(m);
   else
-    tvhdebug("unhandled subscription message [%s]",
+    tvhdebug("demux unhandled subscription message [%s]",
               method);
 
   return true;
@@ -365,6 +375,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   const void  *bin;
   size_t      binlen;
   DemuxPacket *pkt;
+  char        _unused(type) = 0;
 
   /* Validate fields */
   if (htsmsg_get_u32(m, "stream", &idx) ||
@@ -397,14 +408,22 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
     pkt->pts      = TVH_TO_DVD_TIME(s64);
   else
     pkt->pts      = DVD_NOPTS_VALUE;
-  tvhtrace("pts = %lf", pkt->pts);
+
+  /* Type (for debug only) */
+  if (!htsmsg_get_u32(m, "frametype", &u32))
+    type = (char)u32;
+  if (!type)
+    type = '_';
 
   /* Find the stream */
   pkt->iStreamId = m_streams.GetStreamId(idx);
+  tvhtrace("demux pkt idx %d:%d type %c pts %lf len %lld",
+           idx, pkt->iStreamId, type, pkt->pts, (long long)binlen);
 
   /* Drop (could be done earlier) */
   if (pkt->iStreamId < 0)
   {
+    tvhdebug("demux drop pkt");
     PVR->FreeDemuxPacket(pkt);
     return;
   }
@@ -494,6 +513,7 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
     /* Find stream */
     m_streamStat[idx] = 0;
     m_streams.GetStreamData(idx, &stream);
+    tvhdebug("demux subscription start");
     if (GetCodecByName(type, &stream.iCodecType, &stream.iCodecId))
     {
       stream.iPhysicalId = idx;
@@ -545,11 +565,12 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
       }
         
       streams.push_back(stream);
-      tvhdebug("id: %d, type %s, codec: %u", idx, type, stream.iCodecId);
+      tvhdebug("  id: %d, type %s, codec: %u", idx, type, stream.iCodecId);
     }
   }
 
   /* Update streams */
+  tvhdebug("demux stream change");
   m_streams.UpdateStreams(streams);
   pkt = PVR->AllocateDemuxPacket(0);
   pkt->iStreamId = DMX_SPECIALID_STREAMCHANGE;
@@ -570,7 +591,7 @@ void CHTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
   /* Ignore */
   if (!m) return;
   
-  tvhdebug("sourceInfo:");
+  tvhdebug("demux sourceInfo:");
   if ((str = htsmsg_get_str(m, "adapter")) != NULL)
   {
     tvhdebug("  adapter : %s", str);
@@ -628,7 +649,7 @@ void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *_unused(m) )
 void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
 {
   map<int,int>::iterator it;
-  tvhdebug("stats:");
+  tvhdebug("stream stats:");
   for (it = m_streamStat.begin(); it != m_streamStat.end(); it++)
     tvhdebug("stream idx:%d num:%d", it->first, it->second);
 }

@@ -54,6 +54,8 @@ string     g_strUsername         = "";
 string     g_strPassword         = "";
 string     g_strUserPath         = "";
 string     g_strClientPath       = "";
+bool       g_bTraceDebug         = false;
+bool       g_bAsyncEpg           = false;
 
 /*
  * Global state
@@ -87,15 +89,22 @@ void ADDON_ReadSettings(void)
 
   char buffer[1024];
 
+  /* Connection */
   UPDATE_STR(g_strHostname, "host", buffer, DEFAULT_HOST);
   UPDATE_STR(g_strUsername, "user", buffer, "");
   UPDATE_STR(g_strPassword, "pass", buffer, "");
-
   UPDATE_INT(g_iPortHTSP,   "htsp_port", DEFAULT_HTSP_PORT);
   UPDATE_INT(g_iPortHTTP,   "http_port", DEFAULT_HTSP_PORT);
-
   UPDATE_INT(g_iConnectTimeout,  "connect_timeout",  DEFAULT_CONNECT_TIMEOUT);
   UPDATE_INT(g_iResponseTimeout, "response_timeout", DEFAULT_CONNECT_TIMEOUT);
+
+  /* Data Transfer */
+  UPDATE_INT(g_bAsyncEpg,   "epg_async", false);
+
+  /* Debug */
+  UPDATE_INT(g_bTraceDebug, "trace_debug", false);
+
+  /* TODO: Transcoding */
 
 #undef UPDATE_INT
 #undef UPDATE_STR
@@ -213,29 +222,34 @@ ADDON_STATUS ADDON_SetSetting
     return ADDON_STATUS_OK;\
   }
 
-#define UPDATE_INT(key, var, act)\
+#define UPDATE_INT(key, type, var, act)\
   if (!strcmp(settingName, key))\
   {\
-    if (var != *(int*)settingValue)\
+    if (var != *(type*)settingValue)\
     {\
       tvhdebug("update %s from '%d' to '%d'",\
-               settingName, var, *(int*)settingValue);\
+               settingName, var, (int)*(type*)settingValue);\
       return act;\
     }\
     return ADDON_STATUS_OK;\
   }
 
+  /* Connection */
   UPDATE_STR("host", g_strHostname, ADDON_STATUS_NEED_RESTART);
   UPDATE_STR("user", g_strUsername, ADDON_STATUS_NEED_RESTART);
   UPDATE_STR("pass", g_strPassword, ADDON_STATUS_NEED_RESTART);
-
-  UPDATE_INT("htsp_port", g_iPortHTSP, ADDON_STATUS_NEED_RESTART);
-  UPDATE_INT("http_port", g_iPortHTTP, ADDON_STATUS_NEED_RESTART);
-
-  UPDATE_INT("connect_timeout",  g_iConnectTimeout, ADDON_STATUS_OK);
-  UPDATE_INT("response_timeout", g_iConnectTimeout, ADDON_STATUS_OK);
+  UPDATE_INT("htsp_port", int, g_iPortHTSP, ADDON_STATUS_NEED_RESTART);
+  UPDATE_INT("http_port", int, g_iPortHTTP, ADDON_STATUS_NEED_RESTART);
+  UPDATE_INT("connect_timeout",  int, g_iConnectTimeout, ADDON_STATUS_OK);
+  UPDATE_INT("response_timeout", int, g_iConnectTimeout, ADDON_STATUS_OK);
   
-  // TODO: add transcoding options
+  /* Data transfer */
+  UPDATE_INT("epg_async", bool, g_bAsyncEpg, ADDON_STATUS_NEED_RESTART);
+
+  /* Debug */
+  UPDATE_INT("trace_debug", bool, g_bTraceDebug, ADDON_STATUS_OK);
+
+  /* TODO: Transcoding */
 
   return ADDON_STATUS_OK;
 

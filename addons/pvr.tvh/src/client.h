@@ -43,7 +43,7 @@ extern CHelper_libXBMC_codec*         CODEC;
 #define DEFAULT_AUDIO_CODEC      "UNKNOWN"
 #define DEFAULT_RESOLUTION       480
 #define DEFAULT_TRANSCODE        false
-#define HTSP_DEBUGGING           0
+#define TVHTRACE                 1
 
 extern PLATFORM::CMutex          g_mutex;
 extern bool                      m_bCreated;
@@ -57,5 +57,7 @@ extern int                       g_iResponseTimeout;
 extern bool                      g_bShowTimerNotifications;
 extern std::string               g_szUserPath;
 extern std::string               g_szClientPath;
+extern bool                      g_bTraceDebug;
+extern bool                      g_bAsyncEpg;
 
 uint32_t HTSPNextSequenceNumber(void);

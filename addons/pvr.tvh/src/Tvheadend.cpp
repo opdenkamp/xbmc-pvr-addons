@@ -550,44 +550,83 @@ PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
  * EPG
  * *************************************************************************/
 
-// TODO: does it matter these will be out of order?
+/* Transfer schedule to XBMC */
+void CTvheadend::TransferEvent
+  ( ADDON_HANDLE handle, const SEvent &event )
+{
+  /* Build */
+  EPG_TAG epg;
+  memset(&epg, 0, sizeof(EPG_TAG));
+  epg.iUniqueBroadcastId  = event.id;
+  epg.strTitle            = event.title.c_str();
+  epg.iChannelNumber      = event.channel;
+  epg.startTime           = event.start;
+  epg.endTime             = event.stop;
+  epg.strPlotOutline      = event.summary.c_str();
+  epg.strPlot             = event.desc.c_str();
+  epg.iGenreType          = event.content & 0xF0;
+  epg.iGenreSubType       = event.content & 0x0F;
+  epg.firstAired          = event.aired;
+  epg.iSeriesNumber       = event.season;
+  epg.iEpisodeNumber      = event.episode;
+  epg.iEpisodePartNumber  = event.part;
+
+  PVR->TransferEpgEntry(handle, &epg);
+}
+
 PVR_ERROR CTvheadend::GetEpg
   ( ADDON_HANDLE handle, const PVR_CHANNEL &chn, time_t start, time_t end )
 {
   SSchedules::const_iterator sit;
   SEvents::const_iterator eit;
 
-  CLockObject lock(m_mutex);
-  if (!m_asyncCond.Wait(m_mutex, m_asyncComplete, 5000))
-    return PVR_ERROR_NO_ERROR;
-
-  sit = m_schedules.find(chn.iUniqueId);
-  if (sit != m_schedules.end())
+  /* Async transfer */
+  if (g_bAsyncEpg)
   {
-    for (eit = sit->second.events.begin();
-         eit != sit->second.events.end(); eit++)
+    CLockObject lock(m_mutex);
+    if (!m_asyncCond.Wait(m_mutex, m_asyncComplete, 5000))
+      return PVR_ERROR_NO_ERROR;
+
+    sit = m_schedules.find(chn.iUniqueId);
+    if (sit != m_schedules.end())
     {
-      if (eit->second.start    > end)           continue;
-      if (eit->second.stop     < start)         continue;
+      for (eit = sit->second.events.begin();
+          eit != sit->second.events.end(); eit++)
+      {
+        if (eit->second.start    > end)   continue;
+        if (eit->second.stop     < start) continue;
+        TransferEvent(handle, eit->second);
+      }
+    }
 
-      /* Build */
-      EPG_TAG epg;
-      memset(&epg, 0, sizeof(EPG_TAG));
-      epg.iUniqueBroadcastId  = eit->second.id;
-      epg.strTitle            = eit->second.title.c_str();
-      epg.iChannelNumber      = eit->second.channel;
-      epg.startTime           = eit->second.start;
-      epg.endTime             = eit->second.stop;
-      epg.strPlotOutline      = eit->second.summary.c_str();
-      epg.strPlot             = eit->second.desc.c_str();
-      epg.iGenreType          = eit->second.content & 0xF0;
-      epg.iGenreSubType       = eit->second.content & 0x0F;
-      epg.firstAired          = eit->second.aired;
-      epg.iSeriesNumber       = eit->second.season;
-      epg.iEpisodeNumber      = eit->second.episode;
-      epg.iEpisodePartNumber  = eit->second.part;
+  /* Synchronous transfer */
+  }
+  else
+  {
+    CLockObject lock(m_conn.Mutex());
 
-      PVR->TransferEpgEntry(handle, &epg);
+    /* Build message */
+    htsmsg_t *msg = htsmsg_create_map();
+    htsmsg_add_u32(msg, "channelId", chn.iUniqueId);
+    htsmsg_add_s64(msg, "maxTime",   end);
+
+    /* Send and Wait */
+    if ((msg = m_conn.SendAndWait0("getEvents", msg)) == NULL)
+    {
+      tvherror("failed to request epg");
+      return PVR_ERROR_SERVER_ERROR;
+    }
+
+    /* Process */
+    htsmsg_field_t *f;
+    HTSMSG_FOREACH(f, msg)
+    {
+      SEvent event;
+      if (f->hmf_type == HMF_MAP)
+      {
+        if (ParseEvent(&f->hmf_msg, event))
+          TransferEvent(handle, event);
+      }
     }
   }
 
@@ -625,8 +664,7 @@ bool CTvheadend::Connected ( void )
   m_asyncComplete = false;
   m_asyncState    = ASYNC_NONE;
   msg = htsmsg_create_map();
-  htsmsg_add_u32(msg, "epg",        1);
-  // TODO: the above needs to be optional
+  htsmsg_add_u32(msg, "epg",        g_bAsyncEpg);
   //htsmsg_add_u32(msg, "epgMaxTime", 0);
   //htsmsg_add_s64(msg, "lastUpdate", 0);
   if ((msg = m_conn.SendAndWait0("enableAsyncMetadata", msg)) == NULL)
@@ -780,7 +818,7 @@ void CTvheadend::SyncDvrCompleted ( void )
 void CTvheadend::SyncEpgCompleted ( void )
 {
   /* Done */
-  if (m_asyncComplete || m_asyncState > ASYNC_EPG)
+  if (!g_bAsyncEpg || m_asyncComplete || m_asyncState > ASYNC_EPG)
     return;
   
   bool update;

@@ -37,7 +37,8 @@ CHTSPDemux::CHTSPDemux(CHTSPConnection* connection) :
     m_subs(0),
     m_channel(0),
     m_tag(0),
-    m_bIsOpen(false)
+    m_bIsOpen(false),
+    m_demuxPacketBuffer((size_t)-1)
 {
   m_seekEvent = new CEvent;
   m_seekTime  = -1;

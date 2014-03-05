@@ -254,8 +254,8 @@ inline void HTSPResetDemuxStreamInfo(PVR_STREAM_PROPERTIES::PVR_STREAM &stream)
 
 inline void HTSPSetDemuxStreamInfoAudio(PVR_STREAM_PROPERTIES::PVR_STREAM &stream, htsmsg_t *msg)
 {
-  stream.iChannels   = htsmsg_get_u32_or_default(msg, "channels" , 0);
-  stream.iSampleRate = htsmsg_get_u32_or_default(msg, "rate" , 0);
+  stream.iChannels   = htsmsg_get_u32_or_default(msg, "channels" , 2);
+  stream.iSampleRate = htsmsg_get_u32_or_default(msg, "rate" , 48000);
 }
 
 inline void HTSPSetDemuxStreamInfoVideo(PVR_STREAM_PROPERTIES::PVR_STREAM &stream, htsmsg_t *msg)

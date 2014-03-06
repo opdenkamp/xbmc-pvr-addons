@@ -1,8 +1,7 @@
 # XBMC Media Center language file
-# Addon Name: Tvheadend HTSP Client
-# Addon id: pvr.hts
-# Addon version: 1.6.11
-# Addon Provider: Lars Op den Kamp, Team XBMC
+# Addon Name: Tvheadend Client
+# Addon id: pvr.tvh
+# Addon Provider: Adam Sutton
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -17,28 +16,34 @@ msgstr ""
 "Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+#settings labels
+
 msgctxt "#30000"
+msgid "Connection Settings"
+msgstr ""
+
+msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Názov hostiteľa Tvheadend alebo IP adresa"
 
-msgctxt "#30001"
+msgctxt "#30002"
 msgid "HTTP port"
 msgstr "HTTP port"
 
-msgctxt "#30002"
+msgctxt "#30003"
 msgid "HTSP port"
 msgstr "HTSP port"
 
-msgctxt "#30003"
+msgctxt "#30004"
 msgid "Username"
 msgstr "Užívateľské meno"
 
-msgctxt "#30004"
+msgctxt "#30005"
 msgid "Password"
 msgstr "Heslo"
 
 msgctxt "#30006"
-msgid "Connect timeout in seconds"
+msgid "Connection timeout in seconds"
 msgstr "Časový limit pre spojenie v sekundách"
 
 msgctxt "#30007"
@@ -46,33 +51,52 @@ msgid "Response timeout in seconds"
 msgstr "Časový limit pre odpoveď v sekundách"
 
 msgctxt "#30100"
+msgid "Data Transfer"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr ""
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr ""
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr ""
+
+msgctxt "#30300"
 msgid "Tvheadend transcoding settings"
 msgstr "Nastavenie Tvheadend prekódovania"
 
-msgctxt "#30101"
+msgctxt "#30301"
 msgid "Transcoding settings"
 msgstr "Nastavenie prekódovania"
 
-msgctxt "#30102"
+msgctxt "#30302"
 msgid "Enable transcoding"
 msgstr "Povoliť prekódovanie"
 
-msgctxt "#30103"
+msgctxt "#30303"
 msgid "Audio codec"
 msgstr "Koded audia"
 
-msgctxt "#30104"
+msgctxt "#30304"
 msgid "Video codec"
 msgstr "Kodek videa"
 
-msgctxt "#30105"
+msgctxt "#30305"
 msgid "Resolution"
 msgstr "Rozlíšenie"
 
-msgctxt "#30500"
+#empty strings from id 30106 to 30499
+#notifications
+
+msgctxt "#31000"
 msgid "Disconnected from '%s'"
 msgstr "Odpojené od '%s'"
 
-msgctxt "#30501"
+msgctxt "#31001"
 msgid "Reconnected to '%s'"
 msgstr "Opätovne pripojené k '%s'"

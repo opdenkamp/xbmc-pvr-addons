@@ -1,8 +1,7 @@
 # XBMC Media Center language file
-# Addon Name: Tvheadend HTSP Client
-# Addon id: pvr.hts
-# Addon version: 1.6.11
-# Addon Provider: Lars Op den Kamp, Team XBMC
+# Addon Name: Tvheadend Client
+# Addon id: pvr.tvh
+# Addon Provider: Adam Sutton
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -17,62 +16,87 @@ msgstr ""
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#settings labels
+
 msgctxt "#30000"
+msgid "Connection Settings"
+msgstr "Verbindungseinstellungen"
+
+msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend Hostname oder IP"
 
-msgctxt "#30001"
+msgctxt "#30002"
 msgid "HTTP port"
 msgstr "HTTP Port"
 
-msgctxt "#30002"
+msgctxt "#30003"
 msgid "HTSP port"
 msgstr "HTSP Port"
 
-msgctxt "#30003"
+msgctxt "#30004"
 msgid "Username"
 msgstr "Benutzername"
 
-msgctxt "#30004"
+msgctxt "#30005"
 msgid "Password"
 msgstr "Passwort"
 
 msgctxt "#30006"
-msgid "Connect timeout in seconds"
-msgstr "Verbindungszeit Überschreitung in Sekunden"
+msgid "Connection timeout in seconds"
+msgstr "Verbindungszeitüberschreitung in Sekunden"
 
 msgctxt "#30007"
 msgid "Response timeout in seconds"
-msgstr "Antwortzeit Überschreitung in Sekunden"
+msgstr "Antwortzeitüberschreitung in Sekunden"
 
 msgctxt "#30100"
+msgid "Data Transfer"
+msgstr "Datentransfer"
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr "Asynchroner EPG-Transfer"
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr "Debugging"
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr "Trace (detailliert)"
+
+msgctxt "#30300"
 msgid "Tvheadend transcoding settings"
 msgstr "Tvheadend Transkodierungseinstellungen"
 
-msgctxt "#30101"
+msgctxt "#30301"
 msgid "Transcoding settings"
 msgstr "Transkodierungseinstellungen"
 
-msgctxt "#30102"
+msgctxt "#30302"
 msgid "Enable transcoding"
 msgstr "Transkodierung aktivieren"
 
-msgctxt "#30103"
+msgctxt "#30303"
 msgid "Audio codec"
-msgstr "Audio Codec"
+msgstr "Audio-Codec"
 
-msgctxt "#30104"
+msgctxt "#30304"
 msgid "Video codec"
-msgstr "Video Codec"
+msgstr "Video-Codec"
 
-msgctxt "#30105"
+msgctxt "#30305"
 msgid "Resolution"
 msgstr "Auflösung"
 
-msgctxt "#30500"
+#empty strings from id 30106 to 30499
+#notifications
+
+msgctxt "#31000"
 msgid "Disconnected from '%s'"
 msgstr "Getrennt von '%s'"
 
-msgctxt "#30501"
+msgctxt "#31001"
 msgid "Reconnected to '%s'"
 msgstr "Wiederverbunden mit '%s'"

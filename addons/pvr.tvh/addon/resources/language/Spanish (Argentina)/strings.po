@@ -1,8 +1,7 @@
 # XBMC Media Center language file
-# Addon Name: Tvheadend HTSP Client
-# Addon id: pvr.hts
-# Addon version: 1.6.11
-# Addon Provider: Lars Op den Kamp, Team XBMC
+# Addon Name: Tvheadend Client
+# Addon id: pvr.tvh
+# Addon Provider: Adam Sutton
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -17,28 +16,34 @@ msgstr ""
 "Language: es_AR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#settings labels
+
 msgctxt "#30000"
+msgid "Connection Settings"
+msgstr ""
+
+msgctxt "#30001"
 msgid "Tvheadend hostname or IP address"
 msgstr "Tvheadend nombre o dirección IP"
 
-msgctxt "#30001"
+msgctxt "#30002"
 msgid "HTTP port"
 msgstr "Puerto HTTP"
 
-msgctxt "#30002"
+msgctxt "#30003"
 msgid "HTSP port"
 msgstr "Puerto HTSP"
 
-msgctxt "#30003"
+msgctxt "#30004"
 msgid "Username"
 msgstr "Usuario"
 
-msgctxt "#30004"
+msgctxt "#30005"
 msgid "Password"
 msgstr "Contraseña"
 
 msgctxt "#30006"
-msgid "Connect timeout in seconds"
+msgid "Connection timeout in seconds"
 msgstr "Tiempo de espera de conexión en segundos"
 
 msgctxt "#30007"
@@ -46,33 +51,52 @@ msgid "Response timeout in seconds"
 msgstr "Tiempo de espera de respuesta en segundos"
 
 msgctxt "#30100"
+msgid "Data Transfer"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr ""
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr ""
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr ""
+
+msgctxt "#30300"
 msgid "Tvheadend transcoding settings"
 msgstr "Ajuste de transcodificación de TVheadend"
 
-msgctxt "#30101"
+msgctxt "#30301"
 msgid "Transcoding settings"
 msgstr "Ajuste de transcodificación"
 
-msgctxt "#30102"
+msgctxt "#30302"
 msgid "Enable transcoding"
 msgstr "ctivar transcodificación"
 
-msgctxt "#30103"
+msgctxt "#30303"
 msgid "Audio codec"
 msgstr "Códec de audio"
 
-msgctxt "#30104"
+msgctxt "#30304"
 msgid "Video codec"
 msgstr "Códec de video"
 
-msgctxt "#30105"
+msgctxt "#30305"
 msgid "Resolution"
 msgstr "Resolución"
 
-msgctxt "#30500"
+#empty strings from id 30106 to 30499
+#notifications
+
+msgctxt "#31000"
 msgid "Disconnected from '%s'"
 msgstr "Desconectado de '%s'"
 
-msgctxt "#30501"
+msgctxt "#31001"
 msgid "Reconnected to '%s'"
 msgstr "Reconectado a '%s'"

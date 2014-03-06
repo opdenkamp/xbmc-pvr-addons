@@ -1,8 +1,7 @@
 # XBMC Media Center language file
-# Addon Name: Tvheadend HTSP Client
-# Addon id: pvr.hts
-# Addon version: 1.6.11
-# Addon Provider: Lars Op den Kamp, Team XBMC
+# Addon Name: Tvheadend Client
+# Addon id: pvr.tvh
+# Addon Provider: Adam Sutton
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
@@ -16,6 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 
 #settings labels
 

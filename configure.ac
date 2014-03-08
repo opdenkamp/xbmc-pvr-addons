@@ -59,6 +59,13 @@ case "${host}" in
     BIN_EXT=".so"
     BINPREFIX="lib"
     ;;
+  i*86-*-linux-android)
+    TARGET_LDFLAGS="-avoid-version -no-undefined"
+    OS="android"
+    ARCHITECTURE="i486"
+    BIN_EXT=".so"
+    BINPREFIX="lib"
+    ;;
   arm*-*-linux*)
     OS="linux"
     ARCHITECTURE="arm"

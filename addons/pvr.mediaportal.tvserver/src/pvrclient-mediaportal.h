@@ -130,6 +130,9 @@ private:
   int64_t                 m_iLastRecordingUpdate;
   CTsReader*              m_tsreader;
   std::map<int,std::string> m_channelNames;
+  int                     m_signalStateCounter;
+  int                     m_iSignal;
+  int                     m_iSNR;
 
   void Close();
 

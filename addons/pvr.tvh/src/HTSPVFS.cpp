@@ -51,10 +51,10 @@ void CHTSPVFS::Connected ( void )
   /* Re-open */
   if (m_fileId != 0)
   { 
-    tvhdebug("re-open vfs file");
+    tvhdebug("vfs re-open file");
     if (!SendFileOpen(true) || !SendFileSeek(m_offset, SEEK_SET, true))
     {
-      tvherror("failed to re-open vfs file");
+      tvherror("vfs failed to re-open file");
       Close();
     }
   }
@@ -89,7 +89,7 @@ bool CHTSPVFS::Open ( const PVR_RECORDING &rec )
   /* Send open */
   if (!SendFileOpen())
   {
-    tvherror("failed to open file");
+    tvherror("vfs failed to open file");
     return false;
   }
 
@@ -130,14 +130,14 @@ int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
     htsmsg_add_u32(m, "id",   m_fileId);
     htsmsg_add_s64(m, "size", m_buffer.free());
 
-    tvhdebug("fileRead id=%d size=%lld",
+    tvhtrace("vfs read id=%d size=%lld",
              m_fileId, (long long)m_buffer.free());
     
     /* Send */
     m = m_conn.SendAndWait("fileRead", m);
     if (m == NULL)
     {
-      tvherror("fileRead failed to send");
+      tvherror("vfs fileRead failed to send");
       return -1;
     }
 
@@ -145,7 +145,7 @@ int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
     if (htsmsg_get_bin(m, "data", &buf, &len))
     {
       htsmsg_destroy(m);
-      tvherror("fileRead malformed response");
+      tvherror("vfs fileRead malformed response");
       return -1;
     }
 
@@ -191,20 +191,20 @@ long long CHTSPVFS::Size ( void )
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
-  tvhdebug("fileStat id=%d", m_fileId);
+  tvhtrace("vfs stat id=%d", m_fileId);
   
   /* Send */
   if ((m = m_conn.SendAndWait("fileStat", m)) == NULL)
   {
-    tvherror("fileStat failed");
+    tvherror("vfs fileStat failed");
     return -1;
   }
 
   /* Process */
   if (htsmsg_get_s64(m, "size", &ret))
-    tvherror("fileStat malformed response");
+    tvherror("vfs fileStat malformed response");
   else
-    tvhdebug("fileStat size=%lld", (long long)ret);
+    tvhtrace("vfs stat size=%lld", (long long)ret);
   htsmsg_destroy(m);
 
   return ret;
@@ -222,7 +222,7 @@ bool CHTSPVFS::SendFileOpen ( bool force )
   m = htsmsg_create_map();
   htsmsg_add_str(m, "file", m_path.c_str());
 
-  tvhdebug("fileOpen file=%s", m_path.c_str());
+  tvhdebug("vfs open file=%s", m_path.c_str());
 
   /* Send */
   if (force)
@@ -231,14 +231,14 @@ bool CHTSPVFS::SendFileOpen ( bool force )
     m = m_conn.SendAndWait("fileOpen", m);
   if (m == NULL)
   {
-    tvherror("fileOpen failed");
+    tvherror("vfs fileOpen failed");
     return false;
   }
 
   /* Get ID */
   htsmsg_get_u32(m, "id", &m_fileId);
   htsmsg_destroy(m);
-  tvhdebug("fileOpen success id=%d", m_fileId);
+  tvhtrace("vfs opened id=%d", m_fileId);
 
   /* Log */
   return m_fileId > 0;
@@ -252,7 +252,7 @@ void CHTSPVFS::SendFileClose ( void )
   m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", m_fileId);
 
-  tvhdebug("fileClose id=%d", m_fileId);
+  tvhdebug("vfs close id=%d", m_fileId);
   
   /* Send */
   m = m_conn.SendAndWait("fileClose", m);
@@ -275,7 +275,7 @@ ssize_t CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   else if (whence == SEEK_END)
     htsmsg_add_str(m, "whence", "SEEK_END");
 
-  tvhdebug("fileSeek id=%d whence=%d pos=%lld",
+  tvhtrace("vfs seek id=%d whence=%d pos=%lld",
            m_fileId, whence, (long long)pos);
 
   /* Send */
@@ -285,24 +285,24 @@ ssize_t CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
     m = m_conn.SendAndWait("fileSeek", m);
   if (m == NULL)
   {
-    tvherror("failed to send fileSeek");
+    tvherror("vfs failed to send fileSeek");
     return false;
   }
 
   /* Get new offset */
   if (htsmsg_get_s64(m, "offset", &ret))
-    tvherror("malformed fileSeek response");
+    tvherror("vfs malformed fileSeek response");
   htsmsg_destroy(m);
   
   /* Update */
   if (ret >= 0)
   {
-    tvhdebug("fileSeek offset=%lld", (long long)ret);
+    tvhtrace("vfs seek offset=%lld", (long long)ret);
     m_offset = ret;
     m_buffer.reset();
   }
   else
-    tvherror("fileSeek failed");
+    tvherror("vfs fileSeek failed");
 
   return (ssize_t)ret;
 }

@@ -233,7 +233,7 @@ bool CHTSPConnection::ReadMessage ( void )
   /* Sequence number - response */
   if (htsmsg_get_u32(msg, "seq", &seq) == 0)
   {
-    tvhdebug("received response [%d]", seq);
+    tvhtrace("received response [%d]", seq);
     CLockObject lock(m_mutex);
     map<uint32_t,CHTSPResponse*>::iterator it;
     if ((it = m_messages.find(seq)) != m_messages.end())
@@ -249,10 +249,7 @@ bool CHTSPConnection::ReadMessage ( void )
     tvherror("message without a method");
     goto done;
   }
-  if (!strcmp("muxpkt", method))
-    tvhtrace("receive message [%s]", method);
-  else
-    tvhdebug("receive message [%s]", method);
+  tvhtrace("receive message [%s]", method);
 
   /* Pass */
   tvh->ProcessMessage(method, msg);
@@ -275,9 +272,9 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
   uint32_t seq;
 
   if (!htsmsg_get_u32(msg, "seq", &seq))
-    tvhdebug("sending message [%s : %d]", method, seq);
+    tvhtrace("sending message [%s : %d]", method, seq);
   else
-    tvhdebug("sending message [%s]", method);
+    tvhtrace("sending message [%s]", method);
   htsmsg_add_str(msg, "method", method);
 
   /* Serialise */
@@ -494,6 +491,8 @@ fail:
  */
 void* CHTSPConnection::Process ( void )
 {
+  static bool log = false;
+
   while (!IsStopped())
   {
     CStdString host;
@@ -511,7 +510,11 @@ void* CHTSPConnection::Process ( void )
       if (m_socket)
         delete m_socket;
       tvh->Disconnected();
-      tvhdebug("connecting to %s:%d", host.c_str(), port);
+      if (!log)
+        tvhdebug("connecting to %s:%d", host.c_str(), port);
+      else
+        tvhtrace("connecting to %s:%d", host.c_str(), port);
+      log = true;
       m_socket = new CTcpSocket(host.c_str(), port);
       m_ready  = false;
       m_seq    = 0;
@@ -522,7 +525,7 @@ void* CHTSPConnection::Process ( void )
     }
 
     /* Connect */
-    tvhdebug("waiting for connection...");
+    tvhtrace("waiting for connection...");
     if (!m_socket->Open(timeout * 1000))
     {
       tvherror("failed to connect to server");
@@ -530,6 +533,7 @@ void* CHTSPConnection::Process ( void )
       continue;
     }
     tvhdebug("connected");
+    log = false;
 
     /* Start connect thread */
     m_regThread.CreateThread(true);

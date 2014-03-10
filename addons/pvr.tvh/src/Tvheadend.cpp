@@ -347,6 +347,8 @@ PVR_ERROR CTvheadend::GetRecordingEdl
   /* Build request */
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", atoi(rec.strRecordingId));
+  
+  tvhdebug("dvr get cutpoints id=%s", rec.strRecordingId);
 
   /* Send and Wait */
   if ((m = m_conn.SendAndWait("getDvrCutpoints", m)) == NULL)
@@ -1217,7 +1219,7 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
   /* Update */
   if (update)
   {
-    tvhdebug("event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
+    tvhtrace("event id:%d channel:%d start:%d stop:%d title:%s desc:%s",
              evt.id, evt.channel, (int)evt.start, (int)evt.stop,
              evt.title.c_str(), evt.desc.c_str());
 
@@ -1238,7 +1240,7 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
     tvherror("malformed eventDelete");
     return;
   }
-  tvhdebug("delete event %u", u32);
+  tvhtrace("delete event %u", u32);
   
   /* Erase */
   // TODO: a bit nasty we don't actually know the channelId!

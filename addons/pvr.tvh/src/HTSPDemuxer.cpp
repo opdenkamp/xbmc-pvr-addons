@@ -131,14 +131,14 @@ DemuxPacket *CHTSPDemuxer::Read ( void )
 void CHTSPDemuxer::Flush ( void )
 {
   DemuxPacket *pkt;
-  tvhdebug("demux flush");
+  tvhtrace("demux flush");
   while (m_pktBuffer.Pop(pkt))
     PVR->FreeDemuxPacket(pkt);
 }
 
 void CHTSPDemuxer::Abort ( void )
 {
-  tvhdebug("demux abort");
+  tvhtrace("demux abort");
   CLockObject lock(m_conn.Mutex());
   Abort0();
 }
@@ -180,7 +180,7 @@ bool CHTSPDemuxer::Seek
 
   /* Store */
   *startpts = TVH_TO_DVD_TIME(m_seekTime);
-  tvhtrace("startpts = %lf", *startpts);
+  tvhtrace("demux seek startpts = %lf", *startpts);
 
   return true;
 }
@@ -423,7 +423,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   /* Drop (could be done earlier) */
   if (pkt->iStreamId < 0)
   {
-    tvhdebug("demux drop pkt");
+    tvhtrace("demux drop pkt");
     PVR->FreeDemuxPacket(pkt);
     return;
   }
@@ -591,30 +591,30 @@ void CHTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )
   /* Ignore */
   if (!m) return;
   
-  tvhdebug("demux sourceInfo:");
+  tvhtrace("demux sourceInfo:");
   if ((str = htsmsg_get_str(m, "adapter")) != NULL)
   {
-    tvhdebug("  adapter : %s", str);
+    tvhtrace("  adapter : %s", str);
     m_sourceInfo.si_adapter  = str;
   }
   if ((str = htsmsg_get_str(m, "network")) != NULL)
   {
-    tvhdebug("  network : %s", str);
+    tvhtrace("  network : %s", str);
     m_sourceInfo.si_network  = str;
   }
   if ((str = htsmsg_get_str(m, "mux")) != NULL)
   {
-    tvhdebug("  mux     : %s", str);
+    tvhtrace("  mux     : %s", str);
     m_sourceInfo.si_mux      = str;
   }
   if ((str = htsmsg_get_str(m, "provider")) != NULL)
   {
-    tvhdebug("  provider : %s", str);
+    tvhtrace("  provider : %s", str);
     m_sourceInfo.si_provider = str;
   }
   if ((str = htsmsg_get_str(m, "service")) != NULL)
   {
-    tvhdebug("  service : %s", str);
+    tvhtrace("  service : %s", str);
     m_sourceInfo.si_service  = str;
   }
 }
@@ -639,7 +639,7 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
 {
   uint32_t u32;
   if (!htsmsg_get_u32(m, "speed", &u32))
-    tvhdebug("recv speed %d", u32);
+    tvhtrace("recv speed %d", u32);
 }
 
 void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *_unused(m) )
@@ -649,9 +649,9 @@ void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *_unused(m) )
 void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
 {
   map<int,int>::iterator it;
-  tvhdebug("stream stats:");
+  tvhtrace("stream stats:");
   for (it = m_streamStat.begin(); it != m_streamStat.end(); it++)
-    tvhdebug("stream idx:%d num:%d", it->first, it->second);
+    tvhtrace("stream idx:%d num:%d", it->first, it->second);
 }
 
 void CHTSPDemuxer::ParseSignalStatus ( htsmsg_t *m )
@@ -663,30 +663,30 @@ void CHTSPDemuxer::ParseSignalStatus ( htsmsg_t *m )
   m_signalInfo.Clear();
 
   /* Parse */
-  tvhdebug("signalStatus:");
+  tvhtrace("signalStatus:");
   if ((str = htsmsg_get_str(m, "feStatus")) != NULL)
   {
-    tvhdebug("  status : %s", str);
+    tvhtrace("  status : %s", str);
     m_signalInfo.fe_status = str;
   }
   if (!htsmsg_get_u32(m, "feSNR", &u32))
   {
-    tvhdebug("  snr    : %d", u32);
+    tvhtrace("  snr    : %d", u32);
     m_signalInfo.fe_snr    = u32;
   }
   if (!htsmsg_get_u32(m, "feBER", &u32))
   {
-    tvhdebug("  ber    : %d", u32);
+    tvhtrace("  ber    : %d", u32);
     m_signalInfo.fe_ber    = u32;
   }
   if (!htsmsg_get_u32(m, "feUNC", &u32))
   {
-    tvhdebug("  unc    : %d", u32);
+    tvhtrace("  unc    : %d", u32);
     m_signalInfo.fe_unc    = u32;
   }
   if (!htsmsg_get_u32(m, "feSignal", &u32))
   {
-    tvhdebug("  signal    : %d", u32);
+    tvhtrace("  signal    : %d", u32);
     m_signalInfo.fe_signal = u32;
   }
 }
@@ -695,13 +695,13 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
 {
   uint32_t u32;
   int64_t s64;
-  tvhdebug("timeshiftStatus:");
+  tvhtrace("timeshiftStatus:");
   if (!htsmsg_get_u32(m, "full", &u32))
-    tvhdebug("  full  : %d", u32);
+    tvhtrace("  full  : %d", u32);
   if (!htsmsg_get_s64(m, "start", &s64))
-    tvhdebug("  start : %ld", (long)s64);
+    tvhtrace("  start : %ld", (long)s64);
   if (!htsmsg_get_s64(m, "end", &s64))
-    tvhdebug("  end   : %ld", (long)s64);
+    tvhtrace("  end   : %ld", (long)s64);
   if (!htsmsg_get_s64(m, "shift", &s64))
-    tvhdebug("  shift : %ld", (long)s64);
+    tvhtrace("  shift : %ld", (long)s64);
 }

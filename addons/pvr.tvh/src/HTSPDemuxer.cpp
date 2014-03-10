@@ -216,12 +216,14 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
           sizeof(sig.strAdapterName));
   strncpy(sig.strAdapterStatus, m_signalInfo.fe_status.c_str(),
           sizeof(sig.strAdapterStatus));
+#ifndef OPENELEC_32
   strncpy(sig.strServiceName,   m_sourceInfo.si_service.c_str(),
           sizeof(sig.strServiceName));
   strncpy(sig.strProviderName,  m_sourceInfo.si_provider.c_str(),
           sizeof(sig.strProviderName));
   strncpy(sig.strMuxName,       m_sourceInfo.si_mux.c_str(),
           sizeof(sig.strMuxName));
+#endif
   
   sig.iSNR      = m_signalInfo.fe_snr;
   sig.iSignal   = m_signalInfo.fe_signal;

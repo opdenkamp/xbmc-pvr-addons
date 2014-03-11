@@ -1,3 +1,9 @@
+0.2.0
+ - sane defaults for audio channels (if info not provided by TVH)
+ - add channel icons to recordings
+ - language files updated
+ - minor tweaks
+
 0.1.0
  - better platform compatibility
  - trace debugging is now configurable

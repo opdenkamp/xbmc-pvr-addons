@@ -287,10 +287,15 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
     PVR_RECORDING rec;
     memset(&rec, 0, sizeof(rec));
 
-    /* Channel name */
+    /* Channel name and icon */
     if ((cit = m_channels.find(rit->second.channel)) != m_channels.end())
+    {
       strncpy(rec.strChannelName, cit->second.name.c_str(),
               sizeof(rec.strChannelName));
+      
+      strncpy(rec.strIconPath, cit->second.icon.c_str(),
+              sizeof(rec.strIconPath));
+    }
 
     /* URL ( HTSP < v7 ) */
     // TODO: do I care!

@@ -43,7 +43,6 @@ extern CHelper_libXBMC_codec*         CODEC;
 #define DEFAULT_AUDIO_CODEC      "UNKNOWN"
 #define DEFAULT_RESOLUTION       480
 #define DEFAULT_TRANSCODE        false
-#define TVHTRACE                 1
 
 extern PLATFORM::CMutex          g_mutex;
 extern bool                      m_bCreated;

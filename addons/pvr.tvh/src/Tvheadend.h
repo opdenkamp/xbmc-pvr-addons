@@ -59,11 +59,7 @@ extern "C" {
 #define tvhdebug(...) tvhlog(LOG_DEBUG, ##__VA_ARGS__)
 #define tvhinfo(...)  tvhlog(LOG_INFO,  ##__VA_ARGS__)
 #define tvherror(...) tvhlog(LOG_ERROR, ##__VA_ARGS__)
-#if TVHTRACE
 #define tvhtrace(...) if (g_bTraceDebug) tvhlog(LOG_DEBUG, ##__VA_ARGS__)
-#else
-#define tvhtrace(...) ((void)0)
-#endif
 static inline void tvhlog ( ADDON::addon_log_t lvl, const char *fmt, ... )
 {
   char buf[16384];

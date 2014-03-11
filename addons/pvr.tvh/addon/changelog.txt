@@ -1,2 +1,8 @@
+0.1.0
+ - better platform compatibility
+ - trace debugging is now configurable
+ - added option to receive and handle asynchronous EPG updates
+ - general bugfixes
+
 0.0.1
 - re-implement pvr.hts in a sane way!

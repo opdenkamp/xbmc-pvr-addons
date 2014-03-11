@@ -543,9 +543,9 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
       if (stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
       {
         stream.iChannels
-          = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 0);
+          = htsmsg_get_u32_or_default(&f->hmf_msg, "channels", 2);
         stream.iSampleRate
-          = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 0);
+          = htsmsg_get_u32_or_default(&f->hmf_msg, "rate", 48000);
       }
 
       /* Video */

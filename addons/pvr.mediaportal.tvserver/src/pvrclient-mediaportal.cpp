@@ -1258,7 +1258,7 @@ PVR_ERROR cPVRClientMediaPortal::AddTimer(const PVR_TIMER &timerinfo)
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR cPVRClientMediaPortal::DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
+PVR_ERROR cPVRClientMediaPortal::DeleteTimer(const PVR_TIMER &timer, bool UNUSED(bForceDelete))
 {
   char           command[256];
   string         result;
@@ -1883,7 +1883,7 @@ const char* cPVRClientMediaPortal::GetLiveStreamURL(const PVR_CHANNEL &channelin
   }
 }
 
-void cPVRClientMediaPortal::PauseStream(bool bPaused)
+void cPVRClientMediaPortal::PauseStream(bool UNUSED(bPaused))
 {
   if (m_tsreader)
     m_tsreader->Pause();

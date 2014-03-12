@@ -21,6 +21,7 @@
 
 #include "PidTable.h"
 #include "client.h" //XBMC->Log
+#include "utils.h"
 
 using namespace ADDON;
 
@@ -104,7 +105,7 @@ void CPidTable::Copy(const CPidTable &pids)
 }
 
 
-bool CPidTable::HasTeletextPageInfo(int page)
+bool CPidTable::HasTeletextPageInfo(int UNUSED(page))
 { //MG: todo
   //std::vector<TeletextServiceInfo>::iterator vit = TeletextInfo.begin();
   //while(vit != TeletextInfo.end())

@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include "SectionDecoder.h"
 #include "TSHeader.h"
+#include "utils.h"
 
 using namespace ADDON;
 
@@ -242,7 +243,7 @@ void CSectionDecoder::OnTsPacket(CTsHeader& header,byte* tsPacket)
   }
 }
 
-void CSectionDecoder::OnNewSection(CSection& section)
+void CSectionDecoder::OnNewSection(CSection& UNUSED(section))
 {
 }
 

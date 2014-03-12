@@ -456,7 +456,7 @@ std::string cTimer::UpdateScheduleCommand()
 }
 
 
-int cTimer::XBMC2MepoPriority(int xbmcprio)
+int cTimer::XBMC2MepoPriority(int UNUSED(xbmcprio))
 {
   // From XBMC side: 0.99 where 0=lowest and 99=highest priority (like VDR). Default value: 50
   // Meaning of the MediaPortal field is unknown to me. Default seems to be 0.
@@ -464,7 +464,7 @@ int cTimer::XBMC2MepoPriority(int xbmcprio)
   return 0;
 }
 
-int cTimer::Mepo2XBMCPriority(int mepoprio)
+int cTimer::Mepo2XBMCPriority(int UNUSED(mepoprio))
 {
   return 50; //Default value
 }

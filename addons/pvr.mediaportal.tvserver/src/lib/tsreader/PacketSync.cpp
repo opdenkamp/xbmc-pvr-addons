@@ -20,6 +20,7 @@
  */
 
 #include "PacketSync.h"
+#include "utils.h"
 
 CPacketSync::CPacketSync(void)
 {
@@ -80,6 +81,6 @@ void CPacketSync::OnRawData(byte* pData, int nDataLen)
   m_tempBufferPos = 0 ;
 }
 
-void CPacketSync::OnTsPacket(byte* tsPacket)
+void CPacketSync::OnTsPacket(byte* UNUSED(tsPacket))
 {
 }

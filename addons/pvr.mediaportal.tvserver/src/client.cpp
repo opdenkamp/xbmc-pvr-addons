@@ -156,7 +156,7 @@ bool ADDON_HasSettings()
   return true;
 }
 
-unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet)
+unsigned int ADDON_GetSettings(ADDON_StructSetting*** UNUSED(sSet))
 {
   return 0;
 }
@@ -430,7 +430,7 @@ void ADDON_FreeSettings()
 
 }
 
-void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data)
+void ADDON_Announce(const char* UNUSED(flag), const char* UNUSED(sender), const char* UNUSED(message), const void* UNUSED(data))
 {
 }
 
@@ -485,7 +485,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES *pProperties)
+PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* UNUSED(pProperties))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -547,7 +547,7 @@ PVR_ERROR DialogChannelScan()
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK& UNUSED(menuhook), const PVR_MENUHOOK_DATA& UNUSED(item))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -584,22 +584,22 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
     return g_client->GetChannels(handle, bRadio);
 }
 
-PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel)
+PVR_ERROR DeleteChannel(const PVR_CHANNEL& UNUSED(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR RenameChannel(const PVR_CHANNEL &channel)
+PVR_ERROR RenameChannel(const PVR_CHANNEL& UNUSED(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channelinfo)
+PVR_ERROR DialogChannelSettings(const PVR_CHANNEL& UNUSED(channelinfo))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channelinfo)
+PVR_ERROR DialogAddChannel(const PVR_CHANNEL& UNUSED(channelinfo))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -889,7 +889,7 @@ bool CanSeekStream(void)
 }
 
 /** UNUSED API FUNCTIONS */
-PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR MoveChannel(const PVR_CHANNEL& UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 DemuxPacket* DemuxRead(void) { return NULL; }
 void DemuxAbort(void) {}
 void DemuxReset(void) {}

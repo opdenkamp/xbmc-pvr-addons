@@ -84,9 +84,6 @@ void CPmtParser::OnNewSection(CSection& section)
       pointer += (descriptorLen+2);
     }
     // loop 2
-    int stream_type = 0;
-    short elementary_PID = 0;
-    short ES_info_length = 0;
     vector<TempPid> tempPids;
 
     m_pidInfo.Reset();
@@ -96,9 +93,9 @@ void CPmtParser::OnNewSection(CSection& section)
     while (len1 > 0)
     {
       //if (start+pointer+4>=sectionLen+9) return ;
-      stream_type = section.Data[pointer];
-      elementary_PID = ((section.Data[pointer+1] & 0x1F) << 8) + section.Data[pointer+2];
-      ES_info_length = ((section.Data[pointer+3] & 0xF) << 8) + section.Data[pointer+4];
+      int stream_type = section.Data[pointer];
+      short elementary_PID = ((section.Data[pointer+1] & 0x1F) << 8) + section.Data[pointer+2];
+      short ES_info_length = ((section.Data[pointer+3] & 0xF) << 8) + section.Data[pointer+4];
       XBMC->Log(LOG_DEBUG, "pmt: pid:%x type:%x",elementary_PID, stream_type);
 
       if (stream_type == SERVICE_TYPE_VIDEO_MPEG1

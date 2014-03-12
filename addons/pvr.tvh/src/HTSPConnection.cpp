@@ -528,7 +528,10 @@ void* CHTSPConnection::Process ( void )
     tvhtrace("waiting for connection...");
     if (!m_socket->Open(timeout * 1000))
     {
-      tvherror("failed to connect to server");
+      /* Unable to connect, inform the user and wait until next retry */
+      tvherror("unable to connect to %s:%d", host.c_str(), port);
+      XBMC->QueueNotification(QUEUE_ERROR, "Unable to connect to %s:%d", host.c_str(), port);
+      
       Sleep(500); // TODO: Re-try period
       continue;
     }

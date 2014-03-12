@@ -53,6 +53,8 @@ extern "C" {
  * Configuration defines
  */
 #define HTSP_API_VERSION  12
+#define FAST_RECONNECT_TRIES 5
+#define FAST_RECONNECT_INTERVAL 500 // ms
 
 /*
  * Log wrappers

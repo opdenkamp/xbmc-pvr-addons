@@ -354,6 +354,9 @@ const char *GetConnectionString(void)
 
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 {
+  if (!tvh->WaitForConnection())
+    return PVR_ERROR_SERVER_TIMEOUT;
+  
   return tvh->GetDriveSpace(iTotal, iUsed);
 }
 

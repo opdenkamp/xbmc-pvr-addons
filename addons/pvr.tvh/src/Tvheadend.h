@@ -33,6 +33,7 @@
 #include "HTSPTypes.h"
 #include <map>
 #include <cstdarg>
+#include <stdexcept>
 
 extern "C" {
 #include <sys/types.h>
@@ -70,6 +71,14 @@ static inline void tvhlog ( ADDON::addon_log_t lvl, const char *fmt, ... )
   va_end(va);
   XBMC->Log(lvl, buf);
 }
+
+/*
+ * Exceptions
+ */
+class AuthException : public std::runtime_error {
+public:
+  AuthException(const std::string &m) : std::runtime_error(m) { }
+};
 
 /*
  * Forward decleration of classes
@@ -155,7 +164,7 @@ private:
   void        Register         ( void );
   bool        ReadMessage      ( void );
   bool        SendHello        ( void );
-  bool        SendAuth         ( const CStdString &u, const CStdString &p );
+  void        SendAuth         ( const CStdString &u, const CStdString &p );
 
   PLATFORM::CTcpSocket               *m_socket;
   PLATFORM::CMutex                    m_mutex;

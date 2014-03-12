@@ -406,7 +406,7 @@ bool CHTSPConnection::SendHello ( void )
   return true;
 }
 
-bool CHTSPConnection::SendAuth
+void CHTSPConnection::SendAuth
   ( const CStdString &user, const CStdString &pass )
 {
   htsmsg_t *msg = htsmsg_create_map();
@@ -425,20 +425,12 @@ bool CHTSPConnection::SendAuth
   free(sha);
 
   /* Send and Wait */
-  if (!(msg = SendAndWait0("authenticate", msg))) 
-  {
-    tvherror("auth response not received");
-    return false;
-  }
+  if (!(msg = SendAndWait0("authenticate", msg)))
+    throw new AuthException("No auth response receieved");
 
   /* Auth denied */
   if (htsmsg_get_u32_or_default(msg, "noaccess", 0) != 0)
-  {
-    tvherror("auth denied");
-    return false;
-  }
-
-  return true;
+    throw new AuthException("Invalid username or password");
 }
 
 /**
@@ -464,8 +456,15 @@ void CHTSPConnection::Register ( void )
 
     /* Send Auth */
     tvhdebug("sending auth");
-    if (!SendAuth(user, pass)) {
-      tvherror("failed to send auth");
+    
+    try
+    {
+      SendAuth(user, pass);
+    }
+    catch (AuthException *e)
+    {
+      XBMC->QueueNotification(QUEUE_ERROR, "Authenication failed: %s", e->what());
+      tvherror("Authenication failed: %s", e->what());
       goto fail;
     }
 

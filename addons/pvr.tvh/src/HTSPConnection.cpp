@@ -310,8 +310,11 @@ bool CHTSPConnection::SendMessage ( const char *method, htsmsg_t *msg )
 /*
  * Send a message and wait for response
  */
-htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg )
+htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
+  if (iResponseTimeout == -1)
+    iResponseTimeout = g_iResponseTimeout;
+  
   uint32_t seq;
 
   /* Add Sequence number */
@@ -329,7 +332,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg )
   }
 
   /* Wait for response */
-  msg = resp.Get(m_mutex, g_iResponseTimeout * 1000);
+  msg = resp.Get(m_mutex, iResponseTimeout * 1000);
   m_messages.erase(seq);
   if (!msg)
   {
@@ -343,11 +346,14 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg )
 /*
  * Send and wait for response
  */
-htsmsg_t *CHTSPConnection::SendAndWait ( const char *method, htsmsg_t *msg )
+htsmsg_t *CHTSPConnection::SendAndWait ( const char *method, htsmsg_t *msg, int iResponseTimeout )
 {
+  if (iResponseTimeout == -1)
+    iResponseTimeout = g_iResponseTimeout;
+  
   if (!WaitForConnection())
     return false;
-  return SendAndWait0(method, msg);
+  return SendAndWait0(method, msg, iResponseTimeout);
 }
 
 bool CHTSPConnection::SendHello ( void )

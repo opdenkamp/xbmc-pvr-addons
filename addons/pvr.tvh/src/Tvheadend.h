@@ -145,9 +145,9 @@ public:
   void Disconnect  ( void );
   
   bool      SendMessage0    ( const char *method, htsmsg_t *m );
-  htsmsg_t *SendAndWait0    ( const char *method, htsmsg_t *m );
+  htsmsg_t *SendAndWait0    ( const char *method, htsmsg_t *m, int iResponseTimeout = -1);
   bool      SendMessage     ( const char *method, htsmsg_t *m );
-  htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m );
+  htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m, int iResponseTimeout = -1 );
 
   int         GetProtocol      ( void ) { return m_htspVersion; }
 

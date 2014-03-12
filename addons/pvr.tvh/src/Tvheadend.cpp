@@ -204,17 +204,17 @@ PVR_ERROR CTvheadend::SendDvrDelete ( uint32_t id, const char *method )
   htsmsg_t *m = htsmsg_create_map();
   htsmsg_add_u32(m, "id", id);
 
-  /* Send and Wait */
-  if ((m = m_conn.SendAndWait(method, m)) == NULL)
+  /* Send and wait a bit longer than usual */
+  if ((m = m_conn.SendAndWait(method, m, 30)) == NULL)
   {
-    tvherror("failed to cancel DVR entry");
+    tvherror("failed to cancel/delete DVR entry");
     return PVR_ERROR_SERVER_ERROR;
   }
 
   /* Check for error */
   if ((str = htsmsg_get_str(m, "error")) != NULL)
   {
-    tvherror("failed to cancel DVR entry [%s]", str);
+    tvherror("failed to cancel/delete DVR entry [%s]", str);
   }
   else if (htsmsg_get_u32(m, "success", &u32))
   {

@@ -35,6 +35,8 @@ if ((x) != (y))\
   update = true;\
 }
 
+#define UNNUMBERED_CHANNELNUMBER 1000
+
 using namespace std;
 using namespace ADDON;
 using namespace PLATFORM;
@@ -958,7 +960,10 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
 
   /* Channel number */
   if (!htsmsg_get_u32(msg, "channelNumber", &u32))
+  {
+    u32 = u32 > 0 ? u32 : u32 + UNNUMBERED_CHANNELNUMBER;
     UPDATE(channel.num, u32);
+  }
 
   /* Channel icon */
   if ((str = htsmsg_get_str(msg, "channelIcon")) != NULL)

@@ -52,9 +52,10 @@ extern "C" {
 /*
  * Configuration defines
  */
-#define HTSP_API_VERSION  12
-#define FAST_RECONNECT_ATTEMPTS 5
-#define FAST_RECONNECT_INTERVAL 500 // ms
+#define HTSP_API_VERSION           (12)
+#define FAST_RECONNECT_ATTEMPTS     (5)
+#define FAST_RECONNECT_INTERVAL   (500) // ms
+#define UNNUMBERED_CHANNEL      (10000)
 
 /*
  * Log wrappers

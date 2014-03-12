@@ -11,7 +11,6 @@ namespace OS
   {
     OSVERSIONINFOEX osvi;
     SYSTEM_INFO si;
-    PGNSI GetNativeSystemInfo;
     BOOL bOsVersionInfoEx;
 
     ZeroMemory(&si, sizeof(SYSTEM_INFO));
@@ -27,6 +26,7 @@ namespace OS
 
     if (NULL != kernel32_dll)
     {
+      PGNSI GetNativeSystemInfo;
       GetNativeSystemInfo = (PGNSI) GetProcAddress( kernel32_dll, "GetNativeSystemInfo");
       if (NULL != GetNativeSystemInfo)
         GetNativeSystemInfo(&si);

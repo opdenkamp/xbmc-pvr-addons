@@ -33,6 +33,7 @@
  */
 
 #include "DeMultiplexer.h"
+#include "utils.h" //UNUSED()
 #include "client.h" //XBMC->Log()
 #include "TSReader.h"
 
@@ -241,7 +242,7 @@ void CDeMultiplexer::RequestNewPat(void)
 /// In this method we check if any audio/video/subtitle pid or format has changed
 /// If not, we simply return
 /// If something has changed we ask the MP to rebuild the graph
-void CDeMultiplexer::OnNewChannel(CChannelInfo& info)
+void CDeMultiplexer::OnNewChannel(CChannelInfo& UNUSED(info))
 {
   m_bGotNewChannel = true;
 }

@@ -182,7 +182,11 @@ bool Socket::accept ( Socket& new_socket ) const
   socklen_t addr_length = sizeof( _sockaddr );
   new_socket._sd = ::accept(_sd, const_cast<sockaddr*>( (const sockaddr*) &_sockaddr), &addr_length );
 
+#ifdef TARGET_WINDOWS
+  if (new_socket._sd == INVALID_SOCKET)
+#else
   if (new_socket._sd <= 0)
+#endif
   {
     errormessage( getLastError(), "Socket::accept" );
     return false;
@@ -295,19 +299,18 @@ bool Socket::ReadLine (string& line)
 {
   fd_set         set_r, set_e;
   timeval        timeout;
-  int            result;
   int            retries = 6;
   char           buffer[2048];
-  size_t         pos1 = 0;
 
   if (!is_valid())
     return false;
 
   while (true)
   {
-    if ((pos1 = line.find("\r\n", 0)) != std::string::npos)
+    size_t pos1 = line.find("\r\n", 0);
+    if (pos1 != std::string::npos)
     {
-      line.erase(pos1,  string::npos);
+      line.erase(pos1, string::npos);
       return true;
     }
 
@@ -319,7 +322,7 @@ bool Socket::ReadLine (string& line)
     FD_ZERO(&set_e);
     FD_SET(_sd, &set_r);
     FD_SET(_sd, &set_e);
-    result = select(FD_SETSIZE, &set_r, NULL, &set_e, &timeout);
+    int result = select(FD_SETSIZE, &set_r, NULL, &set_e, &timeout);
 
     if (result < 0)
     {
@@ -378,9 +381,7 @@ int Socket::receive ( std::string& data) const
 
 int Socket::receive ( char* data, const unsigned int buffersize, const unsigned int minpacketsize ) const
 {
-
   unsigned int receivedsize = 0;
-  int status = 0;
 
   if ( !is_valid() )
   {
@@ -389,7 +390,7 @@ int Socket::receive ( char* data, const unsigned int buffersize, const unsigned 
 
   while ( (receivedsize <= minpacketsize) && (receivedsize < buffersize) )
   {
-    status = ::recv(_sd, data+receivedsize, (buffersize - receivedsize), 0 );
+    int status = ::recv(_sd, data+receivedsize, (buffersize - receivedsize), 0 );
 
     if ( status == SOCKET_ERROR )
     {

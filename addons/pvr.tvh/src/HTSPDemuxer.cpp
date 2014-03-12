@@ -644,8 +644,17 @@ void CHTSPDemuxer::ParseSubscriptionSpeed ( htsmsg_t *m )
     tvhtrace("recv speed %d", u32);
 }
 
-void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *_unused(m) )
+void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *m )
 {
+  const char *status;
+  status = htsmsg_get_str(m, "status");
+
+  // this field is absent when everything is fine
+  if (status != NULL)
+  {
+    tvhinfo("Bad subscription status: %s", status);
+    XBMC->QueueNotification(QUEUE_INFO, status);
+  }
 }
 
 void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )

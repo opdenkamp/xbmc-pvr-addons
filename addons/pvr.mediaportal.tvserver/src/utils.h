@@ -27,13 +27,11 @@
 #include "windows/WindowsUtils.h"
 #endif
 
-using namespace std;
-
 /**
  * String tokenize
  * Split string using the given delimiter into a vector of substrings
  */
-void Tokenize(const string& str, vector<string>& tokens, const string& delimiters);
+void Tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters);
 
 std::wstring StringToWString(const std::string& s);
 std::string WStringToString(const std::wstring& s);

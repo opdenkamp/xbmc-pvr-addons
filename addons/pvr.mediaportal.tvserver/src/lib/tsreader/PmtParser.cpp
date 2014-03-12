@@ -25,6 +25,7 @@
 #include "ChannelInfo.h"
 #include <cassert>
 
+using namespace std;
 using namespace ADDON;
 
 CPmtParser::CPmtParser()

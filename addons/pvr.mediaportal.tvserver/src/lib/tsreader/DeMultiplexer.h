@@ -39,7 +39,6 @@
 #include "PatParser.h"
 #include "platform/threads/mutex.h"
 
-using namespace std;
 class CTsReader;
 
 class CDeMultiplexer : public CPacketSync, public IPatParserCallback

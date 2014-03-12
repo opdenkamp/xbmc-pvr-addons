@@ -2,6 +2,7 @@
 #include "client.h" 
 #include <iostream> 
 #include <fstream> 
+#include <string>
 #include "tinyxml/XMLUtils.h"
 
 
@@ -168,428 +169,6 @@ void Vu::TimerUpdates()
   }
 }
 
-bool Vu::CheckForChannelUpdate() 
-{
-  if (!g_bCheckForChannelUpdates)
-    return false;
-
-  m_bUpdating = true;
-
-  std::vector<VuChannel> oldchannels = m_channels;
-
-  LoadChannels();
-
-  for(unsigned int i=0; i< oldchannels.size(); i++)
-    oldchannels[i].iChannelState = VU_UPDATE_STATE_NONE;
-
-  for (unsigned int j=0; j<m_channels.size(); j++)
-  {
-    for (unsigned int i=0; i<oldchannels.size(); i++)
-    {
-      if (!oldchannels[i].strServiceReference.compare(m_channels[j].strServiceReference))
-      {
-        if(oldchannels[i] == m_channels[j])
-        {
-          m_channels[j].iChannelState = VU_UPDATE_STATE_FOUND;
-          oldchannels[i].iChannelState = VU_UPDATE_STATE_FOUND;
-        }
-        else
-        {
-          oldchannels[i].iChannelState = VU_UPDATE_STATE_UPDATED;
-          m_channels[j].iChannelState = VU_UPDATE_STATE_UPDATED;
-        }
-      }
-    }
-  }
-  
-  int iNewChannels = 0; 
-  for (unsigned int i=0; i<m_channels.size(); i++) 
-  {
-    if (m_channels[i].iChannelState == VU_UPDATE_STATE_NEW)
-      iNewChannels++;
-  }
-
-  int iRemovedChannels = 0;
-  int iNotUpdatedChannels = 0;
-  int iUpdatedChannels = 0;
-  for (unsigned int i=0; i<oldchannels.size(); i++) 
-  {
-    if(oldchannels[i].iChannelState == VU_UPDATE_STATE_NONE)
-      iRemovedChannels++;
-    
-    if(oldchannels[i].iChannelState == VU_UPDATE_STATE_FOUND)
-      iNotUpdatedChannels++;  
-
-    if(oldchannels[i].iChannelState == VU_UPDATE_STATE_UPDATED)
-      iUpdatedChannels++;
-  }
-
-  XBMC->Log(LOG_INFO, "%s No of channels: removed [%d], untouched [%d], updated '%d', new '%d'", __FUNCTION__, iRemovedChannels, iNotUpdatedChannels, iUpdatedChannels, iNewChannels); 
-
-  m_bUpdating = false;
-
-  if ((iRemovedChannels > 0) || (iUpdatedChannels > 0) || (iNewChannels > 0))
-  {
-    //Channels have been changed, so return "true"
-    return true;
-  }
-  else 
-  {
-    m_channels = oldchannels;
-    return false;
-  }
-}
-
-bool Vu::CheckForGroupUpdate() 
-{
-  if (!g_bCheckForGroupUpdates)
-    return false;
- 
-  m_bUpdating = true;
-
-  std::vector<VuChannelGroup> m_oldgroups = m_groups;
-
-  m_groups.clear();
-  LoadChannelGroups();
-
-  for (unsigned int i=0; i<m_oldgroups.size(); i++)
-    m_oldgroups[i].iGroupState = VU_UPDATE_STATE_NONE;
-
-  // Now compare the old group with the new one
-  for (unsigned int j=0; j<m_groups.size(); j++) 
-  {
-    for(unsigned int i=0;i<m_oldgroups.size(); i++) 
-    {
-      // we find the same service reference for the just fetched
-      // groups in the oldgroups, therefore this is either an name 
-      // update or just a persisting group
-      if (!m_oldgroups[i].strServiceReference.compare(m_groups[j].strServiceReference)) 
-      {
-        if (m_oldgroups[i] == m_groups[j]) 
-        {
-          m_groups[j].iGroupState = VU_UPDATE_STATE_FOUND;
-          m_oldgroups[i].iGroupState = VU_UPDATE_STATE_FOUND;
-        }
-        else 
-        {
-          m_oldgroups[i].iGroupState = VU_UPDATE_STATE_UPDATED;
-          m_groups[j].iGroupState = VU_UPDATE_STATE_UPDATED;
-        }
-      }
-    }
-  }
-
-  int iNewGroups = 0; 
-  for (unsigned int i=0; i<m_groups.size(); i++) 
-  {
-    if (m_groups[i].iGroupState == VU_UPDATE_STATE_NEW)
-      iNewGroups++;
-  }
-
-  int iRemovedGroups = 0;
-  int iNotUpdatedGroups = 0;
-  int iUpdatedGroups = 0;
-  for (unsigned int i=0; i<m_oldgroups.size(); i++) 
-  {
-    if(m_oldgroups[i].iGroupState == VU_UPDATE_STATE_NONE)
-      iRemovedGroups++;
-    
-    if(m_oldgroups[i].iGroupState == VU_UPDATE_STATE_FOUND)
-      iNotUpdatedGroups++;  
-
-    if(m_oldgroups[i].iGroupState == VU_UPDATE_STATE_UPDATED)
-      iUpdatedGroups++;
-  }
-
-  XBMC->Log(LOG_INFO, "%s No of groups: removed [%d], untouched [%d], updated '%d', new '%d'", __FUNCTION__, iRemovedGroups, iNotUpdatedGroups, iUpdatedGroups, iNewGroups); 
-
-  m_bUpdating = false;
-
-
-  if ((iRemovedGroups > 0) || (iUpdatedGroups > 0) || (iNewGroups > 0))
-  {
-    // groups have been changed, so return "true"
-    return true;
-  }
-  else 
-  {
-    m_groups = m_oldgroups;
-    return false;
-  }
-}
-
-void Vu::LoadChannelData()
-{
-  m_bUpdating = true;
-  XBMC->Log(LOG_DEBUG, "%s Load channel data from file: '%schanneldata.xml'", __FUNCTION__, g_strChannelDataPath.c_str());
-
-  CStdString strFileName;
-  strFileName.Format("%schanneldata.xml", g_strChannelDataPath.c_str());
-  
-  TiXmlDocument xmlDoc;
-  if (!xmlDoc.LoadFile(strFileName))
-  {
-    XBMC->Log(LOG_DEBUG, "Unable to parse XML: %s at line %d", xmlDoc.ErrorDesc(), xmlDoc.ErrorRow());
-    m_bUpdating = false;
-    return;
-  }
-
-  XBMC->Log(LOG_DEBUG, "%s Parsing channel data.", __FUNCTION__);
-
-  TiXmlHandle hDoc(&xmlDoc);
-  TiXmlElement* pElem;
-  TiXmlHandle hRoot(0);
-
-  pElem = hDoc.FirstChildElement().Element();
-  
-  if (!pElem)
-  {
-    XBMC->Log(LOG_DEBUG, "%s Could not find root element", __FUNCTION__);
-    m_bUpdating = false;
-    return;
-  }
-
-  hRoot = TiXmlHandle(pElem);
-
-  pElem = hRoot.FirstChild("version").Element();
-
-  if (!pElem)
-  {
-    XBMC->Log(LOG_DEBUG, "%s Could not find <version> element", __FUNCTION__);
-    m_bUpdating = false;
-    return;
-  }
-
-  // Check for the correct channeldata version
-  int iVersion = atoi(pElem->GetText());
-  
-  XBMC->Log(LOG_DEBUG, "%s Found channeldata version: '%d', current channeldata version: '%d'", __FUNCTION__, iVersion, CHANNELDATAVERSION);
-
-  if (iVersion != CHANNELDATAVERSION) 
-  {
-    XBMC->Log(LOG_NOTICE, "%s The channeldata versions do not match, we will abort loading the data from the HDD.", __FUNCTION__);
-    m_bUpdating = false;
-    return;
-  }
-
-  // Get the grouplist
-  pElem = hRoot.FirstChild("grouplist").Element(); 
-  
-  if (!pElem)
-  {
-    XBMC->Log(LOG_DEBUG, "%s Could not find <grouplist> element", __FUNCTION__);
-    m_bUpdating = false;
-    return;
-  }
-
-  TiXmlElement* pNode = pElem->FirstChildElement("group");
-
-  if (!pNode)
-  {
-    XBMC->Log(LOG_DEBUG, "Could not find <group> element");
-    m_bUpdating = false;
-    return;
-  }
-
-  for (; pNode != NULL; pNode = pNode->NextSiblingElement("group"))
-  {
-    CStdString strTmp;
-
-    VuChannelGroup group; 
-    
-    if (!XMLUtils::GetString(pNode, "servicereference", strTmp))
-      continue;
-
-    group.strServiceReference = strTmp.c_str();
-    
-    if (!XMLUtils::GetString(pNode, "groupname", strTmp))
-      continue;
-
-    group.strGroupName = strTmp.c_str();
-
-    m_groups.push_back(group);
-
-    XBMC->Log(LOG_DEBUG, "%s Loaded group '%s' from HDD", __FUNCTION__, group.strGroupName.c_str());
-  }
-
-  // Get the channellist
-  pElem = hRoot.FirstChild("channellist").Element();
-
-  if (!pElem)
-  {
-    XBMC->Log(LOG_DEBUG, "%s Could not find <channellist> element", __FUNCTION__);
-    m_bUpdating = false;
-    return;
-  }
-  
-  pNode = pElem->FirstChildElement("channel");
-
-  if (!pNode)
-  {
-    XBMC->Log(LOG_DEBUG, "Could not find <channel> element");
-    m_bUpdating = false;
-    return;
-  }
-
-  for (; pNode != NULL; pNode = pNode->NextSiblingElement("channel"))
-  {
-    CStdString strTmp;
-    bool bTmp;
-    int iTmp;
-
-    VuChannel channel; 
-    
-    if (XMLUtils::GetBoolean(pNode, "radio", bTmp)) 
-	{
-      channel.bRadio = bTmp;
-    }
-
-    if (!XMLUtils::GetInt(pNode, "id", iTmp))
-      continue;
-    channel.iUniqueId = iTmp;
-
-    if (!XMLUtils::GetInt(pNode, "channelnumber", iTmp))
-      continue;
-    channel.iChannelNumber = iTmp;
-
-    if (!XMLUtils::GetString(pNode, "groupname", strTmp))
-      continue;
-    channel.strGroupName = strTmp.c_str();
-
-    if (!XMLUtils::GetString(pNode, "channelname", strTmp))
-      continue;
-    channel.strChannelName = strTmp.c_str();
-
-    if (!XMLUtils::GetString(pNode, "servicereference", strTmp))
-      continue;
-
-    channel.strServiceReference = strTmp.c_str();
-     
-    if (!XMLUtils::GetString(pNode, "streamurl", strTmp))
-      continue;
-    channel.strStreamURL = strTmp.c_str();
-
-    if (!XMLUtils::GetString(pNode, "iconpath", strTmp))
-      continue;
-    channel.strIconPath = strTmp.c_str();
-
-    m_channels.push_back(channel);
-
-    XBMC->Log(LOG_DEBUG, "%s Loaded channel '%s' from HDD", __FUNCTION__, channel.strChannelName.c_str());
-  }
-  m_bUpdating = false;
-}
-
-void Vu::StoreChannelData()
-{
-  XBMC->Log(LOG_DEBUG, "%s Store channel data into file: '%schanneldata.xml'", __FUNCTION__, g_strChannelDataPath.c_str());
-
-  std::ofstream stream;
-  
-  CStdString strFileName;
-  strFileName.Format("%schanneldata.xml", g_strChannelDataPath.c_str());
-  stream.open(strFileName.c_str());
-
-  if(stream.fail())
-    XBMC->Log(LOG_ERROR, "%s Could not open channeldata file for writing!", __FUNCTION__);
-
-  stream << "<channeldata>\n";
-  stream << "\t<version>" << CHANNELDATAVERSION;
-  stream << "</version>\n";
-  stream << "\t<grouplist>\n";
-  for (unsigned int iGroupPtr = 0; iGroupPtr < m_groups.size(); iGroupPtr++)
-  {
-    VuChannelGroup &group = m_groups.at(iGroupPtr);
-    stream << "\t\t<group>\n";
-
-    CStdString strTmp = group.strServiceReference;
-    Escape(strTmp, "&", "&amp;");
-    Escape(strTmp, "<", "&lt;");
-    Escape(strTmp, ">", "&gt;");
-
-    stream << "\t\t\t<servicereference>" << strTmp;
-    stream << "</servicereference>\n";
-    
-    strTmp = group.strGroupName;
-    Escape(strTmp, "&", "&quot;");
-    Escape(strTmp, "<", "&lt;");
-    Escape(strTmp, ">", "&gt;");
-
-    stream << "\t\t\t<groupname>" << strTmp;
-    stream << "</groupname>\n";
-    stream << "\t\t</group>\n";
-  }
-
-  stream << "\t</grouplist>\n";
-    
-  stream << "\t<channellist>\n";
-  for (unsigned int iChannelPtr = 0; iChannelPtr < m_channels.size(); iChannelPtr++)
-  {
-    stream << "\t\t<channel>\n";
-    VuChannel &channel = m_channels.at(iChannelPtr);
-
-    // store channel properties
-    stream << "\t\t\t<radio>";
-    if (channel.bRadio)
-      stream << "true";
-    else
-      stream << "false";
-    stream << "</radio>\n";
-
-    stream << "\t\t\t<id>" << channel.iUniqueId;
-    stream << "</id>\n";
-    stream << "\t\t\t<channelnumber>" << channel.iChannelNumber;
-    stream << "</channelnumber>\n";
-    
-    CStdString strTmp = channel.strGroupName;
-    Escape(strTmp, "&", "&quot;");
-    Escape(strTmp, "<", "&lt;");
-    Escape(strTmp, ">", "&gt;");
-
-    stream << "\t\t\t<groupname>" << strTmp;
-    stream << "</groupname>\n";
-    
-    strTmp = channel.strChannelName;
-    Escape(strTmp, "&", "&quot;");
-    Escape(strTmp, "<", "&lt;");
-    Escape(strTmp, ">", "&gt;");
-
-    stream << "\t\t\t<channelname>" << strTmp;
-    stream << "</channelname>\n";
-
-    strTmp = channel.strServiceReference;
-    Escape(strTmp, "&", "&quot;");
-    Escape(strTmp, "<", "&lt;");
-    Escape(strTmp, ">", "&gt;");
-
-    stream << "\t\t\t<servicereference>" << strTmp;
-    stream << "</servicereference>\n";
-
-    strTmp =  channel.strStreamURL;
-    Escape(strTmp, "&", "&quot;");
-    Escape(strTmp, "<", "&lt;");
-    Escape(strTmp, ">", "&gt;");
-
-    stream << "\t\t\t<streamurl>" << strTmp;
-    stream << "</streamurl>\n";
-
-    strTmp = channel.strIconPath;
-    Escape(strTmp, "&", "&quot;");
-    Escape(strTmp, "<", "&lt;");
-    Escape(strTmp, ">", "&gt;");
-
-
-    stream << "\t\t\t<iconpath>" << strTmp;
-    stream << "</iconpath>\n";
- 
-    stream << "\t\t</channel>\n";
-
-  }
-  stream << "\t</channellist>\n";
-  stream << "</channeldata>\n";
-  stream.close();
-}
-
 Vu::Vu() 
 {
   m_bIsConnected = false;
@@ -598,17 +177,31 @@ Vu::Vu()
 
   // simply add user@pass in front of the URL if username/password is set
   if ((g_strUsername.length() > 0) && (g_strPassword.length() > 0))
+  {
     strURL.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
-  strURL.Format("http://%s%s:%u/", strURL.c_str(), g_strHostname.c_str(), g_iPortWeb);
+  }
+  
+  if (!g_bUseSecureHTTP)
+    strURL.Format("http://%s%s:%u/", strURL.c_str(), g_strHostname.c_str(), g_iPortWeb);
+  else
+    strURL.Format("https://%s%s:%u/", strURL.c_str(), g_strHostname.c_str(), g_iPortWeb);
+  
   m_strURL = strURL.c_str();
+
   m_iNumRecordings = 0;
   m_iNumChannelGroups = 0;
   m_iCurrentChannel = -1;
   m_iClientIndexCounter = 1;
-  m_bInitial = false;
-  m_bUpdating = false;
 
+  m_bUpdating = false;
   m_iUpdateTimer = 0;
+  m_bInitialEPG = true;
+
+  std::string initialEPGReady = "special://userdata/addon_data/pvr.vuplus/initialEPGReady";
+  m_writeHandle = XBMC->OpenFileForWrite(initialEPGReady.c_str(), true);
+  XBMC->WriteFile(m_writeHandle, "Y", 1);
+  XBMC->CloseFile(m_writeHandle);
+  
 }
 
 bool Vu::Open()
@@ -619,7 +212,19 @@ bool Vu::Open()
   XBMC->Log(LOG_NOTICE, "%s - Hostname: '%s'", __FUNCTION__, g_strHostname.c_str());
   XBMC->Log(LOG_NOTICE, "%s - WebPort: '%d'", __FUNCTION__, g_iPortWeb);
   XBMC->Log(LOG_NOTICE, "%s - StreamPort: '%d'", __FUNCTION__, g_iPortStream);
+  if (!g_bUseSecureHTTP)
+    XBMC->Log(LOG_NOTICE, "%s Use HTTPS: 'false'", __FUNCTION__);
+  else
+    XBMC->Log(LOG_NOTICE, "%s Use HTTPS: 'true'", __FUNCTION__);
   
+  if ((g_strUsername.length() > 0) && (g_strPassword.length() > 0))
+  {
+    if ((g_strUsername.find("@") != std::string::npos) || (g_strPassword.find("@") != std::string::npos))
+    {
+      XBMC->Log(LOG_ERROR, "%s - You cannot use the '@' character in either the username or the password with this addon. Please change your configuraton!", __FUNCTION__);
+      return false;
+    }
+  } 
   m_bIsConnected = GetDeviceInfo();
 
   if (!m_bIsConnected)
@@ -630,10 +235,8 @@ bool Vu::Open()
 
   LoadLocations();
 
-  LoadChannelData();
   if (m_channels.size() == 0) 
   {
-    XBMC->Log(LOG_DEBUG, "%s No stored channels found, fetch from webapi", __FUNCTION__);
     // Load the TV channels - close connection if no channels are found
     if (!LoadChannelGroups())
       return false;
@@ -641,8 +244,6 @@ bool Vu::Open()
     if (!LoadChannels())
       return false;
 
-    m_bInitial = true;
-    StoreChannelData();
   }
   TimerUpdates();
 
@@ -656,37 +257,49 @@ void  *Vu::Process()
 {
   XBMC->Log(LOG_DEBUG, "%s - starting", __FUNCTION__);
 
+  // Wait for the initial EPG update to complete 
+  bool bwait = true;
+  int cycles = 0;
+
+  while (bwait)
+  {
+    if (cycles == 30)
+      bwait = false;
+
+    cycles++;
+    std::string initialEPGReady = "special://userdata/addon_data/pvr.vuplus/initialEPGReady";
+    m_readHandle = XBMC->OpenFile(initialEPGReady.c_str(), 0);
+    byte buf[1];
+    XBMC->ReadFile(m_readHandle, buf, 1);
+    XBMC->CloseFile(m_readHandle);
+    char buf2[] = { "N" };
+    if (buf[0] == buf2[0])
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Intial EPG update COMPLETE!", __FUNCTION__);
+    }
+    else
+    {
+      XBMC->Log(LOG_DEBUG, "%s - Intial EPG update not completed yet.", __FUNCTION__);
+      Sleep(5 * 1000);
+    }
+  }
+
+  // Trigger "Real" EPG updates 
+  for (unsigned int iChannelPtr = 0; iChannelPtr < m_channels.size(); iChannelPtr++)
+  {
+    XBMC->Log(LOG_DEBUG, "%s - Trigger EPG update for channel '%d'", __FUNCTION__, iChannelPtr);
+    PVR->TriggerEpgUpdate(m_channels.at(iChannelPtr).iUniqueId);
+  }
+
   while(!IsStopped())
   {
     Sleep(5 * 1000);
     m_iUpdateTimer += 5;
 
-    if (((int)m_iUpdateTimer > (g_iUpdateInterval * 60)) || (m_bInitial == false))
+    if ((int)m_iUpdateTimer > (g_iUpdateInterval * 60)) 
     {
       m_iUpdateTimer = 0;
  
-      if (!m_bInitial)
-      {
-        // Load the TV channels
-        bool bTriggerGroupsUpdate = CheckForGroupUpdate();
-        bool bTriggerChannelsUpdate = CheckForChannelUpdate();
-
-        m_bInitial = true;
-
-        if (bTriggerGroupsUpdate) 
-        {
-          PVR->TriggerChannelGroupsUpdate();
-          bTriggerChannelsUpdate = true;
-        }
-
-        if (bTriggerChannelsUpdate) 
-        {
-          PVR->TriggerChannelUpdate();
-          // Store the channel data on HDD
-          StoreChannelData();
-        }
-      }
-    
       // Trigger Timer and Recording updates acording to the addon settings
       CLockObject lock(m_mutex);
       XBMC->Log(LOG_INFO, "%s Perform Updates!", __FUNCTION__);
@@ -705,7 +318,7 @@ void  *Vu::Process()
 
   }
 
-  CLockObject lock(m_mutex);
+  //CLockObject lock(m_mutex);
   m_started.Broadcast();
 
   return NULL;
@@ -861,6 +474,7 @@ bool Vu::LoadChannels(CStdString strServiceReference, CStdString strGroupName)
 
     VuChannel newChannel;
     newChannel.bRadio = bRadio;
+    newChannel.bInitialEPG = true;
     newChannel.strGroupName = strGroupName;
     newChannel.iUniqueId = m_channels.size()+1;
     newChannel.iChannelNumber = m_channels.size()+1;
@@ -907,8 +521,12 @@ bool Vu::LoadChannels(CStdString strServiceReference, CStdString strGroupName)
 
     if ((g_strUsername.length() > 0) && (g_strPassword.length() > 0))
       strTmp.Format("%s:%s@", g_strUsername.c_str(), g_strPassword.c_str());
-
-    strTmp.Format("http://%s%s:%d/%s", strTmp.c_str(), g_strHostname, g_iPortStream, strTmp2.c_str());
+    
+    if (!g_bUseSecureHTTP)
+      strTmp.Format("http://%s%s:%d/%s", strTmp.c_str(), g_strHostname, g_iPortStream, strTmp2.c_str());
+    else
+      strTmp.Format("https://%s%s:%d/%s", strTmp.c_str(), g_strHostname, g_iPortStream, strTmp2.c_str());
+    
     newChannel.strStreamURL = strTmp;
 
     if (g_bOnlinePicons == true)
@@ -933,7 +551,7 @@ bool Vu::IsConnected()
 
 CStdString Vu::GetHttpXML(CStdString& url) 
 {
-  CLockObject lock(m_mutex);
+//  CLockObject lock(m_mutex);
 
   XBMC->Log(LOG_INFO, "%s Open webAPI with URL: '%s'", __FUNCTION__, url.c_str());
 
@@ -994,14 +612,13 @@ PVR_ERROR Vu::GetChannels(ADDON_HANDLE handle, bool bRadio)
       xbmcChannel.iChannelNumber    = channel.iChannelNumber;
       strncpy(xbmcChannel.strChannelName, channel.strChannelName.c_str(), sizeof(xbmcChannel.strChannelName));
       strncpy(xbmcChannel.strInputFormat, "", 0); // unused
+      xbmcChannel.iEncryptionSystem = 0;
+      xbmcChannel.bIsHidden         = false;
+      strncpy(xbmcChannel.strIconPath, channel.strIconPath.c_str(), sizeof(xbmcChannel.strIconPath));
 
       CStdString strStream;
       strStream.Format("pvr://stream/tv/%i.ts", channel.iUniqueId);
       strncpy(xbmcChannel.strStreamURL, strStream.c_str(), sizeof(xbmcChannel.strStreamURL)); 
-      strncpy(xbmcChannel.strIconPath, channel.strIconPath.c_str(), sizeof(xbmcChannel.strIconPath));
-      xbmcChannel.iEncryptionSystem = 0;
-      
-      xbmcChannel.bIsHidden         = false;
 
       PVR->TransferChannelEntry(handle, &xbmcChannel);
     }
@@ -1012,15 +629,175 @@ PVR_ERROR Vu::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 Vu::~Vu() 
 {
-  StoreLastPlayedPositions();
-
+  CLockObject lock(m_mutex);
+  XBMC->Log(LOG_DEBUG, "%s Stopping update thread...", __FUNCTION__);
   StopThread();
   
+  XBMC->Log(LOG_DEBUG, "%s Removing internal channels list...", __FUNCTION__);
   m_channels.clear();  
+  
+  XBMC->Log(LOG_DEBUG, "%s Removing internal timers list...", __FUNCTION__);
   m_timers.clear();
+  
+  XBMC->Log(LOG_DEBUG, "%s Removing internal recordings list...", __FUNCTION__);
   m_recordings.clear();
+  
+  XBMC->Log(LOG_DEBUG, "%s Removing internal group list...", __FUNCTION__);
   m_groups.clear();
   m_bIsConnected = false;
+}
+
+bool Vu::GetInitialEPGForGroup(VuChannelGroup &group)
+{
+  // is the addon is currently updating the channels, then delay the call
+  unsigned int iTimer = 0;
+  while(m_bUpdating == true && iTimer < 120)
+  {
+    Sleep(1000);
+    iTimer++;
+  }
+
+  CStdString url;
+  url.Format("%s%s%s",  m_strURL.c_str(), "web/epgnownext?bRef=",  URLEncodeInline(group.strServiceReference.c_str())); 
+ 
+  CStdString strXML;
+  strXML = GetHttpXML(url);
+
+  int iNumEPG = 0;
+  
+  TiXmlDocument xmlDoc;
+  if (!xmlDoc.Parse(strXML.c_str()))
+  {
+    XBMC->Log(LOG_DEBUG, "Unable to parse XML: %s at line %d", xmlDoc.ErrorDesc(), xmlDoc.ErrorRow());
+    return false;
+  }
+
+  TiXmlHandle hDoc(&xmlDoc);
+  TiXmlElement* pElem;
+  TiXmlHandle hRoot(0);
+
+  pElem = hDoc.FirstChildElement("e2eventlist").Element();
+ 
+  if (!pElem)
+  {
+    XBMC->Log(LOG_DEBUG, "%s could not find <e2eventlist> element!", __FUNCTION__);
+    // Return "NO_ERROR" as the EPG could be empty for this channel
+    return false;
+  }
+
+  hRoot=TiXmlHandle(pElem);
+
+  TiXmlElement* pNode = hRoot.FirstChildElement("e2event").Element();
+
+  if (!pNode)
+  {
+    XBMC->Log(LOG_DEBUG, "Could not find <e2event> element");
+    // RETURN "NO_ERROR" as the EPG could be empty for this channel
+    return false;
+  }
+  
+  for (; pNode != NULL; pNode = pNode->NextSiblingElement("e2event"))
+  {
+    CStdString strTmp;
+
+    int iTmpStart;
+    int iTmp;
+
+    // check and set event starttime and endtimes
+    if (!XMLUtils::GetInt(pNode, "e2eventstart", iTmpStart)) 
+      continue;
+
+    if (!XMLUtils::GetInt(pNode, "e2eventduration", iTmp))
+      continue;
+
+    VuEPGEntry entry;
+    entry.startTime = iTmpStart;
+    entry.endTime = iTmpStart + iTmp;
+
+    if (!XMLUtils::GetInt(pNode, "e2eventid", entry.iEventId))  
+      continue;
+
+    
+    if(!XMLUtils::GetString(pNode, "e2eventtitle", strTmp))
+      continue;
+
+    entry.strTitle = strTmp;
+
+    if(!XMLUtils::GetString(pNode, "e2eventservicereference", strTmp))
+      continue;
+
+    entry.strServiceReference = strTmp;
+    
+    entry.iChannelId = GetChannelNumber(entry.strServiceReference.c_str());
+
+    if (XMLUtils::GetString(pNode, "e2eventdescriptionextended", strTmp))
+      entry.strPlot = strTmp;
+
+    if (XMLUtils::GetString(pNode, "e2eventdescription", strTmp))
+       entry.strPlotOutline = strTmp;
+
+    iNumEPG++; 
+    
+    group.initialEPG.push_back(entry);
+  }
+
+  XBMC->Log(LOG_INFO, "%s Loaded %u EPG Entries for group '%s'", __FUNCTION__, iNumEPG, group.strGroupName.c_str());
+  return true;
+}
+
+PVR_ERROR Vu::GetInitialEPGForChannel(ADDON_HANDLE handle, const VuChannel &channel, time_t iStart, time_t iEnd)
+{
+  if (m_iNumChannelGroups < 1)
+    return PVR_ERROR_SERVER_ERROR;
+
+  XBMC->Log(LOG_DEBUG, "%s Fetch information for group '%s'", __FUNCTION__, channel.strGroupName.c_str());
+
+  VuChannelGroup &myGroup = m_groups.at(0);
+  for (int i = 0;i<m_iNumChannelGroups;  i++) 
+  {
+    myGroup = m_groups.at(i);
+    if (!myGroup.strGroupName.compare(channel.strGroupName))
+      if (myGroup.initialEPG.size() == 0)
+      {
+        GetInitialEPGForGroup(myGroup);
+        break;
+      }
+  }
+
+  XBMC->Log(LOG_DEBUG, "%s initialEPG size is now '%d'", __FUNCTION__, myGroup.initialEPG.size());
+  
+  for (unsigned int i = 0;i<myGroup.initialEPG.size();  i++) 
+  {
+    VuEPGEntry &entry = myGroup.initialEPG.at(i);
+    if (!channel.strServiceReference.compare(entry.strServiceReference)) 
+    {
+      EPG_TAG broadcast;
+      memset(&broadcast, 0, sizeof(EPG_TAG));
+
+      broadcast.iUniqueBroadcastId  = entry.iEventId;
+      broadcast.strTitle            = entry.strTitle.c_str();
+      broadcast.iChannelNumber      = channel.iChannelNumber;
+      broadcast.startTime           = entry.startTime;
+      broadcast.endTime             = entry.endTime;
+      broadcast.strPlotOutline      = entry.strPlotOutline.c_str();
+      broadcast.strPlot             = entry.strPlot.c_str();
+      broadcast.strIconPath         = ""; // unused
+      broadcast.iGenreType          = 0; // unused
+      broadcast.iGenreSubType       = 0; // unused
+      broadcast.strGenreDescription = "";
+      broadcast.firstAired          = 0;  // unused
+      broadcast.iParentalRating     = 0;  // unused
+      broadcast.iStarRating         = 0;  // unused
+      broadcast.bNotify             = false;
+      broadcast.iSeriesNumber       = 0;  // unused
+      broadcast.iEpisodeNumber      = 0;  // unused
+      broadcast.iEpisodePartNumber  = 0;  // unused
+      broadcast.strEpisodeName      = ""; // unused
+
+      PVR->TransferEpgEntry(handle, &broadcast);
+    }
+  }
+  return PVR_ERROR_NO_ERROR;
 }
 
 PVR_ERROR Vu::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
@@ -1041,6 +818,31 @@ PVR_ERROR Vu::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, 
 
   VuChannel myChannel;
   myChannel = m_channels.at(channel.iUniqueId-1);
+
+  // Check if the initial short import has already been done for this channel
+  if (m_channels.at(channel.iUniqueId-1).bInitialEPG == true)
+  {
+    m_channels.at(channel.iUniqueId-1).bInitialEPG = false;
+  
+    // Check if all channels have completed the initial EPG import
+    m_bInitialEPG = false;
+    for (unsigned int iChannelPtr = 0; iChannelPtr < m_channels.size(); iChannelPtr++)
+    {
+      if (m_channels.at(iChannelPtr).bInitialEPG == true) 
+      {
+        m_bInitialEPG = true;
+      }
+    }
+
+    if (!m_bInitialEPG)
+    {
+      std::string initialEPGReady = "special://userdata/addon_data/pvr.vuplus/initialEPGReady";
+      m_writeHandle = XBMC->OpenFileForWrite(initialEPGReady.c_str(), true);
+      XBMC->WriteFile(m_writeHandle, "N", 1);
+      XBMC->CloseFile(m_writeHandle);
+    }
+    return GetInitialEPGForChannel(handle, myChannel, iStart, iEnd);
+  }
 
   CStdString url;
   url.Format("%s%s%s",  m_strURL.c_str(), "web/epgservice?sRef=",  URLEncodeInline(myChannel.strServiceReference.c_str())); 
@@ -1466,9 +1268,6 @@ PVR_ERROR Vu::GetRecordings(ADDON_HANDLE handle)
     iTimer++;
   }
 
-  if (m_iNumRecordings != 0)
-    StoreLastPlayedPositions();
-
   m_iNumRecordings = 0;
   m_recordings.clear();
 
@@ -1481,8 +1280,6 @@ PVR_ERROR Vu::GetRecordings(ADDON_HANDLE handle)
   }
 
   TransferRecordings(handle);
-
-  RestoreLastPlayedPositions();
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -1859,24 +1656,48 @@ void Vu::CloseLiveStream(void)
   m_iCurrentChannel = -1;
 }
 
+int Vu::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
+{
+  return 0;
+}
+
+long long Vu::SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */)
+{
+  return 0;
+}
+
+long long Vu::PositionLiveStream(void)
+{
+  return 0;
+}
+
+long long Vu::LengthLiveStream(void)
+{
+  return 0;
+}
+
 bool Vu::SwitchChannel(const PVR_CHANNEL &channel)
 {
+  XBMC->Log(LOG_DEBUG, "%s Switching channels", __FUNCTION__);
+
   if ((int)channel.iUniqueId == m_iCurrentChannel)
     return true;
 
-  if (!g_bZap)
-    return true;
+  m_iCurrentChannel = (int)channel.iUniqueId;
 
-  // Zapping is set to true, so send the zapping command to the PVR box 
-  CStdString strServiceReference = m_channels.at(channel.iUniqueId-1).strServiceReference.c_str();
+  if (g_bZap)
+  {
+    // Zapping is set to true, so send the zapping command to the PVR box 
+    CStdString strServiceReference = m_channels.at(channel.iUniqueId-1).strServiceReference.c_str();
 
-  CStdString strTmp;
-  strTmp.Format("web/zap?sRef=%s", URLEncodeInline(strServiceReference));
+    CStdString strTmp;
+    strTmp.Format("web/zap?sRef=%s", URLEncodeInline(strServiceReference));
 
-  CStdString strResult;
-  if(!SendSimpleCommand(strTmp, strResult))
-    return false;
-
+    CStdString strResult;
+    if(!SendSimpleCommand(strTmp, strResult))
+      return false;
+  
+  }
   return true;
 }
 
@@ -2023,180 +1844,5 @@ int Vu::GetRecordingIndex(CStdString strStreamURL)
       return i;
   }
   return -1;
-}
-
-PVR_ERROR Vu::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
-{
-  // is the addon is currently updating the channels, then delay the call
-  unsigned int iTimer = 0;
-  while(m_bUpdating == true && iTimer < 120)
-  {
-    Sleep(1000);
-    iTimer++;
-  }
-
-  int iRecordId = GetRecordingIndex(recording.strStreamURL);
-
-  if (iRecordId == -1)
-  {
-    XBMC->Log(LOG_ERROR, "%s Could not set lastplayedposition for recording!", __FUNCTION__);
-    return PVR_ERROR_SERVER_ERROR;
-  }
-
-  m_recordings.at(iRecordId).iLastPlayedPosition = lastplayedposition;
-
-  return PVR_ERROR_NO_ERROR;
-}
-
-bool Vu::SetRecordingLastPlayedPosition(CStdString strStreamURL, int lastplayedposition)
-{
-  // is the addon is currently updating the channels, then delay the call
-  unsigned int iTimer = 0;
-  while(m_bUpdating == true && iTimer < 120)
-  {
-    Sleep(1000);
-    iTimer++;
-  }
-
-  XBMC->Log(LOG_DEBUG, "%s Set lastplayedposition '%d' for recording '%s'", __FUNCTION__, lastplayedposition, strStreamURL.c_str());  
-  int iRecordId = GetRecordingIndex(strStreamURL);
-
-  if (iRecordId == -1)
-  {
-    XBMC->Log(LOG_DEBUG, "%s Could not set lastplayedposition for recording!", __FUNCTION__);
-    return false;
-  }
-
-  m_recordings.at(iRecordId).iLastPlayedPosition = lastplayedposition;
-
-  return PVR_ERROR_NO_ERROR;
-}
-
-int Vu::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
-{
-  // is the addon is currently updating the channels, then delay the call
-  unsigned int iTimer = 0;
-  while(m_bUpdating == true && iTimer < 120)
-  {
-    Sleep(1000);
-    iTimer++;
-  }
-
-  int iRecordId = GetRecordingIndex(recording.strStreamURL);
-
-  if (iRecordId == -1)
-  {
-    XBMC->Log(LOG_ERROR, "%s Could not get lastplayedposition for recording!", __FUNCTION__);
-    return PVR_ERROR_SERVER_ERROR;
-  }
-
-  return m_recordings.at(iRecordId).iLastPlayedPosition;
-}
-
-bool Vu::StoreLastPlayedPositions()
-{
-  std::ofstream stream;
-  
-  CStdString strFileName;
-  strFileName.Format("%srecordings.xml", g_strChannelDataPath.c_str());
-  stream.open(strFileName.c_str());
-
-  if(stream.fail())
-  {
-    return false;
-  }
-
-  stream << "<recordingsdata>\n";
-  stream << "\t<recordingslist>\n";
-  for (unsigned int iRecordingsPtr = 0; iRecordingsPtr < m_recordings.size(); iRecordingsPtr++)
-  {
-    VuRecording &recording = m_recordings.at(iRecordingsPtr);
-    stream << "\t\t<recording>\n";
-
-    CStdString strTmp = recording.strStreamURL;
-    Escape(strTmp, "&", "&amp;");
-    Escape(strTmp, "<", "&lt;");
-    Escape(strTmp, ">", "&gt;");
-
-    stream << "\t\t\t<streamurl>" << strTmp;
-    stream << "</streamurl>\n";
-    
-    int i = recording.iLastPlayedPosition;
-
-    stream << "\t\t\t<lastplayedposition>" << i;
-    stream << "</lastplayedposition>\n";
-    stream << "\t\t</recording>\n";
-  }
-
-  stream << "\t</recordingslist>\n";
-    
-  stream << "</recordingsdata>\n";
-  stream.close();
-
-  return true;
-}
-
-bool Vu::RestoreLastPlayedPositions()
-{
-  XBMC->Log(LOG_DEBUG, "%s Load recording data from file: '%srecordings.xml'", __FUNCTION__, g_strChannelDataPath.c_str());
-
-  CStdString strFileName;
-  strFileName.Format("%srecordings.xml", g_strChannelDataPath.c_str());
-  
-  TiXmlDocument xmlDoc;
-  if (!xmlDoc.LoadFile(strFileName))
-  {
-    XBMC->Log(LOG_DEBUG, "Unable to parse XML: %s at line %d", xmlDoc.ErrorDesc(), xmlDoc.ErrorRow());
-    return false;
-  }
-
-  XBMC->Log(LOG_DEBUG, "%s Parsing recording data.", __FUNCTION__);
-
-  TiXmlHandle hDoc(&xmlDoc);
-  TiXmlElement* pElem;
-  TiXmlHandle hRoot(0);
-
-  pElem = hDoc.FirstChildElement().Element();
-  
-  if (!pElem)
-  {
-    XBMC->Log(LOG_DEBUG, "%s Could not find root element", __FUNCTION__);
-    return false;
-  }
-
-  hRoot = TiXmlHandle(pElem);
-
-  // Get the recordingslist
-  pElem = hRoot.FirstChild("recordingslist").Element(); 
-  
-  if (!pElem)
-  {
-    XBMC->Log(LOG_DEBUG, "%s Could not find <recordingslist> element", __FUNCTION__);
-    return false;
-  }
-
-  TiXmlElement* pNode = pElem->FirstChildElement("recording");
-
-  if (!pNode)
-  {
-    XBMC->Log(LOG_DEBUG, "Could not find <recording> element");
-    return false;
-  }
-
-  for (; pNode != NULL; pNode = pNode->NextSiblingElement("recording"))
-  {
-    CStdString strTmp;
-    int iTmp;
-
-    if (!XMLUtils::GetInt(pNode, "lastplayedposition", iTmp))
-      continue;
-
-    if (!XMLUtils::GetString(pNode, "streamurl", strTmp))
-      continue;
-
-    SetRecordingLastPlayedPosition(strTmp, iTmp);
-  }
-
-  return true;
 }
 

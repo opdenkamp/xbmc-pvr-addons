@@ -938,7 +938,6 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
   bool update = false;
   uint32_t u32;
   const char *str;
-  CStdString cstr;
   htsmsg_t *list;
 
   /* Validate */

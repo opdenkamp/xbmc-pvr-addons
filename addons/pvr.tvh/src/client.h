@@ -58,5 +58,3 @@ extern std::string               g_szUserPath;
 extern std::string               g_szClientPath;
 extern bool                      g_bTraceDebug;
 extern bool                      g_bAsyncEpg;
-
-uint32_t HTSPNextSequenceNumber(void);

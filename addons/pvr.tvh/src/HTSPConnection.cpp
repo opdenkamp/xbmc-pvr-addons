@@ -501,7 +501,7 @@ void* CHTSPConnection::Process ( void )
       CLockObject lock(g_mutex);
       host    = g_strHostname;
       port    = g_iPortHTSP;
-      timeout = g_iConnectTimeout;
+      timeout = g_iConnectTimeout * 1000;
     }
 
     /* Create socket (ensure mutex protection) */
@@ -526,13 +526,13 @@ void* CHTSPConnection::Process ( void )
 
     /* Connect */
     tvhtrace("waiting for connection...");
-    if (!m_socket->Open(timeout * 1000))
+    if (!m_socket->Open(timeout))
     {
       /* Unable to connect, inform the user and wait until next retry */
       tvherror("unable to connect to %s:%d", host.c_str(), port);
       XBMC->QueueNotification(QUEUE_ERROR, "Unable to connect to %s:%d", host.c_str(), port);
       
-      Sleep(500); // TODO: Re-try period
+      Sleep(timeout);
       continue;
     }
     tvhdebug("connected");

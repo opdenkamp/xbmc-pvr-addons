@@ -1,3 +1,11 @@
+0.3.0
+ - improved auth error handling
+ - some improvements to re-connection attempts
+ - delay drive space query until connection up
+ - push unumbered channels to end of list
+ - handle subscriptionStatus for untunable service
+ - increase timeout for deleting recordings to handle FS delays
+
 0.2.0
  - sane defaults for audio channels (if info not provided by TVH)
  - add channel icons to recordings

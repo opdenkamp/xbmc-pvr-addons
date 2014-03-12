@@ -491,7 +491,7 @@ fail:
 void* CHTSPConnection::Process ( void )
 {
   static bool log = false;
-  static unsigned int retryAttempt = 1;
+  static unsigned int retryAttempt = 0;
 
   while (!IsStopped())
   {
@@ -533,21 +533,16 @@ void* CHTSPConnection::Process ( void )
       XBMC->QueueNotification(QUEUE_ERROR, "Unable to connect to %s:%d", host.c_str(), port);
       
       // Retry a few times with a short interval, after that with the default timeout
-      int retryTimeout;
-
-      if (retryAttempt <= FAST_RECONNECT_TRIES)
-        retryTimeout = FAST_RECONNECT_INTERVAL;
+      if (++retryAttempt <= FAST_RECONNECT_ATTEMPTS)
+        Sleep(FAST_RECONNECT_INTERVAL);
       else
-        retryTimeout = timeout;
-
-      Sleep(retryTimeout);
-      ++retryAttempt;
+        Sleep(timeout);
       
       continue;
     }
     tvhdebug("connected");
     log = false;
-    retryAttempt = 1;
+    retryAttempt = 0;
 
     /* Start connect thread */
     m_regThread.CreateThread(true);

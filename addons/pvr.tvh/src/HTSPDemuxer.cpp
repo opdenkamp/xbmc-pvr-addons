@@ -194,11 +194,6 @@ void CHTSPDemuxer::Speed ( int speed )
   SendSpeed();
 }
 
-int CHTSPDemuxer::CurrentId ( void )
-{
-  return -1;
-}
-
 PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *streams )
 {
   CLockObject lock(m_mutex);

@@ -553,12 +553,10 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
       {
         stream.iWidth   = htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0);
         stream.iHeight  = htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0);
-        if ((u32 = htsmsg_get_u32_or_default(&f->hmf_msg, "aspect_den", 0)))
-          stream.fAspect
-            = (float)htsmsg_get_u32_or_default(&f->hmf_msg, "aspect_num", 0)
-            / u32;
-        else
-          stream.fAspect = 0.0;
+        
+        /* Setting aspect ratio to zero will cause XBMC to handle changes in it */
+        stream.fAspect = 0.0f;
+        
         if ((u32 = htsmsg_get_u32_or_default(&f->hmf_msg, "duration", 0)) > 0)
         {
           stream.iFPSScale = u32;

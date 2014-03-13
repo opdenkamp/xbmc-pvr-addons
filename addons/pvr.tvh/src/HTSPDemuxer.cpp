@@ -378,6 +378,7 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   size_t      binlen;
   DemuxPacket *pkt;
   char        _unused(type) = 0;
+  int         iStreamId;
 
   /* Validate fields */
   if (htsmsg_get_u32(m, "stream", &idx) ||
@@ -391,20 +392,18 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   m_streamStat[idx]++;
   
   /* Drop packets for unknown streams */
-  int iStreamId = m_streams.GetStreamId(idx);
-  if (iStreamId = -1)
+  if (-1 == (iStreamId = m_streams.GetStreamId(idx)))
   {
     tvhdebug("Dropped packet with unknown stream index %i", idx);
     return;
   }
   
-  pkt->iStreamId = iStreamId;
-
   /* Allocate buffer */
   if (!(pkt = PVR->AllocateDemuxPacket(binlen)))
     return;
   memcpy(pkt->pData, bin, binlen);
-  pkt->iSize = binlen;
+  pkt->iSize     = binlen;
+  pkt->iStreamId = iStreamId;
 
   /* Duration */
   if (!htsmsg_get_u32(m, "duration", &u32))

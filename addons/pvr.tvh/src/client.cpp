@@ -416,7 +416,7 @@ void SetSpeed(int speed)
 
 int GetCurrentClientChannel(void)
 {
-  return tvh->DemuxCurrentId();
+  return -1; // XBMC doesn't even use this
 }
 
 bool SwitchChannel(const PVR_CHANNEL &channel)

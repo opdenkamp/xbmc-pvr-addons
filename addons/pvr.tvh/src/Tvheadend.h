@@ -434,10 +434,6 @@ public:
   {
     return m_dmx.Speed(speed);
   }
-  int          DemuxCurrentId      ( void )
-  {
-    return m_dmx.CurrentId();
-  }
   PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams )
   {
     return m_dmx.CurrentStreams(streams);

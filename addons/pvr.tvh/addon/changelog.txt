@@ -1,3 +1,8 @@
+0.4.0
+ - optimisation, drop invalid packets sooner
+ - remove GetCurrentClientChannel() implementation, not used in XBMC
+ - workaround for aspect ratio detection in XBMC
+
 0.3.0
  - improved auth error handling
  - some improvements to re-connection attempts

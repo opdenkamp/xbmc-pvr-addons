@@ -293,7 +293,7 @@ extern "C" {
 		pCapabilities->bSupportsRecordings         = true;
 		pCapabilities->bSupportsTimers             = true;
 		pCapabilities->bSupportsTV                 = true;
-		pCapabilities->bSupportsRadio              = false;
+		pCapabilities->bSupportsRadio              = true;
 		pCapabilities->bSupportsChannelGroups      = true;
 		pCapabilities->bHandlesInputStream         = true;
 		pCapabilities->bHandlesDemuxing            = false;

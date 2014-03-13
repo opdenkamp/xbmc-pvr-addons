@@ -148,8 +148,10 @@ PVR_ERROR Pvr2Wmc::GetChannels(ADDON_HANDLE handle, bool bRadio)
 	if (IsServerDown())
 		return PVR_ERROR_SERVER_ERROR;
 
-	vector<CStdString> results = _socketClient.GetVector("GetChannels", true);
-
+	CStdString request;
+	request.Format("GetChannels|%s", bRadio ? "True" : "False");
+	vector<CStdString> results = _socketClient.GetVector(request, true);
+	
 	FOREACH(response, results)
 	{ 
 		PVR_CHANNEL xChannel;

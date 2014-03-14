@@ -54,6 +54,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.dvblink", "..\..\addons
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.wmc", "..\..\addons\pvr.wmc\project\VS2010Express\pvrclient_wmc.vcxproj", "{6834B003-2511-4745-818D-F418E87DD941}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.tvh", "..\..\addons\pvr.tvh\project\VS2010Express\pvrclient_tvh.vcxproj", "{60882C9D-8793-40D9-8D78-BDC50710E648}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -182,6 +184,12 @@ Global
 		{6834B003-2511-4745-818D-F418E87DD941}.Release|Win32.ActiveCfg = Release|Win32
 		{6834B003-2511-4745-818D-F418E87DD941}.Release|Win32.Build.0 = Release|Win32
 		{6834B003-2511-4745-818D-F418E87DD941}.Release|x64.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|Win32.ActiveCfg = Debug|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|Win32.Build.0 = Debug|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|x64.ActiveCfg = Debug|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|Win32.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|Win32.Build.0 = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

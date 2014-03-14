@@ -368,6 +368,15 @@ void cVNSIClient::OsdStatusMessage(const char *Message)
   }
 }
 
+void cVNSIClient::ChannelChange(const cChannel *Channel)
+{
+  cMutexLock lock(&m_msgLock);
+  if (m_isStreaming && m_Streamer)
+  {
+    m_Streamer->RetuneChannel(Channel);
+  }
+}
+
 bool cVNSIClient::processRequest(cRequestPacket* req)
 {
   cMutexLock lock(&m_msgLock);
@@ -652,6 +661,7 @@ bool cVNSIClient::process_EnableStatusInterface()
   bool enabled = m_req->extract_U8();
 
   SetStatusInterface(enabled);
+  SetPriority(1);
 
   m_resp->add_U32(VNSI_RET_OK);
   m_resp->finalise();

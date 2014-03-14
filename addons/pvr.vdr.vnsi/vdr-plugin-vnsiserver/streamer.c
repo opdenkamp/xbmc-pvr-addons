@@ -44,6 +44,7 @@ cLiveStreamer::cLiveStreamer(int clientID, uint8_t timeshift, uint32_t timeout)
  : cThread("cLiveStreamer stream processor")
  , m_ClientID(clientID)
  , m_scanTimeout(timeout)
+ , m_VideoInput(m_Event, m_Mutex, m_IsRetune)
 {
   m_Channel         = NULL;
   m_Socket          = NULL;
@@ -55,6 +56,7 @@ cLiveStreamer::cLiveStreamer(int clientID, uint8_t timeshift, uint32_t timeout)
   m_IFrameSeen      = false;
   m_VideoBuffer     = NULL;
   m_Timeshift       = timeshift;
+  m_IsRetune        = false;
 
   memset(&m_FrontendInfo, 0, sizeof(m_FrontendInfo));
 
@@ -129,6 +131,7 @@ bool cLiveStreamer::Open(int serial)
     if (m_Channel && ((m_Channel->Source() >> 24) == 'V'))
       m_IsMPEGPS = true;
 
+    m_IsRetune = false;
     if (!m_VideoInput.Open(m_Channel, m_Priority, m_VideoBuffer))
     {
       ERRORLOG("Can't switch to channel %i - %s", m_Channel->Number(), m_Channel->Name());
@@ -209,7 +212,17 @@ void cLiveStreamer::Action(void)
     else if (ret == -1)
     {
       // no data
-      usleep(10000);
+      {
+        cMutexLock lock(&m_Mutex);
+        if (m_IsRetune)
+        {
+          m_VideoInput.Close();
+          m_VideoInput.Open(m_Channel, m_Priority, m_VideoBuffer);
+          m_IsRetune = false;
+        }
+        else
+          m_Event.TimedWait(m_Mutex, 10);
+      }
       if(m_last_tick.Elapsed() >= (uint64_t)(m_scanTimeout*1000))
       {
         sendStreamStatus();
@@ -643,4 +656,15 @@ bool cLiveStreamer::SeekTime(int64_t time, uint32_t &serial)
   bool ret = m_Demuxer.SeekTime(time);
   serial = m_Demuxer.GetSerial();
   return ret;
+}
+
+void cLiveStreamer::RetuneChannel(const cChannel *channel)
+{
+  if (m_Channel != channel || !m_VideoInput.IsOpen())
+    return;
+
+  INFOLOG("re-tune to channel %s", m_Channel->Name());
+  cMutexLock lock(&m_Mutex);
+  m_IsRetune = true;
+  m_Event.Broadcast();
 }

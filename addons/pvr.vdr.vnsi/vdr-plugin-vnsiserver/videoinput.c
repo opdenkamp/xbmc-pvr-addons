@@ -67,8 +67,11 @@ void cLiveReceiver::Receive(uchar *Data, int Length)
 
 inline void cLiveReceiver::Activate(bool On)
 {
-  m_VideoInput->Attach(On);
   DEBUGLOG("activate live receiver: %d", On);
+  if (!On)
+  {
+    m_VideoInput->Retune();
+  }
 }
 
 // --- cLivePatFilter ----------------------------------------------------
@@ -387,7 +390,8 @@ void cLivePatFilter::Process(u_short Pid, u_char Tid, const u_char *Data, int Le
 
 // ----------------------------------------------------------------------------
 
-cVideoInput::cVideoInput()
+cVideoInput::cVideoInput(cCondVar &condVar, cMutex &mutex, bool &retune) :
+    m_Event(condVar), m_Mutex(mutex), m_IsRetune(retune)
 {
   m_Device = NULL;;
   m_PatFilter = NULL;
@@ -408,7 +412,7 @@ bool cVideoInput::Open(const cChannel *channel, int priority, cVideoBuffer *vide
   m_VideoBuffer = videoBuffer;
   m_Channel = channel;
   m_Priority = priority;
-  m_Device = cDevice::GetDevice(m_Channel, m_Priority, true);
+  m_Device = cDevice::GetDevice(m_Channel, m_Priority, false);
 
   if (m_Device != NULL)
   {
@@ -423,6 +427,7 @@ bool cVideoInput::Open(const cChannel *channel, int priority, cVideoBuffer *vide
       m_Receiver = new cLiveReceiver(this, m_Channel, m_Priority);
       m_Device->AttachReceiver(m_Receiver0);
       m_Device->AttachFilter(m_PatFilter);
+      m_VideoBuffer->AttachInput(true);
       Start();
       return true;
     }
@@ -484,6 +489,19 @@ void cVideoInput::Close()
       DELETENULL(m_PatFilter);
     }
   }
+  m_Channel = NULL;
+  if (m_VideoBuffer)
+  {
+    m_VideoBuffer->AttachInput(false);
+  }
+}
+
+bool cVideoInput::IsOpen()
+{
+  if (m_Channel)
+    return true;
+  else
+    return false;
 }
 
 cChannel *cVideoInput::PmtChannel()
@@ -521,9 +539,11 @@ inline void cVideoInput::Receive(uchar *data, int length)
   m_VideoBuffer->Put(data, length);
 }
 
-inline void cVideoInput::Attach(bool on)
+void cVideoInput::Retune()
 {
-  m_VideoBuffer->AttachInput(on);
+  cMutexLock lock(&m_Mutex);
+  m_IsRetune = true;
+  m_Event.Broadcast();
 }
 
 void cVideoInput::Action()

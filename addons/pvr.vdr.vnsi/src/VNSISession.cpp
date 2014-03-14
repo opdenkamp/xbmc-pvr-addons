@@ -131,7 +131,8 @@ bool cVNSISession::Login()
     m_version   = ServerVersion;
     m_protocol  = (int)protocol;
 
-    if (m_protocol != VNSI_PROTOCOLVERSION)     throw "Protocol versions do not match";
+    if (m_protocol < VNSI_PROTOCOLVERSION)
+      throw "Protocol versions do not match";
 
     if (m_name.empty())
       XBMC->Log(LOG_NOTICE, "Logged in at '%lu+%i' to '%s' Version: '%s' with protocol version '%d'",

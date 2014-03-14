@@ -77,6 +77,7 @@ protected:
   virtual void TimerChange(const cTimer *Timer, eTimerChange Change);
   virtual void Recording(const cDevice *Device, const char *Name, const char *FileName, bool On);
   virtual void OsdStatusMessage(const char *Message);
+  virtual void ChannelChange(const cChannel *Channel);
 
 public:
 

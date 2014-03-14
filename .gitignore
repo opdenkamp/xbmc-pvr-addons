@@ -61,6 +61,7 @@ addons/*/project/VS2010Express/Debug
 addons/*/project/VS2010Express/Release
 lib/jsoncpp/project/VS2010Express/Debug
 lib/jsoncpp/project/VS2010Express/Release
+addons/*/project/VS2010Express/ipch
 addons/*/addon/*.so
 addons/*/addon/*.dll
 addons/*/addon/addon.xml

@@ -1,3 +1,6 @@
+0.2.94
+- Add support for Radio Channels
+
 0.2.93
 - Implements channel groups
 - Improve handling of connection problems and incorrectly formatted messages

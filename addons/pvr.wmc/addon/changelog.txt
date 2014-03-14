@@ -1,0 +1,37 @@
+0.2.93
+- Implements channel groups
+- Improve handling of connection problems and incorrectly formatted messages
+
+0.2.92
+- fixed record/delete series dialog showing occasional blank fields
+- Supports resume across multiple clients (gotham only)
+- Receives and parses server version
+- Signal status can be scanned (note requires enabling in pvr.wmc addon configuration – gotham clients only
+ 
+0.2.91
+- Changed some message strings, added message for instant record
+- Gotham only: updated pvr interface to xbmc 1.9.0, to work with newest gotham builds
+ 
+0.2.9
+- Fixed skin folder name so xml files no longer need to be placed in xbmc install folder (confluence only)
+- Gotham only: fixed custom dialogs
+
+0.2.9
+- now supports XBMC Gotham
+- Fixed button navigation in custom dialogs for Confluence skin
+- Client now posts stream open errors to server
+- Increase wait interval for streamfile size check
+- Credential password hidden from log
+ 
+0.1.8 
+- Fixed bug that could make client give up on live streams intermittently
+- Stopped freezing/crashing when live-tv tuner is stolen for a recording
+- Now knows whether a stream is actively growing
+- Build number reported to server app
+ 
+0.1.7
+ - made StreamSize server queries happen less often
+ - fixed ‘vector’ class connection crashes when socket is not available
+
+0.1.6
+ - first public release

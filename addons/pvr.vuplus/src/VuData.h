@@ -25,57 +25,6 @@ typedef enum VU_UPDATE_STATE
     VU_UPDATE_STATE_NEW
 } VU_UPDATE_STATE;
 
-struct VuChannelGroup {
-  std::string strServiceReference;
-  std::string strGroupName;
-  int iGroupState;
-
-  VuChannelGroup() 
-  { 
-    iGroupState = VU_UPDATE_STATE_NEW;
-  }
-
-  bool operator==(const VuChannelGroup &right) const
-  {
-    return (! strServiceReference.compare(right.strServiceReference)) && (! strGroupName.compare(right.strGroupName));
-  }
-
-};
-
-struct VuChannel
-{
-  bool bRadio;
-  int iUniqueId;
-  int iChannelNumber;
-  std::string strGroupName;
-  std::string strChannelName;
-  std::string strServiceReference;
-  std::string strStreamURL;
-  std::string strIconPath;
-  int iChannelState;
-
-  VuChannel()
-  {
-    iChannelState = VU_UPDATE_STATE_NEW;
-  }
-  
-  bool operator==(const VuChannel &right) const
-  {
-    bool bChanged = true;
-    bChanged = bChanged && (bRadio == right.bRadio); 
-    bChanged = bChanged && (iUniqueId == right.iUniqueId); 
-    bChanged = bChanged && (iChannelNumber == right.iChannelNumber); 
-    bChanged = bChanged && (! strGroupName.compare(right.strGroupName));
-    bChanged = bChanged && (! strChannelName.compare(right.strChannelName));
-    bChanged = bChanged && (! strServiceReference.compare(right.strServiceReference));
-    bChanged = bChanged && (! strStreamURL.compare(right.strStreamURL));
-    bChanged = bChanged && (! strIconPath.compare(right.strIconPath));
-
-    return bChanged;
-  }
-
-};
-
 struct VuEPGEntry 
 {
   int iEventId;
@@ -86,6 +35,27 @@ struct VuEPGEntry
   time_t endTime;
   std::string strPlotOutline;
   std::string strPlot;
+};
+
+struct VuChannelGroup 
+{
+  std::string strServiceReference;
+  std::string strGroupName;
+  int iGroupState;
+  std::vector<VuEPGEntry> initialEPG;
+};
+
+struct VuChannel
+{
+  bool bRadio;
+  bool bInitialEPG;
+  int iUniqueId;
+  int iChannelNumber;
+  std::string strGroupName;
+  std::string strChannelName;
+  std::string strServiceReference;
+  std::string strStreamURL;
+  std::string strIconPath;
 };
 
 struct VuTimer
@@ -157,6 +127,8 @@ class Vu  : public PLATFORM::CThread
 private:
 
   // members
+  void *m_writeHandle;
+  void *m_readHandle;
   std::string m_strEnigmaVersion;
   std::string m_strImageVersion;
   std::string m_strWebIfVersion;
@@ -172,7 +144,6 @@ private:
   std::vector<VuRecording> m_recordings;
   std::vector<VuChannelGroup> m_groups;
   std::vector<std::string> m_locations;
-  bool m_bInitial;
   unsigned int m_iClientIndexCounter;
 
   PLATFORM::CMutex m_mutex;
@@ -181,10 +152,6 @@ private:
   bool m_bUpdating;
 
   // functions
-  void StoreChannelData();
-  void LoadChannelData();
-  bool StoreLastPlayedPositions();
-  bool RestoreLastPlayedPositions();
   CStdString GetHttpXML(CStdString& url);
   int GetChannelNumber(CStdString strServiceReference);
   CStdString GetChannelIconPath(CStdString strChannelName);
@@ -221,13 +188,12 @@ public:
   int GetChannelsAmount(void);
   PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
   PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
+  PVR_ERROR GetInitialEPGForChannel(ADDON_HANDLE handle, const VuChannel &channel, time_t iStart, time_t iEnd);
+  bool GetInitialEPGForGroup(VuChannelGroup &group);
   int GetCurrentClientChannel(void);
   int GetTimersAmount(void);
   PVR_ERROR GetTimers(ADDON_HANDLE handle);
   PVR_ERROR AddTimer(const PVR_TIMER &timer);
-  PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
-  bool SetRecordingLastPlayedPosition(CStdString strStreamURL, int lastplayedposition);
-  int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
   PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
   PVR_ERROR DeleteTimer(const PVR_TIMER &timer);
   bool GetRecordingFromLocation(CStdString strRecordingFolder);
@@ -244,5 +210,10 @@ public:
   bool SwitchChannel(const PVR_CHANNEL &channel);
   bool Open();
   void Action();
+  int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize);
+  long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */);
+  long long PositionLiveStream(void);
+  long long LengthLiveStream(void);
+  bool m_bInitialEPG;
 };
 

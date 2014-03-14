@@ -48,15 +48,13 @@ std::string g_szUserPath              = "";
 std::string g_strIconPath             = "";
 bool        g_bAutomaticTimerlistCleanup = false;
 bool        g_bZap                    = false;
-bool        g_bCheckForGroupUpdates   = true;
-bool        g_bCheckForChannelUpdates = true;
 bool        g_bOnlyCurrentLocation    = false;
 bool        g_bSetPowerstate          = false;
 bool        g_bOnlyOneGroup           = false;
 bool        g_bOnlinePicons           = true;
+bool        g_bUseSecureHTTP          = false;
 std::string g_strOneGroup             = "";
 std::string g_szClientPath            = "";
-std::string g_strChannelDataPath      = "/tmp/";
 
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
@@ -97,6 +95,10 @@ void ADDON_ReadSettings(void)
   else
     g_strPassword = "";
   
+  /* read setting "use_secure" from settings.xml */
+  if (!XBMC->GetSetting("use_secure", &g_bUseSecureHTTP))
+    g_bUseSecureHTTP = false;
+  
   /* read setting "streamport" from settings.xml */
   if (!XBMC->GetSetting("streamport", &g_iPortStream))
     g_iPortStream = DEFAULT_STREAM_PORT;
@@ -116,14 +118,6 @@ void ADDON_ReadSettings(void)
   /* read setting "setpowerstate" from settings.xml */
   if (!XBMC->GetSetting("setpowerstate", &g_bSetPowerstate))
     g_bSetPowerstate = false;
-  
-  /* read setting "checkgroups" from settings.xml */
-  if (!XBMC->GetSetting("checkgroups", &g_bCheckForGroupUpdates))
-    g_bCheckForGroupUpdates = true;
-  
-  /* read setting "showcompleted" from settings.xml */
-  if (!XBMC->GetSetting("checkchannels", &g_bCheckForChannelUpdates))
-    g_bCheckForChannelUpdates = true;
   
   /* read setting "zap" from settings.xml */
   if (!XBMC->GetSetting("zap", &g_bZap))
@@ -152,12 +146,6 @@ void ADDON_ReadSettings(void)
     g_strIconPath = buffer;
   else
     g_strIconPath = "";
-  
-  /* read setting "channeldatapath" from settings.xml */
-  if (XBMC->GetSetting("channeldatapath", buffer))
-    g_strChannelDataPath = buffer;
-  else
-    g_strChannelDataPath = "/tmp/";
   
   free (buffer);
 }
@@ -196,12 +184,9 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   VuData = new Vu;
   if (!VuData->Open()) 
   {
-    delete VuData;
-    delete PVR;
-    delete XBMC;
-    VuData = NULL;
-    PVR = NULL;
-    XBMC = NULL;
+    SAFE_DELETE(VuData);
+    SAFE_DELETE(PVR);
+    SAFE_DELETE(XBMC);
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
     return m_CurStatus;
   }
@@ -232,24 +217,9 @@ void ADDON_Destroy()
     VuData->SendPowerstate();
   }
   
-
-  if (PVR)
-  {
-    delete PVR;
-    PVR = NULL;
-  }
-
-  if (XBMC)
-  {
-    delete XBMC;
-    XBMC = NULL;
-  }
-
-  if (VuData)
-  {
-    delete VuData;
-    VuData = NULL;
-  }
+  SAFE_DELETE(VuData);
+  SAFE_DELETE(PVR);
+  SAFE_DELETE(XBMC);
 
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }
@@ -371,7 +341,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsChannelScan        = false;
   pCapabilities->bHandlesInputStream         = true;
   pCapabilities->bHandlesDemuxing            = false;
-  pCapabilities->bSupportsLastPlayedPosition = true;
+  pCapabilities->bSupportsLastPlayedPosition = false;
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -565,18 +535,12 @@ const char * GetLiveStreamURL(const PVR_CHANNEL &channel)
 }
 PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition) 
 { 
-  if (!VuData || !VuData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return VuData->SetRecordingLastPlayedPosition(recording, lastplayedposition);
+  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) 
 { 
-  if (!VuData || !VuData->IsConnected())
-    return -1;
-
-  return VuData->GetRecordingLastPlayedPosition(recording);
+  return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 /** UNUSED API FUNCTIONS */

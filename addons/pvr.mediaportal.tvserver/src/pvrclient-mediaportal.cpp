@@ -66,6 +66,9 @@ cPVRClientMediaPortal::cPVRClientMediaPortal()
   m_tsreader               = NULL;
   m_genretable             = NULL;
   m_iLastRecordingUpdate   = 0;
+  m_signalStateCounter     = 0;
+  m_iSignal                = 0;
+  m_iSNR                   = 0;
 }
 
 cPVRClientMediaPortal::~cPVRClientMediaPortal()
@@ -1337,6 +1340,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
   if (!IsUp())
   {
     m_iCurrentChannel = -1;
+    m_signalStateCounter = 0;
     XBMC->Log(LOG_ERROR, "Open Live stream failed. No connection to backend.");
     return false;
   }
@@ -1346,8 +1350,9 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
     XBMC->Log(LOG_NOTICE, "New channel uid equal to the already streaming channel. Skipping re-tune.");
     return true;
   }
-  else
-    m_iCurrentChannel = -1; // make sure that it is not a valid channel nr in case it will fail lateron
+
+  m_iCurrentChannel = -1; // make sure that it is not a valid channel nr in case it will fail lateron
+  m_signalStateCounter = 0;
 
   // Start the timeshift
   // Use the optimized TimeshiftChannel call (don't stop a running timeshift)
@@ -1558,6 +1563,11 @@ int cPVRClientMediaPortal::ReadLiveStream(unsigned char *pBuffer, unsigned int i
       {
         XBMC->Log(LOG_NOTICE, "No data in 2 seconds");
         read_timeouts = 0;
+
+        //TODO
+        //if read_done == 0 then check if the backend is still timeshifting,
+        //or retrieve the reason why the timeshifting was stopped/failed...
+
         return read_done;
       }
       bufptr += read_wanted;
@@ -1589,6 +1599,7 @@ void cPVRClientMediaPortal::CloseLiveStream(void)
     m_bTimeShiftStarted = false;
     m_iCurrentChannel = -1;
     m_iCurrentCard = 0;
+    m_signalStateCounter = 0;
   }
   else
   {
@@ -1670,35 +1681,48 @@ PVR_ERROR cPVRClientMediaPortal::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 
   string          result;
 
-  // Request the signal quality for the current streaming card from the backend
-  result = SendCommand("GetSignalQuality\n");
-
-  if (result.length() > 0)
+  // Limit the GetSignalQuality calls to once every 10 s
+  if (m_signalStateCounter == 0)
   {
-    int signallevel = 0;
-    int signalquality = 0;
+    // Request the signal quality for the current streaming card from the backend
+    result = SendCommand("GetSignalQuality\n");
+    TRACE(__FUNCTION__);
 
-    // Fetch the signal level and SNR values from the result string
-    if (sscanf(result.c_str(),"%5i|%5i", &signallevel, &signalquality) == 2)
+    if (result.length() > 0)
     {
-      signalStatus.iSignal = (int) (signallevel * 655.35); // 100% is 0xFFFF 65535
-      signalStatus.iSNR = (int) (signalquality * 655.35); // 100% is 0xFFFF 65535
-      signalStatus.iBER = 0;
-      PVR_STRCPY(signalStatus.strAdapterStatus, "timeshifting"); // hardcoded for now...
+      int signallevel = 0;
+      int signalquality = 0;
 
-      // Try to determine the name of the tv/radio card from the local card cache
-      Card currentCard;
-
-      if (m_cCards.GetCard(m_iCurrentCard, currentCard) == true)
+      // Fetch the signal level and SNR values from the result string
+      if (sscanf(result.c_str(),"%5i|%5i", &signallevel, &signalquality) == 2)
       {
-        PVR_STRCPY(signalStatus.strAdapterName, currentCard.Name.c_str());
-      }
-      else
-      {
-        PVR_STRCLR(signalStatus.strAdapterName);
+        m_iSignal = (int) (signallevel * 655.35); // 100% is 0xFFFF 65535
+        m_iSNR = (int) (signalquality * 655.35); // 100% is 0xFFFF 65535
       }
     }
   }
+  m_signalStateCounter++;
+  if (m_signalStateCounter > 10)
+    m_signalStateCounter = 0;
+
+  signalStatus.iSignal = m_iSignal;
+  signalStatus.iSNR = m_iSNR;
+  signalStatus.iBER = m_signalStateCounter;
+  PVR_STRCPY(signalStatus.strAdapterStatus, "timeshifting"); // hardcoded for now...
+
+  // Try to determine the name of the tv/radio card from the local card cache
+  Card currentCard;
+
+  if (m_cCards.GetCard(m_iCurrentCard, currentCard) == true)
+  {
+    PVR_STRCPY(signalStatus.strAdapterName, currentCard.Name.c_str());
+  }
+  else
+  {
+    PVR_STRCLR(signalStatus.strAdapterName);
+  }
+
+
   return PVR_ERROR_NO_ERROR;
 }
 

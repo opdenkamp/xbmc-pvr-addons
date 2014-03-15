@@ -129,6 +129,9 @@ private:
   PLATFORM::CMutex        m_mutex;
   int64_t                 m_iLastRecordingUpdate;
   CTsReader*              m_tsreader;
+  int                     m_signalStateCounter;
+  int                     m_iSignal;
+  int                     m_iSNR;
 
   void Close();
 

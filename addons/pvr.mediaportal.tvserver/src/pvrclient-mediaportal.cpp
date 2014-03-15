@@ -43,12 +43,12 @@ using namespace ADDON;
 int g_iTVServerXBMCBuild = 0;
 
 /* PVR client version (don't forget to update also the addon.xml and the Changelog.txt files) */
-#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.8.9"
+#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.9.12"
 
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.7.107"
 #define TVSERVERXBMC_MIN_VERSION_BUILD          107
-#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.122, 1.3.0.122 or 1.4.0.123"
+#define TVSERVERXBMC_RECOMMENDED_VERSION_STRING "1.2.3.122, 1.3.0.122, 1.4.0.124, 1.5.0.125 or 1.6.0.126"
 #define TVSERVERXBMC_RECOMMENDED_VERSION_BUILD  122
 
 /************************************************************/

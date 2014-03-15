@@ -1,3 +1,14 @@
+v1.9.12
+- Added: [GUI] Add series recording dialog to configure MediaPortal specific recording options
+- Added: [Settings] Add an option for addon-specific debugging
+- Added: Live TV/Recordings: Report "permission denied" errors on SMB access failures
+- Changed: [Settings] enable fast channel switching by default
+- Changed: Reduce the signal status calls to once every 10s.
+- Fixed: Channel thumbnails: replace also the invalid file name characters <>*?\| in the channel name by a _
+- Fixed: [SMB] Allow an empty username and password field
+- Fixed: [SMB] Don't replace \\ by smb:// when not at the start of the path
+- Fixed: Stop timeshifting at the backend side on buffer open failure.
+
 v1.9.11
 - Updated language files from Transifex
 

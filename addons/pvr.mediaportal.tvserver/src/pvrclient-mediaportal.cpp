@@ -34,6 +34,7 @@
 #ifdef TARGET_WINDOWS
 #include "FileUtils.h"
 #endif
+#include "GUIDialogRecordSettings.h"
 
 using namespace std;
 using namespace ADDON;
@@ -1221,6 +1222,19 @@ PVR_ERROR cPVRClientMediaPortal::AddTimer(const PVR_TIMER &timerinfo)
     return PVR_ERROR_SERVER_ERROR;
 
   cTimer timer(timerinfo);
+
+  if ((timerinfo.startTime > 0) && (timerinfo.iEpgUid != -1))
+  {
+    /* New scheduled recording, not an instant or manual recording
+     * Present a custom dialog with advanced recording settings
+     */
+    CGUIDialogRecordSettings dlgRecSettings( timerinfo, timer );
+
+    int dlogResult = dlgRecSettings.DoModal();
+
+    if (dlogResult == 0)
+      return PVR_ERROR_NO_ERROR;						// user canceled timer in dialog
+  }
 
   result = SendCommand(timer.AddScheduleCommand());
 

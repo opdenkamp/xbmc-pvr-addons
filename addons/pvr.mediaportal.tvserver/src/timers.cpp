@@ -550,3 +550,23 @@ time_t cTimer::Now()
 
   return now;
 }
+
+void cTimer::SetScheduleRecordingType(TvDatabase::ScheduleRecordingType schedType)
+{
+  m_schedtype = schedType;
+}
+
+void cTimer::SetKeepMethod(TvDatabase::KeepMethodType keepmethod)
+{
+  m_keepmethod = keepmethod;
+}
+
+void cTimer::SetPreRecordInterval(int minutes)
+{
+  m_prerecordinterval = minutes;
+}
+
+void cTimer::SetPostRecordInterval(int minutes)
+{
+  m_postrecordinterval = minutes;
+}

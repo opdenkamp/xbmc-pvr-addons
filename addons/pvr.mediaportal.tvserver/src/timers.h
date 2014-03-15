@@ -92,6 +92,10 @@ class cTimer
     TvDatabase::ScheduleRecordingType RepeatFlags2SchedRecType(int repeatflags);
     std::string AddScheduleCommand();
     std::string UpdateScheduleCommand();
+    void SetScheduleRecordingType(TvDatabase::ScheduleRecordingType schedType);
+    void SetKeepMethod(TvDatabase::KeepMethodType keepmethod);
+    void SetPreRecordInterval(int minutes);
+    void SetPostRecordInterval(int minutes);
 
   private:
     int SchedRecType2RepeatFlags(TvDatabase::ScheduleRecordingType schedtype);

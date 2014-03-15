@@ -56,7 +56,7 @@ int g_iTVServerXBMCBuild = 0;
 cPVRClientMediaPortal::cPVRClientMediaPortal()
 {
   m_iCurrentChannel        = -1;
-  m_iCurrentCard           = 0;
+  m_iCurrentCard           = -1;
   m_tcpclient              = new MPTV::Socket(MPTV::af_inet, MPTV::pf_inet, MPTV::sock_stream, MPTV::tcp);
   m_bConnected             = false;
   m_bStop                  = true;
@@ -1508,8 +1508,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         else
         {
           XBMC->Log(LOG_ERROR, "Re-using the existing TsReader failed.");
-          m_iCurrentChannel = -1;
-          m_iCurrentCard = -1;
+          CloseLiveStream();
         }
 
         return bReturn;
@@ -1532,7 +1531,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         if ( m_tsreader->Open(timeshiftfields[2].c_str()) != S_OK )
         {
           XBMC->Log(LOG_ERROR, "Cannot open timeshift buffer %s", timeshiftfields[2].c_str());
-          SAFE_DELETE(m_tsreader);
+          CloseLiveStream();
           return false;
         }
       }
@@ -1542,7 +1541,7 @@ bool cPVRClientMediaPortal::OpenLiveStream(const PVR_CHANNEL &channelinfo)
         if ( m_tsreader->Open(timeshiftfields[0].c_str()) != S_OK)
         {
           XBMC->Log(LOG_ERROR, "Cannot open channel url %s", timeshiftfields[0].c_str());
-          SAFE_DELETE(m_tsreader);
+          CloseLiveStream();
           return false;
         }
         usleep(400000);
@@ -1631,7 +1630,8 @@ void cPVRClientMediaPortal::CloseLiveStream(void)
     XBMC->Log(LOG_NOTICE, "CloseLiveStream: %s", result.c_str());
     m_bTimeShiftStarted = false;
     m_iCurrentChannel = -1;
-    m_iCurrentCard = 0;
+    m_iCurrentCard = -1;
+
     m_signalStateCounter = 0;
   }
   else
@@ -1744,18 +1744,19 @@ PVR_ERROR cPVRClientMediaPortal::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
   signalStatus.iBER = m_signalStateCounter;
   PVR_STRCPY(signalStatus.strAdapterStatus, "timeshifting"); // hardcoded for now...
 
-  // Try to determine the name of the tv/radio card from the local card cache
-  Card currentCard;
 
-  if (m_cCards.GetCard(m_iCurrentCard, currentCard) == true)
+  if (m_iCurrentCard >= 0)
   {
-    PVR_STRCPY(signalStatus.strAdapterName, currentCard.Name.c_str());
-  }
-  else
-  {
-    PVR_STRCLR(signalStatus.strAdapterName);
+    // Try to determine the name of the tv/radio card from the local card cache
+    Card currentCard;
+    if (m_cCards.GetCard(m_iCurrentCard, currentCard) == true)
+    {
+      PVR_STRCPY(signalStatus.strAdapterName, currentCard.Name.c_str());
+      return PVR_ERROR_NO_ERROR;
+    }
   }
 
+  PVR_STRCLR(signalStatus.strAdapterName);
 
   return PVR_ERROR_NO_ERROR;
 }

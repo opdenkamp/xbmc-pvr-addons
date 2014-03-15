@@ -28,7 +28,7 @@
 class CGUIDialogRecordSettings
 {
 public:
-  CGUIDialogRecordSettings(const PVR_TIMER &timerinfo, cTimer& timer);
+  CGUIDialogRecordSettings(const PVR_TIMER &timerinfo, cTimer& timer, const std::string& channelName);
   virtual ~CGUIDialogRecordSettings();
 
   bool Show();

@@ -23,6 +23,8 @@
 #include "GUIDialogRecordSettings.h"
 #include "libXBMC_gui.h"
 #include "timers.h"
+#include "utils.h"
+#include "DateTime.h"
 
 /* Dialog item identifiers */
 #define BUTTON_OK                       1
@@ -40,8 +42,9 @@
 #define LABEL_PROGRAM_CHANNEL          22
 
 using namespace std;
+using namespace MPTV;
 
-CGUIDialogRecordSettings::CGUIDialogRecordSettings(const PVR_TIMER &timerinfo, cTimer& timer) :
+CGUIDialogRecordSettings::CGUIDialogRecordSettings(const PVR_TIMER &timerinfo, cTimer& timer, const std::string& channelName) :
   m_spinFrequency(NULL),
   m_spinAirtime(NULL),
   m_spinChannels(NULL),
@@ -54,18 +57,14 @@ CGUIDialogRecordSettings::CGUIDialogRecordSettings(const PVR_TIMER &timerinfo, c
   m_timerinfo(timerinfo),
   m_timer(timer)
 {
-  struct tm tmStartTime = *localtime( &m_timerinfo.startTime );
-  char buffer[80];
-  strftime(buffer, 80, "%H:%M", &tmStartTime);
-  m_startTime = buffer;
-  strftime(buffer, 80, "%x", &tmStartTime);
-  m_startDate = buffer;
-
-  struct tm tmEndTime = *localtime( &m_timerinfo.endTime );
-  strftime(buffer, 80, "%H:%M", &tmEndTime);
-  m_endTime = buffer;
+  CDateTime startTime(m_timerinfo.startTime);
+  CDateTime endTime(m_timerinfo.endTime);
+  startTime.GetAsLocalizedTime(m_startTime);
+  startTime.GetAsLocalizedDate(m_startDate);
+  endTime.GetAsLocalizedTime(m_endTime);
 
   m_title = m_timerinfo.strTitle;
+  m_channel = channelName;
 
   // needed for every dialog
   m_retVal = -1;				// init to failed load value (due to xml file not being found)
@@ -145,23 +144,23 @@ bool CGUIDialogRecordSettings::OnInit()
 
   // Populate PreRecord spin control
   CStdString marginStart;
-  marginStart.Format("%d", m_timerinfo.iMarginStart);
+  marginStart.Format("%d (%s)", m_timerinfo.iMarginStart, XBMC->GetLocalizedString(30136));
   m_spinPreRecord->AddLabel(XBMC->GetLocalizedString(30135), -1);
   m_spinPreRecord->AddLabel(marginStart.c_str(), m_timerinfo.iMarginStart); //value from XBMC
+  m_spinPreRecord->SetValue(m_timerinfo.iMarginStart);  // Set the default value
   m_spinPreRecord->AddLabel("0", 0);
   m_spinPreRecord->AddLabel("3", 3);
   m_spinPreRecord->AddLabel("5", 5);
   m_spinPreRecord->AddLabel("7", 7);
   m_spinPreRecord->AddLabel("10", 10);
   m_spinPreRecord->AddLabel("15", 15);
-  // Set the default values
-  m_spinPreRecord->SetValue(m_timerinfo.iMarginStart);
 
   // Populate PostRecord spin control
   CStdString marginEnd;
+  marginEnd.Format("%d (%s)", m_timerinfo.iMarginEnd, XBMC->GetLocalizedString(30136));
   m_spinPostRecord->AddLabel(XBMC->GetLocalizedString(30135), -1);
-  marginEnd.Format("%d", m_timerinfo.iMarginEnd);
-  m_spinPostRecord->AddLabel(marginStart.c_str(), m_timerinfo.iMarginStart); //value from XBMC
+  m_spinPostRecord->AddLabel(marginEnd.c_str(), m_timerinfo.iMarginEnd); //value from XBMC
+  m_spinPostRecord->SetValue(m_timerinfo.iMarginEnd);   // Set the default value
   m_spinPostRecord->AddLabel("0", 0);
   m_spinPostRecord->AddLabel("3", 3);
   m_spinPostRecord->AddLabel("5", 5);
@@ -172,8 +171,6 @@ bool CGUIDialogRecordSettings::OnInit()
   m_spinPostRecord->AddLabel("30", 30);
   m_spinPostRecord->AddLabel("45", 45);
   m_spinPostRecord->AddLabel("60", 60);
-  // Set the default values
-  m_spinPostRecord->SetValue(-1);
 
   return true;
 }

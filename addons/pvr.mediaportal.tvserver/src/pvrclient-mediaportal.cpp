@@ -224,6 +224,10 @@ ADDON_STATUS cPVRClientMediaPortal::Connect()
   LoadGenreTable();
   LoadCardSettings();
 
+  XBMC->Log(LOG_INFO, "Locale is: %s\n", setlocale(LC_ALL, NULL) );
+  setlocale(LC_ALL, "");
+  XBMC->Log(LOG_INFO, "Locale is: %s\n", setlocale(LC_ALL, NULL) );
+
   return ADDON_STATUS_OK;
 }
 
@@ -633,6 +637,10 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
     cChannel channel;
     if( channel.Parse(data) )
     {
+      // Cache this channel in our local uid-channel list
+      m_channelNames[channel.UID()] = channel.Name();
+
+      // Prepare the PVR_CHANNEL struct to transfer this channel to XBMC
       tag.iUniqueId = channel.UID();
       tag.iChannelNumber = channel.ExternalID();
       PVR_STRCPY(tag.strChannelName, channel.Name());
@@ -1228,7 +1236,12 @@ PVR_ERROR cPVRClientMediaPortal::AddTimer(const PVR_TIMER &timerinfo)
     /* New scheduled recording, not an instant or manual recording
      * Present a custom dialog with advanced recording settings
      */
-    CGUIDialogRecordSettings dlgRecSettings( timerinfo, timer );
+    std::string strChannelName;
+    if (timerinfo.iClientChannelUid >= 0)
+    {
+      strChannelName = m_channelNames[timerinfo.iClientChannelUid];
+    }
+    CGUIDialogRecordSettings dlgRecSettings( timerinfo, timer, strChannelName);
 
     int dlogResult = dlgRecSettings.DoModal();
 

@@ -20,32 +20,24 @@
 #include <vector>
 #include <ctime>
 #include "uri.h"
-#include "platform/util//util.h"
+#include "platform/util/util.h"
 
 #ifdef TARGET_WINDOWS
-#include "platform/util/StdString.h"
+#include "os-dependent.h"
 #include "windows/WindowsUtils.h"
 #endif
-
-using namespace std;
 
 /**
  * String tokenize
  * Split string using the given delimiter into a vector of substrings
  */
-void Tokenize(const string& str, vector<string>& tokens, const string& delimiters);
+void Tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters);
 
 std::wstring StringToWString(const std::string& s);
 std::string WStringToString(const std::wstring& s);
 std::string lowercase(const std::string& s);
 bool stringtobool(const std::string& s);
 const char* booltostring(const bool b);
-
-/**
- * @brief Converts a C# DateTime string into a time_t value
- * Assumes the usage of somedatetimeval.ToString("u") in C#
- */
-time_t DateTimeToTimeT(const std::string& datetime);
 
 /**
  * @brief Filters forbidden filename characters from channel name and replaces them with _ )
@@ -55,10 +47,29 @@ std::string ToThumbFileName(const char* strChannelName);
 std::string ToXBMCPath(const std::string& strFileName);
 std::string ToWindowsPath(const std::string& strFileName);
 
+/**
+ * @brief Macro to silence unused parameter warnings
+ */
+#ifdef UNUSED
+#  undef UNUSED
+#endif
+#ifdef __GNUC__
+#  define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
+#else
+#  define UNUSED(x)  /* x */
+#endif
+
 #if defined(TARGET_WINDOWS)
 namespace UTF8Util
 {
-  CStdStringW ConvertUTF8ToUTF16(const char* pszTextUTF8);
-  CStdStringA ConvertUTF16ToUTF8(const WCHAR * pszTextUTF16);
+  std::wstring ConvertUTF8ToUTF16(const char* pszTextUTF8);
+  std::string  ConvertUTF16ToUTF8(const WCHAR* pszTextUTF16);
 }
 #endif
+
+/* Addon-specific debug tracing */
+extern bool             g_bDebug;
+#define TRACE(...) if (g_bDebug) \
+  XBMC->Log(LOG_NOTICE, __VA_ARGS__ ); \
+else \
+  XBMC->Log(LOG_DEBUG, __VA_ARGS__ );

@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+using namespace std;
+
 cChannel::cChannel()
 {
   uid = 0;

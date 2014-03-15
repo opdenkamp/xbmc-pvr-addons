@@ -40,6 +40,7 @@
 #include "platform/util/timeutils.h" // for usleep
 #include "platform/util/util.h"
 #include "utils.h"
+#include <errno.h>
 
 using namespace ADDON;
 
@@ -122,7 +123,22 @@ long FileReader::OpenFile()
       m_hFile = fileHandle;
       break;
     }
+    else
+    {
+      struct __stat64 buffer;
+      int statResult = XBMC->StatFile(m_fileName.c_str(), &buffer);
 
+      if (statResult < 0)
+      {
+        if (errno == EACCES)
+        {
+          XBMC->Log(LOG_ERROR, "Permission denied. Check the file or share access rights for '%s'", m_fileName.c_str());
+          XBMC->QueueNotification(QUEUE_ERROR, "Permission denied");
+          Tmo = 0;
+          break;
+        }
+      }
+    }
     usleep(20000);
   }
   while(--Tmo);

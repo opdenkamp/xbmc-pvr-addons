@@ -24,7 +24,6 @@
 #include "PmtParser.h"
 #include "ChannelInfo.h"
 #include <vector>
-using namespace std;
 
 class IPatParserCallback
 {
@@ -53,7 +52,7 @@ public:
 private:
   void        CleanUp();
   IPatParserCallback* m_pCallback;
-  vector<CPmtParser*> m_pmtParsers;
+  std::vector<CPmtParser*> m_pmtParsers;
   int64_t     m_packetsReceived;
   int64_t     m_packetsToSkip;
   int          m_iPatTableVersion;

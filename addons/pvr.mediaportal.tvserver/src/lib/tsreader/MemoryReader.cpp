@@ -30,6 +30,7 @@
 #ifdef LIVE555
 
 #include "MemoryReader.h"
+#include "utils.h"
 
 CMemoryReader::CMemoryReader(CMemoryBuffer& buffer)
 :m_buffer(buffer)
@@ -48,7 +49,7 @@ long CMemoryReader::Read(unsigned char* pbData, unsigned long lDataLength, unsig
   return S_OK;
 }
 
-unsigned long CMemoryReader::setFilePointer(int64_t llDistanceToMove, unsigned long dwMoveMethod)
+unsigned long CMemoryReader::setFilePointer(int64_t UNUSED(llDistanceToMove), unsigned long UNUSED(dwMoveMethod))
 {
   return 0;
 }

@@ -91,38 +91,6 @@ const char* booltostring(const bool b)
   return (b==true) ? "True" : "False";
 }
 
-time_t DateTimeToTimeT(const std::string& datetime)
-{
-  struct tm timeinfo;
-  int year, month ,day;
-  int hour, minute, second;
-  int count;
-  time_t retval;
-
-  count = sscanf(datetime.c_str(), "%4d-%2d-%2d %2d:%2d:%2d", &year, &month, &day, &hour, &minute, &second);
-
-  if(count != 6)
-    return -1;
-
-  timeinfo.tm_hour = hour;
-  timeinfo.tm_min = minute;
-  timeinfo.tm_sec = second;
-  timeinfo.tm_year = year - 1900;
-  timeinfo.tm_mon = month - 1;
-  timeinfo.tm_mday = day;
-  // Make the other fields empty:
-  timeinfo.tm_isdst = -1;
-  timeinfo.tm_wday = 0;
-  timeinfo.tm_yday = 0;
-
-  retval = mktime (&timeinfo);
-
-  if(retval < 0)
-    retval = 0;
-
-  return retval;
-}
-
 std::string ToThumbFileName(const char* strChannelName)
 {
   CStdString strThumbName = strChannelName;
@@ -130,6 +98,12 @@ std::string ToThumbFileName(const char* strChannelName)
   strThumbName.Replace(":","_");
   strThumbName.Replace("/","_");
   strThumbName.Replace("\\","_");
+  strThumbName.Replace(">","_");
+  strThumbName.Replace("<","_");
+  strThumbName.Replace("*","_");
+  strThumbName.Replace("?","_");
+  strThumbName.Replace("\"","_");
+  strThumbName.Replace("|","_");
 
   return strThumbName;
 }
@@ -137,25 +111,22 @@ std::string ToThumbFileName(const char* strChannelName)
 std::string ToXBMCPath(const std::string& strFileName)
 {
   CStdString strXBMCFileName = strFileName;
-  CStdString SMBPrefix = "smb://";
 
-  if (g_szSMBusername.length() > 0)
+  if (strXBMCFileName.Left(2) == "\\\\")
   {
-    SMBPrefix += g_szSMBusername;
-    if (g_szSMBpassword.length() > 0)
+    CStdString SMBPrefix = "smb://";
+
+    if (g_szSMBusername.length() > 0)
     {
-      SMBPrefix += ":" + g_szSMBpassword;
+      SMBPrefix += g_szSMBusername;
+      if (g_szSMBpassword.length() > 0)
+      {
+        SMBPrefix += ":" + g_szSMBpassword;
+      }
+      SMBPrefix += "@";
     }
-    SMBPrefix += "@";
+    strXBMCFileName.Replace("\\\\", SMBPrefix);
   }
-#ifndef TARGET_WINDOWS
-  else
-  {
-    SMBPrefix += "Guest@";
-  }
-#endif
-
-  strXBMCFileName.Replace("\\\\", SMBPrefix);
   strXBMCFileName.Replace('\\', '/');
 
   return strXBMCFileName;
@@ -239,7 +210,7 @@ namespace UTF8Util
   // FUNCTION: ConvertUTF8ToUTF16
   // DESC: Converts Unicode UTF-8 text to Unicode UTF-16 (Windows default).
   //----------------------------------------------------------------------------
-  CStdStringW ConvertUTF8ToUTF16(const char* pszTextUTF8)
+  std::wstring ConvertUTF8ToUTF16(const char* pszTextUTF8)
   {
     //
     // Special case of NULL or empty input string
@@ -287,8 +258,7 @@ namespace UTF8Util
     //
     // Allocate destination buffer to store UTF-16 string
     //
-    CStdStringW strUTF16;
-    WCHAR * pszUTF16 = strUTF16.GetBuffer( cchUTF16 );
+    WCHAR* pszUTF16 = new WCHAR[cchUTF16];
 
     //
     // Do the conversion from UTF-8 to UTF-16
@@ -307,11 +277,13 @@ namespace UTF8Util
     {
       DWORD dwErr = GetLastError();
       XBMC->Log(LOG_ERROR, "ConvertUTF8ToUTF16 failed lasterror == 0x%X.", dwErr);
+      delete[] pszUTF16;
       return L"";
     }
 
-    // Release internal CString buffer
-    strUTF16.ReleaseBuffer();
+    std::wstring strUTF16(pszUTF16);
+
+    delete[] pszUTF16;
 
     // Return resulting UTF16 string
     return strUTF16;
@@ -322,7 +294,7 @@ namespace UTF8Util
   // FUNCTION: ConvertUTF16ToUTF8
   // DESC: Converts Unicode UTF-16 (Windows default) text to Unicode UTF-8.
   //----------------------------------------------------------------------------
-  CStdStringA ConvertUTF16ToUTF8(const WCHAR * pszTextUTF16)
+  std::string ConvertUTF16ToUTF8(const WCHAR * pszTextUTF16)
   {
     //
     // Special case of NULL or empty input string
@@ -373,15 +345,14 @@ namespace UTF8Util
     {
       DWORD dwErr = GetLastError();
       XBMC->Log(LOG_ERROR, "ConvertUTF16ToUTF8 failed lasterror == 0x%X.", dwErr);
-      return L"";
+      return "";
     }
 
     //
     // Allocate destination buffer for UTF-8 string
     //
-    CStdStringA strUTF8;
     int cchUTF8 = cbUTF8; // sizeof(CHAR) = 1 byte
-    CHAR * pszUTF8 = strUTF8.GetBuffer( cchUTF8 );
+    char* pszUTF8 = new char[cchUTF8];
 
     //
     // Do the conversion from UTF-16 to UTF-8
@@ -401,11 +372,13 @@ namespace UTF8Util
     {
       DWORD dwErr = GetLastError();
       XBMC->Log(LOG_ERROR, "ConvertUTF16ToUTF8 failed lasterror == 0x%X.", dwErr);
-      return L"";
+      delete[] pszUTF8;
+      return "";
     }
 
     // Release internal CString buffer
-    strUTF8.ReleaseBuffer();
+    std::string strUTF8(pszUTF8);
+    delete[] pszUTF8;
 
     // Return resulting UTF-8 string
     return strUTF8;

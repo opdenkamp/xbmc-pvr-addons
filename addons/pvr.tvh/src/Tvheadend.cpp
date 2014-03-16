@@ -586,6 +586,8 @@ PVR_ERROR CTvheadend::GetEpg
 {
   SSchedules::const_iterator sit;
   SEvents::const_iterator eit;
+  htsmsg_t *l;
+  htsmsg_field_t *f;
 
   /* Async transfer */
   if (g_bAsyncEpg)
@@ -625,8 +627,13 @@ PVR_ERROR CTvheadend::GetEpg
     }
 
     /* Process */
-    htsmsg_field_t *f;
-    HTSMSG_FOREACH(f, msg)
+    if (!(l = htsmsg_get_list(msg, "events")))
+    {
+      htsmsg_destroy(msg);
+      tvherror("malformed getEvents response");
+      return PVR_ERROR_SERVER_ERROR;
+    }
+    HTSMSG_FOREACH(f, l)
     {
       SEvent event;
       if (f->hmf_type == HMF_MAP)
@@ -635,6 +642,7 @@ PVR_ERROR CTvheadend::GetEpg
           TransferEvent(handle, event);
       }
     }
+    htsmsg_destroy(msg);
   }
 
   return PVR_ERROR_NO_ERROR;

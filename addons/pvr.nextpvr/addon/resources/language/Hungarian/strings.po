@@ -4,12 +4,12 @@
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Hungarian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/hu/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/xbmc-main/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -56,9 +56,65 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "A vevőkártya már nem elérhető"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[ISMÉTLÉS]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Időzítés"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Felvétel típusa"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Felvétel egyszer"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Évad felvétele (ÚJ részek ezen a csatornán)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Évad felvétele (minden rész ezen a csatornán)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Évad felvétele (Naponta, ebben az időben)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Évad felvétele (Hetente ebben az időben)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Évad felvétele (Hétfőtől-Péntekig, ebben az időben)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Évad felvétele (Hétvégék, ebben az időben)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Megtart"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Minden felvétel"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Elő hosszabbítás (perc)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Elő hosszabbítás (perc)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Felvétel mappa"
 
 msgctxt "#30135"
 msgid "Default"

@@ -4,12 +4,12 @@
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Swedish (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/sv/)\n"
+"Language-Team: Swedish (http://www.transifex.com/projects/p/xbmc-main/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -56,9 +56,65 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Mottagaren är inte tillgänglig"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[ÅTERK]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Lägg till timer"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Inspelningstyp"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Spela in en gång"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Säsongsinspelning (NYA avsnitt på denna kanalen)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Säsongsinspelning (alla avsnitt på denna kanalen)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Säsongsinspelning (dagligen, denna tid)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Säsongsinspelning (varje vecka, denna tid)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Säsongsinspelning (Måndag-Fredag, denna tid)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Säsongsinspelning (helger, denna tid)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Behåll"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Alla inspelningar"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Starta före (i minuter)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Starta före (i minuter)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Inspelningsmapp"
 
 msgctxt "#30135"
 msgid "Default"

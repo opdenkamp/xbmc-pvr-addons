@@ -4,12 +4,12 @@
 # Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Russian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ru/)\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/xbmc-main/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,11 +26,19 @@ msgstr "Порт веб-интерфейса"
 
 msgctxt "#30002"
 msgid "Username"
-msgstr "Пользователь"
+msgstr "Имя пользователя"
 
 msgctxt "#30003"
 msgid "Password"
 msgstr "Пароль"
+
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Использовать избранное вместо списка канала"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Использовать избранный локальный файл"
 
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
@@ -44,14 +52,22 @@ msgctxt "#30021"
 msgid "Timeshift buffer path"
 msgstr "Путь к буферу таймшифт"
 
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Использовать RTSP поток для вещания ТВ"
+
 msgctxt "#30100"
 msgid "General"
-msgstr "Основные"
+msgstr "Общие"
 
 msgctxt "#30101"
 msgid "Advanced"
-msgstr "Дополнительно"
+msgstr "Расширенный"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
 msgstr "Не могу соединиться с сервисом записи"
+
+msgctxt "#30501"
+msgid "Recording Service version %s or higher required"
+msgstr "Служба записи требуется %s версии или выше"

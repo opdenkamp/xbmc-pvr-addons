@@ -4,12 +4,12 @@
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Spanish (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/es/)\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/xbmc-main/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -63,6 +63,10 @@ msgstr "Prefiero grabación y parar TV en vivo"
 msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
 msgstr "Prefiero TV en vivo y cancelar la grabación en conflictivo"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "Dirección IP MythTV Backend (WOL)"
 
 msgctxt "#30019"
 msgid "General"
@@ -128,6 +132,10 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr "Avanzado"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Habilitar demux MPEG-TS"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Versión de protocolo: %i - Versión de base de datos: %i"
@@ -168,6 +176,10 @@ msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
 msgstr "Detención de TV en vivo debido a la grabación en conflicto: %s"
 
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "No se esta grabando"
+
 msgctxt "#30310"
 msgid "Enabled"
 msgstr "Activado"
@@ -176,6 +188,38 @@ msgctxt "#30311"
 msgid "Disabled"
 msgstr "Deshabilitado"
 
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "No se ha encontrado broadcast"
+
 msgctxt "#30411"
 msgid "Delete and re-record"
 msgstr "Borrar y volver a grabar"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Mantener la grabación LiveTV"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Mostrar/Ocultar reglas 'No grabar'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Grabar todos los show (de este canal)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Grabar este show todas las semanas"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Grabar este show todos los dias"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Grabar un solo show (en todos los canales)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Grabar todos los nuevos episodios (de este canal)"

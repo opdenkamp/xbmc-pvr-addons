@@ -4,12 +4,12 @@
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Croatian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/hr/)\n"
+"Language-Team: Croatian (http://www.transifex.com/projects/p/xbmc-main/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -194,11 +194,11 @@ msgstr "Pretraživanje programa - Greška"
 
 msgctxt "#30044"
 msgid "Lost connection to VDR Server"
-msgstr "Izgubljena veza sa VDR poslužiteljem"
+msgstr "Izgubljena veza s VDR poslužiteljem"
 
 msgctxt "#30045"
 msgid "Connection to VDR Server restored"
-msgstr "Veza sa VDR poslužiteljem ponovno uspostavljena"
+msgstr "Povezivanje s VDR poslužiteljem ponovno uspostavljeno"
 
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
@@ -218,7 +218,7 @@ msgstr "Postavljanje"
 
 msgctxt "#30102"
 msgid "Controlling OSD - press info to exit"
-msgstr "Upravljanje OSD - pritisni info"
+msgstr "Upravljanje OSD - pritisni info za izlaz"
 
 msgctxt "#30103"
 msgid "Select to control OSD"
@@ -234,12 +234,36 @@ msgstr "Međumemorija vremenskog premotavanja (RAM) x100 MB"
 
 msgctxt "#30106"
 msgid "Timeshift Buffer (File) x1 GB"
-msgstr "Međumemorija vremenskog premotavanja (File) x1 GB"
+msgstr "Međumemorija vremenskog premotavanja (Datoteka) x1 GB"
 
 msgctxt "#30107"
 msgid "VDR Admin"
-msgstr "VDR Admin"
+msgstr "VDR administrator"
 
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Programi"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Dopušteni pružatelj usluga"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Blokirani programi"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtri programa"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radio programi"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Spremi filter"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Nepoznat pružatelj usluge"

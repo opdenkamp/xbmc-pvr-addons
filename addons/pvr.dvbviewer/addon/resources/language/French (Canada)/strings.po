@@ -1,0 +1,73 @@
+# XBMC Media Center language file
+# Addon Name: DVBViewer Client
+# Addon id: pvr.dvbviewer
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: French (Canada) (http://www.transifex.com/projects/p/xbmc-main/language/fr_CA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "#30000"
+msgid "DVBViewer Recording Service IP Address"
+msgstr "Adresse IP du service d'enregistrement DVBViewer"
+
+msgctxt "#30001"
+msgid "Webinterface Port"
+msgstr "Port de l'interface Web"
+
+msgctxt "#30002"
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgctxt "#30003"
+msgid "Password"
+msgstr "Mot de passe"
+
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Utiliser les favoris au lieu de la liste des chaînes"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Utiliser un fichier local de favoris"
+
+msgctxt "#30012"
+msgid "Select the favourites.xml file"
+msgstr "Choisir le fichier favourites.xml"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Activer le décalage temporel"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Chemin du tampon de décalage temporel"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Utiliser la lecture en transit pour la télé en direct "
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Général"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Avancé"
+
+msgctxt "#30500"
+msgid "Can't connect to the Recording Service"
+msgstr "Impossible de se connecter au service d'enregistrement"
+
+msgctxt "#30501"
+msgid "Recording Service version %s or higher required"
+msgstr "La version %s ou ultérieure du service d'enregistrement est exigée"

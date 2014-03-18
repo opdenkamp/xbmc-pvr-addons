@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.njoy"
-  version="1.9.4"
+  version="1.9.5"
   name="Njoy N7 PVR Client"
   provider-name="Team XBMC">
   <requires>
@@ -18,7 +18,7 @@
     library_android="libXBMC_Njoy.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="am">Njoy N7 PVR Client</summary>
-    <summary lang="bg">Njoy N7 PVR клиент</summary>
+    <summary lang="bg">Njoy N7 ПВР клиент</summary>
     <summary lang="ca">Client PVR Njoy N7</summary>
     <summary lang="cs">Klient PVR Njoy N7</summary>
     <summary lang="cy">Rhaglen Rhaglenni Njoy N7</summary>
@@ -26,11 +26,13 @@
     <summary lang="de">Njoy N7 PVR Client</summary>
     <summary lang="el">Πελάτης PVR Njoy N7</summary>
     <summary lang="en">Njoy N7 PVR Client</summary>
+    <summary lang="en_NZ">Njoy N7 PVR Client</summary>
     <summary lang="es">Cliente PVR Njoy N7</summary>
     <summary lang="es_AR">Cliente PVR Njoy N7</summary>
     <summary lang="es_MX">Cliente Njoy N7 PVR</summary>
     <summary lang="et">Njoy N7 PVR klient</summary>
     <summary lang="fr">Client PVR Njoy N7</summary>
+    <summary lang="fr_CA">Client numériscope Njoy N7</summary>
     <summary lang="gl">Cliente PVR de Njoy N7</summary>
     <summary lang="he">Njoy N7 PVR Client</summary>
     <summary lang="hr">Njoy N7 PVR klijent</summary>
@@ -56,10 +58,11 @@
     <summary lang="sr">PVR клијент Njoy N7</summary>
     <summary lang="sv">Njoy N7 PVR Klient</summary>
     <summary lang="ta_IN">Njoy N7 PVR கிளையன்</summary>
+    <summary lang="tg">Муштарии Njoy N7 PVR</summary>
     <summary lang="tr">Njoy N7 PVR İstemcisi</summary>
     <summary lang="uk">Клієнт Njoy N7 для PVR</summary>
     <summary lang="vi">Phần mềm PVR cho Njoy N7</summary>
-    <summary lang="zh">Njoy N7 PVR客户端</summary>
+    <summary lang="zh">Njoy N7 PVR 客户端</summary>
     <summary lang="zh_TW">Njoy N7 PVR 用戶端</summary>
     <platform>@OS@</platform>
   </extension>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.demo"
-  version="1.9.3"
+  version="1.9.4"
   name="PVR Demo Client"
   provider-name="Pulse-Eight Ltd.">
   <requires>
@@ -18,7 +18,7 @@
     library_android="libXBMC_Demo.so" />
   <extension point="xbmc.addon.metadata">
     <summary lang="am">የ PVR ደንበኛ ናሙና </summary>
-    <summary lang="bg">Демонстрация на PVR клиента</summary>
+    <summary lang="bg">Демонстрация на ПВР клиента</summary>
     <summary lang="ca">Client Demo PVR</summary>
     <summary lang="cs">Ukázkový klient PVR</summary>
     <summary lang="cy">Dangosydd Rhaglen Rhagleni</summary>
@@ -26,12 +26,14 @@
     <summary lang="de">Demo PVR Client</summary>
     <summary lang="el">Πελάτης PVR Demo</summary>
     <summary lang="en">Demo PVR Client</summary>
+    <summary lang="en_NZ">Demo PVR Client</summary>
     <summary lang="es">Demo Cliente PVR</summary>
     <summary lang="es_AR">Cliente PVR demo</summary>
     <summary lang="es_MX">Cliente Demo PVR</summary>
     <summary lang="et">Demo PVR klient</summary>
     <summary lang="eu">PVR Bezeroaren Demoa</summary>
     <summary lang="fr">Client PVR de démonstration</summary>
+    <summary lang="fr_CA">Client numériscope de démo</summary>
     <summary lang="gl">Cliente PVR Demo</summary>
     <summary lang="he">הדגמה לקוח PVR</summary>
     <summary lang="hr">Demo PVR klijent</summary>
@@ -56,13 +58,14 @@
     <summary lang="sr">Пробни PVR клијент</summary>
     <summary lang="sv">Demo PVR Klient</summary>
     <summary lang="ta_IN"> PVR கிளையன் செயல்முறை</summary>
+    <summary lang="tg">Муштарии намоишии PVR</summary>
     <summary lang="tr">PVR Tanıtım İstemcisi</summary>
     <summary lang="uk">Демонстраційний клієнт для PVR</summary>
     <summary lang="vi">Demo PVR</summary>
-    <summary lang="zh">PVR演示客户端</summary>
+    <summary lang="zh">PVR 演示客户端</summary>
     <summary lang="zh_TW">演示PVR客戶端</summary>
     <description lang="am">የ PVR ደንበኛ ናሙና </description>
-    <description lang="bg">Демонстрация на PVR клиента</description>
+    <description lang="bg">Демонстрация на ПВР клиента</description>
     <description lang="ca">Client Demo PVR</description>
     <description lang="cs">Ukázkový klient PVR</description>
     <description lang="cy">Dangosydd Rhaglen Rhagleni</description>
@@ -70,12 +73,14 @@
     <description lang="de">Demo PVR Client</description>
     <description lang="el">Πελάτης PVR Demo</description>
     <description lang="en">Demo PVR Client</description>
+    <description lang="en_NZ">Demo PVR Client</description>
     <description lang="es">Demo Cliente PVR</description>
     <description lang="es_AR">Cliente PVR demo</description>
     <description lang="es_MX">Cliente Demo PVR</description>
     <description lang="et">Demo PVR klient</description>
     <description lang="eu">PVR Bezeroaren Demoa</description>
     <description lang="fr">Client PVR de démonstration</description>
+    <description lang="fr_CA">Client numériscope de démo</description>
     <description lang="gl">Cliente PVR Demo</description>
     <description lang="he">הדגמה לקוח PVR</description>
     <description lang="hr">Demo PVR klijent</description>
@@ -100,12 +105,14 @@
     <description lang="sr">Пробни PVR клијент</description>
     <description lang="sv">Demo PVR Klient</description>
     <description lang="ta_IN"> PVR கிளையன் செயல்முறை</description>
+    <description lang="tg">Муштарии намоишии PVR</description>
     <description lang="tr">PVR Tanıtım İstemcisi</description>
     <description lang="uk">Демонстраційний клієнт для PVR</description>
     <description lang="vi">Demo PVR</description>
-    <description lang="zh">PVR演示客户端</description>
+    <description lang="zh">PVR 演示客户端</description>
     <description lang="zh_TW">演示PVR客戶端</description>
     <disclaimer lang="am">ቁራጭ ይዟል </disclaimer>
+    <disclaimer lang="bg">Просто съдържа междинни файлове</disclaimer>
     <disclaimer lang="ca">Només conté fragments</disclaimer>
     <disclaimer lang="cs">Obsahuje pouze pahýly funkcí</disclaimer>
     <disclaimer lang="cy">Bonyn yn unig</disclaimer>
@@ -113,12 +120,14 @@
     <disclaimer lang="de">Enthält nur Fragmente</disclaimer>
     <disclaimer lang="el">Περιέχει μόνο εικονικά κανάλια</disclaimer>
     <disclaimer lang="en">Just contains stubs</disclaimer>
+    <disclaimer lang="en_NZ">Just contains stubs</disclaimer>
     <disclaimer lang="es">Sólo contiene fragmentos</disclaimer>
     <disclaimer lang="es_AR">contiene sólo marcadores</disclaimer>
     <disclaimer lang="es_MX">Solo contiene talones</disclaimer>
     <disclaimer lang="et">Sisaldab ainult juppe</disclaimer>
     <disclaimer lang="eu">Kodearen puskak ditu</disclaimer>
     <disclaimer lang="fr">Ne contient que des clips</disclaimer>
+    <disclaimer lang="fr_CA">Ne contient que des fragments</disclaimer>
     <disclaimer lang="gl">Só contén fragmentos</disclaimer>
     <disclaimer lang="he">רק מכיל stubs</disclaimer>
     <disclaimer lang="hr">Samo sadrži kratke informacije</disclaimer>
@@ -142,6 +151,7 @@
     <disclaimer lang="sr">Садржи само назнаке садржаја</disclaimer>
     <disclaimer lang="sv">Innehåller bara stubbar</disclaimer>
     <disclaimer lang="ta_IN">செயல் இடங்கள் உள்ளன</disclaimer>
+    <disclaimer lang="tg">Танҳо дорои сарпӯшак мебошад</disclaimer>
     <disclaimer lang="tr">Sadece taslakları içerir</disclaimer>
     <disclaimer lang="uk">Не містить нічого</disclaimer>
     <disclaimer lang="vi">Chỉ chứa phần tử sơ khai</disclaimer>

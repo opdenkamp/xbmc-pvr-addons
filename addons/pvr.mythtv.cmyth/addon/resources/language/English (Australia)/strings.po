@@ -1,0 +1,225 @@
+# XBMC Media Center language file
+# Addon Name: MythTV cmyth PVR Client
+# Addon id: pvr.mythtv.cmyth
+# Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: English (Australia) (http://www.transifex.com/projects/p/xbmc-main/language/en_AU/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_AU\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "MythTV Backend Hostname or IP"
+msgstr "MythTV Backend Hostname or IP"
+
+msgctxt "#30001"
+msgid "MythTV Backend Port"
+msgstr "MythTV Backend Port"
+
+msgctxt "#30002"
+msgid "MythTV Database Username"
+msgstr "MythTV Database Username"
+
+msgctxt "#30003"
+msgid "MythTV Database Password"
+msgstr "MythTV Database Password"
+
+msgctxt "#30004"
+msgid "MythTV Database Databasename"
+msgstr "MythTV Database Databasename"
+
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "Include more debug information in the log file"
+
+msgctxt "#30006"
+msgid "Enable Live TV"
+msgstr "Enable Live TV"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "Allow Live TV to move scheduled shows"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Conflict handling"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Prefer Live TV when recording has later slot"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Prefer recording and stop Live TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Prefer Live TV and cancel conflicting recording"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV Backend Ethernet address (WOL)"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "General"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Template provider"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Internal"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Internal template"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Automatically Look Up Metadata"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Commercial Flag new recordings"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Transcode new recordings"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Run User Job #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Run User Job #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Run User Job #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Run User Job #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Transcoder"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Allow recordings to expire?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Recording template"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Advanced"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Enable demuxing MPEG-TS"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Protocol version: %i - Database version: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Failed to connect to MythTV backend"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Failed to connect to MythTV database"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Connection to MythTV backend lost"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Connection to MythTV restored"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "No response from MythTV backend"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Channel unavailable"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Recorder unavailable"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Cancelling conflicting recording: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Stopping Live TV due to conflicting recording: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Not recording"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Enabled"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Disabled"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "No broadcast found"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Delete and re-record"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Keep LiveTV recording"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Show/hide rules with status 'Not Recording'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Record all showings (this channel)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Record this showing every week"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Record this showing every day"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Record one showing (all channels)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Record all new episodes (this channel)"

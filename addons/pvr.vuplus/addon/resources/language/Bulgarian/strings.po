@@ -4,17 +4,25 @@
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Bulgarian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/bg/)\n"
+"Language-Team: Bulgarian (http://www.transifex.com/projects/p/xbmc-main/language/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "VU+ hostname or IP address"
+msgstr "VU+ хост или IP адрес"
+
+msgctxt "#30002"
+msgid "Streaming Port"
+msgstr "Стрийминг порт"
 
 msgctxt "#30003"
 msgid "Username"
@@ -23,6 +31,46 @@ msgstr "Потребител"
 msgctxt "#30004"
 msgid "Password"
 msgstr "Парола"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Таймаут за отговор в секунди"
+
+msgctxt "#30008"
+msgid "Icon Path"
+msgstr "Път до иконите"
+
+msgctxt "#30010"
+msgid "Update Interval in minutes"
+msgstr "Интервал за обновяване в минути"
+
+msgctxt "#30011"
+msgid "Automatic Timerlist Cleanup"
+msgstr "Автоматично почистване на таймерите"
+
+msgctxt "#30012"
+msgid "Webinterface Port"
+msgstr "Порт на уеб интерфейса"
+
+msgctxt "#30013"
+msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "Нулиране преди превключване на канал (за едно-тунерни устройства)"
+
+msgctxt "#30014"
+msgid "Folder for channeldata"
+msgstr "Папка за данните на канала"
+
+msgctxt "#30015"
+msgid "Check for bouquett updates"
+msgstr "Провери за обновявания на букетите"
+
+msgctxt "#30016"
+msgid "Check for channel updates"
+msgstr "Проверявай за обновяване на каналите"
+
+msgctxt "#30017"
+msgid "Use only the DVB boxes' current recording path"
+msgstr "Използвай само за запис на зададения в DVB път"
 
 msgctxt "#30018"
 msgid "General"
@@ -35,3 +83,39 @@ msgstr "Канали"
 msgctxt "#30020"
 msgid "Advanced"
 msgstr "Допълнителни"
+
+msgctxt "#30021"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30022"
+msgid "Recordings / Timer"
+msgstr "Записи / Брояч"
+
+msgctxt "#30023"
+msgid "Recording folder on the receiver"
+msgstr "Папка за записите на ресивъра"
+
+msgctxt "#30024"
+msgid "Send DeepStandby-Command"
+msgstr "Изпращай DeepStandby команда"
+
+msgctxt "#30025"
+msgid "Fetch only one TV bouquet"
+msgstr "Избери само един ТВ букет"
+
+msgctxt "#30026"
+msgid "TV-Bouquet"
+msgstr "ТВ букет"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "Взимай логото на канала от уеб интерфейса"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Изключен от '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Повторно свързан с '%s'"

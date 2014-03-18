@@ -1,0 +1,225 @@
+# XBMC Media Center language file
+# Addon Name: MythTV cmyth PVR Client
+# Addon id: pvr.mythtv.cmyth
+# Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: French (Canada) (http://www.transifex.com/projects/p/xbmc-main/language/fr_CA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "#30000"
+msgid "MythTV Backend Hostname or IP"
+msgstr "Nom d'hôte ou adresse IP de l'arrière-plan MythTV"
+
+msgctxt "#30001"
+msgid "MythTV Backend Port"
+msgstr "Port de l'arrière-plan MythTV"
+
+msgctxt "#30002"
+msgid "MythTV Database Username"
+msgstr "Nom d'utilisateur de la base de données MythTV"
+
+msgctxt "#30003"
+msgid "MythTV Database Password"
+msgstr "Mot de passe de la base de données MythTV"
+
+msgctxt "#30004"
+msgid "MythTV Database Databasename"
+msgstr "Nom de la base de données MythTV"
+
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "Inclure plus d'informations de débogage dans le fichier journal"
+
+msgctxt "#30006"
+msgid "Enable Live TV"
+msgstr "Activer la télé en direct"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "Permettre à la télé en direct de déplacer séries planifiées"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Gestion des conflits"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Préférer la télé en direct quand l'enregistrement a une tranche horaire ultérieure"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Préférer l'enregistrement et arrêter la télé en direct"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Préférer la télé en direct et arrêter les enregistrements en conflit"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "Adresse Ethernet (WOL) de l'arrière-plan MythTV"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Général"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Fournisseur de modèles"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Interne"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Modèle interne"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Rechercher automatiquement les métadonnées"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Marquer les publicités des nouveaux enregistrements"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Transcoder les nouveaux enregistrements"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Exécuter le travail d'utilisateur no 1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Exécuter le travail d'utilisateur no 2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Exécuter le travail d'utilisateur no 3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Exécuter le travail d'utilisateur no 4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Transcodeur"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Permettre l'expiration des enregistrements?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Modèle d'enregistrement"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Avancé"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Activer le démultiplexage MPEG-TS"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Version du protocole : %i - version de la base de données : %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Échec lors de la connexion à l'arrière-plan MythTV"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Échec lors de la connexion à la base de données MythTV"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "La connexion à l'arrière-plan MythTV a été perdue"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "La connexion à MythTV a été récupérée"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Aucune réponse de l'arrière-plan MythTV"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Chaîne non disponible"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Enregistreur non disponible"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Annulation de l'enregistrement en conflit : %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Arrêt de la télé en direct dû à un enregistrement en conflit : %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "N'enregistre pas"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Activé"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Désactivé"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Aucune diffusion trouvée"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Supprimer et ré-enregistrer"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Garder l'enregistrement de la télé en direct"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Montrer/cacher les règles ayant un état « N'enregistre pas »"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Enregistrer toutes les présentations (cette chaîne)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Enregistrer cette présentation toutes les semaines"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Enregistrer cette présentation tous les jours"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Enregistrer une présentation (toutes les chaînes)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Enregistrer tous les nouveaux épisodes (cette chaîne)"

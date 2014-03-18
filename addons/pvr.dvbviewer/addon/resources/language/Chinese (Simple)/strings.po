@@ -4,12 +4,12 @@
 # Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/zh/)\n"
+"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,11 +18,11 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "DVBViewer Recording Service IP Address"
-msgstr "DVBViewer录制服务IP地址"
+msgstr "DVBViewer 录制服务 IP 地址"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
-msgstr "Web界面端口"
+msgstr "Web 界面端口"
 
 msgctxt "#30002"
 msgid "Username"
@@ -42,7 +42,7 @@ msgstr "使用本地收藏夹文件"
 
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
-msgstr "选择favourites.xml文件"
+msgstr "选择 favourites.xml 文件"
 
 msgctxt "#30020"
 msgid "Enable Timeshift"
@@ -58,7 +58,7 @@ msgstr "直播电视使用 RTSP 流"
 
 msgctxt "#30100"
 msgid "General"
-msgstr "常用"
+msgstr "常规"
 
 msgctxt "#30101"
 msgid "Advanced"
@@ -66,8 +66,8 @@ msgstr "高级"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"
-msgstr "无法连接录制服务"
+msgstr "无法连接录像服务"
 
 msgctxt "#30501"
 msgid "Recording Service version %s or higher required"
-msgstr "录制服务需要 s% 或更高版本。"
+msgstr "录像服务需要 s% 或更高版本"

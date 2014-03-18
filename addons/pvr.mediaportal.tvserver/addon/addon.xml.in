@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.mediaportal.tvserver"
-  version="1.9.11"
+  version="1.9.12"
   name="MediaPortal PVR Client"
   provider-name="Marcel Groothuis">
   <requires>
@@ -19,7 +19,7 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="af">XBMC voorprogram vir die MediaPortal TV Bediener (ffmpeg + tsreader weergawe)</summary>
     <summary lang="be">XBMC frontend for the MediaPortal TV Server (ffmpeg + tsreader version)</summary>
-    <summary lang="bg">XBMC интерфейс за ТВ сървъра MediaPortal (ffmpeg + tsreader версия)</summary>
+    <summary lang="bg">XBMC клиент за ТВ сървъра MediaPortal (ffmpeg + tsreader версия)</summary>
     <summary lang="ca">Frontal XBMC pel servidor de TV MediaPortal (versió ffmpeg + tsreader)</summary>
     <summary lang="cs">Rozhraní XBMC pro televizní server MediaPortal (verze ffmpeg + tsreader)</summary>
     <summary lang="cy">Blaen XBMC ar gyfer Gweinydd Teledu MediaPortal (fersiwn ffmpeg + tsreader)</summary>
@@ -27,15 +27,18 @@
     <summary lang="de">XBMC Oberfläche für den MediaPortal TV Server (ffmpeg + tsreader Version)</summary>
     <summary lang="el">Frontend του XBMC για το διακομιστή MediaPortal TV (έκδοση ffmpeg + tsreader)</summary>
     <summary lang="en">XBMC frontend for the MediaPortal TV Server (ffmpeg + tsreader version)</summary>
+    <summary lang="en_NZ">XBMC frontend for the MediaPortal TV Server (ffmpeg + tsreader version)</summary>
     <summary lang="es">Interfaz XBMC para el MediaPortal TV Server (versión ffmpeg + tsreader)</summary>
     <summary lang="es_AR">Interfaz XBMC para el MediaPortal TV Server (versión ffmpeg + tsreader)</summary>
     <summary lang="et">XBMC esi MediaPortal TV serverile (ffmpeg + tsreader versioon)</summary>
     <summary lang="fi">XBMC frontend MediaPortal TV-serverille (ffmpeg + tsreader)</summary>
     <summary lang="fr">Applicatif XBMC pour le serveur TV de MediaPortal (version ffmpeg + tsreader)</summary>
+    <summary lang="fr_CA">Frontal XBMC pour le serveur MediaPortal TV (version ffmpeg + tsreader)</summary>
     <summary lang="gl">O Interface do XBMC para o Servidor de TV de MediaPortal (versión de ffmpeg +tsreader)</summary>
     <summary lang="he">ממשק משתמש XBMC לשרת טלוויזיה MediaPortal (גרסת ffmpeg + tsreader )</summary>
     <summary lang="hr">XBMC sučelje za MediaPortal TV poslužitelj (ffmpeg + tsreader inačica)</summary>
     <summary lang="hu">XBMC Médiaportal előtér-kiszolgáló (ffmpeg + tsreader)</summary>
+    <summary lang="id">Frontend XBMC untuk Server TV MediaPortal (versi ffmpeg + tsreader)</summary>
     <summary lang="it">Frontend XBMC per il server MediaPortal TV (version ffmpeg + tsreader)</summary>
     <summary lang="ja">MediaPortal TV サーバー (ffmpeg + tsreader バージョン) の XBMC フロントエンド</summary>
     <summary lang="ka">XBMC სამომხმარებლო მხარე MediaPortal TV Server-თვის (ffmpeg + tsreader ვერსია)</summary>
@@ -58,11 +61,11 @@
     <summary lang="ta_IN">MediaPortal டிவி சேவையகம் (ffmpeg + tsreader பதிப்பு) க்கான XBMC முன்நிலை</summary>
     <summary lang="uk">Накладка XBMC для сервера ТВ MediaPortal'у  (версія ffmpeg + tsreader)</summary>
     <summary lang="vi">Giao tiếp XBMC cho MediaPortal TV Server (phiên bản ffmpeg + tsreader)</summary>
-    <summary lang="zh">XBMC的MediaPortal TV服务器前端（ffmpeg + tsreader版）</summary>
+    <summary lang="zh">XBMC 的 MediaPortal TV 服务器前端（ffmpeg + tsreader版）</summary>
     <summary lang="zh_TW">MediaPortal電視服務器的XBMC前端 (ffmpeg+tsreader版本)</summary>
     <description lang="af">MediaPortal TV Bediener voorprogram. Ondersteun stroom van Lewendige TV &amp; Opnames, luister na Radio kanale, EPG en Tydhouers. Hierdie byvoegsel kombineer die voormalige ffmpeg en tsreader byvoegsels.</description>
     <description lang="be">MediaPortal TV Server frontend. Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers. This addon combines the former ffmpeg and tsreader addons.</description>
-    <description lang="bg">XBMC интерфейс за ТВ сървъра MediaPortal. Поддържа преглеждане и записване на телевизия, слушане на радио, EPG и таймери. Тази добавка заменя старите ffmpeg и tsreader добавки.</description>
+    <description lang="bg">XBMC клиент за ТВ сървъра MediaPortal. Поддържа стрийминг и записване на телевизия, слушане на радио канали, електронен програмен справочник и броячи. Тази добавка обединява старите ffmpeg и tsreader добавки.</description>
     <description lang="ca">Frontal XMBC de TV MediaPortal. Suporta el flux de TV en directe i enregistraments, escoltes de canals de radio, EPG i temporitzadors. Aquest afegitó combina els anteriors afegitons de ffmpg i tsreader.</description>
     <description lang="cs">Rozhraní pro televizní server MediaPortal. Podporuje proudové vysílání živého vysílání a nahrávek, poslech kanálů rádia, EPG, a časovače. Toto rozšíření kombinuje rozšíření ffmpeg a tsreader.</description>
     <description lang="cy">Blaen Gweinydd Teledu Media Portal. Mae'n cynnal ffrydio Teledu Byw a Recordiadau, gwrando ar sianeli Radio, Amserlen Rhaglenni ac Amserlenydd. Mae'r ychwanegyn yn cynnwys y cyn ychwangion ffmpeg a tsreader.</description>
@@ -70,15 +73,18 @@
     <description lang="de">Mediaportal TV Server Oberfläche. Unterstützt Live TV &amp; Aufnahmen, Radiokanäle, EPG und Timer. Dieses Addon kombiniert die ehemaligen ffmpeg- und tsreader-Addons.</description>
     <description lang="el">Frontend για το διακομιστή MediaPortal TV. Υποστηρίζει ροές Live TV &amp; Εγγραφές, ακρόαση Ραδιοφώνου, EPG και Χρονοδιακόπτες. Αυτό το πρόσθετο συνδυάζει τα προηγούμενα πρόσθετα ffmpeg και tsreader.</description>
     <description lang="en">MediaPortal TV Server frontend. Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers. This addon combines the former ffmpeg and tsreader addons.</description>
+    <description lang="en_NZ">MediaPortal TV Server frontend. Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers. This addon combines the former ffmpeg and tsreader addons.</description>
     <description lang="es">Interfaz MediaPortal TV Server. Soporta transmisión de TV en vivo y grabaciones, escuchar canales de radio, EPG y temporizadores. Este complemento combina los anteriores ffmpeg y tsreader.</description>
     <description lang="es_AR">Interfaz MediaPortal TV Server. Soporta transmisión de TV en vivo y grabaciones, escuchar canales de radio, EPG y temporizadores. Este complemento combina los anteriores ffmpeg y tsreader.</description>
     <description lang="et">MediaPortal TV serveri esi. Toetab telekanalite striimimist ja salvestamist, raadio kuulamist ja elektroonilist saatekava. See lisa kombineerib endas endised ffmpeg ja tsreader lisad.</description>
     <description lang="fi">MediaPortal TV-palvelimen frontend. Tukee livelähetysten sekä tallenteiden virtaustoista, radiokanavia, ohjelmaopasta sekä ajastuksia. Tämä lisäosa yhdistää aikaisemmat ffmpeg- ja tsreader-lisäosat.</description>
     <description lang="fr">Applicatif Serveur TV MediaPortal. Il supporte la lecture en continu de direct télévision et enregistrement, l'écoute de radios, guide de programmes et minuteries. Cette extension combine les existants ffmpeg et tsreader.</description>
-    <description lang="gl">Interface do Servidor de TV de MediaPortal. Soporta transmisión de TV ao vivo e Gravacións, escoita dos canles da radio, EPG e programacións. Este engadido combina o antigo ffmpeg e os engadidos tsreader.</description>
+    <description lang="fr_CA">Frontal pour le serveur MediaPortal TV, prenant en charge la lecture en transit des télés en direct &amp; les enregistrements, l'écoute de chaînes radio, le GÉP et les minuteries. Cet addiciel combines les anciens addiciels ffmpeg et tsreader.</description>
+    <description lang="gl">Interface do Servidor de TV de MediaPortal. Soporta transmisión de TV ao vivo e Gravacións, escoita dos canles da radio, Guía e programacións. Este engadido combina o antigo ffmpeg e os engadidos tsreader.</description>
     <description lang="he">ממשק משתמש לשרת טלוויזיה MediaPortal.תומך בהזרמת שידורי טלוויזיה ורדיו חיים והקלטתם,לוח שידורים ומתזמני הקלטות.תוסף זה משלב בתוכו את התוספים של ffmpeg וtsreader.</description>
     <description lang="hr">MediaPortal TV poslužitelj sučelje. Podržava stremanje i snimanje TV programa, slušanje radio programa, elektronski programski vodič (EPG) i vremenski zadano snimanje. Ovaj dodatak objedinjuje nekadašnje ffmpeg i tsreader dodatke.</description>
     <description lang="hu">Médiaportal előtér-kiszolgáló. Élő adások, felvételek,és rádió adások sugárzásának támogatása EPG-vel és időzítéssel. Ez a kiegészítő egyesíti az ffmpeg, és a tsreader kiegészítőket.</description>
+    <description lang="id">Frontend Server TV MediaPortal. Mendukung pengaliran TV dan Rekaman langsung, mendengarkan kanal radio, EPG dan Timer. Pengaya ini mengkombinasikan penggaya ffmeg dan tsreader yang lama.</description>
     <description lang="it">Frontend del server MediaPortal TV. Supporta lo streaming di Live TV e le registrazioni, l'ascolto dei canali radio, EPG e i timer. Questo addon combina gli addon ffmpeg e tsreaded.</description>
     <description lang="ja">MediaPortal TV サーバーのフロントエンドです。ライブテレビのストリーミングや録画、ラジオチャンネルの視聴、EPG、タイマーなどをサポートしています。以前の ffmpeg アドオンと tsreader アドオンを組み合わせたものです。</description>
     <description lang="ka">MediaPortal TV Server სამომხმარებლო მხარე მხარს უჭერს Live TV სტრიმინგსა და ჩანაწერებს, Radio არხების მოსმენას, EPG-სა და თაიმერებს. ეს ჩადგმა აერთიანებს ძვე ffmpeg და tsreader ჩადგმებს.</description>
@@ -100,11 +106,11 @@
     <description lang="ta_IN">MediaPortal TV Server முன்நிலை. லைவ் டிவி &amp; பதிவுகளின் ஸ்ட்ரீமிங் செய்யவும், ரேடியோ சேனல்கள் கேட்கவும் மற்றும் EPG, துணைபுரிகிறது. இந்த துனைபயன் முன்னாள் ffmpeg மற்றும் tsreader துணை நிரல்கள் ஒருங்கிணைக்கிறது.</description>
     <description lang="uk">Накладка для сервера ТВ MediaPortal. Підтримує потокове Live TV і запис, прослуховування радіо каналів, телегід та планування. Цей додаток сполучає колишні додатки ffmpeg і tsreader.</description>
     <description lang="vi">Giao tiếp cho MediaPortal TV Server. Hỗ trợ truyền phát và thu chương trình Live TV, nghe Radio, hẹn giờ và hiển thị lịch trình chiếu (EPG). Addon này kết hợp cho các addon cũ của ffmpeg và tsreader.</description>
-    <description lang="zh">MediaPortal TV服务器前端，支持直播电视播放和录制、收听电台、电子节目单和定时器。这个插件结合了这前的ffmpeg和tsreader插件。</description>
+    <description lang="zh">MediaPortal TV 服务器前端。支持直播电视和录像流媒体、收听电台、电子节目单和定时器。这个插件结合了之前的 ffmpeg 和 tsreader 插件。</description>
     <description lang="zh_TW">MediaPortal電視服務器的前端。支援的串流檔案包括有：電視直播和錄影，收聽廣播頻道，電子節目表和計時器。這個插件結合了先前ffmpeg和tsreader的插件。</description>
     <disclaimer lang="af">Hierdie is onstabiele sagteware! Die outeurs is op geen manier verantwoordelik vir gefaalde opnames, inkorrekte tydhouers, gemorsde ure, of enige ander ongewensde effekte.</disclaimer>
     <disclaimer lang="be">This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
-    <disclaimer lang="bg">Тази програма е нестабилна! Авторите не носят отговорност за неизпълнение на записването, погрешните таймери, пропилените часове, или някакви други нежелани ефекти.</disclaimer>
+    <disclaimer lang="bg">Тази програма е нестабилна! Авторите не носят отговорност за неуспешно записване, некоректни броячи, пропиляното време и други нежелани ефекти.</disclaimer>
     <disclaimer lang="ca">Això és programari inestable! Els autors no són de cap manera responsables dels enregistraments que han fallat, temporitzadors incorrectes, hores perdudes, o qualsevols altres efectes indesitjables..</disclaimer>
     <disclaimer lang="cs">Tento software není stabilní. Autoři nejsou žádným způsobem zodpovědní za selhání při nahrávání, neplatné časovače, ztracený čas, či jakékoliv jiné nežádoucí události...</disclaimer>
     <disclaimer lang="cy">Mae hwn yn feddalwedd ansad! Nid yw'r awduron yn gyfrifol mewn unrhyw ffordd am fethu recordio, amseru gwallus, oriau wedi eu gwastraffu nac effeithiau anymunol eraill.</disclaimer>
@@ -112,17 +118,20 @@
     <disclaimer lang="de">Dies ist instabile Software! Die Autoren sind in keiner Weise verantwortlich für fehlgeschlagene Aufnahmen, falsche Timer, verschwendete Zeit oder andere ungewünschte Effekte.</disclaimer>
     <disclaimer lang="el">Ασταθές πρόγραμμα! Οι δημιουργοί δεν είναι σε καμία περίπτωση υπεύθυνοι για αποτυχημένες εγγραφές, λανθασμένους χρονοδιακόπτες, χαμένες ώρες, ή κάθε είδους ανεπιθύμητα αποτελέσματα..</disclaimer>
     <disclaimer lang="en">This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
+    <disclaimer lang="en_NZ">This is unstable software! The authors are in no way responsible for failed recordings, incorrect timers, wasted hours, or any other undesirable effects..</disclaimer>
     <disclaimer lang="es">¡Este es un software inestable! Los autores no son de ninguna manera responsables de las grabaciones fallidas o incorrectas, las temporizadores perdidas, ni otros efectos no deseables..</disclaimer>
     <disclaimer lang="es_AR">¡Este software es inestable! Los autores no se responsabilizan por grabaciones fallidas, temporizadores incorrectos, horas perdidas, o cualquier otro efecto no deseado..</disclaimer>
     <disclaimer lang="es_MX">¡Esto es software inestable! Los autores no son de ninguna manera responsables por grabaciones fallidas, temporizadores incorrectos, horas perdidas o cualquier otro efecto no deseado...</disclaimer>
     <disclaimer lang="et">See on ebastabiilne tarkvara! Autorid ei ole kuidagi moodi vastutavad nurjunud salvestiste, ebaõige aegrelee, raisatud tundide ega muude soovimatute asjade eest.</disclaimer>
     <disclaimer lang="fi">Tämä on epävakaa ohjelmisto! Tekijät eivät ole millään muotoa vastuussa epäonnistuneista tallennuksista, virheellisistä ajastuksia, haaskatusta ajasta, verenpaineen noususta tai mistään muusta epäsuotuisasta vaikutuksesta.</disclaimer>
     <disclaimer lang="fr">Cet applicatif est instable ! Les auteurs ne sont en aucun cas responsables d'échec d'enregistrements, minuteries erronées, temps perdu et autres résultats indésirables..</disclaimer>
+    <disclaimer lang="fr_CA">Ce logiciel est instable! Les auteurs ne sont aucunement responsables des enregistrements défaillants, des minuteries erronées, des heures perdues ou tout autre effet indésirable.</disclaimer>
     <disclaimer lang="gl">Este é software non estable, os autores non se fan responsábeis dos erros na gravacións, temporizadores incorrectos, e outros efectos non desexados.</disclaimer>
     <disclaimer lang="he">זוהי תוכנה בלתי יציבה!מחברי התכנה אינם אחראים להקלטות כושלות,מתזמני הקלטות שגויים,שעות מבוזבזות,או כל תוצאה בלתי רצויה...</disclaimer>
     <disclaimer lang="hr">Ovo je nestabilan softver! Autori nisu ni na koji način odgovorni za neuspjelo snimanje, netočna vremena snimanja, izgubljene sate, ili bilo koje druge nepoželjne učinke...</disclaimer>
     <disclaimer lang="hu">Ez nem stabil szoftver! A készítők nem vállalnak felelősséget, a hibás felvételért, rossz időzítésért, elvesztegetett időért...</disclaimer>
     <disclaimer lang="id">Ini merupakan software yang tidak stabil! Penulis tidak bertanggung jawab untuk rekaman gagal, timer salah, waktu terbuang, atau efek tak diinginkan lainnya...</disclaimer>
+    <disclaimer lang="is">Þetta er óstöðugur hugbúnaður! Höfundarnir eru á engann hátt ábyrgir fyrir misheppnuðum upptökum, röngum upptökutímum, klukkustundum sem að fóru í súginn eða nokkrum öðrum óæskilegum áhrifum.</disclaimer>
     <disclaimer lang="it">Questo software non è stabile! Gli autori non sono responsabili per registrazioni fallite, timer non corretti, ore perse, o altri effetti indesiderati...</disclaimer>
     <disclaimer lang="ja">これは不安定なソフトウェアです！本プログラムの作者は、録画の失敗、正確に作動しなかったタイマー、無駄にした時間、その他あらゆる好ましくない結果について責任を負わないものとします。</disclaimer>
     <disclaimer lang="ka">ეს არის არასტაბილური პროგრამული უზრუნველყოფა! ავტორები არ არიან პასუხისმგებელი შეცდომებზე, არასწორ EPG-ზე, დაკარგულ დროზე ან სხვა ხარვეზებზე</disclaimer>
@@ -144,10 +153,11 @@
     <disclaimer lang="sr">Овај софтвер је нестабилан! Аутори ни на који начин нису одговорни за неуспела снимања, неисправна заказана снимања, изгубљене сате или друге нежељене ефекте.</disclaimer>
     <disclaimer lang="sv">Detta är ostabil mjukvara! Upphovsmännen är inte ansvariga för misslyckade inspelningar, inkorrekta timers, bortslösade timmar, eller några andra oönskade effekter..</disclaimer>
     <disclaimer lang="ta_IN">இந்த நிலையற்ற மென்பொருள்! தோல்வியடைந்தது பதிவுகள், தவறான டைமர்கள், வீணாகி மணி, அல்லது வேறு எந்த விரும்பத்தகாத விளைவுகலுக்கு இதன் ஆசிரியர்கள் பொறுப்பு இல்லை.</disclaimer>
+    <disclaimer lang="tg">Ин нармафзори ноустувор аст! Муаллифон барои вайрониҳои сабт, вақтсанҷҳои нодуруст, соатҳои бефоида ва дигар таъсирҳои номатлуб ҷавобгар намебошанд.</disclaimer>
     <disclaimer lang="tr">Bu stabil olmayan program! Yapımcılar hatalı kayıtlardan, bozuk sürelerden, harcanan vakitten veya herhangi bir olumsuz etkiden dolayı sorumlu tutulamaz.</disclaimer>
     <disclaimer lang="uk">Це нестабільна програма! Автор не несуть жодної відповідальності за зіпсуті записи, неправильні таймери, потрачений час, та інші небажані ефекти.</disclaimer>
     <disclaimer lang="vi">Đây là phần mềm không ổn định! Các tác giả không chịu trách nhiệm đối với bản ghi âm thất bại, giờ không chính xác, giờ lãng phí, hoặc bất kỳ tác dụng không mong muốn khác...</disclaimer>
-    <disclaimer lang="zh">这是不稳定版的软件！作者不对录制失败、错误定时造成时间浪费或其它不良影响负责。</disclaimer>
+    <disclaimer lang="zh">这是不稳定版的软件！作者不对录像失败、错误定时造成时间浪费或其它不良影响负责。</disclaimer>
     <disclaimer lang="zh_TW">這是測試版軟體！其原創作者並無法對於以下情況負責，包含：錄影失敗，不正確的定時設定，多餘時數，或任何產生的其它不良影響...</disclaimer>
     <platform>@OS@</platform>
   </extension>

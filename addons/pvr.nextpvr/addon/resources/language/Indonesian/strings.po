@@ -4,21 +4,117 @@
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Indonesian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/id/)\n"
+"Language-Team: Indonesian (http://www.transifex.com/projects/p/xbmc-main/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "NextPVR Hostname"
+msgstr "Hostname NextPVR"
+
+msgctxt "#30001"
+msgid "NextPVR Port (usually 8866 or 7799)"
+msgstr "Port NextPVR (Biasanya 8866 atau 7799)"
+
+msgctxt "#30002"
+msgid "NextPVR PinCode"
+msgstr "Kode Pin NextPVR"
+
+msgctxt "#30003"
+msgid "Enable TimeShift with Live TV"
+msgstr "Aktifkan TimeShift dengan Siaran TV"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Koneksi"
+
 msgctxt "#30041"
 msgid "Advanced"
 msgstr "Tingkat Lanjut"
+
+msgctxt "#30050"
+msgid "NextPVR server is too old."
+msgstr "Server NextPVR terlalu tua."
+
+msgctxt "#30051"
+msgid "Upgrade to '%s' or higher!"
+msgstr "Upgrade ke versi '%s' atau lebih tinggi!"
+
+msgctxt "#30052"
+msgid "Connection failed. Incorrect PIN?"
+msgstr "Koneksi gagal. PIN salah?"
+
+msgctxt "#30053"
+msgid "Tuner no longer available"
+msgstr "Tuner tidak lagi tersedia"
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Tambahkan Timer"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Tipe Perekaman"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Rekam sekali"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Rekam semusim (Setiap episode baru di kanal ini)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Rekam semusim (Semua episode dalam kanal ini)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Rekam semusim (Tiap hari di jam ini)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Rekam semusim (Mingguan, di jam ini)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Rekam semusim (Senin - Jumat, di jam ini)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Rekam semusim (Akhir minggu, di jam ini)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Pertahankan"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Semua rekaman"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Pre-Padding (menit)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Pre-Padding (menit)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Direktori Rekaman"
 
 msgctxt "#30135"
 msgid "Default"

@@ -4,12 +4,12 @@
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Galician (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/gl/)\n"
+"Language-Team: Galician (http://www.transifex.com/projects/p/xbmc-main/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -56,9 +56,57 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "O sintonizador non está dispoñíbel"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Engadir Temporizador"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Tipo de Gravación"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Gravar unha vez"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Gravar Tempada (NOVOS episodios desta canle)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Gravar Tempada (Todos os episodios desta canle)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Gravar Tempada (Diario, neste horario)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Gravar Tempada (Semanal, neste horario)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Gravar Tempada (Luns-Venres, neste horario)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Gravar Tempada (Fins de semana, neste horario)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Manter"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Todas as gravacións"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Cartafol das Gravacións"
 
 msgctxt "#30135"
 msgid "Default"

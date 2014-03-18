@@ -4,12 +4,12 @@
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Croatian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/hr/)\n"
+"Language-Team: Croatian (http://www.transifex.com/projects/p/xbmc-main/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -56,6 +56,66 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Prijemnik više nije dostupan"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[PONOVITI]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Dodaj zakazano snimanje"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Vrsta snimanja"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Snimi jednom"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Snimi sezonu (nove epizode na ovom programu)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Snimi sezonu (sve epizode na ovom programu)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Snimi sezonu (dnevno, ovaj vremenski raspon)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Snimi sezonu (tjedno, ovaj vremenski raspon)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Snimi sezonu (ponedjeljak-petak, ovaj vremenski raspon)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Snimi sezonu (vikendom, ovaj vremenski raspon)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Zadrži"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Sve snimke"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Predpostavljanje (minute)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Predpostavljanje (minute)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Direktorij snimanja"
+
 msgctxt "#30135"
 msgid "Default"
-msgstr "Zadano"
+msgstr "Uobičajeno"

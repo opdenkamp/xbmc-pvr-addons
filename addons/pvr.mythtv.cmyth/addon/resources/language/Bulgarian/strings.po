@@ -4,12 +4,12 @@
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Bulgarian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/bg/)\n"
+"Language-Team: Bulgarian (http://www.transifex.com/projects/p/xbmc-main/language/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "MythTV Backend Hostname or IP"
-msgstr "Име на хоста за MythTV сървъра или IP"
+msgstr "MythTV хост или IP адрес"
 
 msgctxt "#30001"
 msgid "MythTV Backend Port"
@@ -26,27 +26,51 @@ msgstr "Порт за MythTV сървъра"
 
 msgctxt "#30002"
 msgid "MythTV Database Username"
-msgstr "Потребителско име за MythTV"
+msgstr "Потребителско име за MythTV базата данни"
 
 msgctxt "#30003"
 msgid "MythTV Database Password"
-msgstr "Парола на потребителят за MythTV"
+msgstr "Парола за MythTV базата данни"
 
 msgctxt "#30004"
 msgid "MythTV Database Databasename"
 msgstr "Име на базата данни за MythTV"
 
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "Включи повече дебъгваща информация в дневника"
+
 msgctxt "#30006"
 msgid "Enable Live TV"
 msgstr "Включи Live TV"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "Разреши Live TV да се превключва към планираното шоу"
 
 msgctxt "#30008"
 msgid "Conflict handling"
 msgstr "Обработка на конфликти"
 
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Предпочитай Live TV, при записване чрез по-бавния слот"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Предпочитай записването и спри Live TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Предпочитай Live TV и отмени конфликтния запис"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "Интернет адрес на MythTV сървъра (WOL)"
+
 msgctxt "#30019"
 msgid "General"
-msgstr "Основно"
+msgstr "Главни"
 
 msgctxt "#30020"
 msgid "Template provider"
@@ -92,6 +116,14 @@ msgctxt "#30032"
 msgid "Run User Job #4"
 msgstr "Стартирай задача №4"
 
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Енкодер"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Да се разреши ли завършването на записа?"
+
 msgctxt "#30049"
 msgid "Recording template"
 msgstr "Шаблон за записване"
@@ -100,9 +132,25 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr "Допълнителни"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Включи demuxing MPEG-TS"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Версия на протокола: %i - версия на базата данни: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Неуспешно свързване с MythTV сървъра"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Неуспешно свързване с MythTV базата данни"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Избубена е връзката с MythTV сървъра"
 
 msgctxt "#30303"
 msgid "Connection to MythTV restored"
@@ -120,10 +168,58 @@ msgctxt "#30306"
 msgid "Recorder unavailable"
 msgstr "Записващото устройство е недостъпно"
 
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Прекъсване на конфликтния запис: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Спиране на Live TV поради конфликтен запис: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Няма записи"
+
 msgctxt "#30310"
 msgid "Enabled"
 msgstr "Включено"
 
 msgctxt "#30311"
 msgid "Disabled"
-msgstr "Изключена"
+msgstr "Изключено"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Няма открито излъчване"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Изтрий и повторно запиши"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Съхранявай LiveTV записите"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Покажи/скрий правилата със статут 'Няма записи'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Запис на всички предавания (този канал)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Запис на това предаване всяка седмица"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Запис на това предаване всеки ден"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Запис на едно предаване (всички канали)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Запис на всички нови епизоди (този канал)"

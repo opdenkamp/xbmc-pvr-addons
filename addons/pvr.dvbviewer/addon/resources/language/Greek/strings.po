@@ -4,12 +4,12 @@
 # Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Greek (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/el/)\n"
+"Language-Team: Greek (http://www.transifex.com/projects/p/xbmc-main/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,7 +22,7 @@ msgstr "Διεύθυνση IP της Υπηρεσίας Εγγραφών του 
 
 msgctxt "#30001"
 msgid "Webinterface Port"
-msgstr "Θύρα Διεπαφής Ιστού"
+msgstr "Θύρα Διασύνδεσης Ιστού"
 
 msgctxt "#30002"
 msgid "Username"
@@ -38,23 +38,23 @@ msgstr "Χρήση αγαπημένων αντί λίστας καναλιών"
 
 msgctxt "#30011"
 msgid "Use local favourites file"
-msgstr "Χρήση τοπικού αρχείο αγαπημένων"
+msgstr "Χρήση τοπικού αρχείου αγαπημένων"
 
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
-msgstr "Επιλογή του αρχείου favourites.xml"
+msgstr "Επιλογή του αρχείου αγαπημένων favourites.xml"
 
 msgctxt "#30020"
 msgid "Enable Timeshift"
-msgstr "Ενεργοποίηση TimeShift"
+msgstr "Ενεργοποίηση Timeshift"
 
 msgctxt "#30021"
 msgid "Timeshift buffer path"
-msgstr "Διαδρομή προσωρινής αποθήκευσης του TimeShift"
+msgstr "Διαδρομή προσωρινής αποθήκευσης Timeshift"
 
 msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
-msgstr "Χρήση ροής RTSP για live TV"
+msgstr "Χρήση ροής RTSP για ζωντανή τηλεόρασης"
 
 msgctxt "#30100"
 msgid "General"
@@ -62,7 +62,7 @@ msgstr "Γενικά"
 
 msgctxt "#30101"
 msgid "Advanced"
-msgstr "Για προχωρημένους"
+msgstr "Για Προχωρημένους"
 
 msgctxt "#30500"
 msgid "Can't connect to the Recording Service"

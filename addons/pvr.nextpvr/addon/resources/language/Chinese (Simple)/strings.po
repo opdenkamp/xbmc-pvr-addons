@@ -4,12 +4,12 @@
 # Addon Provider: Graeme Blackley
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/zh/)\n"
+"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,15 +18,15 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "NextPVR Hostname"
-msgstr "NextPVR主机名"
+msgstr "NextPVR 主机名"
 
 msgctxt "#30001"
 msgid "NextPVR Port (usually 8866 or 7799)"
-msgstr "NextPVR端口（通常为8866或7799）"
+msgstr "NextPVR 端口（通常为8866或7799）"
 
 msgctxt "#30002"
 msgid "NextPVR PinCode"
-msgstr "NextPVR PIN码"
+msgstr "NextPVR PIN 码"
 
 msgctxt "#30003"
 msgid "Enable TimeShift with Live TV"
@@ -42,7 +42,7 @@ msgstr "高级"
 
 msgctxt "#30050"
 msgid "NextPVR server is too old."
-msgstr "NextPVR服务器版本太旧"
+msgstr "NextPVR 服务器版本太旧。"
 
 msgctxt "#30051"
 msgid "Upgrade to '%s' or higher!"
@@ -50,15 +50,71 @@ msgstr "升级到“%s”或更高版本！"
 
 msgctxt "#30052"
 msgid "Connection failed. Incorrect PIN?"
-msgstr "连接失败，错误PIN码？"
+msgstr "连接失败，错误 PIN 码？"
 
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "电视接收设备不可用"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[重现]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "添加定时器"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "录像类型"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "单次录像"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "季录像（此频道新分集）"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "季录像（此频道所有分集）"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "季录像（每日，此时间档）"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "季录像（每周，此时间档）"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "季录像（周一至五，此时间档）"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "季录像（周末，此时间档）"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "保持"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "所有录像"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "提前量（分）"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "提前量（分）"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "录像目录"
 
 msgctxt "#30135"
 msgid "Default"

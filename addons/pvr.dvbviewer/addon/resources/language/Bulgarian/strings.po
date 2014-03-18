@@ -4,17 +4,25 @@
 # Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Bulgarian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/bg/)\n"
+"Language-Team: Bulgarian (http://www.transifex.com/projects/p/xbmc-main/language/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "DVBViewer Recording Service IP Address"
+msgstr "IP адрес на DVBViewer услуга за записване"
+
+msgctxt "#30001"
+msgid "Webinterface Port"
+msgstr "Порт на уеб интерфейса"
 
 msgctxt "#30002"
 msgid "Username"
@@ -24,6 +32,30 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "Парола"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Използвай любимите вместо списъка с канали"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Използвай локален файл с любими"
+
+msgctxt "#30012"
+msgid "Select the favourites.xml file"
+msgstr "Изберете favourites.xml файл"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Включи таймшифта"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Път към таймшифт буфера"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Използвай RTSP стрийминг за телевизия на живо"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Основни"
@@ -31,3 +63,11 @@ msgstr "Основни"
 msgctxt "#30101"
 msgid "Advanced"
 msgstr "Допълнителни"
+
+msgctxt "#30500"
+msgid "Can't connect to the Recording Service"
+msgstr "Неуспешно свързване с услугата за записване"
+
+msgctxt "#30501"
+msgid "Recording Service version %s or higher required"
+msgstr "Изисква се услуга за записване версия %s или по-нова"

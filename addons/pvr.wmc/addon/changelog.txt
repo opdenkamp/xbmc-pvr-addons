@@ -1,5 +1,8 @@
 0.2.94
 - Add support for Radio Channels
+- Improve triggering of XBMC GUI refresh for Timers/Recordings
+- AddTimer notifications are now info/warning rather than errors
+- Add workaround to get XBMC skip/seek to behave nicely for Active and Remuxed recordings 
 
 0.2.93
 - Implements channel groups

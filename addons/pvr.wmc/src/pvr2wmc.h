@@ -85,6 +85,7 @@ public:
 	PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
 	
 	bool CheckErrorOnServer();
+	void TriggerUpdates(vector<CStdString> results);
 
 private:
 	std::vector<PVR_CHANNELGroup> _groups;

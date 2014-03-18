@@ -35,7 +35,10 @@ using namespace PLATFORM;
 #define STRCPY(dest, src) strncpy(dest, src, sizeof(dest)-1); 
 #define FOREACH(ss, vv) for(std::vector<CStdString>::iterator ss = vv.begin(); ss != vv.end(); ++ss)
 
-int64_t _lastRecordingUpdateTime;
+#define FAKE_TS_LENGTH 2000000			// a fake file length for give to xbmc (used to insert duration headers)
+
+int64_t _lastRecordingUpdateTime;		// the time of the last recording display update
+
 
 Pvr2Wmc::Pvr2Wmc(void)
 {
@@ -47,18 +50,24 @@ Pvr2Wmc::Pvr2Wmc(void)
 	_socketClient.SetClientName(g_strClientName);
 	_socketClient.SetServerPort(g_port);
 
-	_signalStatusCount = 0;
+	_signalStatusCount = 0;			// for signal status display
 	_discardSignalStatus = false;
 
-	_lastRecordingUpdateTime = 0;
 	_streamFile = 0;				// handle to a streamed file
 	_streamFileName = "";
+	_readCnt = 0;
+
 	_initialStreamResetCnt = 0;		// used to count how many times we reset the stream position (due to 2 pass demuxer)
 	_initialStreamPosition = 0;     // used to set an initial position (multiple clients watching the same live tv buffer)
+	
+	_insertDurationHeader = false;	// if true, insert a duration header for active Rec TS file
+	_durationHeader = "";			// the header to insert (received from server)
+	
+	_lastRecordingUpdateTime = 0;	// time of last recording display update
 	_lostStream = false;			// set to true if stream is lost
-	_lastStreamSize = 0;
-	_isStreamFileGrowing = false;	
-	_streamWTV = true;		// by default, assume we are streaming Wtv files (not ts files)
+	_lastStreamSize = 0;			// the last value found for the stream file size
+	_isStreamFileGrowing = false;	// true if stream file is growing (server determines)
+	_streamWTV = true;				// by default, assume we are streaming Wtv files (not ts files)
 }
 
 Pvr2Wmc::~Pvr2Wmc(void)
@@ -733,11 +742,12 @@ bool Pvr2Wmc::OpenLiveStream(const PVR_CHANNEL &channel)
 		return false;
 
 	_lostStream = true;								// init
+	_readCnt = 0;
 
 	CloseLiveStream(false);							// close current stream (if any)
 
 	CStdString request = "OpenLiveStream" + Channel2String(channel);		// request a live stream using channel
-	vector<CStdString> results = _socketClient.GetVector(request, false);						// try to open live stream, get path to stream file
+	vector<CStdString> results = _socketClient.GetVector(request, false);	// try to open live stream, get path to stream file
 
 	if (isServerError(results))												// test if server reported an error
 	{
@@ -799,11 +809,14 @@ bool Pvr2Wmc::SwitchChannel(const PVR_CHANNEL &channel)
 	return _socketClient.GetBool(request, false);		// try to open live stream, get path to stream file
 }
 
+
 // read from the live stream file opened in OpenLiveStream
 int Pvr2Wmc::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
 	if (_lostStream)									// if stream has already been flagged as lost, return 0 bytes 
 		return 0;										// after this happens a few time, xbmc will call CloseLiveStream
+
+	_readCnt++;											// keep a count of the number of reads executed
 
 	if (!_streamWTV)									// if NOT streaming wtv, make sure stream is big enough before it is read
 	{						
@@ -820,7 +833,7 @@ int Pvr2Wmc::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 		// So we actually need to Seek() to our initial start position more than once.  Because there are other situations where we can end up 
 		// at the start of the file (such as the user rewinding) the easiest option at this point is to simply assume the demuxer makes 2 passes,
 		// and to reset the Seek position twice before clearing the stored value and thus no longer performing the reset.
-		
+
 		// Seek to initial file position if OpenLiveStream stored a starting offset and we are at position 0 (start of the file)
 		if (_initialStreamPosition > 0 && PositionLiveStream() == 0)
 		{
@@ -841,16 +854,41 @@ int Pvr2Wmc::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 			}
 		}
 
-		long long totalRead = PositionLiveStream();		// get the current file position
+		long long currentPos = PositionLiveStream();	// get the current file position
+
+		// this is a hack to set the time duration of an ACTIVE recording file. Xbmc reads the ts duration by looking for timestamps
+		// (pts/dts) toward the end of the ts file.  Since our ts file is very small at the start, xbmc skips trying to get the duration
+		// and just sets it to zero, this makes FF,RW,Skip work poorly and gives bad OSD feedback during playback.  The hack is 
+		// to tell xbmc that the ts file is 'FAKE_TS_LENGTH' in length at the start of the playback (see LengthLiveStream).  Then when xbmc 
+		// tries to read the duration by probing the end of the file (it starts looking at fileLength-250k), we catch this read below and feed
+		// it a packet that contains a pts with the duration we want (this packet header is received from the server).  After this, everything 
+		// is set back to normal.
+		if (_insertDurationHeader && FAKE_TS_LENGTH - 250000 == currentPos) // catch xbmc probing for timestamps at end of file
+		{
+			//char pcr[16] = {0x47, 0x51, 0x00, 0x19, 0x00, 0x00, 0x01, 0xBD, 0x00, 0x00, 0x85, 0x80, 0x05, 0x21, 0x2E, 0xDF};
+			_insertDurationHeader = false;									// only do header insertion once
+			memset(pBuffer, 0xFF, iBufferSize);								// set buffer to all FF (default padding char for packets)
+			vector<CStdString> v = split(_durationHeader, " ");				// get header bytes by unpacking reponse
+			for (int i=0; i<16; i++)										// insert header bytes, creating a fake packet
+			{
+				//*(pBuffer + i) = pcr[i];
+				*(pBuffer + i) = (char)strtol(v[i].c_str(), NULL, 16);
+			}
+			return iBufferSize;											// terminate read here
+		} 
+		// in case something goes wrong, turn off fake header insertion flag.
+		// the header insertion usually happens around _readCnt=20, so 50 should be safe
+		if (_readCnt > 50)
+			_insertDurationHeader = false;
 
 		long long fileSize = _lastStreamSize;			// use the last fileSize found, rather than querying host
 
-		if (_isStreamFileGrowing && totalRead + iBufferSize > fileSize)		// if its not big enough for the readsize
+		if (_isStreamFileGrowing && currentPos + iBufferSize > fileSize)	// if its not big enough for the readsize
 			fileSize = ActualFileSize(timeout);								// get the current size of the stream file
 
 		// if the stream file is growing, see if the stream file is big enough to accomodate this read
 		// if its not, wait until it is
-		while (_isStreamFileGrowing && totalRead + iBufferSize > fileSize)
+		while (_isStreamFileGrowing && currentPos + iBufferSize > fileSize)
 		{
 			usleep(600000);								// wait a little (600ms) before we try again
 			timeout++;
@@ -877,7 +915,7 @@ int Pvr2Wmc::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 			if (timeout > 50 )									// if after 30 sec the file has not grown big enough, timeout
 			{
 				_lostStream = true;								// flag that stream is down
-				if (totalRead == 0 && fileSize == 0)			// if no data was ever read, assume no video signal
+				if (currentPos == 0 && fileSize == 0)			// if no data was ever read, assume no video signal
 				{
 					XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30004));
 					XBMC->Log(LOG_DEBUG, "no video found for stream");
@@ -890,9 +928,9 @@ int Pvr2Wmc::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 				return -1;																	// this makes xbmc call closelivestream
 			}
 		}
-	}
+	}  // !_streamWTV
 
-	// read from stream file
+	// finally, read data from stream file
 	unsigned int lpNumberOfBytesRead = XBMC->ReadFile(_streamFile, pBuffer, iBufferSize);
 
 	return lpNumberOfBytesRead;
@@ -937,6 +975,7 @@ long long Pvr2Wmc::PositionLiveStream(void)
 	return lFilePos;
 }
 
+// get stream file size, querying it from server if needed
 long long Pvr2Wmc::ActualFileSize(int count)
 {
 	long long lFileSize = 0;
@@ -952,7 +991,7 @@ long long Pvr2Wmc::ActualFileSize(int count)
 	{
 		CStdString request;
 		request.Format("StreamFileSize|%d", count);		// request stream size form client, passing number of consecutive queries
-		lFileSize = _socketClient.GetLL(request, true);
+		lFileSize = _socketClient.GetLL(request, true);	// get file size form client
 
 		if (lFileSize < -1)								// if server returns a negative file size, it means the stream file is no longer growing (-1 => error)
 		{
@@ -967,6 +1006,8 @@ long long Pvr2Wmc::ActualFileSize(int count)
 // return the length of the current stream file
 long long Pvr2Wmc::LengthLiveStream(void) 
 {
+	if (_insertDurationHeader)			// if true, return a fake file 2Mb length to xbmc, this makes xbmc try to determine
+		return FAKE_TS_LENGTH;			// the ts time duration giving us a chance to insert the real duration
 	if (_lastStreamSize > 0)
 		return _lastStreamSize;
 	return -1;
@@ -997,6 +1038,7 @@ bool Pvr2Wmc::CloseLiveStream(bool notifyServer /*=true*/)
 		return true;
 }
 
+
 // this is only called if a recording is actively being recorded, xbmc detects this when the server
 // doesn't enter a path in the strStreamURL field during a "GetRecordings"
 bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
@@ -1005,9 +1047,10 @@ bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
 		return false;
 
 	_lostStream = true;								// init
+	_readCnt = 0;
 
 	// request an active recording stream
-	CStdString request;// = format("OpenRecordingStream|%s", recording.strRecordingId);	
+	CStdString request;
 	request.Format("OpenRecordingStream|%s", recording.strRecordingId);	
 	vector<CStdString> results = _socketClient.GetVector(request, false);	// try to open recording stream, get path to stream file
 
@@ -1020,6 +1063,7 @@ bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
 		_streamFileName = results[0];
 		_streamWTV = EndsWith(_streamFileName, "wtv");		// true if stream file is a wtv file
 
+		// hand additional args from server
 		if (results.size() >  1)
 			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> rec stream type: " + results[1]);		// either a 'passive' or 'active' WTV OR a TS file
 		
@@ -1027,6 +1071,17 @@ bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
 			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> opening stream: " + results[2]);		// log password safe path of client if available
 		else
 			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> opening stream: " + _streamFileName);	
+
+		if (results.size() > 3 && results[3] != "")											// get header to set duration of ts file
+		{
+			_durationHeader = results[3];													
+			_insertDurationHeader = true;
+		}
+		else
+		{
+			_durationHeader = "";
+			_insertDurationHeader = false;
+		}
 
 		_streamFile = XBMC->OpenFile(_streamFileName.c_str(), 0);	// open the video file for streaming, same handle
 
@@ -1047,8 +1102,12 @@ bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
 			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> stream file opened successfully");
 
 		_lostStream = false;						// stream is open
-		_lastStreamSize = 0;
-		_isStreamFileGrowing = true;
+		_lastStreamSize = 0;						// current size is empty
+		_isStreamFileGrowing = true;				// initially assume its growing
+
+		// Initialise variables for starting stream at an offset (only used for live streams)
+		_initialStreamResetCnt = 0;
+		_initialStreamPosition = 0;
 
 		return true;								// if we got to here, stream started ok
 	}

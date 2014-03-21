@@ -106,11 +106,27 @@ const char *Pvr2Wmc::GetBackendVersion(void)
 		vector<CStdString> results = _socketClient.GetVector(request, true);
 		if (results.size() > 1)
 		{
-			_serverBuild = atoi(results[1]);
-			return results[0].c_str();
+			_serverBuild = atoi(results[1]);			// get server build number for feature checking
 		}
+		// check if recorded tv folder is accessible from client
+        if (results.size() > 2 && results[2] != "")		// if server sends empty string, skip check
+        {
+            if (!XBMC->DirectoryExists(results[2]))
+			{
+				XBMC->Log(LOG_ERROR, "Recorded tv '%s' does not exist", results[2].c_str());
+				CStdString infoStr = XBMC->GetLocalizedString(30017);		
+				XBMC->QueueNotification(QUEUE_ERROR, infoStr.c_str());
+			}
+			else if (!XBMC->CanOpenDirectory(results[2]))
+			{
+				XBMC->Log(LOG_ERROR, "Recorded tv '%s' count not be opened", results[2].c_str());
+				CStdString infoStr = XBMC->GetLocalizedString(30018);		
+				XBMC->QueueNotification(QUEUE_ERROR, infoStr.c_str());
+			}
+        }
+		return (results.size() > 1) ? results[0].c_str() : "0.0";	// return server version to caller
 	}
-	return "0.0";
+	return "Not accessible";	//  server version check failed
 }
 
 int Pvr2Wmc::GetChannelsAmount(void)
@@ -325,37 +341,6 @@ int Pvr2Wmc::GetTimersAmount(void)
 	return _socketClient.GetInt("GetTimerCount", true);
 }
 
-#ifdef TARGET_WINDOWS
-UINT_PTR _recTimer = null;					// holds the recording update timer
-
-// this function is a callback for Pvr2Wmc::UpdateRecordingTimer
-VOID CALLBACK RecUpdateTimerFunc( 
-    HWND hwnd,        // handle to window for timer messages 
-    UINT message,     // WM_TIMER message 
-    UINT idTimer,     // timer identifier 
-    DWORD dwTime)     // current system time 
-{ 
-	PVR->TriggerRecordingUpdate();			// tell xbmc to update recordings display
-	assert(KillTimer(NULL, idTimer));		// stop timer from going again
-	_recTimer = null;
-	XBMC->Log(LOG_DEBUG, "Recording Files updated by function timer");
-}
-
-// activate recording file update after the input number of msec
-void Pvr2Wmc::UpdateRecordingTimer(int msec)
-{
-	if (_recTimer == null)			// if timer is already running do nothing
-	{
-		_recTimer = SetTimer(
-			null,					// hWnd
-			0,						// id (if hWnd is null, the id is assigned)
-			msec,					// time till timer goes off
-			RecUpdateTimerFunc		// update rec file function
-		);
-	}
-}
-#endif
-
 PVR_ERROR Pvr2Wmc::AddTimer(const PVR_TIMER &xTmr)  
 {
 	if (IsServerDown())
@@ -463,9 +448,11 @@ PVR_ERROR Pvr2Wmc::AddTimer(const PVR_TIMER &xTmr)
 
 				if (splitResult[0] == "recordingNow")					// recording is active now
 				{
-#ifdef TARGET_WINDOWS
-					UpdateRecordingTimer(10000);						// give time for the recording to start, then update recordings list
-#endif
+					XBMC->Log(LOG_DEBUG, "timer recording is in progress");
+				}
+				else if (splitResult[0] == "recordingNowTimedOut")		// swmc timed out waiting for the recording to start
+				{
+					XBMC->Log(LOG_DEBUG, "server timed out waiting for in-progress recording to start");
 				}
 				else if (splitResult[0] == "recordingChannel")			// service picked a different channel for timer
 				{
@@ -882,7 +869,7 @@ int Pvr2Wmc::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 				//*(pBuffer + i) = pcr[i];
 				*(pBuffer + i) = (char)strtol(v[i].c_str(), NULL, 16);
 			}
-			return iBufferSize;											// terminate read here
+			return iBufferSize;												// terminate read here after header is inserted
 		} 
 		// in case something goes wrong, turn off fake header insertion flag.
 		// the header insertion usually happens around _readCnt=21, so 50 should be safe

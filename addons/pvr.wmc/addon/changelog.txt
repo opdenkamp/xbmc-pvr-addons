@@ -1,6 +1,9 @@
-0.2.94
+0.2.95
+- display correct duration for active-recordings  (gotham only)
 - Add support for Radio Channels
-- Improve triggering of XBMC GUI refresh for Timers/Recordings
+- displays/logs error if it cannot access the Recorded TV folder at startup
+- better updating of ‘Recordings’ list for all client platforms
+- can receive gui update triggers from server when checking server status
 - AddTimer notifications are now info/warning rather than errors
 - Add workaround to get XBMC skip/seek to behave nicely for Active and Remuxed recordings 
 

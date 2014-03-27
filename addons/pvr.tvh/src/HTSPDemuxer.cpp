@@ -698,13 +698,19 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
 {
   uint32_t u32;
   int64_t s64;
-  tvhtrace("timeshiftStatus:");
+  
   if (!htsmsg_get_u32(m, "full", &u32))
-    tvhtrace("  full  : %d", u32);
-  if (!htsmsg_get_s64(m, "start", &s64))
-    tvhtrace("  start : %ld", (long)s64);
-  if (!htsmsg_get_s64(m, "end", &s64))
-    tvhtrace("  end   : %ld", (long)s64);
+    m_timeshiftStatus.full = (bool)u32;
   if (!htsmsg_get_s64(m, "shift", &s64))
-    tvhtrace("  shift : %ld", (long)s64);
+    m_timeshiftStatus.shift = s64;
+  if (!htsmsg_get_s64(m, "start", &s64))
+    m_timeshiftStatus.start = s64;
+  if (!htsmsg_get_s64(m, "end", &s64))
+    m_timeshiftStatus.end = s64;
+  
+  tvhtrace("timeshiftStatus:");
+  tvhtrace("  full  : %d", m_timeshiftStatus.full);
+  tvhtrace("  shift : %ld", (long)m_timeshiftStatus.shift);
+  tvhtrace("  start : %ld", (long)m_timeshiftStatus.start);
+  tvhtrace("  end   : %ld", (long)m_timeshiftStatus.end);
 }

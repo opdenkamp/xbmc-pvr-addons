@@ -215,6 +215,7 @@ private:
   PLATFORM::CCondition<volatile int64_t>  m_seekCond;
   SSourceInfo                             m_sourceInfo;
   SQuality                                m_signalInfo;
+  STimeshiftStatus                        m_timeshiftStatus;
   
   void         Close0         ( void );
   void         Abort0         ( void );

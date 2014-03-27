@@ -172,11 +172,14 @@ bool CHTSPDemuxer::Seek
   }
 
   /* Wait for time */
-  if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, 5000) || m_seekTime < 0)
+  if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, 5000))
   {
     tvherror("failed to get subscriptionSeek response");
     return false;
   }
+  
+  if (m_seekTime < 0)
+    return false;
 
   /* Store */
   *startpts = TVH_TO_DVD_TIME(m_seekTime);

@@ -571,6 +571,7 @@ void CTvheadend::TransferEvent
   epg.endTime             = event.stop;
   epg.strPlotOutline      = event.summary.c_str();
   epg.strPlot             = event.desc.c_str();
+  epg.strIconPath         = event.image.c_str();
   epg.iGenreType          = event.content & 0xF0;
   epg.iGenreSubType       = event.content & 0x0F;
   epg.firstAired          = event.aired;
@@ -1187,10 +1188,8 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
     evt.desc     = str;
   if ((str = htsmsg_get_str(msg, "subtitle")) != NULL)
     evt.subtitle = str;
-#if TODO_FIXME
   if ((str = htsmsg_get_str(msg, "image")) != NULL)
     evt.image   = str;
-#endif
   if (!htsmsg_get_u32(msg, "nextEventId", &u32))
     evt.next    = u32;
   if (!htsmsg_get_u32(msg, "contentType", &u32))

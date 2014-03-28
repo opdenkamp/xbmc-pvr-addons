@@ -179,6 +179,9 @@ void ADDON_Destroy()
   CLockObject lock(g_mutex);
   SAFE_DELETE(tvh);
   SAFE_DELETE(PVR);
+#ifndef OPENELEC_32
+  SAFE_DELETE(CODEC);
+#endif
   SAFE_DELETE(GUI);
   SAFE_DELETE(XBMC);
   SAFE_DELETE(menuHook);

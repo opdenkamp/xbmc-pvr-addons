@@ -1038,7 +1038,7 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool newTimer)
     endTime += timer.iMarginEnd * 60;
   }
 
-  int date = ((startTime + m_timezone * 60) / DAY_SECS) + DELPHI_DATE;
+  int date = (startTime / DAY_SECS) + DELPHI_DATE;
   timeinfo = localtime(&startTime);
   int start = timeinfo->tm_hour * 60 + timeinfo->tm_min;
   timeinfo = localtime(&endTime);

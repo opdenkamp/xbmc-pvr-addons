@@ -39,7 +39,6 @@ using namespace PLATFORM;
  */
 bool         m_bCreated  = false;
 ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
-int          g_iClientId = -1;
 
 /*
  * Global configuration
@@ -52,8 +51,6 @@ int        g_iConnectTimeout     = DEFAULT_CONNECT_TIMEOUT;
 int        g_iResponseTimeout    = DEFAULT_RESPONSE_TIMEOUT;
 string     g_strUsername         = "";
 string     g_strPassword         = "";
-string     g_strUserPath         = "";
-string     g_strClientPath       = "";
 bool       g_bTraceDebug         = false;
 bool       g_bAsyncEpg           = false;
 
@@ -110,14 +107,12 @@ void ADDON_ReadSettings(void)
 #undef UPDATE_STR
 }
 
-ADDON_STATUS ADDON_Create(void* hdl, void* props)
+ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 {
   CLockObject lock(g_mutex);
 
-  if (!hdl || !props)
-    return ADDON_STATUS_UNKNOWN;
-
-  PVR_PROPERTIES* pvrprops = (PVR_PROPERTIES*)props;
+  if (!hdl)
+    return m_CurStatus;
 
   XBMC = new CHelper_libXBMC_addon;
   if (!XBMC->RegisterMe(hdl))
@@ -160,8 +155,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   tvhinfo("starting PVR client");
 
   m_CurStatus     = ADDON_STATUS_UNKNOWN;
-  g_strUserPath   = pvrprops->strUserPath;
-  g_strClientPath = pvrprops->strClientPath;
 
   ADDON_ReadSettings();
   

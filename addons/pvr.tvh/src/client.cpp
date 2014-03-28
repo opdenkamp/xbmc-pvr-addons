@@ -154,8 +154,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 
   tvhinfo("starting PVR client");
 
-  m_CurStatus     = ADDON_STATUS_UNKNOWN;
-
   ADDON_ReadSettings();
   
   tvh = new CTvheadend;
@@ -167,14 +165,13 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 
 ADDON_STATUS ADDON_GetStatus()
 {
-  {
-    CLockObject lock(g_mutex);
-    if (m_CurStatus != ADDON_STATUS_OK)
-      return m_CurStatus;
-  }
-  if (!tvh->IsConnected())
-    return ADDON_STATUS_LOST_CONNECTION;
-  return ADDON_STATUS_OK;
+  CLockObject lock(g_mutex);
+
+  // Check that we're still connected
+  if (m_CurStatus == ADDON_STATUS_OK && !tvh->IsConnected())
+    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+
+  return m_CurStatus;
 }
 
 void ADDON_Destroy()

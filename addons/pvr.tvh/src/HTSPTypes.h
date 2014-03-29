@@ -221,6 +221,14 @@ struct SQueueStatus
   }
 };
 
+struct STimeshiftStatus
+{
+  bool    full;
+  int64_t shift;
+  int64_t start;
+  int64_t end;
+};
+
 struct SQuality
 {
   std::string fe_status;

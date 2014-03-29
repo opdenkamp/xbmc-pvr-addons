@@ -845,10 +845,13 @@ void CTvheadend::SyncEpgCompleted ( void )
   update = false;
   while (sit != m_schedules.end())
   {
+    uint32_t channelId = sit->second.channel;
+    
     if (sit->second.del)
     {
       update = true;
       m_schedules.erase(sit);
+      PVR->TriggerEpgUpdate(channelId);
     }
     else
     {
@@ -859,15 +862,14 @@ void CTvheadend::SyncEpgCompleted ( void )
         {
           update = true;
           sit->second.events.erase(eit);
+          PVR->TriggerEpgUpdate(channelId);
         }
         eit++;
       }
     }
     sit++;
   }
-#if TODO_FIXME
-  PVR->TriggerEventUpdate();
-#endif
+
   if (update)
     tvhinfo("epg updated");
 }
@@ -1241,10 +1243,8 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
              evt.id, evt.channel, (int)evt.start, (int)evt.stop,
              evt.title.c_str(), evt.desc.c_str());
 
-#if TODO_FIXME
     if (m_asyncState > ASYNC_EPG)
-      PVR->TriggerEventUpdate();
-#endif
+      PVR->TriggerEpgUpdate(tmp.channel);
   }
 }
 
@@ -1261,13 +1261,16 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
   tvhtrace("delete event %u", u32);
   
   /* Erase */
-  // TODO: a bit nasty we don't actually know the channelId!
   SSchedules::iterator sit;
   for (sit = m_schedules.begin(); sit != m_schedules.end(); sit++)
-    sit->second.events.erase(u32);
-
-  /* Update */
-#if TODO_FIXME
-  PVR->TriggerEventUpdate();
-#endif
+  {
+    // Find the event so we can get the channel number
+    SEvents::iterator eit = sit->second.events.find(u32);
+    
+    if (eit != sit->second.events.end())
+    {
+      sit->second.events.erase(eit);
+      PVR->TriggerEpgUpdate(sit->second.channel);
+    }
+  }
 }

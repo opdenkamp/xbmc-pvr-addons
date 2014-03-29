@@ -196,8 +196,13 @@ public:
   CHTSPDemuxer( CHTSPConnection &conn );
   ~CHTSPDemuxer();
 
-  bool ProcessMessage ( const char *method, htsmsg_t *m );
-  void Connected      ( void );
+  bool   ProcessMessage ( const char *method, htsmsg_t *m );
+  void   Connected      ( void );
+  
+  time_t GetTimeshiftTime()
+  {
+    return (time_t)m_timeshiftStatus.shift;
+  }
 
 private:
   PLATFORM::CMutex                        m_mutex;
@@ -215,6 +220,7 @@ private:
   PLATFORM::CCondition<volatile int64_t>  m_seekCond;
   SSourceInfo                             m_sourceInfo;
   SQuality                                m_signalInfo;
+  STimeshiftStatus                        m_timeshiftStatus;
   
   void         Close0         ( void );
   void         Abort0         ( void );
@@ -441,6 +447,10 @@ public:
   PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig )
   {
     return m_dmx.CurrentSignal(sig);
+  }
+  inline time_t DemuxGetTimeshiftTime()
+  {
+    return m_dmx.GetTimeshiftTime();
   }
 
   /*

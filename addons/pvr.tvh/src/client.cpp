@@ -637,7 +637,10 @@ void PauseStream(bool _unused(bPaused))
 }
 time_t GetPlayingTime()
 {
-  return 0;
+  // tvheadend reports the number of microseconds the live stream is shifted but 
+  // XBMC expects it to be an absolute UNIX timestamp
+  int seconds = (double) tvh->DemuxGetTimeshiftTime() / 1000000;
+  return (time_t) (time(NULL) - seconds);
 }
 time_t GetBufferTimeStart()
 {

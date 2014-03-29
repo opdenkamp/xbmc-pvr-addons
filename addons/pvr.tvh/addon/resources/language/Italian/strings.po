@@ -1,0 +1,102 @@
+# XBMC Media Center language file
+# Addon Name: Tvheadend Client
+# Addon id: pvr.tvh
+# Addon Provider: Adam Sutton
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#settings labels
+
+msgctxt "#30000"
+msgid "Connection Settings"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Tvheadend hostname or IP address"
+msgstr "Tvheadend hostname o indirizzo IP"
+
+msgctxt "#30002"
+msgid "HTTP port"
+msgstr "Porta HTTP"
+
+msgctxt "#30003"
+msgid "HTSP port"
+msgstr "Porta HTSP"
+
+msgctxt "#30004"
+msgid "Username"
+msgstr "Nome utente"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Password"
+
+msgctxt "#30006"
+msgid "Connection timeout in seconds"
+msgstr "Timeout della connessione in secondi"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Timeout della risposta in secondi"
+
+msgctxt "#30100"
+msgid "Data Transfer"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Asynchronous EPG transfer"
+msgstr ""
+
+msgctxt "#30200"
+msgid "Debugging"
+msgstr ""
+
+msgctxt "#30201"
+msgid "Trace (detailed)"
+msgstr ""
+
+msgctxt "#30300"
+msgid "Tvheadend transcoding settings"
+msgstr "Impostazioni principali transcodifica TV"
+
+msgctxt "#30301"
+msgid "Transcoding settings"
+msgstr "Impostazioni transcodifica"
+
+msgctxt "#30302"
+msgid "Enable transcoding"
+msgstr "Abilita transcodifica"
+
+msgctxt "#30303"
+msgid "Audio codec"
+msgstr "Codec audio"
+
+msgctxt "#30304"
+msgid "Video codec"
+msgstr "Codec video"
+
+msgctxt "#30305"
+msgid "Resolution"
+msgstr "Risoluzione"
+
+#empty strings from id 30106 to 30499
+#notifications
+
+msgctxt "#31000"
+msgid "Disconnected from '%s'"
+msgstr "Disconnesso da '%s'"
+
+msgctxt "#31001"
+msgid "Reconnected to '%s'"
+msgstr "Riconnesso a '%s'"

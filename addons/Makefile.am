@@ -8,6 +8,7 @@ endif
 SUBDIRS = pvr.demo \
           pvr.dvbviewer \
           pvr.hts \
+          pvr.tvh \
           pvr.mediaportal.tvserver \
           pvr.nextpvr \
           pvr.vdr.vnsi \

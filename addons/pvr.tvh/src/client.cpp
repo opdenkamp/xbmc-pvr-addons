@@ -39,7 +39,6 @@ using namespace PLATFORM;
  */
 bool         m_bCreated  = false;
 ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
-int          g_iClientId = -1;
 
 /*
  * Global configuration
@@ -52,8 +51,6 @@ int        g_iConnectTimeout     = DEFAULT_CONNECT_TIMEOUT;
 int        g_iResponseTimeout    = DEFAULT_RESPONSE_TIMEOUT;
 string     g_strUsername         = "";
 string     g_strPassword         = "";
-string     g_strUserPath         = "";
-string     g_strClientPath       = "";
 bool       g_bTraceDebug         = false;
 bool       g_bAsyncEpg           = false;
 
@@ -110,14 +107,12 @@ void ADDON_ReadSettings(void)
 #undef UPDATE_STR
 }
 
-ADDON_STATUS ADDON_Create(void* hdl, void* props)
+ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 {
   CLockObject lock(g_mutex);
 
-  if (!hdl || !props)
-    return ADDON_STATUS_UNKNOWN;
-
-  PVR_PROPERTIES* pvrprops = (PVR_PROPERTIES*)props;
+  if (!hdl)
+    return m_CurStatus;
 
   XBMC = new CHelper_libXBMC_addon;
   if (!XBMC->RegisterMe(hdl))
@@ -159,10 +154,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   tvhinfo("starting PVR client");
 
-  m_CurStatus     = ADDON_STATUS_UNKNOWN;
-  g_strUserPath   = pvrprops->strUserPath;
-  g_strClientPath = pvrprops->strClientPath;
-
   ADDON_ReadSettings();
   
   tvh = new CTvheadend;
@@ -174,14 +165,13 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
 ADDON_STATUS ADDON_GetStatus()
 {
-  {
-    CLockObject lock(g_mutex);
-    if (m_CurStatus != ADDON_STATUS_OK)
-      return m_CurStatus;
-  }
-  if (!tvh->IsConnected())
-    return ADDON_STATUS_LOST_CONNECTION;
-  return ADDON_STATUS_OK;
+  CLockObject lock(g_mutex);
+
+  // Check that we're still connected
+  if (m_CurStatus == ADDON_STATUS_OK && !tvh->IsConnected())
+    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+
+  return m_CurStatus;
 }
 
 void ADDON_Destroy()
@@ -189,6 +179,9 @@ void ADDON_Destroy()
   CLockObject lock(g_mutex);
   SAFE_DELETE(tvh);
   SAFE_DELETE(PVR);
+#ifndef OPENELEC_32
+  SAFE_DELETE(CODEC);
+#endif
   SAFE_DELETE(GUI);
   SAFE_DELETE(XBMC);
   SAFE_DELETE(menuHook);

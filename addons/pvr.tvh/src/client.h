@@ -53,8 +53,5 @@ extern std::string               g_strUsername;
 extern std::string               g_strPassword;
 extern int                       g_iConnectTimeout;
 extern int                       g_iResponseTimeout;
-extern bool                      g_bShowTimerNotifications;
-extern std::string               g_szUserPath;
-extern std::string               g_szClientPath;
 extern bool                      g_bTraceDebug;
 extern bool                      g_bAsyncEpg;

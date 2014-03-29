@@ -156,6 +156,8 @@ public:
   const char *GetServerName    ( void );
   const char *GetServerVersion ( void );
   const char *GetServerString  ( void );
+  
+  bool        HasCapability(const std::string &capability);
 
   bool        IsConnected       ( void ) { return m_ready; }
   bool        WaitForConnection ( void );
@@ -183,6 +185,7 @@ private:
   int                                 m_challengeLen;
 
   std::map<uint32_t,CHTSPResponse*>   m_messages;
+  std::vector<std::string>            m_capabilities;
 };
 
 /*
@@ -393,6 +396,10 @@ public:
   const char *GetServerString  ( void )
   {
     return m_conn.GetServerString();
+  }
+  bool HasCapability(const std::string &capability)
+  {
+      return m_conn.HasCapability(capability);
   }
   bool IsConnected ( void )
   {

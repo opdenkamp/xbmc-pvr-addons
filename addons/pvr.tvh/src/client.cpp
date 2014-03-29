@@ -384,14 +384,12 @@ PVR_ERROR CallMenuHook
 
 bool CanPauseStream(void)
 {
-  // TODO: dynamic based on server support
-  return true;
+  return tvh->HasCapability("timeshift");
 }
 
 bool CanSeekStream(void)
 {
-  // TODO: dynamic based on server support
-  return true;
+  return tvh->HasCapability("timeshift");
 }
 
 bool OpenLiveStream(const PVR_CHANNEL &channel)

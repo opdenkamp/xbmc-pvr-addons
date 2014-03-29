@@ -138,6 +138,7 @@ PVR_ERROR CTvheadend::GetTagMembers
         {
           PVR_CHANNEL_GROUP_MEMBER gm;
           memset(&gm, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
+          strncpy(gm.strGroupName, group.strGroupName, sizeof(gm.strGroupName) - 1);
           gm.iChannelUniqueId = cit->second.id;
           gm.iChannelNumber   = cit->second.num;
           PVR->TransferChannelGroupMember(handle, &gm);

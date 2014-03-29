@@ -160,7 +160,7 @@ bool CHTSPDemuxer::Seek
   /* Build message */
   m = htsmsg_create_map();  
   htsmsg_add_u32(m, "subscriptionId", m_subId);
-  htsmsg_add_s64(m, "time",           time * 1000);
+  htsmsg_add_s64(m, "time",           (int64_t)time * 1000LL);
   htsmsg_add_u32(m, "absolute",       1);
 
   /* Send and Wait */

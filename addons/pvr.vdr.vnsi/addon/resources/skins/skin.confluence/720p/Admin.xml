@@ -91,7 +91,7 @@
             <width>380</width>
             <height>55</height>
             <font>font24_title</font>
-            <textcolor>grey3</textcolor>
+            <textcolor>grey2</textcolor>
             <align>right</align>
             <aligny>center</aligny>
             <label>$INFO[ListItem.Label]</label>
@@ -270,7 +270,7 @@
             <width>250</width>
             <height>30</height>
             <font>font16caps</font>
-            <textcolor>grey3</textcolor>
+            <textcolor>grey2</textcolor>
             <focusedcolor>white</focusedcolor>
             <texturefocus border="0,2,0,2">MenuItemFO.png</texturefocus>
             <texturenofocus border="0,2,0,2">MenuItemNF.png</texturenofocus>
@@ -289,7 +289,8 @@
             <texturenofocus border="5">MenuItemNF.png</texturenofocus>
             <label>$ADDON[pvr.vdr.vnsi 30109]</label>
             <font>font16caps</font>
-            <textcolor>grey3</textcolor>
+            <textcolor>grey2</textcolor>
+            <focusedcolor>white</focusedcolor>
             <onleft>10</onleft>
             <onright>36</onright>
             <onup>32</onup>
@@ -305,7 +306,8 @@
             <texturenofocus border="5">MenuItemNF.png</texturenofocus>
             <label>$ADDON[pvr.vdr.vnsi 30110]</label>
             <font>font16caps</font>
-            <textcolor>grey3</textcolor>
+            <textcolor>grey2</textcolor>
+            <focusedcolor>white</focusedcolor>
             <onleft>10</onleft>
             <onright>36</onright>
             <onup>33</onup>
@@ -321,7 +323,8 @@
             <texturenofocus border="5">MenuItemNF.png</texturenofocus>
             <label>$ADDON[pvr.vdr.vnsi 30113]</label>
             <font>font16caps</font>
-            <textcolor>grey3</textcolor>
+            <textcolor>grey2</textcolor>
+            <focusedcolor>white</focusedcolor>
             <onleft>10</onleft>
             <onright>36</onright>
             <onup>34</onup>

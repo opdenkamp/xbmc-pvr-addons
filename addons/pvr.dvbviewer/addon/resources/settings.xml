@@ -19,5 +19,8 @@
 
     <setting id="sep2" type="sep" />
     <setting label="30030" id="usertsp" type="bool" default="false" enable="eq(-3,false)" />
+
+    <setting id="sep3" type="sep" />
+    <setting label="30040" id="lowperformance" type="bool" default="false" />
   </category>
 </settings>

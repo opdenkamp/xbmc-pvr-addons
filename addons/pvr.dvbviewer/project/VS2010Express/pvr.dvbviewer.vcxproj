@@ -85,18 +85,19 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\DvbData.cpp" />
-    <ClCompile Include="..\..\src\xmlParser.cpp" />
     <ClCompile Include="..\..\src\TimeshiftBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\DvbData.h" />
-    <ClInclude Include="..\..\src\xmlParser.h" />
     <ClInclude Include="..\..\src\TimeshiftBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
       <Project>{fe4573f6-a794-4ad3-b37f-49e51f1140e6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\project\VS2010Express\tinyxml\tinyxml.vcxproj">
+      <Project>{bdc7d21d-9fd9-41aa-bec8-8b70e1448c50}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

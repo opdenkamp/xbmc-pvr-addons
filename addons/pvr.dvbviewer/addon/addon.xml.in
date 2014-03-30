@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.dvbviewer"
-  version="1.9.13"
+  version="1.9.14"
   name="DVBViewer Client"
   provider-name="jdembski, A600, Manuel Mausz, Portisch">
   <requires>
@@ -72,7 +72,7 @@
     <description lang="da">DVBViewer Recording Service frontend; Understøtter streaming af Direkte TV, Timere, Optagelser og EPG. For parsing af XML output fra RS webinterface bruges xmlParser biblioteket, der er udviklet af Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Mange tak for dette!&#10;</description>
     <description lang="de">Oberfläche für den DVBViewer-Aufnahmedienst; Unterstützt Live TV &amp; Aufnahmen, Timer und EPG. Für das Parsen der XML-Ausgabe der RS-Weboberfläche nutzt es die xmlParser-Bibliothek, entwickelt von Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Vielen Dank dafür!⏎&#10;</description>
     <description lang="el">Frontend για την Υπηρεσία Εγγραφών του DVBViewer. Υποστηρίζει ροές Live TV, Χρονοδιακόπτες, Εγγραφές &amp; EPG. Για την ανάλυση του XML αρχείου εξόδου από την RS διεπαφή ιστού χρησιμοποιείται η βιβλιοθήκη xmlParser που αναπτύχθηκε από τον Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Θερμές ευχαριστίες για αυτό!&#10;</description>
-    <description lang="en">DVBViewer Recording Service frontend; supporting streaming of LiveTV, Timers, Recordings &amp; EPG. For parsing the XML output from the RS webinterface it uses the xmlParser library developed by Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Many thanks for this!&#10;</description>
+    <description lang="en">DVBViewer Recording Service frontend; supporting streaming of LiveTV, Timers, Recordings &amp; EPG.&#10;</description>
     <description lang="en_NZ">DVBViewer Recording Service frontend; supporting streaming of LiveTV, Timers, Recordings &amp; EPG. For parsing the XML output from the RS webinterface it uses the xmlParser library developed by Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). Many thanks for this!&#10;</description>
     <description lang="es">Frontend del Servicio de Grabaciones de DVBViewer; soportando transmisión de TV en Vivo, Temporizadores, Grabaciones y Guía de Programas. Para analizar la salida XML de la interfaz Web RS usa la librería xmlParser desarrollada por Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html).⏎&#10;</description>
     <description lang="es_AR">Frontend del Servicio de Grabaciones de DVBViewer; soportando transmisión de TV en Vivo, Temporizadores, Grabaciones y Guía de Programas. Para analizar la salida XML de la interfaz Web RS usa la librería xmlParser desarrollada por Frank Vanden Berghen (http://www.applied-mathematics.net/tools/xmlParser.html). ¡Mucas gracias por esto!⏎&#10;</description>

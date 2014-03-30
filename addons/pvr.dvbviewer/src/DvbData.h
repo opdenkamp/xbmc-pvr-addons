@@ -5,7 +5,6 @@
 
 #include "client.h"
 #include "TimeshiftBuffer.h"
-#include "xmlParser.h"
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 #include <list>
@@ -21,7 +20,7 @@
 
 // minimum version required
 #define RS_VERSION_MAJOR   1
-#define RS_VERSION_MINOR   25
+#define RS_VERSION_MINOR   26
 #define RS_VERSION_PATCH1  0
 #define RS_VERSION_PATCH2  0
 #define RS_VERSION_NUM  (RS_VERSION_MAJOR << 24 | RS_VERSION_MINOR << 16 | \
@@ -193,18 +192,14 @@ protected:
 private:
   // functions
   CStdString GetHttpXML(const CStdString& url);
-  CStdString URLEncodeInline(const CStdString& strData);
+  CStdString URLEncodeInline(const CStdString& data);
   bool LoadChannels();
   DvbTimers_t LoadTimers();
   void TimerUpdates();
-  void GenerateTimer(const PVR_TIMER& timer, bool bNewtimer = true);
+  void GenerateTimer(const PVR_TIMER& timer, bool newtimer = true);
   int GetTimerId(const PVR_TIMER& timer);
 
   // helper functions
-  bool GetXMLValue(const XMLNode& node, const char* tag, int& value);
-  bool GetXMLValue(const XMLNode& node, const char* tag, bool& value);
-  bool GetXMLValue(const XMLNode& node, const char* tag, CStdString& value,
-      bool localize = false);
   void RemoveNullChars(CStdString& str);
   bool CheckBackendVersion();
   bool UpdateBackendStatus(bool updateSettings = false);
@@ -215,17 +210,15 @@ private:
   CStdString BuildURL(const char* path, ...);
   CStdString BuildExtURL(const CStdString& baseURL, const char* path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
-  uint64_t ParseUInt64(const CStdString& str);
 
 private:
   bool m_connected;
   unsigned int m_backendVersion;
 
   int m_timezone;
-  CStdString m_epgLanguage;
   struct { long long total, used; } m_diskspace;
 
-  CStdString m_strURL;
+  CStdString m_url;
   unsigned int m_currentChannel;
 
   /* channels + active (not hidden) channels */
@@ -236,14 +229,13 @@ private:
   DvbGroups_t m_groups;
   unsigned int m_groupAmount;
 
-  unsigned int m_iUpdateTimer;
-  bool m_bUpdateTimers;
-  bool m_bUpdateEPG;
+  bool m_updateTimers;
+  bool m_updateEPG;
   DvbRecordings_t m_recordings;
   TimeshiftBuffer *m_tsBuffer;
 
   DvbTimers_t m_timers;
-  unsigned int m_iClientIndexCounter;
+  unsigned int m_newTimerIndex;
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;

@@ -63,5 +63,6 @@
     <None Include="..\..\addon\addon.xml.in" />
     <None Include="..\..\addon\resources\skins\skin.confluence\720p\DeleteTimer.xml" />
     <None Include="..\..\addon\resources\skins\skin.confluence\720p\RecordPrefs.xml" />
+    <None Include="..\..\addon\changelog.txt" />
   </ItemGroup>
 </Project>

@@ -989,21 +989,21 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool newTimer)
   XBMC->Log(LOG_DEBUG, "%s iChannelUid=%u title='%s' epgid=%d",
       __FUNCTION__, timer.iClientChannelUid, timer.strTitle, timer.iEpgUid);
 
-  struct tm *timeinfo;
   time_t startTime = timer.startTime, endTime = timer.endTime;
   if (!startTime)
-    time(&startTime);
+    startTime = time(NULL);
   else
   {
     startTime -= timer.iMarginStart * 60;
     endTime += timer.iMarginEnd * 60;
   }
 
-  int date = (startTime / DAY_SECS) + DELPHI_DATE;
-  timeinfo = localtime(&startTime);
-  int start = timeinfo->tm_hour * 60 + timeinfo->tm_min;
-  timeinfo = localtime(&endTime);
-  int stop = timeinfo->tm_hour * 60 + timeinfo->tm_min;
+  unsigned int date = (startTime / DAY_SECS) + DELPHI_DATE;
+  struct tm timeinfo;
+  localtime_r(&startTime, &timeinfo);
+  unsigned int start = timeinfo.tm_hour * 60 + timeinfo.tm_min;
+  localtime_r(&endTime, &timeinfo);
+  unsigned int stop = timeinfo.tm_hour * 60 + timeinfo.tm_min;
 
   char repeat[8] = "-------";
   for (int i = 0; i < 7; ++i)
@@ -1015,12 +1015,12 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool newTimer)
   uint64_t iChannelId = m_channels[timer.iClientChannelUid - 1]->backendIds.front();
   CStdString url;
   if (newTimer)
-    url = BuildURL("api/timeradd.html?ch=%"PRIu64"&dor=%d&enable=1&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
+    url = BuildURL("api/timeradd.html?ch=%"PRIu64"&dor=%u&enable=1&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
         iChannelId, date, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
   else
   {
-    int enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
-    url = BuildURL("api/timeredit.html?id=%d&ch=%"PRIu64"&dor=%d&enable=%d&start=%d&stop=%d&prio=%d&days=%s&title=%s&encoding=255",
+    short enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
+    url = BuildURL("api/timeredit.html?id=%d&ch=%"PRIu64"&dor=%u&enable=%d&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
         GetTimerId(timer), iChannelId, date, enabled, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
   }
 

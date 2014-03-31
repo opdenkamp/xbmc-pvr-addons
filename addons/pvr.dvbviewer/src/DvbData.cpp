@@ -999,11 +999,11 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool newTimer)
   }
 
   unsigned int date = (startTime / DAY_SECS) + DELPHI_DATE;
-  struct tm timeinfo;
-  localtime_r(&startTime, &timeinfo);
-  unsigned int start = timeinfo.tm_hour * 60 + timeinfo.tm_min;
-  localtime_r(&endTime, &timeinfo);
-  unsigned int stop = timeinfo.tm_hour * 60 + timeinfo.tm_min;
+  struct tm *timeinfo;
+  timeinfo = localtime(&startTime);
+  unsigned int start = timeinfo->tm_hour * 60 + timeinfo->tm_min;
+  timeinfo = localtime(&endTime);
+  unsigned int stop = timeinfo->tm_hour * 60 + timeinfo->tm_min;
 
   char repeat[8] = "-------";
   for (int i = 0; i < 7; ++i)

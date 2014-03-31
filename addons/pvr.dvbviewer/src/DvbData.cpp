@@ -144,7 +144,6 @@ PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
     PVR_CHANNEL xbmcChannel;
     memset(&xbmcChannel, 0, sizeof(PVR_CHANNEL));
-
     xbmcChannel.iUniqueId         = channel->id;
     xbmcChannel.bIsRadio          = channel->radio;
     xbmcChannel.iChannelNumber    = channel->frontendNr;
@@ -228,7 +227,6 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
 
     EPG_TAG broadcast;
     memset(&broadcast, 0, sizeof(EPG_TAG));
-
     broadcast.iUniqueBroadcastId  = entry.iEventId;
     broadcast.strTitle            = entry.strTitle.c_str();
     broadcast.iChannelNumber      = channel.iChannelNumber;
@@ -236,18 +234,8 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
     broadcast.endTime             = entry.endTime;
     broadcast.strPlotOutline      = entry.strPlotOutline.c_str();
     broadcast.strPlot             = entry.strPlot.c_str();
-    broadcast.strIconPath         = ""; // unused
     broadcast.iGenreType          = entry.genre & 0xF0;
     broadcast.iGenreSubType       = entry.genre & 0x0F;
-    broadcast.strGenreDescription = ""; // unused
-    broadcast.firstAired          = 0;  // unused
-    broadcast.iParentalRating     = 0;  // unused
-    broadcast.iStarRating         = 0;  // unused
-    broadcast.bNotify             = false;
-    broadcast.iSeriesNumber       = 0;  // unused
-    broadcast.iEpisodeNumber      = 0;  // unused
-    broadcast.iEpisodePartNumber  = 0;  // unused
-    broadcast.strEpisodeName      = ""; // unused
 
     PVR->TransferEpgEntry(handle, &broadcast);
 
@@ -278,6 +266,7 @@ PVR_ERROR Dvb::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
       continue;
     if (group->radio != bRadio)
       continue;
+
     PVR_CHANNEL_GROUP tag;
     memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP));
     tag.bIsRadio = group->radio;
@@ -303,6 +292,7 @@ PVR_ERROR Dvb::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GRO
         it != group->channels.end(); ++it)
     {
       DvbChannel *channel = *it;
+
       PVR_CHANNEL_GROUP_MEMBER tag;
       memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
       PVR_STRCPY(tag.strGroupName, pvrGroup.strGroupName);
@@ -332,24 +322,17 @@ PVR_ERROR Dvb::GetTimers(ADDON_HANDLE handle)
   {
     PVR_TIMER tag;
     memset(&tag, 0, sizeof(PVR_TIMER));
-
+    PVR_STRCPY(tag.strTitle,   timer->strTitle.c_str());
+    PVR_STRCPY(tag.strSummary, timer->strPlot.c_str());
     tag.iClientChannelUid = timer->iChannelUid;
     tag.startTime         = timer->startTime;
     tag.endTime           = timer->endTime;
-    PVR_STRCPY(tag.strTitle,     timer->strTitle.c_str());
-    PVR_STRCPY(tag.strDirectory, "/");   // unused
-    PVR_STRCPY(tag.strSummary,   timer->strPlot.c_str());
     tag.state             = timer->state;
     tag.iPriority         = timer->iPriority;
-    tag.iLifetime         = 0;     // unused
     tag.bIsRepeating      = timer->bRepeating;
     tag.firstDay          = timer->iFirstDay;
     tag.iWeekdays         = timer->iWeekdays;
     tag.iEpgUid           = timer->iEpgId;
-    tag.iMarginStart      = 0;     // unused
-    tag.iMarginEnd        = 0;     // unused
-    tag.iGenreType        = 0;     // unused
-    tag.iGenreSubType     = 0;     // unused
     tag.iClientIndex      = timer->iClientIndex;
 
     PVR->TransferTimerEntry(handle, &tag);
@@ -457,7 +440,6 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     PVR_STRCPY(tag.strPlot,          recording->plot.c_str());
     PVR_STRCPY(tag.strChannelName,   recording->channelName.c_str());
     PVR_STRCPY(tag.strThumbnailPath, recording->thumbnailPath.c_str());
-    PVR_STRCPY(tag.strDirectory,     "/"); // unused
     tag.recordingTime = recording->startTime;
     tag.iDuration     = recording->duration;
     tag.iGenreType    = recording->genre & 0xF0;
@@ -681,8 +663,8 @@ bool Dvb::LoadChannels()
           xChannel; xChannel = xChannel->NextSiblingElement("channel"))
       {
         DvbChannel *channel = new DvbChannel();
-        int flags;
-        xChannel->QueryIntAttribute("flags", &flags);
+        unsigned int flags = 0;
+        xChannel->QueryUnsignedAttribute("flags", &flags);
         channel->radio      = !(flags & VIDEO_FLAG);
         channel->encrypted  = (flags & ENCRYPTED_FLAG);
         channel->name       = xChannel->Attribute("name");
@@ -691,7 +673,7 @@ bool Dvb::LoadChannels()
         xChannel->QueryUnsignedAttribute("nr", &channel->backendNr);
         xChannel->QueryValueAttribute<uint64_t>("EPGID", &channel->epgId);
 
-        uint64_t backendId;
+        uint64_t backendId = 0;
         xChannel->QueryValueAttribute<uint64_t>("ID", &backendId);
         channel->backendIds.push_back(backendId);
 
@@ -711,7 +693,7 @@ bool Dvb::LoadChannels()
         for (TiXmlElement* xSubChannel = xChannel->FirstChildElement("subchannel");
             xSubChannel; xSubChannel = xSubChannel->NextSiblingElement("subchannel"))
         {
-          uint64_t backendId;
+          uint64_t backendId = 0;
           xSubChannel->QueryValueAttribute<uint64_t>("ID", &backendId);
           channel->backendIds.push_back(backendId);
         }

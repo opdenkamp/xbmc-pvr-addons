@@ -42,6 +42,11 @@ typedef enum DVB_UPDATE_STATE
 class DvbChannel
 {
 public:
+  DvbChannel()
+    : backendNr(0), epgId(0)
+  {}
+
+public:
   /*!< @brief unique id passed to xbmc database. see FIXME for more details */
   unsigned int id;
   /*!< @brief backend number for generating the stream url */

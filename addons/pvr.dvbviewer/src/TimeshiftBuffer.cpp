@@ -84,7 +84,7 @@ int TimeshiftBuffer::ReadData(unsigned char *buffer, unsigned int size)
     unsigned int read = XBMC->ReadFile(m_filebufferReadHandle, buffer, size);
     totalReadBytes += read;
 
-    while (read < size && totalTimeWaited < BUFFER_READ_TIMEOUT)
+    while (totalReadBytes < size && totalTimeWaited < BUFFER_READ_TIMEOUT)
     {
       Sleep(BUFFER_READ_WAITTIME);
       totalTimeWaited += BUFFER_READ_WAITTIME;

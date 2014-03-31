@@ -6,7 +6,7 @@
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 
-#define STREAM_READ_BUFFER_SIZE   8192
+#define STREAM_READ_BUFFER_SIZE   32768
 #define BUFFER_READ_TIMEOUT       10000
 #define BUFFER_READ_WAITTIME      50
 

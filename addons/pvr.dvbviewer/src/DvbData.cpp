@@ -502,32 +502,9 @@ void Dvb::CloseLiveStream(void)
     SAFE_DELETE(m_tsBuffer);
 }
 
-int Dvb::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
+TimeshiftBuffer *Dvb::GetTimeshiftBuffer()
 {
-  if (!m_tsBuffer)
-    return 0;
-  return m_tsBuffer->ReadData(pBuffer, iBufferSize);
-}
-
-long long Dvb::SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */)
-{
-  if (!m_tsBuffer)
-    return 0;
-  return m_tsBuffer->Seek(iPosition, iWhence);
-}
-
-long long Dvb::PositionLiveStream(void)
-{
-  if (!m_tsBuffer)
-    return 0;
-  return m_tsBuffer->Position();
-}
-
-long long Dvb::LengthLiveStream(void)
-{
-  if (!m_tsBuffer)
-    return 0;
-  return m_tsBuffer->Length();
+  return m_tsBuffer;
 }
 
 CStdString& Dvb::GetLiveStreamURL(const PVR_CHANNEL& channelinfo)

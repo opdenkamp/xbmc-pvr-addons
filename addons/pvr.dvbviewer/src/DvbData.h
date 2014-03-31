@@ -198,10 +198,7 @@ public:
 
   bool OpenLiveStream(const PVR_CHANNEL& channelinfo);
   void CloseLiveStream();
-  int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize);
-  long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */);
-  long long PositionLiveStream(void);
-  long long LengthLiveStream(void);
+  TimeshiftBuffer *GetTimeshiftBuffer();
   CStdString& GetLiveStreamURL(const PVR_CHANNEL& channelinfo);
 
 protected:

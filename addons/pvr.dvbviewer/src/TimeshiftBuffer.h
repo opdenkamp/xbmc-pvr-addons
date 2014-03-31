@@ -22,6 +22,8 @@ public:
   long long Position();
   long long Length();
   void Stop(void);
+  time_t TimeStart();
+  time_t TimeEnd();
 
 private:
   virtual void *Process(void);
@@ -30,7 +32,7 @@ private:
   void *m_streamHandle;
   void *m_filebufferReadHandle;
   void *m_filebufferWriteHandle;
-  bool m_shifting;
+  time_t m_start;
 };
 
 #endif

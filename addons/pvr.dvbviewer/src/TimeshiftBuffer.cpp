@@ -12,7 +12,7 @@ TimeshiftBuffer::TimeshiftBuffer(CStdString streampath, CStdString bufferpath)
   m_filebufferWriteHandle = XBMC->OpenFileForWrite(m_bufferPath, true);
   Sleep(100);
   m_filebufferReadHandle = XBMC->OpenFile(m_bufferPath, 0);
-  m_shifting = true;
+  m_start = time(NULL);
   CreateThread();
 }
 
@@ -37,7 +37,7 @@ bool TimeshiftBuffer::IsValid()
 
 void TimeshiftBuffer::Stop()
 {
-  m_shifting = false;
+  m_start = 0;
 }
 
 void *TimeshiftBuffer::Process()
@@ -45,7 +45,7 @@ void *TimeshiftBuffer::Process()
   XBMC->Log(LOG_DEBUG, "Timeshift: thread started");
   byte buffer[STREAM_READ_BUFFER_SIZE];
 
-  while (m_shifting)
+  while (m_start)
   {
     unsigned int read = XBMC->ReadFile(m_streamHandle, buffer, sizeof(buffer));
     XBMC->WriteFile(m_filebufferWriteHandle, buffer, read);
@@ -58,7 +58,7 @@ long long TimeshiftBuffer::Seek(long long position, int whence)
 {
   if (m_filebufferReadHandle)
     return XBMC->SeekFile(m_filebufferReadHandle, position, whence);
-  return 0;
+  return -1;
 }
 
 long long TimeshiftBuffer::Position()
@@ -96,4 +96,14 @@ int TimeshiftBuffer::ReadData(unsigned char *buffer, unsigned int size)
       XBMC->Log(LOG_DEBUG, "Timeshifterbuffer timed out, waited : %d", totalTimeWaited);
   }
   return totalReadBytes;
+}
+
+time_t TimeshiftBuffer::TimeStart()
+{
+  return m_start;
+}
+
+time_t TimeshiftBuffer::TimeEnd()
+{
+  return (m_start) ? time(NULL) : 0;
 }

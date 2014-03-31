@@ -161,7 +161,6 @@ public:
 typedef std::vector<DvbChannel *> DvbChannels_t;
 typedef std::vector<DvbGroup> DvbGroups_t;
 typedef std::vector<DvbTimer> DvbTimers_t;
-typedef std::vector<DvbRecording> DvbRecordings_t;
 
 class Dvb
   : public PLATFORM::CThread
@@ -250,7 +249,7 @@ private:
 
   bool m_updateTimers;
   bool m_updateEPG;
-  DvbRecordings_t m_recordings;
+  unsigned int m_recordingAmount;
   TimeshiftBuffer *m_tsBuffer;
 
   DvbTimers_t m_timers;

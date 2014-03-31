@@ -238,7 +238,6 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
     broadcast.iGenreSubType       = entry.genre & 0x0F;
 
     PVR->TransferEpgEntry(handle, &broadcast);
-
     ++iNumEPG;
 
     XBMC->Log(LOG_DEBUG, "%s loaded EPG entry '%u:%s': start=%u, end=%u",
@@ -299,11 +298,11 @@ PVR_ERROR Dvb::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GRO
       tag.iChannelUniqueId = channel->id;
       tag.iChannelNumber   = channelNumberInGroup++;
 
+      PVR->TransferChannelGroupMember(handle, &tag);
+
       XBMC->Log(LOG_DEBUG, "%s add channel '%s' (%u) to group '%s'",
           __FUNCTION__, channel->name.c_str(), channel->backendNr,
           group->name.c_str());
-
-      PVR->TransferChannelGroupMember(handle, &tag);
     }
   }
   return PVR_ERROR_NO_ERROR;
@@ -391,7 +390,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 
   // there's no need to merge new recordings in older ones as XBMC does this
   // already for us (using strRecordingId). so just parse all recordings again
-  m_recordings.clear();
+  m_recordingAmount = 0;
 
   // insert recordings in reverse order
   for (TiXmlNode *xNode = root->LastChild("recording");
@@ -402,57 +401,55 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 
     TiXmlElement *xRecording = xNode->ToElement();
 
-    m_recordings.push_back(DvbRecording());
-    DvbRecording *recording = &m_recordings.back();
+    DvbRecording recording;
+    recording.id = xRecording->Attribute("id");
+    xRecording->QueryUnsignedAttribute("content", &recording.genre);
+    XMLUtils::GetString(xRecording, "channel", recording.channelName);
+    XMLUtils::GetString(xRecording, "title",   recording.title);
+    XMLUtils::GetString(xRecording, "info",    recording.plotOutline);
+    XMLUtils::GetString(xRecording, "desc",    recording.plot);
+    if (recording.plot.empty())
+      recording.plot = recording.plotOutline;
 
-    recording->id = xRecording->Attribute("id");
-    xRecording->QueryUnsignedAttribute("content", &recording->genre);
-    XMLUtils::GetString(xRecording, "channel", recording->channelName);
-    XMLUtils::GetString(xRecording, "title",   recording->title);
-    XMLUtils::GetString(xRecording, "info",    recording->plotOutline);
-    XMLUtils::GetString(xRecording, "desc",    recording->plot);
-    if (recording->plot.empty())
-      recording->plot = recording->plotOutline;
-
-    recording->streamURL = BuildExtURL(streamURL, "%s.ts",
-        recording->id.c_str());
+    recording.streamURL = BuildExtURL(streamURL, "%s.ts", recording.id.c_str());
 
     CStdString thumbnail;
     if (!g_lowPerformance && XMLUtils::GetString(xRecording, "image", thumbnail))
-      recording->thumbnailPath = BuildExtURL(imageURL, "%s", thumbnail.c_str());
+      recording.thumbnailPath = BuildExtURL(imageURL, "%s", thumbnail.c_str());
 
     CStdString startTime = xRecording->Attribute("start");
-    recording->startTime = ParseDateTime(startTime);
+    recording.startTime = ParseDateTime(startTime);
 
     int hours, mins, secs;
     sscanf(xRecording->Attribute("duration"), "%02d%02d%02d", &hours, &mins, &secs);
-    recording->duration = hours*60*60 + mins*60 + secs;
+    recording.duration = hours*60*60 + mins*60 + secs;
 
     // generate a more unique id
-    recording->id += "_" + startTime;
+    recording.id += "_" + startTime;
 
     PVR_RECORDING tag;
     memset(&tag, 0, sizeof(PVR_RECORDING));
-    PVR_STRCPY(tag.strRecordingId,   recording->id.c_str());
-    PVR_STRCPY(tag.strTitle,         recording->title.c_str());
-    PVR_STRCPY(tag.strStreamURL,     recording->streamURL.c_str());
-    PVR_STRCPY(tag.strPlotOutline,   recording->plotOutline.c_str());
-    PVR_STRCPY(tag.strPlot,          recording->plot.c_str());
-    PVR_STRCPY(tag.strChannelName,   recording->channelName.c_str());
-    PVR_STRCPY(tag.strThumbnailPath, recording->thumbnailPath.c_str());
-    tag.recordingTime = recording->startTime;
-    tag.iDuration     = recording->duration;
-    tag.iGenreType    = recording->genre & 0xF0;
-    tag.iGenreSubType = recording->genre & 0x0F;
+    PVR_STRCPY(tag.strRecordingId,   recording.id.c_str());
+    PVR_STRCPY(tag.strTitle,         recording.title.c_str());
+    PVR_STRCPY(tag.strStreamURL,     recording.streamURL.c_str());
+    PVR_STRCPY(tag.strPlotOutline,   recording.plotOutline.c_str());
+    PVR_STRCPY(tag.strPlot,          recording.plot.c_str());
+    PVR_STRCPY(tag.strChannelName,   recording.channelName.c_str());
+    PVR_STRCPY(tag.strThumbnailPath, recording.thumbnailPath.c_str());
+    tag.recordingTime = recording.startTime;
+    tag.iDuration     = recording.duration;
+    tag.iGenreType    = recording.genre & 0xF0;
+    tag.iGenreSubType = recording.genre & 0x0F;
 
     PVR->TransferRecordingEntry(handle, &tag);
+    ++m_recordingAmount;
 
     XBMC->Log(LOG_DEBUG, "%s loaded Recording entry '%s': start=%u, length=%u",
-        __FUNCTION__, recording->title.c_str(), recording->startTime,
-        recording->duration);
+        __FUNCTION__, recording.title.c_str(), recording.startTime,
+        recording.duration);
   }
 
-  XBMC->Log(LOG_INFO, "Loaded %u Recording Entries", m_recordings.size());
+  XBMC->Log(LOG_INFO, "Loaded %u Recording Entries", m_recordingAmount);
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -474,7 +471,7 @@ PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
 
 unsigned int Dvb::GetRecordingsAmount()
 {
-  return m_recordings.size();
+  return m_recordingAmount;
 }
 
 

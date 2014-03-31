@@ -68,13 +68,20 @@ public:
   bool hidden;
 };
 
-struct DvbEPGEntry
+class DvbEPGEntry
 {
+public:
+  DvbEPGEntry()
+    : genre(0)
+  {}
+
+public:
   int iEventId;
   CStdString strTitle;
   unsigned int iChannelUid;
   time_t startTime;
   time_t endTime;
+  unsigned int genre;
   CStdString strPlotOutline;
   CStdString strPlot;
 };
@@ -126,11 +133,18 @@ public:
   unsigned int iClientIndex;
 };
 
-struct DvbRecording
+class DvbRecording
 {
+public:
+  DvbRecording()
+    : genre(0)
+  {}
+
+public:
   CStdString id;
   time_t startTime;
   int duration;
+  unsigned int genre;
   CStdString title;
   CStdString streamURL;
   CStdString plot;

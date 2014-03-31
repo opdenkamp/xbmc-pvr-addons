@@ -224,6 +224,8 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
         entry.strPlot = entry.strPlotOutline;
     }
 
+    XMLUtils::GetUInt(xEntry, "content", entry.genre);
+
     EPG_TAG broadcast;
     memset(&broadcast, 0, sizeof(EPG_TAG));
 
@@ -235,9 +237,9 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
     broadcast.strPlotOutline      = entry.strPlotOutline.c_str();
     broadcast.strPlot             = entry.strPlot.c_str();
     broadcast.strIconPath         = ""; // unused
-    broadcast.iGenreType          = 0;  // unused
-    broadcast.iGenreSubType       = 0;  // unused
-    broadcast.strGenreDescription = "";
+    broadcast.iGenreType          = entry.genre & 0xF0;
+    broadcast.iGenreSubType       = entry.genre & 0x0F;
+    broadcast.strGenreDescription = ""; // unused
     broadcast.firstAired          = 0;  // unused
     broadcast.iParentalRating     = 0;  // unused
     broadcast.iStarRating         = 0;  // unused
@@ -421,6 +423,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     DvbRecording *recording = &m_recordings.back();
 
     recording->id = xRecording->Attribute("id");
+    xRecording->QueryUnsignedAttribute("content", &recording->genre);
     XMLUtils::GetString(xRecording, "channel", recording->channelName);
     XMLUtils::GetString(xRecording, "title",   recording->title);
     XMLUtils::GetString(xRecording, "info",    recording->plotOutline);
@@ -454,9 +457,11 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     PVR_STRCPY(tag.strPlot,          recording->plot.c_str());
     PVR_STRCPY(tag.strChannelName,   recording->channelName.c_str());
     PVR_STRCPY(tag.strThumbnailPath, recording->thumbnailPath.c_str());
+    PVR_STRCPY(tag.strDirectory,     "/"); // unused
     tag.recordingTime = recording->startTime;
     tag.iDuration     = recording->duration;
-    PVR_STRCPY(tag.strDirectory, "/"); // unused
+    tag.iGenreType    = recording->genre & 0xF0;
+    tag.iGenreSubType = recording->genre & 0x0F;
 
     PVR->TransferRecordingEntry(handle, &tag);
 

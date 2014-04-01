@@ -10,6 +10,9 @@ TimeshiftBuffer::TimeshiftBuffer(CStdString streampath, CStdString bufferpath)
   m_streamHandle = XBMC->OpenFile(streampath, 0);
   m_bufferPath += "/tsbuffer.ts";
   m_filebufferWriteHandle = XBMC->OpenFileForWrite(m_bufferPath, true);
+#ifndef TARGET_POSIX
+  m_writePos = 0;
+#endif
   Sleep(100);
   m_filebufferReadHandle = XBMC->OpenFile(m_bufferPath, 0);
   m_start = time(NULL);
@@ -49,6 +52,12 @@ void *TimeshiftBuffer::Process()
   {
     unsigned int read = XBMC->ReadFile(m_streamHandle, buffer, sizeof(buffer));
     XBMC->WriteFile(m_filebufferWriteHandle, buffer, read);
+
+#ifndef TARGET_POSIX
+    m_mutex.Lock();
+    m_writePos += read;
+    m_mutex.Unlock();
+#endif
   }
   XBMC->Log(LOG_DEBUG, "Timeshift: thread stopped");
   return NULL;
@@ -65,7 +74,7 @@ long long TimeshiftBuffer::Position()
 {
   if (m_filebufferReadHandle)
     return XBMC->GetFilePosition(m_filebufferReadHandle);
-  return 0;
+  return -1;
 }
 
 long long TimeshiftBuffer::Length()
@@ -77,25 +86,39 @@ long long TimeshiftBuffer::Length()
 
 int TimeshiftBuffer::ReadData(unsigned char *buffer, unsigned int size)
 {
-  unsigned int totalReadBytes = 0;
-  unsigned int totalTimeWaited = 0;
-  if (m_filebufferReadHandle)
+  if (!m_filebufferReadHandle)
+    return 0;
+  /* make sure we never read above the current write position */
+  int64_t readPos  = XBMC->GetFilePosition(m_filebufferReadHandle);
+  int64_t writePos = 0;
+  do
   {
-    unsigned int read = XBMC->ReadFile(m_filebufferReadHandle, buffer, size);
-    totalReadBytes += read;
-
-    while (totalReadBytes < size && totalTimeWaited < BUFFER_READ_TIMEOUT)
-    {
-      Sleep(BUFFER_READ_WAITTIME);
-      totalTimeWaited += BUFFER_READ_WAITTIME;
-      read = XBMC->ReadFile(m_filebufferReadHandle, buffer, size - totalReadBytes);
-      totalReadBytes += read;
-    }
-
-    if (totalTimeWaited > BUFFER_READ_TIMEOUT)
-      XBMC->Log(LOG_DEBUG, "Timeshifterbuffer timed out, waited : %d", totalTimeWaited);
+    /* refresh write position */
+#ifdef TARGET_POSIX
+    XBMC->SeekFile(m_filebufferWriteHandle, 0L, SEEK_CUR);
+    writePos = XBMC->GetFilePosition(m_filebufferWriteHandle);
+#else
+    m_mutex.Lock();
+    writePos = m_writePos;
+    m_mutex.Unlock();
+#endif
+    //TODO add some sort of timeout
   }
-  return totalReadBytes;
+  while(readPos + size > writePos);
+
+  unsigned int read = XBMC->ReadFile(m_filebufferReadHandle, buffer, size);
+
+  unsigned int timeWaited = 0;
+  while (read < size && timeWaited < BUFFER_READ_TIMEOUT)
+  {
+    Sleep(BUFFER_READ_WAITTIME);
+    timeWaited += BUFFER_READ_WAITTIME;
+    read += XBMC->ReadFile(m_filebufferReadHandle, buffer, size - read);
+  }
+
+  if (timeWaited > BUFFER_READ_TIMEOUT)
+    XBMC->Log(LOG_DEBUG, "Timeshift: Read timed out; waited %u", timeWaited);
+  return read;
 }
 
 time_t TimeshiftBuffer::TimeStart()

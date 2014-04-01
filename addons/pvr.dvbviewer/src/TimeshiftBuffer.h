@@ -33,6 +33,10 @@ private:
   void *m_filebufferReadHandle;
   void *m_filebufferWriteHandle;
   time_t m_start;
+#ifndef TARGET_POSIX
+  PLATFORM::CMutex m_mutex;
+  uint64_t m_writePos;
+#endif
 };
 
 #endif

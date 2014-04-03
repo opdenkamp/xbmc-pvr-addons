@@ -250,6 +250,7 @@ bool CHTSPDemuxer::SendSubscribe ( bool force )
   htsmsg_add_u32(m, "subscriptionId",  ++m_subId);
   htsmsg_add_u32(m, "timeshiftPeriod", (uint32_t)~0);
   htsmsg_add_u32(m, "normts",          1);
+  htsmsg_add_u32(m, "queueDepth",      2000000);
 
   /* Send and Wait for response */
   tvhdebug("demux subscribe to %08x", m_chnId);

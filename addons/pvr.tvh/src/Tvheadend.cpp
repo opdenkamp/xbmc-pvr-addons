@@ -590,6 +590,10 @@ PVR_ERROR CTvheadend::GetEpg
   SEvents::const_iterator eit;
   htsmsg_t *l;
   htsmsg_field_t *f;
+  int n = 0;
+
+  tvhtrace("get epg channel %d start %ld stop %ld", chn.iUniqueId,
+           (long long)start, (long long)end);
 
   /* Async transfer */
   if (g_bAsyncEpg)
@@ -607,6 +611,7 @@ PVR_ERROR CTvheadend::GetEpg
         if (eit->second.start    > end)   continue;
         if (eit->second.stop     < start) continue;
         TransferEvent(handle, eit->second);
+        ++n;
       }
     }
 
@@ -641,11 +646,16 @@ PVR_ERROR CTvheadend::GetEpg
       if (f->hmf_type == HMF_MAP)
       {
         if (ParseEvent(&f->hmf_msg, event))
+        {
           TransferEvent(handle, event);
+          ++n;
+        }
       }
     }
     htsmsg_destroy(msg);
   }
+
+  tvhtrace("get epg channel %d events %d", chn.iUniqueId, n);
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -710,39 +720,70 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
     return true;
 
   /* Lock */
-  CLockObject lock(m_mutex);
+  {
+    CLockObject lock(m_mutex);
 
-  /* Channels */
-  if (!strcmp("channelAdd", method) || !strcmp("channelUpdate", method))
-    ParseChannelUpdate(msg);
-  else if (!strcmp("channelDelete", method))
-    ParseChannelDelete(msg);
+    /* Channels */
+    if (!strcmp("channelAdd", method) || !strcmp("channelUpdate", method))
+      ParseChannelUpdate(msg);
+    else if (!strcmp("channelDelete", method))
+      ParseChannelDelete(msg);
 
-  /* Tags */
-  else if (!strcmp("tagAdd", method) || !strcmp("tagUpdate", method))
-    ParseTagUpdate(msg);
-  else if (!strcmp("tagDelete", method))
-    ParseTagDelete(msg);
+    /* Tags */
+    else if (!strcmp("tagAdd", method) || !strcmp("tagUpdate", method))
+      ParseTagUpdate(msg);
+    else if (!strcmp("tagDelete", method))
+      ParseTagDelete(msg);
 
-  /* Recordings */
-  else if (!strcmp("dvrEntryAdd", method) || !strcmp("dvrEntryUpdate", method))
-    ParseRecordingUpdate(msg);
-  else if (!strcmp("dvrEntryDelete", method))
-    ParseRecordingDelete(msg);
+    /* Recordings */
+    else if (!strcmp("dvrEntryAdd", method) || 
+             !strcmp("dvrEntryUpdate", method))
+      ParseRecordingUpdate(msg);
+    else if (!strcmp("dvrEntryDelete", method))
+      ParseRecordingDelete(msg);
 
-  /* EPG */
-  else if (!strcmp("eventAdd", method) || !strcmp("eventUpdate", method))
-    ParseEventUpdate(msg);
-  else if (!strcmp("eventDelete", method))
-    ParseEventDelete(msg);
+    /* EPG */
+    else if (!strcmp("eventAdd", method) || !strcmp("eventUpdate", method))
+      ParseEventUpdate(msg);
+    else if (!strcmp("eventDelete", method))
+      ParseEventDelete(msg);
 
-  /* ASync complete */
-  else if (!strcmp("initialSyncCompleted", method))
-    SyncCompleted();
+    /* ASync complete */
+    else if (!strcmp("initialSyncCompleted", method))
+      SyncCompleted();
 
-  /* Unknown */
-  else  
-    tvhdebug("unhandled message [%s]", method);
+    /* Unknown */
+    else  
+      tvhdebug("unhandled message [%s]", method);
+  }
+
+  /* Process events
+   * Note: due to potential deadly embrace this must be done without the
+   *       m_mutex held!
+   */
+  SHTSPEventList::iterator it;
+  for (it = m_events.begin(); it != m_events.end(); it++)
+  {
+    switch (it->type)
+    {
+      case HTSP_EVENT_TAG_UPDATE:
+        PVR->TriggerChannelGroupsUpdate();
+        break;
+      case HTSP_EVENT_CHN_UPDATE:
+        PVR->TriggerChannelUpdate();
+        break;
+      case HTSP_EVENT_REC_UPDATE:
+        PVR->TriggerTimerUpdate();
+        PVR->TriggerRecordingUpdate();
+        break;
+      case HTSP_EVENT_EPG_UPDATE:
+        PVR->TriggerEpgUpdate(it->idx);
+        break;
+      case HTSP_EVENT_NONE:
+        break;
+    }
+  }
+  m_events.clear();
 
   /* Local */
   return true;
@@ -780,7 +821,7 @@ void CTvheadend::SyncChannelsCompleted ( void )
     }
     tit++;
   }
-  PVR->TriggerChannelGroupsUpdate();
+  TriggerChannelGroupsUpdate();
   if (update)
     tvhinfo("tags updated");
 
@@ -795,7 +836,7 @@ void CTvheadend::SyncChannelsCompleted ( void )
     }
     cit++;
   }
-  PVR->TriggerChannelUpdate();
+  TriggerChannelUpdate();
   if (update)
     tvhinfo("channels updated");
   
@@ -823,8 +864,8 @@ void CTvheadend::SyncDvrCompleted ( void )
     }
     rit++;
   }
-  PVR->TriggerRecordingUpdate();
-  PVR->TriggerTimerUpdate();
+  TriggerRecordingUpdate();
+  TriggerTimerUpdate();
   if (update)
     tvhinfo("recordings updated");
 
@@ -867,7 +908,7 @@ void CTvheadend::SyncEpgCompleted ( void )
       }
     }
 
-    PVR->TriggerEpgUpdate(sit->second.channel);
+    TriggerEpgUpdate(sit->second.channel);
     update |= chnupdate;
     sit++;
   }
@@ -925,7 +966,7 @@ void CTvheadend::ParseTagUpdate ( htsmsg_t *msg )
     tvhdebug("tag updated id:%u, name:%s",
               tag.id, tag.name.c_str());
     if (m_asyncState > ASYNC_CHN)
-      PVR->TriggerChannelGroupsUpdate();
+      TriggerChannelGroupsUpdate();
   }
 }
 
@@ -943,7 +984,7 @@ void CTvheadend::ParseTagDelete ( htsmsg_t *msg )
   
   /* Erase */
   m_tags.erase(u32);
-  PVR->TriggerChannelGroupsUpdate();
+  TriggerChannelGroupsUpdate();
 }
 
 void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
@@ -1025,7 +1066,7 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
     tvhdebug("channel update id:%u, name:%s",
               channel.id, channel.name.c_str());
     if (m_asyncState > ASYNC_CHN)
-      PVR->TriggerChannelUpdate();
+      TriggerChannelUpdate();
   }
 }
 
@@ -1043,7 +1084,7 @@ void CTvheadend::ParseChannelDelete ( htsmsg_t *msg )
   
   /* Erase */
   m_channels.erase(u32);
-  PVR->TriggerChannelUpdate();
+  TriggerChannelUpdate();
 }
 
 void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
@@ -1133,9 +1174,9 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
 
     if (m_asyncState > ASYNC_DVR)
     {
-      PVR->TriggerTimerUpdate();
+      TriggerTimerUpdate();
       if (rec.state == PVR_TIMER_STATE_RECORDING)
-        PVR->TriggerRecordingUpdate();
+        TriggerRecordingUpdate();
     }
   }
 }
@@ -1156,8 +1197,8 @@ void CTvheadend::ParseRecordingDelete ( htsmsg_t *msg )
   m_recordings.erase(u32);
 
   /* Update */
-  PVR->TriggerTimerUpdate();
-  PVR->TriggerRecordingUpdate();
+  TriggerTimerUpdate();
+  TriggerRecordingUpdate();
 }
 
 bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
@@ -1219,9 +1260,11 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
     return;
 
   /* Get event handle */
-  SEvent &evt = m_schedules[tmp.channel].events[tmp.id];
-  evt.id      = tmp.id;
-  evt.del     = false;
+  SSchedule &sched = m_schedules[tmp.channel];
+  SEvent    &evt   = sched.events[tmp.id];
+  sched.channel    = tmp.channel;
+  evt.id           = tmp.id;
+  evt.del          = false;
   
   /* Store */
   UPDATE(evt.title,    tmp.title);
@@ -1246,7 +1289,7 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
              evt.title.c_str(), evt.desc.c_str());
 
     if (m_asyncState > ASYNC_EPG)
-      PVR->TriggerEpgUpdate(tmp.channel);
+      TriggerEpgUpdate(tmp.channel);
   }
 }
 
@@ -1271,8 +1314,10 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
     
     if (eit != sit->second.events.end())
     {
+      tvhtrace("deleted event %d from channel %d", u32, sit->second.channel);
       sit->second.events.erase(eit);
-      PVR->TriggerEpgUpdate(sit->second.channel);
+      TriggerEpgUpdate(sit->second.channel);
+      return;
     }
   }
 }

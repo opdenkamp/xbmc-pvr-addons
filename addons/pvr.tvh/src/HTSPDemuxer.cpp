@@ -654,10 +654,25 @@ void CHTSPDemuxer::ParseSubscriptionStatus ( htsmsg_t *m )
 
 void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
 {
+  uint32_t u32;
   map<int,int>::iterator it;
   tvhtrace("stream stats:");
   for (it = m_streamStat.begin(); it != m_streamStat.end(); it++)
-    tvhtrace("stream idx:%d num:%d", it->first, it->second);
+    tvhtrace("  idx:%d num:%d", it->first, it->second);
+
+  tvhtrace("queue stats:");
+  if (!htsmsg_get_u32(m, "packets", &u32))
+    tvhtrace("  pkts  %d", u32);
+  if (!htsmsg_get_u32(m, "bytes", &u32))
+    tvhtrace("  bytes %d", u32);
+  if (!htsmsg_get_u32(m, "delay", &u32))
+    tvhtrace("  delay %d", u32);
+  if (!htsmsg_get_u32(m, "Idrops", &u32))
+    tvhtrace("  Idrop %d", u32);
+  if (!htsmsg_get_u32(m, "Pdrops", &u32))
+    tvhtrace("  Pdrop %d", u32);
+  if (!htsmsg_get_u32(m, "Bdrops", &u32))
+    tvhtrace("  Bdrop %d", u32);
 }
 
 void CHTSPDemuxer::ParseSignalStatus ( htsmsg_t *m )

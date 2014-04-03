@@ -225,12 +225,13 @@ private:
   CStdString BuildURL(const char* path, ...);
   CStdString BuildExtURL(const CStdString& baseURL, const char* path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
+  long GetGMTOffset();
 
 private:
   bool m_connected;
   unsigned int m_backendVersion;
 
-  int m_timezone;
+  long m_timezone;
   struct { long long total, used; } m_diskspace;
 
   CStdString m_url;

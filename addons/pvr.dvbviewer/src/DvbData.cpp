@@ -998,7 +998,7 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool newTimer)
     endTime += timer.iMarginEnd * 60;
   }
 
-  unsigned int date = (startTime / DAY_SECS) + DELPHI_DATE;
+  unsigned int date = ((startTime + m_timezone) / DAY_SECS) + DELPHI_DATE;
   struct tm *timeinfo;
   timeinfo = localtime(&startTime);
   unsigned int start = timeinfo->tm_hour * 60 + timeinfo->tm_min;
@@ -1098,8 +1098,11 @@ bool Dvb::UpdateBackendStatus(bool updateSettings)
   }
 
   TiXmlElement *root = doc.RootElement();
+  // RS doesn't update the timezone during daylight saving
+  //if (updateSettings && XMLUtils::GetLong(root, "timezone", m_timezone))
+  //  m_timezone *= 60;
   if (updateSettings)
-    XMLUtils::GetInt(root, "timezone", m_timezone);
+    m_timezone = GetGMTOffset();
 
   // compute disk space. duplicates are detected by their identical values
   typedef std::pair<long long, long long> Recfolder_t;
@@ -1228,4 +1231,30 @@ CStdString Dvb::ConvertToUtf8(const CStdString& src)
   CStdString dest(tmp);
   XBMC->FreeString(tmp);
   return dest;
+}
+
+long Dvb::GetGMTOffset()
+{
+#ifdef TARGET_POSIX
+  struct tm t;
+  tzset();
+  time_t tt = time(NULL);
+  if (localtime_r(&tt, &t))
+    return t.tm_gmtoff;
+#else
+  TIME_ZONE_INFORMATION tz;
+  switch(GetTimeZoneInformation(&tz))
+  {
+    case TIME_ZONE_ID_DAYLIGHT:
+      return (tz.Bias + tz.DaylightBias) * -60;
+      break;
+    case TIME_ZONE_ID_STANDARD:
+      return (tz.Bias + tz.StandardBias) * -60;
+      break;
+    case TIME_ZONE_ID_UNKNOWN:
+      return tz.Bias * -60;
+      break;
+  }
+#endif
+  return 0;
 }

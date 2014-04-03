@@ -558,7 +558,7 @@ void *Dvb::Process()
 CStdString Dvb::GetHttpXML(const CStdString& url)
 {
   CStdString result;
-  void *fileHandle = XBMC->OpenFile(url, 0);
+  void *fileHandle = XBMC->OpenFile(url, READ_NO_CACHE);
   if (fileHandle)
   {
     char buffer[1024];

@@ -47,6 +47,17 @@
 #define PVR_STRCPY(dest, source) do { strncpy(dest, source, sizeof(dest)-1); dest[sizeof(dest)-1] = '\0'; } while(0)
 #define PVR_STRCLR(dest) memset(dest, 0, sizeof(dest))
 
+/* indicate that caller can handle truncated reads, where function returns before entire buffer has been filled */
+#define READ_TRUNCATED 0x01
+/* indicate that that caller support read in the minimum defined chunk size, this disables internal cache then */
+#define READ_CHUNKED 0x02
+/* use cache to access this file */
+#define READ_CACHED 0x04
+/* open without caching. regardless to file type. */
+#define READ_NO_CACHE 0x08
+/* calcuate bitrate for file while reading */
+#define READ_BITRATE 0x10
+
 #define DEFAULT_HOST             "127.0.0.1"
 #define DEFAULT_WEB_PORT         8089
 #define DEFAULT_TSBUFFERPATH     "special://userdata/addon_data/pvr.dvbviewer"

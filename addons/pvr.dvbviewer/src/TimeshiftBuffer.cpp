@@ -7,14 +7,14 @@ using namespace ADDON;
 TimeshiftBuffer::TimeshiftBuffer(CStdString streampath, CStdString bufferpath)
   : m_bufferPath(bufferpath)
 {
-  m_streamHandle = XBMC->OpenFile(streampath, 0);
+  m_streamHandle = XBMC->OpenFile(streampath, READ_NO_CACHE);
   m_bufferPath += "/tsbuffer.ts";
   m_filebufferWriteHandle = XBMC->OpenFileForWrite(m_bufferPath, true);
 #ifndef TARGET_POSIX
   m_writePos = 0;
 #endif
   Sleep(100);
-  m_filebufferReadHandle = XBMC->OpenFile(m_bufferPath, 0);
+  m_filebufferReadHandle = XBMC->OpenFile(m_bufferPath, READ_NO_CACHE);
   m_start = time(NULL);
   CreateThread();
 }

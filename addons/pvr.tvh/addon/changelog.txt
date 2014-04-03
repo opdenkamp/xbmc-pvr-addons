@@ -1,3 +1,7 @@
+0.6.0
+ - Fix bug in the new async EPG triggers to XBMC
+ - Workaround for timeshift buffering bug in Tvheadend
+
 0.5.0
  - Asynchronous EPG update in XBMC
  - Fix problems with time bar during timeshift

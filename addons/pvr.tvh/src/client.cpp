@@ -327,6 +327,9 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bHandlesInputStream       = true;
   pCapabilities->bHandlesDemuxing          = true;
   pCapabilities->bSupportsRecordingFolders = true;
+#ifndef OPENELEC_32
+  pCapabilities->bSupportsRecordingEdl     = true;
+#endif
   return PVR_ERROR_NO_ERROR;
 }
 

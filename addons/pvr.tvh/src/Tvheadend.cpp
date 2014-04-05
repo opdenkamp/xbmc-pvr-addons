@@ -764,7 +764,7 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
   SHTSPEventList::iterator it;
   for (it = m_events.begin(); it != m_events.end(); it++)
   {
-    switch (it->type)
+    switch (it->m_type)
     {
       case HTSP_EVENT_TAG_UPDATE:
         PVR->TriggerChannelGroupsUpdate();
@@ -777,7 +777,7 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
         PVR->TriggerRecordingUpdate();
         break;
       case HTSP_EVENT_EPG_UPDATE:
-        PVR->TriggerEpgUpdate(it->idx);
+        PVR->TriggerEpgUpdate(it->m_idx);
         break;
       case HTSP_EVENT_NONE:
         break;

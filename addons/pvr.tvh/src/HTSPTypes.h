@@ -278,13 +278,13 @@ struct SSourceInfo
 
 struct SHTSPEvent
 {
-  eHTSPEventType type;
-  uint32_t       idx;
+  eHTSPEventType m_type;
+  uint32_t       m_idx;
 
   SHTSPEvent ( eHTSPEventType type = HTSP_EVENT_NONE, uint32_t idx = 0 )
   {
-    type = type;
-    idx  = idx;
+    m_type = type;
+    m_idx  = idx;
   }
 };
 

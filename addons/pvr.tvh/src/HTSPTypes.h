@@ -44,6 +44,15 @@ typedef enum {
   
 } dvr_action_type_t;
 
+enum eHTSPEventType
+{
+  HTSP_EVENT_NONE = 0,
+  HTSP_EVENT_CHN_UPDATE = 1,
+  HTSP_EVENT_TAG_UPDATE = 2,
+  HTSP_EVENT_EPG_UPDATE = 3,
+  HTSP_EVENT_REC_UPDATE = 4,
+};
+
 struct STag
 {
   bool                  del;
@@ -267,4 +276,16 @@ struct SSourceInfo
   }
 };
 
+struct SHTSPEvent
+{
+  eHTSPEventType type;
+  uint32_t       idx;
 
+  SHTSPEvent ( eHTSPEventType type = HTSP_EVENT_NONE, uint32_t idx = 0 )
+  {
+    type = type;
+    idx  = idx;
+  }
+};
+
+typedef std::vector<SHTSPEvent> SHTSPEventList;

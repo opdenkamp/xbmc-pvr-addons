@@ -114,40 +114,6 @@ private:
 };
 
 /*
- * Event trigger
- *
- * Due to potential deadly embrace we defer all XBMC event triggering
- * until we've realeased our mutex
- */
-enum eHTSPEventType
-{
-  HTSP_EVENT_NONE       = 0,
-  HTSP_EVENT_CHN_UPDATE = 1,
-  HTSP_EVENT_TAG_UPDATE = 2,
-  HTSP_EVENT_EPG_UPDATE = 3,
-  HTSP_EVENT_REC_UPDATE = 4,
-};
-
-struct SHTSPEvent
-{
-  eHTSPEventType type;
-  uint32_t       idx;
-
-  SHTSPEvent ( eHTSPEventType type = HTSP_EVENT_NONE, uint32_t idx = 0 )
-  {
-    type = type;
-    idx  = idx;
-  }
-  void Clear ( void )
-  {
-    type = HTSP_EVENT_NONE;
-    idx  = 0;
-  }
-};
-
-typedef std::vector<SHTSPEvent> SHTSPEventList;
-
-/*
  * HTSP Connection registration thread
  */
 class CHTSPRegister

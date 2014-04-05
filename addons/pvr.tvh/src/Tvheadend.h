@@ -92,6 +92,9 @@ class CHTSPDemuxer;
 class CHTSPVFS;
 class CHTSPResponse;
 
+/* Typedefs */
+typedef std::map<uint32_t,CHTSPResponse*> CHTSPResponseList;
+
 /*
  * Global (TODO: might want to change this)
  */
@@ -218,7 +221,7 @@ private:
   void*                               m_challenge;
   int                                 m_challengeLen;
 
-  std::map<uint32_t,CHTSPResponse*>   m_messages;
+  CHTSPResponseList                   m_messages;
   std::vector<std::string>            m_capabilities;
 };
 

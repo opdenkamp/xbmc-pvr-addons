@@ -241,7 +241,7 @@ bool CHTSPConnection::ReadMessage ( void )
   {
     tvhtrace("received response [%d]", seq);
     CLockObject lock(m_mutex);
-    map<uint32_t,CHTSPResponse*>::iterator it;
+    CHTSPResponseList::iterator it;
     if ((it = m_messages.find(seq)) != m_messages.end())
     {
       it->second->Set(msg);

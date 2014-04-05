@@ -358,7 +358,7 @@ htsmsg_t *CHTSPConnection::SendAndWait ( const char *method, htsmsg_t *msg, int 
     iResponseTimeout = g_iResponseTimeout;
   
   if (!WaitForConnection())
-    return false;
+    return NULL;
   return SendAndWait0(method, msg, iResponseTimeout);
 }
 

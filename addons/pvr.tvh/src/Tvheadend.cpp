@@ -104,7 +104,7 @@ int CTvheadend::GetTagCount ( void )
 PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool _unused(radio) )
 {
   CLockObject lock(m_mutex);
-  STags::iterator it;
+  STags::const_iterator it;
   for (it = m_tags.begin(); it != m_tags.end(); it++)
   {
     PVR_CHANNEL_GROUP tag;
@@ -124,9 +124,9 @@ PVR_ERROR CTvheadend::GetTagMembers
   ( ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group )
 {
   CLockObject lock(m_mutex);
-  vector<uint32_t>::iterator it;
-  SChannels::iterator cit;
-  STags::iterator     tit = m_tags.begin();
+  vector<uint32_t>::const_iterator it;
+  SChannels::const_iterator cit;
+  STags::const_iterator     tit = m_tags.begin();
   while (tit != m_tags.end())
   {
     if (tit->second.name == group.strGroupName)
@@ -165,7 +165,7 @@ int CTvheadend::GetChannelCount ( void )
 PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
 {
   CLockObject lock(m_mutex);
-  SChannels::iterator it;
+  SChannels::const_iterator it;
   for (it = m_channels.begin(); it != m_channels.end(); it++)
   {
     if (radio != it->second.radio)
@@ -761,7 +761,7 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
    * Note: due to potential deadly embrace this must be done without the
    *       m_mutex held!
    */
-  SHTSPEventList::iterator it;
+  SHTSPEventList::const_iterator it;
   for (it = m_events.begin(); it != m_events.end(); it++)
   {
     switch (it->type)

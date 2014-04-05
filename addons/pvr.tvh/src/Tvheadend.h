@@ -76,14 +76,6 @@ static inline void tvhlog ( ADDON::addon_log_t lvl, const char *fmt, ... )
 }
 
 /*
- * Exceptions
- */
-class AuthException : public std::runtime_error {
-public:
-  AuthException(const std::string &m) : std::runtime_error(m) { }
-};
-
-/*
  * Forward decleration of classes
  */
 class CTvheadend;
@@ -93,6 +85,7 @@ class CHTSPVFS;
 class CHTSPResponse;
 
 /* Typedefs */
+typedef std::runtime_error AuthException;
 typedef std::map<uint32_t,CHTSPResponse*> CHTSPResponseList;
 
 /*

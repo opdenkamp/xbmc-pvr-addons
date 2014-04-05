@@ -167,7 +167,7 @@ const char *CHTSPConnection::GetServerString ( void )
   return str.c_str();
 }
 
-bool CHTSPConnection::HasCapability(const std::string &capability)
+bool CHTSPConnection::HasCapability(const std::string &capability) const
 {
   return std::find(m_capabilities.begin(), m_capabilities.end(), capability) 
          != m_capabilities.end();

@@ -179,7 +179,7 @@ public:
   bool      SendMessage     ( const char *method, htsmsg_t *m );
   htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m, int iResponseTimeout = -1 );
 
-  inline int  GetProtocol      ( void ) { return m_htspVersion; }
+  inline int  GetProtocol      ( void ) const { return m_htspVersion; }
 
   CStdString  GetWebURL        ( const char *fmt, ... );
 
@@ -187,9 +187,9 @@ public:
   const char *GetServerVersion ( void );
   const char *GetServerString  ( void );
   
-  bool        HasCapability(const std::string &capability);
+  bool        HasCapability(const std::string &capability) const;
 
-  inline bool IsConnected       ( void ) { return m_ready; }
+  inline bool IsConnected       ( void ) const { return m_ready; }
   bool        WaitForConnection ( void );
 
   inline PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
@@ -232,7 +232,7 @@ public:
   bool   ProcessMessage ( const char *method, htsmsg_t *m );
   void   Connected      ( void );
   
-  inline time_t GetTimeshiftTime()
+  inline time_t GetTimeshiftTime() const
   {
     return (time_t)m_timeshiftStatus.shift;
   }
@@ -459,11 +459,11 @@ public:
   {
     return m_conn.GetServerString();
   }
-  inline bool HasCapability(const std::string &capability)
+  inline bool HasCapability(const std::string &capability) const
   {
       return m_conn.HasCapability(capability);
   }
-  inline bool IsConnected ( void )
+  inline bool IsConnected ( void ) const
   {
     return m_conn.IsConnected();
   }
@@ -511,7 +511,7 @@ public:
   {
     return m_dmx.CurrentSignal(sig);
   }
-  inline time_t       DemuxGetTimeshiftTime()
+  inline time_t       DemuxGetTimeshiftTime() const
   {
     return m_dmx.GetTimeshiftTime();
   }

@@ -107,27 +107,22 @@ int TimeshiftBuffer::ReadData(unsigned char *buffer, unsigned int size)
 
   /* make sure we never read above the current write position */
   int64_t readPos  = XBMC->GetFilePosition(m_filebufferReadHandle);
-  int64_t writePos = 0;
-  do
-  {
-    writePos = Length();
-    //TODO add some sort of timeout
-  }
-  while(readPos + size > writePos);
-
-  unsigned int read = XBMC->ReadFile(m_filebufferReadHandle, buffer, size);
-
   unsigned int timeWaited = 0;
-  while (read < size && timeWaited < BUFFER_READ_TIMEOUT)
+WAIT:
+  int64_t writePos = Length();
+  if (readPos + size > writePos)
   {
+    if (timeWaited > BUFFER_READ_TIMEOUT)
+    {
+      XBMC->Log(LOG_DEBUG, "Timeshift: Read timed out; waited %u", timeWaited);
+      return -1;
+    }
     Sleep(BUFFER_READ_WAITTIME);
     timeWaited += BUFFER_READ_WAITTIME;
-    read += XBMC->ReadFile(m_filebufferReadHandle, buffer, size - read);
+    goto WAIT;
   }
 
-  if (timeWaited > BUFFER_READ_TIMEOUT)
-    XBMC->Log(LOG_DEBUG, "Timeshift: Read timed out; waited %u", timeWaited);
-  return read;
+  return XBMC->ReadFile(m_filebufferReadHandle, buffer, size);
 }
 
 time_t TimeshiftBuffer::TimeStart()

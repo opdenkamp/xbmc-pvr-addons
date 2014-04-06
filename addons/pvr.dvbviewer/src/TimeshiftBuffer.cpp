@@ -79,29 +79,38 @@ long long TimeshiftBuffer::Position()
 
 long long TimeshiftBuffer::Length()
 {
-  if (m_filebufferReadHandle)
-    return XBMC->GetFileLength(m_filebufferReadHandle);
-  return 0;
+  if (!m_filebufferReadHandle || !m_filebufferWriteHandle)
+    return 0;
+
+  // We can't use GetFileLength here as it's value will be cached
+  // by XBMC until we read or seek above it.
+  // see xbm/xbmc/filesystem/HDFile.cpp CHDFile::GetLength()
+  //return XBMC->GetFileLength(m_filebufferReadHandle);
+
+  int64_t writePos = 0;
+#ifdef TARGET_POSIX
+  /* refresh write position */
+  XBMC->SeekFile(m_filebufferWriteHandle, 0L, SEEK_CUR);
+  writePos = XBMC->GetFilePosition(m_filebufferWriteHandle);
+#else
+  m_mutex.Lock();
+  writePos = m_writePos;
+  m_mutex.Unlock();
+#endif
+  return writePos;
 }
 
 int TimeshiftBuffer::ReadData(unsigned char *buffer, unsigned int size)
 {
-  if (!m_filebufferReadHandle)
+  if (!m_filebufferReadHandle || !m_filebufferWriteHandle)
     return 0;
+
   /* make sure we never read above the current write position */
   int64_t readPos  = XBMC->GetFilePosition(m_filebufferReadHandle);
   int64_t writePos = 0;
   do
   {
-    /* refresh write position */
-#ifdef TARGET_POSIX
-    XBMC->SeekFile(m_filebufferWriteHandle, 0L, SEEK_CUR);
-    writePos = XBMC->GetFilePosition(m_filebufferWriteHandle);
-#else
-    m_mutex.Lock();
-    writePos = m_writePos;
-    m_mutex.Unlock();
-#endif
+    writePos = Length();
     //TODO add some sort of timeout
   }
   while(readPos + size > writePos);

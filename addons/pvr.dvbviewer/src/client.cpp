@@ -556,6 +556,7 @@ time_t GetBufferTimeEnd()
 
 time_t GetPlayingTime()
 {
+  //FIXME: this should rather return the time of the *current* position
   return GetBufferTimeEnd();
 }
 

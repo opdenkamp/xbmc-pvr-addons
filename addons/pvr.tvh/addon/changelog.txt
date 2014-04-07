@@ -1,3 +1,7 @@
+0.7.0
+ - Fix idiotic variable naming clache
+ - general tidying up
+
 0.6.0
  - Fix bug in the new async EPG triggers to XBMC
  - Workaround for timeshift buffering bug in Tvheadend

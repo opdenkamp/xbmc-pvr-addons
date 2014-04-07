@@ -76,14 +76,6 @@ static inline void tvhlog ( ADDON::addon_log_t lvl, const char *fmt, ... )
 }
 
 /*
- * Exceptions
- */
-class AuthException : public std::runtime_error {
-public:
-  AuthException(const std::string &m) : std::runtime_error(m) { }
-};
-
-/*
  * Forward decleration of classes
  */
 class CTvheadend;
@@ -91,6 +83,10 @@ class CHTSPConnection;
 class CHTSPDemuxer;
 class CHTSPVFS;
 class CHTSPResponse;
+
+/* Typedefs */
+typedef std::runtime_error AuthException;
+typedef std::map<uint32_t,CHTSPResponse*> CHTSPResponseList;
 
 /*
  * Global (TODO: might want to change this)
@@ -149,7 +145,7 @@ public:
   bool      SendMessage     ( const char *method, htsmsg_t *m );
   htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m, int iResponseTimeout = -1 );
 
-  int         GetProtocol      ( void ) { return m_htspVersion; }
+  inline int  GetProtocol      ( void ) const { return m_htspVersion; }
 
   CStdString  GetWebURL        ( const char *fmt, ... );
 
@@ -157,12 +153,12 @@ public:
   const char *GetServerVersion ( void );
   const char *GetServerString  ( void );
   
-  bool        HasCapability(const std::string &capability);
+  bool        HasCapability(const std::string &capability) const;
 
-  bool        IsConnected       ( void ) { return m_ready; }
+  inline bool IsConnected       ( void ) const { return m_ready; }
   bool        WaitForConnection ( void );
 
-  PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
+  inline PLATFORM::CMutex& Mutex ( void ) { return m_mutex; }
   
 private:
   void*       Process          ( void );
@@ -184,7 +180,7 @@ private:
   void*                               m_challenge;
   int                                 m_challengeLen;
 
-  std::map<uint32_t,CHTSPResponse*>   m_messages;
+  CHTSPResponseList                   m_messages;
   std::vector<std::string>            m_capabilities;
 };
 
@@ -202,7 +198,7 @@ public:
   bool   ProcessMessage ( const char *method, htsmsg_t *m );
   void   Connected      ( void );
   
-  time_t GetTimeshiftTime()
+  inline time_t GetTimeshiftTime() const
   {
     return (time_t)m_timeshiftStatus.shift;
   }
@@ -358,23 +354,23 @@ private:
   /*
    * Event handling
    */
-  void        TriggerChannelGroupsUpdate ( void )
+  inline void TriggerChannelGroupsUpdate ( void )
   {
     m_events.push_back(SHTSPEvent(HTSP_EVENT_TAG_UPDATE));
   }
-  void        TriggerChannelUpdate ( void )
+  inline void TriggerChannelUpdate ( void )
   {
     m_events.push_back(SHTSPEvent(HTSP_EVENT_CHN_UPDATE));
   }
-  void        TriggerRecordingUpdate ( void )
+  inline void TriggerRecordingUpdate ( void )
   {
     m_events.push_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
   }
-  void        TriggerTimerUpdate ( void )
+  inline void TriggerTimerUpdate ( void )
   {
     m_events.push_back(SHTSPEvent(HTSP_EVENT_REC_UPDATE));
   }
-  void        TriggerEpgUpdate ( uint32_t idx )
+  inline void TriggerEpgUpdate ( uint32_t idx )
   {
     m_events.push_back(SHTSPEvent(HTSP_EVENT_EPG_UPDATE, idx));
   }
@@ -417,27 +413,27 @@ public:
     PLATFORM::CLockObject lock(m_conn.Mutex());
     return m_conn.WaitForConnection();
   }
-  const char *GetServerName    ( void )
+  inline const char *GetServerName    ( void )
   {
     return m_conn.GetServerName();
   }
-  const char *GetServerVersion ( void )
+  inline const char *GetServerVersion ( void )
   {
     return m_conn.GetServerVersion();
   }
-  const char *GetServerString  ( void )
+  inline const char *GetServerString  ( void )
   {
     return m_conn.GetServerString();
   }
-  bool HasCapability(const std::string &capability)
+  inline bool HasCapability(const std::string &capability) const
   {
       return m_conn.HasCapability(capability);
   }
-  bool IsConnected ( void )
+  inline bool IsConnected ( void ) const
   {
     return m_conn.IsConnected();
   }
-  void Disconnect ( void )
+  inline void Disconnect ( void )
   {
     m_conn.Disconnect();
   }
@@ -445,43 +441,43 @@ public:
   /*
    * Demuxer (pass-thru)
    */
-  bool         DemuxOpen           ( const PVR_CHANNEL &chn )
+  inline bool         DemuxOpen           ( const PVR_CHANNEL &chn )
   {
     return m_dmx.Open(chn);
   }
-  void         DemuxClose          ( void )
+  inline void         DemuxClose          ( void )
   {
     m_dmx.Close();
   }
-  DemuxPacket *DemuxRead           ( void )
+  inline DemuxPacket *DemuxRead           ( void )
   {
     return m_dmx.Read();
   }
-  void         DemuxFlush          ( void )
+  inline void         DemuxFlush          ( void )
   {
     m_dmx.Flush();
   }
-  void         DemuxAbort          ( void )
+  inline void         DemuxAbort          ( void )
   {
     m_dmx.Abort();
   }
-  bool         DemuxSeek           ( int time, bool backward, double *startpts )
+  inline bool         DemuxSeek           ( int time, bool backward, double *startpts )
   {
     return m_dmx.Seek(time, backward, startpts);
   }
-  void         DemuxSpeed          ( int speed )
+  inline void         DemuxSpeed          ( int speed )
   {
     return m_dmx.Speed(speed);
   }
-  PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams )
+  inline PVR_ERROR    DemuxCurrentStreams ( PVR_STREAM_PROPERTIES *streams )
   {
     return m_dmx.CurrentStreams(streams);
   }
-  PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig )
+  inline PVR_ERROR    DemuxCurrentSignal  ( PVR_SIGNAL_STATUS &sig )
   {
     return m_dmx.CurrentSignal(sig);
   }
-  inline time_t DemuxGetTimeshiftTime()
+  inline time_t       DemuxGetTimeshiftTime() const
   {
     return m_dmx.GetTimeshiftTime();
   }
@@ -489,27 +485,27 @@ public:
   /*
    * VFS (pass-thru)
    */
-  bool         VfsOpen             ( const PVR_RECORDING &rec )
+  inline bool         VfsOpen             ( const PVR_RECORDING &rec )
   {
     return m_vfs.Open(rec);
   }
-  void         VfsClose            ( void )
+  inline void         VfsClose            ( void )
   {
     m_vfs.Close();
   }
-  int          VfsRead             ( unsigned char *buf, unsigned int len )
+  inline int          VfsRead             ( unsigned char *buf, unsigned int len )
   {
     return m_vfs.Read(buf, len);
   }
-  long long    VfsSeek             ( long long position, int whence )
+  inline long long    VfsSeek             ( long long position, int whence )
   {
     return m_vfs.Seek(position, whence);
   }
-  long long    VfsTell             ( void )
+  inline long long    VfsTell             ( void )
   {
     return m_vfs.Tell();
   }
-  long long    VfsSize             ( void )
+  inline long long    VfsSize             ( void )
   {
     return m_vfs.Size();
   }

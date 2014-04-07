@@ -167,7 +167,7 @@ const char *CHTSPConnection::GetServerString ( void )
   return str.c_str();
 }
 
-bool CHTSPConnection::HasCapability(const std::string &capability)
+bool CHTSPConnection::HasCapability(const std::string &capability) const
 {
   return std::find(m_capabilities.begin(), m_capabilities.end(), capability) 
          != m_capabilities.end();
@@ -241,7 +241,7 @@ bool CHTSPConnection::ReadMessage ( void )
   {
     tvhtrace("received response [%d]", seq);
     CLockObject lock(m_mutex);
-    map<uint32_t,CHTSPResponse*>::iterator it;
+    CHTSPResponseList::iterator it;
     if ((it = m_messages.find(seq)) != m_messages.end())
     {
       it->second->Set(msg);

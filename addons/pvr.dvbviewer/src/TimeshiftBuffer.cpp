@@ -108,9 +108,7 @@ int TimeshiftBuffer::ReadData(unsigned char *buffer, unsigned int size)
   /* make sure we never read above the current write position */
   int64_t readPos  = XBMC->GetFilePosition(m_filebufferReadHandle);
   unsigned int timeWaited = 0;
-WAIT:
-  int64_t writePos = Length();
-  if (readPos + size > writePos)
+  while (readPos + size > Length())
   {
     if (timeWaited > BUFFER_READ_TIMEOUT)
     {
@@ -119,7 +117,6 @@ WAIT:
     }
     Sleep(BUFFER_READ_WAITTIME);
     timeWaited += BUFFER_READ_WAITTIME;
-    goto WAIT;
   }
 
   return XBMC->ReadFile(m_filebufferReadHandle, buffer, size);

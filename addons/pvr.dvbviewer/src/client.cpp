@@ -70,7 +70,7 @@ void ADDON_ReadSettings(void)
   if (!XBMC->GetSetting("usefavourites", &g_useFavourites))
     g_useFavourites = false;
 
-  if (XBMC->GetSetting("usefavouritesfile", &g_useFavouritesFile))
+  if (!XBMC->GetSetting("usefavouritesfile", &g_useFavouritesFile))
     g_useFavouritesFile = false;
 
   if (g_useFavouritesFile && XBMC->GetSetting("favouritesfile", buffer))

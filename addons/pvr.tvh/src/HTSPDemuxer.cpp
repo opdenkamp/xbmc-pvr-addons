@@ -76,13 +76,13 @@ void CHTSPDemuxer::Close0 ( void )
 
   /* Clear */
   m_opened  = false;
-  m_started = false;
   Flush();
   Abort0();
 }
 
 void CHTSPDemuxer::Abort0 ( void )
 {
+  CLockObject lock(m_mutex);
   m_streams.Clear();
   m_streamStat.clear();
 }

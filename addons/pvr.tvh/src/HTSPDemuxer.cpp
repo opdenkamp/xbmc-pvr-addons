@@ -45,7 +45,7 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
-  : m_conn(conn), m_opened(false), m_started(false), m_chnId(0), m_subId(0),
+  : m_conn(conn), m_opened(false), m_chnId(0), m_subId(0),
     m_speed(1000), m_pktBuffer((size_t)-1)
 {
 }
@@ -101,7 +101,6 @@ bool CHTSPDemuxer::Open ( const PVR_CHANNEL &chn )
   m_speed  = 1000;
 
   /* Open */
-  m_started = false;
   m_opened  = SendSubscribe();
   if (!m_opened)
     SendUnsubscribe();
@@ -200,8 +199,6 @@ void CHTSPDemuxer::Speed ( int speed )
 PVR_ERROR CHTSPDemuxer::CurrentStreams ( PVR_STREAM_PROPERTIES *streams )
 {
   CLockObject lock(m_mutex);
-  if (!m_startCond.Wait(m_mutex, m_started, 5000))
-    return PVR_ERROR_SERVER_ERROR;
   return m_streams.GetProperties(streams) ? PVR_ERROR_NO_ERROR
                                           : PVR_ERROR_SERVER_ERROR; 
 }
@@ -576,10 +573,6 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
 
   /* Source data */
   ParseSourceInfo(htsmsg_get_map(m, "sourceinfo"));
-
-  /* Signal */
-  m_started = true;
-  m_startCond.Broadcast();
 }
 
 void CHTSPDemuxer::ParseSourceInfo ( htsmsg_t *m )

@@ -262,7 +262,7 @@ void CHTSPDemuxer::SendSubscribe ( bool force )
     m = m_conn.SendAndWait("subscribe", m);
   if (m == NULL)
   {
-    tvhdebug("demux failed to send subscribe");
+    tvherror("demux failed to send subscribe");
     return;
   }
 
@@ -271,7 +271,7 @@ void CHTSPDemuxer::SendSubscribe ( bool force )
   htsmsg_destroy(m);
   if (error)
   {
-    tvhdebug("demux failed to subscribe: %s", error);
+    tvherror("demux failed to subscribe: %s", error);
     return;
   }
 
@@ -295,7 +295,7 @@ void CHTSPDemuxer::SendUnsubscribe ( void )
   tvhdebug("demux unsubcribe from %d", m_subscription.channelId);
   if ((m = m_conn.SendAndWait("unsubscribe", m)) == NULL)
   {
-    tvhdebug("demux failed to send unsubcribe");
+    tvherror("demux failed to send unsubcribe");
     return;
   }
 
@@ -304,7 +304,7 @@ void CHTSPDemuxer::SendUnsubscribe ( void )
   htsmsg_destroy(m);
   if (error)
   {
-    tvhdebug("demux failed to unsubcribe: %s", error);
+    tvherror("demux failed to unsubcribe: %s", error);
     return;
   }
 

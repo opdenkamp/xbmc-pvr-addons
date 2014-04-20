@@ -231,7 +231,7 @@ private:
   PVR_ERROR    CurrentStreams ( PVR_STREAM_PROPERTIES *streams );
   PVR_ERROR    CurrentSignal  ( PVR_SIGNAL_STATUS &sig );
 
-  bool SendSubscribe   ( bool force = false );
+  void SendSubscribe   ( bool force = false );
   void SendUnsubscribe ( void );
   void SendSpeed       ( bool force = false );
   

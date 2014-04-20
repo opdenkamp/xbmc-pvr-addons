@@ -237,7 +237,7 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
  * Send Messages
  * *************************************************************************/
 
-bool CHTSPDemuxer::SendSubscribe ( bool force )
+void CHTSPDemuxer::SendSubscribe ( bool force )
 {
   int err;
   htsmsg_t *m;
@@ -263,7 +263,7 @@ bool CHTSPDemuxer::SendSubscribe ( bool force )
   if (m == NULL)
   {
     tvhdebug("demux failed to send subscribe");
-    return false;
+    return;
   }
 
   /* Error */
@@ -272,12 +272,11 @@ bool CHTSPDemuxer::SendSubscribe ( bool force )
   if (err)
   {
     tvhdebug("demux failed to subscribe");
-    return false;
+    return;
   }
 
   m_subscription.active = true;
   tvhdebug("demux succesfully subscribed to %08x", m_subscription.channelId);
-  return true;
 }
 
 void CHTSPDemuxer::SendUnsubscribe ( void )

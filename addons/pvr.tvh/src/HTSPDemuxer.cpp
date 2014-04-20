@@ -255,7 +255,7 @@ void CHTSPDemuxer::SendSubscribe ( bool force )
   htsmsg_add_u32(m, "queueDepth",      2000000);
 
   /* Send and Wait for response */
-  tvhdebug("demux subscribe to %08x", m_subscription.channelId);
+  tvhdebug("demux subscribe to %d", m_subscription.channelId);
   if (force)
     m = m_conn.SendAndWait0("subscribe", m);
   else
@@ -276,7 +276,7 @@ void CHTSPDemuxer::SendSubscribe ( bool force )
   }
 
   m_subscription.active = true;
-  tvhdebug("demux succesfully subscribed to %08x", m_subscription.channelId);
+  tvhdebug("demux succesfully subscribed to %d", m_subscription.channelId);
 }
 
 void CHTSPDemuxer::SendUnsubscribe ( void )

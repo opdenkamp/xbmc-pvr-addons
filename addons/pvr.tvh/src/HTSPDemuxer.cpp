@@ -45,8 +45,7 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
-  : m_conn(conn), m_opened(false), m_started(false), m_chnId(0), m_subId(0),
-    m_speed(1000), m_pktBuffer((size_t)-1)
+  : m_conn(conn), m_started(false), m_pktBuffer((size_t)-1)
 {
 }
 
@@ -57,7 +56,8 @@ CHTSPDemuxer::~CHTSPDemuxer ( void )
 void CHTSPDemuxer::Connected ( void )
 {
   /* Re-subscribe */
-  if (m_opened) {
+  if (m_subscription.active)
+  {
     tvhdebug("demux re-starting stream");
     SendSubscribe(true);
     SendSpeed(true);
@@ -71,11 +71,10 @@ void CHTSPDemuxer::Connected ( void )
 void CHTSPDemuxer::Close0 ( void )
 {
   /* Send unsubscribe */
-  if (m_opened)
+  if (m_subscription.active)
     SendUnsubscribe();
 
   /* Clear */
-  m_opened  = false;
   m_started = false;
   Flush();
   Abort0();
@@ -96,16 +95,19 @@ bool CHTSPDemuxer::Open ( const PVR_CHANNEL &chn )
   /* Close current stream */
   Close0();
   
-  /* Cache data */
-  m_chnId  = chn.iUniqueId;
-  m_speed  = 1000;
+  /* Create new subscription */
+  m_subscription = SSubscription();
+  m_subscription.channelId = chn.iUniqueId;
 
   /* Open */
   m_started = false;
-  m_opened  = SendSubscribe();
-  if (!m_opened)
+  SendSubscribe();
+  
+  /* Send unsubscribe if subscribing failed */
+  if (!m_subscription.active)
     SendUnsubscribe();
-  return m_opened;
+  
+  return m_subscription.active;
 }
 
 void CHTSPDemuxer::Close ( void )
@@ -149,7 +151,7 @@ bool CHTSPDemuxer::Seek
   htsmsg_t *m;
 
   CLockObject lock(m_conn.Mutex());
-  if (!m_subId)
+  if (!m_subscription.active)
     return false;
 
   tvhdebug("demux seek %d", time);
@@ -159,7 +161,7 @@ bool CHTSPDemuxer::Seek
 
   /* Build message */
   m = htsmsg_create_map();  
-  htsmsg_add_u32(m, "subscriptionId", m_subId);
+  htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
   htsmsg_add_s64(m, "time",           (int64_t)time * 1000LL);
   htsmsg_add_u32(m, "absolute",       1);
 
@@ -191,9 +193,9 @@ bool CHTSPDemuxer::Seek
 void CHTSPDemuxer::Speed ( int speed )
 {
   CLockObject lock(m_conn.Mutex());
-  if (!m_subId)
+  if (!m_subscription.active)
     return;
-  m_speed = speed;
+  m_subscription.speed = speed;
   SendSpeed();
 }
 
@@ -246,14 +248,14 @@ bool CHTSPDemuxer::SendSubscribe ( bool force )
 
   /* Build message */
   m = htsmsg_create_map();
-  htsmsg_add_s32(m, "channelId",       m_chnId);
-  htsmsg_add_u32(m, "subscriptionId",  ++m_subId);
+  htsmsg_add_s32(m, "channelId",       m_subscription.channelId);
+  htsmsg_add_u32(m, "subscriptionId",  m_subscription.subscriptionId);
   htsmsg_add_u32(m, "timeshiftPeriod", (uint32_t)~0);
   htsmsg_add_u32(m, "normts",          1);
   htsmsg_add_u32(m, "queueDepth",      2000000);
 
   /* Send and Wait for response */
-  tvhdebug("demux subscribe to %08x", m_chnId);
+  tvhdebug("demux subscribe to %08x", m_subscription.channelId);
   if (force)
     m = m_conn.SendAndWait0("subscribe", m);
   else
@@ -273,7 +275,8 @@ bool CHTSPDemuxer::SendSubscribe ( bool force )
     return false;
   }
 
-  tvhdebug("demux succesfully subscribed to %08x", m_chnId);
+  m_subscription.active = true;
+  tvhdebug("demux succesfully subscribed to %08x", m_subscription.channelId);
   return true;
 }
 
@@ -284,10 +287,13 @@ void CHTSPDemuxer::SendUnsubscribe ( void )
 
   /* Build message */
   m = htsmsg_create_map();
-  htsmsg_add_u32(m, "subscriptionId", m_subId);
+  htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
 
+  /* Mark subscription as inactive immediately in case this command fails */
+  m_subscription.active = false;
+  
   /* Send and Wait */
-  tvhdebug("demux unsubcribe from %d", m_chnId);
+  tvhdebug("demux unsubcribe from %d", m_subscription.channelId);
   if ((m = m_conn.SendAndWait("unsubscribe", m)) == NULL)
   {
     tvhdebug("demux failed to send unsubcribe");
@@ -303,18 +309,19 @@ void CHTSPDemuxer::SendUnsubscribe ( void )
     return;
   }
 
-  tvhdebug("demux succesfully unsubscribed %d", m_chnId);
+  tvhdebug("demux succesfully unsubscribed %d", m_subscription.channelId);
 }
 
 void CHTSPDemuxer::SendSpeed ( bool force )
 {
   htsmsg_t *m;
+  int speed = m_subscription.speed / 10; // XBMC uses values an order of magnitude larger than tvheadend
 
   /* Build message */
   m = htsmsg_create_map();
-  htsmsg_add_u32(m, "subscriptionId", m_subId);
-  htsmsg_add_s32(m, "speed",          m_speed / 10);
-  tvhdebug("demux send speed %d", m_speed / 10);
+  htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
+  htsmsg_add_s32(m, "speed",          speed);
+  tvhdebug("demux send speed %d", speed);
 
   /* Send and Wait */
   if (force)
@@ -340,7 +347,7 @@ bool CHTSPDemuxer::ProcessMessage ( const char *method, htsmsg_t *m )
     return false;
 
   /* Not current subscription - ignore */
-  else if (subId != m_subId)
+  else if (subId != m_subscription.subscriptionId)
     return true;
 
   /* Subscription messages */

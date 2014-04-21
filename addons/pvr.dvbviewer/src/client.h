@@ -69,10 +69,12 @@ extern CStdString    g_password;
 extern bool          g_useFavourites;
 extern bool          g_useFavouritesFile;
 extern CStdString    g_favouritesFile;
+extern int           g_groupRecordings;
 extern bool          g_useTimeshift;
 extern CStdString    g_timeshiftBufferPath;
 extern bool          g_useRTSP;
 extern bool          g_lowPerformance;
+
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
 

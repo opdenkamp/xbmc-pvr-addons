@@ -141,6 +141,17 @@ public:
 class DvbRecording
 {
 public:
+  enum Group
+  {
+    GroupDisabled = 0,
+    GroupByDirectory,
+    GroupByDate,
+    GroupByFirstLetter,
+    GroupByTVChannel,
+    GroupBySeries,
+  };
+
+public:
   DvbRecording()
     : genre(0)
   {}
@@ -233,6 +244,7 @@ private:
 
   long m_timezone;
   struct { long long total, used; } m_diskspace;
+  std::vector<CStdString> m_recfolders;
 
   CStdString m_url;
   unsigned int m_currentChannel;

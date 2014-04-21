@@ -40,6 +40,7 @@ CStdString g_password             = "";
 bool       g_useFavourites        = false;
 bool       g_useFavouritesFile    = false;
 CStdString g_favouritesFile       = "";
+int        g_groupRecordings      = DvbRecording::GroupDisabled;
 bool       g_useTimeshift         = false;
 CStdString g_timeshiftBufferPath  = DEFAULT_TSBUFFERPATH;
 bool       g_useRTSP              = false;
@@ -76,6 +77,9 @@ void ADDON_ReadSettings(void)
   if (g_useFavouritesFile && XBMC->GetSetting("favouritesfile", buffer))
     g_favouritesFile = buffer;
 
+  if (!XBMC->GetSetting("grouprecordings", &g_groupRecordings))
+    g_groupRecordings = DvbRecording::GroupDisabled;
+
   if (!XBMC->GetSetting("usetimeshift", &g_useTimeshift))
     g_useTimeshift = false;
 
@@ -99,10 +103,12 @@ void ADDON_ReadSettings(void)
   XBMC->Log(LOG_DEBUG, "WebPort:    %d", g_webPort);
   XBMC->Log(LOG_DEBUG, "Use favourites: %s", (g_useFavourites) ? "yes" : "no");
   if (g_useFavouritesFile)
-    XBMC->Log(LOG_DEBUG, "Favourites File: %s", g_favouritesFile.c_str());
+    XBMC->Log(LOG_DEBUG, "Favourites file: %s", g_favouritesFile.c_str());
+  if (g_groupRecordings != DvbRecording::GroupDisabled)
+    XBMC->Log(LOG_DEBUG, "Group recordings: %d", g_groupRecordings);
   XBMC->Log(LOG_DEBUG, "Timeshift: %s", (g_useTimeshift) ? "enabled" : "disabled");
   if (g_useTimeshift)
-    XBMC->Log(LOG_DEBUG, "Timeshift Buffer Path: %s", g_timeshiftBufferPath.c_str());
+    XBMC->Log(LOG_DEBUG, "Timeshift buffer path: %s", g_timeshiftBufferPath.c_str());
   XBMC->Log(LOG_DEBUG, "Use RTSP: %s", (g_useRTSP) ? "yes" : "no");
   XBMC->Log(LOG_DEBUG, "Low performance mode: %s", (g_lowPerformance) ? "yes" : "no");
 }
@@ -221,6 +227,11 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   else if (sname == "usetimeshift")
   {
     if (g_useTimeshift != *(bool *)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (sname == "grouprecordings")
+  {
+    if (g_groupRecordings != *(const DvbRecording::Group *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "timeshiftpath")

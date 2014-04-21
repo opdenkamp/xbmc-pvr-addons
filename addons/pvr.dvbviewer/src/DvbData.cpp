@@ -81,6 +81,8 @@ bool Dvb::Open()
     return false;
 
   TimerUpdates();
+  // force recording sync as XBMC won't update recordings on PVR restart
+  PVR->TriggerRecordingUpdate();
 
   XBMC->Log(LOG_INFO, "Starting separate polling thread...");
   CreateThread();
@@ -370,7 +372,7 @@ unsigned int Dvb::GetTimersAmount()
 
 PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
 {
-  CStdString url = BuildURL("api/recordings.html?images=1&nofilename=1");
+  CStdString url = BuildURL("api/recordings.html?images=1");
   CStdString req = GetHttpXML(url);
   RemoveNullChars(req);
 
@@ -440,6 +442,43 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     tag.iDuration     = recording.duration;
     tag.iGenreType    = recording.genre & 0xF0;
     tag.iGenreSubType = recording.genre & 0x0F;
+
+    CStdString tmp;
+    switch(g_groupRecordings)
+    {
+      case DvbRecording::GroupByDirectory:
+        XMLUtils::GetString(xRecording, "file", tmp);
+        tmp.ToLower();
+        for (std::vector<CStdString>::reverse_iterator recf = m_recfolders.rbegin();
+            recf != m_recfolders.rend(); ++recf)
+        {
+          if (tmp.compare(0, recf->length(), *recf) != 0)
+            continue;
+          tmp = tmp.substr(recf->length(), tmp.ReverseFind('\\') - recf->length());
+          tmp.Replace('\\', '/');
+          PVR_STRCPY(tag.strDirectory, tmp.c_str() + 1);
+          break;
+        }
+        break;
+      case DvbRecording::GroupByDate:
+        tmp.Format("%s/%s", startTime.substr(0, 4), startTime.substr(4, 2));
+        PVR_STRCPY(tag.strDirectory, tmp.c_str());
+        break;
+      case DvbRecording::GroupByFirstLetter:
+        tag.strDirectory[0] = recording.title[0];
+        tag.strDirectory[1] = '\0';
+        break;
+      case DvbRecording::GroupByTVChannel:
+        PVR_STRCPY(tag.strDirectory, recording.channelName.c_str());
+        break;
+      case DvbRecording::GroupBySeries:
+        tmp = "Unknown";
+        XMLUtils::GetString(xRecording, "series", tmp);
+        PVR_STRCPY(tag.strDirectory, tmp.c_str());
+        break;
+      default:
+        break;
+    }
 
     PVR->TransferRecordingEntry(handle, &tag);
     ++m_recordingAmount;
@@ -1083,6 +1122,11 @@ bool Dvb::CheckBackendVersion()
   return true;
 }
 
+static bool StringGreaterThan(const CStdString& a, const CStdString& b)
+{
+  return (a.length() < b.length());
+}
+
 bool Dvb::UpdateBackendStatus(bool updateSettings)
 {
   CStdString url = BuildURL("api/status.html");
@@ -1098,11 +1142,16 @@ bool Dvb::UpdateBackendStatus(bool updateSettings)
   }
 
   TiXmlElement *root = doc.RootElement();
-  // RS doesn't update the timezone during daylight saving
-  //if (updateSettings && XMLUtils::GetLong(root, "timezone", m_timezone))
-  //  m_timezone *= 60;
+
   if (updateSettings)
+  {
+    // RS doesn't update the timezone during daylight saving
+    //if (XMLUtils::GetLong(root, "timezone", m_timezone))
+    //  m_timezone *= 60;
     m_timezone = GetGMTOffset();
+
+    m_recfolders.clear();
+  }
 
   // compute disk space. duplicates are detected by their identical values
   typedef std::pair<long long, long long> Recfolder_t;
@@ -1121,7 +1170,14 @@ bool Dvb::UpdateBackendStatus(bool updateSettings)
       m_diskspace.total += size / 1024;
       m_diskspace.used += (size - free) / 1024;
     }
+
+    if (updateSettings && g_groupRecordings != DvbRecording::GroupDisabled)
+      m_recfolders.push_back(CStdString(xFolder->GetText()).ToLower());
   }
+
+  if (updateSettings && g_groupRecordings != DvbRecording::GroupDisabled)
+    std::sort(m_recfolders.begin(), m_recfolders.end(), StringGreaterThan);
+
   return true;
 }
 

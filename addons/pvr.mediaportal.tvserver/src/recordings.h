@@ -80,6 +80,7 @@ public:
   int Lifetime(void) const;
   int TimesWatched(void) const {return m_timesWatched; }
   int LastPlayedPosition(void) const { return m_lastPlayedPosition; }
+  bool IsRecording(void) {return m_isRecording; }
 
   /**
    * \brief Filename of this recording with full path (at server side)

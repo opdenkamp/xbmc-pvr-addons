@@ -981,7 +981,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
       if (g_bUseRTSP == false)
       {
 #ifdef TARGET_WINDOWS
-        if (OS::CFile::Exists( recording.FilePath() ))
+        if ((recording.IsRecording() == false) && (OS::CFile::Exists( recording.FilePath() )))
           PVR_STRCPY(tag.strStreamURL, recording.FilePath());
         else
 #endif
@@ -1261,7 +1261,7 @@ PVR_ERROR cPVRClientMediaPortal::AddTimer(const PVR_TIMER &timerinfo)
   if ( timerinfo.startTime <= 0)
   {
     // Refresh the recordings list to see the newly created recording
-    usleep(1000);
+    usleep(100000);
     PVR->TriggerRecordingUpdate();
   }
 

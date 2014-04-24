@@ -7,6 +7,7 @@ v1.9.13
 - Fixed: [SMB] Don't replace \\ by smb:// when not at the start of the path
 - Fixed: Stop timeshifting at the backend side on buffer open failure.
 - Fixed: Recordings: Fix playback for in-progress recordings. Play them always via the PVR addon to account for the growing file length
+- Fixed: Recording playback over rtsp in ffmpeg mode
 
 v1.9.12
 - Updated language files from Transifex

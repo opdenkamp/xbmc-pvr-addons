@@ -977,28 +977,23 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
         PVR_STRCLR(tag.strDirectory);
       }
 
-      //if (g_bUseRecordingsDir == true)
-      if (g_bUseRTSP == false)
-      {
 #ifdef TARGET_WINDOWS
-        if ((recording.IsRecording() == false) && (OS::CFile::Exists( recording.FilePath() )))
-          PVR_STRCPY(tag.strStreamURL, recording.FilePath());
-        else
+      if ( (g_bUseRTSP == false) && (recording.IsRecording() == false) && (OS::CFile::Exists( recording.FilePath() )))
+      {
+        // Direct access. Bypass the PVR addon completely (both ffmpeg and TSReader mode; Windows only)
+        PVR_STRCPY(tag.strStreamURL, recording.FilePath());
+      }
+      else
 #endif
+      if (g_eStreamingMethod==TSReader)
+      {
+        // Use ReadRecordedStream
         PVR_STRCLR(tag.strStreamURL);
       }
       else
       {
-        if (g_eStreamingMethod==TSReader)
-        {
-          // Use ReadRecordedStream
-          PVR_STRCLR(tag.strStreamURL);
-        }
-        else
-        {
-          // Use rtsp url and XBMC's internal FFMPeg playback
-          PVR_STRCPY(tag.strStreamURL, recording.Stream());
-        }
+        // Use rtsp url and XBMC's internal FFMPeg playback
+        PVR_STRCPY(tag.strStreamURL, recording.Stream());
       }
       PVR->TransferRecordingEntry(handle, &tag);
     }

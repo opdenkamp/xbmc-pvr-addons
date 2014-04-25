@@ -130,6 +130,12 @@ std::string ToThumbFileName(const char* strChannelName)
   strThumbName.Replace(":","_");
   strThumbName.Replace("/","_");
   strThumbName.Replace("\\","_");
+  strThumbName.Replace(">","_");
+  strThumbName.Replace("<","_");
+  strThumbName.Replace("*","_");
+  strThumbName.Replace("?","_");
+  strThumbName.Replace("\"","_");
+  strThumbName.Replace("|","_");
 
   return strThumbName;
 }
@@ -137,25 +143,22 @@ std::string ToThumbFileName(const char* strChannelName)
 std::string ToXBMCPath(const std::string& strFileName)
 {
   CStdString strXBMCFileName = strFileName;
-  CStdString SMBPrefix = "smb://";
 
-  if (g_szSMBusername.length() > 0)
+  if (strXBMCFileName.Left(2) == "\\\\")
   {
-    SMBPrefix += g_szSMBusername;
-    if (g_szSMBpassword.length() > 0)
+    CStdString SMBPrefix = "smb://";
+
+    if (g_szSMBusername.length() > 0)
     {
-      SMBPrefix += ":" + g_szSMBpassword;
+      SMBPrefix += g_szSMBusername;
+      if (g_szSMBpassword.length() > 0)
+      {
+        SMBPrefix += ":" + g_szSMBpassword;
+      }
+      SMBPrefix += "@";
     }
-    SMBPrefix += "@";
+    strXBMCFileName.Replace("\\\\", SMBPrefix);
   }
-#ifndef TARGET_WINDOWS
-  else
-  {
-    SMBPrefix += "Guest@";
-  }
-#endif
-
-  strXBMCFileName.Replace("\\\\", SMBPrefix);
   strXBMCFileName.Replace('\\', '/');
 
   return strXBMCFileName;

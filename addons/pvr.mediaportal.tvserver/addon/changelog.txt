@@ -1,3 +1,14 @@
+v1.9.13
+- Added: Live TV/Recordings: Report "permission denied" errors on SMB access failures
+- Changed: [Settings] enable fast channel switching by default
+- Changed: Reduce the signal status calls to once every 10s.
+- Fixed: Channel thumbnails: replace also the invalid file name characters <>*?\| in the channel name by a _
+- Fixed: [SMB] Allow an empty username and password field
+- Fixed: [SMB] Don't replace \\ by smb:// when not at the start of the path
+- Fixed: Stop timeshifting at the backend side on buffer open failure.
+- Fixed: Recordings: Fix playback for in-progress recordings. Play them always via the PVR addon to account for the growing file length
+- Fixed: Recording playback over rtsp in ffmpeg mode
+
 v1.9.12
 - Updated language files from Transifex
 

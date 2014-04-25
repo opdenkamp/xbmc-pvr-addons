@@ -128,8 +128,8 @@ private:
   int                     m_epg_id_offset;
   int                     m_signalqualityInterval;
   CTsReader*              m_tsreader;
-  CKeepAliveThread        m_keepalive;
-  CEventsThread           m_eventmonitor;
+  CKeepAliveThread*       m_keepalive;
+  CEventsThread*          m_eventmonitor;
 #if defined(ATV_DUMPTS)
   char ofn[25];
   int ofd;

@@ -158,6 +158,18 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   
   tvh = new CTvheadend;
 
+  /* Wait for connection */
+  if (!tvh->WaitForConnection()) {
+    SAFE_DELETE(tvh);
+    SAFE_DELETE(PVR);
+#ifndef OPENELEC_32
+    SAFE_DELETE(CODEC);
+#endif
+    SAFE_DELETE(GUI);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_LOST_CONNECTION;
+  }
+
   m_CurStatus     = ADDON_STATUS_OK;
   m_bCreated      = true;
   return m_CurStatus;
@@ -311,13 +323,6 @@ const char* GetMininumGUIAPIVersion(void)
 
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
-  // TODO: the API is completely naff! there is no way to update any
-  //       of the following or the GetBackend*() methods after connection
-  //       they get called once and only once! Therefore we attempt to
-  //       wait for connection here
-
-  tvh->WaitForConnection();
-
   pCapabilities->bSupportsEPG              = true;
   pCapabilities->bSupportsTV               = true;
   pCapabilities->bSupportsRadio            = true;
@@ -350,9 +355,6 @@ const char *GetConnectionString(void)
 
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 {
-  if (!tvh->WaitForConnection())
-    return PVR_ERROR_SERVER_TIMEOUT;
-  
   return tvh->GetDriveSpace(iTotal, iUsed);
 }
 

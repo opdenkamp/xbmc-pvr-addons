@@ -1,3 +1,10 @@
+1.9.14
+
+[updated] Require DVB Viewer Recording Service 1.26.0 or later
+[updated] Removed external XML library. Use TinyXML instead
+[added] Low performance mode for devices like the raspberry pi
+[fixed] Timers starting near 12pm could have wrong date
+
 1.9.13
 
 [updated] Language files from Transifex

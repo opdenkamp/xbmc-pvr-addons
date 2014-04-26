@@ -10,14 +10,15 @@
 #define BUFFER_READ_TIMEOUT       10000
 #define BUFFER_READ_WAITTIME      50
 
-class TimeshiftBuffer : public PLATFORM::CThread
+class TimeshiftBuffer
+  : public PLATFORM::CThread
 {
 public:
-  TimeshiftBuffer(CStdString streampath, CStdString bufferpath);
+  TimeshiftBuffer(CStdString streamPath, CStdString bufferPath);
   ~TimeshiftBuffer(void);
-  int ReadData(unsigned char *pBuffer, unsigned int iBufferSize);
+  int ReadData(unsigned char *buffer, unsigned int size);
   bool IsValid();
-  long long Seek(long long iPosition, int iWhence);
+  long long Seek(long long position, int whence);
   long long Position();
   long long Length();
   void Stop(void);

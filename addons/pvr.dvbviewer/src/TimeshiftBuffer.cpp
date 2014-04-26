@@ -42,23 +42,22 @@ void TimeshiftBuffer::Stop()
 
 void *TimeshiftBuffer::Process()
 {
-  XBMC->Log(LOG_DEBUG, "TimeShiftProcess:: thread started");
+  XBMC->Log(LOG_DEBUG, "Timeshift: thread started");
   byte buffer[STREAM_READ_BUFFER_SIZE];
-  int bytesRead = STREAM_READ_BUFFER_SIZE;
 
   while (m_shifting)
   {
-    bytesRead = XBMC->ReadFile(m_streamHandle, buffer, sizeof(buffer));
-    XBMC->WriteFile(m_filebufferWriteHandle, buffer, bytesRead);
+    unsigned int read = XBMC->ReadFile(m_streamHandle, buffer, sizeof(buffer));
+    XBMC->WriteFile(m_filebufferWriteHandle, buffer, read);
   }
-  XBMC->Log(LOG_DEBUG, "TimeShiftProcess:: thread stopped");
+  XBMC->Log(LOG_DEBUG, "Timeshift: thread stopped");
   return NULL;
 }
 
-long long TimeshiftBuffer::Seek(long long iPosition, int iWhence)
+long long TimeshiftBuffer::Seek(long long position, int whence)
 {
   if (m_filebufferReadHandle)
-    return XBMC->SeekFile(m_filebufferReadHandle, iPosition, iWhence);
+    return XBMC->SeekFile(m_filebufferReadHandle, position, whence);
   return 0;
 }
 
@@ -76,20 +75,20 @@ long long TimeshiftBuffer::Length()
   return 0;
 }
 
-int TimeshiftBuffer::ReadData(unsigned char *pBuffer, unsigned int iBufferSize)
+int TimeshiftBuffer::ReadData(unsigned char *buffer, unsigned int size)
 {
   unsigned int totalReadBytes = 0;
   unsigned int totalTimeWaited = 0;
   if (m_filebufferReadHandle)
   {
-    unsigned int read = XBMC->ReadFile(m_filebufferReadHandle, pBuffer, iBufferSize);
+    unsigned int read = XBMC->ReadFile(m_filebufferReadHandle, buffer, size);
     totalReadBytes += read;
 
-    while (read < iBufferSize && totalTimeWaited < BUFFER_READ_TIMEOUT)
+    while (read < size && totalTimeWaited < BUFFER_READ_TIMEOUT)
     {
       Sleep(BUFFER_READ_WAITTIME);
       totalTimeWaited += BUFFER_READ_WAITTIME;
-      read = XBMC->ReadFile(m_filebufferReadHandle, pBuffer, iBufferSize - totalReadBytes);
+      read = XBMC->ReadFile(m_filebufferReadHandle, buffer, size - totalReadBytes);
       totalReadBytes += read;
     }
 

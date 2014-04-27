@@ -446,8 +446,6 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
 {
   CLockObject lock(m_mutex);
   SRecordings::const_iterator rit;
-  SChannels::const_iterator cit;
-  CStdString strfmt;
 
   for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
   {

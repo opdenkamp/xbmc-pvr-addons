@@ -1013,12 +1013,12 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
   /* Channel number */
   if (!htsmsg_get_u32(msg, "channelNumber", &u32))
   {
-    if (!u32) u32 = UNNUMBERED_CHANNEL;
+    if (!u32) u32 = GetNextUnnumberedChannelNumber();
     UPDATE(channel.num, u32);
   }
   else if (!channel.num)
   {
-    UPDATE(channel.num, UNNUMBERED_CHANNEL);
+    UPDATE(channel.num, GetNextUnnumberedChannelNumber());
   }
 
   /* Channel icon */
@@ -1320,4 +1320,10 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
       return;
     }
   }
+}
+
+uint32_t CTvheadend::GetNextUnnumberedChannelNumber()
+{
+  static uint32_t number = UNNUMBERED_CHANNEL;
+  return number++;
 }

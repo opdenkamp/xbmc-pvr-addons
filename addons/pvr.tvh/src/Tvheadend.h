@@ -326,6 +326,8 @@ public:
                                 time_t start, time_t end );
   
 private:
+  uint32_t GetNextUnnumberedChannelNumber();
+  
   PLATFORM::CMutex            m_mutex;
   
   CHTSPConnection             m_conn;

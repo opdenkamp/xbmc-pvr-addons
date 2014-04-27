@@ -660,7 +660,7 @@ void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
   uint32_t u32;
   map<int,int>::const_iterator it;
   tvhtrace("stream stats:");
-  for (it = m_streamStat.begin(); it != m_streamStat.end(); it++)
+  for (it = m_streamStat.begin(); it != m_streamStat.end(); ++it)
     tvhtrace("  idx:%d num:%d", it->first, it->second);
 
   tvhtrace("queue stats:");

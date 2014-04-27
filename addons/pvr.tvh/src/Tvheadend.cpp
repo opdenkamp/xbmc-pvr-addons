@@ -105,7 +105,7 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool _unused(radio) )
 {
   CLockObject lock(m_mutex);
   STags::const_iterator it;
-  for (it = m_tags.begin(); it != m_tags.end(); it++)
+  for (it = m_tags.begin(); it != m_tags.end(); ++it)
   {
     PVR_CHANNEL_GROUP tag;
     memset(&tag, 0, sizeof(tag));
@@ -132,7 +132,7 @@ PVR_ERROR CTvheadend::GetTagMembers
     if (tit->second.name == group.strGroupName)
     {
       for (it = tit->second.channels.begin();
-           it != tit->second.channels.end(); it++)
+           it != tit->second.channels.end(); ++it)
       {
         if ((cit = m_channels.find(*it)) != m_channels.end())
         {
@@ -146,7 +146,7 @@ PVR_ERROR CTvheadend::GetTagMembers
       }
       break;
     }
-    tit++;
+    ++tit;
   }
 
   return PVR_ERROR_NO_ERROR;
@@ -166,7 +166,7 @@ PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
 {
   CLockObject lock(m_mutex);
   SChannels::const_iterator it;
-  for (it = m_channels.begin(); it != m_channels.end(); it++)
+  for (it = m_channels.begin(); it != m_channels.end(); ++it)
   {
     if (radio != it->second.radio)
       continue;
@@ -267,7 +267,7 @@ int CTvheadend::GetRecordingCount ( void )
   int ret = 0;
   SRecordings::const_iterator rit;
   CLockObject lock(m_mutex);
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); rit++)
+  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
     if (rit->second.IsRecording())
       ret++;
   return ret;
@@ -280,7 +280,7 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
   SChannels::const_iterator cit;
   char buf[128];
 
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); rit++)
+  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
   {
     if (!rit->second.IsRecording()) continue;
 
@@ -436,7 +436,7 @@ int CTvheadend::GetTimerCount ( void )
   int ret = 0;
   SRecordings::const_iterator rit;
   CLockObject lock(m_mutex);
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); rit++)
+  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
     if (rit->second.IsTimer())
       ret++;
   return ret;
@@ -449,7 +449,7 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
   SChannels::const_iterator cit;
   CStdString strfmt;
 
-  for (rit = m_recordings.begin(); rit != m_recordings.end(); rit++)
+  for (rit = m_recordings.begin(); rit != m_recordings.end(); ++rit)
   {
     if (!rit->second.IsTimer()) continue;
 
@@ -605,7 +605,7 @@ PVR_ERROR CTvheadend::GetEpg
     if (sit != m_schedules.end())
     {
       for (eit = sit->second.events.begin();
-          eit != sit->second.events.end(); eit++)
+          eit != sit->second.events.end(); ++eit)
       {
         if (eit->second.start    > end)   continue;
         if (eit->second.stop     < start) continue;
@@ -683,9 +683,9 @@ bool CTvheadend::Connected ( void )
   m_vfs.Connected();
 
   /* Flag all async fields in case they've been deleted */
-  for (cit = m_channels.begin(); cit != m_channels.end(); cit++)
+  for (cit = m_channels.begin(); cit != m_channels.end(); ++cit)
     cit->second.del = true;
-  for (tit = m_tags.begin(); tit != m_tags.end(); tit++)
+  for (tit = m_tags.begin(); tit != m_tags.end(); ++tit)
     tit->second.del = true;
 
   /* Request Async data */
@@ -763,7 +763,7 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
    *       m_mutex held!
    */
   SHTSPEventList::const_iterator it;
-  for (it = m_events.begin(); it != m_events.end(); it++)
+  for (it = m_events.begin(); it != m_events.end(); ++it)
   {
     switch (it->m_type)
     {
@@ -820,7 +820,7 @@ void CTvheadend::SyncChannelsCompleted ( void )
       update = true;
       m_tags.erase(tit);
     }
-    tit++;
+    ++tit;
   }
   TriggerChannelGroupsUpdate();
   if (update)
@@ -835,7 +835,7 @@ void CTvheadend::SyncChannelsCompleted ( void )
       update = true;
       m_channels.erase(cit);
     }
-    cit++;
+    ++cit;
   }
   TriggerChannelUpdate();
   if (update)
@@ -863,7 +863,7 @@ void CTvheadend::SyncDvrCompleted ( void )
       update = true;
       m_recordings.erase(rit);
     }
-    rit++;
+    ++rit;
   }
   TriggerRecordingUpdate();
   TriggerTimerUpdate();
@@ -905,13 +905,13 @@ void CTvheadend::SyncEpgCompleted ( void )
           chnupdate = true;
           sit->second.events.erase(eit);
         }
-        eit++;
+        ++eit;
       }
     }
 
     TriggerEpgUpdate(sit->second.channel);
     update |= chnupdate;
-    sit++;
+    ++sit;
   }
 
   if (update)
@@ -1308,7 +1308,7 @@ void CTvheadend::ParseEventDelete ( htsmsg_t *msg )
   
   /* Erase */
   SSchedules::iterator sit;
-  for (sit = m_schedules.begin(); sit != m_schedules.end(); sit++)
+  for (sit = m_schedules.begin(); sit != m_schedules.end(); ++sit)
   {
     // Find the event so we can get the channel number
     SEvents::iterator eit = sit->second.events.find(u32);

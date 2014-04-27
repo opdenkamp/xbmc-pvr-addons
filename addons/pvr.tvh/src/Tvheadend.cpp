@@ -816,9 +816,10 @@ void CTvheadend::SyncChannelsCompleted ( void )
     if (tit->second.del)
     {
       update = true;
-      m_tags.erase(tit);
+      m_tags.erase(tit++);
     }
-    ++tit;
+    else
+      ++tit;
   }
   TriggerChannelGroupsUpdate();
   if (update)
@@ -831,9 +832,10 @@ void CTvheadend::SyncChannelsCompleted ( void )
     if (cit->second.del)
     {
       update = true;
-      m_channels.erase(cit);
+      m_channels.erase(cit++);
     }
-    ++cit;
+    else
+      ++cit;
   }
   TriggerChannelUpdate();
   if (update)
@@ -859,9 +861,10 @@ void CTvheadend::SyncDvrCompleted ( void )
     if (rit->second.del)
     {
       update = true;
-      m_recordings.erase(rit);
+      m_recordings.erase(rit++);
     }
-    ++rit;
+    else
+      ++rit;
   }
   TriggerRecordingUpdate();
   TriggerTimerUpdate();
@@ -891,7 +894,7 @@ void CTvheadend::SyncEpgCompleted ( void )
     if (sit->second.del)
     {
       chnupdate = true;
-      m_schedules.erase(sit);
+      m_schedules.erase(sit++);
     }
     else
     {
@@ -901,15 +904,16 @@ void CTvheadend::SyncEpgCompleted ( void )
         if (eit->second.del)
         {
           chnupdate = true;
-          sit->second.events.erase(eit);
+          sit->second.events.erase(eit++);
         }
-        ++eit;
+        else
+          ++eit;
       }
+      ++sit;
     }
 
     TriggerEpgUpdate(sit->second.channel);
     update |= chnupdate;
-    ++sit;
   }
 
   if (update)

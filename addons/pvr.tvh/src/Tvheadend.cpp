@@ -101,7 +101,7 @@ int CTvheadend::GetTagCount ( void )
   return m_tags.size();
 }
 
-PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle, bool _unused(radio) )
+PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle )
 {
   CLockObject lock(m_mutex);
   STags::const_iterator it;

@@ -301,7 +301,7 @@ public:
   PVR_ERROR GetDriveSpace     ( long long *total, long long *used );
 
   int       GetTagCount       ( void );
-  PVR_ERROR GetTags           ( ADDON_HANDLE handle, bool radio );
+  PVR_ERROR GetTags           ( ADDON_HANDLE handle );
   PVR_ERROR GetTagMembers     ( ADDON_HANDLE handle,
                                 const PVR_CHANNEL_GROUP &group );
 

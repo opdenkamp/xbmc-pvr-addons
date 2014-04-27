@@ -38,7 +38,14 @@ void CCircBuffer::alloc(size_t size)
 {
   if (size > m_alloc) {
     m_alloc  = size;
-    m_buffer = (unsigned char*) realloc(m_buffer, size);
+    
+    // don't allow memory to leak on realloc failure
+    unsigned char * buffer = (unsigned char*) realloc(m_buffer, size);
+    
+    if (!buffer)
+      ::free(m_buffer);
+    else
+      m_buffer = buffer;
   }
   m_size = size;
   reset();

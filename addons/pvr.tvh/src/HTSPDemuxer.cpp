@@ -500,7 +500,7 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
   HTSMSG_FOREACH(f, l)
   {
     uint32_t      idx, u32;
-    const char    *type, *str;
+    const char    *type;
     XbmcPvrStream stream;
 
     if (f->hmf_type != HMF_MAP)
@@ -533,8 +533,10 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
       if (stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE ||
           stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
       {
-        if ((str = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
-          strncpy(stream.strLanguage, str, sizeof(stream.strLanguage));
+        const char *language;
+        
+        if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
+          strncpy(stream.strLanguage, language, sizeof(stream.strLanguage));
       }
 
       /* Audio data */

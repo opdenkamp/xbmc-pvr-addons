@@ -79,7 +79,6 @@ size_t CCircBuffer::free(void) const
 
 ssize_t CCircBuffer::write(const unsigned char* data, size_t len)
 {
-  size_t pt1, pt2;
   if (m_size < 2)
     return -1;
   if (len > free())
@@ -87,6 +86,7 @@ ssize_t CCircBuffer::write(const unsigned char* data, size_t len)
   if (m_pin < m_pout)
     memcpy(m_buffer+m_pin, data, len);
   else {
+    size_t pt1, pt2;
     pt1 = m_size - m_pin;
     if (len < pt1) {
       pt1 = len;
@@ -104,7 +104,6 @@ ssize_t CCircBuffer::write(const unsigned char* data, size_t len)
 
 ssize_t CCircBuffer::read(unsigned char* data, size_t len)
 {
-  size_t pt1, pt2;
   if (m_size < 2)
     return -1;
   if (len > avail())
@@ -112,6 +111,7 @@ ssize_t CCircBuffer::read(unsigned char* data, size_t len)
   if (m_pout < m_pin)
     memcpy(data, m_buffer+m_pout, len);
   else {
+    size_t pt1, pt2;
     pt1 = m_size - m_pout;
     if (len < pt1) {
       pt1 = len;

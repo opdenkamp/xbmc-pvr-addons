@@ -169,6 +169,8 @@ bool CHTSPDemuxer::Seek
     tvherror("failed to send subscriptionSeek");
     return false;
   }
+  
+  htsmsg_destroy(m);
 
   /* Wait for time */
   if (!m_seekCond.Wait(m_conn.Mutex(), m_seekTime, 5000))

@@ -74,9 +74,11 @@ PVR_ERROR CTvheadend::GetDriveSpace ( long long *total, long long *used )
     goto error;
   *used  = *total - (s64 / 1024);
 
+  htsmsg_destroy(m);
   return PVR_ERROR_NO_ERROR;
 
 error:
+  htsmsg_destroy(m);
   tvherror("malformed getDiskSpace response");
   return PVR_ERROR_SERVER_ERROR;
 }
@@ -367,6 +369,7 @@ PVR_ERROR CTvheadend::GetRecordingEdl
   if (!(list = htsmsg_get_list(m, "cutpoints")))
   {
     tvherror("malformed getDvrCutpoints response");
+    htsmsg_destroy(m);
     return PVR_ERROR_FAILED;
   }
 
@@ -417,6 +420,7 @@ PVR_ERROR CTvheadend::GetRecordingEdl
   }
   
   *num = idx;
+  htsmsg_destroy(m);
   return PVR_ERROR_NO_ERROR;
 }
 #endif

@@ -407,6 +407,8 @@ bool CHTSPConnection::SendHello ( void )
     m_challengeLen = chal_len;
     memcpy(m_challenge, chal, chal_len);
   }
+
+  htsmsg_destroy(msg);
  
   return true;
 }
@@ -431,11 +433,17 @@ void CHTSPConnection::SendAuth
 
   /* Send and Wait */
   if (!(msg = SendAndWait0("authenticate", msg)))
+  {
+    htsmsg_destroy(msg);
     throw new AuthException("No auth response receieved");
+  }
 
   /* Auth denied */
   if (htsmsg_get_u32_or_default(msg, "noaccess", 0) != 0)
+  {
+    htsmsg_destroy(msg);
     throw new AuthException("Invalid username or password");
+  }
 }
 
 /**

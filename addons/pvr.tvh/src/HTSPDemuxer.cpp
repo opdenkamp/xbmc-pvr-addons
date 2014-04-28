@@ -507,7 +507,7 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
   HTSMSG_FOREACH(f, l)
   {
     uint32_t      idx, u32;
-    const char    *type, *str;
+    const char    *type;
     XbmcPvrStream stream;
 
     if (f->hmf_type != HMF_MAP)
@@ -540,8 +540,10 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
       if (stream.iCodecType == XBMC_CODEC_TYPE_SUBTITLE ||
           stream.iCodecType == XBMC_CODEC_TYPE_AUDIO)
       {
-        if ((str = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
-          strncpy(stream.strLanguage, str, sizeof(stream.strLanguage));
+        const char *language;
+        
+        if ((language = htsmsg_get_str(&f->hmf_msg, "language")) != NULL)
+          strncpy(stream.strLanguage, language, sizeof(stream.strLanguage));
       }
 
       /* Audio data */
@@ -661,7 +663,7 @@ void CHTSPDemuxer::ParseQueueStatus ( htsmsg_t *_unused(m) )
   uint32_t u32;
   map<int,int>::const_iterator it;
   tvhtrace("stream stats:");
-  for (it = m_streamStat.begin(); it != m_streamStat.end(); it++)
+  for (it = m_streamStat.begin(); it != m_streamStat.end(); ++it)
     tvhtrace("  idx:%d num:%d", it->first, it->second);
 
   tvhtrace("queue stats:");

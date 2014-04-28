@@ -236,6 +236,15 @@ struct STimeshiftStatus
   int64_t shift;
   int64_t start;
   int64_t end;
+  
+  STimeshiftStatus() { Clear(); }
+  void Clear()
+  {
+    full  = 0;
+    shift = 0;
+    start = 0;
+    end   = 0;
+  }
 };
 
 struct SQuality

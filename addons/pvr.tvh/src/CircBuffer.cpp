@@ -38,7 +38,14 @@ void CCircBuffer::alloc(size_t size)
 {
   if (size > m_alloc) {
     m_alloc  = size;
-    m_buffer = (unsigned char*) realloc(m_buffer, size);
+    
+    // don't allow memory to leak on realloc failure
+    unsigned char * buffer = (unsigned char*) realloc(m_buffer, size);
+    
+    if (!buffer)
+      ::free(m_buffer);
+    else
+      m_buffer = buffer;
   }
   m_size = size;
   reset();
@@ -79,7 +86,6 @@ size_t CCircBuffer::free(void) const
 
 ssize_t CCircBuffer::write(const unsigned char* data, size_t len)
 {
-  size_t pt1, pt2;
   if (m_size < 2)
     return -1;
   if (len > free())
@@ -87,6 +93,7 @@ ssize_t CCircBuffer::write(const unsigned char* data, size_t len)
   if (m_pin < m_pout)
     memcpy(m_buffer+m_pin, data, len);
   else {
+    size_t pt1, pt2;
     pt1 = m_size - m_pin;
     if (len < pt1) {
       pt1 = len;
@@ -104,7 +111,6 @@ ssize_t CCircBuffer::write(const unsigned char* data, size_t len)
 
 ssize_t CCircBuffer::read(unsigned char* data, size_t len)
 {
-  size_t pt1, pt2;
   if (m_size < 2)
     return -1;
   if (len > avail())
@@ -112,6 +118,7 @@ ssize_t CCircBuffer::read(unsigned char* data, size_t len)
   if (m_pout < m_pin)
     memcpy(data, m_buffer+m_pout, len);
   else {
+    size_t pt1, pt2;
     pt1 = m_size - m_pout;
     if (len < pt1) {
       pt1 = len;

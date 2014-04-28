@@ -312,7 +312,7 @@ public:
         speed = 1000;
         active = false;
         
-        static int previousId;
+        static int previousId = 0;
         subscriptionId = ++previousId;
     }
 };

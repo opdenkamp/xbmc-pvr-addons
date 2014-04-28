@@ -289,3 +289,21 @@ struct SHTSPEvent
 };
 
 typedef std::vector<SHTSPEvent> SHTSPEventList;
+
+class SSubscription
+{
+public:
+    uint32_t subscriptionId;
+    uint32_t channelId;
+    int      speed;
+    bool     active;
+    
+    SSubscription()
+    {
+        speed = 1000;
+        active = false;
+        
+        static int previousId;
+        subscriptionId = ++previousId;
+    }
+};

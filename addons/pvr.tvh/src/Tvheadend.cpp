@@ -885,7 +885,7 @@ void CTvheadend::SyncEpgCompleted ( void )
   if (!g_bAsyncEpg || m_asyncComplete || m_asyncState > ASYNC_EPG)
     return;
   
-  bool update, chnupdate;
+  bool update;
   SSchedules::iterator  sit = m_schedules.begin();
   SEvents::iterator     eit;
 
@@ -893,11 +893,11 @@ void CTvheadend::SyncEpgCompleted ( void )
   update = false;
   while (sit != m_schedules.end())
   {
-    chnupdate = false;
+    uint32_t channelId = sit->second.channel;
     
     if (sit->second.del)
     {
-      chnupdate = true;
+      update = true;
       m_schedules.erase(sit++);
     }
     else
@@ -907,7 +907,7 @@ void CTvheadend::SyncEpgCompleted ( void )
       {
         if (eit->second.del)
         {
-          chnupdate = true;
+          update = true;
           sit->second.events.erase(eit++);
         }
         else
@@ -916,8 +916,7 @@ void CTvheadend::SyncEpgCompleted ( void )
       ++sit;
     }
 
-    TriggerEpgUpdate(sit->second.channel);
-    update |= chnupdate;
+    TriggerEpgUpdate(channelId);
   }
 
   if (update)

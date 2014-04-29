@@ -45,7 +45,8 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
-  : m_conn(conn), m_started(false), m_pktBuffer((size_t)-1)
+  : m_conn(conn), m_started(false), m_pktBuffer((size_t)-1),
+    m_seekTime(INVALID_SEEKTIME)
 {
 }
 
@@ -157,9 +158,6 @@ bool CHTSPDemuxer::Seek
 
   tvhdebug("demux seek %d", time);
 
-  /* Clear */
-  m_seekTime = 0;
-
   /* Build message */
   m = htsmsg_create_map();  
   htsmsg_add_u32(m, "subscriptionId", m_subscription.subscriptionId);
@@ -183,7 +181,7 @@ bool CHTSPDemuxer::Seek
     return false;
   }
   
-  if (m_seekTime < 0)
+  if (m_seekTime == INVALID_SEEKTIME)
     return false;
 
   /* Store */
@@ -631,7 +629,7 @@ void CHTSPDemuxer::ParseSubscriptionSkip ( htsmsg_t *m )
   CLockObject lock(m_conn.Mutex());
   int64_t s64;
   if (htsmsg_get_s64(m, "time", &s64)) {
-    m_seekTime = -1;
+    m_seekTime = INVALID_SEEKTIME;
   } else {
     m_seekTime = s64;
   }

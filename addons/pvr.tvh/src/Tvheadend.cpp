@@ -1231,7 +1231,7 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
   evt.channel = channel;
   evt.start   = (time_t)start;
   evt.stop    = (time_t)stop;
-  evt.title   = str ? str : "";
+  evt.title   = str;
 
   if ((str = htsmsg_get_str(msg, "summary")) != NULL)
     evt.summary  = str;

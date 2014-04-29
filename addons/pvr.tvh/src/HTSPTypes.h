@@ -171,6 +171,8 @@ struct SEvent
     del     = false;
     id      = 0;
     next    = 0;
+    channel = 0;
+    content = 0;
     start   = 0;
     stop    = 0;
     stars   = 0;

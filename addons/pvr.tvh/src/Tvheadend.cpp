@@ -720,74 +720,102 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
   if (m_vfs.ProcessMessage(method, msg))
     return true;
 
-  /* Lock */
+  /* Store */
+  m_queue.Push(CHTSPMessage(method, msg));
+  return false;
+}
+  
+void* CTvheadend::Process ( void )
+{
+  CHTSPMessage msg;
+  const char *method;
+
+  while (!IsStopped())
   {
-    CLockObject lock(m_mutex);
-
-    /* Channels */
-    if (!strcmp("channelAdd", method) || !strcmp("channelUpdate", method))
-      ParseChannelUpdate(msg);
-    else if (!strcmp("channelDelete", method))
-      ParseChannelDelete(msg);
-
-    /* Tags */
-    else if (!strcmp("tagAdd", method) || !strcmp("tagUpdate", method))
-      ParseTagUpdate(msg);
-    else if (!strcmp("tagDelete", method))
-      ParseTagDelete(msg);
-
-    /* Recordings */
-    else if (!strcmp("dvrEntryAdd", method) || 
-             !strcmp("dvrEntryUpdate", method))
-      ParseRecordingUpdate(msg);
-    else if (!strcmp("dvrEntryDelete", method))
-      ParseRecordingDelete(msg);
-
-    /* EPG */
-    else if (!strcmp("eventAdd", method) || !strcmp("eventUpdate", method))
-      ParseEventUpdate(msg);
-    else if (!strcmp("eventDelete", method))
-      ParseEventDelete(msg);
-
-    /* ASync complete */
-    else if (!strcmp("initialSyncCompleted", method))
-      SyncCompleted();
-
-    /* Unknown */
-    else  
-      tvhdebug("unhandled message [%s]", method);
-  }
-
-  /* Process events
-   * Note: due to potential deadly embrace this must be done without the
-   *       m_mutex held!
-   */
-  SHTSPEventList::const_iterator it;
-  for (it = m_events.begin(); it != m_events.end(); ++it)
-  {
-    switch (it->m_type)
+    /* Check Q */
+    // this is a bit horrible, but meh
+    if (!m_queue.Pop(msg, 2000))
+      continue;
+    if (!msg.m_msg)
+      continue;
+    method = msg.m_method.c_str();
+    
+    /* Scope lock for processing */
     {
-      case HTSP_EVENT_TAG_UPDATE:
-        PVR->TriggerChannelGroupsUpdate();
-        break;
-      case HTSP_EVENT_CHN_UPDATE:
-        PVR->TriggerChannelUpdate();
-        break;
-      case HTSP_EVENT_REC_UPDATE:
-        PVR->TriggerTimerUpdate();
-        PVR->TriggerRecordingUpdate();
-        break;
-      case HTSP_EVENT_EPG_UPDATE:
-        PVR->TriggerEpgUpdate(it->m_idx);
-        break;
-      case HTSP_EVENT_NONE:
-        break;
+      CLockObject lock(m_mutex);
+
+      /* Channels */
+      if (!strcmp("channelAdd", method) ||
+          !strcmp("channelUpdate", method))
+        ParseChannelUpdate(msg.m_msg);
+      else if (!strcmp("channelDelete", method))
+        ParseChannelDelete(msg.m_msg);
+
+      /* Tags */
+      else if (!strcmp("tagAdd", method) ||
+               !strcmp("tagUpdate", method))
+        ParseTagUpdate(msg.m_msg);
+      else if (!strcmp("tagDelete", method))
+        ParseTagDelete(msg.m_msg);
+
+      /* Recordings */
+      else if (!strcmp("dvrEntryAdd", method) || 
+               !strcmp("dvrEntryUpdate", method))
+        ParseRecordingUpdate(msg.m_msg);
+      else if (!strcmp("dvrEntryDelete", method))
+        ParseRecordingDelete(msg.m_msg);
+
+      /* EPG */
+      else if (!strcmp("eventAdd", method) ||
+               !strcmp("eventUpdate", method))
+        ParseEventUpdate(msg.m_msg);
+      else if (!strcmp("eventDelete", method))
+        ParseEventDelete(msg.m_msg);
+
+      /* ASync complete */
+      else if (!strcmp("initialSyncCompleted", method))
+        SyncCompleted();
+
+      /* Unknown */
+      else  
+        tvhdebug("unhandled message [%s]", method);
     }
+  
+    /* Manual delete rather than waiting */
+    htsmsg_destroy(msg.m_msg);
+    msg.m_msg = NULL;
+
+    /* Process events
+     * Note: due to potential deadly embrace this must be done without the
+     *       m_mutex held!
+     */
+    SHTSPEventList::const_iterator it;
+    for (it = m_events.begin(); it != m_events.end(); ++it)
+    {
+      switch (it->m_type)
+      {
+        case HTSP_EVENT_TAG_UPDATE:
+          PVR->TriggerChannelGroupsUpdate();
+          break;
+        case HTSP_EVENT_CHN_UPDATE:
+          PVR->TriggerChannelUpdate();
+          break;
+        case HTSP_EVENT_REC_UPDATE:
+          PVR->TriggerTimerUpdate();
+          PVR->TriggerRecordingUpdate();
+          break;
+        case HTSP_EVENT_EPG_UPDATE:
+          PVR->TriggerEpgUpdate(it->m_idx);
+          break;
+        case HTSP_EVENT_NONE:
+          break;
+      }
+    }
+    m_events.clear();
   }
-  m_events.clear();
 
   /* Local */
-  return true;
+  return NULL;
 }
 
 void CTvheadend::SyncCompleted ( void )

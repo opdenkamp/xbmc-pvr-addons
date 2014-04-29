@@ -32,6 +32,7 @@
 #include "CircBuffer.h"
 #include "HTSPTypes.h"
 #include <map>
+#include <queue>
 #include <cstdarg>
 #include <stdexcept>
 
@@ -84,10 +85,12 @@ class CHTSPConnection;
 class CHTSPDemuxer;
 class CHTSPVFS;
 class CHTSPResponse;
+class CHTSPMessage;
 
 /* Typedefs */
 typedef std::runtime_error AuthException;
 typedef std::map<uint32_t,CHTSPResponse*> CHTSPResponseList;
+typedef PLATFORM::SyncedBuffer<CHTSPMessage> CHTSPMessageQueue;
 
 /*
  * Global (TODO: might want to change this)
@@ -108,6 +111,37 @@ private:
   PLATFORM::CCondition<volatile bool> m_cond;
   bool                                m_flag;
   htsmsg_t                           *m_msg;
+};
+
+/*
+ * HTSP Message
+ */
+class CHTSPMessage
+{
+public:
+  CHTSPMessage(std::string method = "", htsmsg_t *msg = NULL)
+    : m_method(method), m_msg(msg)
+  {
+  }
+  ~CHTSPMessage()
+  {
+    if (m_msg)
+      htsmsg_destroy(m_msg);
+  }
+  CHTSPMessage& operator=(const CHTSPMessage &msg)
+  {
+    if (this != &msg)
+    {
+      if (m_msg)
+        htsmsg_destroy(m_msg);
+      m_method  = msg.m_method;
+      m_msg     = msg.m_msg;
+      msg.m_msg = NULL; // ownership is passed
+    }
+    return *this;
+  }
+  std::string      m_method;
+  mutable htsmsg_t *m_msg;
 };
 
 /*
@@ -287,6 +321,7 @@ private:
  * Root object for Tvheadend connection
  */
 class CTvheadend
+  : PLATFORM::CThread
 {
 public:
   CTvheadend();
@@ -330,6 +365,8 @@ private:
   CHTSPDemuxer                m_dmx;
   CHTSPVFS                    m_vfs;
 
+  CHTSPMessageQueue           m_queue;
+
   SChannels                   m_channels;
   STags                       m_tags;
   SRecordings                 m_recordings;
@@ -348,6 +385,11 @@ private:
   PLATFORM::CCondition<bool>  m_asyncCond;
   
   CStdString  GetImageURL     ( const char *str );
+
+  /*
+   * Message processing
+   */
+  void *Process ( void );
 
   /*
    * Event handling

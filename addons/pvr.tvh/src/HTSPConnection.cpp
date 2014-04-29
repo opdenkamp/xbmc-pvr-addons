@@ -253,16 +253,16 @@ bool CHTSPConnection::ReadMessage ( void )
   if (!(method = htsmsg_get_str(msg, "method")))
   {
     tvherror("message without a method");
-    goto done;
+    htsmsg_destroy(msg);
+    return true;
   }
   tvhtrace("receive message [%s]", method);
 
-  /* Pass */
-  tvh->ProcessMessage(method, msg);
+  /* Pass (if return is true, message is finished) */
+  if (tvh->ProcessMessage(method, msg))
+    htsmsg_destroy(msg);
+  // TODO: maybe a copy should be made if it needs to be kept?
 
-  /* Free */
-done:
-  htsmsg_destroy(msg);
   return true;
 }
 

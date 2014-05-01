@@ -1,3 +1,11 @@
+1.9.15
+
+[updated] Speed up timeshift startup time
+[added] If available add genre to EPG
+[added] Support for grouping recordings. Grouping can be by rec. directory,
+        rec. date, first letter, tv channel or series
+[fixed] Another timezone offsets fix
+
 1.9.14
 
 [updated] Require DVB Viewer Recording Service 1.26.0 or later

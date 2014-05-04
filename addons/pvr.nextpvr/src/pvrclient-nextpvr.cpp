@@ -1345,11 +1345,14 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
       }
 
       // is it taking too long?
-      if (read_timeouts > 100)
+      if (read_timeouts > 200)
       {
-        m_streamingclient->close();
+        char *str = XBMC->GetLocalizedString(30053);
         bufferMore = false;
-        XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30053));
+        if (str != NULL)
+        {
+          XBMC->QueueNotification(QUEUE_ERROR, str);
+        }
         return -1;
       }
     }

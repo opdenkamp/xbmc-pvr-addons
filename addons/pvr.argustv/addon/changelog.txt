@@ -1,3 +1,5 @@
+v1.9.177 (01-05-2014)
+- fill initial last played position for recordings
 v1.9.176 (22-04-2014)
 - improved timer conflicts detection
 - fix threads on OS X

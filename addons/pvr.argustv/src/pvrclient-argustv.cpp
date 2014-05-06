@@ -689,6 +689,7 @@ PVR_ERROR cPVRClientArgusTV::GetRecordings(ADDON_HANDLE handle)
               tag.iDuration      = recording.RecordingStopTime() - recording.RecordingStartTime();
               strncpy(tag.strPlot, recording.Description(), sizeof(tag.strPlot));
               tag.iPlayCount     = recording.FullyWatchedCount();
+              tag.iLastPlayedPosition = recording.LastWatchedPosition();
               if (nrOfRecordings > 1)
               {
                 recording.Transform(true);

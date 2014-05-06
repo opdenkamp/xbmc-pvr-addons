@@ -42,6 +42,11 @@ typedef enum DVB_UPDATE_STATE
 class DvbChannel
 {
 public:
+  DvbChannel()
+    : backendNr(0), epgId(0)
+  {}
+
+public:
   /*!< @brief unique id passed to xbmc database. see FIXME for more details */
   unsigned int id;
   /*!< @brief backend number for generating the stream url */
@@ -68,13 +73,20 @@ public:
   bool hidden;
 };
 
-struct DvbEPGEntry
+class DvbEPGEntry
 {
+public:
+  DvbEPGEntry()
+    : genre(0)
+  {}
+
+public:
   int iEventId;
   CStdString strTitle;
   unsigned int iChannelUid;
   time_t startTime;
   time_t endTime;
+  unsigned int genre;
   CStdString strPlotOutline;
   CStdString strPlot;
 };
@@ -126,11 +138,29 @@ public:
   unsigned int iClientIndex;
 };
 
-struct DvbRecording
+class DvbRecording
 {
+public:
+  enum Group
+  {
+    GroupDisabled = 0,
+    GroupByDirectory,
+    GroupByDate,
+    GroupByFirstLetter,
+    GroupByTVChannel,
+    GroupBySeries,
+  };
+
+public:
+  DvbRecording()
+    : genre(0)
+  {}
+
+public:
   CStdString id;
   time_t startTime;
   int duration;
+  unsigned int genre;
   CStdString title;
   CStdString streamURL;
   CStdString plot;
@@ -142,7 +172,6 @@ struct DvbRecording
 typedef std::vector<DvbChannel *> DvbChannels_t;
 typedef std::vector<DvbGroup> DvbGroups_t;
 typedef std::vector<DvbTimer> DvbTimers_t;
-typedef std::vector<DvbRecording> DvbRecordings_t;
 
 class Dvb
   : public PLATFORM::CThread
@@ -180,10 +209,7 @@ public:
 
   bool OpenLiveStream(const PVR_CHANNEL& channelinfo);
   void CloseLiveStream();
-  int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize);
-  long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */);
-  long long PositionLiveStream(void);
-  long long LengthLiveStream(void);
+  TimeshiftBuffer *GetTimeshiftBuffer();
   CStdString& GetLiveStreamURL(const PVR_CHANNEL& channelinfo);
 
 protected:
@@ -210,13 +236,15 @@ private:
   CStdString BuildURL(const char* path, ...);
   CStdString BuildExtURL(const CStdString& baseURL, const char* path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
+  long GetGMTOffset();
 
 private:
   bool m_connected;
   unsigned int m_backendVersion;
 
-  int m_timezone;
+  long m_timezone;
   struct { long long total, used; } m_diskspace;
+  std::vector<CStdString> m_recfolders;
 
   CStdString m_url;
   unsigned int m_currentChannel;
@@ -231,7 +259,7 @@ private:
 
   bool m_updateTimers;
   bool m_updateEPG;
-  DvbRecordings_t m_recordings;
+  unsigned int m_recordingAmount;
   TimeshiftBuffer *m_tsBuffer;
 
   DvbTimers_t m_timers;

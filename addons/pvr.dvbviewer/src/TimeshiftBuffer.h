@@ -6,7 +6,7 @@
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 
-#define STREAM_READ_BUFFER_SIZE   8192
+#define STREAM_READ_BUFFER_SIZE   32768
 #define BUFFER_READ_TIMEOUT       10000
 #define BUFFER_READ_WAITTIME      50
 
@@ -22,6 +22,8 @@ public:
   long long Position();
   long long Length();
   void Stop(void);
+  time_t TimeStart();
+  time_t TimeEnd();
 
 private:
   virtual void *Process(void);
@@ -30,7 +32,11 @@ private:
   void *m_streamHandle;
   void *m_filebufferReadHandle;
   void *m_filebufferWriteHandle;
-  bool m_shifting;
+  time_t m_start;
+#ifndef TARGET_POSIX
+  PLATFORM::CMutex m_mutex;
+  uint64_t m_writePos;
+#endif
 };
 
 #endif

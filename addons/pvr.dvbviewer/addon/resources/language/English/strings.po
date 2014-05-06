@@ -71,6 +71,36 @@ msgid "Enable low performance mode (disables logos & thumbnails)"
 msgstr ""
 
 #empty strings from id 30041 to 30099
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr ""
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr ""
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr ""
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr ""
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr ""
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr ""
+
+msgctxt "#30056"
+msgid "by series"
+msgstr ""
+
+#empty strings from id 30057 to 30099
 #sections
 
 msgctxt "#30100"
@@ -81,7 +111,11 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr ""
 
-#empty strings from id 30102 to 30499
+msgctxt "#30102"
+msgid "Recordings"
+msgstr ""
+
+#empty strings from id 30103 to 30499
 #notifications
 
 msgctxt "#30500"

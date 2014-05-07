@@ -604,7 +604,7 @@ PVR_ERROR CTvheadend::GetEpg
   if (g_bAsyncEpg)
   {
     CLockObject lock(m_mutex);
-    if (!m_asyncCond.Wait(m_mutex, m_asyncComplete, 5000))
+    if (!m_asyncCond.Wait(m_mutex, m_asyncComplete, g_iConnectTimeout * 1000))
       return PVR_ERROR_NO_ERROR;
 
     sit = m_schedules.find(chn.iUniqueId);

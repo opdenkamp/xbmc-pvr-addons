@@ -107,8 +107,6 @@ void ADDON_ReadSettings(void)
 
 ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 {
-  CLockObject lock(g_mutex);
-
   if (!hdl)
     return m_CurStatus;
   
@@ -133,6 +131,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   ADDON_ReadSettings();
   
   tvh = new CTvheadend;
+  tvh->Start();
 
   /* Wait for connection */
   if (!tvh->WaitForConnection()) {

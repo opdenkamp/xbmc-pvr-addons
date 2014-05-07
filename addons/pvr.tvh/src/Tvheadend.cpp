@@ -49,6 +49,12 @@ CTvheadend::~CTvheadend()
 {
 }
 
+void CTvheadend::Start ( void )
+{
+  CreateThread();
+  m_conn.CreateThread();
+}
+
 /* **************************************************************************
  * Miscellaneous
  * *************************************************************************/

@@ -94,7 +94,6 @@ CHTSPConnection::CHTSPConnection ()
     m_serverName(""), m_serverVersion(""), m_htspVersion(0),
     m_webRoot(""), m_challenge(NULL), m_challengeLen(0)
 {
-  CreateThread();
 }
 
 CHTSPConnection::~CHTSPConnection()
@@ -136,7 +135,7 @@ bool CHTSPConnection::WaitForConnection ( void )
 {
   if (!m_ready) {
     tvhtrace("waiting for registration...");
-    m_regCond.Wait(m_mutex, m_ready, g_iConnectTimeout);
+    m_regCond.Wait(m_mutex, m_ready, g_iConnectTimeout * 1000);
   }
   return m_ready;
 }
@@ -232,6 +231,7 @@ bool CHTSPConnection::ReadMessage ( void )
   /* Deserialize */
   if (!(msg = htsmsg_binary_deserialize(buf, len, buf)))
   {
+    free(buf);
     tvherror("failed to decode message");
     return false;
   }

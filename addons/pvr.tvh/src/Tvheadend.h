@@ -123,6 +123,11 @@ public:
     : m_method(method), m_msg(msg)
   {
   }
+  CHTSPMessage(const CHTSPMessage& msg)
+    : m_method(msg.m_method), m_msg(msg.m_msg)
+  {
+    msg.m_msg    = NULL;
+  }
   ~CHTSPMessage()
   {
     if (m_msg)
@@ -134,9 +139,9 @@ public:
     {
       if (m_msg)
         htsmsg_destroy(m_msg);
-      m_method  = msg.m_method;
-      m_msg     = msg.m_msg;
-      msg.m_msg = NULL; // ownership is passed
+      m_method     = msg.m_method;
+      m_msg        = msg.m_msg;
+      msg.m_msg    = NULL; // ownership is passed
     }
     return *this;
   }
@@ -148,7 +153,7 @@ public:
  * HTSP Connection registration thread
  */
 class CHTSPRegister
-  : PLATFORM::CThread
+  : public PLATFORM::CThread
 {
   friend class CHTSPConnection;
 
@@ -165,7 +170,7 @@ private:
  * HTSP Connection
  */
 class CHTSPConnection
-  : PLATFORM::CThread
+  : public PLATFORM::CThread
 {
   friend class CHTSPRegister;
 
@@ -321,11 +326,13 @@ private:
  * Root object for Tvheadend connection
  */
 class CTvheadend
-  : PLATFORM::CThread
+  : public PLATFORM::CThread
 {
 public:
   CTvheadend();
   ~CTvheadend();
+
+  void Start ( void );
 
   void Disconnected   ( void );
   bool Connected      ( void );

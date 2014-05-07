@@ -1,3 +1,8 @@
+0.8.0
+ - Added thread for processing non-realtime messages, such as async updates. This should help with some stutter issues (at least during live TV).
+ - Improvements to connection setup
+ - Lots of bug fixes and tidying up
+
 0.7.0
  - Fix idiotic variable naming clache
  - general tidying up

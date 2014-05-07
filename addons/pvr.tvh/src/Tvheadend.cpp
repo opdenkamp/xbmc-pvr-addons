@@ -339,7 +339,6 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
   return PVR_ERROR_NO_ERROR;
 }
 
-#ifndef OPENELEC_32
 PVR_ERROR CTvheadend::GetRecordingEdl
   ( const PVR_RECORDING &rec, PVR_EDL_ENTRY edl[], int *num )
 {
@@ -423,7 +422,6 @@ PVR_ERROR CTvheadend::GetRecordingEdl
   htsmsg_destroy(m);
   return PVR_ERROR_NO_ERROR;
 }
-#endif
 
 PVR_ERROR CTvheadend::DeleteRecording ( const PVR_RECORDING &rec )
 {

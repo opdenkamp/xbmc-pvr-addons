@@ -60,9 +60,7 @@ bool       g_bAsyncEpg           = false;
 CHelper_libXBMC_addon *XBMC      = NULL;
 CHelper_libXBMC_pvr   *PVR       = NULL;
 CHelper_libXBMC_gui   *GUI       = NULL;
-#ifndef OPENELEC_32
 CHelper_libXBMC_codec *CODEC     = NULL;
-#endif
 PVR_MENUHOOK          *menuHook  = NULL;
 CTvheadend            *tvh       = NULL;
 
@@ -113,40 +111,18 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
 
   if (!hdl)
     return m_CurStatus;
-
-  XBMC = new CHelper_libXBMC_addon;
-  if (!XBMC->RegisterMe(hdl))
-  {
-    SAFE_DELETE(XBMC);
-    return ADDON_STATUS_PERMANENT_FAILURE;
-  }
-
-  GUI = new CHelper_libXBMC_gui;
-  if (!GUI->RegisterMe(hdl))
-  {
-    SAFE_DELETE(GUI);
-    SAFE_DELETE(XBMC);
-    return ADDON_STATUS_PERMANENT_FAILURE;
-  }
-
-#ifndef OPENELEC_32
+  
+  /* Instantiate helpers */
+  XBMC  = new CHelper_libXBMC_addon;
+  GUI   = new CHelper_libXBMC_gui;
   CODEC = new CHelper_libXBMC_codec;
-  if (!CODEC->RegisterMe(hdl))
-  {
-    SAFE_DELETE(CODEC);
-    SAFE_DELETE(GUI);
-    SAFE_DELETE(XBMC);
-    return ADDON_STATUS_PERMANENT_FAILURE;
-  }
-#endif
-
-  PVR = new CHelper_libXBMC_pvr;
-  if (!PVR->RegisterMe(hdl))
+  PVR   = new CHelper_libXBMC_pvr;
+  
+  if (!XBMC->RegisterMe(hdl) || !GUI->RegisterMe(hdl) ||
+      !CODEC->RegisterMe(hdl) || !PVR->RegisterMe(hdl))
   {
     SAFE_DELETE(PVR);
-#ifndef OPENELEC_32
     SAFE_DELETE(CODEC);
-#endif
     SAFE_DELETE(GUI);
     SAFE_DELETE(XBMC);
     return ADDON_STATUS_PERMANENT_FAILURE;
@@ -162,9 +138,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   if (!tvh->WaitForConnection()) {
     SAFE_DELETE(tvh);
     SAFE_DELETE(PVR);
-#ifndef OPENELEC_32
     SAFE_DELETE(CODEC);
-#endif
     SAFE_DELETE(GUI);
     SAFE_DELETE(XBMC);
     return ADDON_STATUS_LOST_CONNECTION;
@@ -191,9 +165,7 @@ void ADDON_Destroy()
   CLockObject lock(g_mutex);
   SAFE_DELETE(tvh);
   SAFE_DELETE(PVR);
-#ifndef OPENELEC_32
   SAFE_DELETE(CODEC);
-#endif
   SAFE_DELETE(GUI);
   SAFE_DELETE(XBMC);
   SAFE_DELETE(menuHook);
@@ -332,9 +304,8 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bHandlesInputStream       = true;
   pCapabilities->bHandlesDemuxing          = true;
   pCapabilities->bSupportsRecordingFolders = true;
-#ifndef OPENELEC_32
   pCapabilities->bSupportsRecordingEdl     = true;
-#endif
+
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -362,19 +333,12 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
  * GUI hooks
  * *************************************************************************/
 
-#ifdef OPENELEC_32
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &_unused(menuhook))
-{
-  return PVR_ERROR_NO_ERROR;
-}
-#else
 PVR_ERROR CallMenuHook
   (const PVR_MENUHOOK &_unused(menuhook),
    const PVR_MENUHOOK_DATA &_unused(data))
 {
   return PVR_ERROR_NO_ERROR;
 }
-#endif
 
 /* **************************************************************************
  * Demuxer
@@ -506,13 +470,11 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle)
   return tvh->GetRecordings(handle);
 }
 
-#ifndef OPENELEC_32
 PVR_ERROR GetRecordingEdl
   (const PVR_RECORDING &rec, PVR_EDL_ENTRY edl[], int *num)
 {
   return tvh->GetRecordingEdl(rec, edl, num);
 }
-#endif
 
 PVR_ERROR DeleteRecording(const PVR_RECORDING &rec)
 {

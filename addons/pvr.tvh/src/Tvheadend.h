@@ -307,10 +307,8 @@ public:
 
   int       GetRecordingCount ( void );
   PVR_ERROR GetRecordings     ( ADDON_HANDLE handle );
-#ifndef OPENELEC_32
   PVR_ERROR GetRecordingEdl   ( const PVR_RECORDING &rec, PVR_EDL_ENTRY edl[],
                                 int *num );
-#endif
   PVR_ERROR DeleteRecording   ( const PVR_RECORDING &rec );
   PVR_ERROR RenameRecording   ( const PVR_RECORDING &rec );
   int       GetTimerCount     ( void );

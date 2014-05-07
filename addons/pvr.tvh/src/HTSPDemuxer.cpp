@@ -32,11 +32,7 @@ extern "C" {
 #include "libhts/sha1.h"
 }
 
-#ifdef OPENELEC_32
-#include "avcodec.h"
-#else
 #include "xbmc_codec_descriptor.hpp"
-#endif
 
 #define TVH_TO_DVD_TIME(x) ((double)x * DVD_TIME_BASE / 1000000.0)
 
@@ -217,14 +213,12 @@ PVR_ERROR CHTSPDemuxer::CurrentSignal ( PVR_SIGNAL_STATUS &sig )
           sizeof(sig.strAdapterName));
   strncpy(sig.strAdapterStatus, m_signalInfo.fe_status.c_str(),
           sizeof(sig.strAdapterStatus));
-#ifndef OPENELEC_32
   strncpy(sig.strServiceName,   m_sourceInfo.si_service.c_str(),
           sizeof(sig.strServiceName));
   strncpy(sig.strProviderName,  m_sourceInfo.si_provider.c_str(),
           sizeof(sig.strProviderName));
   strncpy(sig.strMuxName,       m_sourceInfo.si_mux.c_str(),
           sizeof(sig.strMuxName));
-#endif
   
   sig.iSNR      = m_signalInfo.fe_snr;
   sig.iSignal   = m_signalInfo.fe_signal;
@@ -439,55 +433,6 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   m_pktBuffer.Push(pkt);
 }
 
-#if OPENELEC_32
-bool GetCodecByName
-  ( const char *name, unsigned int *codec_type, unsigned int *codec_id )
-{
-  static struct {
-    const char *name;
-    int         type;
-    int         id;
-  } codecs[] = {
-    { "AC3",        AVMEDIA_TYPE_AUDIO,     CODEC_ID_AC3          },
-    { "EAC3",       AVMEDIA_TYPE_AUDIO,     CODEC_ID_EAC3         },
-    { "MPEG2AUDIO", AVMEDIA_TYPE_AUDIO,     CODEC_ID_MP2          },
-    { "AAC",        AVMEDIA_TYPE_AUDIO,     CODEC_ID_AAC          },
-    { "AACLATM",    AVMEDIA_TYPE_AUDIO,     CODEC_ID_AAC_LATM     },
-    { "VORBIS",     AVMEDIA_TYPE_AUDIO,     CODEC_ID_VORBIS       },
-    { "MPEG2VIDEO", AVMEDIA_TYPE_VIDEO,     CODEC_ID_MPEG2VIDEO   },
-    { "H264",       AVMEDIA_TYPE_VIDEO,     CODEC_ID_H264         },
-    { "VP8",        AVMEDIA_TYPE_VIDEO,     CODEC_ID_VP8          },
-    { "MPEG4VIDEO", AVMEDIA_TYPE_VIDEO,     CODEC_ID_MPEG4        },
-    { "DVBSUB",     AVMEDIA_TYPE_SUBTITLE,  CODEC_ID_DVB_SUBTITLE },
-    { "TEXTSUB",    AVMEDIA_TYPE_SUBTITLE,  CODEC_ID_TEXT         },
-    { "TELETEXT",   AVMEDIA_TYPE_SUBTITLE,  CODEC_ID_DVB_TELETEXT },
-    { NULL, 0, 0 }
-  };
-  int i = 0;
-  
-  while (codecs[i].name) {
-    if (!strcmp(name, codecs[i].name)) {
-      *codec_type = codecs[i].type;
-      *codec_id   = codecs[i].id;
-      return true;
-    }
-    i++;
-  }
-  return false;
-}
-#else
-bool GetCodecByName
-  ( const char *name, xbmc_codec_type_t *codec_type, unsigned int *codec_id )
-{
-  CodecDescriptor codec = CodecDescriptor::GetCodecByName(name);
-  if (codec.Codec().codec_type == XBMC_CODEC_TYPE_UNKNOWN)
-    return false;
-  *codec_type = codec.Codec().codec_type;
-  *codec_id   = codec.Codec().codec_id;
-  return true;
-}
-#endif
-
 void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
 {
   vector<XbmcPvrStream>  streams;
@@ -521,8 +466,14 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
     m_streamStat[idx] = 0;
     m_streams.GetStreamData(idx, &stream);
     tvhdebug("demux subscription start");
-    if (GetCodecByName(type, &stream.iCodecType, &stream.iCodecId))
+    
+    CodecDescriptor codecDescriptor = CodecDescriptor::GetCodecByName(type);
+    xbmc_codec_t codec = codecDescriptor.Codec();
+    
+    if (codec.codec_type != XBMC_CODEC_TYPE_UNKNOWN)
     {
+      stream.iCodecType  = codec.codec_type;
+      stream.iCodecId    = codec.codec_id;
       stream.iPhysicalId = idx;
 
       /* Subtitle ID */

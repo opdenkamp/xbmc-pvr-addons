@@ -74,7 +74,7 @@ static inline void tvhlog ( ADDON::addon_log_t lvl, const char *fmt, ... )
   va_start(va, fmt);
   vsnprintf(buf + c, sizeof(buf) - c, fmt, va);
   va_end(va);
-  XBMC->Log(lvl, buf);
+  XBMC->Log(lvl, "%s", buf);
 }
 
 /*

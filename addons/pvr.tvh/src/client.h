@@ -25,14 +25,12 @@
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
 #include "libXBMC_gui.h"
+#include "libXBMC_codec.h"
 
 extern ADDON::CHelper_libXBMC_addon*  XBMC;
 extern CHelper_libXBMC_pvr*           PVR;
 extern CHelper_libXBMC_gui*           GUI;
-#ifndef OPENELEC_32
-#include "libXBMC_codec.h"
 extern CHelper_libXBMC_codec*         CODEC;
-#endif
 
 #define DEFAULT_HOST             "127.0.0.1"
 #define DEFAULT_HTTP_PORT        9981

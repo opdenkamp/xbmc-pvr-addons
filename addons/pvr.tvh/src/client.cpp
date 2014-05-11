@@ -90,7 +90,7 @@ void ADDON_ReadSettings(void)
   UPDATE_INT(g_iPortHTSP,   "htsp_port", DEFAULT_HTSP_PORT);
   UPDATE_INT(g_iPortHTTP,   "http_port", DEFAULT_HTSP_PORT);
   UPDATE_INT(g_iConnectTimeout,  "connect_timeout",  DEFAULT_CONNECT_TIMEOUT);
-  UPDATE_INT(g_iResponseTimeout, "response_timeout", DEFAULT_CONNECT_TIMEOUT);
+  UPDATE_INT(g_iResponseTimeout, "response_timeout", DEFAULT_RESPONSE_TIMEOUT);
 
   /* Data Transfer */
   UPDATE_INT(g_bAsyncEpg,   "epg_async", false);

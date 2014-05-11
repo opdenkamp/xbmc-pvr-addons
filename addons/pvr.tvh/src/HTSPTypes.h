@@ -297,6 +297,16 @@ struct SHTSPEvent
     m_type = type;
     m_idx  = idx;
   }
+  
+  bool operator==(const SHTSPEvent &right) const
+  {
+    return m_type == right.m_type && m_idx == right.m_idx;
+  }
+
+  bool operator!=(const SHTSPEvent &right) const
+  {
+    return !(*this == right);
+  }
 };
 
 typedef std::vector<SHTSPEvent> SHTSPEventList;

@@ -1,3 +1,6 @@
+0.8.1
+ - fixed destroying the addon which caused a deadlock on exit and when resetting the database
+
 0.8.0
  - Added thread for processing non-realtime messages, such as async updates. This should help with some stutter issues (at least during live TV).
  - Improvements to connection setup

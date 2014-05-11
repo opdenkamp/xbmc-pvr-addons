@@ -37,10 +37,6 @@ extern CHelper_libXBMC_codec*         CODEC;
 #define DEFAULT_HTSP_PORT        9982
 #define DEFAULT_CONNECT_TIMEOUT  10
 #define DEFAULT_RESPONSE_TIMEOUT 5
-#define DEFAULT_VIDEO_CODEC      "H264"
-#define DEFAULT_AUDIO_CODEC      "UNKNOWN"
-#define DEFAULT_RESOLUTION       480
-#define DEFAULT_TRANSCODE        false
 
 extern PLATFORM::CMutex          g_mutex;
 extern std::string               g_strHostname;

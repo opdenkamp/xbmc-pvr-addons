@@ -47,6 +47,7 @@ CTvheadend::CTvheadend()
 
 CTvheadend::~CTvheadend()
 {
+  StopThread(0);
 }
 
 void CTvheadend::Start ( void )

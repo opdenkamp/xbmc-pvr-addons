@@ -214,7 +214,7 @@ ADDON_STATUS ADDON_SetSetting
   UPDATE_INT("htsp_port", int, g_iPortHTSP, ADDON_STATUS_NEED_RESTART);
   UPDATE_INT("http_port", int, g_iPortHTTP, ADDON_STATUS_NEED_RESTART);
   UPDATE_INT("connect_timeout",  int, g_iConnectTimeout, ADDON_STATUS_OK);
-  UPDATE_INT("response_timeout", int, g_iConnectTimeout, ADDON_STATUS_OK);
+  UPDATE_INT("response_timeout", int, g_iResponseTimeout, ADDON_STATUS_OK);
   
   /* Data transfer */
   UPDATE_INT("epg_async", bool, g_bAsyncEpg, ADDON_STATUS_NEED_RESTART);

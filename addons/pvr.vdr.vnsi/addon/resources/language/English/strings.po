@@ -210,7 +210,11 @@ msgctxt "#30047"
 msgid "Request Timeshift"
 msgstr ""
 
-#empty strings from id 30048 to 30099
+msgctxt "#30048"
+msgid "Path to channel icons"
+msgstr ""
+
+#empty strings from id 30049 to 30099
 
 msgctxt "#30100"
 msgid "VDR OSD"

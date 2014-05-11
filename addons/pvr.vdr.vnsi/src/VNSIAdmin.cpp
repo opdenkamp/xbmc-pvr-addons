@@ -1427,11 +1427,15 @@ bool cVNSIAdmin::ReadChannelList(bool radio)
     char *strChannelName  = vresp->extract_String();
     channel.m_name = strChannelName;
     char *strProviderName = vresp->extract_String();
-    channel.m_provider = strProviderName;
+    channel.m_provider    = strProviderName;
     channel.m_id          = vresp->extract_U32();
                             vresp->extract_U32(); // first caid
     char *strCaids        = vresp->extract_String();
     channel.SetCaids(strCaids);
+    if (m_protocol >= 6)
+    {
+      std::string ref = vresp->extract_String();
+    }
     channel.m_radio       = radio;
 
     delete[] strChannelName;

@@ -43,7 +43,6 @@ extern CHelper_libXBMC_codec*         CODEC;
 #define DEFAULT_TRANSCODE        false
 
 extern PLATFORM::CMutex          g_mutex;
-extern bool                      m_bCreated;
 extern std::string               g_strHostname;
 extern int                       g_iPortHTSP;
 extern int                       g_iPortHTTP;

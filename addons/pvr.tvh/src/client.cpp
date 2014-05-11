@@ -37,7 +37,6 @@ using namespace PLATFORM;
 /*
  * Client state
  */
-bool         m_bCreated  = false;
 ADDON_STATUS m_CurStatus = ADDON_STATUS_UNKNOWN;
 
 /*
@@ -144,7 +143,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* _unused(props))
   }
 
   m_CurStatus     = ADDON_STATUS_OK;
-  m_bCreated      = true;
   return m_CurStatus;
 }
 
@@ -168,7 +166,6 @@ void ADDON_Destroy()
   SAFE_DELETE(GUI);
   SAFE_DELETE(XBMC);
   SAFE_DELETE(menuHook);
-  m_bCreated  = false;
   m_CurStatus = ADDON_STATUS_UNKNOWN;
 }
 

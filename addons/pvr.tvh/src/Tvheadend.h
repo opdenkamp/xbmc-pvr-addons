@@ -419,7 +419,10 @@ private:
   }
   inline void TriggerEpgUpdate ( uint32_t idx )
   {
-    m_events.push_back(SHTSPEvent(HTSP_EVENT_EPG_UPDATE, idx));
+    SHTSPEvent event = SHTSPEvent(HTSP_EVENT_EPG_UPDATE, idx);
+    
+    if (std::find(m_events.begin(), m_events.end(), event) == m_events.end())
+      m_events.push_back(event);
   }
 
   /*

@@ -40,7 +40,7 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 CTvheadend::CTvheadend()
-  : m_dmx(m_conn), m_vfs(m_conn), m_asyncState(ASYNC_NONE),
+  : m_dmx(m_conn), m_vfs(m_conn), m_queue((size_t) - 1), m_asyncState(ASYNC_NONE),
     m_asyncComplete(false)
 {
 }

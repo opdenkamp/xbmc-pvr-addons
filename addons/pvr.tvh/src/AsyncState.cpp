@@ -47,7 +47,7 @@ void AsyncState::WaitForState(eAsyncState state, int timeoutMs /* = -1*/)
   int timeSlept = 0;
 
   // sleep for WAIT_PERIOD until the timeout is reached or the state changes
-  while (GetState() < state && timeSlept < timeoutMs)
+  while (timeSlept < timeoutMs && GetState() < state)
   {
     usleep(WAIT_PERIOD_MS * 1000);
     timeSlept += WAIT_PERIOD_MS;

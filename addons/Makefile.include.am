@@ -37,6 +37,7 @@ else
 	mkdir -m 755 -p $(DESTDIR)@DATADIR@/$(ADDONNAME)
 	cp -f @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@ $(DESTDIR)@LIBDIR@/$(ADDONNAME) ; chmod 655 $(DESTDIR)@LIBDIR@/$(ADDONNAME)/@BINPREFIX@$(ADDONBINNAME)@BIN_EXT@
 	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon/* $(DESTDIR)@DATADIR@/$(ADDONNAME) ; chmod -R o+rx $(DESTDIR)@DATADIR@/$(ADDONNAME)
+	rm -f $(DESTDIR)@DATADIR@/$(ADDONNAME)/addon.xml.in
 endif
 
 all: @BUILD_TYPE@

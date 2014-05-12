@@ -33,10 +33,9 @@ void AsyncState::SetState(eAsyncState state)
 {
   CLockObject lock(m_mutex);
   m_state = state;
-  m_condition.Broadcast();
 }
 
-void AsyncState::WaitForState(eAsyncState state, int timeoutMs /* = -1*/)
+bool AsyncState::WaitForState(eAsyncState state, int timeoutMs /* = -1*/)
 {
   // use global response timeout if no specific timeout has been defined
   if (timeoutMs == -1)
@@ -45,6 +44,8 @@ void AsyncState::WaitForState(eAsyncState state, int timeoutMs /* = -1*/)
     timeoutMs = g_iResponseTimeout * 1000;
   }
   
-  while(GetState() < state)
+  if (GetState() < state)
     m_condition.Wait(m_mutex, timeoutMs);
+  
+  return GetState() >= state;
 }

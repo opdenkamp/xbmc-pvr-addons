@@ -69,8 +69,9 @@ public:
    * @param state the minimum state desired
    * @param timeout timeout in milliseconds. Defaults to -1 which means the 
    * global response timeout will be used.
+   * @return whether the state changed or not
    */
-  void WaitForState(eAsyncState state, int timeoutMs = -1);
+  bool WaitForState(eAsyncState state, int timeoutMs = -1);
 
 private:
 

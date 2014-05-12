@@ -105,7 +105,8 @@ CStdString CTvheadend::GetImageURL ( const char *str )
 
 int CTvheadend::GetTagCount ( void )
 {
-  m_asyncState.WaitForState(ASYNC_DVR);
+  if (!m_asyncState.WaitForState(ASYNC_DVR))
+    return 0;
   
   CLockObject lock(m_mutex);
   return m_tags.size();
@@ -113,7 +114,8 @@ int CTvheadend::GetTagCount ( void )
 
 PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle )
 {
-  m_asyncState.WaitForState(ASYNC_DVR);
+  if (!m_asyncState.WaitForState(ASYNC_DVR))
+    return PVR_ERROR_FAILED;
   
   CLockObject lock(m_mutex);
   STags::const_iterator it;
@@ -135,7 +137,8 @@ PVR_ERROR CTvheadend::GetTags ( ADDON_HANDLE handle )
 PVR_ERROR CTvheadend::GetTagMembers
   ( ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group )
 {
-  m_asyncState.WaitForState(ASYNC_DVR);
+  if (!m_asyncState.WaitForState(ASYNC_DVR))
+    return PVR_ERROR_FAILED;
   
   CLockObject lock(m_mutex);
   vector<uint32_t>::const_iterator it;
@@ -172,7 +175,8 @@ PVR_ERROR CTvheadend::GetTagMembers
 
 int CTvheadend::GetChannelCount ( void )
 {
-  m_asyncState.WaitForState(ASYNC_DVR);
+  if (!m_asyncState.WaitForState(ASYNC_DVR))
+    return 0;
   
   CLockObject lock(m_mutex);
   return m_channels.size();
@@ -180,7 +184,8 @@ int CTvheadend::GetChannelCount ( void )
 
 PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
 {
-  m_asyncState.WaitForState(ASYNC_DVR);
+  if (!m_asyncState.WaitForState(ASYNC_DVR))
+    return PVR_ERROR_FAILED;
   
   CLockObject lock(m_mutex);
   SChannels::const_iterator it;
@@ -282,7 +287,8 @@ PVR_ERROR CTvheadend::SendDvrUpdate
 
 int CTvheadend::GetRecordingCount ( void )
 {
-  m_asyncState.WaitForState(ASYNC_EPG);
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return 0;
   
   int ret = 0;
   SRecordings::const_iterator rit;
@@ -295,7 +301,8 @@ int CTvheadend::GetRecordingCount ( void )
 
 PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
 {
-  m_asyncState.WaitForState(ASYNC_EPG);
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return PVR_ERROR_NO_ERROR;
   
   CLockObject lock(m_mutex);
   SRecordings::const_iterator rit;
@@ -455,7 +462,8 @@ PVR_ERROR CTvheadend::RenameRecording ( const PVR_RECORDING &rec )
 
 int CTvheadend::GetTimerCount ( void )
 {
-  m_asyncState.WaitForState(ASYNC_EPG);
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return 0;
   
   int ret = 0;
   SRecordings::const_iterator rit;
@@ -468,7 +476,8 @@ int CTvheadend::GetTimerCount ( void )
 
 PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
 {
-  m_asyncState.WaitForState(ASYNC_EPG);
+  if (!m_asyncState.WaitForState(ASYNC_EPG))
+    return PVR_ERROR_FAILED;
   
   CLockObject lock(m_mutex);
   SRecordings::const_iterator rit;
@@ -621,7 +630,8 @@ PVR_ERROR CTvheadend::GetEpg
   /* Async transfer */
   if (g_bAsyncEpg)
   {
-    m_asyncState.WaitForState(ASYNC_DONE);
+    if (!m_asyncState.WaitForState(ASYNC_DONE))
+      return PVR_ERROR_FAILED;
     
     CLockObject lock(m_mutex);
     sit = m_schedules.find(chn.iUniqueId);

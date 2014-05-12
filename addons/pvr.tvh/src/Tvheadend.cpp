@@ -40,8 +40,7 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 CTvheadend::CTvheadend()
-  : m_dmx(m_conn), m_vfs(m_conn), m_queue((size_t) - 1), m_asyncState(ASYNC_NONE),
-    m_asyncComplete(false)
+  : m_dmx(m_conn), m_vfs(m_conn), m_queue((size_t) - 1)
 {
 }
 
@@ -604,10 +603,9 @@ PVR_ERROR CTvheadend::GetEpg
   /* Async transfer */
   if (g_bAsyncEpg)
   {
+    m_asyncState.WaitForState(ASYNC_DONE);
+    
     CLockObject lock(m_mutex);
-    if (!m_asyncCond.Wait(m_mutex, m_asyncComplete, g_iConnectTimeout * 1000))
-      return PVR_ERROR_NO_ERROR;
-
     sit = m_schedules.find(chn.iUniqueId);
     if (sit != m_schedules.end())
     {
@@ -674,9 +672,7 @@ PVR_ERROR CTvheadend::GetEpg
 
 void CTvheadend::Disconnected ( void )
 {
-  CLockObject lock(m_mutex);
-  m_asyncComplete = false;
-  m_asyncState    = ASYNC_NONE;
+  m_asyncState.SetState(ASYNC_NONE);
 }
 
 bool CTvheadend::Connected ( void )
@@ -696,8 +692,8 @@ bool CTvheadend::Connected ( void )
     tit->second.del = true;
 
   /* Request Async data */
-  m_asyncComplete = false;
-  m_asyncState    = ASYNC_NONE;
+  m_asyncState.SetState(ASYNC_NONE);
+  
   msg = htsmsg_create_map();
   htsmsg_add_u32(msg, "epg",        g_bAsyncEpg);
   //htsmsg_add_u32(msg, "epgMaxTime", 0);
@@ -831,15 +827,13 @@ void CTvheadend::SyncCompleted ( void )
   SyncChannelsCompleted();
   SyncDvrCompleted();
   SyncEpgCompleted();
-  m_asyncComplete = true;
-  m_asyncState    = ASYNC_DONE;
-  m_asyncCond.Broadcast();
+  m_asyncState.SetState(ASYNC_DONE);
 }
 
 void CTvheadend::SyncChannelsCompleted ( void )
 {
   /* Already done */
-  if (m_asyncComplete || m_asyncState > ASYNC_CHN)
+  if (m_asyncState.GetState() > ASYNC_CHN)
     return;
 
   bool update;
@@ -879,13 +873,13 @@ void CTvheadend::SyncChannelsCompleted ( void )
     tvhinfo("channels updated");
   
   /* Next */
-  m_asyncState = ASYNC_DVR;
+  m_asyncState.SetState(ASYNC_DVR);
 }
 
 void CTvheadend::SyncDvrCompleted ( void )
 {
   /* Done */
-  if (m_asyncComplete || m_asyncState > ASYNC_DVR)
+  if (m_asyncState.GetState() > ASYNC_DVR)
     return;
 
   bool update;
@@ -909,13 +903,13 @@ void CTvheadend::SyncDvrCompleted ( void )
     tvhinfo("recordings updated");
 
   /* Next */
-  m_asyncState = ASYNC_EPG;
+  m_asyncState.SetState(ASYNC_EPG);
 }
 
 void CTvheadend::SyncEpgCompleted ( void )
 {
   /* Done */
-  if (!g_bAsyncEpg || m_asyncComplete || m_asyncState > ASYNC_EPG)
+  if (!g_bAsyncEpg || m_asyncState.GetState() > ASYNC_EPG)
     return;
   
   bool update;
@@ -1004,7 +998,7 @@ void CTvheadend::ParseTagUpdate ( htsmsg_t *msg )
   {
     tvhdebug("tag updated id:%u, name:%s",
               tag.id, tag.name.c_str());
-    if (m_asyncState > ASYNC_CHN)
+    if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelGroupsUpdate();
   }
 }
@@ -1104,7 +1098,7 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
   if (update) {
     tvhdebug("channel update id:%u, name:%s",
               channel.id, channel.name.c_str());
-    if (m_asyncState > ASYNC_CHN)
+    if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelUpdate();
   }
 }
@@ -1211,7 +1205,7 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
              rec.id, state, rec.title.c_str(), rec.description.c_str(),
              rec.error.c_str());
 
-    if (m_asyncState > ASYNC_DVR)
+    if (m_asyncState.GetState() > ASYNC_DVR)
     {
       TriggerTimerUpdate();
       if (rec.state == PVR_TIMER_STATE_RECORDING)
@@ -1327,7 +1321,7 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
              evt.id, evt.channel, (int)evt.start, (int)evt.stop,
              evt.title.c_str(), evt.desc.c_str());
 
-    if (m_asyncState > ASYNC_EPG)
+    if (m_asyncState.GetState() > ASYNC_EPG)
       TriggerEpgUpdate(tmp.channel);
   }
 }

@@ -31,6 +31,7 @@
 #include "libXBMC_addon.h"
 #include "CircBuffer.h"
 #include "HTSPTypes.h"
+#include "AsyncState.h"
 #include <map>
 #include <queue>
 #include <cstdarg>
@@ -381,15 +382,7 @@ private:
 
   SHTSPEventList              m_events;
 
-  enum {
-    ASYNC_NONE = 0,
-    ASYNC_CHN  = 1,
-    ASYNC_DVR  = 2,
-    ASYNC_EPG  = 3,
-    ASYNC_DONE = 4
-  }                           m_asyncState;
-  bool                        m_asyncComplete;
-  PLATFORM::CCondition<bool>  m_asyncCond;
+  AsyncState                  m_asyncState;
   
   CStdString  GetImageURL     ( const char *str );
 

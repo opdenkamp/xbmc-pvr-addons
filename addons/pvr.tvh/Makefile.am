@@ -15,6 +15,7 @@ LIBS            = @abs_top_srcdir@/lib/libhts/libhts.la -ldl
 include ../Makefile.include.am
 
 lib_pvr_tvh_addon_la_SOURCES = src/client.cpp \
+                               src/AsyncState.cpp \
                                src/Tvheadend.cpp \
                                src/HTSPConnection.cpp \
                                src/HTSPDemuxer.cpp \

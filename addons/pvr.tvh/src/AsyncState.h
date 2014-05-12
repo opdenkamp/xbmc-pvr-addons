@@ -74,13 +74,9 @@ public:
 
 private:
 
-  /**
-   * The amount of milliseconds to sleep while waiting for a state change
-   */
-  static const int WAIT_PERIOD_MS = 50;
-
   eAsyncState m_state;
   PLATFORM::CMutex m_mutex;
+  PLATFORM::CCondition<bool> m_condition;
 
 };
 

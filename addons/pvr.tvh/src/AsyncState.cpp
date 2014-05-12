@@ -33,6 +33,7 @@ void AsyncState::SetState(eAsyncState state)
 {
   CLockObject lock(m_mutex);
   m_state = state;
+  m_condition.Broadcast();
 }
 
 void AsyncState::WaitForState(eAsyncState state, int timeoutMs /* = -1*/)
@@ -43,13 +44,7 @@ void AsyncState::WaitForState(eAsyncState state, int timeoutMs /* = -1*/)
     CLockObject lock(g_mutex);
     timeoutMs = g_iResponseTimeout * 1000;
   }
-
-  int timeSlept = 0;
-
-  // sleep for WAIT_PERIOD until the timeout is reached or the state changes
-  while (timeSlept < timeoutMs && GetState() < state)
-  {
-    usleep(WAIT_PERIOD_MS * 1000);
-    timeSlept += WAIT_PERIOD_MS;
-  }
+  
+  while(GetState() < state)
+    m_condition.Wait(m_mutex, timeoutMs);
 }

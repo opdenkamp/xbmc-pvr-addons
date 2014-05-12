@@ -12,7 +12,7 @@ AC_PREFIX_DEFAULT($PREFIX_DEFAULT)
 
 AC_PROG_CXX
 AC_PROG_CPP
-AC_PROG_LIBTOOL
+LT_INIT
 
 AC_SEARCH_LIBS([pthread_create],[pthread],, AC_MSG_ERROR([required library 'pthread' is missing]))
 

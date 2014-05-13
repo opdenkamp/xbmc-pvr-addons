@@ -1069,7 +1069,7 @@ bool cVNSIAdmin::OnInit()
   m_spinTimeshiftBufferRam = GUI->Control_getSpin(m_window, CONTROL_SPIN_TIMESHIFT_BUFFER_RAM);
   m_spinTimeshiftBufferRam->Clear();
   char buffer[8];
-  for (int i = 1; i <= 40; i++)
+  for (int i = 1; i <= 80; i++)
   {
     sprintf(buffer, "%d", i);
     m_spinTimeshiftBufferRam->AddLabel(buffer, i);

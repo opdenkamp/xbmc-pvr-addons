@@ -26,13 +26,14 @@ using namespace PLATFORM;
 
 AsyncState::AsyncState()
 {
-  SetState(ASYNC_NONE);
+  m_state = ASYNC_NONE;
 }
 
 void AsyncState::SetState(eAsyncState state)
 {
   CLockObject lock(m_mutex);
   m_state = state;
+  m_condition.Broadcast();
 }
 
 bool AsyncState::WaitForState(eAsyncState state, int timeoutMs /* = -1*/)
@@ -44,8 +45,9 @@ bool AsyncState::WaitForState(eAsyncState state, int timeoutMs /* = -1*/)
     timeoutMs = g_iResponseTimeout * 1000;
   }
   
-  if (GetState() < state)
+  CLockObject lock(m_mutex);
+  if (m_state < state)
     m_condition.Wait(m_mutex, timeoutMs);
   
-  return GetState() >= state;
+  return m_state >= state;
 }

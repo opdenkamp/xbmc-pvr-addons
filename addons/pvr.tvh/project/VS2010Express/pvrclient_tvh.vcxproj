@@ -84,6 +84,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\AsyncState.cpp" />
     <ClCompile Include="..\..\src\CircBuffer.cpp" />
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\HTSPConnection.cpp" />

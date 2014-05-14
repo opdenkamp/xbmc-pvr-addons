@@ -1310,7 +1310,6 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
 {
   bool update = false;
   SEvent tmp;
-  tmp.Clear();
 
   /* Parse */
   if (!ParseEvent(msg, tmp))

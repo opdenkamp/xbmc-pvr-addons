@@ -70,6 +70,17 @@ struct STag
     icon.clear();
     channels.clear();
   }
+
+  inline bool operator==(const STag &right)
+  {
+    return id == right.id && name == right.name &&
+           icon == right.icon && channels == right.channels;
+  }
+
+  inline bool operator!=(const STag &right)
+  {
+    return !(*this == right);
+  }
 };
 
 struct SChannel

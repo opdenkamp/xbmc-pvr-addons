@@ -980,7 +980,6 @@ void CTvheadend::SyncEpgCompleted ( void )
 
 void CTvheadend::ParseTagUpdate ( htsmsg_t *msg )
 {
-  bool update = false;
   uint32_t u32;
   const char *str;
   htsmsg_t *list;
@@ -993,39 +992,38 @@ void CTvheadend::ParseTagUpdate ( htsmsg_t *msg )
   }
 
   /* Locate object */
-  STag &tag = m_tags[u32];
-  tag.id    = u32;
-  tag.del   = false;
+  STag &existingTag = m_tags[u32];
+  existingTag.del   = false;
+  
+  /* Create new object */
+  STag tag;
+  tag.id = u32;
 
   /* Name */
   if ((str = htsmsg_get_str(msg, "tagName")) != NULL)
-    UPDATE(tag.name, str);
+    tag.name = str;
 
   /* Icon */
   if ((str = htsmsg_get_str(msg, "tagIcon")) != NULL)
-  {
-    CStdString url = GetImageURL(str);
-    UPDATE(tag.icon, url);
-  }
+    tag.icon = GetImageURL(str);
 
   /* Members */
   if ((list = htsmsg_get_list(msg, "members")) != NULL)
   {
     htsmsg_field_t *f;
-    tag.channels.clear();
     HTSMSG_FOREACH(f, list)
     {
       if (f->hmf_type != HMF_S64) continue;
       tag.channels.push_back((int)f->hmf_s64);
     }
-    update = true; // TODO: could do detection here as well!
   }
 
   /* Update */
-  if (update)
+  if (existingTag != tag)
   {
+    existingTag = tag;
     tvhdebug("tag updated id:%u, name:%s",
-              tag.id, tag.name.c_str());
+              existingTag.id, existingTag.name.c_str());
     if (m_asyncState.GetState() > ASYNC_CHN)
       TriggerChannelGroupsUpdate();
   }

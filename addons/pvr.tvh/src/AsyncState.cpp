@@ -38,16 +38,20 @@ void AsyncState::SetState(eAsyncState state)
 
 bool AsyncState::WaitForState(eAsyncState state, int timeoutMs /* = -1*/)
 {
-  // use global response timeout if no specific timeout has been defined
+  /* Use global default */
   if (timeoutMs == -1)
   {
     CLockObject lock(g_mutex);
     timeoutMs = g_iResponseTimeout * 1000;
   }
   
+  CTimeout timeout(timeoutMs);
   CLockObject lock(m_mutex);
-  if (m_state < state)
-    m_condition.Wait(m_mutex, timeoutMs);
+
+  /* Loop (until complete or no change) */
+  while (m_state < state && timeout.TimeLeft()) {
+    m_condition.Wait(m_mutex, timeout.TimeLeft());
+  }
   
   return m_state >= state;
 }

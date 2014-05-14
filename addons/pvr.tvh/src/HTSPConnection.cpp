@@ -343,6 +343,7 @@ htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int
   if (!msg)
   {
     tvherror("response not received");
+    Disconnect();
     return NULL;
   }
 

@@ -1,3 +1,7 @@
+0.9.2
+ - another minor improvement to AsyncState class
+ - improvements to tag update checking
+
 0.9.1
  - fix silly mistake in the new AsyncState class, could cause deadlock
 

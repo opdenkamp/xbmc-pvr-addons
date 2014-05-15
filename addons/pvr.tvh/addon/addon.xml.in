@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.tvh"
-  version="0.9.1"
+  version="0.9.2"
   name="Tvheadend Client"
   provider-name="Adam Sutton">
   <requires>

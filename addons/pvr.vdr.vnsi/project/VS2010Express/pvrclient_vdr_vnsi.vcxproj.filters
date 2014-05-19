@@ -24,9 +24,6 @@
     <ClCompile Include="..\..\src\responsepacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\tools.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\VNSIChannelScan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

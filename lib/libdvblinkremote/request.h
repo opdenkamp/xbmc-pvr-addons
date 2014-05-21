@@ -514,6 +514,31 @@ namespace dvblinkremote {
   };
 
   /** 
+    * Class for Raw HTTP stream requests that supports timeshifting.
+    * This is used as input parameter for the IDVBLinkRemoteConnection::PlayChannel method.
+    * @see IDVBLinkRemoteConnection::PlayChannel()
+    */
+  class RawHttpTimeshiftStreamRequest : public StreamRequest
+  {
+  public:
+    /**
+      * Initializes a new instance of the dvblinkremote::RawHttpStreamRequest class.
+      * @param serverAddress a constant string reference representing the DVBLink server address.
+      * @param dvbLinkChannelId a constant long representing the DVBLink channel identifier.
+      * @param clientId a constant string reference representing the unique identification string of the client. 
+      * \remark \p serverAddress is the IP address/server network name of the DVBLink server. 
+      * \remark \p clientId should be the same across all DVBLink Client API calls from a given client. 
+      * It can be a uuid for example or id/mac of the client device.
+      */
+    RawHttpTimeshiftStreamRequest(const std::string& serverAddress, const long dvbLinkChannelId, const std::string& clientId);
+
+    /**
+      * Destructor for cleaning up allocated memory.
+      */
+    ~RawHttpTimeshiftStreamRequest();
+  };
+
+  /** 
     * Class for Raw UDP stream requests.
     * This is used as input parameter for the IDVBLinkRemoteConnection::PlayChannel method.
     * @see IDVBLinkRemoteConnection::PlayChannel()

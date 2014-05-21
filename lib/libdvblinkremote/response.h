@@ -509,6 +509,11 @@ namespace dvblinkremote {
     bool IsActive;
 
     /**
+      * Represents if the recording is conflicting with another recording.
+      */
+    bool IsConflict;
+
+    /**
       * Gets the program of the recording.
       * @return Recording program
       */

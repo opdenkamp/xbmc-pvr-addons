@@ -73,6 +73,17 @@ RawHttpStreamRequest::~RawHttpStreamRequest()
 
 }
 
+RawHttpTimeshiftStreamRequest::RawHttpTimeshiftStreamRequest(const std::string& serverAddress, const long channelDvbLinkId, const std::string& clientId)
+  : StreamRequest(serverAddress, channelDvbLinkId, clientId, DVBLINK_REMOTE_STREAM_TYPE_RAW_HTTP_TIMESHIFT)
+{
+
+}
+
+RawHttpTimeshiftStreamRequest::~RawHttpTimeshiftStreamRequest()
+{
+
+}
+
 RawUdpStreamRequest::RawUdpStreamRequest(const std::string& serverAddress, const long channelDvbLinkId, const std::string& clientId, const std::string& clientAddress, const unsigned short int streamingPort)
   : m_clientAddress(clientAddress), m_streamingPort(streamingPort), StreamRequest(serverAddress, channelDvbLinkId, clientId, DVBLINK_REMOTE_STREAM_TYPE_RAW_UDP)
 { }

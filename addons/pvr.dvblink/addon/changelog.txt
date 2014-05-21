@@ -1,3 +1,9 @@
+[B]Version 1.7.1[/B]
+Backport of version 1.9.1 to Frodo branch
+Added: support for DVBLink v5 server timeshifting capabilities
+Fixed: series number, genre, episode name tags
+Fixed: correct displaying of series recordings
+
 [B]Version 1.7.0[/B]
 Fixed: Recordings on DVBLINK 4.5.3
 Fixed: Closing socket file handles

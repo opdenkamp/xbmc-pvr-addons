@@ -34,6 +34,7 @@ Recording::Recording(const std::string& id, const std::string& scheduleId, const
     m_program((Program*)program)
 {
   IsActive = false;
+  IsConflict = false;
 }
 
 Recording::Recording(Recording& recording)
@@ -43,6 +44,7 @@ Recording::Recording(Recording& recording)
   m_channelId = recording.GetChannelID();
   m_program = new Program(recording.GetProgram());
   IsActive = false;
+  IsConflict = false;
 }
 
 Recording::~Recording()
@@ -141,6 +143,10 @@ bool GetRecordingsResponseSerializer::GetRecordingsResponseXmlDataDeserializer::
       
     if (m_parent.HasChildElement(element, "is_active")) {
       r->IsActive = Util::GetXmlFirstChildElementTextAsBoolean(&element, "is_active");
+    }
+
+    if (m_parent.HasChildElement(element, "is_conflict")) {
+      r->IsConflict = Util::GetXmlFirstChildElementTextAsBoolean(&element, "is_conflict");
     }
 
     m_recordingList.push_back(r);

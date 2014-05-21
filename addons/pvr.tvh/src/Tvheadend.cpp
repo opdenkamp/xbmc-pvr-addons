@@ -391,12 +391,12 @@ PVR_ERROR CTvheadend::GetRecordingEdl
     return PVR_ERROR_SERVER_ERROR;
   }
 
-  /* Validate */
+  /* Check if we got any cut points */
   if (!(list = htsmsg_get_list(m, "cutpoints")))
   {
-    tvherror("malformed getDvrCutpoints response");
+    tvhinfo("no cut points available from dvr entry %s", rec.strRecordingId);
     htsmsg_destroy(m);
-    return PVR_ERROR_FAILED;
+    return PVR_ERROR_NO_ERROR;
   }
 
   /* Process */

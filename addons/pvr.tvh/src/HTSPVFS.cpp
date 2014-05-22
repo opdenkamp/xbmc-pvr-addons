@@ -101,7 +101,6 @@ void CHTSPVFS::Close ( void )
 int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
 {
   ssize_t ret;
-  CLockObject lock(m_conn.Mutex());
 
   /* Not opened */
   if (!m_fileId)
@@ -123,7 +122,11 @@ int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
              m_fileId, (long long)m_buffer.free());
     
     /* Send */
-    m = m_conn.SendAndWait("fileRead", m);
+    {
+      CLockObject lock(m_conn.Mutex());
+      m = m_conn.SendAndWait("fileRead", m);
+    }
+      
     if (m == NULL)
     {
       tvherror("vfs fileRead failed to send");

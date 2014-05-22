@@ -373,7 +373,7 @@ PVR_ERROR CTvheadend::GetRecordingEdl
   if (m_conn.GetProtocol() < 12)
     return PVR_ERROR_NOT_IMPLEMENTED;
   
-  CLockObject lock(m_mutex);
+  CLockObject lock(m_conn.Mutex());
   htsmsg_t *list;
   htsmsg_field_t *f;
   int idx;

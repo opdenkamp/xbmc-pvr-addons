@@ -1238,9 +1238,11 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
   /* Update */
   if (update)
   {
+    std::string error = rec.error.empty() ? "none" : rec.error;
+    
     tvhdebug("recording id:%d, state:%s, title:%s, desc:%s, error:%s",
              rec.id, state, rec.title.c_str(), rec.description.c_str(),
-             rec.error.c_str());
+             error.c_str());
 
     if (m_asyncState.GetState() > ASYNC_DVR)
     {

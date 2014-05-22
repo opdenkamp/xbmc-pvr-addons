@@ -60,18 +60,6 @@ void CHTSPVFS::Connected ( void )
   }
 }
 
-bool CHTSPVFS::ProcessMessage
-  ( const char *_unused(method), htsmsg_t *_unused(m) )
-{
-  return false;
-}
-
-void CHTSPVFS::Flush ( void )
-{
-  m_buffer.reset();
-  m_offset = 0;
-}
-
 /* **************************************************************************
  * VFS API
  * *************************************************************************/
@@ -104,7 +92,8 @@ void CHTSPVFS::Close ( void )
   if (m_fileId != 0)
     SendFileClose();
 
-  Flush();
+  m_buffer.reset();
+  m_offset = 0;
   m_fileId = 0;
   m_path   = "";
 }

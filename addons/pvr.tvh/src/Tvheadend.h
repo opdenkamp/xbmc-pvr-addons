@@ -183,7 +183,6 @@ public:
   
   bool      SendMessage0    ( const char *method, htsmsg_t *m );
   htsmsg_t *SendAndWait0    ( const char *method, htsmsg_t *m, int iResponseTimeout = -1);
-  bool      SendMessage     ( const char *method, htsmsg_t *m );
   htsmsg_t *SendAndWait     ( const char *method, htsmsg_t *m, int iResponseTimeout = -1 );
 
   inline int  GetProtocol      ( void ) const { return m_htspVersion; }
@@ -299,7 +298,6 @@ public:
   CHTSPVFS ( CHTSPConnection &conn );
   ~CHTSPVFS ();
 
-  bool ProcessMessage ( const char *method, htsmsg_t *m );
   void Connected    ( void );
 
 private:
@@ -308,8 +306,6 @@ private:
   uint32_t        m_fileId;
   CCircBuffer     m_buffer;
   int64_t         m_offset;
-
-  void      Flush  ( void );
 
   bool      Open   ( const PVR_RECORDING &rec );
   void      Close  ( void );

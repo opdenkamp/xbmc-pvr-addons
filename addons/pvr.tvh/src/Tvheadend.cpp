@@ -747,10 +747,6 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
   if (m_dmx.ProcessMessage(method, msg))
     return true;
 
-  /* VFS */
-  if (m_vfs.ProcessMessage(method, msg))
-    return true;
-
   /* Store */
   m_queue.Push(CHTSPMessage(method, msg));
   return false;

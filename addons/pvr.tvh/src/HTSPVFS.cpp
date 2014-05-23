@@ -87,8 +87,6 @@ bool CHTSPVFS::Open ( const PVR_RECORDING &rec )
 
 void CHTSPVFS::Close ( void )
 {
-  CLockObject lock(m_conn.Mutex());
-
   if (m_fileId != 0)
     SendFileClose();
 

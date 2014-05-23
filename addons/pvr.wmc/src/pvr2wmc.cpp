@@ -1087,11 +1087,11 @@ PVR_ERROR Pvr2Wmc::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 			if (results.size() >= 9)
 			{
 				memset(&cachedSignalStatus, 0, sizeof(cachedSignalStatus));
-				snprintf(signalStatus.strAdapterName, sizeof(signalStatus.strAdapterName), results[0]);
-				snprintf(signalStatus.strAdapterStatus, sizeof(signalStatus.strAdapterStatus), results[1]);
-				snprintf(signalStatus.strProviderName, sizeof(signalStatus.strProviderName), results[2]);
-				snprintf(signalStatus.strServiceName, sizeof(signalStatus.strServiceName), results[3]);
-				snprintf(signalStatus.strMuxName, sizeof(signalStatus.strMuxName), results[4]);
+				STRCPY(signalStatus.strAdapterName, results[0].GetBuf());
+				STRCPY(signalStatus.strAdapterStatus, results[1].GetBuf());
+				STRCPY(signalStatus.strProviderName, results[2].GetBuf());
+				STRCPY(signalStatus.strServiceName, results[3].GetBuf());
+				STRCPY(signalStatus.strMuxName, results[4].GetBuf());
 				signalStatus.iSignal = atoi(results[5]) * 655.35;
 				signalStatus.dVideoBitrate = atof(results[6]);
 				signalStatus.dAudioBitrate = atof(results[7]);

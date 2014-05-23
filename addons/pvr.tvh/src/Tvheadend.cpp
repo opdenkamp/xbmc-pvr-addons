@@ -265,7 +265,12 @@ PVR_ERROR CTvheadend::SendDvrUpdate
     htsmsg_add_s64(m, "stop",  stop);
 
   /* Send and Wait */
-  if ((m = m_conn.SendAndWait("updateDvrEntry", m)) == NULL)
+  {
+    CLockObject lock(m_conn.Mutex());
+    m = m_conn.SendAndWait("updateDvrEntry", m);
+  }
+    
+  if (m == NULL)
   {
     tvherror("failed to update DVR entry");
     return PVR_ERROR_SERVER_ERROR;

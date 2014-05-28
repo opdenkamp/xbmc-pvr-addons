@@ -1,3 +1,6 @@
+0.2.96
+- Improve handling of signal information. Prior to this release, an attacker with network access to the addon could potentially cause the addon to crash.
+
 0.2.95
 - display correct duration for active-recordings  (gotham only)
 - Add support for Radio Channels

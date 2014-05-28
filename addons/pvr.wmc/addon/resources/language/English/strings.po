@@ -80,6 +80,14 @@ msgctxt "#30014"
 msgid "Enable SignalStatus calls"
 msgstr ""
 
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr ""
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr ""
+
 msgctxt "#30015"
 msgid "Refresh SignalStatus Interval (sec)"
 msgstr ""

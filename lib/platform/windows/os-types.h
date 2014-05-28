@@ -45,9 +45,6 @@
 #include <windows.h>
 #include <wchar.h>
 
-/* String to 64-bit int */
-#define atoll(S) _atoi64(S)
-
 /* Platform dependent path separator */
 #ifndef PATH_SEPARATOR_CHAR
 #define PATH_SEPARATOR_CHAR '\\'

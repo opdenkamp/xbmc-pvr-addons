@@ -176,3 +176,98 @@ msgstr ""
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr ""
+
+#empty strings from id 30076 to 30099
+
+# Schedule settings dialog
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr ""
+
+msgctxt "#30101"
+msgid "Frequency"
+msgstr ""
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr ""
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr ""
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr ""
+
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr ""
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr ""
+
+# Frequency:
+msgctxt "#30110"
+msgid "Record Once"
+msgstr ""
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr ""
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr ""
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr ""
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr ""
+
+# Airtime:
+msgctxt "#30120"
+msgid "This time"
+msgstr ""
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr ""
+
+# Channel:
+msgctxt "#30125"
+msgid "This Channel"
+msgstr ""
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr ""
+
+# Keep:
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr ""
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr ""
+
+msgctxt "#30132"
+msgid "Days"
+msgstr ""
+
+msgctxt "#30133"
+msgid "Always"
+msgstr ""
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr ""
+
+msgctxt "#30136"
+msgid "XBMC default"
+msgstr ""

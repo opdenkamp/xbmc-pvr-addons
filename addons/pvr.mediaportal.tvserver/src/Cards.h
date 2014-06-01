@@ -20,7 +20,7 @@
 
 #include <vector>
 #include <string>
-#include <ctime>
+#include "DateTime.h"
 
 using namespace std;
 
@@ -29,25 +29,25 @@ using namespace std;
  */
 typedef struct Card
 {
-  int      IdCard;
-  string   DevicePath;
-  string   Name;
-  int      Priority;
-  bool     GrabEPG;
-  time_t   LastEpgGrab;
-  string   RecordingFolder;
-  string   RecordingFolderUNC;
-  int      IdServer;
-  bool     Enabled;
-  int      CamType;
-  string   TimeshiftFolder;
-  string   TimeshiftFolderUNC;
-  int      RecordingFormat;
-  int      DecryptLimit;
-  bool     Preload;
-  bool     CAM;
-  int      NetProvider;
-  bool     StopGraph;
+  int       IdCard;
+  string    DevicePath;
+  string    Name;
+  int       Priority;
+  bool      GrabEPG;
+  MPTV::CDateTime LastEpgGrab;
+  string    RecordingFolder;
+  string    RecordingFolderUNC;
+  int       IdServer;
+  bool      Enabled;
+  int       CamType;
+  string    TimeshiftFolder;
+  string    TimeshiftFolderUNC;
+  int       RecordingFormat;
+  int       DecryptLimit;
+  bool      Preload;
+  bool      CAM;
+  int       NetProvider;
+  bool      StopGraph;
 } Card;
 
 class CCards: public vector<Card>

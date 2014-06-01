@@ -28,6 +28,7 @@
 #include "libXBMC_addon.h"
 #include "libXBMC_pvr.h"
 #include "GenreTable.h"
+#include "DateTime.h"
 
 using namespace std;
 
@@ -38,10 +39,10 @@ private:
   string m_title;
   string m_shortText;
   string m_description;
-  time_t m_StartTime;
-  time_t m_EndTime;
-  time_t m_originalAirDate;
-  int m_Duration;
+  MPTV::CDateTime m_startTime;
+  MPTV::CDateTime m_endTime;
+  MPTV::CDateTime m_originalAirDate;
+  int m_duration;
   string m_genre;
   int m_genre_type;
   int m_genre_subtype;
@@ -60,10 +61,10 @@ public:
 
   bool ParseLine(string& data);
   int UniqueId(void) const { return m_uid; }
-  time_t StartTime(void) const { return m_StartTime; }
-  time_t EndTime(void) const { return m_EndTime; }
-  time_t Duration(void) const { return m_Duration; }
-  time_t OriginalAirDate(void) const { return m_originalAirDate; }
+  time_t StartTime(void) const;
+  time_t EndTime(void) const;
+  time_t Duration(void) const { return m_duration; }
+  time_t OriginalAirDate(void) const;
   const char *Title(void) const { return m_title.c_str(); }
   const char *ShortText(void) const { return m_shortText.c_str(); }
   const char *Description(void) const { return m_description.c_str(); }

@@ -121,8 +121,10 @@
     <ClCompile Include="..\..\src\Cards.cpp" />
     <ClCompile Include="..\..\src\channels.cpp" />
     <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\DateTime.cpp" />
     <ClCompile Include="..\..\src\epg.cpp" />
     <ClCompile Include="..\..\src\GenreTable.cpp" />
+    <ClCompile Include="..\..\src\GUIDialogRecordSettings.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\ChannelInfo.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\DeMultiplexer.cpp" />
     <ClCompile Include="..\..\src\lib\tsreader\DvbUtil.cpp" />
@@ -149,9 +151,11 @@
     <ClInclude Include="..\..\src\Cards.h" />
     <ClInclude Include="..\..\src\channels.h" />
     <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\DateTime.h" />
     <ClInclude Include="..\..\src\epg.h" />
     <ClInclude Include="..\..\src\FileUtils.h" />
     <ClInclude Include="..\..\src\GenreTable.h" />
+    <ClInclude Include="..\..\src\GUIDialogRecordSettings.h" />
     <ClInclude Include="..\..\src\lib\tsreader\ChannelInfo.h" />
     <ClInclude Include="..\..\src\lib\tsreader\DeMultiplexer.h" />
     <ClInclude Include="..\..\src\lib\tsreader\DvbUtil.h" />

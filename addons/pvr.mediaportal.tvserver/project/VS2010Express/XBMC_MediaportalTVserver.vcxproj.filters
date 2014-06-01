@@ -107,15 +107,18 @@
     <ClCompile Include="..\..\src\lib\tsreader\TSHeader.cpp">
       <Filter>Source Files\lib%255ctsreader</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\GUIDialogRecordSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\DateTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Cards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\channels.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\epg.h">
@@ -191,6 +194,15 @@
       <Filter>Header Files\lib%255ctsreader</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\os-dependent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\GUIDialogRecordSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\DateTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

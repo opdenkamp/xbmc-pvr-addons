@@ -54,6 +54,7 @@ std::string            g_szUserPath   = "";
 std::string            g_szClientPath = "";
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
+CHelper_libXBMC_gui   *GUI            = NULL;
 
 extern "C" {
 
@@ -89,6 +90,15 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
+  GUI = new CHelper_libXBMC_gui;
+  if (!GUI->RegisterMe(hdl))
+  {
+    SAFE_DELETE(GUI);
+    SAFE_DELETE(PVR);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
+
   XBMC->Log(LOG_INFO, "Creating MediaPortal PVR-Client");
 
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
@@ -104,6 +114,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   if (m_CurStatus != ADDON_STATUS_OK)
   {
     SAFE_DELETE(g_client);
+    SAFE_DELETE(GUI);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
   }
@@ -118,6 +129,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 void ADDON_Destroy()
 {
   SAFE_DELETE(g_client);
+  SAFE_DELETE(GUI);
   SAFE_DELETE(PVR);
   SAFE_DELETE(XBMC);
 

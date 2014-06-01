@@ -1,3 +1,6 @@
+v1.9.15
+- Added: Series recording support (requires skin specific dialog)
+
 v1.9.14
 - Updated language files from Transifex
 

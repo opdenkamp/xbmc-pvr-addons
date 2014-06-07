@@ -164,14 +164,65 @@ void Pvr2Wmc::TriggerUpdates(vector<CStdString> results)
 {
 	FOREACH(response, results)
 	{
-		if (*response == "updateTimers")
+		vector<CStdString> v = split(*response, "|");				// split to unpack string
+
+		if (v.size() < 1)
+		{
+			XBMC->Log(LOG_DEBUG, "Wrong number of fields xfered for Triggers/Message");
+			return;
+		}
+
+		if (v[0] == "updateTimers")
 			PVR->TriggerTimerUpdate();
-		else if (*response == "updateRecordings")
+		else if (v[0] == "updateRecordings")
 			PVR->TriggerRecordingUpdate();
-		else if (*response == "updateChannels")
+		else if (v[0] == "updateChannels")
 			PVR->TriggerChannelUpdate();
-		else if (*response == "updateChannelGroups")
+		else if (v[0] == "updateChannelGroups")
 			PVR->TriggerChannelGroupsUpdate();
+		else if (v[0] == "message")
+		{
+			if (v.size() < 3)
+			{
+				XBMC->Log(LOG_DEBUG, "Wrong number of fields xfered for Message");
+				return;
+			}
+
+			XBMC->Log(LOG_DEBUG, "Received message from backend: %s", response);
+			CStdString infoStr;
+				
+			// Get localised string for this stringID
+			int stringId = atoi(v[1].c_str());
+			infoStr = XBMC->GetLocalizedString(stringId);
+
+			// Use text from backend if stringID not found
+			if (infoStr == "")
+			{
+				infoStr = v[2];
+			}
+
+			// Send XBMC Notification (support up to 4 parameter replaced arguments from the backend)
+			if (v.size() == 3)
+			{
+				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str());
+			}
+			else if (v.size() == 4)
+			{
+				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str(), v[3].c_str());
+			}
+			else if (v.size() == 5)
+			{
+				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str(), v[3].c_str(), v[4].c_str());
+			}
+			else if (v.size() == 6)
+			{
+				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str(), v[3].c_str(), v[4].c_str(), v[5].c_str());
+			}
+			else
+			{
+				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str(), v[3].c_str(), v[4].c_str(), v[5].c_str(), v[6].c_str());
+			}
+		}
 	}
 }
 

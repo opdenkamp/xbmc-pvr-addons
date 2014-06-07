@@ -80,6 +80,14 @@ msgctxt "#30014"
 msgid "Enable SignalStatus calls"
 msgstr ""
 
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr ""
+
+msgctxt "#30016"
+msgid "Store viewing resume times on server"
+msgstr ""
+
 msgctxt "#30017"
 msgid "Recorded TV folder not found"
 msgstr ""
@@ -88,12 +96,8 @@ msgctxt "#30018"
 msgid "Recorded TV folder cannot be opened"
 msgstr ""
 
-msgctxt "#30015"
-msgid "Refresh SignalStatus Interval (sec)"
-msgstr ""
-
-msgctxt "#30016"
-msgid "Store viewing resume times on server"
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
 msgstr ""
 
 msgctxt "#30020"

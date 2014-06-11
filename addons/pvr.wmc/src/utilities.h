@@ -10,4 +10,5 @@ bool Str2Bool(const CStdString str);
 
 bool EndsWith(CStdString const &fullString, CStdString const &ending);
 bool StartsWith(CStdString const &fullString, CStdString const &starting);
-
+bool ReadFileContents(CStdString const &strFileName, CStdString &strResult);
+bool WriteFileContents(CStdString const &strFileName, CStdString &strContent);

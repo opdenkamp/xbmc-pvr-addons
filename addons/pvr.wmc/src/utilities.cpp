@@ -2,6 +2,7 @@
 #include "tinyxml/XMLUtils.h"
 #include "utilities.h"
 
+#include "client.h"
 #include <string>
 #include <stdio.h>
 #include <cstdarg>
@@ -10,6 +11,8 @@
 #else
     #include <stdarg.h>
 #endif
+
+using namespace ADDON;
 
 // format related string functions taken from:
 // http://www.flipcode.com/archives/Safe_sprintf.shtml
@@ -56,4 +59,38 @@ bool StartsWith(CStdString const &fullString, CStdString const &starting)
     } else {
         return false;
     }
+}
+
+bool ReadFileContents(CStdString const &strFileName, CStdString &strContent)
+{
+	void* fileHandle = XBMC->OpenFile(strFileName.c_str(), 0);
+	if (fileHandle)
+	{
+		char buffer[1024];
+		while (XBMC->ReadFileString(fileHandle, buffer, 1024))
+			strContent.append(buffer);
+		XBMC->CloseFile(fileHandle);
+		return true;
+	}
+	return false;
+}
+
+bool WriteFileContents(CStdString const &strFileName, CStdString &strContent)
+{
+	void* fileHandle = XBMC->OpenFileForWrite(strFileName.c_str(), true);
+	if (fileHandle)
+	{
+		int rc = XBMC->WriteFile(fileHandle, strContent.c_str(), strContent.length());
+		if (rc)
+		{
+			XBMC->Log(LOG_DEBUG, "wrote file %s", strFileName.c_str());
+		}
+		else
+		{
+			XBMC->Log(LOG_ERROR, "can not write to %s", strFileName.c_str());
+		}
+		XBMC->CloseFile(fileHandle);
+		return rc >= 0;
+	}
+	return false;
 }

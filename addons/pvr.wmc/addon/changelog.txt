@@ -1,3 +1,6 @@
+0.2.98
+- add Wake On LAN support to wake the ServerWMC backend server
+
 0.2.97
 - support receiving notifications from the backend
 - add notification for new backend version available

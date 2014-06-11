@@ -40,3 +40,14 @@ extern bool								g_bEnableMultiResume;
 extern ADDON::CHelper_libXBMC_addon		*XBMC;
 extern CHelper_libXBMC_pvr				*PVR;
 extern CHelper_libXBMC_gui				*GUI;
+extern CStdString						g_strServerMAC;
+extern bool								g_bWakeOnLAN;
+extern CStdString						g_AddonDataCustom;
+
+enum backend_status
+  {
+    BACKEND_UNKNOWN,
+    BACKEND_DOWN,
+    BACKEND_UP
+  };
+extern backend_status					g_BackendOnline;

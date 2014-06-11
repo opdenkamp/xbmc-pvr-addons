@@ -2,6 +2,7 @@
 - support receiving notifications from the backend
 - add notification for new backend version available
 - send client time to backend and add notification for clock drift warning
+- provide client name and OS to backend on more non windows platforms
 
 0.2.95
 - display correct duration for active-recordings  (gotham only)

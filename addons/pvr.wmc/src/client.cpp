@@ -112,19 +112,24 @@ extern "C" {
 		
 
 		// get the name of the computer client is running on
-#ifdef TARGET_WINDOWS
 		gethostname(buffer, 50); 
 		g_strClientName = buffer;		// send this computers name to server
 
+#ifdef TARGET_WINDOWS
 		// get windows version
 		OSVERSIONINFO osvi;
 		ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
 		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 		GetVersionEx(&osvi);
 		g_clientOS.Format("windows(%d.%d)", osvi.dwMajorVersion, osvi.dwMinorVersion);	// set windows version string
+#elif defined TARGET_LINUX
+		g_clientOS = "linux";			// set to the client OS name
+#elif defined TARGET_DARWIN
+		g_clientOS = "darwin";			// set to the client OS name
+#elif defined TARGET_FREEBSD
+		g_clientOS = "freeBSD";			// set to the client OS name
 #else
-		g_strClientName = "";			// empty string signals to server to display the IP address
-		g_clientOS = "";				// set to the client OS name
+		g_clientOS = "";					// set blank client OS name
 #endif
 	}
 

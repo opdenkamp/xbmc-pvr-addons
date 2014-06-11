@@ -43,10 +43,6 @@ int64_t _lastRecordingUpdateTime;		// the time of the last recording display upd
 
 Pvr2Wmc::Pvr2Wmc(void)
 {
-	_iEpgStart = -1;
-	_strDefaultIcon =  "http://www.royalty-free.tv/news/wp-content/uploads/2011/06/cc-logo1.jpg";
-	_strDefaultMovie = "";
-
 	_socketClient.SetServerName(g_strServerName);
 	_socketClient.SetClientName(g_strClientName);
 	_socketClient.SetServerPort(g_port);
@@ -73,8 +69,6 @@ Pvr2Wmc::Pvr2Wmc(void)
 
 Pvr2Wmc::~Pvr2Wmc(void)
 {
-	_channels.clear();
-	_groups.clear();
 }
 
 bool Pvr2Wmc::IsServerDown()

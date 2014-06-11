@@ -26,14 +26,6 @@
 #include "client.h"
 #include "Socket.h"
 
-struct PVR_CHANNELGroup
-{
-	bool             bRadio;
-	int              iGroupId;
-	std::string      strGroupName;
-	std::vector<int> members;
-};
-
 class Pvr2Wmc 
 {
 public:
@@ -89,12 +81,7 @@ public:
 	void TriggerUpdates(vector<CStdString> results);
 
 private:
-	std::vector<PVR_CHANNELGroup> _groups;
-	std::vector<PVR_CHANNEL>      _channels;
 	int _serverBuild;
-	time_t                       _iEpgStart;
-	CStdString                   _strDefaultIcon;
-	CStdString                   _strDefaultMovie;
 	CStdString Timer2String(const PVR_TIMER &xTmr);
 	CStdString Channel2String(const PVR_CHANNEL &xTmr);
 

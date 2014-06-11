@@ -120,6 +120,10 @@ msgctxt "#30024"
 msgid "Recording stream exited early"
 msgstr ""
 
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr ""
+
 msgctxt "#30100"
 msgid "Recording Preference"
 msgstr ""

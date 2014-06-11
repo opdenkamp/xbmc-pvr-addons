@@ -1,6 +1,7 @@
 0.2.97
 - support receiving notifications from the backend
 - add notification for new backend version available
+- send client time to backend and add notification for clock drift warning
 
 0.2.95
 - display correct duration for active-recordings  (gotham only)

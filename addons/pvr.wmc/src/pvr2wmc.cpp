@@ -101,8 +101,13 @@ const char *Pvr2Wmc::GetBackendVersion(void)
 {
 	if (!IsServerDown())
 	{
+		// Send client's time (in UTC) to backend
+		time_t now = time(NULL);
+		char datestr[32];
+		strftime(datestr, 32, "%Y-%m-%d %H:%M:%S", gmtime(&now));
+		
 		CStdString request;
-		request.Format("GetServerVersion");
+		request.Format("GetServerVersion|%s", datestr);
 		vector<CStdString> results = _socketClient.GetVector(request, true);
 		if (results.size() > 1)
 		{
@@ -181,45 +186,56 @@ void Pvr2Wmc::TriggerUpdates(vector<CStdString> results)
 			PVR->TriggerChannelGroupsUpdate();
 		else if (v[0] == "message")
 		{
-			if (v.size() < 3)
+			if (v.size() < 4)
 			{
 				XBMC->Log(LOG_DEBUG, "Wrong number of fields xfered for Message");
 				return;
 			}
 
-			XBMC->Log(LOG_DEBUG, "Received message from backend: %s", response);
+			XBMC->Log(LOG_INFO, "Received message from backend: %s", response);
 			CStdString infoStr;
+
+			// Get notification level
+			int level = atoi(v[1].c_str());
+			if (level < QUEUE_INFO)
+			{
+				level = QUEUE_INFO;
+			}
+			else if (level > QUEUE_ERROR)
+			{
+				level = QUEUE_ERROR;
+			}
 				
 			// Get localised string for this stringID
-			int stringId = atoi(v[1].c_str());
+			int stringId = atoi(v[2].c_str());
 			infoStr = XBMC->GetLocalizedString(stringId);
 
 			// Use text from backend if stringID not found
 			if (infoStr == "")
 			{
-				infoStr = v[2];
+				infoStr = v[3];
 			}
 
 			// Send XBMC Notification (support up to 4 parameter replaced arguments from the backend)
-			if (v.size() == 3)
+			if (v.size() == 4)
 			{
-				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str());
-			}
-			else if (v.size() == 4)
-			{
-				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str(), v[3].c_str());
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str());
 			}
 			else if (v.size() == 5)
 			{
-				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str(), v[3].c_str(), v[4].c_str());
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str(), v[4].c_str());
 			}
 			else if (v.size() == 6)
 			{
-				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str(), v[3].c_str(), v[4].c_str(), v[5].c_str());
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str(), v[4].c_str(), v[5].c_str());
+			}
+			else if (v.size() == 7)
+			{
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str(), v[4].c_str(), v[5].c_str(), v[6].c_str());
 			}
 			else
 			{
-				XBMC->QueueNotification(QUEUE_INFO, infoStr.c_str(), v[3].c_str(), v[4].c_str(), v[5].c_str(), v[6].c_str());
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str(), v[4].c_str(), v[5].c_str(), v[6].c_str(), v[7].c_str());
 			}
 		}
 	}

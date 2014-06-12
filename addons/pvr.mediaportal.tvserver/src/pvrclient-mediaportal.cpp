@@ -990,7 +990,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
       if ( (g_bUseRTSP == false) && (recording.IsRecording() == false) && (OS::CFile::Exists( recording.FilePath() )))
       {
         // Direct access. Bypass the PVR addon completely (both ffmpeg and TSReader mode; Windows only)
-        PVR_STRCPY(tag.strStreamURL, recording.FilePath());
+        PVR_STRCPY(tag.strStreamURL, ToXBMCPath(recording.FilePath()).c_str());
       }
       else
 #endif

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon
+  id="pvr.filmon"
+  version="0.4.0"
+  name="PVR Filmon Client"
+  provider-name="Stephen Denham">
+  <requires>
+    <c-pluff version="0.1"/>
+    <import addon="xbmc.pvr" version="1.9.0"/>
+  </requires>
+  <extension
+    point="xbmc.pvrclient"
+    library_linux="XBMC_Filmon.pvr"
+	library_osx="XBMC_Filmon.pvr"
+    library_freebsd="XBMC_Filmon.pvr"
+    library_wingl="XBMC_Filmon_win32.dll"
+    library_windx="XBMC_Filmon_win32.dll"
+    library_android="libXBMC_Filmon.so" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Filmon PVR Client</summary>
+    <description lang="en">Filmon frontend. Supports live TV, recordings, EPG. Requires a Filmon subscription. Before enabling: (a) in Filmon set channels as favourite to see them in XBMC (b) enter your username and password in this addon's settings. Note: recordings can take several minutes to appear after timer is completed.</description>
+    <platform>@OS@</platform>
+  </extension>
+</addon>

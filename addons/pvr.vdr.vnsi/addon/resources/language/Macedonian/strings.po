@@ -211,3 +211,11 @@ msgstr "Конфигурација"
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Канали"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Радио Канали"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Зачувај филтри"

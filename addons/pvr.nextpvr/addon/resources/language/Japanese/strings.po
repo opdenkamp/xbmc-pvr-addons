@@ -26,7 +26,7 @@ msgstr "NextPVR ポート番号 (通常 8866 か 7799)"
 
 msgctxt "#30002"
 msgid "NextPVR PinCode"
-msgstr "NextPVR PinCode"
+msgstr "NextPVR Pinコード"
 
 msgctxt "#30003"
 msgid "Enable TimeShift with Live TV"
@@ -55,6 +55,50 @@ msgstr "接続に失敗。PIN が間違っていませんか？"
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "チューナーがみつかりません"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "タイマーを追加"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "録画タイプ"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "一回だけ録画"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "連ドラ録画 (このチャンネルの新エピソード)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "連ドラ録画 (このチャンネルの全エピソード)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "連ドラ録画 (毎日、この時間帯)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "連ドラ録画 (毎週、この時間帯)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "連ドラ録画 (月曜〜金曜、この時間帯)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "連ドラ録画 (週末、この時間帯)"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "全録画"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "録画ディレクトリ"
 
 msgctxt "#30135"
 msgid "Default"

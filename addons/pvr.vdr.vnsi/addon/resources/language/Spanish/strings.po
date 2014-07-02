@@ -34,7 +34,7 @@ msgstr "Conversión de caracteres"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
-msgstr "Tiempo para conectar excedido"
+msgstr "Tiempo de espera de conexión (s)"
 
 msgctxt "#30005"
 msgid "Allow VDR Messages"
@@ -46,15 +46,15 @@ msgstr "Leer grabaciones en carpeta"
 
 msgctxt "#30007"
 msgid "VDR recordings directory"
-msgstr "Directorio de grabación para VDR"
+msgstr "Carpeta para grabaciones de VDR"
 
 msgctxt "#30008"
 msgid "Channel search"
-msgstr "Buscar canal"
+msgstr "Buscar canales"
 
 msgctxt "#30009"
 msgid "Channel search - Settings"
-msgstr "Búsqueda de canales - Ajustes"
+msgstr "Buscar canales - Ajustes"
 
 msgctxt "#30010"
 msgid "Start Channel search"
@@ -62,7 +62,7 @@ msgstr "Comenzar Búsqueda de canales"
 
 msgctxt "#30011"
 msgid "Source Type"
-msgstr "Tipo de fuente"
+msgstr "Tipo de origen"
 
 msgctxt "#30012"
 msgid "TV channels"
@@ -74,7 +74,7 @@ msgstr "Canales Radio"
 
 msgctxt "#30014"
 msgid "FTA channels"
-msgstr "Canales FTA"
+msgstr "Canales en abierto"
 
 msgctxt "#30015"
 msgid "Scrambled channels"
@@ -94,7 +94,7 @@ msgstr "Inversión de cable"
 
 msgctxt "#30019"
 msgid "Cable Symbolrate"
-msgstr "Símbolo de cable"
+msgstr "Tasa de símbolos del cable"
 
 msgctxt "#30020"
 msgid "Cable modulation"
@@ -102,7 +102,7 @@ msgstr "Modulación de cable"
 
 msgctxt "#30021"
 msgid "Terr Inversion"
-msgstr "Inversión Terr"
+msgstr "Inversión TDT"
 
 msgctxt "#30022"
 msgid "Satellite"
@@ -154,7 +154,7 @@ msgstr "Radio Analógica"
 
 msgctxt "#30034"
 msgid "Transponder:"
-msgstr "Transponder:"
+msgstr "Transpondedor:"
 
 msgctxt "#30035"
 msgid "New channels"
@@ -206,7 +206,7 @@ msgstr "Crear grupos de canales de forma automática en el servidor"
 
 msgctxt "#30047"
 msgid "Request Timeshift"
-msgstr "Requerir TimeShift"
+msgstr "Solicitar TimeShift"
 
 msgctxt "#30100"
 msgid "VDR OSD"
@@ -218,7 +218,7 @@ msgstr "Ajustes"
 
 msgctxt "#30102"
 msgid "Controlling OSD - press info to exit"
-msgstr "Controlando OSD, pulsa info para salir"
+msgstr "Controlando OSD - pulsa info para salir"
 
 msgctxt "#30103"
 msgid "Select to control OSD"
@@ -262,7 +262,7 @@ msgstr "Canales de radio"
 
 msgctxt "#30113"
 msgid "Save filters"
-msgstr "Filtros guardados"
+msgstr "Guardar filtros"
 
 msgctxt "#30114"
 msgid "Provider Unknown"

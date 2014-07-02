@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.njoy"
-  version="1.9.5"
+  version="1.9.6"
   name="Njoy N7 PVR Client"
   provider-name="Team XBMC">
   <requires>
@@ -27,6 +27,7 @@
     <summary lang="el">Πελάτης PVR Njoy N7</summary>
     <summary lang="en">Njoy N7 PVR Client</summary>
     <summary lang="en_NZ">Njoy N7 PVR Client</summary>
+    <summary lang="en_US">Njoy N7 PVR Client</summary>
     <summary lang="es">Cliente PVR Njoy N7</summary>
     <summary lang="es_AR">Cliente PVR Njoy N7</summary>
     <summary lang="es_MX">Cliente Njoy N7 PVR</summary>
@@ -38,10 +39,12 @@
     <summary lang="hr">Njoy N7 PVR klijent</summary>
     <summary lang="hu">Njoy N7 PVR ügyfél</summary>
     <summary lang="id">Klien Njoy N7 PVR</summary>
+    <summary lang="is">Njoy N7 Upptökubiðlari (PVR Client)</summary>
     <summary lang="it">Client PVR Njoy N7</summary>
     <summary lang="ja">Njoy N7 PVR クライアント</summary>
     <summary lang="ka">Njoy N7 PVR კლიენტი</summary>
     <summary lang="ko">Njoy N7 PVR 클라이언트</summary>
+    <summary lang="lt">Njoy N7 PVR klientas</summary>
     <summary lang="lv">Njoy N7 PVR klients</summary>
     <summary lang="mk"> Njoy N7 PVR клиент</summary>
     <summary lang="ms">Klien PVR Njoy N7</summary>
@@ -53,12 +56,14 @@
     <summary lang="pt_BR">Cliente de PVR Njoy N7</summary>
     <summary lang="ro">Client PVR Njoy N7</summary>
     <summary lang="ru">Njoy N7 PVR Клиент</summary>
+    <summary lang="si">Njoy N7 PVR සේවාග්‍රාහකයා </summary>
     <summary lang="sk">Njoy N7 PVR Klient</summary>
     <summary lang="sl">Odjemalec PVR Njoy N7</summary>
     <summary lang="sr">PVR клијент Njoy N7</summary>
     <summary lang="sv">Njoy N7 PVR Klient</summary>
     <summary lang="ta_IN">Njoy N7 PVR கிளையன்</summary>
     <summary lang="tg">Муштарии Njoy N7 PVR</summary>
+    <summary lang="th">Njoy N7 PVR Client</summary>
     <summary lang="tr">Njoy N7 PVR İstemcisi</summary>
     <summary lang="uk">Клієнт Njoy N7 для PVR</summary>
     <summary lang="vi">Phần mềm PVR cho Njoy N7</summary>

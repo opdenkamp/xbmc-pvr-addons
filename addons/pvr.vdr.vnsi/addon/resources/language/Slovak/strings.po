@@ -243,3 +243,27 @@ msgstr "VDR Admin"
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Kanály"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Zoznam povolených poskytovateľov"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Zoznam zakázaných kanálov"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtre kanálov"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Rozhlasové kanály"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Uložiť filtre"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Neznámy poskytovateľ"

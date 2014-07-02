@@ -20,9 +20,49 @@ msgctxt "#30000"
 msgid "VDR Hostname or IP"
 msgstr "VDR saimniekvārds vai IP"
 
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "VNSI ports"
+
 msgctxt "#30002"
 msgid "Priority"
 msgstr "Prioritāte"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Rakstzīmju kopas konversija"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Savienojuma noilgums"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Atļaut VDR ziņojumus"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Lasīt ierakstus no direktorijas"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "VDR ierakstu direktorija"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Kanāla meklēšana"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Kanāla meklēšana - iestatījumi"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Sākt kanāla meklēšanu"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Avota veids"
 
 msgctxt "#30012"
 msgid "TV channels"
@@ -32,6 +72,14 @@ msgctxt "#30013"
 msgid "Radio channels"
 msgstr "Radio kanāli"
 
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Bezmaksas kanāli"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Maksas kanāli"
+
 msgctxt "#30016"
 msgid "HD channels"
 msgstr "HD kanāli"
@@ -39,6 +87,22 @@ msgstr "HD kanāli"
 msgctxt "#30017"
 msgid "Country"
 msgstr "Valsts"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Kabeļa inversija"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Kabeļa simbolbiežums"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Kabeļa modulācija"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Terr inversija"
 
 msgctxt "#30022"
 msgid "Satellite"
@@ -52,6 +116,10 @@ msgctxt "#30024"
 msgid "Back"
 msgstr "Atpakaļ"
 
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Kanāla meklēšana - darbojas... %i %%"
+
 msgctxt "#30026"
 msgid "Type:"
 msgstr "Tips:"
@@ -60,13 +128,49 @@ msgctxt "#30027"
 msgid "Device:"
 msgstr "Ierīce:"
 
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Skenēt: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Signāls: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Jauni kanāli: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Visi kanāli: %i"
+
 msgctxt "#30032"
 msgid "Analog TV"
 msgstr "Analogā TV"
 
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Analogais radio"
+
 msgctxt "#30034"
 msgid "Transponder:"
 msgstr "Nesējfrekvence:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Jauni kanāli"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Kanāla meklēšana - pabeigta"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Neviena ierīce nav pieejama - iziet"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Neviena DVB-S2 ierīce nav pieejama - mēģina atgriesties pie DVB-S"
 
 msgctxt "#30039"
 msgid "Running"
@@ -80,6 +184,30 @@ msgctxt "#30041"
 msgid "Finished"
 msgstr "Pabeigts"
 
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Kanāla meklēšana - atcelta"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Kanāla meklēšana - kļūda"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Zudis VDR servera pieslēgums"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "VDR servera pieslēgums atjaunots"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Izveidot kanālu grupas serverī automātiski"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Pieprasīt laika nobīdi"
+
 msgctxt "#30100"
 msgid "VDR OSD"
 msgstr "VDR OSD"
@@ -88,6 +216,26 @@ msgctxt "#30101"
 msgid "Setup"
 msgstr "Iestatīšana"
 
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "OSD kontrolēšana - iziet spiežot info"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Atlasiet OSD kontrolei"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Laika nobīdes režīms"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Laika nobīdes buferis (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Laika nobīdes buferis (fails) x1 GB"
+
 msgctxt "#30107"
 msgid "VDR Admin"
 msgstr "VDR admins"
@@ -95,3 +243,27 @@ msgstr "VDR admins"
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Kanāli"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Atļautie piegādātāji "
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Aizliegtie kanāli"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Kanālu filtri"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radio kanāli"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Saglabāt filtrus"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Nezināms piegādātājs"

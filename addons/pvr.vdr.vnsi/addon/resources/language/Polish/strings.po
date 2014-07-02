@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "VDR Hostname or IP"
-msgstr "IP lub nazwa hosta VDR"
+msgstr "Nazwa hosta lub adres IPVDR"
 
 msgctxt "#30001"
 msgid "VNSI Port"
@@ -30,7 +30,7 @@ msgstr "Priorytet"
 
 msgctxt "#30003"
 msgid "Character Set Conversion"
-msgstr "Konwersja zestaw kodowania znaków"
+msgstr "Konwersja kodowania znaków"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
@@ -42,11 +42,11 @@ msgstr "Zezwalaj na wiadomości VDR"
 
 msgctxt "#30006"
 msgid "Read recordings from directory"
-msgstr "Wczytaj nagrania z folderu"
+msgstr "Wczytuj nagrania z folderu"
 
 msgctxt "#30007"
 msgid "VDR recordings directory"
-msgstr "Katalog nagrań VDR"
+msgstr "Folder nagrań VDR"
 
 msgctxt "#30008"
 msgid "Channel search"
@@ -66,7 +66,7 @@ msgstr "Typ źródła"
 
 msgctxt "#30012"
 msgid "TV channels"
-msgstr "Kanały TV"
+msgstr "Kanały telewizyjne"
 
 msgctxt "#30013"
 msgid "Radio channels"
@@ -74,7 +74,7 @@ msgstr "Kanały radiowe"
 
 msgctxt "#30014"
 msgid "FTA channels"
-msgstr "Kanały FTA"
+msgstr "Kanały niekodowane"
 
 msgctxt "#30015"
 msgid "Scrambled channels"
@@ -90,19 +90,19 @@ msgstr "Kraj"
 
 msgctxt "#30018"
 msgid "Cable Inversion"
-msgstr "Inwersja TV kablowej"
+msgstr "Inwersja telewizji kablowej"
 
 msgctxt "#30019"
 msgid "Cable Symbolrate"
-msgstr "Szybkość transmisji symboli TV kablowej"
+msgstr "Szybkość transmisji telewizji kablowej"
 
 msgctxt "#30020"
 msgid "Cable modulation"
-msgstr "Modulacja TV kablowej"
+msgstr "Modulacja telewizji kablowej"
 
 msgctxt "#30021"
 msgid "Terr Inversion"
-msgstr "Inwersja TV naziemnej"
+msgstr "Inwersja telewizji naziemnej"
 
 msgctxt "#30022"
 msgid "Satellite"
@@ -110,7 +110,7 @@ msgstr "Satelita"
 
 msgctxt "#30023"
 msgid "ATSC Type"
-msgstr "Typ ATSC"
+msgstr "Typ telewizji naziemnej ATSC"
 
 msgctxt "#30024"
 msgid "Back"
@@ -146,7 +146,7 @@ msgstr "Wszystkich kanałów: %i"
 
 msgctxt "#30032"
 msgid "Analog TV"
-msgstr "TV analogowa"
+msgstr "Telewizja analogowa"
 
 msgctxt "#30033"
 msgid "Analog Radio"
@@ -166,11 +166,11 @@ msgstr "Wyszukiwanie kanałów - Zakończone"
 
 msgctxt "#30037"
 msgid "No device available - exiting"
-msgstr "Brak dostępnych urządzeń - Kończenie"
+msgstr "Brak dostępnych urządzeń - zamykanie"
 
 msgctxt "#30038"
 msgid "No DVB-S2 device available - trying fallback to DVB-S"
-msgstr "Brak urządzenia DVB-S2 - próba powrotu do DVB-S"
+msgstr "Brak dostępnych urządzeń DVB-S2 - testowanie awaryjnie DVB-S"
 
 msgctxt "#30039"
 msgid "Running"
@@ -202,47 +202,47 @@ msgstr "Przywrócono połączenie z serwerem VDR"
 
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
-msgstr "Utwórz automatycznie grupy kanałów na serwerze"
+msgstr "Utwórz grupy kanałów automatycznie na serwerze"
 
 msgctxt "#30047"
 msgid "Request Timeshift"
-msgstr "Zapytaj o funkcję pauzowania"
+msgstr "Zapytaj o funkcję przesunięcia czasowego"
 
 msgctxt "#30100"
 msgid "VDR OSD"
-msgstr "menu ekranowe VDR"
+msgstr "Menu ekranowe VDR"
 
 msgctxt "#30101"
 msgid "Setup"
-msgstr "Setup"
+msgstr "Ustawienie"
 
 msgctxt "#30102"
 msgid "Controlling OSD - press info to exit"
-msgstr "Sterowanie OSD - aby wyjść naciśnij Info "
+msgstr "Sterowanie menu ekranowym - naciśnij Info aby wyjść"
 
 msgctxt "#30103"
 msgid "Select to control OSD"
-msgstr "Zaznacz aby mieć kontrolę OSD"
+msgstr "Zaznacz, aby kontrolować menu ekranowe"
 
 msgctxt "#30104"
 msgid "Timeshift Mode"
-msgstr "Tryb funkcji pauzowania"
+msgstr "Tryb przesunięcia czasowego"
 
 msgctxt "#30105"
 msgid "Timeshift Buffer (RAM) x100 MB"
-msgstr "Wielkość bufora funkcji pauzowania (RAM) x100 MB "
+msgstr "Rozmiar bufora przesunięcia czasowego (RAM) x100 MB "
 
 msgctxt "#30106"
 msgid "Timeshift Buffer (File) x1 GB"
-msgstr "Wielkość bufora funkcji pauzowania (Plik) x1 GB"
+msgstr "Rozmiar bufora przesunięcia czasowego (Plik) x1 GB"
 
 msgctxt "#30107"
 msgid "VDR Admin"
-msgstr "Usługa VDR Admin "
+msgstr "Administracja VDR"
 
 msgctxt "#30108"
 msgid "Channels"
-msgstr "Kanałów"
+msgstr "Kanały"
 
 msgctxt "#30109"
 msgid "Provider whitelist"

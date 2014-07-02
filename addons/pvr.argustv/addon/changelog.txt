@@ -1,3 +1,5 @@
+v1.9.178 (01-07-2014)
+- Updated language files from Transifex
 v1.9.177 (01-05-2014)
 - fill initial last played position for recordings
 v1.9.176 (22-04-2014)

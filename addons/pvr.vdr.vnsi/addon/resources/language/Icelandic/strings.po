@@ -16,6 +16,54 @@ msgstr ""
 "Language: is\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "Hýsilnafn VDR eða IP tala"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "Gátt fyrir VNSI"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Forgangur"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Stafasett fyrir umbreytingu"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Tengitími útrennur (ms)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Leyfa VDR skilaboð"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Lesa upptökur frá skráasafni"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Upptökuskráasafn VDR"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Rásaleit"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Rásaleit - Stillingar"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Hefja Rásaleit"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Gerð uppsprettu"
+
 msgctxt "#30012"
 msgid "TV channels"
 msgstr "Sjónvarpsrásir"
@@ -24,30 +72,198 @@ msgctxt "#30013"
 msgid "Radio channels"
 msgstr "Útvarpsrásir"
 
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Fríar rásir"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Ruglaðar rásir"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "HD rásir"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "Land"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Kapal-umsnúningur"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Merkjahraði kapals"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Kapalmótun"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Umsnúningur Jarðlægs merkis (Terr Inv)"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Gerfihnöttur"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "ATSC gerð"
 
 msgctxt "#30024"
 msgid "Back"
 msgstr "Til baka"
 
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Rásaleit - í gangi... %i %%"
+
 msgctxt "#30026"
 msgid "Type:"
 msgstr "Tegund:"
 
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Tæki:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Skönnun: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Merki: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Nýjar rásir: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Allar rásir: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Hliðrænt sjónvarp"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Hliðrænt útvarp"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Endurvarpi:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Nýjar rásir"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Rásaleit - Lokið"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Ekkert tæki tiltækt - hætti við"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Ekkert DVB-S2 tæki tiltækt - reyna að nota DVB-S"
+
 msgctxt "#30039"
 msgid "Running"
-msgstr "Keyrir"
+msgstr "Í gangi"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Stöðvað"
 
 msgctxt "#30041"
 msgid "Finished"
 msgstr "Búið"
 
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Rásaleit - Hætt við"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Rásaleit - Villa"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Missti tenginguna við VDR miðlara"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "Tenging endurheimt við VDR miðlara"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Búa sjálfvirkt til rásahópa á miðlaranum"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Biðja um Tímahliðrun"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "Skjátexti VDR"
+
 msgctxt "#30101"
 msgid "Setup"
 msgstr "Uppsetning"
 
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Stjórna Skjátexta - Ýttu á upplýsingar til að hætta"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Valið að stjórna Skjátexta"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Tímahliðrunarhamur"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Flýtiminni Tímahriðrunar (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Flýtiminni Tímahliðrunar (Skrá) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Stjórnandi"
+
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Rásir"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Hvítlisti Veitna"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Bannlisti Rása"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Rásasía"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "'Utvarpsrásir"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Vista síur"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Veita Óþekkt"

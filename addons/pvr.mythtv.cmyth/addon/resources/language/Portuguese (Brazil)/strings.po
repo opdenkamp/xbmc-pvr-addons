@@ -194,7 +194,7 @@ msgstr "Nenhuma transmissão encontrada"
 
 msgctxt "#30411"
 msgid "Delete and re-record"
-msgstr "Deletar e regravar"
+msgstr "Excluir e regravar"
 
 msgctxt "#30412"
 msgid "Keep LiveTV recording"

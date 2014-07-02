@@ -54,19 +54,19 @@ msgstr "Conflicto de manejo"
 
 msgctxt "#30009"
 msgid "Prefer Live TV when recording has later slot"
-msgstr "Prefiero TV en vivo y dejar la grabación para mas tarde"
+msgstr "Preferir TV en vivo si la grabación es más adelante"
 
 msgctxt "#30010"
 msgid "Prefer recording and stop Live TV"
-msgstr "Prefiero grabación y parar TV en vivo"
+msgstr "Preferir grabación y parar TV en vivo"
 
 msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
-msgstr "Prefiero TV en vivo y cancelar la grabación en conflictivo"
+msgstr "Prefiero TV en vivo y cancelar la grabación conflictiva"
 
 msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
-msgstr "Dirección IP MythTV Backend (WOL)"
+msgstr "Dirección IP MythTV Back-end (WOL)"
 
 msgctxt "#30019"
 msgid "General"
@@ -142,23 +142,23 @@ msgstr "Versión de protocolo: %i - Versión de base de datos: %i"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"
-msgstr "Falló conexión con backend de MythTV"
+msgstr "Falló la conexión con Back-end de MythTV"
 
 msgctxt "#30301"
 msgid "Failed to connect to MythTV database"
-msgstr "Falló conexión con base de datos de MythTV"
+msgstr "Falló la conexión con base de datos de MythTV"
 
 msgctxt "#30302"
 msgid "Connection to MythTV backend lost"
-msgstr "Conexión con backend de MythTV perdida"
+msgstr "Conexión con Back-end de MythTV perdida"
 
 msgctxt "#30303"
 msgid "Connection to MythTV restored"
-msgstr "Conexión con backend de MythTV restaurada"
+msgstr "Conexión con Back-end de MythTV restaurada"
 
 msgctxt "#30304"
 msgid "No response from MythTV backend"
-msgstr "No hay respuesta del backend de MythTV"
+msgstr "No hay respuesta del Back-end de MythTV"
 
 msgctxt "#30305"
 msgid "Channel unavailable"
@@ -174,11 +174,11 @@ msgstr "Cancelando grabación en conflicto: %s"
 
 msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
-msgstr "Detención de TV en vivo debido a la grabación en conflicto: %s"
+msgstr "Detención de TV en vivo debido a grabación en conflicto: %s"
 
 msgctxt "#30309"
 msgid "Not recording"
-msgstr "No se esta grabando"
+msgstr "No se está grabando"
 
 msgctxt "#30310"
 msgid "Enabled"
@@ -186,11 +186,11 @@ msgstr "Activado"
 
 msgctxt "#30311"
 msgid "Disabled"
-msgstr "Deshabilitado"
+msgstr "Desactivado"
 
 msgctxt "#30312"
 msgid "No broadcast found"
-msgstr "No se ha encontrado broadcast"
+msgstr "No se ha encontrado emisión"
 
 msgctxt "#30411"
 msgid "Delete and re-record"
@@ -206,19 +206,19 @@ msgstr "Mostrar/Ocultar reglas 'No grabar'"
 
 msgctxt "#30431"
 msgid "Record all showings (this channel)"
-msgstr "Grabar todos los show (de este canal)"
+msgstr "Grabar todos los programas (de este canal)"
 
 msgctxt "#30432"
 msgid "Record this showing every week"
-msgstr "Grabar este show todas las semanas"
+msgstr "Grabar este programa todas las semanas"
 
 msgctxt "#30433"
 msgid "Record this showing every day"
-msgstr "Grabar este show todos los dias"
+msgstr "Grabar este programa todos los dias"
 
 msgctxt "#30434"
 msgid "Record one showing (all channels)"
-msgstr "Grabar un solo show (en todos los canales)"
+msgstr "Grabar un programa (en todos los canales)"
 
 msgctxt "#30435"
 msgid "Record all new episodes (this channel)"

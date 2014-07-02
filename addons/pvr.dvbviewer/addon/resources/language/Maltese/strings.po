@@ -27,3 +27,7 @@ msgstr "Sigriet"
 msgctxt "#30100"
 msgid "General"
 msgstr "Ġenerali"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Recordings"

@@ -1,16 +1,15 @@
 # XBMC Media Center language file
-# Addon Name: PVR IP-TV Simple Client
+# Addon Name: PVR IPTV Simple Client
 # Addon id: pvr.iptvsimple
-# Addon version: 0.1.0
 # Addon Provider: nightik
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: English (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/en/)\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-main/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -31,6 +30,8 @@ msgctxt "#30002"
 msgid "Remote Path (Internet address)"
 msgstr ""
 
+#empty strings from id 30003 to 30009
+
 msgctxt "#30010"
 msgid "General"
 msgstr ""
@@ -46,6 +47,8 @@ msgstr ""
 msgctxt "#30013"
 msgid "Numbering channels starts at"
 msgstr ""
+
+#empty strings from id 30014 to 30019
 
 msgctxt "#30020"
 msgid "EPG Settings"
@@ -74,6 +77,8 @@ msgstr ""
 msgctxt "#30026"
 msgid "Cache XMLTV at local storage"
 msgstr ""
+
+#empty strings from id 30027 to 30029
 
 msgctxt "#30030"
 msgid "Channels Logos"

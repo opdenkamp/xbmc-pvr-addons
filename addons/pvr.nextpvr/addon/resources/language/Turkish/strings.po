@@ -16,6 +16,10 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "NextPVR Hostname"
+msgstr "NextPVR Ana makine adı"
+
 msgctxt "#30001"
 msgid "NextPVR Port (usually 8866 or 7799)"
 msgstr "NextPVR Portu (genellikle 8866 veya 7799'dur)"
@@ -23,6 +27,10 @@ msgstr "NextPVR Portu (genellikle 8866 veya 7799'dur)"
 msgctxt "#30002"
 msgid "NextPVR PinCode"
 msgstr "NextPVR Pin Kodu"
+
+msgctxt "#30003"
+msgid "Enable TimeShift with Live TV"
+msgstr "Live TV için zaman kaydırma aktif"
 
 msgctxt "#30040"
 msgid "Connection"
@@ -44,9 +52,61 @@ msgctxt "#30052"
 msgid "Connection failed. Incorrect PIN?"
 msgstr "Bağlantı başarısız. PIN doğru mu?"
 
+msgctxt "#30053"
+msgid "Tuner no longer available"
+msgstr "Radyo mevcut değil."
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Zamanlayıcı ekle"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Kayıt tipi"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Tek kayıt"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Kayot Sezonu (Bu kanal için yeni bölümler mevcut.)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Kayıt Sezonu (Bu kanal için tüm bölümler mevcut)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Kayıt Sezonu (Günlük zaman dilimi)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Kayıt Sezonu (Haftalık zaman dilimi)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Kayıt Sezonu (Pazartesi - Cuma zaman dilimi)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Kayot Sezonu (Hafta sonları zaman dilimi)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Sakla"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Bütün kayıtlar"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Kayıt dizini"
 
 msgctxt "#30135"
 msgid "Default"

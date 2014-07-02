@@ -42,11 +42,11 @@ msgstr "Incluír máis información de depuración no ficheiro de rexistro"
 
 msgctxt "#30006"
 msgid "Enable Live TV"
-msgstr "Habilitar TV ao vivo"
+msgstr "Activar TV en directo"
 
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
-msgstr "Permitir á TV ao vivo mover as series programadas."
+msgstr "Permitir á TV en directo mover as series programadas."
 
 msgctxt "#30008"
 msgid "Conflict handling"
@@ -204,6 +204,22 @@ msgctxt "#30421"
 msgid "Show/hide rules with status 'Not Recording'"
 msgstr "Amosar/Agochar regras co estado 'Sen Gravar'"
 
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Gravar todas as emisións (esta canle)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Gravar esta emisión cada semana"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Gravar esta emisión cada día"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Gravar unha emisión (todas as canles)"
+
 msgctxt "#30435"
 msgid "Record all new episodes (this channel)"
-msgstr "Gravar todos os novos episodios (esta canle)"
+msgstr "Gravar todos os episodios novos (esta canle)"

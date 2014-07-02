@@ -54,7 +54,39 @@ msgstr "Ubicación del buffer de TimeShift"
 
 msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
-msgstr "Usar streaming RTSP para TV en vivo"
+msgstr "Usar streaming RTSP para TV en directo"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Activar el modo de bajo rendimiento (desactiva logos y miniaturas)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Grabaciones de Grupo"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "Deshabilitado"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "por carpeta de grabación"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "por fecha de grabación "
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "por primera letra"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "por canales de tv"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "por series"
 
 msgctxt "#30100"
 msgid "General"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Avanzado"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Grabaciones"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "No se puede conectar con el Servicio de Grabación"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Incapaz de conectar con el Servicio de Grabación DVBViewer"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Se necesita versión %s os superior del servicio de grabación"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Se requiere una versión %s o superior para el Servicio de Grabación DVBViewer "
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "No se puede analizar la lista de canales"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Para mas información comprobar el Log XBMC"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "No se puede abrir el archivo local favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "No se puede cargar la lista de favoritos"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "No se puede leer el listado de temporizadores"

@@ -74,7 +74,7 @@ msgstr "Windows парола (SMB)"
 
 msgctxt "#30018"
 msgid "Use RTSP streaming"
-msgstr "Използвай RTSP стрийминг"
+msgstr "Ползвай RTSP стрийминг"
 
 msgctxt "#30040"
 msgid "Connection"

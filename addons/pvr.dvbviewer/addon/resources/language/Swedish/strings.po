@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Använd RTSP-strömning för direktsänd TV"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Aktivera lågt prestandaläge (inaktiverar logos & miniatyrbilder)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Gruppinspelningar"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "inaktiverad"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "efter inspelningskatalog"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "efter inspelningsdatum"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "efter första bokstav"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "efter tv-kanal"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "efter serie"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Allmänt"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Avancerad"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Inspelningar"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Kan inte ansluta till inspelningstjänsten"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Kunde inte ansluta till DVBViewers inspelningstjänst"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Inspelningsservice version %s eller högre krävs"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer Inspelningstjänst Version %s eller uppåt krävs"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Kunde inte läsa av kanallista"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Se XBMC loggen för mer information"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Kunde inte öppna lokal favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Kunde inte läsa av favoritlistan"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Kunde inte läsa av timerlistan"

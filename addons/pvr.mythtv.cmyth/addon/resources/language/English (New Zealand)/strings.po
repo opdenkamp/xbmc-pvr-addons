@@ -196,6 +196,10 @@ msgctxt "#30411"
 msgid "Delete and re-record"
 msgstr "Delete and re-record"
 
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Keep LiveTV recording"
+
 msgctxt "#30421"
 msgid "Show/hide rules with status 'Not Recording'"
 msgstr "Show/hide rules with status 'Not Recording'"

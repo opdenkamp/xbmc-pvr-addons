@@ -18,8 +18,8 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "N7 IP"
-msgstr "N7 IP"
+msgstr "Adres Ip N7"
 
 msgctxt "#30001"
 msgid "N7 Port"
-msgstr "N7 Port"
+msgstr "Port N7"

@@ -34,11 +34,11 @@ msgstr "Парола"
 
 msgctxt "#30010"
 msgid "Use favourites instead of channel list"
-msgstr "Използвай любимите вместо списъка с канали"
+msgstr "Ползвай любимите вместо списъка с канали"
 
 msgctxt "#30011"
 msgid "Use local favourites file"
-msgstr "Използвай локален файл с любими"
+msgstr "Ползвай локален файл с любими"
 
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
@@ -54,7 +54,7 @@ msgstr "Път към таймшифт буфера"
 
 msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
-msgstr "Използвай RTSP стрийминг за телевизия на живо"
+msgstr "Ползвай RTSP стрийминг за телевизия на живо"
 
 msgctxt "#30100"
 msgid "General"
@@ -64,10 +64,22 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Допълнителни"
 
-msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Неуспешно свързване с услугата за записване"
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Записи"
 
-msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Изисква се услуга за записване версия %s или по-нова"
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Не може да се анализира каналния списък"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Провери XBMC дневника за още информация"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Не може да се отвори локалния favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Не може да се анализира списъка с любими"

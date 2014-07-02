@@ -1,0 +1,141 @@
+# XBMC Media Center language file
+# Addon Name: DVBLink PVR Client
+# Addon id: pvr.dvblink
+# Addon Provider: DVBLogic
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Norwegian (http://www.transifex.com/projects/p/xbmc-main/language/no/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: no\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "General"
+msgstr "Generelt"
+
+msgctxt "#30001"
+msgid "Server Address"
+msgstr "Tjeneradresse"
+
+msgctxt "#30002"
+msgid "Server Port"
+msgstr "Tjenerport"
+
+msgctxt "#30003"
+msgid "Client name"
+msgstr "Klientnavn"
+
+msgctxt "#30004"
+msgid "Connection timeout (s)"
+msgstr "Tilkoblingsavbrudd (s)"
+
+msgctxt "#30005"
+msgid "Username"
+msgstr "Brukernavn"
+
+msgctxt "#30006"
+msgid "Password"
+msgstr "Passord"
+
+msgctxt "#30100"
+msgid "Stream"
+msgstr "Strøm"
+
+msgctxt "#30102"
+msgid "Stream format"
+msgstr "Strømmeformat"
+
+msgctxt "#30103"
+msgid "Height"
+msgstr "Høyde"
+
+msgctxt "#30104"
+msgid "Width"
+msgstr "Bredde"
+
+msgctxt "#30105"
+msgid "Bitrate"
+msgstr "Bitrate"
+
+msgctxt "#30106"
+msgid "Audio track"
+msgstr "Lydspor"
+
+msgctxt "#30107"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30108"
+msgid "RTP"
+msgstr "RTP"
+
+msgctxt "#30109"
+msgid "HLS"
+msgstr "HLS"
+
+msgctxt "#30110"
+msgid "ASF"
+msgstr "ASF"
+
+msgctxt "#30111"
+msgid "Enable Timeshift"
+msgstr "Aktiver tidsforskyvning"
+
+msgctxt "#30112"
+msgid "Timeshift buffer path"
+msgstr "Sti for tidsforskyvningbuffer"
+
+msgctxt "#30200"
+msgid "Advanced"
+msgstr "Avansert"
+
+msgctxt "#30201"
+msgid "Use channel handle instead of client id"
+msgstr "Bruk kanalnavn i stedet for klient-ID"
+
+msgctxt "#30202"
+msgid "Show information messages"
+msgstr "Vis informasjonsbeskjeder"
+
+msgctxt "#32001"
+msgid "Connected to DVBLink Server '%s'"
+msgstr "Koblet til DVBLink-tjener ‘%s’"
+
+msgctxt "#32002"
+msgid "Found '%d' channels"
+msgstr "Fant ‘%d’ kanaler"
+
+msgctxt "#32003"
+msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
+msgstr "Kunne ikke koble til DVBLink-tjener ‘%s’ (Feilkode : %d)"
+
+msgctxt "#32004"
+msgid "Could not get recordings (Error code : %d)"
+msgstr "Kunne ikke hente opptak (Feilkode : %d)"
+
+msgctxt "#32006"
+msgid "Could not get timers(Error code : %d)"
+msgstr "Kunne ikke hente tidsur (Feilkode : %d)"
+
+msgctxt "#32007"
+msgid "Found %d EPG timers"
+msgstr "Fant %d EPG-tidsur"
+
+msgctxt "#32008"
+msgid "Found %d manual timers"
+msgstr "Fant %d manuelle tidsur"
+
+msgctxt "#32009"
+msgid "Found %d recordings"
+msgstr "Fant %d opptak"
+
+msgctxt "#32010"
+msgid "Could not get stream for channel %s (Error code : %d)"
+msgstr "Kunne ikke hente kanalstrøm %s (Feilkode : %d)"

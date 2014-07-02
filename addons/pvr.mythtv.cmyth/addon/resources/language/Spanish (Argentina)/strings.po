@@ -64,6 +64,10 @@ msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
 msgstr "Preferir TV en vivo y cancelar la grabación en conflicto"
 
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "Dirección Ethernet del MythTV de fondo (WOL)"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "General"
@@ -128,6 +132,10 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr "Avanzado"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Habilitar desmultiplexación MPEG-TS"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Versión de protocolo: %i - Versión de base de datos: %i"
@@ -168,6 +176,10 @@ msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
 msgstr "Deteniendo TV en vivo debido a la grabación en conflicto: %s"
 
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "No está grabando"
+
 msgctxt "#30310"
 msgid "Enabled"
 msgstr "Activado"
@@ -175,3 +187,39 @@ msgstr "Activado"
 msgctxt "#30311"
 msgid "Disabled"
 msgstr "Deshabilitado"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "No se encontró difusión"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Eliminar y volver a grabar"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Seguir grabando LiveTV"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Mostrar/ocultar reglas con estado \"No grabando\""
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Grabar todos los programas (este canal)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Grabar este programa todas las semanas"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Grabar este programa todos los dias"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Grabar un programa (todos los canales)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Grabar todos los episodios nuevos (este canal)"

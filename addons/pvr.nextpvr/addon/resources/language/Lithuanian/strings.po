@@ -56,9 +56,53 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Imtuvas nebepasiekiamas"
 
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Pridėti laikmatį"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Įrašo tipas"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Įrašyti tik kartą"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Įrašyti sezoną (Nauji epzodai šiuo kanalu)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Įrašyti sezoną (Visi epzodai šiuo kanalu)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Įrašyti sezoną (Kas dieną, šiuo metu)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Įrašyti sezoną (Kas savaitę, šiuo metu)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Įrašyti sezoną (Pirmadienį - penktadienį, šiuo metu)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Įrašyti sezoną (Savaitgaliais, šiuo metu)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Išlaikyti"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Visi įrašai"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Įrašų aplankas"
 
 msgctxt "#30135"
 msgid "Default"

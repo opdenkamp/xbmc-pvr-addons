@@ -23,7 +23,3 @@ msgstr "nom itilizateur"
 msgctxt "#30003"
 msgid "Password"
 msgstr "mo de pas"
-
-msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Pa ka konekte ak sevis enrejistremen"

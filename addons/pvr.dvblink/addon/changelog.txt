@@ -1,3 +1,6 @@
+[B]Version 1.9.2[/B]
+Updated: language files from Transifex
+
 [B]Version 1.9.1[/B]
 Added: support for DVBLink v5 server timeshifting capabilities
 Fixed: series number, genre, episode name tags

@@ -82,7 +82,7 @@ msgstr "சேனல்கள்"
 
 msgctxt "#30020"
 msgid "Advanced"
-msgstr "மேம்பட்ட"
+msgstr "மேம்பட்டது"
 
 msgctxt "#30021"
 msgid "HTTP"

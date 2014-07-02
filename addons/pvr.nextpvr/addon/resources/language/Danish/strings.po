@@ -56,9 +56,65 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Tuneren er ikke længere tilgængelig"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Tilføj Timer"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Optagelses Type"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Optag en gang"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Optag Sæson (Nye episoder på denne kanal)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Optag Season (Alle episoder på denne kanal)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Optag Sæson (Dagligt, dette tidsinterval)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Optag Sæson (Ugentligt, dette tidsinterval)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Optag Sæson (Mandag-fredag​​, dette tidsinterval)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Optag Sæson (weekender, dette tidsinterval)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Behold"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Alle Optagelser"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Før-Fyld (minutter)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Før-Fyld (minutter)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Optagelses Mappe"
 
 msgctxt "#30135"
 msgid "Default"

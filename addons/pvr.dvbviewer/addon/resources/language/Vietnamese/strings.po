@@ -32,9 +32,29 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "Mật khẩu"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Dùng danh sách yêu thích thay cho danh sách toàn bộ kênh"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Dùng tệp tin yêu thích có sẵn"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Chọn nguồn file favourites.xml"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Bật Timeshift"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Đường dẫn bộ đệm Timeshift"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Dùng RTSP cho chương trình TV"
 
 msgctxt "#30100"
 msgid "General"
@@ -44,6 +64,6 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Nâng cao"
 
-msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Không kết nối được tới Recording Service"
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Các bản ghi"

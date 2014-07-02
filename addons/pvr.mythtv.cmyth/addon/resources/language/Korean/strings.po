@@ -67,3 +67,15 @@ msgstr "사용함"
 msgctxt "#30311"
 msgid "Disabled"
 msgstr "사용 안 함"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "이 프로그램 매 주 녹화"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "이 프로그램 매일 녹화 "
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "모든 새 에피소드 녹화 (이 채널)"

@@ -22,7 +22,7 @@ msgstr "IP-Adresse des DVBViewer-Aufnahmedienstes"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
-msgstr "Weboberfläche Port"
+msgstr "Weboberflächenport"
 
 msgctxt "#30002"
 msgid "Username"
@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "RTSP-Streaming für Live TV verwenden"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Niedrigen Leistungsmodus aktivieren (deaktiviert Logos & Miniaturansichten)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Gruppenaufnahmen"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "deaktiviert"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "nach Aufnameverzeichnis"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "nach Aufnahmedatum"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "nach dem ersten Buchstaben"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "nach Fernsehsender"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "nach Serie"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Allgemein"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Fortgeschritten"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Aufnahmen"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Kann keine Verbindung mit dem Aufzeichnungsdienst herstellen"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Mit dem DVBViewer-Aufnahmedienst konnte nicht verbunden werden"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Aufzeichnungsdienst in Version %s oder höher wird benötigt"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer Aufnahme-Dienst Version %s oder höher wird benötigt"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Kanal-Liste konnte nicht eingelesen werden"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Überprüfen Sie das XBMC-Protokoll für weitere Informationen"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Lokale favourites.xml konnte nicht geladen werden"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Favoriten-Liste konnte nicht eingelesen werden"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Timer-Liste konnte nicht eingelesen werden"

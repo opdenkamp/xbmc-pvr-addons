@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Použiť RTSP streamovanie pre živú TV"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Zapnúť mód pre nízky výkon (nezobrazovať logo a obrázkové náhľady)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Zoskupiť nahrávky"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "vypnuté"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "podľa adresára nahrávky"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "podľa dátumu nahrávky"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "podľa začiatočného písmena"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "podľa TV kanálu"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "podľa série"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Hlavné"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Pokročilé"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Nahrávky"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Nie je možné sa pripojiť k nahrávacej službe"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Nepodarilo sa spojiť so službou nahrávania DVBViewer"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Vyžaduje sa služba nahrávania vo verzii %s alebo vyššej"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Je potrebná DVBViewer Recording Service verzia min. %s"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Nepodarilo sa sprístupniť zoznam kanálov"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Pre viac informácií pozri XBMC log"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Nedá sa otvoriť lokálny favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Nepodarilo sa sprístupniť zoznam obľúbených"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Nepodarilo sa sprístupniť zoznam časových plánov"

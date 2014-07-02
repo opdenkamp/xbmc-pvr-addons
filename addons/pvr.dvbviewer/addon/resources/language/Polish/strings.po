@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "DVBViewer Recording Service IP Address"
-msgstr "Adres IP usługi DVBViewer Recording Service"
+msgstr "Adres IP usługi"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
@@ -26,7 +26,7 @@ msgstr "Port interfejsu webowego"
 
 msgctxt "#30002"
 msgid "Username"
-msgstr "Nazwa użytkownika"
+msgstr "Użytkownik"
 
 msgctxt "#30003"
 msgid "Password"
@@ -46,15 +46,47 @@ msgstr "Wybierz plik favourites.xml"
 
 msgctxt "#30020"
 msgid "Enable Timeshift"
-msgstr "Włącz funkcję przesunięcia czasowego"
+msgstr "Aktywuj funkcję przesunięcia czasowego"
 
 msgctxt "#30021"
 msgid "Timeshift buffer path"
-msgstr "Ścieżka do pliku bufora przesunięcia czasowego"
+msgstr "Ścieżka do pliku bufora"
 
 msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Używaj RTSP do strumieniowania telewizji"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Aktywuj tryb niskiej wydajności (bez logo i miniatur)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Grupuj nagrania "
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "nieaktywne"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "po katalogach"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "po datach"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "alfabetycznie"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "po kanałach"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "po serialach"
 
 msgctxt "#30100"
 msgid "General"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Zaawansowane"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Nagrania"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
+msgid "Unable to connect to the DVBViewer Recording Service"
 msgstr "Problem z połączeniem z usługą Recording Service"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
+msgid "DVBViewer Recording Service version %s or higher required"
 msgstr "Usługa Recording Service wymagana w wersji %s lub nowszej"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Błąd parsowania listy kanałów"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Sprawdź szczegóły w pliku dziennika XBMC"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Nie można otworzyć pliku favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Błąd parsowania listy ulubionych"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Błąd parsowania listy nagrań"

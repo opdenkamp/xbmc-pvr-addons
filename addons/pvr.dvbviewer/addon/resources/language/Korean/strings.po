@@ -32,9 +32,37 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "비밀번호"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "채널 목록 대신 즐겨찾기 사용"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "로컬 즐겨찾기 사용"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "favourites.xml 파일 선택"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "타임시프트 사용"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "타임시프트 버퍼 경로"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "TV 시청에 RTSP 스트리밍 사용"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "저성능 모드 사용 (로고와 썸네일 사용하지 않음)"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "사용 안 함"
 
 msgctxt "#30100"
 msgid "General"
@@ -44,6 +72,6 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "고급"
 
-msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "녹화 서비스에 연결할 수 없음"
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "녹화"

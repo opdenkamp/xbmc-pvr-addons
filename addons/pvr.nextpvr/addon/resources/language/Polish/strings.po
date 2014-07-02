@@ -26,11 +26,11 @@ msgstr "Port NextPVR (zazwyczaj 8866 lub 7799)"
 
 msgctxt "#30002"
 msgid "NextPVR PinCode"
-msgstr "Kod pin NextPVR "
+msgstr "Kod PIN NextPVR "
 
 msgctxt "#30003"
 msgid "Enable TimeShift with Live TV"
-msgstr "Włącz funkcję przesunięcia czasowego dla programów telewizyjnych"
+msgstr "Aktywuj funkcję przesunięcia czasowego"
 
 msgctxt "#30040"
 msgid "Connection"
@@ -50,11 +50,11 @@ msgstr "Zainstaluj wersję '%s' lub nowszą!"
 
 msgctxt "#30052"
 msgid "Connection failed. Incorrect PIN?"
-msgstr "Problem z połączeniem. Nieprawidłowy PIN?"
+msgstr "Nieudane połączenie. Nieprawidłowy PIN?"
 
 msgctxt "#30053"
 msgid "Tuner no longer available"
-msgstr "Tuner niedostępny"
+msgstr "Tuner nie jest niedostępny"
 
 msgctxt "#30054"
 msgid "[RECUR]"
@@ -62,11 +62,11 @@ msgstr "[POWTARZAJ]"
 
 msgctxt "#30100"
 msgid "Add Timer"
-msgstr "Zaplanuj"
+msgstr "Zaplanuj nagranie"
 
 msgctxt "#30120"
 msgid "Recording Type"
-msgstr "Rodzaj nagrania"
+msgstr "Typ nagrania"
 
 msgctxt "#30121"
 msgid "Record Once"
@@ -98,7 +98,7 @@ msgstr "Nagrywaj sezon (w weekendy, w tym przedziale czasowym)"
 
 msgctxt "#30130"
 msgid "Keep"
-msgstr "Zatrzymaj"
+msgstr "Zachowaj"
 
 msgctxt "#30131"
 msgid "All Recordings"
@@ -106,11 +106,11 @@ msgstr "Wszystkie nagrania"
 
 msgctxt "#30132"
 msgid "Pre-Padding (minutes)"
-msgstr "Rozpoczęcie nagrywania (minuty)"
+msgstr "Nagrywaj przed planowanym czasem (minuty)"
 
 msgctxt "#30133"
 msgid "Pre-Padding (minutes)"
-msgstr "Rozpoczęcie nagrywania (minuty)"
+msgstr "Nagrywaj po planowanym czasie (minuty)"
 
 msgctxt "#30134"
 msgid "Recording Directory"

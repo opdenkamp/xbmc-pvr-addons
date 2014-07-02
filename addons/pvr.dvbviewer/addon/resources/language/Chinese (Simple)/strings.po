@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "直播电视使用 RTSP 流"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "启用低性能模式（禁用图标和缩略图）"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "录像分组"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "禁用"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "按录像目录"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "按录像日期"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "按首字母"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "按电视频道"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "按系列"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "常规"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "高级"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "录像"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "无法连接录像服务"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "无法连接到 DVBViewer 录像服务"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "录像服务需要 s% 或更高版本"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer 录像服务需要 %s 或更高版本"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "无法解析频道列表"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "更多信息见 XBMC 日志"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "无法打开本地 favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "无法解析收藏夹列表"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "无法解析定时器列表"

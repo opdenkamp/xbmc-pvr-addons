@@ -90,7 +90,7 @@ msgstr "Notranja predloga"
 
 msgctxt "#30026"
 msgid "Automatically Look Up Metadata"
-msgstr "Samodejno poizvedi metapodatke"
+msgstr "Samodejno poizvedi za metapodatke"
 
 msgctxt "#30027"
 msgid "Commercial Flag new recordings"

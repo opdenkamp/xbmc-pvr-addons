@@ -56,9 +56,65 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Il tuner non è più disponibile"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Aggiungi timer"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Tipo di registrazione"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Registra una volta"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Registra stagione (Nuovi episodi su questo canale)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Registra stagioni (Tutti gli episodi su questo canale)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Registra stagione (Giornalmente, questa fascia temporale)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Registra stagione (Settimanalmente, questa fascia temporale)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Registra stagione (Lunedì-Venerdì, questa fascia temporale)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Registra stagione (Weekend, questa fascia temporale)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Mantieni"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Tutte le registrazioni"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Anticipo registrazione (minuti)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Anticipo registrazione (minuti)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Directory di registrazione"
 
 msgctxt "#30135"
 msgid "Default"

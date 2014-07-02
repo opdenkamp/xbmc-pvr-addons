@@ -16,6 +16,14 @@ msgstr ""
 "Language: is\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "DVBViewer Recording Service IP Address"
+msgstr "IP netfang fyrir upptökuþjónustu DVBViewer"
+
+msgctxt "#30001"
+msgid "Webinterface Port"
+msgstr "Gátt vefviðmóts"
+
 msgctxt "#30002"
 msgid "Username"
 msgstr "Notandanafn"
@@ -24,10 +32,98 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "Lykilorð"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Nota uppáhaldslista í staðinn fyrir rásalista"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Nota staðværa uppáhaldslista"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Veldu favourites.xml skrána"
 
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Virkja Tímahliðrun"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Slóð á biðminni Tímahliðrunar"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Nota RTSP straum fyrir beinar sjónvarpsútsendingar"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Virkja ham fyrir litla vinnslu (gera óvirkar táknmyndir og smámyndir)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Hópa upptökur"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "óvirkt"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "eftir upptökumöppu"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "eftir upptökudagsetningu"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "eftir fyrsta staf"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "eftir sjónvarpsrás"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "eftir seríum"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Almennt"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Ítarlegt"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Upptökur"
+
+msgctxt "#30500"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Gat ekki tengst DVBViewer upptökuþjónustunni"
+
+msgctxt "#30501"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Þarfnast útgáfu %s eða nýrri af DVBViewer upptökuþjónustunni"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Gat ekki þáttað rásalista"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Skoðaðu XBMC atburðaskránna fyrir nánari upplýsingar"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Gat ekki opnað staðværa favourites.xml skrá"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Gat ekki þáttað uppáhaldslistann"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Gat ekki þáttað tímatöku listann"

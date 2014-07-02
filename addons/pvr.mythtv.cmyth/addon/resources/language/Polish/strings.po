@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "MythTV Backend Hostname or IP"
-msgstr "IP lub nazwa hosta serwera MythTV"
+msgstr "Nazwa hosta lub adres IP serwera MythTV"
 
 msgctxt "#30001"
 msgid "MythTV Backend Port"
@@ -26,11 +26,11 @@ msgstr "Port serwera MythTV"
 
 msgctxt "#30002"
 msgid "MythTV Database Username"
-msgstr "Nazwa użytkownika do bazy danych MythTV"
+msgstr "Nazwa użytkownika bazy danych MythTV"
 
 msgctxt "#30003"
 msgid "MythTV Database Password"
-msgstr "Hasło do bazy danych MythTV"
+msgstr "Hasło użytkownika bazy danych MythTV"
 
 msgctxt "#30004"
 msgid "MythTV Database Databasename"
@@ -38,15 +38,15 @@ msgstr "Nazwa bazy danych MythTV"
 
 msgctxt "#30005"
 msgid "Include more debug information in the log file"
-msgstr "Umieść więcej szczegółowych informacji w logach (debug)"
+msgstr "Rejestruj szczegółowe informacje diagnostyczne"
 
 msgctxt "#30006"
 msgid "Enable Live TV"
-msgstr "Włącz TV na żywo"
+msgstr "Aktywuj funkcje odtwarzania i nagrywania telewizji"
 
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
-msgstr "Pozwól TV na żywo na przesuwanie zaplanowanych programów"
+msgstr "Zezwalaj na przesuwanie zaplanowanych programów"
 
 msgctxt "#30008"
 msgid "Conflict handling"
@@ -54,15 +54,15 @@ msgstr "Zarządzanie konfliktami"
 
 msgctxt "#30009"
 msgid "Prefer Live TV when recording has later slot"
-msgstr "Preferuj TV gdy nagranie jest później"
+msgstr "Preferuj odtwarzanie zamiast nagrywania, gdy nie koliduje"
 
 msgctxt "#30010"
 msgid "Prefer recording and stop Live TV"
-msgstr "Preferuj nagranie i zatrzymuj TV"
+msgstr "Preferuj nagrywanie zatrzymując odtwarzanie"
 
 msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
-msgstr "Preferuj TV i anuluj nagranie"
+msgstr "Preferuj odtwarzanie anulując kolidujące nagrywanie"
 
 msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
@@ -90,31 +90,31 @@ msgstr "Szablon wewnętrzny"
 
 msgctxt "#30026"
 msgid "Automatically Look Up Metadata"
-msgstr "Automatyczne wyszukiwanie etykiet"
+msgstr "Automatyczne wyszukiwanie metadanych"
 
 msgctxt "#30027"
 msgid "Commercial Flag new recordings"
-msgstr "Wskaźnik reklam nowych nagrań"
+msgstr "Znacznik reklam nowych nagrań"
 
 msgctxt "#30028"
 msgid "Transcode new recordings"
-msgstr "Przekoduj nowe nagrania"
+msgstr "Transkoduj nowe nagrania"
 
 msgctxt "#30029"
 msgid "Run User Job #1"
-msgstr "Uruchom zadanie 1"
+msgstr "Uruchom zadanie nr 1"
 
 msgctxt "#30030"
 msgid "Run User Job #2"
-msgstr "Uruchom zadanie 2"
+msgstr "Uruchom zadanie nr 2"
 
 msgctxt "#30031"
 msgid "Run User Job #3"
-msgstr "Uruchom zadanie 3"
+msgstr "Uruchom zadanie nr 3"
 
 msgctxt "#30032"
 msgid "Run User Job #4"
-msgstr "Uruchom zadanie 4"
+msgstr "Uruchom zadanie nr 4"
 
 msgctxt "#30033"
 msgid "Transcoder"
@@ -122,7 +122,7 @@ msgstr "Transkoder"
 
 msgctxt "#30034"
 msgid "Allow recordings to expire?"
-msgstr "Nagrania przedawniają się?"
+msgstr "Zezwalać na przedawnienie nagrań?"
 
 msgctxt "#30049"
 msgid "Recording template"
@@ -134,7 +134,7 @@ msgstr "Zaawansowane"
 
 msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
-msgstr "Włącz demukser MPEG-TS"
+msgstr "Używaj demuksera MPEG-TS"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
@@ -142,11 +142,11 @@ msgstr "Wersja protokołu: %i - wersja bazy danych: %i"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"
-msgstr "Nie można połączyć się z serwerem MythTV"
+msgstr "Nieudane połączenie z serwerem MythTV"
 
 msgctxt "#30301"
 msgid "Failed to connect to MythTV database"
-msgstr "Nie można połączyć się z bazą danych MythTV"
+msgstr "Nieudane połączenie z bazą danych MythTV"
 
 msgctxt "#30302"
 msgid "Connection to MythTV backend lost"
@@ -154,7 +154,7 @@ msgstr "Zerwane połączenie z serwerem MythTV"
 
 msgctxt "#30303"
 msgid "Connection to MythTV restored"
-msgstr "Przywrócone połączenie z MythTV"
+msgstr "Przywrócono połączenie z MythTV"
 
 msgctxt "#30304"
 msgid "No response from MythTV backend"
@@ -170,11 +170,11 @@ msgstr "Nagrywanie niedostępne"
 
 msgctxt "#30307"
 msgid "Canceling conflicting recording: %s"
-msgstr "Anulowanie nagrania powodującego konflikt: %s"
+msgstr "Anulowanie kolidującego nagrania: %s"
 
 msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
-msgstr "Zatrzymywanie TV z powodu konfliktu nagrania: %s"
+msgstr "Zatrzymywanie odtwarzania z powodu kolidującego nagrania: %s"
 
 msgctxt "#30309"
 msgid "Not recording"
@@ -182,11 +182,11 @@ msgstr "Nie nagrywa"
 
 msgctxt "#30310"
 msgid "Enabled"
-msgstr "Włączone"
+msgstr "Aktywowane"
 
 msgctxt "#30311"
 msgid "Disabled"
-msgstr "Wyłączony"
+msgstr "Wyłączone"
 
 msgctxt "#30312"
 msgid "No broadcast found"
@@ -198,11 +198,11 @@ msgstr "Skasuj i nagraj ponownie "
 
 msgctxt "#30412"
 msgid "Keep LiveTV recording"
-msgstr "Nagrywaj TV na żywo"
+msgstr "Zachowuj nagranie telewizji"
 
 msgctxt "#30421"
 msgid "Show/hide rules with status 'Not Recording'"
-msgstr "Pokaż/Ukryj status \"Nie nagrywa\""
+msgstr "Pokazuj/Ukrywaj reguły ze stanem \"Nie nagrywa\""
 
 msgctxt "#30431"
 msgid "Record all showings (this channel)"
@@ -222,4 +222,4 @@ msgstr "Nagrywaj jedną audycję (wszystkie kanały)"
 
 msgctxt "#30435"
 msgid "Record all new episodes (this channel)"
-msgstr "Nagrywaj wszystkie nowe epizody (na tym kanale) "
+msgstr "Nagrywaj wszystkie nowe odcinki (na tym kanale) "

@@ -32,9 +32,29 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "Contrasenya"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Utilitza favorits enlloc de llista de canals"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Utilitza fitxer local de favorits"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Seleccioneu el fitxer favourites.xml"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Activar Timeshift"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Camí de la memòria intermedia del Timeshift"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Utilitza flux RTSP per a TV en viu"
 
 msgctxt "#30100"
 msgid "General"
@@ -44,6 +64,6 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Avançat"
 
-msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "No es pot connectar amb el servei d'enregistrament"
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Enregistraments"

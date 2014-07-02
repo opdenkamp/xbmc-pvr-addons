@@ -74,7 +74,7 @@ msgstr "Contraseña de Windows (SMB)"
 
 msgctxt "#30018"
 msgid "Use RTSP streaming"
-msgstr "Utilizar RTSP streaming"
+msgstr "Utilizar transmisión RTSP"
 
 msgctxt "#30040"
 msgid "Connection"
@@ -90,7 +90,7 @@ msgstr "Reproducción"
 
 msgctxt "#30050"
 msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Su versión TVServerXBMC '%s' es demasiado antigua. ¡Por favor actualice a '%s' o superior!"
+msgstr "La versión '%s' de TVServerXBMC es demasiado antigua. ¡Por favor actualice a '%s' o superior!"
 
 msgctxt "#30051"
 msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"

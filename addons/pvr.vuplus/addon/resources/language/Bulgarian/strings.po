@@ -70,7 +70,7 @@ msgstr "Проверявай за обновяване на каналите"
 
 msgctxt "#30017"
 msgid "Use only the DVB boxes' current recording path"
-msgstr "Използвай само за запис на зададения в DVB път"
+msgstr "Ползвай само за запис на зададения в DVB път"
 
 msgctxt "#30018"
 msgid "General"

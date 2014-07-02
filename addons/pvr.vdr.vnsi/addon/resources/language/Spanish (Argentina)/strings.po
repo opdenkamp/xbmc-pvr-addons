@@ -243,3 +243,27 @@ msgstr "Administrar VDR"
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Canales"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Lista blanca de proveedores"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Lista negra de canales"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtros de canal"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Canales de radio"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Guardar filtros"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Proveedor desconocido"

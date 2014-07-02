@@ -32,6 +32,14 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "Contraseña"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Usar favoritos en lugar de lista de canal"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Usar archivo de favoritos local"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Elegir el archivo favourites.xml"
@@ -44,6 +52,42 @@ msgctxt "#30021"
 msgid "Timeshift buffer path"
 msgstr "Ruta del buffer de Timeshift"
 
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Usar transmisión RTSP para TV en vivo"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Habilitar modo de bajo rendimiento (deshabilita logos y miniaturas)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Agrupar grabaciones"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "deshabilitado"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "por directorio de grabación"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "por fecha de grabación"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "por primera letra"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "por canal de televisión"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "por serie"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "General"
@@ -52,6 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Avanzado"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Grabaciones"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "No se puede conectar con el Servicio de Grabación"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "No se puede conectar con el Servicio de Grabación de DVBViewer"
+
+msgctxt "#30501"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Se requiere Servicio de Grabación versión %s o superior"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "No se puede leer la lista de canales"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Vea el log de XBMC para más información"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "No se puede abrir el archivo local favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "No se puede leer la lista de favoritos"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "No se puede leer el listado de temporizadores"

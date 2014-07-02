@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "VU+ hostname or IP address"
-msgstr "Adres IP lub nazwa hosta VU+"
+msgstr "Nazwa hosta lub adres IP VU+"
 
 msgctxt "#30002"
 msgid "Streaming Port"
@@ -38,11 +38,11 @@ msgstr "Limit czasu odpowiedzi w sekundach"
 
 msgctxt "#30008"
 msgid "Icon Path"
-msgstr "Ścieżka do ikony"
+msgstr "Folder logo"
 
 msgctxt "#30010"
 msgid "Update Interval in minutes"
-msgstr "Częstotliwość aktualizacji w minutach"
+msgstr "Aktualizuj w interwale minut"
 
 msgctxt "#30011"
 msgid "Automatic Timerlist Cleanup"
@@ -54,23 +54,23 @@ msgstr "Port interfejsu webowego"
 
 msgctxt "#30013"
 msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
-msgstr "Przeskocz przed zmianą kanału (np. dla urządzeń z jednym tunerem)"
+msgstr "Przełączaj na dany kanał (np. dla dekoderów z jednym tunerem)"
 
 msgctxt "#30014"
 msgid "Folder for channeldata"
-msgstr "Folder na dane kanałowe"
+msgstr "Folder danych "
 
 msgctxt "#30015"
 msgid "Check for bouquett updates"
-msgstr "Sprawdź aktualizację bukietów"
+msgstr "Sprawdzaj aktualizacje bukietów"
 
 msgctxt "#30016"
 msgid "Check for channel updates"
-msgstr "Sprawdź aktualizację kanałów"
+msgstr "Sprawdzaj aktualizacje kanałów"
 
 msgctxt "#30017"
 msgid "Use only the DVB boxes' current recording path"
-msgstr "Używaj tylko bieżącego folderu nagrywania urządzenia DVB"
+msgstr "Używaj tylko bieżącego folderu nagrywania dekodera"
 
 msgctxt "#30018"
 msgid "General"
@@ -94,15 +94,15 @@ msgstr "Nagrania / Planowane nagrania"
 
 msgctxt "#30023"
 msgid "Recording folder on the receiver"
-msgstr "Folder nagrywania na odbiorniku"
+msgstr "Folder nagrywania na dekoderze"
 
 msgctxt "#30024"
 msgid "Send DeepStandby-Command"
-msgstr "Wyślij polecenie głębokiego czuwania (DeepStandby)"
+msgstr "Wysyłaj polecenie głębokiego czuwania"
 
 msgctxt "#30025"
 msgid "Fetch only one TV bouquet"
-msgstr "Pobierz tylko jeden bukiet"
+msgstr "Pobieraj tylko jeden bukiet"
 
 msgctxt "#30026"
 msgid "TV-Bouquet"
@@ -110,7 +110,7 @@ msgstr "Bukiet"
 
 msgctxt "#30027"
 msgid "Fetch picons from webinterface"
-msgstr "Pobierz logo kanałów przez interfejs internetowy"
+msgstr "Pobieraj loga kanałów przez interfejs webowy"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

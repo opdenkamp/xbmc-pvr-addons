@@ -56,6 +56,10 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Instemmer nie meer beskikbaar"
 
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Hou"
+
 msgctxt "#30135"
 msgid "Default"
 msgstr "Verstek"

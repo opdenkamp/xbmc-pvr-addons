@@ -223,3 +223,11 @@ msgstr "VDR管理"
 msgctxt "#30108"
 msgid "Channels"
 msgstr "チャンネル"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "チャンネルのブラックリスト"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "ラジオチャンネル"

@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "DVBViewer Recording Service IP Address"
-msgstr "DVBViewer Recording Service IP adrese"
+msgstr "DVBViewer ierakstīšanas servisa IP adrese"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
@@ -34,15 +34,15 @@ msgstr "Parole"
 
 msgctxt "#30010"
 msgid "Use favourites instead of channel list"
-msgstr "Channel list vietā izmantot favourites"
+msgstr "Kanālu saraksta vietā izmantot izlasi"
 
 msgctxt "#30011"
 msgid "Use local favourites file"
-msgstr "Izmantot lokālu favourites failu"
+msgstr "Izmantot lokālo izlases failu"
 
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
-msgstr "Izvēlēties favourites.xml failu"
+msgstr "Atlasīt favourites.xml failu"
 
 msgctxt "#30020"
 msgid "Enable Timeshift"
@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Izmantot RTSP straumēšanu tiešraides TV"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Ieslēgt mazas efektivitātes režīmu (izslēdz logo & sīktēlus)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Grupas ieraksti"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "izslēgts"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "pēc ierakstīšanas direktorijas"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "pēc ierakstīšanas datuma"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "pēc pirmā burta"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "pēc tv kanāla"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "pēc sērijas"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Vispārīgi"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Papildus"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Ieraksti"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Nevar savienoties ar Recording Service"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Nevar pieslēgties DVBViewer ierakstīšanas servisam"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Nepieciešama Recording Service %s vai jaunāka versija"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Nepieciešams DVBViewer ierakstīšanas serviss %s vai jaunāka versija"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Nevar parsēt kanālu sarakstu"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Pārbaudiet XBMC žurnālu plašākai informācijai"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Nevar atvērt lokālo favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Nevar parsēt izlases sarakstu"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Nevar parsēt taimera sarakstu"

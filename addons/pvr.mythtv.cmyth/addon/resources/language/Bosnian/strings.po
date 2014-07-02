@@ -20,6 +20,10 @@ msgctxt "#30019"
 msgid "General"
 msgstr "Opšte"
 
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Kanal nedostupan"
+
 msgctxt "#30310"
 msgid "Enabled"
 msgstr "Omogućeno"

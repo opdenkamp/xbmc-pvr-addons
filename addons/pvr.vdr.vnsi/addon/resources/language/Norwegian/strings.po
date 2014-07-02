@@ -208,10 +208,34 @@ msgctxt "#30101"
 msgid "Setup"
 msgstr "Konfigurasjon"
 
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Administrator"
+
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Kanaler"
 
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "leverandør hvitliste "
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Kanal svarteliste"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Kanal filtre "
+
 msgctxt "#30112"
 msgid "Radio Channels"
 msgstr "Radio Channels"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Lagre filtre"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Leverandør Ukjent"

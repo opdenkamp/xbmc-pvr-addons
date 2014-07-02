@@ -20,6 +20,26 @@ msgctxt "#30000"
 msgid "MythTV Backend Hostname or IP"
 msgstr "MythTV aizmugursistēmas saimniekvārds vai IP"
 
+msgctxt "#30001"
+msgid "MythTV Backend Port"
+msgstr "MythTV aizmugursistēmas ports"
+
+msgctxt "#30002"
+msgid "MythTV Database Username"
+msgstr "MythTV datubāzes lietotājvārds"
+
+msgctxt "#30003"
+msgid "MythTV Database Password"
+msgstr "MythTV datubāzes parole"
+
+msgctxt "#30004"
+msgid "MythTV Database Databasename"
+msgstr "MythTV datubāzes nosaukums"
+
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "Iekļaut vairāk atkļūdošanas informācijas žurnāla failā"
+
 msgctxt "#30006"
 msgid "Enable Live TV"
 msgstr "Ieslēgt tiešraides TV"
@@ -44,9 +64,17 @@ msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
 msgstr "Dot priekšroku tiešraides TV un atcelt konfliktējošo ierakstu"
 
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV aizmugursistēmas datortīkla adrese (WOL)"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Vispārīgi"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Veidnes piegādātājs"
 
 msgctxt "#30021"
 msgid "Internal"
@@ -56,21 +84,77 @@ msgctxt "#30022"
 msgid "MythTV"
 msgstr "MythTV"
 
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Iekšējā veidne"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Automātiski uzmeklēt metadatus"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Komerciālais karogs jauniem ierakstiem"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Transkodēt jaunos ierakstus"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Darbināt lietotāja uzdevumu #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Darbināt lietotāja uzdevumu #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Darbināt lietotāja uzdevumu #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Darbināt lietotāja uzdevumu #4"
+
 msgctxt "#30033"
 msgid "Transcoder"
 msgstr "Pārkodētājs"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Vai atļaut beigties ierakstu termiņam?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Ierakstīšanas veidne"
 
 msgctxt "#30050"
 msgid "Advanced"
 msgstr "Papildus"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Ieslēgt MPEG-TS demultipleksu"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Protokola versija: %i - Datubāzes versija: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Neizdevās pieslēgties MythTV aizmugursistēmai"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Neizdevās pieslēgties MythTV datubāzei"
+
 msgctxt "#30302"
 msgid "Connection to MythTV backend lost"
-msgstr "Zudis savienojums ar MythTV aizmugursistēmu"
+msgstr "Zudis MythTV aizmugursistēmas pieslēgums"
 
 msgctxt "#30303"
 msgid "Connection to MythTV restored"
-msgstr "Savienojums ar MythTV atjaunots"
+msgstr "MythTV pieslēgums atjaunots"
 
 msgctxt "#30304"
 msgid "No response from MythTV backend"
@@ -79,6 +163,14 @@ msgstr "MythTV aizmugursistēma neatbild."
 msgctxt "#30305"
 msgid "Channel unavailable"
 msgstr "Kanāls nav pieejams"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Ierakstītājs nepieejams"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Atceļ konfliktējošo ierakstīšanu: %s"
 
 msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
@@ -96,6 +188,38 @@ msgctxt "#30311"
 msgid "Disabled"
 msgstr "Izslēgts"
 
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Pārraide nav atrasta"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Dzēst un ierakstīt no jauna"
+
 msgctxt "#30412"
 msgid "Keep LiveTV recording"
 msgstr "Paturēt tiešraides TV ierakstu"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Rādīt/slēpt kārtulas ar statusu 'neieraksta'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Ierakstīt visus raidījumus (šis kanāls)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Ierakstīt šo raidījumu katru nedēļu"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Ierakstīt šo raidījumu katru dienu"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Ierakstīt vienu raidījumu (visi kanāli)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Ierakstīt visas jaunās sērijas (šis kanāls)"

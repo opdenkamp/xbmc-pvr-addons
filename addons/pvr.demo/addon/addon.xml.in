@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.demo"
-  version="1.9.4"
+  version="1.9.5"
   name="PVR Demo Client"
   provider-name="Pulse-Eight Ltd.">
   <requires>
@@ -27,6 +27,7 @@
     <summary lang="el">Πελάτης PVR Demo</summary>
     <summary lang="en">Demo PVR Client</summary>
     <summary lang="en_NZ">Demo PVR Client</summary>
+    <summary lang="en_US">Demo PVR Client</summary>
     <summary lang="es">Demo Cliente PVR</summary>
     <summary lang="es_AR">Cliente PVR demo</summary>
     <summary lang="es_MX">Cliente Demo PVR</summary>
@@ -38,10 +39,13 @@
     <summary lang="he">הדגמה לקוח PVR</summary>
     <summary lang="hr">Demo PVR klijent</summary>
     <summary lang="hu">Demo PVR ügyfél</summary>
+    <summary lang="hy">Նախնական PVR բաժանորդ</summary>
     <summary lang="id">Klien Demo PVR</summary>
+    <summary lang="is">Prufu upptökubiðlari</summary>
     <summary lang="it">Client PVR Demo</summary>
     <summary lang="ja">デモ PVR クライアント</summary>
     <summary lang="ko">데모 PVR 클라이언트</summary>
+    <summary lang="lt">Demo PVR klientas</summary>
     <summary lang="lv">Demo PVR klients</summary>
     <summary lang="mk">Демо за PVR клиент</summary>
     <summary lang="ms">Kline PVR Demo</summary>
@@ -53,12 +57,14 @@
     <summary lang="pt_BR">Cliente de PVR de Demonstração</summary>
     <summary lang="ro">Demo client PVR</summary>
     <summary lang="ru">Демонстрация клиента PVR</summary>
+    <summary lang="si">ආදර්ශක PVR ආයත්තකයා</summary>
     <summary lang="sk">Demo PVR Klient</summary>
     <summary lang="sl">Demo odjemalec PVR</summary>
     <summary lang="sr">Пробни PVR клијент</summary>
     <summary lang="sv">Demo PVR Klient</summary>
     <summary lang="ta_IN"> PVR கிளையன் செயல்முறை</summary>
     <summary lang="tg">Муштарии намоишии PVR</summary>
+    <summary lang="th">ตัวอย่างลูกข่าย PVR</summary>
     <summary lang="tr">PVR Tanıtım İstemcisi</summary>
     <summary lang="uk">Демонстраційний клієнт для PVR</summary>
     <summary lang="vi">Demo PVR</summary>
@@ -74,6 +80,7 @@
     <description lang="el">Πελάτης PVR Demo</description>
     <description lang="en">Demo PVR Client</description>
     <description lang="en_NZ">Demo PVR Client</description>
+    <description lang="en_US">Demo PVR Client</description>
     <description lang="es">Demo Cliente PVR</description>
     <description lang="es_AR">Cliente PVR demo</description>
     <description lang="es_MX">Cliente Demo PVR</description>
@@ -85,10 +92,13 @@
     <description lang="he">הדגמה לקוח PVR</description>
     <description lang="hr">Demo PVR klijent</description>
     <description lang="hu">Demo PVR ügyfél</description>
+    <description lang="hy">Նախնական PVR բաժանորդ</description>
     <description lang="id">Demo Klien PVR</description>
+    <description lang="is">Prufu upptökubiðlari</description>
     <description lang="it">Client PVR Demo</description>
     <description lang="ja">デモ PVR クライアント</description>
     <description lang="ko">데모 PVR 클라이언트</description>
+    <description lang="lt">Demo PVR klientas</description>
     <description lang="lv">Demo PVR klients</description>
     <description lang="mk">Демо за PVR клиент</description>
     <description lang="ms">Klien PVR Demo</description>
@@ -100,12 +110,14 @@
     <description lang="pt_BR">Cliente de PVR de Demonstração</description>
     <description lang="ro">Demo client PVR</description>
     <description lang="ru">Демонстрация клиента PVR</description>
+    <description lang="si">ආදර්ශක PVR ආයත්තකයා</description>
     <description lang="sk">Demo PVR Klient</description>
     <description lang="sl">Demo odjemalec PVR</description>
     <description lang="sr">Пробни PVR клијент</description>
     <description lang="sv">Demo PVR Klient</description>
     <description lang="ta_IN"> PVR கிளையன் செயல்முறை</description>
     <description lang="tg">Муштарии намоишии PVR</description>
+    <description lang="th">ตัวอย่างลูกข่าย PVR</description>
     <description lang="tr">PVR Tanıtım İstemcisi</description>
     <description lang="uk">Демонстраційний клієнт для PVR</description>
     <description lang="vi">Demo PVR</description>
@@ -121,6 +133,7 @@
     <disclaimer lang="el">Περιέχει μόνο εικονικά κανάλια</disclaimer>
     <disclaimer lang="en">Just contains stubs</disclaimer>
     <disclaimer lang="en_NZ">Just contains stubs</disclaimer>
+    <disclaimer lang="en_US">Just contains stubs</disclaimer>
     <disclaimer lang="es">Sólo contiene fragmentos</disclaimer>
     <disclaimer lang="es_AR">contiene sólo marcadores</disclaimer>
     <disclaimer lang="es_MX">Solo contiene talones</disclaimer>
@@ -133,6 +146,7 @@
     <disclaimer lang="hr">Samo sadrži kratke informacije</disclaimer>
     <disclaimer lang="hu">Csak tesztfunkciókat tartalmaz</disclaimer>
     <disclaimer lang="id">Hanya mengandung stub</disclaimer>
+    <disclaimer lang="is">Inniheldur aðeins búta</disclaimer>
     <disclaimer lang="it">Contiene solo tronconi</disclaimer>
     <disclaimer lang="ja">単なるスタブです</disclaimer>
     <disclaimer lang="lv">Satur tikai nepabeigtas lietas</disclaimer>
@@ -146,6 +160,7 @@
     <disclaimer lang="pt_BR">Só contém esboços</disclaimer>
     <disclaimer lang="ro">Contine numai cioturi</disclaimer>
     <disclaimer lang="ru">Содержит заглушки</disclaimer>
+    <disclaimer lang="si">අක්කඩ පමණක් අන්තර්ගතයි.</disclaimer>
     <disclaimer lang="sk">Obsahuje len útržky</disclaimer>
     <disclaimer lang="sl">Vsebuje le fiktivne vsebine</disclaimer>
     <disclaimer lang="sr">Садржи само назнаке садржаја</disclaimer>

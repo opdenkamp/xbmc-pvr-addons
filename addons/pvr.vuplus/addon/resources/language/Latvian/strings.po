@@ -20,6 +20,10 @@ msgctxt "#30000"
 msgid "VU+ hostname or IP address"
 msgstr "VU+ saimniekvārds vai IP adrese"
 
+msgctxt "#30002"
+msgid "Streaming Port"
+msgstr "Straumēšanas ports"
+
 msgctxt "#30003"
 msgid "Username"
 msgstr "LIetotājvārds"
@@ -32,9 +36,41 @@ msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Atbildes noilgums sekundēs"
 
+msgctxt "#30008"
+msgid "Icon Path"
+msgstr "Ikonu ceļš"
+
+msgctxt "#30010"
+msgid "Update Interval in minutes"
+msgstr "Atjaunināšanas intervāls minūtēs"
+
+msgctxt "#30011"
+msgid "Automatic Timerlist Cleanup"
+msgstr "Automātiska taimersaraksta uzkopšana"
+
 msgctxt "#30012"
 msgid "Webinterface Port"
 msgstr "Tīmekļa saskarnes ports"
+
+msgctxt "#30013"
+msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "Pārslēgt pirms kanāla pārslēgšanās (piem., viena uztvērēja pierīcēm)"
+
+msgctxt "#30014"
+msgid "Folder for channeldata"
+msgstr "Mape kanāldatiem"
+
+msgctxt "#30015"
+msgid "Check for bouquett updates"
+msgstr "Pārbaudīt buķetes atjauninājumus"
+
+msgctxt "#30016"
+msgid "Check for channel updates"
+msgstr "Pārbaudīt kanāla atjauninājumus"
+
+msgctxt "#30017"
+msgid "Use only the DVB boxes' current recording path"
+msgstr "Izmantot tikai DVB pierīces pašreizējo ierakstīšanas ceļu"
 
 msgctxt "#30018"
 msgid "General"
@@ -51,6 +87,30 @@ msgstr "Papildus"
 msgctxt "#30021"
 msgid "HTTP"
 msgstr "HTTP"
+
+msgctxt "#30022"
+msgid "Recordings / Timer"
+msgstr "Ieraksti / Taimeris"
+
+msgctxt "#30023"
+msgid "Recording folder on the receiver"
+msgstr "Ierakstīšanas mape atskaņotājā"
+
+msgctxt "#30024"
+msgid "Send DeepStandby-Command"
+msgstr "Sūtīt \"dziļas gatavības\" komandu"
+
+msgctxt "#30025"
+msgid "Fetch only one TV bouquet"
+msgstr "Iegūt tikai vienu TV buķeti"
+
+msgctxt "#30026"
+msgid "TV-Bouquet"
+msgstr "TV-buķete"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "Iegūt pikonas no tīmeklā saskarnes"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

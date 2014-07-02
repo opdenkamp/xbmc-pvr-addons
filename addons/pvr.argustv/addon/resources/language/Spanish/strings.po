@@ -18,11 +18,11 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "ARGUS TV Hostname"
-msgstr "Hostname ARGUS TV"
+msgstr "Nombre del servidor ARGUS TV"
 
 msgctxt "#30001"
 msgid "ARGUS TV webserver port"
-msgstr "Puerto del webserver de ARGUS TV"
+msgstr "Puerto del servidor Web de ARGUS TV"
 
 msgctxt "#30002"
 msgid "Include Radio"

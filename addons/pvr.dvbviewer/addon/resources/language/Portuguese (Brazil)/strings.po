@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Usar RTSP streaming para TV ao Vivo"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Ativar modo de baixa performance (desabilita logos & miniaturas)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Gravações Agrupadas"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "desativado"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "pelo diretório de gravação"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "pela data da gravação"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "pela primeira letra"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "por canais tv"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "por séries"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Geral"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Avançado"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Gravações"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Não pude me conectar ao Serviço de Gravação"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Não goi possível conectar com o serviço de gravação DVBViewer"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Versão do Serviço de Gravação %s ou maior é requerido"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Versão do serviço de gravação DVDViewer %s ou maior é requerido"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Não foi possível analisar a lista de canais"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Verifique o log do XBMC para maiores informações"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Não foi possível abrir favourites.xml local"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Não foi possível analisar lista de favoritos"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Não foi possível analisar lista dos agendamentos"

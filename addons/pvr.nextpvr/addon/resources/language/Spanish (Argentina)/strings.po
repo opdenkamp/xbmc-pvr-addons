@@ -56,6 +56,66 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Sintonizador ya no está disponible"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Agregar temporalizador"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Tipos de grabado"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Grabar una vez"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Grabar temporada (nuevos episodios en este canal)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Grabar temporada (todos los espisodios en este canal)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Grabar temporada (Diario, este intervalo de tiempo)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Grabar temporada (Semanal, este intervalo de tiempo)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Grabar temporada (Lunes a Viernes, este intervalo de tiempo)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Grabar temporada (Fines de semana, este intervalo de tiempo)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Mantener"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Todas las grabaciones"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Relleno previo (minutos)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Relleno previo (minutos)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Directorio de grabaciones"
+
 msgctxt "#30135"
 msgid "Default"
 msgstr "Por defecto"

@@ -56,6 +56,34 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Canlı TV için RTSP akışını kullan"
 
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Grup kayıtları"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "devre dışı"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "kayıt dizinine göre"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "kayıt tarihine göre"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "İlk harfe göre"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "tv kanalına göre"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "diziye göre"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Genel"
@@ -64,10 +92,6 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Gelişmiş"
 
-msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Kayıt Servisi'ne bağlanılamıyor"
-
-msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Kayıt Servisi'nin %s veya daha yüksek sürümü gerekiyor"
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Kayıtlar"

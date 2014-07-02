@@ -27,3 +27,7 @@ msgstr "Лозинка"
 msgctxt "#30100"
 msgid "General"
 msgstr "Опште"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Снимци"

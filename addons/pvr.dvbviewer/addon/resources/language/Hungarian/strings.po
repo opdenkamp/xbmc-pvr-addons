@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "RTSP adatfolyam használata az elő TV-hez"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Alacsony teljesítményigényű mód (logók és bélyegképek letiltása)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Felvételek csoportosítása"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "letiltva"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "felvétel könyvtár szerint"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "felvétel dátuma szerint"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "Kezdőbetű szerint"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "Tv csatorna szerint"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "sorozat szerint"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Általános"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Haladó"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Felvételek"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Nem lehet a felvétel szolgáltatáshoz csatlakozni"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Nem lehet a DVBViewer felvétel szolgáltatáshoz csatlakozni"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Felvétel szolgáltatás verzió %s vagy nagyobb szükséges"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer Felvétel Szolgáltatás verzió %s vagy nagyobb szükséges"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Csatornalista nem összeállítható"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "További információk az XBMC logban"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "A heyli favourites.xml fájl nem megnyitható"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "A kedvencek lista nem összeállítható"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "A felvételi lista nem összeállítható"

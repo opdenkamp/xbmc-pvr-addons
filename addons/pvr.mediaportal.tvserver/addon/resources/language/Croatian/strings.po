@@ -54,7 +54,7 @@ msgstr "Pretvori naziv računala u IP adresu"
 
 msgctxt "#30009"
 msgid "EPG: Read genre strings (slow)"
-msgstr "EPG: čitaj nizove žanra (sporije)"
+msgstr "EPG: čitaj slogove žanra (sporije)"
 
 msgctxt "#30010"
 msgid "Wait time after tuning a channel (ms)"

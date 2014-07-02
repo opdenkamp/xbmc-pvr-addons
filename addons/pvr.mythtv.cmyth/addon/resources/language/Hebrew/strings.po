@@ -64,6 +64,10 @@ msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
 msgstr "העדף שידור חי ובטל התנגשויות הקלטה"
 
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV כתובת רשת ממשק אחרוי (WOL)"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "כללי"
@@ -128,6 +132,10 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr "מתקדם"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "הפעל demuxing MPEG-TS"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "גרסת פרוטוקול: %i - גרסת מסד נתונים: %i"
@@ -191,6 +199,26 @@ msgstr "מחק והקלט שוב"
 msgctxt "#30412"
 msgid "Keep LiveTV recording"
 msgstr "השאר הקלטה"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "הצג/הסתר כללים עם סטאטוס 'לא מקליט'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "הקלטת כל התוכניות (ערוץ זה)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "הקלט תוכנית זו בכל שבוע"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "הקלט תוכנית זו בכל יום"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "הקלט תוכנית אחת (בכל הערוצים)"
 
 msgctxt "#30435"
 msgid "Record all new episodes (this channel)"

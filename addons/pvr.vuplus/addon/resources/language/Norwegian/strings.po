@@ -108,6 +108,10 @@ msgctxt "#30026"
 msgid "TV-Bouquet"
 msgstr "TV-Bouquet"
 
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "Hent piconer fra nettgrensesnittet"
+
 msgctxt "#30500"
 msgid "Disconnected from '%s'"
 msgstr "Frakoblet fra '%s'"

@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "VDR Hostname or IP"
-msgstr "Hostname ou IP VDR"
+msgstr "Nome do servidor ou IP VDR"
 
 msgctxt "#30001"
 msgid "VNSI Port"

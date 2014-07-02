@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Utilizza streaming RTSP per la TV live"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Abilità modalità leggera (disabilita loghi e anteprime)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Raggruppa registrazioni"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "disabilitato"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "per cartella di registrazione"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "per data di registrazione"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "per lettera iniziale"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "per canale tv"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "per serie"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Generale"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Avanzato"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Registrazioni"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Impossibile connettersi al servizio di registrazione"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Non posso connettermi al DVBViewer Recording Service"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Richiesta la versione %s o maggiore del Recording Service"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Versione %s del DVBViewer Recording Service richiesta"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Impossibile analizzare la lista canali"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Controlla il log XBMC per maggiori informazioni"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Impossibile aprire favourites.xml locale"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Impossibile analizzare la lista preferiti"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Impossibile analizzare la lista timer"

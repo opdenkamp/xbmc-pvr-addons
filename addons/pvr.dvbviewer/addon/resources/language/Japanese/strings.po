@@ -32,6 +32,14 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "パスワード"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "チャンネルリストの代わりにお気に入りを使用"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "ローカルのお気に入りファイルを使用"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "favourites.xml ファイルを選択"
@@ -44,6 +52,42 @@ msgctxt "#30021"
 msgid "Timeshift buffer path"
 msgstr "タイムシフト用バッファのパス"
 
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "ライブ TV に RTSP ストリーミングを使用"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "低パフォーマンスモードを有効に（ロゴやサムネールを無効に）"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "グループ録画"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "無効"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "録画ディレクトリ順"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "録画年月日順"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "あいうえお順"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "チャンネル順"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "シリーズ順"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "一般"
@@ -52,6 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "高度な設定"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "録音"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "録画サービスに接続できません"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "DVBViewer 録画サービスに接続できませんでした"
+
+msgctxt "#30501"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer 録画サービスバージョン %s 以上が必要です"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "チャンネルリストの解析に失敗しました"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "詳しくは XBMC のログを参照してください"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "ローカルのお気に入りファイルを開けませんでした"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "お気に入りリストの読み込みに失敗しました"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "タイマーリストの読み込みに失敗しました"

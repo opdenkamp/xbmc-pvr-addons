@@ -64,10 +64,6 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Napredno"
 
-msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "S storitvijo DVBViewer se ni mogoče povezati"
-
-msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Potrebna je storitev DVBViewer različice %s ali novejše"
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Posnetki"

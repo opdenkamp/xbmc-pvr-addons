@@ -16,9 +16,105 @@ msgstr ""
 "Language: is\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "NextPVR Hostname"
+msgstr "Hýsingarnafn NextPVR"
+
+msgctxt "#30001"
+msgid "NextPVR Port (usually 8866 or 7799)"
+msgstr "Gátt fyrir NextPVR (vanalega 8866 eða 7799)"
+
+msgctxt "#30002"
+msgid "NextPVR PinCode"
+msgstr "NextPVR Pinkóði"
+
+msgctxt "#30003"
+msgid "Enable TimeShift with Live TV"
+msgstr "Virkja Tímahliðrun með Live TV"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Tenging"
+
+msgctxt "#30041"
+msgid "Advanced"
+msgstr "Ítarlegt"
+
+msgctxt "#30050"
+msgid "NextPVR server is too old."
+msgstr "NextPVR miðlari er of gamall."
+
+msgctxt "#30051"
+msgid "Upgrade to '%s' or higher!"
+msgstr "Uppfærðu uppí '%s' eða nýrri!"
+
+msgctxt "#30052"
+msgid "Connection failed. Incorrect PIN?"
+msgstr "Tenging mistókst. Rangt PIN?"
+
+msgctxt "#30053"
+msgid "Tuner no longer available"
+msgstr "Móttakari ekki lengur tiltækur"
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Bæta við Tímatöku"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Gerð Upptöku"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Taka upp einu sinni"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Taka upp Þáttaröð (NÝJA þætti á þessari rás)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Taka upp Þáttaröð (Alla þætti á þessari rás)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Taka upp Þáttaröð (Daglega, innan tímaramma)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Taka upp Þáttaröð (Vikulega, innan tímaramma)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Taka upp Þáttaröð (Mánudaga-föstudaga, innan tímaramma)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Taka upp Þáttaröð (Helgar, innan tímaramma)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Halda"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Allar Upptökur"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "For-upptaka (mínútur)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "For-upptaka (mínútur)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Upptökumappa"
 
 msgctxt "#30135"
 msgid "Default"

@@ -27,3 +27,7 @@ msgstr "Loyniorð"
 msgctxt "#30100"
 msgid "General"
 msgstr "Vanligt"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Upptøkur"

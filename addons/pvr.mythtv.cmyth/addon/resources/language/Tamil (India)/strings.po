@@ -126,7 +126,7 @@ msgstr "பதிவு வார்ப்புரு"
 
 msgctxt "#30050"
 msgid "Advanced"
-msgstr "மேம்பட்ட"
+msgstr "மேம்பட்டது"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
@@ -174,4 +174,4 @@ msgstr "செயல்படுத்தபட்டுள்ளது"
 
 msgctxt "#30311"
 msgid "Disabled"
-msgstr "முடக்கப்பட்டன"
+msgstr "முடக்கப்பட்டது"

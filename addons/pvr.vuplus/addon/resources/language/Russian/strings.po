@@ -38,7 +38,7 @@ msgstr "Тайм-аут отклика в секундах"
 
 msgctxt "#30008"
 msgid "Icon Path"
-msgstr "Путь к иконкам"
+msgstr "Путь к значкам"
 
 msgctxt "#30010"
 msgid "Update Interval in minutes"

@@ -56,9 +56,65 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "מקלט אינו זמין יותר"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "הוסף תזמון"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "סוג הקלטה"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "הקלט פעם אחת"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "הקלטת עונה (פרקים חדשים בערוץ זה)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "הקלטת עונה (כל הפרקים בערוץ זה)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "הקלטת עונה (יומי, במשבצת זמן זו)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "הקלטת עונה (שבועי, במשבצת זמן זו)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "הקלטת עונה (שני-שישי, במשבצת זמן זו)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "הקלטת עונה (סופי שבוע, במשבצת זמן זו)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "שמור"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "כל ההקלטות"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Pre-Padding (דקות)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Pre-Padding (דקות)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "תיקית הקלטות"
 
 msgctxt "#30135"
 msgid "Default"

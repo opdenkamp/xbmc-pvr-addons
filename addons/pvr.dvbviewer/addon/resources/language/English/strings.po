@@ -70,7 +70,7 @@ msgctxt "#30040"
 msgid "Enable low performance mode (disables logos & thumbnails)"
 msgstr ""
 
-#empty strings from id 30041 to 30099
+#empty strings from id 30041 to 30049
 
 msgctxt "#30050"
 msgid "Group recordings"

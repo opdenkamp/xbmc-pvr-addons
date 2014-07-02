@@ -64,10 +64,6 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Uwch"
 
-msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Methu cysylltu â'r Gwasanaeth Recordio"
-
-msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Mae angen Gwasanaeth Recordio fersiwn %s or neu uwch"
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Recordiadau"

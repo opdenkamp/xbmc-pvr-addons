@@ -22,7 +22,7 @@ msgstr "Nombre del servidor NextPVR"
 
 msgctxt "#30001"
 msgid "NextPVR Port (usually 8866 or 7799)"
-msgstr "Puerto NextPVR (usualmente 8866 o 7799)"
+msgstr "Puerto NextPVR (normalmente 8866 o 7799)"
 
 msgctxt "#30002"
 msgid "NextPVR PinCode"
@@ -82,7 +82,7 @@ msgstr "Grabar la temporada (Todos los episodios de este canal)"
 
 msgctxt "#30124"
 msgid "Record Season (Daily, this timeslot)"
-msgstr "Grabar la temporada (diariamente , en este horario)"
+msgstr "Grabar la temporada (diariamente, en este horario)"
 
 msgctxt "#30125"
 msgid "Record Season (Weekly, this timeslot)"
@@ -90,7 +90,7 @@ msgstr "Grabar la temporada (Semanalmente, en este horario)"
 
 msgctxt "#30126"
 msgid "Record Season (Monday-Friday, this timeslot)"
-msgstr "rabar la temporada (de Lunes a Viernes, en este horario)"
+msgstr "Grabar la temporada (de Lunes a Viernes, en este horario)"
 
 msgctxt "#30127"
 msgid "Record Season (Weekends, this timeslot)"
@@ -106,11 +106,11 @@ msgstr "Todas las grabaciones"
 
 msgctxt "#30132"
 msgid "Pre-Padding (minutes)"
-msgstr "Pre-Padding (minutos)"
+msgstr "Margen (minutos)"
 
 msgctxt "#30133"
 msgid "Pre-Padding (minutes)"
-msgstr "Pre-Padding (minutos)"
+msgstr "Margen (minutos)"
 
 msgctxt "#30134"
 msgid "Recording Directory"
@@ -118,4 +118,4 @@ msgstr "Carpeta de grabaciones"
 
 msgctxt "#30135"
 msgid "Default"
-msgstr "Default"
+msgstr "Por defecto"

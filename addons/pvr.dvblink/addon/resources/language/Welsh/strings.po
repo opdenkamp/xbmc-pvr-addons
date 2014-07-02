@@ -1,0 +1,53 @@
+# XBMC Media Center language file
+# Addon Name: DVBLink PVR Client
+# Addon id: pvr.dvblink
+# Addon Provider: DVBLogic
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Welsh (http://www.transifex.com/projects/p/xbmc-main/language/cy/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cy\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
+
+msgctxt "#30000"
+msgid "General"
+msgstr "Cyffredinol"
+
+msgctxt "#30005"
+msgid "Username"
+msgstr "Enw defnyddiwr"
+
+msgctxt "#30006"
+msgid "Password"
+msgstr "Cyfrinair"
+
+msgctxt "#30100"
+msgid "Stream"
+msgstr "Ffrydio"
+
+msgctxt "#30105"
+msgid "Bitrate"
+msgstr "Didradd"
+
+msgctxt "#30107"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30111"
+msgid "Enable Timeshift"
+msgstr "Galluogi Symud Amser"
+
+msgctxt "#30112"
+msgid "Timeshift buffer path"
+msgstr "Llwybr byffro Symud Amser"
+
+msgctxt "#30200"
+msgid "Advanced"
+msgstr "Uwch"

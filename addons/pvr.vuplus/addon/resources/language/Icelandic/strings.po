@@ -16,6 +16,14 @@ msgstr ""
 "Language: is\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "VU+ hostname or IP address"
+msgstr "Nafn eða IP vistfang VU+ hýsingar"
+
+msgctxt "#30002"
+msgid "Streaming Port"
+msgstr "Gátt straums"
+
 msgctxt "#30003"
 msgid "Username"
 msgstr "Notandanafn"
@@ -23,6 +31,46 @@ msgstr "Notandanafn"
 msgctxt "#30004"
 msgid "Password"
 msgstr "Lykilorð"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Tímatakmörk svartíma í sekúndum"
+
+msgctxt "#30008"
+msgid "Icon Path"
+msgstr "Slóð táknmynda"
+
+msgctxt "#30010"
+msgid "Update Interval in minutes"
+msgstr "Uppfærslutími í mínútum"
+
+msgctxt "#30011"
+msgid "Automatic Timerlist Cleanup"
+msgstr "Sjálfvirk hreinsun á Tímatökulista"
+
+msgctxt "#30012"
+msgid "Webinterface Port"
+msgstr "Gátt vefviðmóts"
+
+msgctxt "#30013"
+msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "Bið á milli rásaskipta (þ.e. fyrir box með einum móttakara)"
+
+msgctxt "#30014"
+msgid "Folder for channeldata"
+msgstr "Mappa fyrir rásargögn"
+
+msgctxt "#30015"
+msgid "Check for bouquett updates"
+msgstr "Athuga með uppfærslur knippa"
+
+msgctxt "#30016"
+msgid "Check for channel updates"
+msgstr "Athuga með uppfærslu rása"
+
+msgctxt "#30017"
+msgid "Use only the DVB boxes' current recording path"
+msgstr "Nota aðeins núverandi upptökuslóð upptökutækja"
 
 msgctxt "#30018"
 msgid "General"
@@ -32,9 +80,37 @@ msgctxt "#30019"
 msgid "Channels"
 msgstr "Rásir"
 
+msgctxt "#30020"
+msgid "Advanced"
+msgstr "Ítarlegt"
+
 msgctxt "#30021"
 msgid "HTTP"
 msgstr "HTTP"
+
+msgctxt "#30022"
+msgid "Recordings / Timer"
+msgstr "Upptökur / Tímatökur"
+
+msgctxt "#30023"
+msgid "Recording folder on the receiver"
+msgstr "Upptökumappa á móttakaranum"
+
+msgctxt "#30024"
+msgid "Send DeepStandby-Command"
+msgstr "Senda DjúpurSvefn-skipun"
+
+msgctxt "#30025"
+msgid "Fetch only one TV bouquet"
+msgstr "Sækja aðeins eitt sjónvarpsknippi"
+
+msgctxt "#30026"
+msgid "TV-Bouquet"
+msgstr "Sjónvarps-knippi"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "Sækja 'picon' frá vefviðmóti"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

@@ -108,6 +108,10 @@ msgctxt "#30026"
 msgid "TV-Bouquet"
 msgstr "TV-Boeket"
 
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "Gaan haal picons vanaf webkoppelvlak"
+
 msgctxt "#30500"
 msgid "Disconnected from '%s'"
 msgstr "Gediskonnekteer van '%s'"

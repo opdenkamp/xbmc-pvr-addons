@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Koristi RTSP streamanje za televiziju"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Omogući slabije performanse (onemogući logotipove i minijature)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Grupiraj snimanja"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "onemogućeno"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "prema direktoriju snimanja"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "prema datumu snimanja"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "prema prvom slovu"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "prema TV programu"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "prema seriji"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Općenito"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Napredno"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Snimanja"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Nemoguće povezivanje s uslugom snimanja"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Nemoguće povezivanje s DVBViewer uslugom snimanja"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Potrebna je usluga snimanja inačice %s ili viša"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer usluga snimanja inačice %s ili novija je potrebna"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Nemoguća obrada popisa programa"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Provjerite XBMC zapis za više informacija"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Nemoguće otvaranje lokalne favourites.xml datoteke"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Nemoguća obrada popisa omiljenih"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Nemoguća obrada popisa zakazanih snimanja"

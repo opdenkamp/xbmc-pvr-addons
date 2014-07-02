@@ -42,15 +42,27 @@ msgstr "ログファイルに更に詳しいデバッグ情報を含める"
 
 msgctxt "#30006"
 msgid "Enable Live TV"
-msgstr "Live TV を有効に"
+msgstr "ライブTV を有効に"
 
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
-msgstr "Live Tvがスケジュールされたショーの移動を許可する"
+msgstr "ライブTV がスケジュールされたショーの移動を許可する"
 
 msgctxt "#30008"
 msgid "Conflict handling"
 msgstr "コンフリクトの処理"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "ライブTV を停止して録画する"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "競合する録画をキャンセルしてライブTV を視聴する"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV バックエンドのイーサネットアドレス (WOL)"
 
 msgctxt "#30019"
 msgid "General"
@@ -108,6 +120,10 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr "高度な設定"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "MPEG-TS 分離を有効"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "プロトコルのバージョン: %i - データベースのバージョン: %i"
@@ -140,6 +156,18 @@ msgctxt "#30306"
 msgid "Recorder unavailable"
 msgstr "レコーダーが使用できない"
 
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "競合する録画をキャンセルしました : %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "録画と競合するためライブTV を視聴停止しました : %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "録画しません"
+
 msgctxt "#30310"
 msgid "Enabled"
 msgstr "LCD有効"
@@ -147,3 +175,31 @@ msgstr "LCD有効"
 msgctxt "#30311"
 msgid "Disabled"
 msgstr "無効"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "削除して再録画"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "ライブTV の録画を保つ"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "すべてを録画する (このチャンネル)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "毎週録画する"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "毎日録画する"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "すべてを録画する (すべてのチャンネル)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "すべてを新しいエピソードを録画する (このチャンネル)"

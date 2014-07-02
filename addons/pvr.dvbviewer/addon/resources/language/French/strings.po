@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Utiliser le streaming RTSP pour la TV Directe"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Permettre le mode à basses performances (désactive les logos et les vignettes)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Grouper les enregistrements"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "désactivé"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "par dossier d'enregistrement"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "par date d'enregistrement"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "par première lettre"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "par chaîne TV"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "par séries"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Général"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Avancé"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Enregistrements"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Impossible de se connecter au service d'enregistrement"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Impossible de se connecter au service d'enregistrement DVBViewer"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Version du service d'enregistrement %s ou supérieur requisé"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "La version %s ou ultérieure du service d'enregistrement DVBViewer est exigée"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Impossible d'analyser la liste des chaînes"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Consultez le journal de XBMC pour plus d'informations"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Impossible d'ouvrir le fichier favourites.xml local"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Impossible d'analyser la liste des favoris"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Impossible d'analyser la liste des minuteries"

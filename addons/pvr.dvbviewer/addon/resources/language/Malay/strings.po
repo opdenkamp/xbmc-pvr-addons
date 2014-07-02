@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Guna penstriman RTSP untuk TV langsung"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Upayakan mod prestasi rendah (tidakupayakan logo & lakaran kecil)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Rakaman kumpulan"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "lumpuh"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "berdasarkan direktori rakaman"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "berdasarkan tarikh rakaman"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "berdasarkan hufur pertama"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "berdasarkan saluran televisyen"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "berdasarkan siri"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Am"
@@ -64,10 +96,30 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Lanjutan"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Rakaman"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Tidak dapat sambung ke Perkhidmatan Rakaman"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Tidak dapat bersambung kepada Servis Rakaman DVBViewer"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Perkhidmatan Rakaman versi %s atau lebih tinggi diperlukan"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Servis Rakaman DVBViewer versi %s atau lebih tinggi diperlukan"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Senarai saluran tidak dapat dihurai"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Semak log XBMC untuk maklumat lanjut"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Senarai kegemaran tidak dapat dihurai"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Senarai pemasa tidak dapat dihurai"

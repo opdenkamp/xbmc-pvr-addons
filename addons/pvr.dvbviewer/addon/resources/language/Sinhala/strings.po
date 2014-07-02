@@ -1,0 +1,57 @@
+# XBMC Media Center language file
+# Addon Name: DVBViewer Client
+# Addon id: pvr.dvbviewer
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Sinhala (http://www.transifex.com/projects/p/xbmc-main/language/si/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: si\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30002"
+msgid "Username"
+msgstr "පරිශීලක නම"
+
+msgctxt "#30003"
+msgid "Password"
+msgstr "මුරපදය"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "කාල සාරුව ක්‍රියාත්මක කරන්න"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "කාල සාරු අවරෝධක පෙත"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "මුලකුර අනුව"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "රුපවාහිනී නාලිකාව අනුව"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "මාලාව අනුව"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "සාමාන්‍ය"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "උසස්"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "පටිගතකිරීම්"

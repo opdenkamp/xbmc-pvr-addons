@@ -38,7 +38,7 @@ msgstr "சாளரம் பயனர் விவரங்கள்"
 
 msgctxt "#30005"
 msgid "Password"
-msgstr "அடையாளச் சொல்"
+msgstr "கடவுச்சொல்"
 
 msgctxt "#30006"
 msgid "Delay after tuning (ms)"

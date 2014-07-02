@@ -22,47 +22,47 @@ msgstr "Nazwa hosta Mediaportal "
 
 msgctxt "#30001"
 msgid "Mediaportal XBMC plugin Port"
-msgstr "Port dodatku Mediaportal XBMC"
+msgstr "Port wtyczki"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
-msgstr "Tylko niekodowane (Free-to-air)"
+msgstr "Tylko niekodowane"
 
 msgctxt "#30003"
 msgid "Include Radio"
-msgstr "Uwzględnij Radio"
+msgstr "Uwzględniaj kanały radiowe"
 
 msgctxt "#30004"
 msgid "Fast channel switching (don't stop timeshift)"
-msgstr "Szybka zmiana kanałów (nie przerywaj timeshift'u)"
+msgstr "Szybka zmiana kanału (nie zatrzymuj przesunięcia czasowego)"
 
 msgctxt "#30005"
 msgid "Connect timeout (s)"
-msgstr "Upłynął limit czasu (s)"
+msgstr "Limit czasu połączenia (s)"
 
 msgctxt "#30006"
 msgid "Import only TV Channels from group"
-msgstr "Importuj jedynie kanały TV z grupy"
+msgstr "Importuj tylko kanały telewizyjne z grupy"
 
 msgctxt "#30007"
 msgid "Import only Radio Channels from group"
-msgstr "Importuj jedynie kanały Radiowe z grupy"
+msgstr "Importuj tylko kanały radiowe z grupy"
 
 msgctxt "#30008"
 msgid "Convert hostname to IP-adress"
-msgstr "Rozwijaj nazwę hosta na IP"
+msgstr "Rozwiązuj nazwę hosta na adres IP"
 
 msgctxt "#30009"
 msgid "EPG: Read genre strings (slow)"
-msgstr "EPG: odczytuj gatunek (powolne)"
+msgstr "Przewodnik TV: wczytuj gatunki (powolne)"
 
 msgctxt "#30010"
 msgid "Wait time after tuning a channel (ms)"
-msgstr "Czas czekania po dostrojeniu kanału (ms)"
+msgstr "Czas oczekiwania po dostrojeniu kanału (ms)"
 
 msgctxt "#30015"
 msgid "Streaming method"
-msgstr "Metoda streamingu"
+msgstr "Metoda streamieniowania"
 
 msgctxt "#30016"
 msgid "Windows user account (SMB)"
@@ -74,11 +74,11 @@ msgstr "Hasło użytkownika Windows (SMB)"
 
 msgctxt "#30018"
 msgid "Use RTSP streaming"
-msgstr "Używaj streamingu RTSP"
+msgstr "Używaj strumieniowania RTSP"
 
 msgctxt "#30040"
 msgid "Connection"
-msgstr "Połącznie"
+msgstr "Połączenie"
 
 msgctxt "#30041"
 msgid "MediaPortal"
@@ -90,11 +90,11 @@ msgstr "Odtwarzanie"
 
 msgctxt "#30050"
 msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Twoja wersja TVServerXBMC '%s' jest zbyt stara. Zaktualizują ją do '%s' lub wyższej!"
+msgstr "Wtyczka TVServerXBMC '%s' jest w za starej wersji. Zaktualizują ją do wersji '%s' lub nowszej!"
 
 msgctxt "#30051"
 msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Twoja wersja TVServerXBMC jest zbyt stara. Zaktualizują ją do '%s' lub wyższej!"
+msgstr "Wtyczka TVServerXBMC jest w za starej wersji. Zaktualizują ją do wersji '%s' lub nowszej!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -110,7 +110,7 @@ msgstr "Kanał jest zakodowany"
 
 msgctxt "#30062"
 msgid "No video or audio detected"
-msgstr "Nie wykryto fonii ani wizji"
+msgstr "Brak strumieni wideo i dźwięku"
 
 msgctxt "#30063"
 msgid "No signal detected"
@@ -122,7 +122,7 @@ msgstr "Nieznany błąd"
 
 msgctxt "#30065"
 msgid "Unable to start graph"
-msgstr "Nie powiodło się uruchomienie grafiki"
+msgstr "Nie powiodło się uruchomienie diagramu"
 
 msgctxt "#30066"
 msgid "Unknown channel"
@@ -142,7 +142,7 @@ msgstr "Karta jest niedostępna"
 
 msgctxt "#30070"
 msgid "Connection to slave failed"
-msgstr "Połączenie do slave'a nie powiodło się"
+msgstr "Połączenie do usługi podrzędnej nie powiodło się"
 
 msgctxt "#30071"
 msgid "Not the owner"
@@ -150,7 +150,7 @@ msgstr "To nie jest właściciel"
 
 msgctxt "#30072"
 msgid "Graph building failed"
-msgstr "Budowanie grafiki nie powiodło się"
+msgstr "Budowanie diagramu nie powiodło się"
 
 msgctxt "#30073"
 msgid "SW Encoder missing"

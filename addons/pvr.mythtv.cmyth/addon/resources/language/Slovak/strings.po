@@ -64,6 +64,10 @@ msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
 msgstr "Uprednostniť živé TV vysielanie a zrušiť konfliktné plánované nahrávania"
 
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "Ethernetová adresa backendu MythTV (WOL)"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Všeobecné"
@@ -128,6 +132,10 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr "Pokročilé"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Povoliť demultiplexovanie MPEG-TS"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Verzia protokolu: %i - Verzia databázy: %i"
@@ -168,6 +176,10 @@ msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
 msgstr "Zastavuje sa živé TV vysielanie z dôvodu konfliktu s nahrávaním: %s"
 
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Nenahráva sa"
+
 msgctxt "#30310"
 msgid "Enabled"
 msgstr "Aktívne"
@@ -176,6 +188,38 @@ msgctxt "#30311"
 msgid "Disabled"
 msgstr "Zakázaný"
 
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Nenašlo sa žiadne vysielanie"
+
 msgctxt "#30411"
 msgid "Delete and re-record"
 msgstr "Vymazať a znova nahrať"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Ponechať nahrávky LiveTV"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Zobraziť/skryť pravidlá so stavom 'Nenahráva sa'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Nahrať všetky predstavenia (na tomto kanáli)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Nahrať toto predstavenie každý týždeň"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Nahrať toto predstavenie každý deň"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Nahrať jedno predstavenie (na všetkých kanáloch)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Nahrať všetky nové epizódy (na tomto kanáli)"

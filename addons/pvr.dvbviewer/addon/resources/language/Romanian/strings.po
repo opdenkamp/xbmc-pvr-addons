@@ -18,11 +18,11 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "DVBViewer Recording Service IP Address"
-msgstr "Adresa IP a DVBViewer"
+msgstr "DVBViewer Adresa IP"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
-msgstr "Portul interfaței web"
+msgstr "Portul interfeței web"
 
 msgctxt "#30002"
 msgid "Username"
@@ -32,21 +32,61 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "Parolă"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Folosiți favorite în locul listei complete de canale."
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Folosiți fișierul local de favorite"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Selectează fișierul favourites.xml "
 
 msgctxt "#30020"
 msgid "Enable Timeshift"
-msgstr "Activeaza programul de inregistrare"
+msgstr "Activează programul de înregistrare"
 
 msgctxt "#30021"
 msgid "Timeshift buffer path"
-msgstr "Calea tamponului de inregistrare"
+msgstr "Calea buffer-ului de înregistrare"
 
 msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
-msgstr "Foloseste RTSP pentru TV in direct"
+msgstr "Foloseste RTSP pentru streaming Live TV"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Activează modul de performanță scăzută (scoate logo-uri și miniaturi)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Grup de înregistrări "
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "dezactivat"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "după directorul de înregistrare"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "după data de înregistrare"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "după prima literă"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "după canalul TV"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "după serie"
 
 msgctxt "#30100"
 msgid "General"
@@ -56,6 +96,10 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Avansat"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Înregistrări"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Nu se poate conecta la Serviciul de înregistrare"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Nu se poate conecta la serviciul de înregistrare DVBViewer"

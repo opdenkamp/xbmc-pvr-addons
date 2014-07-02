@@ -16,6 +16,10 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "VU+ hostname or IP address"
+msgstr "VU+ ana bilgisayar adı veya IP adresi"
+
 msgctxt "#30002"
 msgid "Streaming Port"
 msgstr "Yayın Portu"
@@ -36,6 +40,14 @@ msgctxt "#30008"
 msgid "Icon Path"
 msgstr "Simge Yolu"
 
+msgctxt "#30010"
+msgid "Update Interval in minutes"
+msgstr "Güncelleme aralığı dakikası"
+
+msgctxt "#30011"
+msgid "Automatic Timerlist Cleanup"
+msgstr "Otomatik Zamanlayıcı Listesi Temizleme"
+
 msgctxt "#30012"
 msgid "Webinterface Port"
 msgstr "Web arayüzü Portu"
@@ -43,6 +55,10 @@ msgstr "Web arayüzü Portu"
 msgctxt "#30014"
 msgid "Folder for channeldata"
 msgstr "Kanal verisi için klasör"
+
+msgctxt "#30015"
+msgid "Check for bouquett updates"
+msgstr "bouquett güncellemelerini kontrol et"
 
 msgctxt "#30016"
 msgid "Check for channel updates"
@@ -63,6 +79,14 @@ msgstr "Gelişmiş"
 msgctxt "#30021"
 msgid "HTTP"
 msgstr "HTTP"
+
+msgctxt "#30022"
+msgid "Recordings / Timer"
+msgstr "Kayıtlar / Zamanlayıcılar"
+
+msgctxt "#30023"
+msgid "Recording folder on the receiver"
+msgstr "Alıcıdaki kayıt klasörü"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

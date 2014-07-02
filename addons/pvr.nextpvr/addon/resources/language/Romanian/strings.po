@@ -56,6 +56,66 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Tuner-ul nu mai este disponibil"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECURENT]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Adaugă timp"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Tip înregistrare"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Înregistrează o dată"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Sesiune de înregistrări (episoade NOI pe acest canal)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Sesiune de înregistrări (toate episoadele de pe acest canal)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Sesiune de înregistrări (zilnic, acest slot)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Sesiune de înregistrări (săptămânal, acest slot)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Sesiune de înregistrări (luni-vineri, acest slot)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Sesiune de înregistrări (weekend, acest slot)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Păstrează"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Toate înregistrările"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Spațiere înainte (minute)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Spațiere înainte (minute)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Director pentru înregistrări"
+
 msgctxt "#30135"
 msgid "Default"
 msgstr "Standard"

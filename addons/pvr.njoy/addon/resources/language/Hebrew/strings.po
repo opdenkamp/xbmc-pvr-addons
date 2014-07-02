@@ -22,4 +22,4 @@ msgstr "N7 IP"
 
 msgctxt "#30001"
 msgid "N7 Port"
-msgstr "N7 Port"
+msgstr "יציאת N7"

@@ -16,6 +16,10 @@ msgstr ""
 "Language: lt\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30000"
+msgid "DVBViewer Recording Service IP Address"
+msgstr "DVBViewer įrašymo paslaugų IP adresas"
+
 msgctxt "#30001"
 msgid "Webinterface Port"
 msgstr "Web sąsajos prievadas"
@@ -28,6 +32,62 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "Slaptažodis"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Naudoti mėgstamiausi vietoj kanalų sąrašo"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Naudoti vietinį mėgstamiausią failą"
+
+msgctxt "#30012"
+msgid "Select the favourites.xml file"
+msgstr "Pasirinkti favourites.xml failą"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Įjungti laiko poslinkį"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Laiko poslinkio buferio kelias"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Naudoti RTSP transliaciją Live TV"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Įjungti mažo veiksmingumo režimą (išjungia logotipus ir miniatiūras)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Grupiniai įrašai"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "išjungta"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "pagal įrašymo katalogą"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "pagal įrašymo datą"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "pagal pirmą raidę"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "pagal TV kanalą"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "pagal seriją"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Pagrindinis"
@@ -35,3 +95,35 @@ msgstr "Pagrindinis"
 msgctxt "#30101"
 msgid "Advanced"
 msgstr "Išplėstinis"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Įrašai"
+
+msgctxt "#30500"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Nepavyko prisijungti prie DVBViewer įrašymo paslaugų"
+
+msgctxt "#30501"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer įrašymo paslaugų versija %s arba didesnę būtinąją"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Nepavyko apdoroti kanalų sąrašo"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Patikrinti XBMC žurnalą -Daugiau informacijos"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Nepavyko atverti vietinio favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Nepavyko apdoroti mėgstamiausių sąrašo"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Nepavyko apdoroti laikmačio sąrašo"

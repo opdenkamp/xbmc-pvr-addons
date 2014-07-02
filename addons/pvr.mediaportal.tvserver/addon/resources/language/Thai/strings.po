@@ -16,6 +16,10 @@ msgstr ""
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "ระยะเวลาหยุดการเชื่อมต่อ (วิ)"
+
 msgctxt "#30042"
 msgid "Playback"
 msgstr "เล่นเพลง"

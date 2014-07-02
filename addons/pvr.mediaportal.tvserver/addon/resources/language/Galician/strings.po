@@ -18,15 +18,15 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Mediaportal Hostname"
-msgstr "Nome de host do Mediaportal"
+msgstr "Nome do host de Mediaportal"
 
 msgctxt "#30001"
 msgid "Mediaportal XBMC plugin Port"
-msgstr "Extensión para o porto de XBMC de Mediaportal"
+msgstr "Extensión para o porto do XBMC de Mediaportal"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
-msgstr "Só emisión libre"
+msgstr "Só emisións en aberto"
 
 msgctxt "#30003"
 msgid "Include Radio"
@@ -46,7 +46,7 @@ msgstr "Importar só os canles de TV dende o grupo"
 
 msgctxt "#30007"
 msgid "Import only Radio Channels from group"
-msgstr "Importar só os canles de Radio dende o grupo"
+msgstr "Importar só as canles de Radio dende o grupo"
 
 msgctxt "#30008"
 msgid "Convert hostname to IP-adress"

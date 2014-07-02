@@ -56,9 +56,65 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Tuner už nie je k dispozícii"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[OPAK.]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Pridať časovač"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Typ nahrávania"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Nahrať raz"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Nahrať sériu (NOVÉ epizódy na tomto kanáli)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Nahrať sériu (všetky epizódy na tomto kanáli)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Nahrať sériu (denne, o tomto čase)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Nahrať sériu (týždenne, o tomto čase)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Nahrať sériu (pondelok až piatok, o tomto čase)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Nahrať sériu (víkend, o tomto čase)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Ponechať"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Všetky nahrávky"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Doba nahrávania pred stanoveným časom (minúty)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Doba nahrávania pred stanoveným časom začiatku (minúty)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Adresár pre nahrávky"
 
 msgctxt "#30135"
 msgid "Default"

@@ -204,6 +204,26 @@ msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Tạo các nhóm kênh tự động trên máy chủ"
 
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Cài đặt"
+
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Kênh"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Danh sách kênh bị cấm"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Bộ lọc kênh"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Kênh Radio"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Lưu bộ lọc"

@@ -32,6 +32,10 @@ msgctxt "#30052"
 msgid "Connection failed. Incorrect PIN?"
 msgstr "ግንኙነቱ አልተሳካም የተሳሳተ PIN?"
 
+msgctxt "#30130"
+msgid "Keep"
+msgstr "ማስቀመጫ"
+
 msgctxt "#30135"
 msgid "Default"
 msgstr "ነባር "

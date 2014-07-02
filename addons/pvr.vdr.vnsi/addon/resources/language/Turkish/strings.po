@@ -16,6 +16,10 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "VDR Ana makine adı veya IP"
+
 msgctxt "#30001"
 msgid "VNSI Port"
 msgstr "VNSI Portu"
@@ -48,6 +52,10 @@ msgctxt "#30010"
 msgid "Start Channel search"
 msgstr "Kanal aramayı başlat"
 
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Kaynak tipi"
+
 msgctxt "#30012"
 msgid "TV channels"
 msgstr "TV kanalları"
@@ -60,6 +68,10 @@ msgctxt "#30014"
 msgid "FTA channels"
 msgstr "FTA kanalları"
 
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Şifreli Kanallar"
+
 msgctxt "#30016"
 msgid "HD channels"
 msgstr "HD kanallar"
@@ -67,6 +79,10 @@ msgstr "HD kanallar"
 msgctxt "#30017"
 msgid "Country"
 msgstr "Ülke"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Kabloluya çevir"
 
 msgctxt "#30022"
 msgid "Satellite"

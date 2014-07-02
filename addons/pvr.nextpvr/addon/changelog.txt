@@ -1,3 +1,6 @@
+v1.9.9
+- updated language files from Transifex
+
 v1.9.8
 - fixed bug that could cause connection to close prematurely 
 

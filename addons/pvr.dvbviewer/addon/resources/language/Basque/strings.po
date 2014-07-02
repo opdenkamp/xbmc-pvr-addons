@@ -27,3 +27,7 @@ msgstr "Pasahitza"
 msgctxt "#30100"
 msgid "General"
 msgstr "Orokorra"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Grabazioak"

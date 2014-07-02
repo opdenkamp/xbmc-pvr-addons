@@ -243,3 +243,27 @@ msgstr "VDR Admin"
 msgctxt "#30108"
 msgid "Channels"
 msgstr "ערוצים"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "רשימת ספקים בטוחים"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "רשימת ערוצים לא בטוחים"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "מסנני ערוץ"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "ערוצי רדיו"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "שם מסננים"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "ספק לא ידוע"

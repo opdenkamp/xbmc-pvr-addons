@@ -22,4 +22,4 @@ msgstr "N7 IP'si"
 
 msgctxt "#30001"
 msgid "N7 Port"
-msgstr "N7 Portu"
+msgstr "N7 Bağlantı noktası"

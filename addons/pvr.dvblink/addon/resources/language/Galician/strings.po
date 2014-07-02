@@ -1,0 +1,141 @@
+# XBMC Media Center language file
+# Addon Name: DVBLink PVR Client
+# Addon id: pvr.dvblink
+# Addon Provider: DVBLogic
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Galician (http://www.transifex.com/projects/p/xbmc-main/language/gl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: gl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "General"
+msgstr "Xeral"
+
+msgctxt "#30001"
+msgid "Server Address"
+msgstr "Enderezo do Servidor"
+
+msgctxt "#30002"
+msgid "Server Port"
+msgstr "Porto do Servidor"
+
+msgctxt "#30003"
+msgid "Client name"
+msgstr "Nome do cliente"
+
+msgctxt "#30004"
+msgid "Connection timeout (s)"
+msgstr "Tempo(s) de espera"
+
+msgctxt "#30005"
+msgid "Username"
+msgstr "Nome de usuario"
+
+msgctxt "#30006"
+msgid "Password"
+msgstr "Contrasinal"
+
+msgctxt "#30100"
+msgid "Stream"
+msgstr "Fluxo"
+
+msgctxt "#30102"
+msgid "Stream format"
+msgstr "Formato do fluxo"
+
+msgctxt "#30103"
+msgid "Height"
+msgstr "Alto"
+
+msgctxt "#30104"
+msgid "Width"
+msgstr "Ancho"
+
+msgctxt "#30105"
+msgid "Bitrate"
+msgstr "Taxe de bits"
+
+msgctxt "#30106"
+msgid "Audio track"
+msgstr "Pista de audio"
+
+msgctxt "#30107"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30108"
+msgid "RTP"
+msgstr "RTP"
+
+msgctxt "#30109"
+msgid "HLS"
+msgstr "HLS"
+
+msgctxt "#30110"
+msgid "ASF"
+msgstr "ASF"
+
+msgctxt "#30111"
+msgid "Enable Timeshift"
+msgstr "Habilitar Timeshift"
+
+msgctxt "#30112"
+msgid "Timeshift buffer path"
+msgstr "Camiño do búfer do Timeshift"
+
+msgctxt "#30200"
+msgid "Advanced"
+msgstr "Avanzado"
+
+msgctxt "#30201"
+msgid "Use channel handle instead of client id"
+msgstr "Empregar o manexador da canle no canto do id do cliente"
+
+msgctxt "#30202"
+msgid "Show information messages"
+msgstr "Amosar mensaxes de información"
+
+msgctxt "#32001"
+msgid "Connected to DVBLink Server '%s'"
+msgstr "Conectado ao Servidor DVBLink '%s'"
+
+msgctxt "#32002"
+msgid "Found '%d' channels"
+msgstr "Atopadas '%d' canles"
+
+msgctxt "#32003"
+msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
+msgstr "Non se puido conectar co Servidor DVBLink '%s' (códido do erro: %d)"
+
+msgctxt "#32004"
+msgid "Could not get recordings (Error code : %d)"
+msgstr "Non se puideron obter as gravacións (código do erro: %d)"
+
+msgctxt "#32006"
+msgid "Could not get timers(Error code : %d)"
+msgstr "Non se puideron obter os temporizadores (código do erro: %d)"
+
+msgctxt "#32007"
+msgid "Found %d EPG timers"
+msgstr "Atopados %d temporizadores"
+
+msgctxt "#32008"
+msgid "Found %d manual timers"
+msgstr "Atopados %d temporizadores manuais"
+
+msgctxt "#32009"
+msgid "Found %d recordings"
+msgstr "Atopadas %d gravacións"
+
+msgctxt "#32010"
+msgid "Could not get stream for channel %s (Error code : %d)"
+msgstr "Non foi posíbel obter o fluxo da canle %s (código do erro: %d)"

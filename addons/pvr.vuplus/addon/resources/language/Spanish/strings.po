@@ -90,7 +90,7 @@ msgstr "HTTP"
 
 msgctxt "#30022"
 msgid "Recordings / Timer"
-msgstr "Grabaciones/ Temporizador"
+msgstr "Grabaciones/Temporizador"
 
 msgctxt "#30023"
 msgid "Recording folder on the receiver"
@@ -98,7 +98,7 @@ msgstr "Carpeta de grabaciones en el receptor"
 
 msgctxt "#30024"
 msgid "Send DeepStandby-Command"
-msgstr "Envíe el comando DeepStandby"
+msgstr "Enviar comando DeepStandby"
 
 msgctxt "#30025"
 msgid "Fetch only one TV bouquet"

@@ -32,6 +32,14 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "Heslo"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Použij oblibené místo seznamu programů"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Použit lokální soubor oblíbených"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Vyberte soubor favourites.xml"
@@ -44,6 +52,42 @@ msgctxt "#30021"
 msgid "Timeshift buffer path"
 msgstr "Cesta k zásobníku časového posunu"
 
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Použij RTSP streamování pro TV"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Zapni mód nízkého výkonu (zakáže loga & náhledy)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Seskup nahrávky"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "zakázáno"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "podle složky nahrávky"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "podle času nahrávky"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "podle počátečního písmena"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "podle tv programu"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "podle seriálu"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Obecné"
@@ -52,6 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Pokročilé"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Nahrávky"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Nelze se spojit se službou nahrávání"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Nelze se spojit se službou nahrávání DBVieweru"
+
+msgctxt "#30501"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Je vyžadována DVBViewer Recording Service verze %s nebo vyšší."
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Nemohu parsovat seznam programů"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Pro více informací projdi XBMC log"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Nemohu otevřít lokální favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Nemohu parsovat seznam oblíbených"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Nemohu parsovat seznam časovačů"

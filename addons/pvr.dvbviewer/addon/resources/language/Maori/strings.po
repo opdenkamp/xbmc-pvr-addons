@@ -31,3 +31,7 @@ msgstr "Āhuawhānui"
 msgctxt "#30101"
 msgid "Advanced"
 msgstr "Arā Atu Anō"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Ngā pūhopu"

@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Enable Live TV"
 msgstr "Canlı TV aktifleştir"
 
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Kaydı tercih et ve Live TV durdur"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Genel"
@@ -60,13 +64,57 @@ msgctxt "#30025"
 msgid "Internal template"
 msgstr "Dahili görünüm"
 
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Yeni dönüştürücü kayıtları"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Kullanıcı çalışmaları #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Kullanıcı çalışmaları #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Kullanıcı çalışmaları #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Kullanıcı çalışmaları #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Dönüştürücü"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Şablon kaydedildi."
+
 msgctxt "#30050"
 msgid "Advanced"
 msgstr "Gelişmiş"
 
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "MythTV veritabanı ile bağlantı başarısız"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Bağlantı düzenlendi."
+
 msgctxt "#30305"
 msgid "Channel unavailable"
 msgstr "Kanal kullanılamıyor"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Kaydedici kullanılamıyor."
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Kaydedilemedi."
 
 msgctxt "#30310"
 msgid "Enabled"
@@ -76,6 +124,38 @@ msgctxt "#30311"
 msgid "Disabled"
 msgstr "Devre dışı"
 
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Hiçbir yayın bulunamadı"
+
 msgctxt "#30411"
 msgid "Delete and re-record"
 msgstr "Sil ve yeniden kaydet"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "LiveTV kaydını devam ettir"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "'Kaydedilemeyenler' durumu için kuralları Göster/Gizle"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Tüm kayıtları göster (bu kanal için)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Tüm Hafta  kayıtlarını göster"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Hergün kaydı höster"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Kayıt göster (Tüm Kanallar)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Tüm bölümleri göster (nu kanal için)"

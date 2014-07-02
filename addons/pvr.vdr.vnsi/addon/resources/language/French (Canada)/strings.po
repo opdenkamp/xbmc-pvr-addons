@@ -100,6 +100,10 @@ msgctxt "#30020"
 msgid "Cable modulation"
 msgstr "Modulation du câble"
 
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Inversion DVB-T"
+
 msgctxt "#30022"
 msgid "Satellite"
 msgstr "Satellite"

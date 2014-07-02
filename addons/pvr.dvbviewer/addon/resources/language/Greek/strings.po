@@ -56,6 +56,38 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Χρήση ροής RTSP για ζωντανή τηλεόρασης"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Λειτουργία χαμηλής απόδοσης (απενεργοποιεί λογότυπα & μικρογραφίες)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Εγγραφές γκρουπ"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "ανενεργό"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "ανά φάκελο εγγραφής"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "ανά ημερομηνία εγγραφής"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "αλφαβητικά"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "ανά κανάλι"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "ανά σειρά"
+
 msgctxt "#30100"
 msgid "General"
 msgstr "Γενικά"
@@ -64,10 +96,34 @@ msgctxt "#30101"
 msgid "Advanced"
 msgstr "Για Προχωρημένους"
 
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Εγγραφές"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Αδυναμία σύνδεσης με την Υπηρεσία Εγγραφών"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Αδυναμία σύνδεσης με την Υπηρεσία Εγγραφών του DVBViewer"
 
 msgctxt "#30501"
-msgid "Recording Service version %s or higher required"
-msgstr "Απαιτείται η έκδοση %s ή ανώτερη για το Recording Service"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Απαιτείται η έκδοση %s ή ανώτερη για την Υπηρεσία Εγγραφών του DVBViewer"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Αδυναμία ανάλυσης της λίστας καναλιών"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Ελέγξτε το αρχείο καταγραφής του XBMC για περισσότερες πληροφορίες"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Αδυναμία χρήσης του τοπικού αρχείου favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Αδυναμία ανάλυσης της λίστας αγαπημένων"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Αδυναμία ανάλυσης της λίστας χρονοδιακοπτών"

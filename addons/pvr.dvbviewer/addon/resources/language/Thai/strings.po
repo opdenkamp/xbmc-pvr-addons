@@ -31,3 +31,7 @@ msgstr "ทั่วไป"
 msgctxt "#30101"
 msgid "Advanced"
 msgstr "ขั้นสูง"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "กำลังบันทึก"

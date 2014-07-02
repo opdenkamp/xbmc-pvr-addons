@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "VDR Hostname or IP"
-msgstr "VDR பின்தள புரவலன் பெயர் அல்லது ஐபி"
+msgstr "VDR பின்தள பெயர் அல்லது ஐபி"
 
 msgctxt "#30001"
 msgid "VNSI Port"
@@ -102,7 +102,7 @@ msgstr "கம்பி குறிப்பேற்றம்"
 
 msgctxt "#30021"
 msgid "Terr Inversion"
-msgstr "எதிர்மறை Terr"
+msgstr "Terr எதிர்மறை"
 
 msgctxt "#30022"
 msgid "Satellite"
@@ -243,3 +243,27 @@ msgstr "VDR நிர்வாகம்"
 msgctxt "#30108"
 msgid "Channels"
 msgstr "சேனல்கள்"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "வழங்குநர் வெள்ளை பட்டியல்"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "சேனல் கருப்பு பட்டியல்"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "சேனல் வடிகட்டிகள்"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "வானொலி சேனல்கள்"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "வடிகட்டிகளை சேமி"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "அறியாத வழங்குநர்"

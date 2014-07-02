@@ -27,3 +27,7 @@ msgstr "رمز عبور"
 msgctxt "#30100"
 msgid "General"
 msgstr "عمومی"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "ضبط شده ها"

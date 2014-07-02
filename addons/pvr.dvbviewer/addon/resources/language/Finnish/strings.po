@@ -35,3 +35,7 @@ msgstr "Yleiset"
 msgctxt "#30101"
 msgid "Advanced"
 msgstr "Lisäasetukset"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Nauhoitukset"

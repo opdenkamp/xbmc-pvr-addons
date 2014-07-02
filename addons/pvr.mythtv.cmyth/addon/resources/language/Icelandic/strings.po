@@ -16,17 +16,169 @@ msgstr ""
 "Language: is\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "MythTV Backend Hostname or IP"
+msgstr "Hýsilnafn MythTV bakenda eða IP"
+
+msgctxt "#30001"
+msgid "MythTV Backend Port"
+msgstr "Gátt MythTV bakenda"
+
+msgctxt "#30002"
+msgid "MythTV Database Username"
+msgstr "Notandanafn MythTV gagnagrunns"
+
+msgctxt "#30003"
+msgid "MythTV Database Password"
+msgstr "Lykilorð MythTV gagnagrunns"
+
+msgctxt "#30004"
+msgid "MythTV Database Databasename"
+msgstr "Nafn MythTV gangagrunns"
+
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "Ítarlegri villukemdiupplýsingar í atvikaskránni"
+
 msgctxt "#30006"
 msgid "Enable Live TV"
-msgstr "Virkja beina útsendingu"
+msgstr "Virkja Live TV"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "Leyfa Live TV að færa sýningar sem eru komnar á dagskrá"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Höndla árekstra"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Kjósa frekar Live TV þegar upptaka á seinni tíma"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Kjósa upptöku og stöðva Live TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Kjósa Live TV og hætta við upptöku sem rekst á"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "Ethernet vistfang MythTV bakenda (WOL)"
 
 msgctxt "#30019"
 msgid "General"
 msgstr "Almennt"
 
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Veita sniðmáts"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Innbyggt"
+
 msgctxt "#30022"
 msgid "MythTV"
 msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Innbyggt sniðmát"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Leita sjálfvirkt að lýsigögnum"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Auglýsinga-merkja nýjar upptökur"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Umkóða nýjar upptökur"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Keyra Notandaverk #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Keyra Notandaverk #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Keyra Notandaverk #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Keyra Notandaverk #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Umkóðari"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Leyfa upptökum að renna út?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Sniðmát upptakna"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Ítarlegt"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Virkja MPEG-TS demuxing"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Útgáfa samskiptareglna: %i - Útgáfa gagnagrunns: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Tókst ekki að tengjast bakenda MythTV"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Tókst ekki að tengjast MythTV gagnagrunni"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Tenging við MythTV bakenda rofnaði"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Tenging við MythTV bakenda endurheimt"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Engin svörun frá M;ythTV bakenda"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Rás ekki tiltæk"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Upptökutæki ekki tiltækt"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Hætta við upptöku sem rekst á: "
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Stöðva Live TV vegna upptöku sem rekst á: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Ekki að taka upp"
 
 msgctxt "#30310"
 msgid "Enabled"
@@ -35,3 +187,39 @@ msgstr "Virkt"
 msgctxt "#30311"
 msgid "Disabled"
 msgstr "Óvirkt"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Engin útsending fannst"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Eyða og taka upp aftur"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Halda Live TV í upptöku"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Sýna/Fela reglur með stöðu 'Ekki að taka upp'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Taka upp alla þætti (þessi rás)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Taka upp þessa sýningu í hverri viku"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Taka upp þennan þátt daglega"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Taka upp einn þátt (allar rásir)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Taka upp allar nýjar þáttaraður (þessi rás)"

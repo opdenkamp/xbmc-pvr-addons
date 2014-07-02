@@ -54,7 +54,7 @@ msgstr "Convertir nombre de host a dirección IP"
 
 msgctxt "#30009"
 msgid "EPG: Read genre strings (slow)"
-msgstr "EPG: Leer cadenas de género (lento)"
+msgstr "GEP: Leer cadenas de género (lento)"
 
 msgctxt "#30010"
 msgid "Wait time after tuning a channel (ms)"
@@ -90,11 +90,11 @@ msgstr "Reproducción"
 
 msgctxt "#30050"
 msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Tu versión TVServerXBMC '%s' es demasiado antigua. ¡Por favor actualiza a '%s' o superior!"
+msgstr "Su versión TVServerXBMC '%s' es demasiado antigua. ¡Por favor actualiza a '%s' o superior!"
 
 msgctxt "#30051"
 msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Tu versión TVServerXBMC es demasiado antigua. ¡Por favor actualiza a '%s' o superior!"
+msgstr "Su versión TVServerXBMC es demasiado antigua. ¡Por favor actualiza a '%s' o superior!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."

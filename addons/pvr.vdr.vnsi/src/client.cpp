@@ -295,7 +295,7 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   else if (str == "timeshift")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'timeshift' from %u to %u", g_iTimeshift, *(int*) settingValue);
-    g_iPriority = *(int*) settingValue;
+    g_iTimeshift = *(int*) settingValue;
   }
   else if (str == "convertchar")
   {

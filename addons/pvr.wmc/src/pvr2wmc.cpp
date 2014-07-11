@@ -621,7 +621,7 @@ PVR_ERROR Pvr2Wmc::GetTimers(ADDON_HANDLE handle)
 	if (IsServerDown())
 		return PVR_ERROR_SERVER_ERROR;
 
-	vector<CStdString> responses = _socketClient.GetVector("GetTimers", true);							
+	vector<CStdString> responses = _socketClient.GetVector("GetTimers", true);
 
 	FOREACH(response, responses)
 	{
@@ -661,7 +661,7 @@ PVR_ERROR Pvr2Wmc::GetTimers(ADDON_HANDLE handle)
 	}
 
 	// check time since last time Recordings were updated, update if it has been awhile
-	if ( PLATFORM::GetTimeMs() >  _lastRecordingUpdateTime + 20000)
+	if ( _lastRecordingUpdateTime != 0 && PLATFORM::GetTimeMs() > _lastRecordingUpdateTime + 120000)
 	{
 		PVR->TriggerRecordingUpdate();
 	}
@@ -691,7 +691,8 @@ PVR_ERROR Pvr2Wmc::GetRecordings(ADDON_HANDLE handle)
 
 		// r.Id, r.Program.Title, r.FileName, recDir, plotOutline,
 		// plot, r.Channel.CallSign, ""/*icon path*/, ""/*thumbnail path*/, ToTime_t(r.RecordingTime),
-		// duration, r.RequestedProgram.Priority, r.KeepLength.ToString(), genre, subgenre
+		// duration, r.RequestedProgram.Priority, r.KeepLength.ToString(), genre, subgenre, ResumePos
+		// fields 16 - 23 used by MB3, 24 PlayCount
 
 		if (v.size() < 16)
 		{
@@ -715,8 +716,14 @@ PVR_ERROR Pvr2Wmc::GetRecordings(ADDON_HANDLE handle)
 		xRec.iGenreType = atoi(v[13].c_str());
 		xRec.iGenreSubType = atoi(v[14].c_str());
 		if (g_bEnableMultiResume)
+		{
 			xRec.iLastPlayedPosition = atoi(v[15].c_str());
-	
+			if (v.size() > 24)
+			{
+				xRec.iPlayCount = atoi(v[24].c_str());
+			}
+		}
+
 		PVR->TransferRecordingEntry(handle, &xRec);
 	}
 
@@ -781,7 +788,7 @@ PVR_ERROR Pvr2Wmc::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording
 {
 	CStdString command;
 	command.Format("SetResumePosition|%s|%d", recording.strRecordingId, lastplayedposition);
-	vector<CStdString> results = _socketClient.GetVector(command, false);					
+	vector<CStdString> results = _socketClient.GetVector(command, true);					
 	PVR->TriggerRecordingUpdate();		// this is needed to get the new resume point actually used by the player (xbmc bug)								
 	return PVR_ERROR_NO_ERROR;
 }
@@ -795,6 +802,16 @@ int Pvr2Wmc::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 	command.Format("GetResumePosition|%s", recording.strRecordingId); 
 	int pos = _socketClient.GetInt(command, true);
 	return pos;
+}
+
+// set the recording playcount in the wmc database
+PVR_ERROR Pvr2Wmc::SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
+{
+	CStdString command;
+	command.Format("SetPlayCount|%s|%d", recording.strRecordingId, count);
+	vector<CStdString> results = _socketClient.GetVector(command, true);					
+	//PVR->TriggerRecordingUpdate();		// this is needed to get the new play count actually used by the player (xbmc bug)								
+	return PVR_ERROR_NO_ERROR;
 }
 
 

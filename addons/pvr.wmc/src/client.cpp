@@ -321,16 +321,19 @@ extern "C" {
 
 	PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 	{
-		pCapabilities->bSupportsEPG                = true;
-		pCapabilities->bSupportsRecordings         = true;
-		pCapabilities->bSupportsTimers             = true;
-		pCapabilities->bSupportsTV                 = true;
-		pCapabilities->bSupportsRadio              = true;
-		pCapabilities->bSupportsChannelGroups      = true;
-		pCapabilities->bHandlesInputStream         = true;
-		pCapabilities->bHandlesDemuxing            = false;
-		pCapabilities->bSupportsChannelScan        = false;
-		pCapabilities->bSupportsLastPlayedPosition = g_bEnableMultiResume;
+		pCapabilities->bSupportsEPG					= true;
+		pCapabilities->bSupportsTV					= true;
+		pCapabilities->bSupportsRadio				= true;
+		pCapabilities->bSupportsRecordings			= true;
+		pCapabilities->bSupportsTimers				= true;
+		pCapabilities->bSupportsChannelGroups		= true;
+		pCapabilities->bSupportsChannelScan			= false;
+		pCapabilities->bHandlesInputStream			= true;
+		pCapabilities->bHandlesDemuxing				= false;
+		pCapabilities->bSupportsRecordingFolders	= false;
+		pCapabilities->bSupportsRecordingPlayCount	= true;
+		pCapabilities->bSupportsLastPlayedPosition	= g_bEnableMultiResume;
+		pCapabilities->bSupportsRecordingEdl		= false;
 
 		return PVR_ERROR_NO_ERROR;
 	}
@@ -661,6 +664,13 @@ extern "C" {
 		return -1; 
 	}
 
+	PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
+	{ 
+		if (_wmc && g_bEnableMultiResume)
+			return _wmc->SetRecordingPlayCount(recording, count);
+		return PVR_ERROR_NOT_IMPLEMENTED; 
+	}
+
 
 	PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
 	{ 
@@ -676,14 +686,12 @@ extern "C" {
 	PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 	void DemuxReset(void) {}
 	void DemuxFlush(void) {}
-	PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
 	void DemuxAbort(void) {}
 	DemuxPacket* DemuxRead(void) { return NULL; }
 	unsigned int GetChannelSwitchDelay(void) { return 0; }
 	const char * GetLiveStreamURL(const PVR_CHANNEL &channel)  {  return "";  }
 	bool SeekTime(int,bool,double*) { return false; }
 	void SetSpeed(int) {};
-   
 	PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 	time_t GetPlayingTime() { return 0; }
 	time_t GetBufferTimeStart() { return 0; }

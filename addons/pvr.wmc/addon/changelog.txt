@@ -1,5 +1,6 @@
 0.2.98
 - add Wake On LAN support to wake the ServerWMC backend server
+- store PlayCount/WatchedStatus of recordings in the backend so it can be shared by all clients
 
 0.2.97
 - support receiving notifications from the backend

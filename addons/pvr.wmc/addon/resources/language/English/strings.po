@@ -84,7 +84,7 @@ msgid "Refresh SignalStatus Interval (sec)"
 msgstr ""
 
 msgctxt "#30016"
-msgid "Store viewing resume times on server"
+msgid "Store Resume/Watched status on server"
 msgstr ""
 
 msgctxt "#30017"

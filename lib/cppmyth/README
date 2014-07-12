@@ -1,0 +1,27 @@
+This project is intended to create a easy client interface for the
+MythTV backend. Its development started from january 2014 and today
+the API supports the protocol version of MythTV 0.26 to 0.28-pre.
+
+=============================
+       Linux, OS-X, BSD
+=============================
+
+Build:
+------
+
+Start by configuring the build folder:
+
+mkdir build
+cd build
+cmake <root path of cppmyth>
+
+Then build the lib:
+
+make
+
+
+Generate the documentation:
+---------------------------
+
+doxygen <root path of cppmyth>/docs/doxygen-user.cfg
+doxygen <root path of cppmyth>/docs/doxygen-dev.cfg

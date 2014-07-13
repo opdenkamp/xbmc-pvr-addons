@@ -1,3 +1,13 @@
+0.2.98
+- add Wake On LAN support to wake the ServerWMC backend server
+- store PlayCount/WatchedStatus of recordings in the backend so it can be shared by all clients
+
+0.2.97
+- support receiving notifications from the backend
+- add notification for new backend version available
+- send client time to backend and add notification for clock drift warning
+- provide client name and OS to backend on more non windows platforms
+
 0.2.95
 - display correct duration for active-recordings  (gotham only)
 - Add support for Radio Channels

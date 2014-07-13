@@ -22,6 +22,7 @@
 #include "client.h"
 #include "xbmc_pvr_dll.h"
 #include "pvr2wmc.h"
+#include "utilities.h"
 #include "platform/util/util.h"
 
 using namespace std;
@@ -32,6 +33,7 @@ using namespace ADDON;
 #endif
 
 #define DEFAULT_PORT 9080
+#define DEFAULT_WAKEONLAN_ENABLE false
 #define DEFAULT_SIGNAL_ENABLE false
 #define DEFAULT_SIGNAL_THROTTLE 10
 #define DEFAULT_MULTI_RESUME true
@@ -46,10 +48,14 @@ PVR_MENUHOOK	*menuHook       = NULL;
 CStdString		g_strServerName;							// the name of the server to connect to
 CStdString		g_strClientName;							// the name of the computer running addon
 int				g_port;
+bool			g_bWakeOnLAN;								// whether to send wake on LAN to server
+CStdString		g_strServerMAC;								// MAC address of server
 bool			g_bSignalEnable;
 int				g_signalThrottle;
 bool			g_bEnableMultiResume;
 CStdString		g_clientOS;									// OS of client, passed to server
+
+backend_status	g_BackendOnline;							// whether the backend is online
 
 /* User adjustable settings are saved here.
 * Default values are defined inside client.h
@@ -57,6 +63,7 @@ CStdString		g_clientOS;									// OS of client, passed to server
 */
 CStdString g_strUserPath             = "";
 CStdString g_strClientPath           = "";
+CStdString		g_AddonDataCustom	= "";					// location of custom addondata settings file
 
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
@@ -74,6 +81,8 @@ extern "C" {
 			return;
 
 		g_strServerName = LOCALHOST;			// either "mediaserver" OR "." / "127.0.0.1"
+		g_strServerMAC = "";
+		g_bWakeOnLAN = false;
 		g_port = DEFAULT_PORT;
 		g_bSignalEnable = DEFAULT_SIGNAL_ENABLE;
 		g_signalThrottle = DEFAULT_SIGNAL_THROTTLE;
@@ -95,6 +104,22 @@ extern "C" {
 			XBMC->Log(LOG_ERROR, "Couldn't get 'host' setting, using '127.0.0.1'");
 		}
 
+		if (!XBMC->GetSetting("wake_on_lan", &g_bWakeOnLAN))
+		{
+			XBMC->Log(LOG_ERROR, "Couldn't get 'wake_on_lan' setting, using '%s'", DEFAULT_WAKEONLAN_ENABLE);
+		}
+
+		CStdString fileContent;
+		if (ReadFileContents(g_AddonDataCustom, fileContent))
+		{
+			g_strServerMAC = fileContent;
+			XBMC->Log(LOG_ERROR, "Using ServerWMC MAC address from custom addondata '%s'", g_strServerMAC.c_str());
+		}
+		else
+		{
+			XBMC->Log(LOG_ERROR, "Couldn't get ServerWMC MAC address from custom addondata, using empty value");
+		}
+
 		if (!XBMC->GetSetting("signal", &g_bSignalEnable))
 		{
 			XBMC->Log(LOG_ERROR, "Couldn't get 'signal' setting, using '%s'", DEFAULT_SIGNAL_ENABLE);
@@ -112,19 +137,24 @@ extern "C" {
 		
 
 		// get the name of the computer client is running on
-#ifdef TARGET_WINDOWS
 		gethostname(buffer, 50); 
 		g_strClientName = buffer;		// send this computers name to server
 
+#ifdef TARGET_WINDOWS
 		// get windows version
 		OSVERSIONINFO osvi;
 		ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
 		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 		GetVersionEx(&osvi);
 		g_clientOS.Format("windows(%d.%d)", osvi.dwMajorVersion, osvi.dwMinorVersion);	// set windows version string
+#elif defined TARGET_LINUX
+		g_clientOS = "linux";			// set to the client OS name
+#elif defined TARGET_DARWIN
+		g_clientOS = "darwin";			// set to the client OS name
+#elif defined TARGET_FREEBSD
+		g_clientOS = "freeBSD";			// set to the client OS name
 #else
-		g_strClientName = "";			// empty string signals to server to display the IP address
-		g_clientOS = "";				// set to the client OS name
+		g_clientOS = "";					// set blank client OS name
 #endif
 	}
 
@@ -168,6 +198,7 @@ extern "C" {
 		_CurStatus     = ADDON_STATUS_UNKNOWN;
 		g_strUserPath   = pvrprops->strUserPath;
 		g_strClientPath = pvrprops->strClientPath;
+		g_AddonDataCustom = g_strUserPath + "ServerMACAddr.txt";
 
 		ADDON_ReadSettings();
 
@@ -289,16 +320,19 @@ extern "C" {
 
 	PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 	{
-		pCapabilities->bSupportsEPG                = true;
-		pCapabilities->bSupportsRecordings         = true;
-		pCapabilities->bSupportsTimers             = true;
-		pCapabilities->bSupportsTV                 = true;
-		pCapabilities->bSupportsRadio              = true;
-		pCapabilities->bSupportsChannelGroups      = true;
-		pCapabilities->bHandlesInputStream         = true;
-		pCapabilities->bHandlesDemuxing            = false;
-		pCapabilities->bSupportsChannelScan        = false;
-		pCapabilities->bSupportsLastPlayedPosition = g_bEnableMultiResume;
+		pCapabilities->bSupportsEPG					= true;
+		pCapabilities->bSupportsTV					= true;
+		pCapabilities->bSupportsRadio				= true;
+		pCapabilities->bSupportsRecordings			= true;
+		pCapabilities->bSupportsTimers				= true;
+		pCapabilities->bSupportsChannelGroups		= true;
+		pCapabilities->bSupportsChannelScan			= false;
+		pCapabilities->bHandlesInputStream			= true;
+		pCapabilities->bHandlesDemuxing				= false;
+		pCapabilities->bSupportsRecordingFolders	= false;
+		pCapabilities->bSupportsRecordingPlayCount	= true;
+		pCapabilities->bSupportsLastPlayedPosition	= g_bEnableMultiResume;
+		pCapabilities->bSupportsRecordingEdl		= false;
 
 		return PVR_ERROR_NO_ERROR;
 	}
@@ -629,6 +663,13 @@ extern "C" {
 		return -1; 
 	}
 
+	PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
+	{ 
+		if (_wmc && g_bEnableMultiResume)
+			return _wmc->SetRecordingPlayCount(recording, count);
+		return PVR_ERROR_NOT_IMPLEMENTED; 
+	}
+
 
 	PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
 	{ 
@@ -644,14 +685,12 @@ extern "C" {
 	PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 	void DemuxReset(void) {}
 	void DemuxFlush(void) {}
-	PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count) { return PVR_ERROR_NOT_IMPLEMENTED; }
 	void DemuxAbort(void) {}
 	DemuxPacket* DemuxRead(void) { return NULL; }
 	unsigned int GetChannelSwitchDelay(void) { return 0; }
 	const char * GetLiveStreamURL(const PVR_CHANNEL &channel)  {  return "";  }
 	bool SeekTime(int,bool,double*) { return false; }
 	void SetSpeed(int) {};
-   
 	PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 	time_t GetPlayingTime() { return 0; }
 	time_t GetBufferTimeStart() { return 0; }

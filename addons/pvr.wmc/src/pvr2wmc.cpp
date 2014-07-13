@@ -42,10 +42,6 @@ int64_t _lastRecordingUpdateTime;		// the time of the last recording display upd
 
 Pvr2Wmc::Pvr2Wmc(void)
 {
-	_iEpgStart = -1;
-	_strDefaultIcon =  "http://www.royalty-free.tv/news/wp-content/uploads/2011/06/cc-logo1.jpg";
-	_strDefaultMovie = "";
-
 	_socketClient.SetServerName(g_strServerName);
 	_socketClient.SetClientName(g_strClientName);
 	_socketClient.SetServerPort(g_port);
@@ -72,8 +68,6 @@ Pvr2Wmc::Pvr2Wmc(void)
 
 Pvr2Wmc::~Pvr2Wmc(void)
 {
-	_channels.clear();
-	_groups.clear();
 }
 
 bool Pvr2Wmc::IsServerDown()
@@ -94,16 +88,27 @@ bool Pvr2Wmc::IsServerDown()
 
 void Pvr2Wmc::UnLoading()
 {
-	_socketClient.GetBool("ClientGoingDown", true);			// returns true if server is up
+	_socketClient.GetBool("ClientGoingDown", true, false);			// returns true if server is up
 }
 
 const char *Pvr2Wmc::GetBackendVersion(void)
 {
 	if (!IsServerDown())
 	{
+		static CStdString strVersion = "0.0";
+
+		// Send client's time (in UTC) to backend
+		time_t now = time(NULL);
+		char datestr[32];
+		strftime(datestr, 32, "%Y-%m-%d %H:%M:%S", gmtime(&now));
+		
 		CStdString request;
-		request.Format("GetServerVersion");
+		request.Format("GetServerVersion|%s", datestr);
 		vector<CStdString> results = _socketClient.GetVector(request, true);
+		if (results.size() > 0)
+		{
+			strVersion = CStdString(results[0]);
+		}
 		if (results.size() > 1)
 		{
 			_serverBuild = atoi(results[1]);			// get server build number for feature checking
@@ -124,7 +129,17 @@ const char *Pvr2Wmc::GetBackendVersion(void)
 				XBMC->QueueNotification(QUEUE_ERROR, infoStr.c_str());
 			}
         }
-		return (results.size() > 1) ? results[0].c_str() : "0.0";	// return server version to caller
+		// check if server returned it's MAC address
+		if (results.size() > 3 && results[3] != "" && results[3] != g_strServerMAC)
+		{
+			XBMC->Log(LOG_INFO, "Setting ServerWMC Server MAC Address to '%s'", results[3].c_str());
+			g_strServerMAC = results[3];
+		
+			// Attempt to save MAC address to custom addon data
+			WriteFileContents(g_AddonDataCustom, g_strServerMAC);
+		}
+		
+		return strVersion.c_str();	// return server version to caller
 	}
 	return "Not accessible";	//  server version check failed
 }
@@ -163,14 +178,76 @@ void Pvr2Wmc::TriggerUpdates(vector<CStdString> results)
 {
 	FOREACH(response, results)
 	{
-		if (*response == "updateTimers")
+		vector<CStdString> v = split(*response, "|");				// split to unpack string
+
+		if (v.size() < 1)
+		{
+			XBMC->Log(LOG_DEBUG, "Wrong number of fields xfered for Triggers/Message");
+			return;
+		}
+
+		if (v[0] == "updateTimers")
 			PVR->TriggerTimerUpdate();
-		else if (*response == "updateRecordings")
+		else if (v[0] == "updateRecordings")
 			PVR->TriggerRecordingUpdate();
-		else if (*response == "updateChannels")
+		else if (v[0] == "updateChannels")
 			PVR->TriggerChannelUpdate();
-		else if (*response == "updateChannelGroups")
+		else if (v[0] == "updateChannelGroups")
 			PVR->TriggerChannelGroupsUpdate();
+		else if (v[0] == "message")
+		{
+			if (v.size() < 4)
+			{
+				XBMC->Log(LOG_DEBUG, "Wrong number of fields xfered for Message");
+				return;
+			}
+
+			XBMC->Log(LOG_INFO, "Received message from backend: %s", response);
+			CStdString infoStr;
+
+			// Get notification level
+			int level = atoi(v[1].c_str());
+			if (level < QUEUE_INFO)
+			{
+				level = QUEUE_INFO;
+			}
+			else if (level > QUEUE_ERROR)
+			{
+				level = QUEUE_ERROR;
+			}
+				
+			// Get localised string for this stringID
+			int stringId = atoi(v[2].c_str());
+			infoStr = XBMC->GetLocalizedString(stringId);
+
+			// Use text from backend if stringID not found
+			if (infoStr == "")
+			{
+				infoStr = v[3];
+			}
+
+			// Send XBMC Notification (support up to 4 parameter replaced arguments from the backend)
+			if (v.size() == 4)
+			{
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str());
+			}
+			else if (v.size() == 5)
+			{
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str(), v[4].c_str());
+			}
+			else if (v.size() == 6)
+			{
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str(), v[4].c_str(), v[5].c_str());
+			}
+			else if (v.size() == 7)
+			{
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str(), v[4].c_str(), v[5].c_str(), v[6].c_str());
+			}
+			else
+			{
+				XBMC->QueueNotification((ADDON::queue_msg)level, infoStr.c_str(), v[4].c_str(), v[5].c_str(), v[6].c_str(), v[7].c_str());
+			}
+		}
 	}
 }
 
@@ -543,7 +620,7 @@ PVR_ERROR Pvr2Wmc::GetTimers(ADDON_HANDLE handle)
 	if (IsServerDown())
 		return PVR_ERROR_SERVER_ERROR;
 
-	vector<CStdString> responses = _socketClient.GetVector("GetTimers", true);							
+	vector<CStdString> responses = _socketClient.GetVector("GetTimers", true);
 
 	FOREACH(response, responses)
 	{
@@ -583,7 +660,7 @@ PVR_ERROR Pvr2Wmc::GetTimers(ADDON_HANDLE handle)
 	}
 
 	// check time since last time Recordings were updated, update if it has been awhile
-	if ( PLATFORM::GetTimeMs() >  _lastRecordingUpdateTime + 20000)
+	if ( _lastRecordingUpdateTime != 0 && PLATFORM::GetTimeMs() > _lastRecordingUpdateTime + 120000)
 	{
 		PVR->TriggerRecordingUpdate();
 	}
@@ -613,7 +690,8 @@ PVR_ERROR Pvr2Wmc::GetRecordings(ADDON_HANDLE handle)
 
 		// r.Id, r.Program.Title, r.FileName, recDir, plotOutline,
 		// plot, r.Channel.CallSign, ""/*icon path*/, ""/*thumbnail path*/, ToTime_t(r.RecordingTime),
-		// duration, r.RequestedProgram.Priority, r.KeepLength.ToString(), genre, subgenre
+		// duration, r.RequestedProgram.Priority, r.KeepLength.ToString(), genre, subgenre, ResumePos
+		// fields 16 - 23 used by MB3, 24 PlayCount
 
 		if (v.size() < 16)
 		{
@@ -637,8 +715,14 @@ PVR_ERROR Pvr2Wmc::GetRecordings(ADDON_HANDLE handle)
 		xRec.iGenreType = atoi(v[13].c_str());
 		xRec.iGenreSubType = atoi(v[14].c_str());
 		if (g_bEnableMultiResume)
+		{
 			xRec.iLastPlayedPosition = atoi(v[15].c_str());
-	
+			if (v.size() > 24)
+			{
+				xRec.iPlayCount = atoi(v[24].c_str());
+			}
+		}
+
 		PVR->TransferRecordingEntry(handle, &xRec);
 	}
 
@@ -703,7 +787,7 @@ PVR_ERROR Pvr2Wmc::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording
 {
 	CStdString command;
 	command.Format("SetResumePosition|%s|%d", recording.strRecordingId, lastplayedposition);
-	vector<CStdString> results = _socketClient.GetVector(command, false);					
+	vector<CStdString> results = _socketClient.GetVector(command, true);					
 	PVR->TriggerRecordingUpdate();		// this is needed to get the new resume point actually used by the player (xbmc bug)								
 	return PVR_ERROR_NO_ERROR;
 }
@@ -717,6 +801,16 @@ int Pvr2Wmc::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 	command.Format("GetResumePosition|%s", recording.strRecordingId); 
 	int pos = _socketClient.GetInt(command, true);
 	return pos;
+}
+
+// set the recording playcount in the wmc database
+PVR_ERROR Pvr2Wmc::SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
+{
+	CStdString command;
+	command.Format("SetPlayCount|%s|%d", recording.strRecordingId, count);
+	vector<CStdString> results = _socketClient.GetVector(command, true);					
+	//PVR->TriggerRecordingUpdate();		// this is needed to get the new play count actually used by the player (xbmc bug)								
+	return PVR_ERROR_NO_ERROR;
 }
 
 

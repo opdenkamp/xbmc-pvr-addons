@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.dvblink"
-  version="1.6.1"
+  version="1.7.1"
   name="DVBLink PVR Client"
-  provider-name="Barcode Madness">
+  provider-name="DVBLogic">
   <requires>
     <c-pluff version="0.1"/>
     <import addon="xbmc.pvr" version="1.6.0"/>

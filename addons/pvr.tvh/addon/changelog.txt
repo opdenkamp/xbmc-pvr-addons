@@ -1,0 +1,27 @@
+0.4.0
+ - optimisation, drop invalid packets sooner
+ - remove GetCurrentClientChannel() implementation, not used in XBMC
+ - workaround for aspect ratio detection in XBMC
+
+0.3.0
+ - improved auth error handling
+ - some improvements to re-connection attempts
+ - delay drive space query until connection up
+ - push unumbered channels to end of list
+ - handle subscriptionStatus for untunable service
+ - increase timeout for deleting recordings to handle FS delays
+
+0.2.0
+ - sane defaults for audio channels (if info not provided by TVH)
+ - add channel icons to recordings
+ - language files updated
+ - minor tweaks
+
+0.1.0
+ - better platform compatibility
+ - trace debugging is now configurable
+ - added option to receive and handle asynchronous EPG updates
+ - general bugfixes
+
+0.0.1
+- re-implement pvr.hts in a sane way!

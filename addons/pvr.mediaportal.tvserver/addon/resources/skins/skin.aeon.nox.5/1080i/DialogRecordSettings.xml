@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window type="dialog">
+	<defaultcontrol always="true">10</defaultcontrol>
+	<coordinates>
+		<system>1</system>
+		<posx>399</posx>
+		<posy>210</posy>
+	</coordinates>
+	<include>dialogeffect</include>
+	<controls>
+		<control type="image">
+			<description>background image</description>
+			<posx>0</posx>
+			<posy>0</posy>
+			<width>1172</width>
+			<height>660</height>
+			<texture border="40">dialogs/default/bg.png</texture>
+		</control>
+		<!-- Heading label -->
+		<control type="label" id="2">
+			<description>header label</description>
+			<posx>30</posx>
+			<posy>32</posy>
+			<width>1112</width>
+			<height>40</height>
+			<font>font15_title</font>
+			<label>$ADDON[pvr.mediaportal.tvserver 30100]</label>
+			<align>center</align>
+			<textcolor>dialogheader</textcolor>
+		</control>
+		<control type="image">
+			<posx>30</posx>
+			<posy>86</posy>
+			<width>790</width>
+			<height>542</height>
+			<texture border="5">dialogs/default/inner.png</texture>
+		</control>
+		<!-- dialog contents -->
+		<control type="group">
+			<!-- Dialog specific controls //-->
+
+			<control type="group">
+				<posx>45</posx>
+				<posy>100</posy>
+				<control type="label" description="Program title" id="20">
+					<posx>0</posx>
+					<posy>0</posy>
+					<width>738</width>
+					<height>30</height>
+					<textcolor>grey</textcolor>
+					<font>font14</font>
+					<!--<label>filled in by code</label>-->
+					<scroll>true</scroll>
+				</control>
+				<control type="label" description="Program start time" id="21">
+					<posx>0</posx>
+					<posy>45</posy>
+					<width>738</width>
+					<height>25</height>
+					<font>font14</font>
+					<!--<label>filled in by code</label>-->
+                    <textcolor>grey</textcolor>
+                    <selectedcolor>selected</selectedcolor>
+				</control>
+				<control type="label" description="Program channel" id="22">
+					<posx>0</posx>
+					<posy>90</posy>
+					<width>738</width>
+					<height>25</height>
+					<font>font14</font>
+					<!--<label>filled in by code</label>-->
+					<textcolor>grey</textcolor>
+					<selectedcolor>selected</selectedcolor>
+				</control>
+			</control>
+
+			<control type="image">
+				<posx>31</posx>
+				<posy>230</posy>
+				<width>789</width>
+				<height>2</height>
+				<align>left</align>
+				<texture border="1">separator2.png</texture>
+			</control>
+			<control type="grouplist" description="spincontrols" id="23">
+				<posx>31</posx>
+				<posy>245</posy>
+				<itemgap>0</itemgap>
+				<pagecontrol>6</pagecontrol>
+				<width>789</width>
+				<height>540</height>
+				<onup>23</onup>
+				<ondown>23</ondown>
+				<onleft>9001</onleft>
+				<onright>9001</onright>
+
+				<control type="spincontrolex" id="10">
+					<description>Frequency</description>
+					<label>$ADDON[pvr.mediaportal.tvserver 30101]</label>
+					<width>789</width>
+				</control>
+
+				<control type="spincontrolex" id="11">
+					<description>Airtime</description>
+					<label>$ADDON[pvr.mediaportal.tvserver 30102]</label>
+					<width>789</width>
+				</control>
+
+				<control type="spincontrolex" id="12">
+					<description>Channels</description>
+					<label>$ADDON[pvr.mediaportal.tvserver 30103]</label>
+					<width>789</width>
+				</control>
+
+				<control type="image" id="24">
+					<description>Separator</description>
+					<width>789</width>
+					<height>2</height>
+					<align>left</align>
+					<texture border="1">separator2.png</texture>
+				</control>
+
+				<control type="spincontrolex" id="13">
+					<description>Keep</description>
+					<label>$ADDON[pvr.mediaportal.tvserver 30104]</label>
+					<width>789</width>
+				</control>
+
+				<control type="spincontrolex" id="14">
+					<description>Record minutes before start</description>
+					<label>$ADDON[pvr.mediaportal.tvserver 30105]</label>
+					<width>789</width>
+				</control>
+
+				<control type="spincontrolex" id="15">
+					<description>Record minutes after end</description>
+					<label>$ADDON[pvr.mediaportal.tvserver 30106]</label>
+					<width>789</width>
+				</control>
+			</control>
+
+			<!-- right group (buttons) -->
+			<control type="group">
+				<posx>824</posx>
+				<posy>88</posy>
+				<control type="image">
+					<posx>-1</posx>
+					<posy>-2</posy>
+					<width>312</width>
+					<height>542</height>
+					<texture border="5">dialogs/default/inner.png</texture>
+				</control>
+				<!-- Dialog Ok/Cancel buttons //-->
+				<control type="grouplist" id="9001">
+					<onup>9001</onup>
+					<onleft>23</onleft>
+					<onright>23</onright>
+					<ondown>9001</ondown>
+					<control type="button" id="1">
+						<description>Ok Button</description>
+						<width>310</width>
+						<label>186</label>
+					</control>
+					<control type="button" id="2">
+						<description>Cancel Button</description>
+						<width>310</width>
+						<label>222</label>
+					</control>
+				</control>
+			</control>
+		</control>
+	</controls>
+</window>

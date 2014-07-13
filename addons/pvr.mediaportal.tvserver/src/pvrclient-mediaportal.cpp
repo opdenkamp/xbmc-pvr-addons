@@ -34,6 +34,7 @@
 #ifdef TARGET_WINDOWS
 #include "FileUtils.h"
 #endif
+#include "GUIDialogRecordSettings.h"
 
 using namespace std;
 using namespace ADDON;
@@ -42,7 +43,7 @@ using namespace ADDON;
 int g_iTVServerXBMCBuild = 0;
 
 /* PVR client version (don't forget to update also the addon.xml and the Changelog.txt files) */
-#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.9.13"
+#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.9.14"
 
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.7.107"
@@ -242,6 +243,9 @@ ADDON_STATUS cPVRClientMediaPortal::Connect()
   /* Load additional settings */
   LoadGenreTable();
   LoadCardSettings();
+
+  /* The pvr addon cannot access XBMC's current locale settings, so just use the system default */
+  setlocale(LC_ALL, "");
 
   return ADDON_STATUS_OK;
 }
@@ -652,6 +656,11 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
     cChannel channel;
     if( channel.Parse(data) )
     {
+      // Cache this channel in our local uid-channel list
+      // This cache is used for the GUIDialogRecordSettings
+      m_channelNames[channel.UID()] = channel.Name();
+
+      // Prepare the PVR_CHANNEL struct to transfer this channel to XBMC
       tag.iUniqueId = channel.UID();
       tag.iChannelNumber = channel.ExternalID();
       PVR_STRCPY(tag.strChannelName, channel.Name());
@@ -981,7 +990,7 @@ PVR_ERROR cPVRClientMediaPortal::GetRecordings(ADDON_HANDLE handle)
       if ( (g_bUseRTSP == false) && (recording.IsRecording() == false) && (OS::CFile::Exists( recording.FilePath() )))
       {
         // Direct access. Bypass the PVR addon completely (both ffmpeg and TSReader mode; Windows only)
-        PVR_STRCPY(tag.strStreamURL, recording.FilePath());
+        PVR_STRCPY(tag.strStreamURL, ToXBMCPath(recording.FilePath()).c_str());
       }
       else
 #endif
@@ -1240,6 +1249,24 @@ PVR_ERROR cPVRClientMediaPortal::AddTimer(const PVR_TIMER &timerinfo)
     return PVR_ERROR_SERVER_ERROR;
 
   cTimer timer(timerinfo);
+
+  if ((timerinfo.startTime > 0) && (timerinfo.iEpgUid != -1))
+  {
+    /* New scheduled recording, not an instant or manual recording
+     * Present a custom dialog with advanced recording settings
+     */
+    std::string strChannelName;
+    if (timerinfo.iClientChannelUid >= 0)
+    {
+      strChannelName = m_channelNames[timerinfo.iClientChannelUid];
+    }
+    CGUIDialogRecordSettings dlgRecSettings( timerinfo, timer, strChannelName);
+
+    int dlogResult = dlgRecSettings.DoModal();
+
+    if (dlogResult == 0)
+      return PVR_ERROR_NO_ERROR;						// user canceled timer in dialog
+  }
 
   result = SendCommand(timer.AddScheduleCommand());
 

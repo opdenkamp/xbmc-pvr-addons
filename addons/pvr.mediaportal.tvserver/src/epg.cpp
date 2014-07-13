@@ -26,6 +26,7 @@ using namespace std;
 #include "epg.h"
 #include "utils.h"
 #include "client.h"
+#include "DateTime.h"
 
 using namespace ADDON;
 
@@ -48,10 +49,8 @@ void cEpg::Reset()
   m_episodePart.clear();
 
   m_uid             = 0;
-  m_StartTime       = 0;
-  m_EndTime         = 0;
   m_originalAirDate = 0;
-  m_Duration        = 0;
+  m_duration        = 0;
   m_genre_type      = 0;
   m_genre_subtype   = 0;
   m_seriesNumber    = 0;
@@ -87,23 +86,19 @@ bool cEpg::ParseLine(string& data)
       // field 13 = starRating (int)
       // field 14 = parentalRating (int)
 
-      m_StartTime = DateTimeToTimeT(epgfields[0]);
-
-      if(m_StartTime < 0)
+      if( m_startTime.SetFromDateTime(epgfields[0]) == false )
       {
         XBMC->Log(LOG_ERROR, "cEpg::ParseLine: Unable to convert start time '%s' into date+time", epgfields[0].c_str());
         return false;
       }
 
-      m_EndTime = DateTimeToTimeT(epgfields[1]);
-
-      if( m_EndTime < 0)
+      if( m_endTime.SetFromDateTime(epgfields[1]) == false )
       {
         XBMC->Log(LOG_ERROR, "cEpg::ParseLine: Unable to convert end time '%s' into date+time", epgfields[1].c_str());
         return false;
       }
 
-      m_Duration  = m_EndTime - m_StartTime;
+      m_duration  = m_endTime - m_startTime;
 
       m_title = epgfields[2];
       m_description = epgfields[3];
@@ -123,9 +118,7 @@ bool cEpg::ParseLine(string& data)
         m_parentalRating = atoi(epgfields[14].c_str());
 
         //originalAirDate
-        m_originalAirDate = DateTimeToTimeT(epgfields[11]);
-
-        if(  m_originalAirDate < 0)
+        if( m_originalAirDate.SetFromDateTime(epgfields[11]) == false )
         {
           XBMC->Log(LOG_ERROR, "cEpg::ParseLine: Unable to convert original air date '%s' into date+time", epgfields[11].c_str());
           return false;
@@ -146,4 +139,22 @@ bool cEpg::ParseLine(string& data)
 void cEpg::SetGenreTable(CGenreTable* genretable)
 {
   m_genretable = genretable;
+}
+
+time_t cEpg::StartTime(void) const
+{
+  time_t retval = m_startTime.GetAsTime();
+  return retval;
+}
+
+time_t cEpg::EndTime(void) const
+{
+  time_t retval = m_endTime.GetAsTime();
+  return retval;
+}
+
+time_t cEpg::OriginalAirDate(void) const
+{
+  time_t retval = m_endTime.GetAsTime();
+  return retval;
 }

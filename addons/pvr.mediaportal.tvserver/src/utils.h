@@ -42,12 +42,6 @@ bool stringtobool(const std::string& s);
 const char* booltostring(const bool b);
 
 /**
- * @brief Converts a C# DateTime string into a time_t value
- * Assumes the usage of somedatetimeval.ToString("u") in C#
- */
-time_t DateTimeToTimeT(const std::string& datetime);
-
-/**
  * @brief Filters forbidden filename characters from channel name and replaces them with _ )
  */
 std::string ToThumbFileName(const char* strChannelName);

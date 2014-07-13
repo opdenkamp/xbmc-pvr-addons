@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.wmc-@OS@-@ARCHITECTURE@"
-  version="0.2.96"
+  version="0.2.97"
   name="Windows Media Center Client - @OS@ @ARCHITECTURE@ Edition"
   provider-name="KrustyReturns">
   <requires>
     <c-pluff version="0.1"/>
-    <import addon="xbmc.pvr" version="1.9.0"/>
+    <import addon="xbmc.pvr" version="1.9.1"/>
   </requires>
   <extension
     point="xbmc.pvrclient"

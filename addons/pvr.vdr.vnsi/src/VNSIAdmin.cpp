@@ -1069,7 +1069,7 @@ bool cVNSIAdmin::OnInit()
   m_spinTimeshiftBufferRam = GUI->Control_getSpin(m_window, CONTROL_SPIN_TIMESHIFT_BUFFER_RAM);
   m_spinTimeshiftBufferRam->Clear();
   char buffer[8];
-  for (int i = 1; i <= 40; i++)
+  for (int i = 1; i <= 80; i++)
   {
     sprintf(buffer, "%d", i);
     m_spinTimeshiftBufferRam->AddLabel(buffer, i);
@@ -1427,11 +1427,15 @@ bool cVNSIAdmin::ReadChannelList(bool radio)
     char *strChannelName  = vresp->extract_String();
     channel.m_name = strChannelName;
     char *strProviderName = vresp->extract_String();
-    channel.m_provider = strProviderName;
+    channel.m_provider    = strProviderName;
     channel.m_id          = vresp->extract_U32();
                             vresp->extract_U32(); // first caid
     char *strCaids        = vresp->extract_String();
     channel.SetCaids(strCaids);
+    if (m_protocol >= 6)
+    {
+      std::string ref = vresp->extract_String();
+    }
     channel.m_radio       = radio;
 
     delete[] strChannelName;

@@ -68,9 +68,9 @@
       <control type="list" id="10">
         <defaultcontrol always="true">1</defaultcontrol>
         <left>10</left>
-        <top>90</top>
+        <top>82</top>
         <width>260</width>
-        <height>481</height>
+        <height>541</height>
         <onleft>10</onleft>
         <onright>11</onright>
         <onup>10</onup>
@@ -86,9 +86,9 @@
             <texture border="5">MenuItemNF.png</texture>
           </control>
           <control type="label">
-            <left>250</left>
+            <left>10</left>
             <top>0</top>
-            <width>380</width>
+            <width>240</width>
             <height>55</height>
             <font>font24_title</font>
             <textcolor>grey2</textcolor>
@@ -106,9 +106,9 @@
             <texture border="5">MenuItemFO.png</texture>
           </control>
           <control type="label">
-            <left>250</left>
+            <left>10</left>
             <top>0</top>
-            <width>380</width>
+            <width>240</width>
             <height>55</height>
             <font>font24_title</font>
             <textcolor>white</textcolor>

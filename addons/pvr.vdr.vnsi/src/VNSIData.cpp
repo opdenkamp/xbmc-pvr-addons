@@ -236,6 +236,19 @@ bool cVNSIData::GetChannelsList(ADDON_HANDLE handle, bool radio)
     tag.iUniqueId         = vresp->extract_U32();
     tag.iEncryptionSystem = vresp->extract_U32();
     char *strCaids        = vresp->extract_String();
+    if (m_protocol >= 6)
+    {
+      std::string path = g_szIconPath;
+      std::string ref = vresp->extract_String();
+      if (!path.empty())
+      {
+        if (path[path.length()-1] != '/')
+          path += '/';
+        path += ref;
+        path += ".png";
+        strncpy(tag.strIconPath, path.c_str(), sizeof(tag.strIconPath) - 1);
+      }
+    }
     tag.bIsRadio          = radio;
 
     PVR->TransferChannelEntry(handle, &tag);

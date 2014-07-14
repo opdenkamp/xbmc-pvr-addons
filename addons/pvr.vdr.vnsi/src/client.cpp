@@ -50,6 +50,7 @@ int           g_iConnectTimeout         = DEFAULT_TIMEOUT;      ///< The Socket 
 int           g_iPriority               = DEFAULT_PRIORITY;     ///< The Priority this client have in response to other clients
 bool          g_bAutoChannelGroups      = DEFAULT_AUTOGROUPS;
 int           g_iTimeshift              = 1;
+std::string   g_szIconPath              = "";
 
 CHelper_libXBMC_addon *XBMC   = NULL;
 CHelper_libXBMC_codec *CODEC  = NULL;
@@ -179,6 +180,20 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     g_bAutoChannelGroups = DEFAULT_AUTOGROUPS;
   }
 
+  /* Read setting "iconpath" from settings.xml */
+  buffer = (char*) malloc(512);
+  buffer[0] = 0; /* Set the end of string */
+
+  if (XBMC->GetSetting("iconpath", buffer))
+    g_szIconPath = buffer;
+  else
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'iconpath' setting");
+    g_szHostname = "";
+  }
+  free(buffer);
+
   VNSIData = new cVNSIData;
   if (!VNSIData->Open(g_szHostname, g_iPort))
   {
@@ -280,7 +295,7 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   else if (str == "timeshift")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'timeshift' from %u to %u", g_iTimeshift, *(int*) settingValue);
-    g_iPriority = *(int*) settingValue;
+    g_iTimeshift = *(int*) settingValue;
   }
   else if (str == "convertchar")
   {

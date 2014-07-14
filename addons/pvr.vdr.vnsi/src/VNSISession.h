@@ -71,6 +71,9 @@ protected:
   int              m_port;
   std::string      m_name;
   PLATFORM::CMutex m_mutex;
+  int              m_protocol;
+  std::string      m_server;
+  std::string      m_version;
 
 private:
 
@@ -78,8 +81,5 @@ private:
 
   PLATFORM::CTcpConnection *m_socket;
   PLATFORM::CMutex          m_readMutex;
-  int                       m_protocol;
-  std::string               m_server;
-  std::string               m_version;
   bool                      m_connectionLost;
 };

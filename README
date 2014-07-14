@@ -52,8 +52,30 @@ Example: addons\pvr.demo\addon\*.* => YOUR_XBMC_DIR\addons\pvr.demo\*.*
 
 Building the pvr addons together with xbmc:
 -------------------------------------------
-TODO
-describe how to import the "xbmc-pvr-addons.sln" in "XBMC for Windows.sln"
+For the purposes of this readme, assume that source code for the 2 solutions is in <rootdir>\xbmc and <rootdir>\xbmc-pvr-addons
+
+Firstly ensure that you have a working build for both XBMC and xbmc-pvr-addons separately
+
+Then import the xbmc_pvr_addons projects into the XBMC solution
+1) Open "XBMC for Windows.sln"
+2) Right click the solution in Solution Explorer and select Add -> Existing Project
+3) Change file type filter to "Solution Files (*.sln)"
+4) Browse to and select the PVR addons solution (xbmc-pvr-addons.sln)
+5) Dismiss any warnings about projects already existing in the solution
+6) If you only develop on certain addons you can remove unwanted addon projects from the XBMC solution
+
+Add a PostBuild action to any pvr addon projects you wish to debug to copy their output into the XBMC addon directory
+
+source: <rootdir>\xbmc-pvr-addons\addons\<addon_name>\addon
+dest:   <rootdir>\xbmc\addons\<addon_name>
+
+Example post build command using robocopy and Visual Studio parameters, with correct error code handling:
+
+if "$(SolutionName)"=="XBMC for Windows" robocopy $(OutDir) "$(SolutionDir)..\..\addons\$(ProjectName)" /s /NP
+if errorlevel 1 exit 0 else exit %errorlevel%
+
+
+Remember not to include any XBMC solution file or PVR addon project (post build event) in your pull requests!
 
 XBMC Windows installer with included pvr addons:
 ------------------------------------------------

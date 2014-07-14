@@ -809,7 +809,8 @@ PVR_ERROR Pvr2Wmc::SetRecordingPlayCount(const PVR_RECORDING &recording, int cou
 	CStdString command;
 	command.Format("SetPlayCount|%s|%d", recording.strRecordingId, count);
 	vector<CStdString> results = _socketClient.GetVector(command, true);					
-	//PVR->TriggerRecordingUpdate();		// this is needed to get the new play count actually used by the player (xbmc bug)								
+	if (count <= 0)
+		PVR->TriggerRecordingUpdate();		// this is needed to get the new play count actually used by the player (xbmc bug)								
 	return PVR_ERROR_NO_ERROR;
 }
 

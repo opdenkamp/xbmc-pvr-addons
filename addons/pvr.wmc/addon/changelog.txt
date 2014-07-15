@@ -1,3 +1,17 @@
+0.3.99
+- manually trigger recordings refresh after XBMC calls SetPlayedCount
+
+0.3.98
+- add Wake On LAN support to wake the ServerWMC backend server
+- store PlayCount/WatchedStatus of recordings in the backend so it can be shared by all clients
+
+0.3.97 (XBMC 14 Helix)
+- support receiving notifications from the backend
+- add notification for new backend version available
+- version numbering changed to 0.3.X for XBMC 14 "Helix"
+- send client time to backend and add notification for clock drift warning
+- provide client name and OS to backend on more non windows platforms
+
 0.2.96
 - Improve handling of signal information. Prior to this release, an attacker with network access to the addon could potentially cause the addon to crash.
 

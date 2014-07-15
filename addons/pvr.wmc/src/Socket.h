@@ -264,11 +264,11 @@ class Socket
 		void SetServerName(CStdString strServerName);
 		void SetClientName(CStdString strClientName);
 		void SetServerPort(int port);
-		std::vector<CStdString> GetVector(const CStdString &request, bool allowRetry);
-		CStdString GetString(const CStdString &request, bool allowRetry);
-		bool GetBool(const CStdString &request, bool allowRetry);
-		int GetInt(const CStdString &request, bool allowRetry);
-		long long GetLL(const CStdString &request, bool allowRetry);
+		std::vector<CStdString> GetVector(const CStdString &request, bool allowRetry, bool allowWOL = true);
+		CStdString GetString(const CStdString &request, bool allowRetry, bool allowWOL = true);
+		bool GetBool(const CStdString &request, bool allowRetry, bool allowWOL = true);
+		int GetInt(const CStdString &request, bool allowRetry, bool allowWOL = true);
+		long long GetLL(const CStdString &request, bool allowRetry, bool allowWOL = true);
 
 		void SetTimeOut(int tSec);
 };

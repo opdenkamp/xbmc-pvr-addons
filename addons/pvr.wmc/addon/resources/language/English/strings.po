@@ -43,7 +43,6 @@ msgctxt "#30005"
 msgid "Tuner is needed for recording"
 msgstr ""
 
-
 msgctxt "#30006"
 msgid "Recording delete failed, file in use or write protected"
 msgstr ""
@@ -80,6 +79,14 @@ msgctxt "#30014"
 msgid "Enable SignalStatus calls"
 msgstr ""
 
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr ""
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr ""
+
 msgctxt "#30017"
 msgid "Recorded TV folder not found"
 msgstr ""
@@ -88,12 +95,8 @@ msgctxt "#30018"
 msgid "Recorded TV folder cannot be opened"
 msgstr ""
 
-msgctxt "#30015"
-msgid "Refresh SignalStatus Interval (sec)"
-msgstr ""
-
-msgctxt "#30016"
-msgid "Store viewing resume times on server"
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
 msgstr ""
 
 msgctxt "#30020"
@@ -114,6 +117,18 @@ msgstr ""
 
 msgctxt "#30024"
 msgid "Recording stream exited early"
+msgstr ""
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr ""
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr ""
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
 msgstr ""
 
 msgctxt "#30100"

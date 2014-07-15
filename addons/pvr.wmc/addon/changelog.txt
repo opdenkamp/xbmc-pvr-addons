@@ -1,3 +1,6 @@
+0.3.99
+- manually trigger recordings refresh after XBMC calls SetPlayedCount
+
 0.3.98
 - add Wake On LAN support to wake the ServerWMC backend server
 - store PlayCount/WatchedStatus of recordings in the backend so it can be shared by all clients

@@ -67,3 +67,6 @@ lib/tinyxml2/tinyxml2/Release
 addons/*/addon/*.so
 addons/*/addon/*.dll
 addons/*/addon/addon.xml
+
+# Netbeans project files
+nbproject/

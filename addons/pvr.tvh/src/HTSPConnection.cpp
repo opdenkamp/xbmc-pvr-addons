@@ -304,16 +304,6 @@ bool CHTSPConnection::SendMessage0 ( const char *method, htsmsg_t *msg )
 }
 
 /*
- * Send a message (if connection is not up wait)
- */
-bool CHTSPConnection::SendMessage ( const char *method, htsmsg_t *msg )
-{
-  if (!WaitForConnection())
-    return false;
-  return SendMessage0(method, msg);
-}
-
-/*
  * Send a message and wait for response
  */
 htsmsg_t *CHTSPConnection::SendAndWait0 ( const char *method, htsmsg_t *msg, int iResponseTimeout )

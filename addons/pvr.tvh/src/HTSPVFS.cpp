@@ -60,18 +60,6 @@ void CHTSPVFS::Connected ( void )
   }
 }
 
-bool CHTSPVFS::ProcessMessage
-  ( const char *_unused(method), htsmsg_t *_unused(m) )
-{
-  return false;
-}
-
-void CHTSPVFS::Flush ( void )
-{
-  m_buffer.reset();
-  m_offset = 0;
-}
-
 /* **************************************************************************
  * VFS API
  * *************************************************************************/
@@ -99,12 +87,11 @@ bool CHTSPVFS::Open ( const PVR_RECORDING &rec )
 
 void CHTSPVFS::Close ( void )
 {
-  CLockObject lock(m_conn.Mutex());
-
   if (m_fileId != 0)
     SendFileClose();
 
-  Flush();
+  m_buffer.reset();
+  m_offset = 0;
   m_fileId = 0;
   m_path   = "";
 }
@@ -112,7 +99,6 @@ void CHTSPVFS::Close ( void )
 int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
 {
   ssize_t ret;
-  CLockObject lock(m_conn.Mutex());
 
   /* Not opened */
   if (!m_fileId)
@@ -134,7 +120,11 @@ int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
              m_fileId, (long long)m_buffer.free());
     
     /* Send */
-    m = m_conn.SendAndWait("fileRead", m);
+    {
+      CLockObject lock(m_conn.Mutex());
+      m = m_conn.SendAndWait("fileRead", m);
+    }
+      
     if (m == NULL)
     {
       tvherror("vfs fileRead failed to send");

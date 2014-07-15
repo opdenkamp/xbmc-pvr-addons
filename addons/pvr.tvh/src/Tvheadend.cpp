@@ -265,7 +265,12 @@ PVR_ERROR CTvheadend::SendDvrUpdate
     htsmsg_add_s64(m, "stop",  stop);
 
   /* Send and Wait */
-  if ((m = m_conn.SendAndWait("updateDvrEntry", m)) == NULL)
+  {
+    CLockObject lock(m_conn.Mutex());
+    m = m_conn.SendAndWait("updateDvrEntry", m);
+  }
+    
+  if (m == NULL)
   {
     tvherror("failed to update DVR entry");
     return PVR_ERROR_SERVER_ERROR;
@@ -373,7 +378,6 @@ PVR_ERROR CTvheadend::GetRecordingEdl
   if (m_conn.GetProtocol() < 12)
     return PVR_ERROR_NOT_IMPLEMENTED;
   
-  CLockObject lock(m_mutex);
   htsmsg_t *list;
   htsmsg_field_t *f;
   int idx;
@@ -385,18 +389,22 @@ PVR_ERROR CTvheadend::GetRecordingEdl
   tvhdebug("dvr get cutpoints id=%s", rec.strRecordingId);
 
   /* Send and Wait */
-  if ((m = m_conn.SendAndWait("getDvrCutpoints", m)) == NULL)
   {
-    tvherror("failed to update DVR entry");
-    return PVR_ERROR_SERVER_ERROR;
+    CLockObject lock(m_conn.Mutex());
+    
+    if ((m = m_conn.SendAndWait("getDvrCutpoints", m)) == NULL)
+    {
+      tvherror("failed to update DVR entry");
+      return PVR_ERROR_SERVER_ERROR;
+    }
   }
 
-  /* Validate */
+  /* Check if we got any cut points */
   if (!(list = htsmsg_get_list(m, "cutpoints")))
   {
-    tvherror("malformed getDvrCutpoints response");
+    tvhinfo("no cut points available from dvr entry %s", rec.strRecordingId);
     htsmsg_destroy(m);
-    return PVR_ERROR_FAILED;
+    return PVR_ERROR_NO_ERROR;
   }
 
   /* Process */
@@ -522,7 +530,7 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   uint32_t u32;
   dvr_prio_t prio;
 
-  CLockObject lock(m_conn.Mutex());
+  
 
   /* Build message */
   htsmsg_t *m = htsmsg_create_map();
@@ -555,7 +563,12 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   htsmsg_add_u32(m, "priority", (int)prio);
   
   /* Send and Wait */
-  if ((m = m_conn.SendAndWait("addDvrEntry", m)) == NULL)
+  {
+    CLockObject lock(m_conn.Mutex());
+    m = m_conn.SendAndWait("addDvrEntry", m);
+  }
+  
+  if (m == NULL)
   {
     tvherror("failed to add DVR entry");
     return PVR_ERROR_SERVER_ERROR;
@@ -651,18 +664,20 @@ PVR_ERROR CTvheadend::GetEpg
   }
   else
   {
-    CLockObject lock(m_conn.Mutex());
-
     /* Build message */
     htsmsg_t *msg = htsmsg_create_map();
     htsmsg_add_u32(msg, "channelId", chn.iUniqueId);
     htsmsg_add_s64(msg, "maxTime",   end);
 
     /* Send and Wait */
-    if ((msg = m_conn.SendAndWait0("getEvents", msg)) == NULL)
     {
-      tvherror("failed to request epg");
-      return PVR_ERROR_SERVER_ERROR;
+      CLockObject lock(m_conn.Mutex());
+      
+      if ((msg = m_conn.SendAndWait0("getEvents", msg)) == NULL)
+      {
+        tvherror("failed to request epg");
+        return PVR_ERROR_SERVER_ERROR;
+      }
     }
 
     /* Process */
@@ -745,10 +760,6 @@ bool CTvheadend::ProcessMessage ( const char *method, htsmsg_t *msg )
 {
   /* Demuxer */
   if (m_dmx.ProcessMessage(method, msg))
-    return true;
-
-  /* VFS */
-  if (m_vfs.ProcessMessage(method, msg))
     return true;
 
   /* Store */
@@ -1227,9 +1238,11 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
   /* Update */
   if (update)
   {
+    std::string error = rec.error.empty() ? "none" : rec.error;
+    
     tvhdebug("recording id:%d, state:%s, title:%s, desc:%s, error:%s",
              rec.id, state, rec.title.c_str(), rec.description.c_str(),
-             rec.error.c_str());
+             error.c_str());
 
     if (m_asyncState.GetState() > ASYNC_DVR)
     {

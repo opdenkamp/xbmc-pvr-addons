@@ -1,3 +1,12 @@
+1.9.14
+- remove: implementation for lastplayedposition (XBMC handles this now)
+- remove: loading of channel data from HDD
+- change: handling of EPG
+- add: error message if username or password contain the @-sign
+
+1.9.13
+- sync with PVR API v1.9.1
+
 1.9.12
 - updated language files from Transifex
 

@@ -1303,8 +1303,6 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
     evt.summary  = str;
   if ((str = htsmsg_get_str(msg, "description")) != NULL)
     evt.desc     = str;
-  if ((str = htsmsg_get_str(msg, "subtitle")) != NULL)
-    evt.subtitle = str;
   if ((str = htsmsg_get_str(msg, "image")) != NULL)
     evt.image   = str;
   if (!htsmsg_get_u32(msg, "nextEventId", &u32))
@@ -1325,7 +1323,6 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
 {
   bool update = false;
   SEvent tmp;
-  tmp.Clear();
 
   /* Parse */
   if (!ParseEvent(msg, tmp))
@@ -1345,7 +1342,6 @@ void CTvheadend::ParseEventUpdate ( htsmsg_t *msg )
   UPDATE(evt.channel,  tmp.channel);
   UPDATE(evt.summary,  tmp.summary);
   UPDATE(evt.desc,     tmp.desc);
-  UPDATE(evt.subtitle, tmp.subtitle);
   UPDATE(evt.image,    tmp.image);
   UPDATE(evt.next,     tmp.next);
   UPDATE(evt.content,  tmp.content);

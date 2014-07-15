@@ -171,7 +171,6 @@ struct SEvent
   uint32_t    episode;
   uint32_t    part;
   std::string title;
-  std::string subtitle;
   std::string desc;
   std::string summary;
   std::string image;
@@ -193,7 +192,6 @@ struct SEvent
     episode = 0;
     part    = 0;
     title.clear();
-    subtitle.clear();
     desc.clear();
     summary.clear();
     image.clear();

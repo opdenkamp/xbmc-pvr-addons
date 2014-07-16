@@ -79,7 +79,7 @@
     <ClInclude Include="..\..\src\tools.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\lib\cmyth\Win32\libcmyth.vcxproj">
+    <ProjectReference Include="..\..\..\..\lib\cmyth\Win32\libcmyth_pvr.vcxproj">
       <Project>{f9e6874d-60a8-49ba-9393-a2105e63abcf}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">

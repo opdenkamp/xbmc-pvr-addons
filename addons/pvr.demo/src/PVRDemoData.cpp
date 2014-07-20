@@ -229,6 +229,10 @@ bool PVRDemoData::LoadDemoData(void)
       else
         recording.strStreamURL = strTmp;
 
+      /* recording path */
+      if (XMLUtils::GetString(pRecordingNode, "directory", strTmp))
+        recording.strDirectory = strTmp;
+
       iUniqueGroupId++;
       strTmp.Format("%d", iUniqueGroupId);
       recording.strRecordingId = strTmp;
@@ -456,6 +460,7 @@ PVR_ERROR PVRDemoData::GetRecordings(ADDON_HANDLE handle)
     strncpy(xbmcRecording.strRecordingId, recording.strRecordingId.c_str(), sizeof(xbmcRecording.strRecordingId) - 1);
     strncpy(xbmcRecording.strTitle,       recording.strTitle.c_str(),       sizeof(xbmcRecording.strTitle) - 1);
     strncpy(xbmcRecording.strStreamURL,   recording.strStreamURL.c_str(),   sizeof(xbmcRecording.strStreamURL) - 1);
+    strncpy(xbmcRecording.strDirectory,   recording.strDirectory.c_str(),   sizeof(xbmcRecording.strDirectory) - 1);
 
     PVR->TransferRecordingEntry(handle, &xbmcRecording);
   }

@@ -460,6 +460,7 @@
     <recording>
       <title>Demo Recording entry 1</title>
       <url></url>
+      <directory>/Directory1/SubDirectory1/</directory>
       <channelname>Demo TV Channel 1</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>
@@ -471,6 +472,7 @@
     <recording>
       <title>Demo Recording entry 2</title>
       <url></url>
+      <directory>/Directory1/SubDirectory1/</directory>
       <channelname>Demo TV Channel 2</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>
@@ -482,6 +484,7 @@
     <recording>
       <title>Demo Recording entry 3</title>
       <url></url>
+      <directory>/Directory1/SubDirectory1/</directory>
       <channelname>Demo TV Channel 3</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>
@@ -493,6 +496,7 @@
     <recording>
       <title>Demo Recording entry 4</title>
       <url></url>
+      <directory>/Directory1/SubDirectory2/</directory>
       <channelname>Demo TV Channel 4</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>
@@ -504,6 +508,7 @@
     <recording>
       <title>Demo Recording entry 5</title>
       <url></url>
+      <directory>/Directory1/SubDirectory2/</directory>
       <channelname>Demo TV Channel 5</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>
@@ -515,6 +520,7 @@
     <recording>
       <title>Demo Recording entry 6</title>
       <url></url>
+      <directory>/Directory2/SubDirectory1/</directory>
       <channelname>Demo TV Channel 6</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>
@@ -526,6 +532,7 @@
     <recording>
       <title>Demo Recording entry 7</title>
       <url></url>
+      <directory>/Directory2/SubDirectory1/</directory>
       <channelname>Demo TV Channel 7</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>
@@ -537,6 +544,7 @@
     <recording>
       <title>Demo Recording entry 8</title>
       <url></url>
+      <directory>/Directory2/SubDirectory2/</directory>
       <channelname>Demo TV Channel 8</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>
@@ -548,6 +556,7 @@
     <recording>
       <title>Demo Recording entry 9</title>
       <url></url>
+      <directory>/Directory2/SubDirectory2/</directory>
       <channelname>Demo TV Channel 9</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>
@@ -559,6 +568,7 @@
     <recording>
       <title>Demo Recording entry 10</title>
       <url></url>
+      <directory>/Directory2/</directory>
       <channelname>Demo TV Channel 10</channelname>
       <plotoutline>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</plotoutline>
       <plot>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</plot>

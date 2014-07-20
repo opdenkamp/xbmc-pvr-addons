@@ -70,6 +70,7 @@ struct PVRDemoRecording
   std::string strRecordingId;
   std::string strStreamURL;
   std::string strTitle;
+  std::string strDirectory;
   time_t      recordingTime;
 };
 

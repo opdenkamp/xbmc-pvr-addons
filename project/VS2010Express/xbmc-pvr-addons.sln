@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platform", "platform\platform.vcxproj", "{FE4573F6-A794-4AD3-B37F-49E51F1140E6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "tinyxml\tinyxml.vcxproj", "{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}"
@@ -25,10 +27,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjsoncpp", "..\..\lib\jso
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.mythtv.cmyth", "..\..\addons\pvr.mythtv.cmyth\project\VS2010Express\pvr.mythtv.cmyth.vcxproj", "{A55ACC6B-837D-4784-8E41-66947B1D9B8C}"
 	ProjectSection(ProjectDependencies) = postProject
-		{F9E6874D-60A8-49BA-9393-A2105E63ABCF} = {F9E6874D-60A8-49BA-9393-A2105E63ABCF}
+		{6205DD7A-4910-4491-BAF6-E651C6D99002} = {6205DD7A-4910-4491-BAF6-E651C6D99002}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcmyth", "..\..\lib\cmyth\Win32\libcmyth.vcxproj", "{F9E6874D-60A8-49BA-9393-A2105E63ABCF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcmyth_pvr", "..\..\lib\cmyth\Win32\libcmyth_pvr.vcxproj", "{6205DD7A-4910-4491-BAF6-E651C6D99002}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vuplus", "..\..\addons\pvr.vuplus\project\VS2010Express\pvr.vuplus.vcxproj", "{848DCDD6-7142-4507-A75A-6872A9256F3F}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -122,12 +124,12 @@ Global
 		{A55ACC6B-837D-4784-8E41-66947B1D9B8C}.Release|Win32.ActiveCfg = Release|Win32
 		{A55ACC6B-837D-4784-8E41-66947B1D9B8C}.Release|Win32.Build.0 = Release|Win32
 		{A55ACC6B-837D-4784-8E41-66947B1D9B8C}.Release|x64.ActiveCfg = Release|Win32
-		{F9E6874D-60A8-49BA-9393-A2105E63ABCF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F9E6874D-60A8-49BA-9393-A2105E63ABCF}.Debug|Win32.Build.0 = Debug|Win32
-		{F9E6874D-60A8-49BA-9393-A2105E63ABCF}.Debug|x64.ActiveCfg = Debug|Win32
-		{F9E6874D-60A8-49BA-9393-A2105E63ABCF}.Release|Win32.ActiveCfg = Release|Win32
-		{F9E6874D-60A8-49BA-9393-A2105E63ABCF}.Release|Win32.Build.0 = Release|Win32
-		{F9E6874D-60A8-49BA-9393-A2105E63ABCF}.Release|x64.ActiveCfg = Release|Win32
+		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Debug|Win32.Build.0 = Debug|Win32
+		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Debug|x64.ActiveCfg = Debug|Win32
+		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Release|Win32.ActiveCfg = Release|Win32
+		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Release|Win32.Build.0 = Release|Win32
+		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Release|x64.ActiveCfg = Release|Win32
 		{848DCDD6-7142-4507-A75A-6872A9256F3F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{848DCDD6-7142-4507-A75A-6872A9256F3F}.Debug|Win32.Build.0 = Debug|Win32
 		{848DCDD6-7142-4507-A75A-6872A9256F3F}.Debug|x64.ActiveCfg = Debug|Win32

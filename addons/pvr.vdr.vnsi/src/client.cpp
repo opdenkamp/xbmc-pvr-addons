@@ -43,6 +43,7 @@ ADDON_STATUS m_CurStatus      = ADDON_STATUS_UNKNOWN;
  * and exported to the other source files.
  */
 std::string   g_szHostname              = DEFAULT_HOST;
+std::string   g_szWolMac                = "";
 int           g_iPort                   = DEFAULT_PORT;
 bool          g_bCharsetConv            = DEFAULT_CHARCONV;     ///< Convert VDR's incoming strings to UTF8 character set
 bool          g_bHandleMessages         = DEFAULT_HANDLE_MSG;   ///< Send VDR's OSD status messages to XBMC OSD
@@ -124,6 +125,20 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   }
   free(buffer);
 
+  buffer = (char*) malloc(64);
+  buffer[0] = 0; /* Set the end of string */
+
+  /* Read setting "wol_mac" from settings.xml */
+  if (XBMC->GetSetting("wol_mac", buffer))
+    g_szWolMac = buffer;
+  else
+  {
+    /* If setting is unknown fallback to empty default */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'wol_mac' setting, falling back to default");
+    g_szWolMac = "";
+  }
+  free(buffer);
+
   /* Read setting "port" from settings.xml */
   if (!XBMC->GetSetting("port", &g_iPort))
   {
@@ -190,11 +205,31 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   {
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'iconpath' setting");
-    g_szHostname = "";
+    g_szIconPath = "";
   }
   free(buffer);
 
   VNSIData = new cVNSIData;
+
+  /* First wake up the VDR server in case a MAC-Address is specified */
+  if (!g_szWolMac.empty()) {
+    const char* temp_mac;
+    temp_mac = g_szWolMac.c_str();
+    if (!XBMC->WakeOnLan(temp_mac)) {
+      XBMC->Log(LOG_ERROR, "Error waking up VNSI Server at MAC-Address %s", temp_mac);
+      ADDON_Destroy();
+      m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+      return m_CurStatus;
+    }
+  }
+
+  if (!VNSIData->Open(g_szHostname, g_iPort))
+  {
+    ADDON_Destroy();
+    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+    return m_CurStatus;
+  }
+
   if (!VNSIData->Open(g_szHostname, g_iPort))
   {
     ADDON_Destroy();
@@ -276,6 +311,16 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     tmp_sHostname = g_szHostname;
     g_szHostname = (const char*) settingValue;
     if (tmp_sHostname != g_szHostname)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (str == "wol_mac")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'wol_mac'");
+    string tmp_sWol_mac;
+    XBMC->Log(LOG_INFO, "Changed Setting 'wol_mac' from %s to %s", g_szWolMac.c_str(), (const char*) settingValue);
+    tmp_sWol_mac = g_szWolMac;
+    g_szWolMac = (const char*) settingValue;
+    if (tmp_sWol_mac != g_szWolMac)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "port")

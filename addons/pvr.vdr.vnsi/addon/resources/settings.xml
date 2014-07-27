@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <setting id="host" type="text" label="30000" default="127.0.0.1" />
+    <setting id="wol_mac" type="text" label="30048" default="" />
     <setting id="port" type="number" label="30001" default="34890" />
     <setting id="priority" type="enum" label="30002" values="-1|0|5|10|15|20|25|30|35|40|45|50|55|60|65|70|75|80|85|90|95|99|100" default="0"/>
     <setting id="timeshift" type="enum" label="30047" values="0|1" default="1"/>

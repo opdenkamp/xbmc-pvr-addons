@@ -208,10 +208,6 @@ msgctxt "#30047"
 msgid "Request Timeshift"
 msgstr "Request Timeshift"
 
-msgctxt "#30048"
-msgid "Wake-on-LAN MAC"
-msgstr "Wake-on-LAN MAC"
-
 msgctxt "#30100"
 msgid "VDR OSD"
 msgstr "VDR OSD"

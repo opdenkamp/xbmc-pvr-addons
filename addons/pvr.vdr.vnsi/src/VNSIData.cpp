@@ -47,6 +47,25 @@ bool cVNSIData::Open(const std::string& hostname, int port, const char* name)
   return true;
 }
 
+bool cVNSIData::Open(const std::string& hostname, int port, const char* name, const std::string& mac)
+{
+  /* First wake up the VDR server in case a MAC-Address is specified */
+  if (!mac.empty()) {
+    const char* temp_mac;
+    temp_mac = mac.c_str();
+
+    if (!XBMC->WakeOnLan(temp_mac)) {
+      XBMC->Log(LOG_ERROR, "Error waking up VNSI Server at MAC-Address %s", temp_mac);
+      return false;
+    }
+  }
+
+  if(!cVNSIData::Open(hostname, port, name))
+    return false;
+
+  return true;
+}
+
 bool cVNSIData::Login()
 {
   if(!cVNSISession::Login())

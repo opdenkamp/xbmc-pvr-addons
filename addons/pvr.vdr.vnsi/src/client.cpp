@@ -210,27 +210,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   free(buffer);
 
   VNSIData = new cVNSIData;
-
-  /* First wake up the VDR server in case a MAC-Address is specified */
-  if (!g_szWolMac.empty()) {
-    const char* temp_mac;
-    temp_mac = g_szWolMac.c_str();
-    if (!XBMC->WakeOnLan(temp_mac)) {
-      XBMC->Log(LOG_ERROR, "Error waking up VNSI Server at MAC-Address %s", temp_mac);
-      ADDON_Destroy();
-      m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
-      return m_CurStatus;
-    }
-  }
-
-  if (!VNSIData->Open(g_szHostname, g_iPort))
-  {
-    ADDON_Destroy();
-    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
-    return m_CurStatus;
-  }
-
-  if (!VNSIData->Open(g_szHostname, g_iPort))
+  if (!VNSIData->Open(g_szHostname, g_iPort, NULL, g_szWolMac))
   {
     ADDON_Destroy();
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;

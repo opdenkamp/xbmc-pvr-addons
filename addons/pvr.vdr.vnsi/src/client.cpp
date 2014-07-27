@@ -205,7 +205,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   {
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'iconpath' setting");
-    g_szHostname = "";
+    g_szIconPath = "";
   }
   free(buffer);
 

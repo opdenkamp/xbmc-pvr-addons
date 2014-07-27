@@ -205,12 +205,32 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   {
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'iconpath' setting");
-    g_szIconPath = "";
+    g_szHostname = "";
   }
   free(buffer);
 
   VNSIData = new cVNSIData;
-  if (!VNSIData->Open(g_szHostname, g_iPort, "", g_szWolMac))
+
+  /* First wake up the VDR server in case a MAC-Address is specified */
+  if (!g_szWolMac.empty()) {
+    const char* temp_mac;
+    temp_mac = g_szWolMac.c_str();
+    if (!XBMC->WakeOnLan(temp_mac)) {
+      XBMC->Log(LOG_ERROR, "Error waking up VNSI Server at MAC-Address %s", temp_mac);
+      ADDON_Destroy();
+      m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+      return m_CurStatus;
+    }
+  }
+
+  if (!VNSIData->Open(g_szHostname, g_iPort))
+  {
+    ADDON_Destroy();
+    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+    return m_CurStatus;
+  }
+
+  if (!VNSIData->Open(g_szHostname, g_iPort))
   {
     ADDON_Destroy();
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;

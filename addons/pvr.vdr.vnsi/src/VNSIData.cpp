@@ -39,14 +39,6 @@ cVNSIData::~cVNSIData()
   Close();
 }
 
-bool cVNSIData::Open(const std::string& hostname, int port, const char* name)
-{
-  if(!cVNSISession::Open(hostname, port, name))
-    return false;
-
-  return true;
-}
-
 bool cVNSIData::Open(const std::string& hostname, int port, const char* name, const std::string& mac)
 {
   /* First wake up the VDR server in case a MAC-Address is specified */
@@ -60,7 +52,7 @@ bool cVNSIData::Open(const std::string& hostname, int port, const char* name, co
     }
   }
 
-  if(!cVNSIData::Open(hostname, port, name))
+  if(!cVNSISession::Open(hostname, port, name))
     return false;
 
   return true;

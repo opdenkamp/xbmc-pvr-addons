@@ -214,7 +214,11 @@ msgctxt "#30048"
 msgid "Path to channel icons"
 msgstr ""
 
-#empty strings from id 30049 to 30099
+msgctxt "#30049"
+msgid "VDR Server MAC for Wake-on-LAN"
+msgstr ""
+
+#empty strings from id 30050 to 30099
 
 msgctxt "#30100"
 msgid "VDR OSD"

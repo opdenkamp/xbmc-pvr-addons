@@ -230,13 +230,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return m_CurStatus;
   }
 
-  if (!VNSIData->Open(g_szHostname, g_iPort))
-  {
-    ADDON_Destroy();
-    m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
-    return m_CurStatus;
-  }
-
   if (!VNSIData->Login())
   {
     ADDON_Destroy();

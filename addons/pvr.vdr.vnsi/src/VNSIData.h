@@ -37,7 +37,7 @@ public:
   cVNSIData();
   virtual ~cVNSIData();
 
-  bool        Open(const std::string& hostname, int port, const char* name = NULL);
+  bool        Open(const std::string& hostname, int port, const char* name = NULL, const std::string& mac = "");
   bool        Login();
 
   bool        SupportChannelScan();

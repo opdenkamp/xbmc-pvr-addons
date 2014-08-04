@@ -376,6 +376,13 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   char        _unused(type) = 0;
   int         iStreamId;
   
+  /* Ignore packets while switching channels */
+  if (!m_subscription.active)
+  {
+    tvhdebug("Ignored mux packet due to channel switch");
+    return;
+  }
+  
   /* Validate fields */
   if (htsmsg_get_u32(m, "stream", &idx) ||
       htsmsg_get_bin(m, "payload", &bin, &binlen))

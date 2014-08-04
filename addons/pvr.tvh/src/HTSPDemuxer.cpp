@@ -377,6 +377,11 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   DemuxPacket *pkt;
   char        _unused(type) = 0;
   int         iStreamId;
+  
+  /* Don't process packets for the "previous" subscription if we're about to 
+   * switch channels anyway*/
+  if (!m_started)
+    return;
 
   /* Validate fields */
   if (htsmsg_get_u32(m, "stream", &idx) ||

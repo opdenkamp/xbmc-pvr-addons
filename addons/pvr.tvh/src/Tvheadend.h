@@ -246,8 +246,6 @@ public:
 private:
   PLATFORM::CMutex                        m_mutex;
   CHTSPConnection                        &m_conn;
-  bool                                    m_started;
-  PLATFORM::CCondition<volatile bool>     m_startCond;
   PLATFORM::SyncedBuffer<DemuxPacket*>    m_pktBuffer;
   ADDON::XbmcStreamProperties             m_streams;
   std::map<int,int>                       m_streamStat;

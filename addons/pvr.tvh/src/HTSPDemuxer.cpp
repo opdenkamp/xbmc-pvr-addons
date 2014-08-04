@@ -41,7 +41,7 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 CHTSPDemuxer::CHTSPDemuxer ( CHTSPConnection &conn )
-  : m_conn(conn), m_started(false), m_pktBuffer((size_t)-1),
+  : m_conn(conn), m_pktBuffer((size_t)-1),
     m_seekTime(INVALID_SEEKTIME)
 {
 }
@@ -72,7 +72,6 @@ void CHTSPDemuxer::Close0 ( void )
     SendUnsubscribe();
 
   /* Clear */
-  m_started = false;
   Flush();
   Abort0();
 }
@@ -98,7 +97,6 @@ bool CHTSPDemuxer::Open ( const PVR_CHANNEL &chn )
   m_subscription.channelId = chn.iUniqueId;
 
   /* Open */
-  m_started = false;
   SendSubscribe();
   
   /* Send unsubscribe if subscribing failed */
@@ -378,11 +376,6 @@ void CHTSPDemuxer::ParseMuxPacket ( htsmsg_t *m )
   char        _unused(type) = 0;
   int         iStreamId;
   
-  /* Don't process packets for the "previous" subscription if we're about to 
-   * switch channels anyway*/
-  if (!m_started)
-    return;
-
   /* Validate fields */
   if (htsmsg_get_u32(m, "stream", &idx) ||
       htsmsg_get_bin(m, "payload", &bin, &binlen))

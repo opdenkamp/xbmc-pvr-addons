@@ -515,6 +515,15 @@ void CHTSPDemuxer::ParseSubscriptionStart ( htsmsg_t *m )
         stream.iWidth   = htsmsg_get_u32_or_default(&f->hmf_msg, "width", 0);
         stream.iHeight  = htsmsg_get_u32_or_default(&f->hmf_msg, "height", 0);
         
+        /* Ignore this message if the stream details haven't been determined 
+           yet, a new message will be sent once they have. This is fixed in 
+           some versions of tvheadend and is here for backward compatibility. */
+        if (stream.iWidth == 0 || stream.iHeight == 0)
+        {
+          tvhinfo("Ignoring subscriptionStart, stream details missing");
+          return;
+        }
+        
         /* Setting aspect ratio to zero will cause XBMC to handle changes in it */
         stream.fAspect = 0.0f;
         

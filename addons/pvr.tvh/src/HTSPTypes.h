@@ -87,8 +87,6 @@ struct SChannel
 {
   bool             del;
   uint32_t         id;
-  uint32_t         now;
-  uint32_t         next;
   uint32_t         num;
   bool             radio;
   uint32_t         caid;
@@ -100,8 +98,6 @@ struct SChannel
   {
     del   = false;
     id    = 0;
-    now   = 0;
-    next  = 0;
     num   = 0;
     radio = false;
     caid  = 0;

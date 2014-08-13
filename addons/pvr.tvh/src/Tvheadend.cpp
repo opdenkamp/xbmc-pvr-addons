@@ -19,6 +19,7 @@
  *
  */
 
+#include <sstream>
 #include "Tvheadend.h"
 
 #include "platform/util/util.h"
@@ -626,6 +627,11 @@ void CTvheadend::TransferEvent
   epg.iEpisodeNumber      = event.episode;
   epg.iEpisodePartNumber  = event.part;
 
+  std::stringstream ss;
+  ss << event.recordingId;
+  const std::string recordingId = ss.str();
+  epg.strRecordingId = recordingId.c_str();
+  
   PVR->TransferEpgEntry(handle, &epg);
 }
 
@@ -1155,7 +1161,7 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
 {
   bool update = false;
   const char *state, *str;
-  uint32_t id, channel;
+  uint32_t id, channel, eventId;
   int64_t start, stop;
 
   /* Channels must be complete */
@@ -1179,6 +1185,12 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
   UPDATE(rec.channel, channel);
   UPDATE(rec.start,   start);
   UPDATE(rec.stop,    stop);
+  
+  /* Add optional event link */
+  if (!htsmsg_get_u32(msg, "eventId", &eventId))
+  {
+    UPDATE(rec.eventId, eventId);
+  }
 
   /* Parse state */
   if      (strstr(state, "scheduled") != NULL)
@@ -1309,7 +1321,17 @@ bool CTvheadend::ParseEvent ( htsmsg_t *msg, SEvent &evt )
     evt.age     = u32;
   if (!htsmsg_get_s64(msg, "firstAired", &s64))
     evt.aired   = (time_t)s64;
-
+  
+  /* Add optional recording link */
+  for (SRecordings::const_iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
+  {
+    if (it->second.eventId == evt.id)
+    {
+      evt.recordingId = evt.id;
+      break;
+    }
+  }
+  
   return true;
 }
 

@@ -203,7 +203,7 @@ void Pvr2Wmc::TriggerUpdates(vector<CStdString> results)
 				return;
 			}
 
-			XBMC->Log(LOG_INFO, "Received message from backend: %s", response);
+			XBMC->Log(LOG_INFO, "Received message from backend: %s", *response->c_str());
 			CStdString infoStr;
 
 			// Get notification level

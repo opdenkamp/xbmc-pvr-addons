@@ -115,6 +115,7 @@ struct SRecording
   bool             del;
   uint32_t         id;
   uint32_t         channel;
+  uint32_t         eventId;
   int64_t          start;
   int64_t          stop;
   std::string      title;
@@ -129,6 +130,7 @@ struct SRecording
     del     = false;
     id      = 0;
     channel = 0;
+    eventId = 0;
     start   = 0;
     stop    = 0;
     state   = PVR_TIMER_STATE_ERROR;
@@ -170,6 +172,7 @@ struct SEvent
   std::string desc;
   std::string summary;
   std::string image;
+  uint32_t    recordingId;
 
   SEvent() { Clear(); }
   void Clear()
@@ -191,6 +194,7 @@ struct SEvent
     desc.clear();
     summary.clear();
     image.clear();
+    recordingId = 0;
   }
 };
 

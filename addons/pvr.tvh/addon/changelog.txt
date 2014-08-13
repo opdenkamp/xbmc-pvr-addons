@@ -1,3 +1,10 @@
+0.9.3
+ - no longer triggers updates in XBMC whenever the current programme on a channel changes
+ - fix potential crash during channel switching (especially with VAAPI)
+ - adapt to the latest API changes (event -> recording link)
+ - fix a confusing log message
+ - minor improvements under the hood
+
 0.9.2
  - another minor improvement to AsyncState class
  - improvements to tag update checking

@@ -203,7 +203,7 @@ void Pvr2Wmc::TriggerUpdates(vector<CStdString> results)
 				return;
 			}
 
-			XBMC->Log(LOG_INFO, "Received message from backend: %s", response);
+			XBMC->Log(LOG_INFO, "Received message from backend: %s", response->c_str());
 			CStdString infoStr;
 
 			// Get notification level
@@ -849,9 +849,9 @@ bool Pvr2Wmc::OpenLiveStream(const PVR_CHANNEL &channel)
 		_streamWTV = EndsWith(results[0], "wtv");					// true if stream file is a wtv file
 
 		if (results.size() > 1)
-			XBMC->Log(LOG_DEBUG, "OpenLiveStream> opening stream: " + results[1]);		// log password safe path of client if available
+			XBMC->Log(LOG_DEBUG, "OpenLiveStream> opening stream: %s", results[1].c_str());		// log password safe path of client if available
 		else
-			XBMC->Log(LOG_DEBUG, "OpenLiveStream> opening stream: " + _streamFileName);	
+			XBMC->Log(LOG_DEBUG, "OpenLiveStream> opening stream: %s", _streamFileName.c_str());
 		
 		// Initialise variables for starting stream at an offset
 		_initialStreamResetCnt = 0;
@@ -1156,12 +1156,12 @@ bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
 
 		// hand additional args from server
 		if (results.size() >  1)
-			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> rec stream type: " + results[1]);		// either a 'passive' or 'active' WTV OR a TS file
+			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> rec stream type: %s", results[1].c_str());		// either a 'passive' or 'active' WTV OR a TS file
 		
 		if (results.size() > 2)
-			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> opening stream: " + results[2]);		// log password safe path of client if available
+			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> opening stream: %s", results[2].c_str());		// log password safe path of client if available
 		else
-			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> opening stream: " + _streamFileName);	
+			XBMC->Log(LOG_DEBUG, "OpenRecordedStream> opening stream: %s", _streamFileName.c_str());	
 
 		if (results.size() > 3 && results[3] != "")											// get header to set duration of ts file
 		{
@@ -1239,14 +1239,14 @@ PVR_ERROR Pvr2Wmc::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 			if (results.size() >= 9)
 			{
 				memset(&cachedSignalStatus, 0, sizeof(cachedSignalStatus));
-				snprintf(signalStatus.strAdapterName, sizeof(signalStatus.strAdapterName), "%s", results[0].c_str());
-				snprintf(signalStatus.strAdapterStatus, sizeof(signalStatus.strAdapterStatus), "%s", results[1].c_str());
-				snprintf(signalStatus.strProviderName, sizeof(signalStatus.strProviderName), "%s", results[2].c_str());
-				snprintf(signalStatus.strServiceName, sizeof(signalStatus.strServiceName), "%s", results[3].c_str());
-				snprintf(signalStatus.strMuxName, sizeof(signalStatus.strMuxName), "%s", results[4].c_str());
-				signalStatus.iSignal = atoi(results[5]) * 655.35;
-				signalStatus.dVideoBitrate = atof(results[6]);
-				signalStatus.dAudioBitrate = atof(results[7]);
+				snprintf(cachedSignalStatus.strAdapterName, sizeof(cachedSignalStatus.strAdapterName), "%s", results[0].c_str());
+				snprintf(cachedSignalStatus.strAdapterStatus, sizeof(cachedSignalStatus.strAdapterStatus), "%s", results[1].c_str());
+				snprintf(cachedSignalStatus.strProviderName, sizeof(cachedSignalStatus.strProviderName), "%s", results[2].c_str());
+				snprintf(cachedSignalStatus.strServiceName, sizeof(cachedSignalStatus.strServiceName), "%s", results[3].c_str());
+				snprintf(cachedSignalStatus.strMuxName, sizeof(cachedSignalStatus.strMuxName), "%s", results[4].c_str());
+				cachedSignalStatus.iSignal = (int)(atoi(results[5]) * 655.35);
+				cachedSignalStatus.dVideoBitrate = atof(results[6]);
+				cachedSignalStatus.dAudioBitrate = atof(results[7]);
 			
 				bool error = atoi(results[8]) == 1;
 				if (error)

@@ -314,7 +314,7 @@ private:
 
   bool      SendFileOpen  ( bool force = false );
   void      SendFileClose ( void );
-  ssize_t   SendFileSeek  ( int64_t pos, int whence, bool force = false );
+  long long SendFileSeek  ( int64_t pos, int whence, bool force = false );
 };
 
 /*

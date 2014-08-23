@@ -263,6 +263,8 @@ else
 fi
 AC_SUBST(DATADIR)
 
+AC_CONFIG_SUBDIRS([lib/cppmyth])
+
 ### Keep this in alphabetical order
 AC_CONFIG_FILES([Makefile \
                  lib/Makefile \

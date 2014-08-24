@@ -3,6 +3,8 @@ AC_INIT([xbmc-pvr-addons], 1:0:0)
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
+AC_CONFIG_MACRO_DIR([m4])
+
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, [http://www.xbmc.org])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([no])])
@@ -224,7 +226,21 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
         [Define to 1 if your compiler supports the __sync_val_compare_and_swap() intrinsic.])
 fi
 
+### Linker extra flags
+m4_include([m4/ax_check_link_flag.m4])
 
+cat > tmp.ver <<EOF
+TEST {
+  local:
+    *;
+};
+EOF
+
+AX_CHECK_LINK_FLAG(["-Wl,--version-script=tmp.ver"],[HAVE_VERSION_SCRIPT=yes],[HAVE_VERSION_SCRIPT=no])
+AM_CONDITIONAL([HAVE_VERSION_SCRIPT], [test "${HAVE_VERSION_SCRIPT}" = "yes"])
+
+rm -f tmp.ver
+### End Linker extra flags
 
 HOST_CXXFLAGS="-Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses -fPIC $HOST_CXXFLAGS"
 
@@ -263,6 +279,8 @@ else
 fi
 AC_SUBST(DATADIR)
 
+AC_CONFIG_SUBDIRS([lib/cppmyth])
+
 ### Keep this in alphabetical order
 AC_CONFIG_FILES([Makefile \
                  lib/Makefile \
@@ -282,6 +300,7 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.hts/Makefile \
                  addons/pvr.iptvsimple/Makefile \
                  addons/pvr.mediaportal.tvserver/Makefile \
+                 addons/pvr.mythtv/Makefile \
                  addons/pvr.mythtv.cmyth/Makefile \
                  addons/pvr.nextpvr/Makefile \
                  addons/pvr.njoy/Makefile \
@@ -295,6 +314,7 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.hts/addon/addon.xml
                  addons/pvr.iptvsimple/addon/addon.xml
                  addons/pvr.mediaportal.tvserver/addon/addon.xml
+                 addons/pvr.mythtv/addon/addon.xml
                  addons/pvr.mythtv.cmyth/addon/addon.xml
                  addons/pvr.nextpvr/addon/addon.xml
                  addons/pvr.njoy/addon/addon.xml

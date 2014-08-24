@@ -538,7 +538,7 @@ void MythEventHandler::MythEventHandlerPrivate::RetryConnect()
   while (!IsStopped())
   {
     // wake up the backend sending magic packet
-    if (m_sendWOL && !g_szMythHostEther.IsEmpty())
+    if (!g_szMythHostEther.IsEmpty())
       XBMC->WakeOnLan(g_szMythHostEther);
 
     usleep(999999);

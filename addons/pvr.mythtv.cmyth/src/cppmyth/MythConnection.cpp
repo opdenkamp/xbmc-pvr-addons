@@ -85,6 +85,14 @@ MythConnection::MythConnection(const CStdString &server, unsigned short port, bo
   else
     connection = cmyth_conn_connect_monitor(const_cast<char*>(server.c_str()), port, RCV_BUF_CONTROL_SIZE, TCP_RCV_BUF_CONTROL_SIZE);
   *m_conn_t = connection;
+
+  // If connection fails then try to wake up backend before retrying
+  if (!IsConnected() && !g_szMythHostEther.IsEmpty())
+  {
+    XBMC->Log(LOG_DEBUG, "MythConnection - Attempting WOL %s", g_szMythHostEther.c_str());
+    XBMC->WakeOnLan(g_szMythHostEther);
+  }
+    cmyth_conn_block_shutdown(connection);
 }
 
 MythEventHandler *MythConnection::CreateEventHandler()
@@ -136,7 +144,10 @@ bool MythConnection::TryReconnect()
   int retval;
 
   if (!g_szMythHostEther.IsEmpty())
-      XBMC->WakeOnLan(g_szMythHostEther);
+  {
+    XBMC->Log(LOG_DEBUG, "TryReconnect - Attempting WOL %s", g_szMythHostEther.c_str());
+    XBMC->WakeOnLan(g_szMythHostEther);
+  }
 
   Lock();
   if (m_playback)

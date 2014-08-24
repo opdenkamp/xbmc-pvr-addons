@@ -2112,3 +2112,46 @@ out:
 	pthread_mutex_unlock(&conn->conn_mutex);
 	return err;
 }
+
+int
+cmyth_conn_block_shutdown(cmyth_conn_t conn)
+{
+	int err = 0;
+	char msg[256];
+
+	if (!conn) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: no connection\n",
+			  __FUNCTION__);
+		return -EINVAL;
+	}
+
+	if (conn->conn_version < 18) {
+		cmyth_dbg(CMYTH_DBG_ERROR, "%s: protocol version doesn't support BLOCK_SHUTDOWN\n",
+			  __FUNCTION__);
+		return -EPERM;
+	}
+
+    snprintf(msg, sizeof(msg), "BLOCK_SHUTDOWN");
+
+	pthread_mutex_lock(&conn->conn_mutex);
+
+	if ((err = cmyth_send_message(conn, msg)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_send_message() failed (%d)\n",
+			  __FUNCTION__, err);
+		goto out;
+	}
+
+	if ((err=cmyth_rcv_feedback(conn, "OK", 2)) < 0) {
+		cmyth_dbg(CMYTH_DBG_ERROR,
+			  "%s: cmyth_rcv_feedback() failed (%d)\n",
+			  __FUNCTION__, err);
+		goto out;
+	}
+
+out:
+	pthread_mutex_unlock(&conn->conn_mutex);
+	return err;
+
+}
+

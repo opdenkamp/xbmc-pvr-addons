@@ -92,9 +92,7 @@ MythConnection::MythConnection(const CStdString &server, unsigned short port, bo
     XBMC->Log(LOG_DEBUG, "MythConnection - Attempting WOL %s", g_szMythHostEther.c_str());
     XBMC->WakeOnLan(g_szMythHostEther);
   }
-// Need a newer version of cmyth for this
-//  else
-//    cmyth_conn_block_shutdown(connection);
+    cmyth_conn_block_shutdown(connection);
 }
 
 MythEventHandler *MythConnection::CreateEventHandler()

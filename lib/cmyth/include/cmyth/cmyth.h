@@ -453,6 +453,15 @@ extern char* cmyth_conn_get_client_hostname(cmyth_conn_t conn);
  */
 extern int cmyth_conn_reschedule_recordings(cmyth_conn_t conn, uint32_t recordid);
 
+/**
+ * Inform the MythTV backend that a shutdown is not allowed as long as this
+ * connction is active.
+ * \param conn connection handle
+ * \retval 0 success
+ * \retval <0 error
+ */
+extern int cmyth_conn_block_shutdown(cmyth_conn_t conn);
+
 /*
  * -----------------------------------------------------------------
  * Event Operations

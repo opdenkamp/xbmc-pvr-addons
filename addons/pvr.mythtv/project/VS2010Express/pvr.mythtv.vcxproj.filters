@@ -55,6 +55,8 @@
       <Filter>demuxer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\avinfo.cpp" />
+    <ClCompile Include="..\..\src\guidialogbase.cpp" />
+    <ClCompile Include="..\..\src\guidialogyesno.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
@@ -121,6 +123,8 @@
     <ClInclude Include="..\..\src\demuxer\debug.h">
       <Filter>demuxer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\guidialogbase.h" />
+    <ClInclude Include="..\..\src\guidialogyesno.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cppmyth">

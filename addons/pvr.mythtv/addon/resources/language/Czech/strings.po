@@ -117,8 +117,8 @@ msgid "Transcoder"
 msgstr "Převaděč"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "Umožnit aby nahrávky vypršely?"
+msgid "Allow recordings to expire"
+msgstr "Umožnit aby nahrávky vypršely"
 
 msgctxt "#30049"
 msgid "Recording template"

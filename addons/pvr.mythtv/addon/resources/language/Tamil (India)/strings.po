@@ -117,8 +117,8 @@ msgid "Transcoder"
 msgstr "டிரான்ஸ்கோடர்"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "பதிவுகள் காலாவதியாகும்வரை அனுமதி?"
+msgid "Allow recordings to expire"
+msgstr "பதிவுகள் காலாவதியாகும்வரை அனுமதி"
 
 msgctxt "#30049"
 msgid "Recording template"

@@ -669,8 +669,9 @@ int AVContext::parse_ts_psi()
         uint16_t channel = av_rb16(psi);
         uint16_t pmt_pid = av_rb16(psi + 2);
 
-        if ((pmt_pid & 0xe000) != 0xe000)
-          return AVCONTEXT_TS_ERROR;
+        // Reserved fields in table sections must be "set" to '1' bits.
+        //if ((pmt_pid & 0xe000) != 0xe000)
+        //  return AVCONTEXT_TS_ERROR;
 
         pmt_pid &= 0x1fff;
 
@@ -723,8 +724,9 @@ int AVContext::parse_ts_psi()
         uint8_t pes_type = av_rb8(psi);
         uint16_t pes_pid = av_rb16(psi + 1);
 
-        if ((pes_pid & 0xe000) != 0xe000)
-          return AVCONTEXT_TS_ERROR;
+        // Reserved fields in table sections must be "set" to '1' bits.
+        //if ((pes_pid & 0xe000) != 0xe000)
+        //  return AVCONTEXT_TS_ERROR;
 
         pes_pid &= 0x1fff;
 

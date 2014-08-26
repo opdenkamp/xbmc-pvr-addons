@@ -121,7 +121,7 @@ msgid "Transcoder"
 msgstr "Διακωδικοποιητής"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
+msgid "Allow recordings to expire"
 msgstr "Να επιτρέπεται η χρονική λήξη των εγγραφών;"
 
 msgctxt "#30049"

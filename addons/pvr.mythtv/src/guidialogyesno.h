@@ -1,6 +1,6 @@
 #pragma once
 /*
- *      Copyright (C) 2005-2012 Team XBMC
+ *      Copyright (C) 2005-2014 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -21,23 +21,49 @@
  *
  */
 
-#include <string>
-#include <map>
+#include "client.h"
+#include "guidialogbase.h"
 
-typedef std::multimap<int, std::string> CategoryByIdMap;
-typedef std::multimap<std::string, int> CategoryByNameMap;
-
-class Categories
+class GUIDialogYesNo : public GUIDialogBase
 {
 public:
-  Categories();
 
-  std::string Category(int category) const;
-  int Category(const std::string& category) const;
+  GUIDialogYesNo();
+  GUIDialogYesNo(const char *heading, const char *text, int focus);
+  ~GUIDialogYesNo();
+
+  bool OnInit();
+  bool OnClick(int controlId);
+  bool OnAction(int actionId);
+
+  void SetHeading(const char *heading)
+  {
+    m_heading.assign(heading);
+  }
+  void SetText(const char *text)
+  {
+    m_text.assign(text);
+  }
+  void SetFocus(int focus)
+  {
+    m_focus = focus;
+  }
+  bool IsNull()
+  {
+    return m_response == 0;
+  }
+  bool IsYes()
+  {
+    return m_response == 1;
+  }
+  bool IsNo()
+  {
+    return m_response == 2;
+  }
 
 private:
-  void LoadEITCategories(const char *filePath);
-
-  CategoryByIdMap   m_categoriesById;
-  CategoryByNameMap m_categoriesByName;
+  std::string m_heading;
+  std::string m_text;
+  int m_focus;
+  int m_response;
 };

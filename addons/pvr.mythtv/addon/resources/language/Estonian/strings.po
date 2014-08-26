@@ -117,8 +117,8 @@ msgid "Transcoder"
 msgstr "Transkodeerija"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "Luba salvestistel aeguda?"
+msgid "Allow recordings to expire"
+msgstr "Luba salvestistel aeguda"
 
 msgctxt "#30049"
 msgid "Recording template"

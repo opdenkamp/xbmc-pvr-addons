@@ -121,8 +121,8 @@ msgid "Transcoder"
 msgstr "转码器"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "允许录像过期？"
+msgid "Allow recordings to expire"
+msgstr "允许录像过期"
 
 msgctxt "#30049"
 msgid "Recording template"

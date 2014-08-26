@@ -121,8 +121,8 @@ msgid "Transcoder"
 msgstr "Transcoder"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "Sta opnames toe te expireren?"
+msgid "Allow recordings to expire"
+msgstr "Sta opnames toe te expireren"
 
 msgctxt "#30049"
 msgid "Recording template"

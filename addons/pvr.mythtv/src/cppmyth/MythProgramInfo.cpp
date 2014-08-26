@@ -157,6 +157,16 @@ float MythProgramInfo::GetPropsAspec() const
   return m_props->m_aspec;
 }
 
+void MythProgramInfo::SetPropsSerie(bool flag)
+{
+  m_props->m_serie = flag;
+}
+
+bool MythProgramInfo::GetPropsSerie() const
+{
+  return m_props->m_serie;
+}
+
 std::string MythProgramInfo::UID() const
 {
   char buf[50] = "";

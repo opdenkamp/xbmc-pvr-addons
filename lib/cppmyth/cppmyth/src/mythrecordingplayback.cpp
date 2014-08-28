@@ -43,7 +43,7 @@ RecordingPlayback::RecordingPlayback(EventHandler& handler)
 {
   m_eventSubscriberId = m_eventHandler.CreateSubscription(this);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_UPDATE_FILE_SIZE);
-  ProtoPlayback::Open();
+  Open();
 }
 
 RecordingPlayback::RecordingPlayback(const std::string& server, unsigned port)
@@ -53,11 +53,10 @@ RecordingPlayback::RecordingPlayback(const std::string& server, unsigned port)
 , m_transfer(NULL)
 , m_recording(NULL)
 {
-  // Start my private handler. It will be stopped and closed by destructor.
-  m_eventHandler.Start();
+  // Private handler will be stopped and closed by destructor.
   m_eventSubscriberId = m_eventHandler.CreateSubscription(this);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_UPDATE_FILE_SIZE);
-  ProtoPlayback::Open();
+  Open();
 }
 
 RecordingPlayback::~RecordingPlayback()
@@ -73,7 +72,13 @@ bool RecordingPlayback::Open()
   PLATFORM::CLockObject lock(*m_mutex);
   if (ProtoPlayback::IsOpen())
     return true;
-  return ProtoPlayback::Open();
+  if (ProtoPlayback::Open())
+  {
+    if (!m_eventHandler.IsRunning())
+      m_eventHandler.Start();
+    return true;
+  }
+  return false;
 }
 
 void RecordingPlayback::Close()
@@ -81,8 +86,7 @@ void RecordingPlayback::Close()
   // Begin critical section
   PLATFORM::CLockObject lock(*m_mutex);
   CloseTransfer();
-  if (ProtoPlayback::IsOpen())
-    ProtoPlayback::Close();
+  ProtoPlayback::Close();
 }
 
 bool RecordingPlayback::OpenTransfer(ProgramPtr recording)

@@ -123,6 +123,7 @@ SignalStatusPtr ProtoEvent::RcvSignalStatus()
 
 int ProtoEvent::RcvBackendMessage(unsigned timeout, EventMessage& msg)
 {
+  PLATFORM::CLockObject lock(*m_mutex);
   struct timeval tv;
   tv.tv_sec = timeout;
   tv.tv_usec = 0;

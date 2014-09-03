@@ -1,3 +1,6 @@
+[B]Version 1.9.4[/B]
+Updated to API v1.9.2
+
 [B]Version 1.9.2[/B]
 Updated: language files from Transifex
 

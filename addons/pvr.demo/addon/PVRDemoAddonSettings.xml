@@ -169,6 +169,33 @@
       <icon>special://xbmc/addons/pvr.demo/data/10.png</icon>
       <stream></stream>
     </channel>
+    <channel>
+      <name>Demo TV Channel Sub.1</name>
+      <radio>0</radio>
+      <number>1</number>
+      <subnumber>1</subnumber>
+      <encryption>0</encryption>
+      <icon></icon>
+      <stream></stream>
+    </channel>
+    <channel>
+      <name>Demo TV Channel Sub.2</name>
+      <radio>0</radio>
+      <number>1</number>
+      <subnumber>2</subnumber>
+      <encryption>0</encryption>
+      <icon></icon>
+      <stream></stream>
+    </channel>
+    <channel>
+      <name>Demo TV Channel Sub.3</name>
+      <radio>0</radio>
+      <number>1</number>
+      <subnumber>3</subnumber>
+      <encryption>0</encryption>
+      <icon></icon>
+      <stream></stream>
+    </channel>
   </channels>
   <channelgroups>
     <group>

@@ -94,6 +94,10 @@ bool PVRDemoData::LoadDemoData(void)
       if (!XMLUtils::GetInt(pChannelNode, "number", channel.iChannelNumber))
         channel.iChannelNumber = iUniqueChannelId;
 
+      /* sub channel number */
+      if (!XMLUtils::GetInt(pChannelNode, "subnumber", channel.iSubChannelNumber))
+        channel.iSubChannelNumber = 0;
+
       /* CAID */
       if (!XMLUtils::GetInt(pChannelNode, "encryption", channel.iEncryptionSystem))
         channel.iEncryptionSystem = 0;
@@ -364,6 +368,7 @@ PVR_ERROR PVRDemoData::GetChannels(ADDON_HANDLE handle, bool bRadio)
       xbmcChannel.iUniqueId         = channel.iUniqueId;
       xbmcChannel.bIsRadio          = channel.bRadio;
       xbmcChannel.iChannelNumber    = channel.iChannelNumber;
+      xbmcChannel.iSubChannelNumber = channel.iSubChannelNumber;
       strncpy(xbmcChannel.strChannelName, channel.strChannelName.c_str(), sizeof(xbmcChannel.strChannelName) - 1);
       strncpy(xbmcChannel.strStreamURL, channel.strStreamURL.c_str(), sizeof(xbmcChannel.strStreamURL) - 1);
       xbmcChannel.iEncryptionSystem = channel.iEncryptionSystem;
@@ -387,6 +392,7 @@ bool PVRDemoData::GetChannel(const PVR_CHANNEL &channel, PVRDemoChannel &myChann
       myChannel.iUniqueId         = thisChannel.iUniqueId;
       myChannel.bRadio            = thisChannel.bRadio;
       myChannel.iChannelNumber    = thisChannel.iChannelNumber;
+      myChannel.iSubChannelNumber = thisChannel.iSubChannelNumber;
       myChannel.iEncryptionSystem = thisChannel.iEncryptionSystem;
       myChannel.strChannelName    = thisChannel.strChannelName;
       myChannel.strIconPath       = thisChannel.strIconPath;
@@ -441,8 +447,8 @@ PVR_ERROR PVRDemoData::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHA
         memset(&xbmcGroupMember, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
 
         strncpy(xbmcGroupMember.strGroupName, group.strGroupName, sizeof(xbmcGroupMember.strGroupName) - 1);
-        xbmcGroupMember.iChannelUniqueId = channel.iUniqueId;
-        xbmcGroupMember.iChannelNumber   = channel.iChannelNumber;
+        xbmcGroupMember.iChannelUniqueId  = channel.iUniqueId;
+        xbmcGroupMember.iChannelNumber    = channel.iChannelNumber;
 
         PVR->TransferChannelGroupMember(handle, &xbmcGroupMember);
       }

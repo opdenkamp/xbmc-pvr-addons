@@ -471,7 +471,8 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
       memset(&tag, 0, sizeof(PVR_CHANNEL));
 
       tag.iUniqueId = it->first;
-      tag.iChannelNumber = (unsigned)atoi(it->second.Number().c_str());
+      tag.iChannelNumber = it->second.NumberMajor();
+      tag.iSubChannelNumber = it->second.NumberMinor();
       PVR_STRCPY(tag.strChannelName, it->second.Name().c_str());
       tag.bIsHidden = !it->second.Visible();
       tag.bIsRadio = it->second.IsRadio();
@@ -1022,7 +1023,7 @@ PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_E
     prog = it->second;
   }
   // Check required props else return
-  float fps = prog.GetPropsFrameRate();
+  float fps = prog.GetPropsVideoFrameRate();
   XBMC->Log(LOG_DEBUG, "%s: AV props: Frame Rate = %.3f", __FUNCTION__, fps);
   if (fps <= 0)
     return PVR_ERROR_NO_ERROR;
@@ -1070,6 +1071,8 @@ PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_E
           if (g_bExtraDebug)
             XBMC->Log(LOG_DEBUG, "%s: COMBREAK %9.3f - %9.3f", __FUNCTION__, s, e);
         }
+        startPtr.reset();
+        break;
       case Myth::MARK_CUT_END:
         if (startPtr && startPtr->markType == Myth::MARK_CUT_START && (*it)->markValue > startPtr->markValue)
         {
@@ -1084,6 +1087,8 @@ PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_E
           if (g_bExtraDebug)
             XBMC->Log(LOG_DEBUG, "%s: CUT %9.3f - %9.3f", __FUNCTION__, s, e);
         }
+        startPtr.reset();
+        break;
       default:
         startPtr.reset();
     }
@@ -1116,6 +1121,31 @@ bool PVRClientMythTV::IsMyLiveRecording(const MythProgramInfo& programInfo)
     }
   }
   return false;
+}
+
+void PVRClientMythTV::FillRecordingAVInfo(MythProgramInfo& programInfo, Myth::Stream *stream)
+{
+  AVInfo info(stream);
+  AVInfo::STREAM_AVINFO mInfo;
+  if (info.GetMainStream(&mInfo))
+  {
+    // Set video frame rate
+    if (mInfo.stream_info.fps_scale > 0)
+    {
+      float fps = 0;
+      switch(mInfo.stream_type)
+      {
+        case STREAM_TYPE_VIDEO_H264:
+          fps = (float)(mInfo.stream_info.fps_rate) / (mInfo.stream_info.fps_scale * (mInfo.stream_info.interlaced ? 2 : 1));
+          break;
+        default:
+          fps = (float)(mInfo.stream_info.fps_rate) / mInfo.stream_info.fps_scale;
+      }
+      programInfo.SetPropsVideoFrameRate(fps);
+    }
+    // Set video aspec
+    programInfo.SetPropsVideoAspec(mInfo.stream_info.aspect);
+  }
 }
 
 int PVRClientMythTV::GetTimersAmount(void)
@@ -1826,15 +1856,8 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)
   {
     if (g_bExtraDebug)
       XBMC->Log(LOG_DEBUG, "%s: Done", __FUNCTION__);
-    // Gather AV info for later use
-    AVInfo info(m_recordingStream);
-    ElementaryStream::STREAM_INFO mInfo;
-    if (info.GetMainStream(&mInfo) && mInfo.fps_scale > 0)
-    {
-      prog.SetPropsFrameRate((float)(mInfo.fps_rate) / (mInfo.fps_scale * (mInfo.interlaced ? 2 : 1)));
-      if (mInfo.aspect > 0)
-        prog.SetPropsAspec(mInfo.aspect);
-    }
+    // Fill AV info for later use
+    FillRecordingAVInfo(prog, m_recordingStream);
     return true;
   }
 

@@ -40,12 +40,12 @@ public:
   : pid(0xffff)
   , continuity(0xff)
   , packet_type(PACKET_TYPE_UNKNOWN)
-  , packet_table()
   , channel(0)
   , wait_unit_start(true)
   , has_stream_data(false)
   , streaming(false)
   , stream(NULL)
+  , packet_table()
   {
   }
 
@@ -67,12 +67,12 @@ public:
   uint16_t pid;
   uint8_t continuity;
   PACKET_TYPE packet_type;
-  TSTable packet_table;
   uint16_t channel;
   bool wait_unit_start;
   bool has_stream_data;
   bool streaming;
   ElementaryStream* stream;
+  TSTable packet_table;
 };
 
 #endif /* TSPACKET_H */

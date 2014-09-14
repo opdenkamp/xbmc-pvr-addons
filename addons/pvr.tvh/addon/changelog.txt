@@ -1,3 +1,7 @@
+0.9.4
+ - sync with latest PVR API
+ - expose ATSC subchannel numbers to XBMC
+
 0.9.3
  - no longer triggers updates in XBMC whenever the current programme on a channel changes
  - fix potential crash during channel switching (especially with VAAPI)

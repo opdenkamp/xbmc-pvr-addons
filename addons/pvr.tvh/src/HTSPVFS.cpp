@@ -251,7 +251,7 @@ void CHTSPVFS::SendFileClose ( void )
   // Note: ignore the return;
 }
 
-ssize_t CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
+long long CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
 {
   htsmsg_t *m;
   int64_t ret = -1;
@@ -294,5 +294,5 @@ ssize_t CHTSPVFS::SendFileSeek ( int64_t pos, int whence, bool force )
   else
     tvherror("vfs fileSeek failed");
 
-  return (ssize_t)ret;
+  return ret;
 }

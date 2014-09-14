@@ -1,6 +1,8 @@
+0.3.102
+- populate new subchannel field
+
 0.3.101
 - updated to API v1.9.2
-- populate subchannel field now XBMC supports them
 
 0.3.100
 - fix to XBMC->Log calls for clang compiler and general consistency

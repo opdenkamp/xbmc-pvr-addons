@@ -201,6 +201,7 @@ PVR_ERROR CTvheadend::GetChannels ( ADDON_HANDLE handle, bool radio )
     chn.iUniqueId         = it->second.id;
     chn.bIsRadio          = it->second.radio;
     chn.iChannelNumber    = it->second.num;
+    chn.iSubChannelNumber = it->second.numMinor;
     chn.iEncryptionSystem = it->second.caid;
     chn.bIsHidden         = false;
     strncpy(chn.strChannelName, it->second.name.c_str(),
@@ -1095,6 +1096,12 @@ void CTvheadend::ParseChannelUpdate ( htsmsg_t *msg )
   else if (!channel.num)
   {
     UPDATE(channel.num, GetNextUnnumberedChannelNumber());
+  }
+  
+  /* ATSC subchannel number */
+  if (!htsmsg_get_u32(msg, "channelNumberMinor", &u32))
+  {
+    UPDATE(channel.numMinor, u32);
   }
 
   /* Channel icon */

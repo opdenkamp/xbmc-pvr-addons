@@ -88,6 +88,7 @@ struct SChannel
   bool             del;
   uint32_t         id;
   uint32_t         num;
+  uint32_t         numMinor;
   bool             radio;
   uint32_t         caid;
   std::string      name;
@@ -99,6 +100,7 @@ struct SChannel
     del   = false;
     id    = 0;
     num   = 0;
+    numMinor = 0;
     radio = false;
     caid  = 0;
     name.clear();

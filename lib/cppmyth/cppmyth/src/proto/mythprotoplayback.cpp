@@ -67,7 +67,7 @@ bool ProtoPlayback::IsOpen()
 {
   // Try reconnect
   if (m_hang)
-    return Open();
+    return ProtoPlayback::Open();
   return ProtoBase::IsOpen();
 }
 

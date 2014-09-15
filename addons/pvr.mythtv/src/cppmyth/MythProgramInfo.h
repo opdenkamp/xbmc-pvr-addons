@@ -51,6 +51,8 @@ public:
   float GetPropsFrameRate() const;
   void SetPropsAspec(float aspec);
   float GetPropsAspec() const;
+  void SetPropsSerie(bool flag);
+  bool GetPropsSerie() const;
   // Program fields
   std::string UID() const;
   std::string ProgramID() const;
@@ -88,11 +90,13 @@ private:
     Props()
     : m_frameRate(0)
     , m_aspec(0)
+    , m_serie(false)
     {}
     ~Props() {}
 
     float m_frameRate;
     float m_aspec;
+    bool m_serie;               ///< true if program is serie else false
   };
   MYTH_SHARED_PTR<Props> m_props;
 

@@ -24,6 +24,7 @@
 #include "client.h"
 #include "tools.h"
 #include "avinfo.h"
+#include "guidialogyesno.h"
 
 #include <time.h>
 #include <set>
@@ -444,8 +445,8 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
   LoadChannelsAndChannelGroups();
   m_PVRChannelUidById.clear();
 
-  // Create a map<(channum, callsign), chanid> to merge channels with same channum and callsign
-  std::map<std::pair<std::string, std::string>, unsigned int> channelIdentifiers;
+  // Create a map<(sourceid, channum, callsign), chanid> to merge channels with same channum and callsign within same group
+  std::map<std::pair<unsigned int, std::pair<std::string, std::string> >, unsigned int> channelIdentifiers;
 
   // Transfer channels of the requested type (radio / tv)
   for (ChannelIdMap::iterator it = m_channelsById.begin(); it != m_channelsById.end(); ++it)
@@ -453,8 +454,8 @@ PVR_ERROR PVRClientMythTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
     if (it->second.IsRadio() == bRadio && !it->second.IsNull())
     {
       // Skip channels with same channum and callsign
-      std::pair<std::string, std::string> channelIdentifier = std::make_pair(it->second.Number(), it->second.Callsign());
-      std::map<std::pair<std::string, std::string>, unsigned int>::iterator itm = channelIdentifiers.find(channelIdentifier);
+      std::pair<unsigned int, std::pair<std::string, std::string> > channelIdentifier = std::make_pair(it->second.SourceID(), std::make_pair(it->second.Number(), it->second.Callsign()));
+      std::map<std::pair<unsigned int, std::pair<std::string, std::string> >, unsigned int>::iterator itm = channelIdentifiers.find(channelIdentifier);
       if (itm != channelIdentifiers.end())
       {
         XBMC->Log(LOG_DEBUG, "%s: skipping channel: %d", __FUNCTION__, it->second.ID());
@@ -561,7 +562,7 @@ PVR_ERROR PVRClientMythTV::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR
       PVR_CHANNEL_GROUP_MEMBER tag;
       memset(&tag, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
 
-      tag.iChannelNumber = channelNumber++;
+      tag.iChannelNumber = ++channelNumber;
       tag.iChannelUniqueId = (unsigned)FindPVRChannelUid(channelIt->second.ID());
       PVR_STRCPY(tag.strGroupName, group.strGroupName);
       PVR->TransferChannelGroupMember(handle, &tag);
@@ -644,7 +645,32 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
   // Load recordings list
   if (m_recordings.empty())
     FillRecordings();
-
+  // Setup series
+  if (g_iGroupRecordings == GROUP_RECORDINGS_ONLY_FOR_SERIES)
+  {
+    typedef std::map<std::pair<std::string, std::string>, ProgramInfoMap::iterator::pointer> TitlesMap;
+    TitlesMap titles;
+    for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
+    {
+      if (!it->second.IsNull() && it->second.IsVisible())
+      {
+        std::pair<std::string, std::string> title = std::make_pair(it->second.RecordingGroup(), it->second.Title());
+        TitlesMap::iterator found = titles.find(title);
+        if (found != titles.end())
+        {
+          if (found->second)
+          {
+            found->second->second.SetPropsSerie(true);
+            found->second = NULL;
+          }
+          it->second.SetPropsSerie(true);
+        }
+        else
+          titles.insert(std::make_pair(title, &(*it)));
+      }
+    }
+  }
+  // Transfer to PVR
   for (ProgramInfoMap::iterator it = m_recordings.begin(); it != m_recordings.end(); ++it)
   {
     if (!it->second.IsNull() && it->second.IsVisible())
@@ -670,8 +696,9 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       tag.iGenreType = genre&0xF0;
 
       // Add recording title to directory to group everything according to its name just like MythTV does
-      std::string strDirectory;
-      strDirectory.append(it->second.RecordingGroup()).append("/").append(it->second.Title());
+      std::string strDirectory(it->second.RecordingGroup());
+      if (g_iGroupRecordings == GROUP_RECORDINGS_ALWAYS || (g_iGroupRecordings == GROUP_RECORDINGS_ONLY_FOR_SERIES && it->second.GetPropsSerie()))
+        strDirectory.append("/").append(it->second.Title());
       PVR_STRCPY(tag.strDirectory, strDirectory.c_str());
 
       // Images
@@ -977,10 +1004,11 @@ int PVRClientMythTV::GetRecordingLastPlayedPosition(const PVR_RECORDING &recordi
 
 PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_EDL_ENTRY entries[], int *size)
 {
+  *size = 0;
+  if (g_iEnableEDL == ENABLE_EDL_NEVER)
+    return PVR_ERROR_NO_ERROR;
   if (g_bExtraDebug)
-  {
     XBMC->Log(LOG_DEBUG, "%s: Reading edl for: %s", __FUNCTION__, recording.strTitle);
-  }
   // Check recording
   MythProgramInfo prog;
   {
@@ -997,21 +1025,29 @@ PVR_ERROR PVRClientMythTV::GetRecordingEdl(const PVR_RECORDING &recording, PVR_E
   float fps = prog.GetPropsFrameRate();
   XBMC->Log(LOG_DEBUG, "%s: AV props: Frame Rate = %.3f", __FUNCTION__, fps);
   if (fps <= 0)
-  {
-    *size = 0;
     return PVR_ERROR_NO_ERROR;
-  }
-  // Processing marks
+  // Search for marks
   Myth::MarkListPtr skpList = m_control->GetCommBreakList(*(prog.GetPtr()));
   XBMC->Log(LOG_DEBUG, "%s: Found %d commercial breaks for: %s", __FUNCTION__, skpList->size(), recording.strTitle);
   Myth::MarkListPtr cutList = m_control->GetCutList(*(prog.GetPtr()));
   XBMC->Log(LOG_DEBUG, "%s: Found %d cut list entries for: %s", __FUNCTION__, cutList->size(), recording.strTitle);
   skpList->insert(skpList->end(), cutList->begin(), cutList->end());
+  // Open dialog
+  if (g_iEnableEDL == ENABLE_EDL_DIALOG && !skpList->empty())
+  {
+    GUIDialogYesNo dialog(XBMC->GetLocalizedString(30110), XBMC->GetLocalizedString(30111), 1);
+    dialog.Open();
+    if (dialog.IsNo())
+      return PVR_ERROR_NO_ERROR;
+  }
+  // Processing marks
   int index = 0;
   Myth::MarkList::const_iterator it;
   Myth::MarkPtr startPtr;
   for (it = skpList->begin(); it != skpList->end(); ++it)
   {
+    if (index >= PVR_ADDON_EDL_LENGTH)
+      break;
     switch ((*it)->markType)
     {
       case Myth::MARK_COMM_START:

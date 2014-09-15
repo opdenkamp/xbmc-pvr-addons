@@ -170,9 +170,10 @@ void AVInfo::Process()
   }
 
   int ret = 0;
-  bool analyzed = false;
+  bool analyzed = false; ///< become true once all channel streams are parsed
+  size_t throughput = 0; ///< to limit size of analyzed data
 
-  while (!analyzed)
+  while (!analyzed && throughput < ES_MAX_BUFFER_SIZE)
   {
     {
       ret = m_AVContext->TSResync();
@@ -187,6 +188,7 @@ void AVInfo::Process()
       ElementaryStream::STREAM_PKT pkt;
       while (get_stream_data(&pkt))
       {
+        throughput += pkt.size;
         if (pkt.streamChange)
         {
           // Update stream properties. Analyzing will be closed once setup is completed for all streams.

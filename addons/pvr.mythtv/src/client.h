@@ -56,6 +56,12 @@
 
 #define DEFAULT_HANDLE_DEMUXING             false
 #define DEFAULT_TUNE_DELAY                  5
+#define GROUP_RECORDINGS_ALWAYS             0
+#define GROUP_RECORDINGS_ONLY_FOR_SERIES    1
+#define GROUP_RECORDINGS_NEVER              2
+#define ENABLE_EDL_ALWAYS                   0
+#define ENABLE_EDL_DIALOG                   1
+#define ENABLE_EDL_NEVER                    2
 
 /*!
  * @brief PVR macros for string exchange
@@ -94,6 +100,8 @@ extern bool         g_bRecAutoExpire;
 extern int          g_iRecTranscoder;
 extern bool         g_bDemuxing;
 extern int          g_iTuneDelay;
+extern int          g_iGroupRecordings;
+extern int          g_iEnableEDL;
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr   *PVR;

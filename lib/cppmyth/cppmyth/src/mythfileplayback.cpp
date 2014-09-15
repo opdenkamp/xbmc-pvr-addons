@@ -61,8 +61,7 @@ void FilePlayback::Close()
   // Begin critical section
   PLATFORM::CLockObject lock(*m_mutex);
   CloseTransfer();
-  if (ProtoPlayback::IsOpen())
-    ProtoPlayback::Close();
+  ProtoPlayback::Close();
 }
 
 bool FilePlayback::OpenTransfer(const std::string& pathname, const std::string& sgname)

@@ -1,3 +1,12 @@
+v1.9.22
+- Fix identifier for DVB-SUBTITLE
+- Add setting to enable or disable EDL functionnality
+- Add setting to configure grouping for recordings
+- Load EIT categories from customized user file
+- Merge channels with same source ID
+- Fix codec infos after stream parsing (AAC LATM)
+- Fix crash when trying to show recording from unattainable slave backend
+
 v1.9.21
 - Updated to API v1.9.2
 

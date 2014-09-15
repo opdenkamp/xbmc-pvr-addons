@@ -121,8 +121,8 @@ msgid "Transcoder"
 msgstr "Átkódoló"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "Engedélyezed a felvételek lejártát ?"
+msgid "Allow recordings to expire"
+msgstr "Engedélyezed a felvételek lejártát"
 
 msgctxt "#30049"
 msgid "Recording template"

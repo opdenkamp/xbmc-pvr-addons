@@ -37,13 +37,13 @@ using namespace Myth;
 ////
 
 EventHandler::EventHandlerThread::EventHandlerThread(const std::string& server, unsigned port)
-: m_event(new ProtoEvent(server,port))
+: m_server(server)
+, m_port(port)
 {
 }
 
 EventHandler::EventHandlerThread::~EventHandlerThread()
 {
-  SAFE_DELETE(m_event);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,8 +57,6 @@ public:
   BasicEventHandler(const std::string& server, unsigned port);
   virtual ~BasicEventHandler();
   // Implements MythEventHandlerThread
-  virtual std::string GetServer() const;
-  virtual unsigned GetPort() const;
   virtual bool Start();
   virtual void Stop();
   virtual bool IsRunning();
@@ -69,7 +67,7 @@ public:
 
 private:
   PLATFORM::CMutex *m_mutex;
-  unsigned m_timeout;
+  ProtoEvent *m_event;
   // About subscriptions
   typedef std::map<EVENT_t, std::vector<unsigned> > subscriptionsByEvent_t;
   subscriptionsByEvent_t m_subscriptionsByEvent;
@@ -86,42 +84,34 @@ private:
 BasicEventHandler::BasicEventHandler(const std::string& server, unsigned port)
 : EventHandlerThread(server, port), PLATFORM::CThread()
 , m_mutex(new PLATFORM::CMutex)
-, m_timeout(0)
+, m_event(new ProtoEvent(server,port))
 {
 }
 
 BasicEventHandler::~BasicEventHandler()
 {
-  if (m_event->IsOpen())
-    Stop();
+  Stop();
+  SAFE_DELETE(m_event);
   SAFE_DELETE(m_mutex);
-}
-
-std::string BasicEventHandler::GetServer() const
-{
-  return m_event->GetServer();
-}
-
-unsigned BasicEventHandler::GetPort() const
-{
-  return m_event->GetPort();
 }
 
 bool BasicEventHandler::Start()
 {
-  Stop();
+  if (PLATFORM::CThread::IsRunning())
+    return true;
   return PLATFORM::CThread::CreateThread();
 }
 
 void BasicEventHandler::Stop()
 {
   if (PLATFORM::CThread::IsRunning())
-    PLATFORM::CThread::StopThread();
-  // After incomplete thread stop the connection still opened
-  // So force closing
+  {
+    DBG(MYTH_DBG_DEBUG, "%s: event handler thread (%p)\n", __FUNCTION__, this);
+    PLATFORM::CThread::StopThread(0);
+    DBG(MYTH_DBG_DEBUG, "%s: event handler thread (%p) stopped\n", __FUNCTION__, this);
+  }
   if (m_event->IsOpen())
     m_event->Close();
-  m_mutex->Clear();
 }
 
 bool BasicEventHandler::IsRunning()
@@ -201,12 +191,11 @@ void *BasicEventHandler::Process()
   // Try to connect
   if (m_event->Open())
     AnnounceStatus(EVENTHANDLER_CONNECTED);
-  m_timeout = EVENTHANDLER_TIMEOUT;
   while (!PLATFORM::CThread::IsStopped())
   {
     int r;
     EventMessage msg;
-    r = m_event->RcvBackendMessage(m_timeout, msg);
+    r = m_event->RcvBackendMessage(EVENTHANDLER_TIMEOUT, msg);
     if (r > 0)
       DispatchEvent(msg);
     else if (r < 0)
@@ -219,18 +208,19 @@ void *BasicEventHandler::Process()
       AnnounceTimer();
     }
   }
-  // Close connection
   AnnounceStatus(EVENTHANDLER_STOPPED);
+  // Close connection
   m_event->Close();
   return NULL;
 }
 
 void BasicEventHandler::AnnounceStatus(const char *status)
 {
+  DBG(MYTH_DBG_DEBUG, "%s: (%p) %s\n", __FUNCTION__, this, status);
   EventMessage msg;
   msg.event = EVENT_HANDLER_STATUS;
   msg.subject.push_back(status);
-  msg.subject.push_back(m_event->GetServer());
+  msg.subject.push_back(m_server);
   DispatchEvent(msg);
 }
 
@@ -248,8 +238,7 @@ void BasicEventHandler::RetryConnect()
   unsigned c = 0;
   while (!PLATFORM::CThread::IsStopped())
   {
-    usleep(500000);
-    if (++c > 9)  // 5 seconds
+    if (++c > 10)  // 5 seconds
     {
       if (m_event->Open())
       {
@@ -260,6 +249,7 @@ void BasicEventHandler::RetryConnect()
       DBG(MYTH_DBG_INFO, "%s: could not open event socket (%d)\n", __FUNCTION__, m_event->GetSocketErrNo());
       AnnounceStatus(EVENTHANDLER_NOTCONNECTED);
     }
+    usleep(500000);
   }
 }
 

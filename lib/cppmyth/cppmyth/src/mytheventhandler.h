@@ -35,8 +35,6 @@
 namespace Myth
 {
 
-  class ProtoEvent;
-
   class EventSubscriber
   {
   public:
@@ -66,8 +64,8 @@ namespace Myth
     public:
       EventHandlerThread(const std::string& server, unsigned port);
       virtual ~EventHandlerThread();
-      virtual std::string GetServer() const = 0;
-      virtual unsigned GetPort() const = 0;
+      virtual std::string GetServer() const { return m_server; }
+      virtual unsigned GetPort() const { return m_port; }
       virtual bool Start() = 0;
       virtual void Stop() = 0;
       virtual bool IsRunning() = 0;
@@ -76,7 +74,8 @@ namespace Myth
       virtual bool SubscribeForEvent(unsigned subid, EVENT_t event) = 0;
       virtual void RevokeSubscription(unsigned subid) = 0;
     protected:
-      ProtoEvent *m_event;
+      std::string m_server;
+      unsigned m_port;
     };
 
     typedef MYTH_SHARED_PTR<EventHandlerThread> EventHandlerThreadPtr;

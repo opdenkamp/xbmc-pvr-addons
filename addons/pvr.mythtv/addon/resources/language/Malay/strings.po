@@ -121,8 +121,8 @@ msgid "Transcoder"
 msgstr "Transkoder"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "Benarkan rakaman menjadi luput?"
+msgid "Allow recordings to expire"
+msgstr "Benarkan rakaman menjadi luput"
 
 msgctxt "#30049"
 msgid "Recording template"

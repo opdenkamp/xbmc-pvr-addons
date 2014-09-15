@@ -49,13 +49,13 @@ LiveTVPlayback::LiveTVPlayback(EventHandler& handler)
 , m_signal()
 , m_chain()
 {
-  ProtoMonitor::Open();
   m_eventSubscriberId = m_eventHandler.CreateSubscription(this);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_SIGNAL);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_LIVETV_CHAIN);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_LIVETV_WATCH);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_DONE_RECORDING);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_UPDATE_FILE_SIZE);
+  Open();
 }
 
 LiveTVPlayback::LiveTVPlayback(const std::string& server, unsigned port)
@@ -67,15 +67,14 @@ LiveTVPlayback::LiveTVPlayback(const std::string& server, unsigned port)
 , m_signal()
 , m_chain()
 {
-  ProtoMonitor::Open();
-  // Start my private handler. It will be stopped and closed by destructor.
-  m_eventHandler.Start();
+  // Private handler will be stopped and closed by destructor.
   m_eventSubscriberId = m_eventHandler.CreateSubscription(this);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_SIGNAL);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_LIVETV_CHAIN);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_LIVETV_WATCH);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_DONE_RECORDING);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_UPDATE_FILE_SIZE);
+  Open();
 }
 
 LiveTVPlayback::~LiveTVPlayback()
@@ -91,7 +90,13 @@ bool LiveTVPlayback::Open()
   PLATFORM::CLockObject lock(*m_mutex);
   if (ProtoMonitor::IsOpen())
     return true;
-  return ProtoMonitor::Open();
+  if (ProtoMonitor::Open())
+  {
+    if (!m_eventHandler.IsRunning())
+      m_eventHandler.Start();
+    return true;
+  }
+  return false;
 }
 
 void LiveTVPlayback::Close()
@@ -99,8 +104,7 @@ void LiveTVPlayback::Close()
   // Begin critical section
   PLATFORM::CLockObject lock(*m_mutex);
   m_recorder.reset();
-  if (ProtoMonitor::IsOpen())
-    ProtoMonitor::Close();
+  ProtoMonitor::Close();
 }
 
 void LiveTVPlayback::SetTuneDelay(unsigned delay)

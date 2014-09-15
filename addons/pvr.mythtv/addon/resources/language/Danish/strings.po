@@ -117,7 +117,7 @@ msgid "Transcoder"
 msgstr "Transkoder"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
+msgid "Allow recordings to expire"
 msgstr "Tillad at optagelser udløber"
 
 msgctxt "#30049"

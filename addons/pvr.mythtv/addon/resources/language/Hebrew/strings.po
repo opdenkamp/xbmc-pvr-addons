@@ -117,8 +117,8 @@ msgid "Transcoder"
 msgstr "מקודד מחדש"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "אפשר פקיעת תוקף הקלטות?"
+msgid "Allow recordings to expire"
+msgstr "אפשר פקיעת תוקף הקלטות"
 
 msgctxt "#30049"
 msgid "Recording template"

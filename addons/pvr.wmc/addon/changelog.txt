@@ -1,3 +1,6 @@
+0.3.102
+- populate new subchannel field
+
 0.3.101
 - updated to API v1.9.2
 
@@ -26,7 +29,7 @@
 - display correct duration for active-recordings  (gotham only)
 - Add support for Radio Channels
 - displays/logs error if it cannot access the Recorded TV folder at startup
-- better updating of �Recordings� list for all client platforms
+- better updating of ‘Recordings’ list for all client platforms
 - can receive gui update triggers from server when checking server status
 - AddTimer notifications are now info/warning rather than errors
 - Add workaround to get XBMC skip/seek to behave nicely for Active and Remuxed recordings 
@@ -39,7 +42,7 @@
 - fixed record/delete series dialog showing occasional blank fields
 - Supports resume across multiple clients (gotham only)
 - Receives and parses server version
-- Signal status can be scanned (note requires enabling in pvr.wmc addon configuration � gotham clients only
+- Signal status can be scanned (note requires enabling in pvr.wmc addon configuration – gotham clients only
  
 0.2.91
 - Changed some message strings, added message for instant record
@@ -64,7 +67,7 @@
  
 0.1.7
  - made StreamSize server queries happen less often
- - fixed �vector� class connection crashes when socket is not available
+ - fixed ‘vector’ class connection crashes when socket is not available
 
 0.1.6
  - first public release

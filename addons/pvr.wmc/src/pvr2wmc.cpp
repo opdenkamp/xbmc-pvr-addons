@@ -270,19 +270,27 @@ PVR_ERROR Pvr2Wmc::GetChannels(ADDON_HANDLE handle, bool bRadio)
 		vector<CStdString> v = split(*response, "|");
 		// packing: id, bradio, c.OriginalNumber, c.CallSign, c.IsEncrypted, imageStr, c.IsBlocked
 
-		if (v.size() < 7)
+		if (v.size() < 9)
 		{
 			XBMC->Log(LOG_DEBUG, "Wrong number of fields xfered for channel group data");
 			continue;
 		}
 
+		// Populate Channel (and optionally subchannel if one was provided)
+		vector<CStdString> c = split(v[7], ".");
+		if (c.size() > 1)
+		{
+			xChannel.iChannelNumber = atoi(c[0].c_str());
+			xChannel.iSubChannelNumber = atoi(c[1].c_str());
+		}
+		else
+		{
+			xChannel.iChannelNumber = atoi(v[2].c_str());
+		}
+
 		xChannel.iUniqueId = strtoul(v[0].c_str(), 0, 10);					// convert to unsigned int
 		xChannel.bIsRadio = Str2Bool(v[1]);
-		xChannel.iChannelNumber = atoi(v[2].c_str());
 		STRCPY(xChannel.strChannelName,  v[3].c_str());
-		//CStdString test = "C:\\Users\\Public\\Recorded TV\\dump.mpg";
-		//STRCPY(xChannel.strStreamURL,  test.c_str());
-		//STRCPY(xChannel.strInputFormat, "video/wtv");
 		xChannel.iEncryptionSystem = Str2Bool(v[4]);
 		if (v[5].compare("NULL") != 0)										// if icon path is null
 			STRCPY(xChannel.strIconPath,  v[5].c_str()); 

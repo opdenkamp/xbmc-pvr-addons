@@ -1,3 +1,7 @@
+[B]Version 1.9.5[/B]
+Fixed: transcoded live TV streaming
+Added: transcoded live TV with timeshifting capabilities
+
 [B]Version 1.9.4[/B]
 Updated to API v1.9.2
 

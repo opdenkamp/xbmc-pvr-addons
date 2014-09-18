@@ -44,7 +44,7 @@
 class DVBLinkClient : public PLATFORM::CThread
 {
 public:
-  DVBLinkClient(ADDON::CHelper_libXBMC_addon *XBMC, CHelper_libXBMC_pvr *PVR, std::string clientname, std::string hostname, long port, bool showinfomsg, std::string username, std::string password, bool usetimeshift);
+    DVBLinkClient(ADDON::CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* pvr, CHelper_libXBMC_gui* gui, std::string clientname, std::string hostname, long port, bool showinfomsg, std::string username, std::string password);
   ~DVBLinkClient(void);
   int GetChannelsAmount();
   PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
@@ -58,8 +58,8 @@ public:
   PVR_ERROR DeleteTimer(const PVR_TIMER &timer);
   PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
   bool GetStatus();
-  const char * GetLiveStreamURL(const PVR_CHANNEL &channel, DVBLINK_STREAMTYPE streamtype, int width, int height, int bitrate, std::string audiotrack);
-  bool OpenLiveStream(const PVR_CHANNEL &channel, DVBLINK_STREAMTYPE streamtype, int width, int height, int bitrate, std::string audiotrack);
+  bool StartStreaming(const PVR_CHANNEL &channel, dvblinkremote::StreamRequest* streamRequest, std::string& stream_url);
+  bool OpenLiveStream(const PVR_CHANNEL &channel, bool use_timeshift, bool use_transcoder, int width, int height, int bitrate, std::string audiotrack);
   void StopStreaming(bool bUseChlHandle);
   int GetCurrentChannelId();
   void GetDriveSpace(long long *iTotal, long long *iUsed);
@@ -91,11 +91,11 @@ private:
   PLATFORM::CMutex        m_mutex;
   CHelper_libXBMC_pvr *PVR;
   ADDON::CHelper_libXBMC_addon  *XBMC; 
+  CHelper_libXBMC_gui   *GUI;
   DVBLINK_STREAMTYPE m_streamtype;
   std::string m_clientname;
   std::string m_hostname;
-  TimeShiftBuffer *m_tsBuffer;
-  bool m_usetimeshift;
+  LiveStreamerBase* m_live_streamer;
   bool m_showinfomsg;
   bool m_updating;
   std::string m_recordingsid;

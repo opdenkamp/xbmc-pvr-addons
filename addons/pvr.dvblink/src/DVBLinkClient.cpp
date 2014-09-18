@@ -57,16 +57,16 @@ std::string DVBLinkClient::GetBuildInRecorderObjectID()
 
 
 
-DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon  *XBMC, CHelper_libXBMC_pvr *PVR,std::string clientname, std::string hostname, long port,bool showinfomsg, std::string username, std::string password, bool usetimeshift)
+DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* pvr, CHelper_libXBMC_gui* gui, std::string clientname, std::string hostname, long port, bool showinfomsg, std::string username, std::string password)
 {
-  this->PVR = PVR;
-  this->XBMC = XBMC;
+  PVR = pvr;
+  XBMC = xbmc;
+  GUI = gui;
   m_clientname = clientname;
   m_hostname = hostname;
   m_connected = false;
   m_currentChannelId = 0;
   m_showinfomsg = showinfomsg;
-  m_usetimeshift = usetimeshift;
 
   m_httpClient = new HttpPostClient(XBMC,hostname, port, username, password);
   m_dvblinkRemoteCommunication = DVBLinkRemote::Connect((HttpClient&)*m_httpClient, m_hostname.c_str(), port, username.c_str(), password.c_str());
@@ -78,7 +78,7 @@ DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon  *XBMC, CHelper_libXBMC_pvr *
   GetChannelsRequest request;
   m_channels = new ChannelList();
   m_stream = new Stream();
-  m_tsBuffer = NULL;
+  m_live_streamer = NULL;
 
   if ((status = m_dvblinkRemoteCommunication->GetChannels(request, *m_channels)) == DVBLINK_REMOTE_STATUS_OK)
   {
@@ -163,16 +163,6 @@ PVR_ERROR DVBLinkClient::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
       PVR_STRCPY(xbmcChannel.strChannelName,channel->GetName().c_str());
       CStdString stream;
-      if (!m_usetimeshift)
-      {
-        if (isRadio)
-          stream.Format("pvr://stream/radio/%i.ts", channel->GetDvbLinkID());
-        else
-          stream.Format("pvr://stream/tv/%i.ts", channel->GetDvbLinkID());
-        
-        PVR_STRCPY(xbmcChannel.strStreamURL, stream.c_str());
-        PVR_STRCPY(xbmcChannel.strInputFormat, "video/x-mpegts");
-      }
 
       //PVR_STRCPY(xbmcChannel.strIconPath, "special://userdata/addon_data/pvr.dvblink/channel.png");
       PVR->TransferChannelEntry(handle, &xbmcChannel);
@@ -478,111 +468,115 @@ int DVBLinkClient::GetCurrentChannelId()
   return m_currentChannelId;
 }
 
-const char * DVBLinkClient::GetLiveStreamURL(const PVR_CHANNEL &channel, DVBLINK_STREAMTYPE streamtype, int width, int height, int bitrate, std::string audiotrack)
+bool DVBLinkClient::StartStreaming(const PVR_CHANNEL &channel, StreamRequest* streamRequest, std::string& stream_url)
 {
-  PLATFORM::CLockObject critsec(m_mutex);
-  StreamRequest* streamRequest = NULL;
-  TranscodingOptions options(width, height);
-  options.SetBitrate(bitrate);
-  options.SetAudioTrack(audiotrack);
-  Channel * c = m_channelMap[channel.iUniqueId];
   DVBLinkRemoteStatusCode status;
-  if (m_usetimeshift)
-  {
-    streamRequest = new RawHttpTimeshiftStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str());
-  } else
-  {
-    switch (streamtype)
-    {
-    case HTTP:
-      streamRequest = new RawHttpStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str());
-      break;
-    case RTP:
-      streamRequest = new RealTimeTransportProtocolStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str(), options);
-      break;
-    case HLS:
-      streamRequest = new HttpLiveStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str(), options);
-      break;
-    case ASF:
-      streamRequest = new WindowsMediaStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str(), options);
-      break;
-    }
-  }
-
   if ((status = m_dvblinkRemoteCommunication->PlayChannel(*streamRequest, *m_stream)) != DVBLINK_REMOTE_STATUS_OK)
   {
     std::string error;
     m_dvblinkRemoteCommunication->GetLastError(error);
-    XBMC->Log(LOG_ERROR, "Could not get stream for channel %i (Error code : %d)", channel.iUniqueId, (int)status,error.c_str());
+    XBMC->Log(LOG_ERROR, "Could not start streaming for channel %i (Error code : %d)", channel.iUniqueId, (int)status,error.c_str());
     XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(32010), channel.strChannelName, (int)status);
-    SAFE_DELETE(streamRequest);
-    return "";
+    return false;
   }
 
   m_currentChannelId = channel.iUniqueId;
-  SAFE_DELETE(streamRequest);
-  return m_stream->GetUrl().c_str();
+  stream_url = m_stream->GetUrl();
+  return true;
 }
 
-bool DVBLinkClient::OpenLiveStream(const PVR_CHANNEL &channel, DVBLINK_STREAMTYPE streamtype, int width, int height, int bitrate, std::string audiotrack)
+bool DVBLinkClient::OpenLiveStream(const PVR_CHANNEL &channel, bool use_timeshift, bool use_transcoder, int width, int height, int bitrate, std::string audiotrack)
 {
-  if (m_usetimeshift)
-  {
-    if (m_tsBuffer)
+    bool ret_val = false;
+
+    PLATFORM::CLockObject critsec(m_mutex);
+
+    if (m_live_streamer)
     {
-      SAFE_DELETE(m_tsBuffer);
+        SAFE_DELETE(m_live_streamer);
     }
-    m_tsBuffer = new TimeShiftBuffer(XBMC, GetLiveStreamURL(channel, streamtype, width, height, bitrate, audiotrack));
-    return true;
-  }
-  return false;
+	//time-shifted playback always uses raw http stream type - no transcoding option is possible now
+    if (use_timeshift)
+        m_live_streamer = new TimeShiftBuffer(XBMC);
+    else
+        m_live_streamer = new LiveTVStreamer(XBMC);
+
+    //adjust transcoded height and width if needed
+    int w = width == 0 ? GUI->GetScreenWidth() : width;
+    int h = height == 0 ? GUI->GetScreenHeight() : height;
+
+    Channel * c = m_channelMap[channel.iUniqueId];
+
+    StreamRequest* sr = m_live_streamer->GetStreamRequest(c->GetDvbLinkID(), m_clientname, m_hostname, use_transcoder, w, h, bitrate, audiotrack);
+    if (sr != NULL)
+    {
+        std::string url;
+        if (StartStreaming(channel, sr, url))
+        {
+            m_live_streamer->Start(url);
+            ret_val = true;
+        }
+        else
+        {
+            delete m_live_streamer;
+            m_live_streamer = NULL;
+        }
+        delete sr;
+    }
+    else
+    {
+        XBMC->Log(LOG_ERROR, "m_live_streamer->GetStreamRequest returned NULL. (channel %i)", channel.iUniqueId);
+        delete m_live_streamer;
+        m_live_streamer = NULL;
+    }
+    return ret_val;
 }
 
 int DVBLinkClient::ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-  if(m_tsBuffer)
-    return m_tsBuffer->ReadData(pBuffer,iBufferSize);
+    if (m_live_streamer)
+        return m_live_streamer->ReadData(pBuffer, iBufferSize);
   return 0;
 }
 
 long long DVBLinkClient::SeekLiveStream(long long iPosition, int iWhence)
 {
-  if(m_tsBuffer)
-    return m_tsBuffer->Seek(iPosition, iWhence);
+    if (m_live_streamer)
+        return m_live_streamer->Seek(iPosition, iWhence);
   return 0;
 }
 
 long long DVBLinkClient::PositionLiveStream(void)
 {
-  if(m_tsBuffer)
-    return m_tsBuffer->Position();
+    if (m_live_streamer)
+        return m_live_streamer->Position();
   return 0;
 }
 long long DVBLinkClient::LengthLiveStream(void)
 {
-  if(m_tsBuffer)
-    return m_tsBuffer->Length();
+    if (m_live_streamer)
+        return m_live_streamer->Length();
   return 0;
 }
 
 time_t DVBLinkClient::GetPlayingTime()
 {
-  if(m_tsBuffer)
-    return m_tsBuffer->GetPlayingTime();
+    if (m_live_streamer)
+        return m_live_streamer->GetPlayingTime();
   return 0;
 }
 
 time_t DVBLinkClient::GetBufferTimeStart()
 {
-  if(m_tsBuffer)
-    return m_tsBuffer->GetBufferTimeStart();
+    if (m_live_streamer)
+        return m_live_streamer->GetBufferTimeStart();
   return 0;
 }
 
 time_t DVBLinkClient::GetBufferTimeEnd()
 {
-  if(m_tsBuffer)
-    return m_tsBuffer->GetBufferTimeEnd();
+    if (m_live_streamer)
+        return m_live_streamer->GetBufferTimeEnd();
   return 0;
 }
 
@@ -591,10 +585,11 @@ void DVBLinkClient::StopStreaming(bool bUseChlHandle)
   PLATFORM::CLockObject critsec(m_mutex);
   StopStreamRequest * request;
  
-
-  if (m_usetimeshift && m_tsBuffer)
+  if (m_live_streamer != NULL)
   {
-     SAFE_DELETE(m_tsBuffer);
+      m_live_streamer->Stop();
+      SAFE_DELETE(m_live_streamer);
+      m_live_streamer = NULL;
   }
 
   if (bUseChlHandle)
@@ -758,8 +753,9 @@ DVBLinkClient::~DVBLinkClient(void)
   SAFE_DELETE(m_httpClient);
   SAFE_DELETE(m_channels);
   SAFE_DELETE(m_stream);
-  if (m_tsBuffer)
+  if (m_live_streamer)
   {
-    SAFE_DELETE(m_tsBuffer);
+      m_live_streamer->Stop();
+      SAFE_DELETE(m_live_streamer);
   }
 }

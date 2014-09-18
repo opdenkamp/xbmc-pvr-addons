@@ -49,8 +49,8 @@ msgid "Stream"
 msgstr "Поток"
 
 msgctxt "#30102"
-msgid "Stream format"
-msgstr "Формат потокового вещания"
+msgid "Enable transcoding"
+msgstr "Enable transcoding"
 
 msgctxt "#30103"
 msgid "Height"

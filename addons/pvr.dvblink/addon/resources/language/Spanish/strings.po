@@ -49,8 +49,8 @@ msgid "Stream"
 msgstr "Flujo"
 
 msgctxt "#30102"
-msgid "Stream format"
-msgstr "Formato del flujo"
+msgid "Enable transcoding"
+msgstr "Enable transcoding"
 
 msgctxt "#30103"
 msgid "Height"

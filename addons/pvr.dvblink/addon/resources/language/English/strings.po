@@ -55,8 +55,8 @@ msgstr ""
 #empty string with id 30101
 
 msgctxt "#30102"
-msgid "Stream format"
-msgstr ""
+msgid "Enable transcoding"
+msgstr "Enable transcoding"
 
 msgctxt "#30103"
 msgid "Height"

@@ -49,8 +49,8 @@ msgid "Stream"
 msgstr "ප්‍රවාහය"
 
 msgctxt "#30102"
-msgid "Stream format"
-msgstr "ප්‍රවාහ ආකෘතිය"
+msgid "Enable transcoding"
+msgstr "Enable transcoding"
 
 msgctxt "#30103"
 msgid "Height"

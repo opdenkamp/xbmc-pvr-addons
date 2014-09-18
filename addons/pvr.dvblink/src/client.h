@@ -35,14 +35,13 @@ enum DVBLINK_STREAMTYPE {HTTP=0,RTP=1,HLS =2, ASF=3};
 /*  Client Settings default values */
 #define DEFAULT_HOST                "127.0.0.1"
 #define DEFAULT_PORT                8100
-#define DEFAULT_TIMEOUT             10
-#define DEFAULT_STREAMTYPE          HTTP
+#define DEFAULT_USETRANSCODING       false
 #define DEFAULT_USERNAME            ""
 #define DEFAULT_PASSWORD            ""
 #define DEFAULT_SHOWINFOMSG         false
-#define DEFAULT_HEIGHT              720
-#define DEFAULT_WIDTH               576
-#define DEFAULT_BITRATE             512
+#define DEFAULT_HEIGHT              0
+#define DEFAULT_WIDTH               0
+#define DEFAULT_BITRATE             1024
 #define DEFAULT_AUDIOTRACK          "eng"
 #define DEFAULT_USETIMESHIFT        false
 
@@ -50,8 +49,7 @@ enum DVBLINK_STREAMTYPE {HTTP=0,RTP=1,HLS =2, ASF=3};
 extern std::string  g_szClientname;
 extern std::string  g_szHostname;
 extern long         g_lPort;
-extern int          g_iConnectTimeout;
-extern DVBLINK_STREAMTYPE  g_szStreamType;
+extern bool			g_bUseTranscoding;
 extern std::string  g_szUsername;
 extern std::string  g_szPassword;
 extern int   g_iHeight;

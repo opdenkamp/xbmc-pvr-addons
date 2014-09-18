@@ -49,8 +49,8 @@ msgid "Stream"
 msgstr "Adatfolyam"
 
 msgctxt "#30102"
-msgid "Stream format"
-msgstr "Stream formátum"
+msgid "Enable transcoding"
+msgstr "Enable transcoding"
 
 msgctxt "#30103"
 msgid "Height"

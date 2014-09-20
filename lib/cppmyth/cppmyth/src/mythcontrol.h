@@ -41,7 +41,7 @@ namespace Myth
 
     /**
      * @brief Check availability of API services
-     * @return If unavailable then 0 else the backend version Id
+     * @return If unavailable then 0 else the backend protocol number
      */
     unsigned CheckService()
     {
@@ -215,16 +215,16 @@ namespace Myth
      */
     bool DeleteRecording(const Program& program, bool forceDelete = false, bool allowRerecord = false)
     {
-      unsigned proto = m_wsapi.CheckService();
-      if (proto >= 82)
+      WSServiceVersion_t wsv = m_wsapi.CheckService(WS_Dvr);
+      if (wsv.ranking >= 0x00020001)
         return m_wsapi.DeleteRecording(program.channel.chanId, program.recording.startTs, forceDelete, allowRerecord);
       return m_monitor.DeleteRecording(program, forceDelete, allowRerecord);
     }
 
     bool UndeleteRecording(const Program& program)
     {
-      unsigned proto = m_wsapi.CheckService();
-      if (proto >= 82)
+      WSServiceVersion_t wsv = m_wsapi.CheckService(WS_Dvr);
+      if (wsv.ranking >= 0x00020001)
         return m_wsapi.UnDeleteRecording(program.channel.chanId, program.recording.startTs);
       return m_monitor.UndeleteRecording(program);
     }

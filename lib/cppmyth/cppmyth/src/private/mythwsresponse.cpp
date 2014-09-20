@@ -89,10 +89,11 @@ static bool __readHeaderLine(TcpSocket *socket, const char *eol, std::string& li
 
 WSResponse::WSResponse(const WSRequest &request)
 : m_socket(new TcpSocket())
-, m_isValid(false)
+, m_successful(false)
 , m_statusCode(0)
 , m_serverInfo()
 , m_etag()
+, m_location()
 , m_contentType(CT_NONE)
 , m_contentLength(0)
 , m_consumed(0)
@@ -100,17 +101,21 @@ WSResponse::WSResponse(const WSRequest &request)
   if (m_socket->Connect(request.GetServer().c_str(), request.GetPort(), SOCKET_RCVBUF_MINSIZE))
   {
     m_socket->SetReadAttempt(6); // 60 sec to hang up
-    if (SendRequest(request) && GetResponse() && m_statusCode == 200)
-      m_isValid = true;
-    else if (m_statusCode && m_contentLength)
+    if (SendRequest(request) && GetResponse())
     {
-      size_t r;
-      char *content = new char[m_contentLength + 1];
-      r = ReadContent(content, m_contentLength);
-      content[r] = '\0';
-      DBG(MYTH_DBG_ERROR, "%s: error (%d): %s\n", __FUNCTION__, m_statusCode, content);
-      delete[] content;
+      if (m_statusCode < 200)
+        DBG(MYTH_DBG_WARN, "%s: status %d\n", __FUNCTION__, m_statusCode);
+      else if (m_statusCode < 300)
+        m_successful = true;
+      else if (m_statusCode < 400)
+        m_successful = false;
+      else if (m_statusCode < 500)
+        DBG(MYTH_DBG_ERROR, "%s: bad request (%d)\n", __FUNCTION__, m_statusCode);
+      else
+        DBG(MYTH_DBG_ERROR, "%s: server error (%d)\n", __FUNCTION__, m_statusCode);
     }
+    else
+      DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
   }
 }
 
@@ -218,6 +223,9 @@ bool WSResponse::GetResponse()
           if (val && memcmp(token, "SERVER", token_len) == 0)
             m_serverInfo.append(val);
           break;
+        case 8:
+          if (val && memcmp(token, "LOCATION", token_len) == 0)
+            m_location.append(val);
         case 12:
           if (val && memcmp(token, "CONTENT-TYPE", token_len) == 0)
             m_contentType = ContentTypeFromMime(val);
@@ -235,24 +243,11 @@ bool WSResponse::GetResponse()
   return ret;
 }
 
-bool WSResponse::IsValid()
-{
-  return m_isValid;
-}
-
-size_t WSResponse::GetContentLength() const
-{
-  return m_contentLength;
-}
-
 size_t WSResponse::ReadContent(char* buf, size_t buflen)
 {
   if (!m_socket->IsConnected())
     return 0;
-  return m_socket->ReadResponse(buf, buflen);
-}
-
-size_t WSResponse::GetConsumed() const
-{
-  return m_consumed;
+  size_t s = m_socket->ReadResponse(buf, buflen);
+  m_consumed += s;
+  return s;
 }

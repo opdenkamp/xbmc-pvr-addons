@@ -35,13 +35,13 @@
 
 namespace MythDTO75
 {
-  attr_bind_t version[] =
+  attr_bind_t version2_0[] =
   {
     { "Version",        IS_STRING,  (setter_t)MythDTOVersion::SetVersion_Version },
     { "Protocol",       IS_UINT32,  (setter_t)MythDTOVersion::SetVersion_Protocol },
     { "Schema",         IS_UINT32,  (setter_t)MythDTOVersion::SetVersion_Schema },
   };
-  bindings_t VersionBindArray = { sizeof(version) / sizeof(attr_bind_t), version };
+  bindings_t VersionBindArray2_0 = { sizeof(version2_0) / sizeof(attr_bind_t), version2_0 };
 
   attr_bind_t list[] =
   {

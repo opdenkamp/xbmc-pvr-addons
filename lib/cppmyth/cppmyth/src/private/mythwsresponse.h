@@ -39,17 +39,20 @@ namespace Myth
     WSResponse(const WSRequest& request);
     ~WSResponse();
 
-    bool IsValid();
-    size_t GetContentLength() const;
+    bool IsSuccessful() const { return m_successful; }
+    size_t GetContentLength() const { return m_contentLength; }
     size_t ReadContent(char *buf, size_t buflen);
-    size_t GetConsumed() const;
+    size_t GetConsumed() const { return m_consumed; }
+    int GetStatusCode() const { return m_statusCode; }
+    const std::string& Redirection() const { return m_location; }
 
   private:
     TcpSocket *m_socket;
-    bool m_isValid;
+    bool m_successful;
     int m_statusCode;
     std::string m_serverInfo;
     std::string m_etag;
+    std::string m_location;
     CT_t m_contentType;
     size_t m_contentLength;
     size_t m_consumed;

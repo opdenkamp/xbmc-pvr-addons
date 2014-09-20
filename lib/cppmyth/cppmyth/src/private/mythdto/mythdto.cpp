@@ -26,10 +26,10 @@
 
 #include <cstddef>
 
-const bindings_t *MythDTO::getVersionBindArray(unsigned proto)
+const bindings_t *MythDTO::getVersionBindArray(unsigned ranking)
 {
-  (void)proto;
-  return &MythDTO75::VersionBindArray;
+  (void)ranking;
+  return &MythDTO75::VersionBindArray2_0;
 }
 
 const bindings_t *MythDTO::getListBindArray(unsigned proto)

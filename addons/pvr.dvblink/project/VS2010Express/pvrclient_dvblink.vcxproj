@@ -104,6 +104,7 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\DVBLinkClient.cpp" />
     <ClCompile Include="..\..\src\HttpPostClient.cpp" />
+    <ClCompile Include="..\..\src\RecordingStreamer.cpp" />
     <ClCompile Include="..\..\src\TimeShiftBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +112,7 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\DVBLinkClient.h" />
     <ClInclude Include="..\..\src\HttpPostClient.h" />
+    <ClInclude Include="..\..\src\RecordingStreamer.h" />
     <ClInclude Include="..\..\src\TimeShiftBuffer.h" />
   </ItemGroup>
   <ItemGroup>

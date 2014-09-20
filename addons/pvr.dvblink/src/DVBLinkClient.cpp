@@ -391,6 +391,7 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
   PLATFORM::CLockObject critsec(m_mutex);
   PVR_ERROR result = PVR_ERROR_FAILED;
   DVBLinkRemoteStatusCode status;
+  m_recording_id_to_url_map.clear();
 
   GetPlaybackObjectRequest getPlaybackObjectRequest(m_hostname.c_str(), m_recordingsid);
   getPlaybackObjectRequest.IncludeChildrenObjectsForRequestedObject = true;
@@ -424,7 +425,9 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
       
     xbmcRecording.recordingTime = tvitem->GetMetadata().GetStartTime();
     PVR_STRCPY(xbmcRecording.strPlot, tvitem->GetMetadata().ShortDescription.c_str());
-    PVR_STRCPY(xbmcRecording.strStreamURL, tvitem->GetPlaybackUrl().c_str());
+    PVR_STRCPY(xbmcRecording.strPlotOutline, tvitem->GetMetadata().SubTitle.c_str());
+//    PVR_STRCPY(xbmcRecording.strStreamURL, tvitem->GetPlaybackUrl().c_str());
+    m_recording_id_to_url_map[xbmcRecording.strRecordingId] = tvitem->GetPlaybackUrl();
     xbmcRecording.iDuration =  tvitem->GetMetadata().GetDuration();
     PVR_STRCPY(xbmcRecording.strChannelName, tvitem->ChannelName.c_str());
     PVR_STRCPY(xbmcRecording.strThumbnailPath, tvitem->GetThumbnailUrl().c_str());
@@ -445,6 +448,21 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
   m_recordingCount = getPlaybackObjectResponse.GetPlaybackItems().size();
   result = PVR_ERROR_NO_ERROR;
   return result;
+}
+
+bool DVBLinkClient::GetRecordingURL(const char* recording_id, std::string& url)
+{
+    bool ret_val = false;
+    if (m_recording_id_to_url_map.find(recording_id) != m_recording_id_to_url_map.end())
+    {
+        url = m_recording_id_to_url_map[recording_id];
+        ret_val = true;
+    }
+    else
+    {
+        XBMC->Log(LOG_ERROR, "Could not get playback url for recording %s)", recording_id);
+    }
+    return ret_val;
 }
 
 void DVBLinkClient::GetDriveSpace(long long *iTotal, long long *iUsed)

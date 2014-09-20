@@ -41,6 +41,8 @@
 #define DVBLINK_BUILD_IN_RECORDER_SOURCE_ID   "8F94B459-EFC0-4D91-9B29-EC3D72E92677"
 #define DVBLINK_RECODINGS_BY_DATA_ID   "F6F08949-2A07-4074-9E9D-423D877270BB"
 
+typedef std::map<std::string, std::string> recording_id_to_url_map_t;
+
 class DVBLinkClient : public PLATFORM::CThread
 {
 public:
@@ -70,6 +72,7 @@ public:
   time_t GetPlayingTime();
   time_t GetBufferTimeStart();
   time_t GetBufferTimeEnd();
+  bool GetRecordingURL(const char* recording_id, std::string& url);
 
 private:
   bool DoEPGSearch(dvblinkremote::EpgSearchResult& epgSearchResult, const std::string& channelId, const long startTime, const long endTime, const std::string & programId = "");
@@ -99,6 +102,7 @@ private:
   bool m_showinfomsg;
   bool m_updating;
   std::string m_recordingsid;
+  recording_id_to_url_map_t m_recording_id_to_url_map;
 };
 
 /*!

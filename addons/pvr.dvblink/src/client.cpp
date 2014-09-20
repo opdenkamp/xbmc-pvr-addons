@@ -28,6 +28,7 @@
 #include "DVBLinkClient.h"
 #include "platform/util/util.h"
 #include "platform/util/timeutils.h"
+#include "RecordingStreamer.h"
 
 using namespace std;
 using namespace ADDON;
@@ -44,6 +45,7 @@ std::string g_strUserPath           = "";
 std::string g_strClientPath         = "";
 
 DVBLinkClient* dvblinkclient = NULL;
+RecordingStreamer* recording_streamer = NULL;
 
 std::string g_szHostname            = DEFAULT_HOST;                  ///< The Host name or IP of the DVBLink Server
 long        g_lPort                 = DEFAULT_PORT;                  ///< The DVBLink Connect Server listening port (default: 8080)
@@ -634,6 +636,73 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
   return PVR_ERROR_NO_ERROR;
 }
 
+//recording functions
+
+bool OpenRecordedStream(const PVR_RECORDING &recording)
+{
+    //close previous stream to be sure
+    CloseRecordedStream();
+
+    bool ret_val = false;
+    std::string url;
+    if (dvblinkclient->GetRecordingURL(recording.strRecordingId, url))
+    {
+        recording_streamer = new RecordingStreamer(XBMC, g_szClientname, g_szHostname, g_lPort, g_szUsername, g_szPassword);
+        if (recording_streamer->OpenRecordedStream(recording.strRecordingId, url))
+        {
+            ret_val = true;
+        }
+        else
+        {
+            delete recording_streamer;
+            recording_streamer = NULL;
+        }
+    }
+    return ret_val;
+}
+
+void CloseRecordedStream(void)
+{
+    if (recording_streamer != NULL)
+    {
+        recording_streamer->CloseRecordedStream();
+        delete recording_streamer;
+        recording_streamer = NULL;
+    }
+}
+
+int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
+{
+    if (recording_streamer != NULL)
+        return recording_streamer->ReadRecordedStream(pBuffer, iBufferSize);
+
+    return -1;
+}
+
+long long SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */)
+{
+    if (recording_streamer != NULL)
+        return recording_streamer->SeekRecordedStream(iPosition, iWhence);
+
+    return -1;
+}
+
+long long PositionRecordedStream(void)
+{
+    if (recording_streamer != NULL)
+        return recording_streamer->PositionRecordedStream();
+
+    return -1;
+}
+
+long long LengthRecordedStream(void)
+{
+    if (recording_streamer != NULL)
+        return recording_streamer->LengthRecordedStream();
+
+    return -1;
+}
+
 /** UNUSED API FUNCTIONS */
 
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* pProperties)
@@ -690,34 +759,6 @@ PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
-}
-
-
-bool OpenRecordedStream(const PVR_RECORDING &recording)
-{
-  return false;
-}
-void CloseRecordedStream(void)
-{
-}
-
-int ReadRecordedStream(unsigned char *pBuffer, unsigned int iBufferSize)
-{
-  return 0;
-}
-long long SeekRecordedStream(long long iPosition, int iWhence /* = SEEK_SET */)
-{
-  return 0;
-}
-
-long long PositionRecordedStream(void)
-{
-  return -1;
-}
-
-long long LengthRecordedStream(void)
-{
-  return 0;
 }
 
 void DemuxReset(void)

@@ -480,6 +480,30 @@ PVR_ERROR DVBLinkClient::DeleteRecording(const PVR_RECORDING& recording)
   return result;
 }
 
+static std::string get_subtitle(int season, int episode, const std::string& episode_name)
+{
+    std::string se_str;
+    if (season > 0 || episode > 0)
+    {
+        char buf[1024];
+
+        se_str += "(";
+        if (season > 0)
+        {
+            sprintf(buf, "S%02d", season);
+            se_str += buf;
+        }
+        if (episode > 0)
+        {
+            sprintf(buf, "E%02d", episode);
+            se_str += buf;
+        }
+        se_str += ")";
+    }
+    if (episode_name.size() > 0)
+        se_str += " " + episode_name;
+    return se_str;
+}
 
 PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
 {
@@ -515,8 +539,13 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
     memset(&xbmcRecording, 0, sizeof(PVR_RECORDING));
       
     PVR_STRCPY(xbmcRecording.strRecordingId,tvitem->GetObjectID().c_str());
-      
-    PVR_STRCPY(xbmcRecording.strTitle,tvitem->GetMetadata().GetTitle().c_str());
+
+    //form a title as "name - (SxxExx) subtitle" because XBMC does not display episode/season information almost anywhere
+    std::string title = tvitem->GetMetadata().GetTitle();
+    std::string se_str = get_subtitle(tvitem->GetMetadata().SeasonNumber, tvitem->GetMetadata().EpisodeNumber, tvitem->GetMetadata().SubTitle);
+    if (se_str.size() > 0)
+        title += " - " + se_str;
+    PVR_STRCPY(xbmcRecording.strTitle, title.c_str());
       
     xbmcRecording.recordingTime = tvitem->GetMetadata().GetStartTime();
     PVR_STRCPY(xbmcRecording.strPlot, tvitem->GetMetadata().ShortDescription.c_str());

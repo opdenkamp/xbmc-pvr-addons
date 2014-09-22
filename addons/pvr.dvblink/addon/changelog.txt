@@ -1,4 +1,5 @@
 [B]Version 1.9.5[/B]
+Added: display of episode name and number in recordings list
 Fixed: no channels/recordings if DVBLink server is not available during xbmc start-up
 Fixed: single and recurring manual recordings
 Fixed: interrupted playback of the recording, which is still being recorded

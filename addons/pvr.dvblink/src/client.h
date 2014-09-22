@@ -28,10 +28,6 @@
 #include "libXBMC_pvr.h"
 #include "libXBMC_gui.h"
 
-extern bool                          m_bCreated;
-
-enum DVBLINK_STREAMTYPE {HTTP=0,RTP=1,HLS =2, ASF=3};
-
 /*  Client Settings default values */
 #define DEFAULT_HOST                "127.0.0.1"
 #define DEFAULT_PORT                8100
@@ -58,6 +54,3 @@ extern int   g_iBitrate;
 extern std::string  g_szAudiotrack;
 extern bool g_bShowInfoMSG;
 extern bool g_bUseTimeshift;
-
-extern ADDON::CHelper_libXBMC_addon *XBMC;
-extern CHelper_libXBMC_pvr          *PVR;

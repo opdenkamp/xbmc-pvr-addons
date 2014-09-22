@@ -82,6 +82,9 @@ private:
   int GetInternalUniqueIdFromChannelId(const std::string& channelId);
   virtual void * Process(void);
 
+  std::string make_timer_hash(const std::string& timer_id, const std::string& schedule_id);
+  bool parse_timer_hash(const char* timer_hash, std::string& timer_id, std::string& schedule_id);
+
   HttpPostClient* m_httpClient; 
   dvblinkremote::IDVBLinkRemoteConnection* m_dvblinkRemoteCommunication;
   bool m_connected;
@@ -95,7 +98,6 @@ private:
   CHelper_libXBMC_pvr *PVR;
   ADDON::CHelper_libXBMC_addon  *XBMC; 
   CHelper_libXBMC_gui   *GUI;
-  DVBLINK_STREAMTYPE m_streamtype;
   std::string m_clientname;
   std::string m_hostname;
   LiveStreamerBase* m_live_streamer;

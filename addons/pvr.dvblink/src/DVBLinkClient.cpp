@@ -25,6 +25,8 @@
 
 #include "DVBLinkClient.h"
 #include "platform/util/StdString.h"
+#include "DialogRecordPref.h"
+#include "DialogDeleteTimer.h"
 
 using namespace dvblinkremote;
 using namespace dvblinkremotehttp;
@@ -54,8 +56,6 @@ std::string DVBLinkClient::GetBuildInRecorderObjectID()
   }
   return result;
 }
-
-
 
 DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* pvr, CHelper_libXBMC_gui* gui, std::string clientname, std::string hostname, long port, bool showinfomsg, std::string username, std::string password)
 {
@@ -191,6 +191,29 @@ int DVBLinkClient::GetInternalUniqueIdFromChannelId(const std::string& channelId
   return 0;
 }
 
+std::string DVBLinkClient::make_timer_hash(const std::string& timer_id, const std::string& schedule_id)
+{
+    std::string res = schedule_id + "#" + timer_id;
+    return res;
+}
+
+bool DVBLinkClient::parse_timer_hash(const char* timer_hash, std::string& timer_id, std::string& schedule_id)
+{
+    bool ret_val = false;
+
+    std::string timer = timer_hash;
+    size_t pos = timer.find('#');
+    if (pos != std::string::npos)
+    {
+        timer_id = timer.c_str() + pos + 1;
+        schedule_id = timer.substr(0, pos);
+        ret_val = true;
+    }
+
+    return ret_val;
+}
+
+
 PVR_ERROR DVBLinkClient::GetTimers(ADDON_HANDLE handle)
 {
   PVR_ERROR result = PVR_ERROR_FAILED;
@@ -224,7 +247,8 @@ PVR_ERROR DVBLinkClient::GetTimers(ADDON_HANDLE handle)
     //fake index
     xbmcTimer.iClientIndex = i;
     //misuse strDirectory to keep id of the timer
-    PVR_STRCPY(xbmcTimer.strDirectory, rec->GetID().c_str());
+    std::string timer_hash = make_timer_hash(rec->GetID(), rec->GetScheduleID());
+    PVR_STRCPY(xbmcTimer.strDirectory, timer_hash.c_str());
       
     xbmcTimer.iClientChannelUid = GetInternalUniqueIdFromChannelId(rec->GetChannelID());
     xbmcTimer.state = PVR_TIMER_STATE_SCHEDULED;
@@ -235,7 +259,7 @@ PVR_ERROR DVBLinkClient::GetTimers(ADDON_HANDLE handle)
     if (!rec->GetProgram().IsRecord)
       xbmcTimer.state = PVR_TIMER_STATE_CANCELLED;
 
-    xbmcTimer.bIsRepeating = rec->GetProgram().IsSeries;
+    xbmcTimer.bIsRepeating = rec->GetProgram().IsRepeatRecord;
 
     PVR_STR2INT(xbmcTimer.iEpgUid, rec->GetProgram().GetID().c_str());
     
@@ -264,40 +288,82 @@ PVR_ERROR DVBLinkClient::GetTimers(ADDON_HANDLE handle)
   return result;
 }
 
+static bool is_bit_set(int bit_num, unsigned char bit_field)
+{
+    unsigned char mask = (0x01 << bit_num);
+    return (bit_field & mask) != 0;
+}
+
 PVR_ERROR DVBLinkClient::AddTimer(const PVR_TIMER &timer)
 {
-  PVR_ERROR result = PVR_ERROR_FAILED;
-  PLATFORM::CLockObject critsec(m_mutex);
-  DVBLinkRemoteStatusCode status;
-  AddScheduleRequest * addScheduleRequest = NULL;
-  std::string channelId = m_channelMap[timer.iClientChannelUid]->GetID();
-  if (timer.iEpgUid != -1)
-  {
-    char programId [33];
-    PVR_INT2STR(programId,timer.iEpgUid);
-    addScheduleRequest = new AddScheduleByEpgRequest(channelId, programId, timer.bIsRepeating);
-  }
-  else
-  {
-    //TODO: Fix day mask
-    addScheduleRequest = new AddManualScheduleRequest(channelId, timer.startTime, timer.endTime - timer.startTime, -1, timer.strTitle);
-  }
+    PVR_ERROR result = PVR_ERROR_FAILED;
+    PLATFORM::CLockObject critsec(m_mutex);
+    DVBLinkRemoteStatusCode status;
+    AddScheduleRequest * addScheduleRequest = NULL;
+    std::string channelId = m_channelMap[timer.iClientChannelUid]->GetID();
+    if (timer.iEpgUid != -1)
+    {
+        bool record_series = false;
+        //do not ask if record is pressed during watching
+        if (timer.startTime != 0)
+        {
+            // ask how to record this program
+            CDialogRecordPref vWindow(XBMC, GUI, record_series);
+            int dlg_res = vWindow.DoModal();
+            if (dlg_res == 1)
+            {
+                record_series = vWindow.RecSeries;
+            } else 
+            {
+                if (dlg_res == 0)
+                    return PVR_ERROR_NO_ERROR;
+            }
+        }
+
+        char programId [128];
+        PVR_INT2STR(programId,timer.iEpgUid);
+        addScheduleRequest = new AddScheduleByEpgRequest(channelId, programId, record_series);
+    }
+    else
+    {
+        time_t start_time = timer.startTime;
+        time_t duration = timer.endTime - timer.startTime;
+        long day_mask = 0;
+        if (timer.bIsRepeating)
+        {
+            //change day mask to DVBLink server format (Sun - first day)
+            bool bcarry = (timer.iWeekdays & 0x40) == 0x40;
+            day_mask = (timer.iWeekdays << 1) & 0x7F;
+            if (bcarry)
+                day_mask |= 0x01;
+            //find first now/future time, which matches the day mask
+            start_time = timer.startTime > timer.firstDay ? timer.startTime : timer.firstDay;
+            for (size_t i = 0; i < 7; i++)
+            {
+                tm* local_start_time = localtime(&start_time);
+                if (is_bit_set(local_start_time->tm_wday, (unsigned char)day_mask))
+                    break;
+                start_time += time_t(24 * 3600);
+            }
+        }
+        addScheduleRequest = new AddManualScheduleRequest(channelId, start_time, duration, day_mask, timer.strTitle);
+    }
   
-  if ((status = m_dvblinkRemoteCommunication->AddSchedule(*addScheduleRequest)) == DVBLINK_REMOTE_STATUS_OK)
-  {
-    XBMC->Log(LOG_INFO, "Timer added");
-    PVR->TriggerTimerUpdate();
-    result = PVR_ERROR_NO_ERROR;
-  }
-  else
-  {
-    result = PVR_ERROR_FAILED;
-    std::string error;
-    m_dvblinkRemoteCommunication->GetLastError(error);
-    XBMC->Log(LOG_ERROR, "Could not add timer (Error code : %d Description : %s)", (int)status, error.c_str());
-  }
-  SAFE_DELETE(addScheduleRequest);
-  return result;
+    if ((status = m_dvblinkRemoteCommunication->AddSchedule(*addScheduleRequest)) == DVBLINK_REMOTE_STATUS_OK)
+    {
+        XBMC->Log(LOG_INFO, "Timer added");
+        PVR->TriggerTimerUpdate();
+        result = PVR_ERROR_NO_ERROR;
+    }
+    else
+    {
+        result = PVR_ERROR_FAILED;
+        std::string error;
+        m_dvblinkRemoteCommunication->GetLastError(error);
+        XBMC->Log(LOG_ERROR, "Could not add timer (Error code : %d Description : %s)", (int)status, error.c_str());
+    }
+    SAFE_DELETE(addScheduleRequest);
+    return result;
 }
 
 PVR_ERROR DVBLinkClient::DeleteTimer(const PVR_TIMER &timer)
@@ -306,12 +372,41 @@ PVR_ERROR DVBLinkClient::DeleteTimer(const PVR_TIMER &timer)
   PLATFORM::CLockObject critsec(m_mutex);
   DVBLinkRemoteStatusCode status;
   
-  //recording id is kept in strDirectory!
-  RemoveRecordingRequest removeRecording(timer.strDirectory);
+  //timer id hash is kept in strDirectory!
+  std::string timer_id;
+  std::string schedule_id;
+  parse_timer_hash(timer.strDirectory, timer_id, schedule_id);
 
-  if ((status = m_dvblinkRemoteCommunication->RemoveRecording(removeRecording)) == DVBLINK_REMOTE_STATUS_OK)
+  bool cancel_series = true;
+  if (timer.bIsRepeating)
   {
-    XBMC->Log(LOG_INFO, "Timer deleted");
+      //show dialog and ask: cancel series or just this episode
+      CDialogDeleteTimer vWindow(XBMC, GUI, cancel_series);
+      int dlg_res = vWindow.DoModal();
+      if (dlg_res == 1)
+      {
+          cancel_series = vWindow.DeleteSeries;
+      } else 
+      {
+          if (dlg_res == 0)
+              return PVR_ERROR_NO_ERROR;
+      }
+  }
+
+  if (cancel_series)
+  {
+      RemoveScheduleRequest removeSchedule(schedule_id);
+      status = m_dvblinkRemoteCommunication->RemoveSchedule(removeSchedule);
+  }
+  else
+  {
+      RemoveRecordingRequest removeRecording(timer_id);
+      status = m_dvblinkRemoteCommunication->RemoveRecording(removeRecording);
+  }
+
+  if (status == DVBLINK_REMOTE_STATUS_OK)
+  {
+    XBMC->Log(LOG_INFO, "Timer(s) deleted");
     PVR->TriggerTimerUpdate();
     result = PVR_ERROR_NO_ERROR;
   }

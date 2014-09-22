@@ -102,6 +102,8 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
   <ItemGroup>
     <ClCompile Include="..\..\src\base64.cpp" />
     <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\DialogDeleteTimer.cpp" />
+    <ClCompile Include="..\..\src\DialogRecordPref.cpp" />
     <ClCompile Include="..\..\src\DVBLinkClient.cpp" />
     <ClCompile Include="..\..\src\HttpPostClient.cpp" />
     <ClCompile Include="..\..\src\RecordingStreamer.cpp" />
@@ -110,6 +112,8 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
   <ItemGroup>
     <ClInclude Include="..\..\src\base64.h" />
     <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\DialogDeleteTimer.h" />
+    <ClInclude Include="..\..\src\DialogRecordPref.h" />
     <ClInclude Include="..\..\src\DVBLinkClient.h" />
     <ClInclude Include="..\..\src\HttpPostClient.h" />
     <ClInclude Include="..\..\src\RecordingStreamer.h" />

@@ -37,7 +37,6 @@ using namespace ADDON;
 #define snprintf _snprintf
 #endif
 
-bool           m_bCreated           = false;
 ADDON_STATUS   m_CurStatus          = ADDON_STATUS_UNKNOWN;
 
 
@@ -244,8 +243,11 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   
   dvblinkclient = new DVBLinkClient(XBMC,PVR, GUI, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword);
 
-  m_CurStatus = ADDON_STATUS_OK;
-  m_bCreated = true;
+    if (dvblinkclient->GetStatus())
+        m_CurStatus = ADDON_STATUS_OK;
+    else
+        m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+
   return m_CurStatus;
 }
 
@@ -257,7 +259,6 @@ ADDON_STATUS ADDON_GetStatus()
 void ADDON_Destroy()
 {
   delete dvblinkclient;
-  m_bCreated = false;
   m_CurStatus = ADDON_STATUS_UNKNOWN;
   SAFE_DELETE(PVR);
   SAFE_DELETE(XBMC);
@@ -431,34 +432,55 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 {
  if (dvblinkclient)
  {
-   dvblinkclient->GetDriveSpace(iTotal, iUsed);
-   return PVR_ERROR_NO_ERROR;
+    if (dvblinkclient->GetStatus())
+    {
+        dvblinkclient->GetDriveSpace(iTotal, iUsed);
+        return PVR_ERROR_NO_ERROR;
+    }
  }
   return PVR_ERROR_SERVER_ERROR;
 }
 
 PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
-  if (dvblinkclient)
-    return dvblinkclient->GetEPGForChannel(handle, channel, iStart, iEnd);
+    if (dvblinkclient)
+    {
+        if (dvblinkclient->GetStatus())
+        {
+            return dvblinkclient->GetEPGForChannel(handle, channel, iStart, iEnd);
+        }
+    }
 
   return PVR_ERROR_SERVER_ERROR;
 }
 
 int GetChannelsAmount(void)
 {
-  if (dvblinkclient)
-    return dvblinkclient->GetChannelsAmount();
-
-  return -1;
+    if (dvblinkclient)
+    {
+        if (dvblinkclient->GetStatus())
+        {
+            return dvblinkclient->GetChannelsAmount();
+        }
+        else
+        {
+            return PVR_ERROR_SERVER_ERROR;
+        }
+    }
+    return -1;
 }
 
 PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
-  if (dvblinkclient)
-    return dvblinkclient->GetChannels(handle, bRadio);
+    if (dvblinkclient)
+    {
+        if (dvblinkclient->GetStatus())
+        {
+            return dvblinkclient->GetChannels(handle, bRadio);
+        }
+    }
 
-  return PVR_ERROR_SERVER_ERROR;
+    return PVR_ERROR_SERVER_ERROR;
 }
 
 // live / timshifted stream functions

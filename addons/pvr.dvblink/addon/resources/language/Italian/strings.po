@@ -139,3 +139,27 @@ msgstr "Trovato %d registrazioni"
 msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "Non posso ottenere lo stream per il canale %s (Codice d'errore: %d)"
+
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Series recording"
+
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr "Record this episode only"
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Record all episodes"
+
+msgctxt "#32014"
+msgid "Delete timer"
+msgstr "Delete timer"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Delete this timer only"
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr "Delete the entire series"

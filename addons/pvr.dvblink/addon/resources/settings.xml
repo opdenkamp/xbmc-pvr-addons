@@ -19,7 +19,7 @@
   </category>
    <!-- Advanced -->
   <category label="30200">   
-  
-  <setting id="showinfomsg" type="bool" label="30202" default="false" />
+		<setting id="showinfomsg" type="bool" label="30202" default="false" />
+		<setting id="add_rec_episode_info" type="bool" label="30203" default="true" />
 </category>
 </settings>

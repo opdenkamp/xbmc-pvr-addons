@@ -114,7 +114,11 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr ""
 
-#empty strings from id 30203 to 32000
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Combine title and episode name for recordings"
+
+#empty strings from id 30204 to 32000
 #category labels
 
 msgctxt "#32001"

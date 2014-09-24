@@ -104,6 +104,13 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "显示信息"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Combine title and episode name for recordings"
+
+#empty strings from id 30204 to 32000
+#category labels
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "连接到 DVBLink 服务器“%s”"

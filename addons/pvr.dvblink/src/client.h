@@ -40,17 +40,5 @@
 #define DEFAULT_BITRATE             1024
 #define DEFAULT_AUDIOTRACK          "eng"
 #define DEFAULT_USETIMESHIFT        false
+#define DEFAULT_ADDRECEPISODE2TITLE true
 
-/* Client Settings */
-extern std::string  g_szClientname;
-extern std::string  g_szHostname;
-extern long         g_lPort;
-extern bool			g_bUseTranscoding;
-extern std::string  g_szUsername;
-extern std::string  g_szPassword;
-extern int   g_iHeight;
-extern int   g_iWidth;
-extern int   g_iBitrate;
-extern std::string  g_szAudiotrack;
-extern bool g_bShowInfoMSG;
-extern bool g_bUseTimeshift;

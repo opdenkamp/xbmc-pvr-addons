@@ -57,7 +57,8 @@ std::string DVBLinkClient::GetBuildInRecorderObjectID()
   return result;
 }
 
-DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* pvr, CHelper_libXBMC_gui* gui, std::string clientname, std::string hostname, long port, bool showinfomsg, std::string username, std::string password)
+DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* pvr, CHelper_libXBMC_gui* gui, std::string clientname, std::string hostname, 
+    long port, bool showinfomsg, std::string username, std::string password, bool add_episode_to_rec_title)
 {
   PVR = pvr;
   XBMC = xbmc;
@@ -67,6 +68,7 @@ DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* p
   m_connected = false;
   m_currentChannelId = 0;
   m_showinfomsg = showinfomsg;
+  m_add_episode_to_rec_title = add_episode_to_rec_title;
 
   m_httpClient = new HttpPostClient(XBMC,hostname, port, username, password);
   m_dvblinkRemoteCommunication = DVBLinkRemote::Connect((HttpClient&)*m_httpClient, m_hostname.c_str(), port, username.c_str(), password.c_str());
@@ -540,11 +542,14 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
       
     PVR_STRCPY(xbmcRecording.strRecordingId,tvitem->GetObjectID().c_str());
 
-    //form a title as "name - (SxxExx) subtitle" because XBMC does not display episode/season information almost anywhere
     std::string title = tvitem->GetMetadata().GetTitle();
-    std::string se_str = get_subtitle(tvitem->GetMetadata().SeasonNumber, tvitem->GetMetadata().EpisodeNumber, tvitem->GetMetadata().SubTitle);
-    if (se_str.size() > 0)
-        title += " - " + se_str;
+    if (m_add_episode_to_rec_title)
+    {
+        //form a title as "name - (SxxExx) subtitle" because XBMC does not display episode/season information almost anywhere
+        std::string se_str = get_subtitle(tvitem->GetMetadata().SeasonNumber, tvitem->GetMetadata().EpisodeNumber, tvitem->GetMetadata().SubTitle);
+        if (se_str.size() > 0)
+            title += " - " + se_str;
+    }
     PVR_STRCPY(xbmcRecording.strTitle, title.c_str());
       
     xbmcRecording.recordingTime = tvitem->GetMetadata().GetStartTime();

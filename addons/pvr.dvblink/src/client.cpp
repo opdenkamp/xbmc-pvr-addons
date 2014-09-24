@@ -57,8 +57,9 @@ int         g_iHeight               = DEFAULT_HEIGHT;                ///< Height
 int         g_iWidth                = DEFAULT_WIDTH;                 ///< Width of stream when using transcoding (0: autodetect)
 int         g_iBitrate              = DEFAULT_BITRATE;               ///< Bitrate of stream when using transcoding
 std::string g_szAudiotrack          = DEFAULT_AUDIOTRACK;            ///< Audiotrack to include in stream when using transcoding
-bool        g_bUseTimeshift         = DEFAULT_USETIMESHIFT;             ///< Use timeshift
-CHelper_libXBMC_addon *XBMC         = NULL;
+bool        g_bUseTimeshift         = DEFAULT_USETIMESHIFT;          ///< Use timeshift
+bool        g_bAddRecEpisode2title  = DEFAULT_ADDRECEPISODE2TITLE;   ///< Concatenate title and episode info for recordings
+CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr   *PVR          = NULL;
 CHelper_libXBMC_gui   *GUI          = NULL;
 
@@ -203,6 +204,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     g_bShowInfoMSG = DEFAULT_SHOWINFOMSG;
   }
 
+  /* Read setting "Add episode name to title for recordings" from settings.xml */
+  if (!XBMC->GetSetting("add_rec_episode_info", &g_bAddRecEpisode2title))
+  {
+      /* If setting is unknown fallback to defaults */
+      XBMC->Log(LOG_ERROR, "Couldn't get 'add_rec_episode_info' setting, falling back to 'true' as default");
+      g_bAddRecEpisode2title = DEFAULT_ADDRECEPISODE2TITLE;
+  }
+
   /* Read setting "height" from settings.xml */
   if (!XBMC->GetSetting("height", &g_iHeight))
   {
@@ -241,12 +250,13 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "settings: enable_transcoding='%i' host='%s', port=%i", g_bUseTranscoding, g_szHostname.c_str(), g_lPort);
   
-  dvblinkclient = new DVBLinkClient(XBMC,PVR, GUI, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword);
+  dvblinkclient = new DVBLinkClient(XBMC, PVR, GUI, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword, g_bAddRecEpisode2title);
 
     if (dvblinkclient->GetStatus())
         m_CurStatus = ADDON_STATUS_OK;
     else
         m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
+
 
   return m_CurStatus;
 }
@@ -326,12 +336,18 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'timeshift' from %u to %u", g_bUseTimeshift, *(int*) settingValue);
     g_bUseTimeshift = *(bool*) settingValue;
-       return ADDON_STATUS_NEED_RESTART;
+    return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "showinfomsg")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'showinfomsg' from %u to %u", g_bShowInfoMSG, *(int*) settingValue);
     g_bShowInfoMSG = *(bool*) settingValue;
+  }
+  else if (str == "add_rec_episode_info")
+  {
+      XBMC->Log(LOG_INFO, "Changed Setting 'add_rec_episode_info' from %u to %u", g_bAddRecEpisode2title, *(int*)settingValue);
+      g_bAddRecEpisode2title = *(bool*)settingValue;
+      return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "height")
   {
@@ -403,7 +419,7 @@ const char* GetMininumGUIAPIVersion(void)
 PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 {
   pCapabilities->bSupportsEPG                = true;
-  pCapabilities->bSupportsRecordings         = true; //TODO: ADD when possible to see recording
+  pCapabilities->bSupportsRecordings         = true;
   pCapabilities->bSupportsTimers             = true;
   pCapabilities->bSupportsTV                 = true;
   pCapabilities->bSupportsRadio              = true;
@@ -413,13 +429,13 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
 
 const char *GetBackendName(void)
 {
-  static const char *strBackendName = "DVBLink Connect! Server";
+  static const char *strBackendName = "DVBLink Server";
   return strBackendName;
 }
 
 const char *GetBackendVersion(void)
 {
-  static  const char * strBackendVersion = "0.2";
+  static  const char * strBackendVersion = "5.x";
   return strBackendVersion;
 }
 

@@ -251,27 +251,17 @@ PVR_ERROR CTvheadend::SendDvrDelete ( uint32_t id, const char *method )
   return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
 
-PVR_ERROR CTvheadend::SendDvrUpdate
-  ( uint32_t id, const CStdString &title, time_t start, time_t stop )
+PVR_ERROR CTvheadend::SendDvrUpdate( htsmsg_t* m )
 {
   const char *str;
   uint32_t u32;
-
-  /* Build message */
-  htsmsg_t *m = htsmsg_create_map();
-  htsmsg_add_u32(m, "id", id);
-  htsmsg_add_str(m, "title", title.c_str());
-  if (start)
-    htsmsg_add_s64(m, "start", start);
-  if (stop)
-    htsmsg_add_s64(m, "stop",  stop);
 
   /* Send and Wait */
   {
     CLockObject lock(m_conn.Mutex());
     m = m_conn.SendAndWait("updateDvrEntry", m);
   }
-    
+
   if (m == NULL)
   {
     tvherror("failed to update DVR entry");
@@ -287,7 +277,6 @@ PVR_ERROR CTvheadend::SendDvrUpdate
   {
     tvherror("failed to parse updateDvrEntry response");
   }
-  htsmsg_destroy(m);
 
   return u32 > 0  ? PVR_ERROR_NO_ERROR : PVR_ERROR_FAILED;
 }
@@ -350,6 +339,12 @@ PVR_ERROR CTvheadend::GetRecordings ( ADDON_HANDLE handle )
     /* Time/Duration */
     rec.recordingTime = (time_t)rit->second.start;
     rec.iDuration     = (time_t)(rit->second.stop - rit->second.start);
+
+    /* Priority */
+    rec.iPriority = rit->second.priority;
+
+    /* Retention */
+    rec.iLifetime = rit->second.retention;
 
     /* Directory */
     if (rit->second.path != "")
@@ -467,7 +462,14 @@ PVR_ERROR CTvheadend::DeleteRecording ( const PVR_RECORDING &rec )
 
 PVR_ERROR CTvheadend::RenameRecording ( const PVR_RECORDING &rec )
 {
-  return SendDvrUpdate(atoi(rec.strRecordingId), rec.strTitle, 0, 0);
+  /* Build message */
+  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_add_u32(m, "id",     atoi(rec.strRecordingId));
+  htsmsg_add_str(m, "title",  rec.strTitle);
+
+  PVR_ERROR e = SendDvrUpdate(m);
+  htsmsg_destroy(m);
+  return e;
 }
 
 int CTvheadend::GetTimerCount ( void )
@@ -509,14 +511,14 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
     strncpy(tmr.strSummary, rit->second.description.c_str(),
             sizeof(tmr.strSummary) - 1);
     tmr.state             = rit->second.state;
-    tmr.iPriority         = 0;     // unused
-    tmr.iLifetime         = 0;     // unused
+    tmr.iPriority         = rit->second.priority;
+    tmr.iLifetime         = rit->second.retention;
     tmr.bIsRepeating      = false; // unused
     tmr.firstDay          = 0;     // unused
     tmr.iWeekdays         = 0;     // unused
     tmr.iEpgUid           = 0;     // unused
-    tmr.iMarginStart      = 0;     // unused
-    tmr.iMarginEnd        = 0;     // unused
+    tmr.iMarginStart      = rit->second.startExtra;
+    tmr.iMarginEnd        = rit->second.stopExtra;
     tmr.iGenreType        = 0;     // unused
     tmr.iGenreSubType     = 0;     // unused
 
@@ -532,15 +534,11 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
   uint32_t u32;
   dvr_prio_t prio;
 
-  
-
   /* Build message */
   htsmsg_t *m = htsmsg_create_map();
   if (timer.iEpgUid > 0)
   {
-    htsmsg_add_u32(m, "eventId",    timer.iEpgUid);
-    htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
-    htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
+    htsmsg_add_u32(m, "eventId",      timer.iEpgUid);
   }
   else
   {
@@ -550,6 +548,12 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
     htsmsg_add_u32(m, "channelId",    timer.iClientChannelUid);
     htsmsg_add_str(m, "description",  timer.strSummary);
   }
+
+  htsmsg_add_s64(m, "startExtra", timer.iMarginStart);
+  htsmsg_add_s64(m, "stopExtra",  timer.iMarginEnd);
+
+  if (m_conn.GetProtocol() > 12)
+    htsmsg_add_u32(m, "retention", timer.iLifetime);
 
   /* Priority */
   if (timer.iPriority > 80)
@@ -562,14 +566,15 @@ PVR_ERROR CTvheadend::AddTimer ( const PVR_TIMER &timer )
     prio = DVR_PRIO_LOW;
   else
     prio = DVR_PRIO_UNIMPORTANT;
+
   htsmsg_add_u32(m, "priority", (int)prio);
-  
+
   /* Send and Wait */
   {
     CLockObject lock(m_conn.Mutex());
     m = m_conn.SendAndWait("addDvrEntry", m);
   }
-  
+
   if (m == NULL)
   {
     tvherror("failed to add DVR entry");
@@ -598,8 +603,40 @@ PVR_ERROR CTvheadend::DeleteTimer
 
 PVR_ERROR CTvheadend::UpdateTimer ( const PVR_TIMER &timer )
 {
-  return SendDvrUpdate(timer.iClientIndex, timer.strTitle,
-                       timer.startTime, timer.endTime);
+  /* Build message */
+  htsmsg_t *m = htsmsg_create_map();
+  htsmsg_add_u32(m, "id",           timer.iClientIndex);
+  htsmsg_add_str(m, "title",        timer.strTitle);
+  htsmsg_add_s64(m, "start",        timer.startTime);
+  htsmsg_add_s64(m, "stop",         timer.endTime);
+  htsmsg_add_str(m, "description",  timer.strSummary);
+  htsmsg_add_s64(m, "startExtra",   timer.iMarginStart);
+  htsmsg_add_s64(m, "stopExtra",    timer.iMarginEnd);
+
+  if (m_conn.GetProtocol() > 12)
+  {
+    dvr_prio_t prio;
+
+    htsmsg_add_u32(m, "retention", timer.iLifetime);
+
+    /* Priority */
+    if (timer.iPriority > 80)
+      prio = DVR_PRIO_IMPORTANT;
+    else if (timer.iPriority > 60)
+      prio = DVR_PRIO_HIGH;
+    else if (timer.iPriority > 40)
+      prio = DVR_PRIO_NORMAL;
+    else if (timer.iPriority > 20)
+      prio = DVR_PRIO_LOW;
+    else
+      prio = DVR_PRIO_UNIMPORTANT;
+
+    htsmsg_add_u32(m, "priority",   (int)prio);
+  }
+
+  PVR_ERROR e = SendDvrUpdate(m);
+  htsmsg_destroy(m);
+  return e;
 }
 
 /* **************************************************************************
@@ -1168,8 +1205,8 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
 {
   bool update = false;
   const char *state, *str;
-  uint32_t id, channel, eventId;
-  int64_t start, stop;
+  uint32_t id, channel, eventId, retention, priority;
+  int64_t start, stop, startExtra, stopExtra;
 
   /* Channels must be complete */
   SyncChannelsCompleted();
@@ -1181,7 +1218,7 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
       htsmsg_get_s64(msg, "stop",    &stop)    ||
       ((state = htsmsg_get_str(msg, "state")) == NULL))
   {
-    tvherror("malformed dvrEntryUpdate");
+    tvherror("malformed dvrEntryAdd/dvrEntryUpdate");
     return;
   }
 
@@ -1192,11 +1229,51 @@ void CTvheadend::ParseRecordingUpdate ( htsmsg_t *msg )
   UPDATE(rec.channel, channel);
   UPDATE(rec.start,   start);
   UPDATE(rec.stop,    stop);
-  
-  /* Add optional event link */
-  if (!htsmsg_get_u32(msg, "eventId", &eventId))
+
+  /* Add optional fields */
+  if (!htsmsg_get_u32(msg, "eventId",    &eventId))
   {
     UPDATE(rec.eventId, eventId);
+  }
+
+  if (!htsmsg_get_s64(msg, "startExtra", &startExtra))
+  {
+    UPDATE(rec.startExtra, startExtra);
+  }
+
+  if (!htsmsg_get_s64(msg, "stopExtra",  &stopExtra))
+  {
+    UPDATE(rec.stopExtra,  stopExtra);
+  }
+
+  if (!htsmsg_get_u32(msg, "retention",  &retention))
+  {
+    UPDATE(rec.retention, retention);
+  }
+
+  if (!htsmsg_get_u32(msg, "priority",   &priority))
+  {
+    switch (priority)
+    {
+      case DVR_PRIO_IMPORTANT:
+        UPDATE(rec.priority, 100);
+        break;
+      case DVR_PRIO_HIGH:
+        UPDATE(rec.priority, 75);
+        break;
+      case DVR_PRIO_NORMAL:
+        UPDATE(rec.priority, 50);
+        break;
+      case DVR_PRIO_LOW:
+        UPDATE(rec.priority, 25);
+        break;
+      case DVR_PRIO_UNIMPORTANT:
+        UPDATE(rec.priority, 0);
+        break;
+      default:
+        tvherror("malformed dvrEntryAdd/dvrEntryUpdate");
+        return;
+    }
   }
 
   /* Parse state */

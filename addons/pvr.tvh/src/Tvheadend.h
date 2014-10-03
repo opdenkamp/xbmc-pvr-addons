@@ -421,8 +421,7 @@ private:
    * Message sending
    */
   PVR_ERROR   SendDvrDelete   ( uint32_t id, const char *method );
-  PVR_ERROR   SendDvrUpdate   ( uint32_t id, const CStdString &title,
-                                time_t start, time_t stop );
+  PVR_ERROR   SendDvrUpdate   ( htsmsg_t *m );
 
   /*
    * Channel/Tags/Recordings/Events

@@ -120,25 +120,35 @@ struct SRecording
   uint32_t         eventId;
   int64_t          start;
   int64_t          stop;
+  int64_t          startExtra;
+  int64_t          stopExtra;
   std::string      title;
   std::string      path;
   std::string      description;
   PVR_TIMER_STATE  state;
   std::string      error;
+  uint32_t         retention;
+  uint32_t         priority;
 
   SRecording() { Clear(); }
   void Clear()
   {
-    del     = false;
-    id      = 0;
-    channel = 0;
-    eventId = 0;
-    start   = 0;
-    stop    = 0;
+    del        = false;
+    id         = 0;
+    channel    = 0;
+    eventId    = 0;
+    start      = 0;
+    stop       = 0;
+    startExtra = 0;
+    stopExtra  = 0;
+
     state   = PVR_TIMER_STATE_ERROR;
     title.clear();
     description.clear();
     error.clear();
+
+    retention = 99; // kodi default - "99 days"
+    priority  = 50; // kodi default - "normal"
   }
   
   bool IsRecording () const

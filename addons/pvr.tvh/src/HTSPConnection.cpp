@@ -534,7 +534,6 @@ void* CHTSPConnection::Process ( void )
     {
       /* Unable to connect, inform the user */
       tvherror("unable to connect to %s:%d", host.c_str(), port);
-      XBMC->QueueNotification(QUEUE_ERROR, "Unable to connect to %s:%d", host.c_str(), port);
       
       // Retry a few times with a short interval, after that with the default timeout
       if (++retryAttempt <= FAST_RECONNECT_ATTEMPTS)

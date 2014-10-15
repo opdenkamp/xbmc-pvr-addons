@@ -58,7 +58,7 @@ std::string DVBLinkClient::GetBuildInRecorderObjectID()
 }
 
 DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* pvr, CHelper_libXBMC_gui* gui, std::string clientname, std::string hostname, 
-    long port, bool showinfomsg, std::string username, std::string password, bool add_episode_to_rec_title)
+    long port, bool showinfomsg, std::string username, std::string password, bool add_episode_to_rec_title, bool group_recordings_by_title)
 {
   PVR = pvr;
   XBMC = xbmc;
@@ -69,6 +69,7 @@ DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* p
   m_currentChannelId = 0;
   m_showinfomsg = showinfomsg;
   m_add_episode_to_rec_title = add_episode_to_rec_title;
+  m_group_recordings_by_title = group_recordings_by_title;
 
   m_httpClient = new HttpPostClient(XBMC,hostname, port, username, password);
   m_dvblinkRemoteCommunication = DVBLinkRemote::Connect((HttpClient&)*m_httpClient, m_hostname.c_str(), port, username.c_str(), password.c_str());
@@ -482,7 +483,7 @@ PVR_ERROR DVBLinkClient::DeleteRecording(const PVR_RECORDING& recording)
   return result;
 }
 
-static std::string get_subtitle(int season, int episode, const std::string& episode_name)
+static std::string get_subtitle(int season, int episode, const std::string& episode_name, int year)
 {
     std::string se_str;
     if (season > 0 || episode > 0)
@@ -502,8 +503,23 @@ static std::string get_subtitle(int season, int episode, const std::string& epis
         }
         se_str += ")";
     }
+
+    if (year > 0)
+    {
+        char buf[1024];
+
+        if (se_str.size() > 0)
+          se_str += " ";
+
+        se_str += "[";
+        sprintf(buf, "%04d", year);
+        se_str += buf;
+        se_str += "]";
+    }
+
     if (episode_name.size() > 0)
-        se_str += " " + episode_name;
+        se_str += " - " + episode_name;
+
     return se_str;
 }
 
@@ -546,7 +562,7 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
     if (m_add_episode_to_rec_title)
     {
         //form a title as "name - (SxxExx) subtitle" because XBMC does not display episode/season information almost anywhere
-        std::string se_str = get_subtitle(tvitem->GetMetadata().SeasonNumber, tvitem->GetMetadata().EpisodeNumber, tvitem->GetMetadata().SubTitle);
+        std::string se_str = get_subtitle(tvitem->GetMetadata().SeasonNumber, tvitem->GetMetadata().EpisodeNumber, tvitem->GetMetadata().SubTitle, (int)tvitem->GetMetadata().Year);
         if (se_str.size() > 0)
             title += " - " + se_str;
     }
@@ -569,6 +585,11 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
     {
       xbmcRecording.iGenreType = genre_type;
       xbmcRecording.iGenreSubType = genre_subtype;
+    }
+
+    if (m_group_recordings_by_title)
+    {
+      PVR_STRCPY(xbmcRecording.strDirectory, tvitem->GetMetadata().GetTitle().c_str());
     }
 
     PVR->TransferRecordingEntry(handle, &xbmcRecording);

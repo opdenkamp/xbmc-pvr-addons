@@ -50,7 +50,7 @@ msgstr "Streamen"
 
 msgctxt "#30102"
 msgid "Enable transcoding"
-msgstr "Enable transcoding"
+msgstr "Transcoding aktivieren"
 
 msgctxt "#30103"
 msgid "Height"
@@ -106,9 +106,13 @@ msgstr "Informationsmeldungen anzeigen"
 
 msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
-msgstr "Combine title and episode name for recordings"
+msgstr "In Aufnahmen Titel und Episodennummer anzeigen"
 
-#empty strings from id 30204 to 32000
+msgctxt "#30204"
+msgid "Group Recordings by Title"
+msgstr "Aufnahmen nach Title gruppieren"
+
+#empty strings from id 30205 to 32000
 #category labels
 
 msgctxt "#32001"
@@ -149,24 +153,24 @@ msgstr "Stream für Sender %s konnte nicht abgerufen werden (Fehlercode : %d)"
 
 msgctxt "#32011"
 msgid "Series recording"
-msgstr "Series recording"
+msgstr "Serienaufnahme"
 
 msgctxt "#32012"
 msgid "Record this episode only"
-msgstr "Record this episode only"
+msgstr "Nur diese Episode aufnehmen"
 
 msgctxt "#32013"
 msgid "Record all episodes"
-msgstr "Record all episodes"
+msgstr "Alle Episoden aufnehmen"
 
 msgctxt "#32014"
 msgid "Delete timer"
-msgstr "Delete timer"
+msgstr "Timer löschen"
 
 msgctxt "#32015"
 msgid "Delete this timer only"
-msgstr "Delete this timer only"
+msgstr "Nur diesen Timer löschen"
 
 msgctxt "#32016"
 msgid "Delete the entire series"
-msgstr "Delete the entire series"
+msgstr "Die Serienaufnahme löschen"

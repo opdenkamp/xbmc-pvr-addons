@@ -47,7 +47,7 @@ class DVBLinkClient : public PLATFORM::CThread
 {
 public:
     DVBLinkClient(ADDON::CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* pvr, CHelper_libXBMC_gui* gui, std::string clientname, std::string hostname, long port, 
-        bool showinfomsg, std::string username, std::string password, bool add_episode_to_rec_title);
+        bool showinfomsg, std::string username, std::string password, bool add_episode_to_rec_title, bool group_recordings_by_title);
   ~DVBLinkClient(void);
   int GetChannelsAmount();
   PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
@@ -103,6 +103,7 @@ private:
   std::string m_hostname;
   LiveStreamerBase* m_live_streamer;
   bool m_add_episode_to_rec_title;
+  bool m_group_recordings_by_title;
   bool m_showinfomsg;
   bool m_updating;
   std::string m_recordingsid;

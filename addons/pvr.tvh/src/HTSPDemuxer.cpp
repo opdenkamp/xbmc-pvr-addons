@@ -697,7 +697,7 @@ void CHTSPDemuxer::ParseTimeshiftStatus ( htsmsg_t *m )
   
   tvhtrace("timeshiftStatus:");
   tvhtrace("  full  : %d", m_timeshiftStatus.full);
-  tvhtrace("  shift : %ld", (long)m_timeshiftStatus.shift);
-  tvhtrace("  start : %ld", (long)m_timeshiftStatus.start);
-  tvhtrace("  end   : %ld", (long)m_timeshiftStatus.end);
+  tvhtrace("  shift : %lld", m_timeshiftStatus.shift);
+  tvhtrace("  start : %lld", m_timeshiftStatus.start);
+  tvhtrace("  end   : %lld", m_timeshiftStatus.end);
 }

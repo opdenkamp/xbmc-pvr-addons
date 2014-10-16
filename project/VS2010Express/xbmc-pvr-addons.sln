@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platform", "platform\platform.vcxproj", "{FE4573F6-A794-4AD3-B37F-49E51F1140E6}"
 EndProject
@@ -313,15 +313,19 @@ Global
 		{6834B003-2511-4745-818D-F418E87DD941}.Release|Win32.ActiveCfg = Release|Win32
 		{6834B003-2511-4745-818D-F418E87DD941}.Release|Win32.Build.0 = Release|Win32
 		{6834B003-2511-4745-818D-F418E87DD941}.Release|x64.ActiveCfg = Release|Win32
-		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|Win32.ActiveCfg = Debug|Win32
-		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|Win32.Build.0 = Debug|Win32
-		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|x64.ActiveCfg = Debug|Win32
-		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|Win32.ActiveCfg = Release|Win32
-		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|Win32.Build.0 = Release|Win32
-		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|x64.ActiveCfg = Release|Win32
 		{6834B003-2511-4745-818D-F418E87DD941}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
 		{6834B003-2511-4745-818D-F418E87DD941}.RelWithDebInfo|Win32.Build.0 = Release|Win32
 		{6834B003-2511-4745-818D-F418E87DD941}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|Win32.ActiveCfg = Debug|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|Win32.Build.0 = Debug|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|x64.ActiveCfg = Debug|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.MinSizeRel|Win32.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.MinSizeRel|x64.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|Win32.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|Win32.Build.0 = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|x64.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.Debug|Win32.Build.0 = Debug|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.Debug|x64.ActiveCfg = Debug|Win32

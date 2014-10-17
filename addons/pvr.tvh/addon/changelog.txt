@@ -1,3 +1,10 @@
+0.9.5
+ - sync the whole project with upstream
+ - upgraded Windows compiler toolchain
+ - don't display connection error popups, let XBMC handle it. This way the "Do not show connection lost warnings" option in XBMC actually works as intended.
+ - fix a rare crash that can happen if the channel list takes too long to import (only seen it happen in the debugger)
+ - fix an integer flow when logging timeshift status
+
 0.9.4
  - sync with latest PVR API
  - expose ATSC subchannel numbers to XBMC

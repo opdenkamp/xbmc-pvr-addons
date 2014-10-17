@@ -1,30 +1,225 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Ukrainian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/uk/)\n"
+"Language-Team: Ukrainian (http://www.transifex.com/projects/p/xbmc-main/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "IP сервера VDR або його назва"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "Порт VNSI"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Пріоритет"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Налаштування конвертування символів"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Затримка зв’язку (с) "
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Дозволити повідомлення VDR"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Читати записи з теки"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Тека записів VDR"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Пошук каналів"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Пошук каналів - Налаштування"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Почати пошук каналів"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Тип джерела"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "Телевізійні канали"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Радіо канали"
+
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Безплатні канали"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Зашифровані канали"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "HD канали"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "Країна"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Кабельне - Інверсія"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Кабельне - символьна швидкість"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Кабельне - модуляція"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Наземне - інверсія "
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Супутник"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "Тип ATSC"
+
+msgctxt "#30024"
+msgid "Back"
+msgstr "Назад"
+
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Пошук каналів  - запущено... %i %%"
 
 msgctxt "#30026"
 msgid "Type:"
 msgstr "Тип:"
 
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Пристрій:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Сканування: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Сигнал: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Нові канали: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Всі канали: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Аналогове телебачення"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Аналогове радіо"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Транспондер:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Нові канали"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Пошук каналів - Закінчено"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Немає доступного пристрою - вихід"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Немає доступного пристрою DVB-S2 - намагаюся повернутися до DVB-S"
+
 msgctxt "#30039"
 msgid "Running"
 msgstr "Запуск…"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Зупинено"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Завершено"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Пошук каналів  - Скасовано"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Пошук каналів  - Помилка"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Втрачено зв’язок з сервером VDR"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "Зв’язок з VDR сервером відновлено"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Створити групи каналів автоматично на сервері"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Налаштування"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Контроль OSD - натисніть Info для виходу"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Admin"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Канали"

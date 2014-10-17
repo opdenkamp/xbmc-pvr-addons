@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -23,7 +24,10 @@
 #define VNSI_COMMAND_H
 
 /** Current VNSI Protocol Version number */
-#define VNSI_PROTOCOLVERSION 5
+#define VNSI_PROTOCOLVERSION 6
+
+/** Minimum VNSI Protocol Version number */
+#define VNSI_MIN_PROTOCOLVERSION 5
 
 /** Packet types */
 #define VNSI_CHANNEL_REQUEST_RESPONSE 1

@@ -55,7 +55,7 @@ public:
   PVR_ERROR GetBackendTime(time_t *localTime, int *gmtOffset);
 
   /* EPG handling */
-  PVR_ERROR GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart = NULL, time_t iEnd = NULL);
+  PVR_ERROR GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart = 0, time_t iEnd = 0);
 
   /* Channel handling */
   int GetNumChannels(void);
@@ -129,6 +129,10 @@ private:
   PLATFORM::CMutex        m_mutex;
   int64_t                 m_iLastRecordingUpdate;
   CTsReader*              m_tsreader;
+  std::map<int,std::string> m_channelNames;
+  int                     m_signalStateCounter;
+  int                     m_iSignal;
+  int                     m_iSNR;
 
   void Close();
 

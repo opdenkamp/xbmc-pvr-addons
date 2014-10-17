@@ -1,25 +1,68 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Galician (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/gl/)\n"
+"Language-Team: Galician (http://www.transifex.com/projects/p/xbmc-main/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: gl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "Nome de host ou IP de VDR"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "Porto VNSI"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Prioridade"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Conversión do conxunto de caracteres"
+
 msgctxt "#30004"
 msgid "Connect timeout (s)"
 msgstr "Tempo(s) de espera para conectar"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Permitir mensaxes do VDR"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Ler gravacións do cartafol"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Cartafol das gravacións do VDR"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Busca de canles"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Busca de canles - Configuración"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Iniciar Busca"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Tipo de Fonte"
 
 msgctxt "#30012"
 msgid "TV channels"
@@ -29,18 +72,198 @@ msgctxt "#30013"
 msgid "Radio channels"
 msgstr "Canles de Radio"
 
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Canles FTA"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Canles Codificadas"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "Canles HD"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "País"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Inversión de cable"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Ratio do cable"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Modulación do cable"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Inversión Terr"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Satélite"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "Tipo ATSC"
 
 msgctxt "#30024"
 msgid "Back"
 msgstr "Atrás"
 
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Busca de canles - executando... %i %%"
+
 msgctxt "#30026"
 msgid "Type:"
 msgstr "Tipo:"
 
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Dispositivo:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Buscar: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Sinal: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Novas canles: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Todas as canles: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "TV Analóxica"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Radio Analóxica"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Transpondedor:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Novas canles"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Busca da canles - Remantado"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Dispositivo non dispoñíbel - saíndo"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Dispositivo DVB-S2 non dispoñíbel - tente de voltar ao DVB-S"
+
 msgctxt "#30039"
 msgid "Running"
 msgstr "Procesando"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Detido"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Rematado"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Busca de canles - Cancelada"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Busca de canles - Erro"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Perdeuse a conexión co Servidor VDR"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "Restabeleceuse a conexión co Servidor VDR"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Crear grupos de canles automaticamente no servidor"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Solicitar Timeshift"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Configuración"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Controlando o OSD - prema info. para saír"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Seleccionar para controlar o OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Modo Timeshift"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Búfer do Timeshift (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Búfer do Timeshift (Ficheiro) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "Administrador VDR"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Canles"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Listaxe branca de Provedores"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Listaxe negra de Provedores"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtros das canles"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Canles de Radio"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Gardar filtros"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Provedor Descoñecido"

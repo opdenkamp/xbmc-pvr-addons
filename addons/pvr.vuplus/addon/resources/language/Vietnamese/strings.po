@@ -1,0 +1,121 @@
+# XBMC Media Center language file
+# Addon Name: VU+ / Enigma2 Client
+# Addon id: pvr.vuplus
+# Addon Provider: Joerg Dembski
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Vietnamese (http://www.transifex.com/projects/p/xbmc-main/language/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "VU+ hostname or IP address"
+msgstr "Tên miền hoặc địa chỉ IP của VU+"
+
+msgctxt "#30002"
+msgid "Streaming Port"
+msgstr "Cổng Streaming"
+
+msgctxt "#30003"
+msgid "Username"
+msgstr "Tên truy cập"
+
+msgctxt "#30004"
+msgid "Password"
+msgstr "Mật khẩu"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Số giây tự ngắt chờ kết nối"
+
+msgctxt "#30008"
+msgid "Icon Path"
+msgstr "Đường dẫn biểu tượng"
+
+msgctxt "#30010"
+msgid "Update Interval in minutes"
+msgstr "Số phút tự cập nhật lại"
+
+msgctxt "#30011"
+msgid "Automatic Timerlist Cleanup"
+msgstr "Tự động xoá danh sách hẹn giờ"
+
+msgctxt "#30012"
+msgid "Webinterface Port"
+msgstr "Cổng Webinterface"
+
+msgctxt "#30013"
+msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "Tắt trước khi chuyển kênh (ví dụ cho các Single Tuner box)"
+
+msgctxt "#30014"
+msgid "Folder for channeldata"
+msgstr "Thư mục đặt dữ liệu cho kênh"
+
+msgctxt "#30015"
+msgid "Check for bouquett updates"
+msgstr "Kiểm tra cập nhật bouquett"
+
+msgctxt "#30016"
+msgid "Check for channel updates"
+msgstr "Kiểm tra cập nhật kênh"
+
+msgctxt "#30017"
+msgid "Use only the DVB boxes' current recording path"
+msgstr "Chỉ sử dụng đương dẫn lưu hiện tại của DVB box"
+
+msgctxt "#30018"
+msgid "General"
+msgstr "Tổng Quan"
+
+msgctxt "#30019"
+msgid "Channels"
+msgstr "Kênh"
+
+msgctxt "#30020"
+msgid "Advanced"
+msgstr "Nâng cao"
+
+msgctxt "#30021"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30022"
+msgid "Recordings / Timer"
+msgstr "Thu / Hẹn giờ"
+
+msgctxt "#30023"
+msgid "Recording folder on the receiver"
+msgstr "Thư mục lưu trên thiết bị"
+
+msgctxt "#30024"
+msgid "Send DeepStandby-Command"
+msgstr "Gửi lệnh Chế Độ Chờ"
+
+msgctxt "#30025"
+msgid "Fetch only one TV bouquet"
+msgstr "Chỉ lấy một TV bouquet"
+
+msgctxt "#30026"
+msgid "TV-Bouquet"
+msgstr "TV-Bouquet"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "Lấy các hình icon từ mạng"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Đã ngắt kết nối từ '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Đã kết nối lại tới '%s'"

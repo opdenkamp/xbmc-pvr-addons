@@ -20,7 +20,7 @@
 #include <vector>
 #include <ctime>
 #include "uri.h"
-#include "platform/util//util.h"
+#include "platform/util/util.h"
 
 #ifdef TARGET_WINDOWS
 #include "platform/util/StdString.h"
@@ -42,18 +42,25 @@ bool stringtobool(const std::string& s);
 const char* booltostring(const bool b);
 
 /**
- * @brief Converts a C# DateTime string into a time_t value
- * Assumes the usage of somedatetimeval.ToString("u") in C#
- */
-time_t DateTimeToTimeT(const std::string& datetime);
-
-/**
  * @brief Filters forbidden filename characters from channel name and replaces them with _ )
  */
 std::string ToThumbFileName(const char* strChannelName);
 
 std::string ToXBMCPath(const std::string& strFileName);
 std::string ToWindowsPath(const std::string& strFileName);
+
+/**
+ * @brief Macro to silence unused parameter warnings
+ */
+#ifdef UNUSED
+#  undef UNUSED
+#endif
+#ifdef __GNUC__
+#  define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
+#else
+#  define UNUSED(x)  /* x */
+#endif
+
 
 #if defined(TARGET_WINDOWS)
 namespace UTF8Util

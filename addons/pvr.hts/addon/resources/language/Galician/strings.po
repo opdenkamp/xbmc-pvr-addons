@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: Tvheadend HTSP Client
 # Addon id: pvr.hts
-# Addon version: 1.6.11
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Galician (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/gl/)\n"
+"Language-Team: Galician (http://www.transifex.com/projects/p/xbmc-main/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Tvheadend hostname or IP address"
-msgstr "nome do host ou enderezo IP"
+msgstr "Nome do host ou enderezo IP"
 
 msgctxt "#30001"
 msgid "HTTP port"
@@ -44,6 +43,18 @@ msgstr "Tempo de espera da conexión en segundos"
 msgctxt "#30007"
 msgid "Response timeout in seconds"
 msgstr "Tempo de espera da resposta en segundos"
+
+msgctxt "#30100"
+msgid "Tvheadend transcoding settings"
+msgstr "Axustes da transcodificación de Tvheadend"
+
+msgctxt "#30101"
+msgid "Transcoding settings"
+msgstr "Axustes da transcodificación"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Habilitar a transcodificación"
 
 msgctxt "#30103"
 msgid "Audio codec"

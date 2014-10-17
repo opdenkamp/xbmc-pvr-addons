@@ -17,7 +17,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -26,10 +27,10 @@
 #include "xbmc_pvr_dll.h"
 #include "DVBLinkClient.h"
 #include "platform/util/util.h"
+#include "platform/util/timeutils.h"
 
 using namespace std;
 using namespace ADDON;
-
 
 #ifdef TARGET_WINDOWS
 #define snprintf _snprintf
@@ -48,22 +49,44 @@ std::string g_szHostname            = DEFAULT_HOST;                  ///< The Ho
 long        g_lPort                 = DEFAULT_PORT;                  ///< The DVBLink Connect Server listening port (default: 8080)
 int         g_iConnectTimeout       = DEFAULT_TIMEOUT;               ///< The Socket connection timeout
 DVBLINK_STREAMTYPE g_eStreamType    = DEFAULT_STREAMTYPE;            ///< Stream type used by video stream
-std::string g_szClientname          = DEFAULT_CLIENTNAME;            ///< Name of dvblink client
+std::string g_szClientname;                                          ///< Name of dvblink client
 std::string g_szUsername            = DEFAULT_USERNAME;              ///< Username
 std::string g_szPassword            = DEFAULT_PASSWORD;              ///< Password
-bool        g_bUseChlHandle         = DEFAULT_USECHLHANDLE;          ///< Use channel handle instead of client id
 bool        g_bShowInfoMSG          = DEFAULT_SHOWINFOMSG;           ///< Show information messages
 int         g_iHeight               = DEFAULT_HEIGHT;                ///< Height of stream when using transcoding
 int         g_iWidth                = DEFAULT_WIDTH;                 ///< Width of stream when using transcoding
 int         g_iBitrate              = DEFAULT_BITRATE;               ///< Bitrate of stream when using transcoding
 std::string g_szAudiotrack          = DEFAULT_AUDIOTRACK;            ///< Audiotrack to include in stream when using transcoding
-std::string g_szTimeShiftBufferPath = DEFAULT_TIMESHIFTBUFFERPATH;   ///< Path to timeshift buffer 
 bool        g_bUseTimeshift         = DEFAULT_USETIMESHIFT;             ///< Use timeshift
 CHelper_libXBMC_addon *XBMC         = NULL;
 CHelper_libXBMC_pvr   *PVR          = NULL;
 
 extern "C" {
 
+static void generate_uuid(std::string& uuid)
+{
+  int64_t seed_value = PLATFORM::GetTimeMs();
+  seed_value = seed_value % 1000000000;
+  srand((unsigned int)seed_value);
+
+  //fill in uuid string from a template
+  std::string template_str = "xxxx-xx-xx-xx-xxxxxx";
+  for (size_t i=0; i<template_str.size(); i++)
+  {
+    if (template_str[i] != '-')
+    {
+      double a1 = rand();
+      double a3 = RAND_MAX;
+      unsigned char ch = (unsigned char)(a1 * 255 / a3);
+      char buf[16];
+      sprintf(buf, "%02x", ch);
+      uuid += buf;
+		} else
+		{
+			uuid += '-';
+		}
+  }
+}
 
 ADDON_STATUS ADDON_Create(void* hdl, void* props)
 {
@@ -89,6 +112,10 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   XBMC->Log(LOG_DEBUG, "%s - Creating the PVR DVBlink add-on", __FUNCTION__);
 
+  //generate a guid to use as a client identification
+  generate_uuid(g_szClientname);
+  XBMC->Log(LOG_NOTICE, "Generated guid %s to use as a DVBLink client ID", g_szClientname.c_str());
+
   m_CurStatus     = ADDON_STATUS_UNKNOWN;
   g_strUserPath   = pvrprops->strUserPath;
   g_strClientPath = pvrprops->strClientPath;
@@ -108,18 +135,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'host' setting, falling back to '127.0.0.1' as default");
     g_szHostname = DEFAULT_HOST;
-  }
-
-  /* Read setting "client" from settings.xml */
-  if (XBMC->GetSetting("client", buffer))
-  {
-    g_szClientname = buffer;
-  }
-  else
-  {
-    /* If setting is unknown fallback to defaults */
-    XBMC->Log(LOG_ERROR, "Couldn't get 'clientname' setting, falling back to 'xbmc' as default");
-    g_szClientname = DEFAULT_CLIENTNAME;
   }
 
   /* Read setting "username" from settings.xml */
@@ -170,14 +185,6 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     g_iConnectTimeout = DEFAULT_TIMEOUT;
   }
 
-  /* Read setting "ch_handle" from settings.xml */
-  if (!XBMC->GetSetting("ch_handle", &g_bUseChlHandle))
-  {
-    /* If setting is unknown fallback to defaults */
-    XBMC->Log(LOG_ERROR, "Couldn't get 'ch_handle' setting, falling back to 'true' as default");
-    g_bUseChlHandle = DEFAULT_USECHLHANDLE;
-  }
-
   /* Read setting "timeshift" from settings.xml */
   if (!XBMC->GetSetting("timeshift", &g_bUseTimeshift))
   {
@@ -186,20 +193,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     g_bUseTimeshift = DEFAULT_USETIMESHIFT;
   }
 
-  /* Read setting "timeshiftpath" from settings.xml */
-  if (XBMC->GetSetting("timeshiftpath", buffer))
-  {
-    g_szTimeShiftBufferPath = buffer;
-  }
-  else
-  {
-    /* If setting is unknown fallback to defaults */
-    XBMC->Log(LOG_ERROR, "Couldn't get 'timeshiftpath' setting, falling back to 'special://userdata/addon_data/pvr.dvblink/' as default");
-    g_szTimeShiftBufferPath = DEFAULT_TIMESHIFTBUFFERPATH;
-  }
-
-
-  /* Read setting "ch_handle" from settings.xml */
+  /* Read setting "shoow info message" from settings.xml */
   if (!XBMC->GetSetting("showinfomsg", &g_bShowInfoMSG))
   {
     /* If setting is unknown fallback to defaults */
@@ -245,7 +239,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "settings: streamtype='%i' host='%s', port=%i, timeout=%i", g_eStreamType, g_szHostname.c_str(), g_lPort, g_iConnectTimeout);
   
-  dvblinkclient = new DVBLinkClient(XBMC,PVR, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword, g_bUseTimeshift, g_szTimeShiftBufferPath);
+  dvblinkclient = new DVBLinkClient(XBMC,PVR, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword, g_bUseTimeshift);
 
   m_CurStatus = ADDON_STATUS_OK;
   m_bCreated = true;
@@ -285,15 +279,6 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     tmp_sHostname = g_szHostname;
     g_szHostname = (const char*) settingValue;
     if (tmp_sHostname != g_szHostname)
-      return ADDON_STATUS_NEED_RESTART;
-  }
-  else if (str == "client")
-  {
-    string tmp_sClientname;
-    XBMC->Log(LOG_INFO, "Changed Setting 'client' from %s to %s", g_szClientname.c_str(), (const char*) settingValue);
-    tmp_sClientname = g_szClientname;
-    g_szClientname = (const char*) settingValue;
-    if (tmp_sClientname != g_szClientname)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "username")
@@ -338,25 +323,11 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     XBMC->Log(LOG_INFO, "Changed setting 'timeout' from %u to %u", g_iConnectTimeout, *(int*) settingValue);
     g_iConnectTimeout = *(int*) settingValue;
   }
-  else if (str == "ch_handle")
-  {
-    XBMC->Log(LOG_INFO, "Changed Setting 'ch_handle' from %u to %u", g_bUseChlHandle, *(int*) settingValue);
-    g_bUseChlHandle = *(bool*) settingValue;
-  }
   else if (str == "timeshift")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'timeshift' from %u to %u", g_bUseTimeshift, *(int*) settingValue);
     g_bUseTimeshift = *(bool*) settingValue;
        return ADDON_STATUS_NEED_RESTART;
-  }
-  else if (str == "timeshiftpath")
-  {
-    string tmp_sTimeShiftBufferPath;
-    XBMC->Log(LOG_INFO, "Changed Setting 'timeshiftpath' from %s to %s", g_szTimeShiftBufferPath.c_str(), (const char*) settingValue);
-    tmp_sTimeShiftBufferPath = g_szTimeShiftBufferPath;
-    g_szTimeShiftBufferPath = (const char*) settingValue;
-    if (tmp_sTimeShiftBufferPath != g_szTimeShiftBufferPath)
-      return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "showinfomsg")
   {
@@ -502,7 +473,7 @@ bool OpenLiveStream(const PVR_CHANNEL &channel)
 void CloseLiveStream(void)
 {
   if (dvblinkclient)
-    dvblinkclient->StopStreaming(g_bUseChlHandle);
+    dvblinkclient->StopStreaming(true);
 }
 
 const char * GetLiveStreamURL(const PVR_CHANNEL &channel)
@@ -538,6 +509,27 @@ long long LengthLiveStream(void)
   if (dvblinkclient)
     return dvblinkclient->LengthLiveStream();
   return -1;
+}
+
+time_t GetPlayingTime()
+{
+  if (dvblinkclient)
+    return dvblinkclient->GetPlayingTime();
+  return 0;
+}
+
+time_t GetBufferTimeStart()
+{
+  if (dvblinkclient)
+    return dvblinkclient->GetBufferTimeStart();
+  return 0;
+}
+
+time_t GetBufferTimeEnd()
+{
+  if (dvblinkclient)
+    return dvblinkclient->GetBufferTimeEnd();
+  return 0;
 }
 
 void PauseStream(bool bPaused)
@@ -782,9 +774,5 @@ bool SeekTime(int,bool,double*)
 void SetSpeed(int)
 {
 }
-
-time_t GetPlayingTime() { return 0; }
-time_t GetBufferTimeStart() { return 0; }
-time_t GetBufferTimeEnd() { return 0; }
 
 }

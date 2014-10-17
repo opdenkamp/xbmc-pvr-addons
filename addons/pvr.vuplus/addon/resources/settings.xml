@@ -10,11 +10,8 @@
 
   <!-- Channels -->
   <category label="30019">
-    <setting id="channeldatapath" type="folder" label="30014" default="" />
     <setting label="30025" type="bool" id="onlyonegroup" default="false"/>
     <setting label="30026" type="text" id="onegroup" default="" enable="eq(-1,true)" />
-    <setting label="30015" type="bool" id="checkgroups" default="true"/>
-    <setting label="30016" type="bool" id="checkchannels" default="true"/>
     <setting label="30013" type="bool" id="zap" default="false"/>
   </category>
 
@@ -22,6 +19,7 @@
   <category label="30020">
     <setting id="streamport" type="number" label="30002" default="8001" />
     <setting id="webport" type="number" label="30012" default="80" />
+    <setting label="30028" type="bool" id="use_secure" default="false"/>
     <setting id="user" type="text" label="30003" default="" />
     <setting id="pass" type="text" label="30004" option="hidden" default="" />
     <setting id="recordingpath" type="text" label="30023" default="" />

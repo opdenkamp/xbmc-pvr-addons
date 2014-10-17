@@ -1,0 +1,121 @@
+# XBMC Media Center language file
+# Addon Name: VU+ / Enigma2 Client
+# Addon id: pvr.vuplus
+# Addon Provider: Joerg Dembski
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: French (Canada) (http://www.transifex.com/projects/p/xbmc-main/language/fr_CA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "#30000"
+msgid "VU+ hostname or IP address"
+msgstr "Nom d'hôte ou adresse IP de VU+"
+
+msgctxt "#30002"
+msgid "Streaming Port"
+msgstr "Port de lecture en transit"
+
+msgctxt "#30003"
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgctxt "#30004"
+msgid "Password"
+msgstr "Mot de passe"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Délai d'attente de réponse en secondes"
+
+msgctxt "#30008"
+msgid "Icon Path"
+msgstr "Chemin des icônes"
+
+msgctxt "#30010"
+msgid "Update Interval in minutes"
+msgstr "Intervalle de mise à jour en minutes"
+
+msgctxt "#30011"
+msgid "Automatic Timerlist Cleanup"
+msgstr "Nettoyage automatique de la liste des minuteries"
+
+msgctxt "#30012"
+msgid "Webinterface Port"
+msgstr "Port de l'interface Web"
+
+msgctxt "#30013"
+msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "Passer les chaînes avant le changement effectif (c.-à-d. pour les boîtiers syntoniseurs simples)"
+
+msgctxt "#30014"
+msgid "Folder for channeldata"
+msgstr "Dossier des données de chaînes"
+
+msgctxt "#30015"
+msgid "Check for bouquett updates"
+msgstr "Vérifier les mises à jour du bouquet numérique"
+
+msgctxt "#30016"
+msgid "Check for channel updates"
+msgstr "Vérifier les mises à jour de chaînes"
+
+msgctxt "#30017"
+msgid "Use only the DVB boxes' current recording path"
+msgstr "Utiliser seulement le chemin d'enregistrement actuel du boîtier DVB"
+
+msgctxt "#30018"
+msgid "General"
+msgstr "Général"
+
+msgctxt "#30019"
+msgid "Channels"
+msgstr "Chaînes"
+
+msgctxt "#30020"
+msgid "Advanced"
+msgstr "Avancé"
+
+msgctxt "#30021"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30022"
+msgid "Recordings / Timer"
+msgstr " Enregistrements  / minuterie"
+
+msgctxt "#30023"
+msgid "Recording folder on the receiver"
+msgstr "Dossier d'enregistrement du récepteur"
+
+msgctxt "#30024"
+msgid "Send DeepStandby-Command"
+msgstr "Envoyer la commande deepstandby"
+
+msgctxt "#30025"
+msgid "Fetch only one TV bouquet"
+msgstr "Ne récupérer qu'un bouquet télé"
+
+msgctxt "#30026"
+msgid "TV-Bouquet"
+msgstr "Bouquet télé"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "Récupérer les icônes de l'interface Web"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Se déconnecter de « %s »"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Se reconnecter à « %s »"

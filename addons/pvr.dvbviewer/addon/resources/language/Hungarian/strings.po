@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Hungarian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/hu/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/xbmc-main/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,33 +25,105 @@ msgid "Webinterface Port"
 msgstr "Web-kezelőfelület port"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "Sugárzási port"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "Felvételek portja"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "Felhasználónév"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Jelszó"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Csatornák betöltése a favourites.xml fájlból a channels.dat helyett"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Kedvencek használata a csatornalista helyett."
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Helyi kedvencek fájl használata"
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "A favourites.xml fájl kiválasztása"
 
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Csúsztatott élőkép engedélyezése"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Csúsztatott élőkép tároló útvonala"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "RTSP adatfolyam használata az elő TV-hez"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Alacsony teljesítményigényű mód (logók és bélyegképek letiltása)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Felvételek csoportosítása"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "letiltva"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "felvétel könyvtár szerint"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "felvétel dátuma szerint"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "Kezdőbetű szerint"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "Tv csatorna szerint"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "sorozat szerint"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Általános"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Haladó"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Felvételek"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Nem lehet a felvétel szolgáltatáshoz csatlakozni"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Nem lehet a DVBViewer felvétel szolgáltatáshoz csatlakozni"
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "Legalább 1.%d verziószámú felvétel szolgáltatás szükséges"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer Felvétel Szolgáltatás verzió %s vagy nagyobb szükséges"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Csatornalista nem összeállítható"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "További információk az XBMC logban"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "A heyli favourites.xml fájl nem megnyitható"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "A kedvencek lista nem összeállítható"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "A felvételi lista nem összeállítható"

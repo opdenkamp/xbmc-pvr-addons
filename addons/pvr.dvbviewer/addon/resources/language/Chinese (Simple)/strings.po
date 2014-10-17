@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/zh/)\n"
+"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,40 +18,112 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "DVBViewer Recording Service IP Address"
-msgstr "DVBViewer录制服务IP地址"
+msgstr "DVBViewer 录制服务 IP 地址"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
-msgstr "Web界面端口"
+msgstr "Web 界面端口"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "流媒体端口"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "录制端口"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "用户名"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "密码"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "从favourites.xml中载入频道跳过channels.dat"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "使用收藏夹代替频道列表"
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "使用本地收藏夹文件"
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
-msgstr "选择favourites.xml文件"
+msgstr "选择 favourites.xml 文件"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "启用时光平移"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "时光平移缓存路径"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "直播电视使用 RTSP 流"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "启用低性能模式（禁用图标和缩略图）"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "录像分组"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "禁用"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "按录像目录"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "按录像日期"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "按首字母"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "按电视频道"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "按系列"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "常规"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "高级"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "录像"
 
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "无法连接录制服务"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "无法连接到 DVBViewer 录像服务"
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "录制服务版本需 1.%d 或以上。"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer 录像服务需要 %s 或更高版本"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "无法解析频道列表"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "更多信息见 XBMC 日志"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "无法打开本地 favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "无法解析收藏夹列表"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "无法解析定时器列表"

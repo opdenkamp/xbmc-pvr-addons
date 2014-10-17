@@ -1,3 +1,14 @@
+[B]Version 1.9.4[/B]
+Updated to API v1.9.2
+
+[B]Version 1.9.2[/B]
+Updated: language files from Transifex
+
+[B]Version 1.9.1[/B]
+Added: support for DVBLink v5 server timeshifting capabilities
+Fixed: series number, genre, episode name tags
+Fixed: correct displaying of series recordings
+
 [B]Version 1.9.0[/B]
 Sync with XBMC PVR API v1.9.0
 

@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Lithuanian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/lt/)\n"
+"Language-Team: Lithuanian (http://www.transifex.com/projects/p/xbmc-main/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -31,11 +30,11 @@ msgstr "Prioritetas"
 
 msgctxt "#30003"
 msgid "Character Set Conversion"
-msgstr "Konversijos simbolių rinkinys"
+msgstr "Simbolių rinkinio konvertavimas"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
-msgstr "Prisijungimui skyrtas laikas (s)"
+msgstr "Prisijungimui skirtas laikas (s)"
 
 msgctxt "#30005"
 msgid "Allow VDR Messages"
@@ -107,7 +106,7 @@ msgstr "Terr inversija"
 
 msgctxt "#30022"
 msgid "Satellite"
-msgstr "Palydovas (Satellite)"
+msgstr "Palydovas"
 
 msgctxt "#30023"
 msgid "ATSC Type"
@@ -127,7 +126,7 @@ msgstr "Tipas:"
 
 msgctxt "#30027"
 msgid "Device:"
-msgstr "prietaisas:"
+msgstr "Įrenginys:"
 
 msgctxt "#30028"
 msgid "Scan: %i"
@@ -151,7 +150,7 @@ msgstr "Analoginė TV"
 
 msgctxt "#30033"
 msgid "Analog Radio"
-msgstr "Analoginė Radija"
+msgstr "Analoginis radijas"
 
 msgctxt "#30034"
 msgid "Transponder:"
@@ -163,19 +162,19 @@ msgstr "Nauji kanalai"
 
 msgctxt "#30036"
 msgid "Channel search - Finished"
-msgstr "Kanalų paieška - Baigta(-s)"
+msgstr "Kanalų paieška - Baigta"
 
 msgctxt "#30037"
 msgid "No device available - exiting"
-msgstr "Negalimi jokie prietaisai -  nutraukimas"
+msgstr "Nėra galimų įrenginių - išeinama"
 
 msgctxt "#30038"
 msgid "No DVB-S2 device available - trying fallback to DVB-S"
-msgstr "Nėra DVB-S2 - Bandomas atsarginis DVB-S"
+msgstr "Nėra DVB-S2 įrenginio - bandomas atsarginis DVB-S"
 
 msgctxt "#30039"
 msgid "Running"
-msgstr "Paleisti"
+msgstr "Veikia"
 
 msgctxt "#30040"
 msgid "Stopped"
@@ -187,7 +186,7 @@ msgstr "Užbaigta"
 
 msgctxt "#30042"
 msgid "Channel search - Canceled"
-msgstr "Kanalų paieška - Atšauktas"
+msgstr "Kanalų paieška - Atšaukta"
 
 msgctxt "#30043"
 msgid "Channel search - Error"
@@ -204,3 +203,67 @@ msgstr "Prijungimas prie VDR serverio atkurtas"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Serveryje sukurti kanalų grupes automatiškai"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Užklausti laiko poslinkio"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Sąranka"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Kontroliuojamas OSD - spauskite info, norėdami išeiti"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Pasirinkite, norėdami kontroliuoti OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Laiko poslinkio būdas"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Laiko poslinkio buferis (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Laiko poslinkio buferis (Failas) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR administratorius"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanalai"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Tiekėjų baltasis sąrašas"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Tiekėjų juodasis sąrašas"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Kanalų filtrai"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radijo kanalai"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Išsaugoti filtrus"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Tiekėjas nežinomas"

@@ -1,0 +1,173 @@
+# XBMC Media Center language file
+# Addon Name: MythTV cmyth PVR Client
+# Addon id: pvr.mythtv.cmyth
+# Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Georgian (http://www.transifex.com/projects/p/xbmc-main/language/ka/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ka\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "MythTV Backend Hostname or IP"
+msgstr "MythTV სერვერული მხარის სახელი ან IP"
+
+msgctxt "#30001"
+msgid "MythTV Backend Port"
+msgstr "MythTV სერვერული მხარის პორტი"
+
+msgctxt "#30002"
+msgid "MythTV Database Username"
+msgstr "MythTV მონაცემთა ბაზის მომხმარებელი"
+
+msgctxt "#30003"
+msgid "MythTV Database Password"
+msgstr "MythTV მონაცემთა ბაზის პაროლი"
+
+msgctxt "#30004"
+msgid "MythTV Database Databasename"
+msgstr "MythTV მონაცემთა ბაზის ბაზის სახელი"
+
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "ჩართე უფრო მეტი დებაგ ინფორმაცია ჟურნალში"
+
+msgctxt "#30006"
+msgid "Enable Live TV"
+msgstr "Live TV -ის ჩართვა"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "ნება დართე Live TV-ს რომ გადაიტანოს დაგეგმილი გადაცემები"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "კონფლიქტების მოგვარება"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "არჩიე Live TV როცა ჩანაწერს აქვს უფრო გვიანდელი სლოტი"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "არჩიე ჩანაწერი და გამორთე Live TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "არჩიე Live TV და გააუქმე კონფლიქტური ჩაწერა"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "მთავარი"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "შაბლონის მომწოდებელი"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "შიდა"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "შიდა შაბლონი"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "მეტაინფორმაციის ავტომატური ძებნა"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "ახალი ჩანაწერების ტრანსკოდირება"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "გაუშვი მომხმარებლის დავალება #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "გაუშვი მომხმარებლის დავალება #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "გაუშვი მომხმარებლის დავალება #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "გაუშვი მომხმარებლის დავალება #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "ტრანსკოდერი"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "ჩანაწერებს გაუვიდეს ვადა?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "ჩაწერის შაბლონი"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "დამატებით"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "პროტოკოლის ვერსია: %i - მონაცემთ ბაზის ვერსია: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "ვერ ვუერთდები MythTV სერვერს"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "ვერ ვუერთდები MythTV მონაცემთა ბაზას"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "MythTV სერვერთან კავშირი გაწყდა"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "MythTV-თან კავშირი აღდგა"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "არ არის პასუხი MythTV სერვერისგან"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "არხი მიუწვდომელია"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "ჩამწერი მიუწვდომელი"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "უქმდება კონფლიქტური ჩანაწერი: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "ჩერდება Live TV კონფლიქტური ჩანაწერის გამო: %s"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "ჩართულია"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "წაშალე და თავიდან ჩაწერე"

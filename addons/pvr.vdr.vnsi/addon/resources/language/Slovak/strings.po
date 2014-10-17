@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Slovak (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/sk/)\n"
+"Language-Team: Slovak (http://www.transifex.com/projects/p/xbmc-main/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -204,3 +203,67 @@ msgstr "Spojenie k VDR serveru bolo obnovené"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Automaticky vytvárať skupiny kanálov na serveri"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Vyžadovať časový posun"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Konfigurácia"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Ovládanie OSD - stlačte info pre ukončenie"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Vyberte ovládanie OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Režim časového posunu"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Zásobník časového posunu (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Zásobník časového posunu (Súbor) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Admin"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanály"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Zoznam povolených poskytovateľov"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Zoznam zakázaných kanálov"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtre kanálov"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Rozhlasové kanály"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Uložiť filtre"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Neznámy poskytovateľ"

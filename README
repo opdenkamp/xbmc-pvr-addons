@@ -52,8 +52,19 @@ Example: addons\pvr.demo\addon\*.* => YOUR_XBMC_DIR\addons\pvr.demo\*.*
 
 Building the pvr addons together with xbmc:
 -------------------------------------------
-TODO
-describe how to import the "xbmc-pvr-addons.sln" in "XBMC for Windows.sln"
+Firstly ensure that you have a working build for both XBMC and xbmc-pvr-addons separately
+
+Then import the xbmc_pvr_addons projects into the XBMC solution
+1) Open "XBMC for Windows.sln"
+2) Right click the solution in Solution Explorer and select Add -> Existing Project
+3) Change file type filter to "Solution Files (*.sln)"
+4) Browse to and select the PVR addons solution (xbmc-pvr-addons.sln)
+5) Dismiss any warnings about projects already existing in the solution
+6) If you only develop on certain addons you can remove unwanted addon projects from the XBMC solution
+
+The pvr projects already contain a PostBuild action that only runs when part of the XBMC solution, that copies their output into the XBMC solution's addon directory
+
+Remember not to include any XBMC solution file modifications to include the PVR addons, in your pull requests!
 
 XBMC Windows installer with included pvr addons:
 ------------------------------------------------

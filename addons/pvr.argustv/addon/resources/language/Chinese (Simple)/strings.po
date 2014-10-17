@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: ARGUS TV client
 # Addon id: pvr.argustv
-# Addon version: 1.6.163
 # Addon Provider: Fred Hoogduin, Marcel Groothuis
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/zh/)\n"
+"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,11 +18,11 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "ARGUS TV Hostname"
-msgstr "ARGUS TV主机名"
+msgstr "ARGUS TV 主机名"
 
 msgctxt "#30001"
 msgid "ARGUS TV webserver port"
-msgstr "ARGUS TV web服务器端口"
+msgstr "ARGUS TV web 服务器端口"
 
 msgctxt "#30002"
 msgid "Include Radio"
@@ -35,7 +34,7 @@ msgstr "连接超时（秒）"
 
 msgctxt "#30004"
 msgid "Windows user account"
-msgstr "Windows用户帐号"
+msgstr "Windows 用户帐号"
 
 msgctxt "#30005"
 msgid "Password"

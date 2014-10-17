@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Danish (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/da/)\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/xbmc-main/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,33 +25,105 @@ msgid "Webinterface Port"
 msgstr "Web-grænsefladeport"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "Streamport"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "Optagelsesport"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "Brugernavn"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Adgangskode"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Indlæs kanaler fra favourites.xml i stedet for channels.dat"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Brug favoritter i stedet for kanalliste"
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Brug lokal favoritfil"
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Vælg favourites.xml filen"
 
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Aktiver tidsforskydning"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Stien til tidsforskydningsbuffer"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Brug RTSP streaming til live TV"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Aktiver lav ydeevne tilstand (deaktiverer logoer & thumbnails)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Gruppe optagelser"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "deaktiveret"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "ud fra optage mappe"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "ud fra optage dato"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "ud fra første bogstav"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "ud fra tv kanal"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "ud fra serier"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Generelt"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Avanceret"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Optagelser"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Kan ikke forbinde til optagelsestjeneste"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Kunne ikke oprette forbindelse til DVBViewer Optage Service"
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "Optagelsestjeneste version 1.%d eller højere kræves"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer Optage Service version %s eller højere kræves"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Kan ikke analysere kanalliste"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Tjek XBMC log for mere information"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Kan ikke åbne lokal favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Kunne ikke fortolke favoritliste"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Kan ikke analysere timerliste"

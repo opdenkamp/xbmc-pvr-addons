@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Hungarian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/hu/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/xbmc-main/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -204,3 +203,67 @@ msgstr " A kapcsolat a VDR szerverrel visszaállítva"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Csatorna csoportok automatikus létrehozása a szerveren"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Csúsztatott élőkép kérése"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Beállítás"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "OSD vezérlés - info gombbal kilép"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "OSD vezérlése"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Csúsztatott felvétel mód"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Csúsztatott felvétel puffer (RAM) x100 Mb"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Csúsztatott felvétel (Fájl)x1 Gb"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Admin"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Csatornák"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Szolgáltató fehérlista"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Csatorna fekete-lista"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Csatorna szűrők"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Rádió csatornák"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Szűrők elmentése"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Szolgáltató ismeretlen"

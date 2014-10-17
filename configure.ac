@@ -3,6 +3,8 @@ AC_INIT([xbmc-pvr-addons], 1:0:0)
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
+AC_CONFIG_MACRO_DIR([m4])
+
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION, [http://www.xbmc.org])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([no])])
@@ -13,6 +15,7 @@ AC_PREFIX_DEFAULT($PREFIX_DEFAULT)
 AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_LIBTOOL
+LT_INIT
 
 AC_SEARCH_LIBS([pthread_create],[pthread],, AC_MSG_ERROR([required library 'pthread' is missing]))
 
@@ -56,6 +59,13 @@ case "${host}" in
     TARGET_LDFLAGS="-avoid-version -no-undefined"
     OS="android"
     ARCHITECTURE="arm"
+    BIN_EXT=".so"
+    BINPREFIX="lib"
+    ;;
+  i*86-*-linux-android)
+    TARGET_LDFLAGS="-avoid-version -no-undefined"
+    OS="android"
+    ARCHITECTURE="i486"
     BIN_EXT=".so"
     BINPREFIX="lib"
     ;;
@@ -123,7 +133,7 @@ if test "$have_gl" = "yes"; then
 fi
 echo "GL: $have_gl"
 
-AC_CHECK_LIB([GLESv2],[main],have_gles2=yes, have_gles2=no)
+AC_CHECK_LIB([GLESv2],[main],[AC_CHECK_HEADER([GLES2/gl2.h], have_gles2=yes, have_gles2=no, )], have_gles2=no)
 if test "$have_gles2" = "yes"; then
   AC_DEFINE([HAVE_GLES2],[1],["Define to 1 if we have gles2"])
   AM_CONDITIONAL(HAVE_GLES2, true)
@@ -169,11 +179,39 @@ if test "$build_addons_with_dependencies" = "yes"; then
     AC_SUBST(ZLIB_LIBS)
   fi
   echo "Zlib: $use_zlib"
+
+  # For Filmon
+  AC_CHECK_LIB(curl, curl_easy_init, [use_curl=yes], [use_curl=no])
+  if test "$use_curl" = "yes"; then
+    AC_DEFINE([HAVE_CURL],[1],["Define to 1 if we have the curl library"])
+    CURL_LIBS='-lcurl'
+    AC_SUBST(CURL_LIBS)
+  fi
+  echo "Curl: $use_curl"
+
+  # For Filmon
+  AC_CHECK_LIB(jsoncpp, _ZNK4Json5Value4sizeEv, [use_jsoncpp=yes], [use_jsoncpp=no])
+  if test "$use_jsoncpp" = "yes"; then
+    AC_DEFINE([HAVE_JSONCPP],[1],["Define to 1 if we have the jsoncpp library"])
+    JSONCPP_LIBS='-ljsoncpp'
+    AC_SUBST(JSONCPP_LIBS)
+  fi
+  echo "JsonCPP: $use_jsoncpp"
+
+  # For Filmon
+  AC_CHECK_LIB(cryptopp, main, [use_cryptopp=yes], [use_cryptopp=no])
+  if test "$use_cryptopp" = "yes"; then
+    AC_DEFINE([HAVE_CRYPTOPP],[1],["Define to 1 if we have the cryptopp library"])
+    CRYPTOPP_LIBS='-lcryptopp'
+    AC_SUBST(CRYPTOPP_LIBS)
+  fi
+  echo "CryptoCPP: $use_cryptopp"
 fi
 
 ### Addons with dependencies
 AM_CONDITIONAL([ADDON_MYTHTV], [test "$build_addons_with_dependencies" = "yes" -a "$use_mysql" = "yes" -a "$use_boost" = "yes"])
 AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addons_with_dependencies" = "yes" -a "$use_zlib" = "yes"])
+AM_CONDITIONAL([ADDON_FILMON], [test "$build_addons_with_dependencies" = "yes" -a "$use_curl" = "yes"])
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then
@@ -217,7 +255,21 @@ if test "x$have_builtin_sync_val_compare_and_swap" = "xyes"; then
         [Define to 1 if your compiler supports the __sync_val_compare_and_swap() intrinsic.])
 fi
 
+### Linker extra flags
+m4_include([m4/ax_check_link_flag.m4])
 
+cat > tmp.ver <<EOF
+TEST {
+  local:
+    *;
+};
+EOF
+
+AX_CHECK_LINK_FLAG(["-Wl,--version-script=tmp.ver"],[HAVE_VERSION_SCRIPT=yes],[HAVE_VERSION_SCRIPT=no])
+AM_CONDITIONAL([HAVE_VERSION_SCRIPT], [test "${HAVE_VERSION_SCRIPT}" = "yes"])
+
+rm -f tmp.ver
+### End Linker extra flags
 
 HOST_CXXFLAGS="-Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses -fPIC $HOST_CXXFLAGS"
 
@@ -256,44 +308,51 @@ else
 fi
 AC_SUBST(DATADIR)
 
+AC_CONFIG_SUBDIRS([lib/cppmyth])
+
+### Keep this in alphabetical order
 AC_CONFIG_FILES([Makefile \
                  lib/Makefile \
-                 lib/jsoncpp/Makefile \
-                 lib/libhts/Makefile \
-                 lib/tinyxml/Makefile \
                  lib/cmyth/Makefile \
                  lib/cmyth/libcmyth/Makefile \
                  lib/cmyth/librefmem/Makefile \
-                 lib/tinyxml2/Makefile \
+                 lib/jsoncpp/Makefile \
                  lib/libdvblinkremote/Makefile \
+                 lib/libhts/Makefile \
+                 lib/tinyxml/Makefile \
+                 lib/tinyxml2/Makefile \
                  addons/Makefile \
-                 addons/pvr.demo/Makefile \
-                 addons/pvr.dvbviewer/Makefile \
                  addons/pvr.argustv/Makefile \
+                 addons/pvr.demo/Makefile \
+                 addons/pvr.dvblink/Makefile \
+                 addons/pvr.dvbviewer/Makefile \
+                 addons/pvr.filmon/Makefile \
                  addons/pvr.hts/Makefile \
-                 addons/pvr.tvh/Makefile \
+                 addons/pvr.iptvsimple/Makefile \
                  addons/pvr.mediaportal.tvserver/Makefile \
+                 addons/pvr.mythtv/Makefile \
+                 addons/pvr.mythtv.cmyth/Makefile \
                  addons/pvr.nextpvr/Makefile \
                  addons/pvr.njoy/Makefile \
-                 addons/pvr.vuplus/Makefile \
+                 addons/pvr.tvh/Makefile \
                  addons/pvr.vdr.vnsi/Makefile \
-                 addons/pvr.mythtv.cmyth/Makefile \
-                 addons/pvr.dvblink/Makefile \
+                 addons/pvr.vuplus/Makefile \
                  addons/pvr.wmc/Makefile \
-                 addons/pvr.iptvsimple/Makefile \
                  addons/pvr.argustv/addon/addon.xml
                  addons/pvr.demo/addon/addon.xml
+                 addons/pvr.dvblink/addon/addon.xml
                  addons/pvr.dvbviewer/addon/addon.xml
+                 addons/pvr.filmon/addon/addon.xml
                  addons/pvr.hts/addon/addon.xml
-                 addons/pvr.tvh/addon/addon.xml
+                 addons/pvr.iptvsimple/addon/addon.xml
                  addons/pvr.mediaportal.tvserver/addon/addon.xml
+                 addons/pvr.mythtv/addon/addon.xml
                  addons/pvr.mythtv.cmyth/addon/addon.xml
                  addons/pvr.nextpvr/addon/addon.xml
                  addons/pvr.njoy/addon/addon.xml
+                 addons/pvr.tvh/addon/addon.xml
                  addons/pvr.vdr.vnsi/addon/addon.xml
                  addons/pvr.vuplus/addon/addon.xml
-                 addons/pvr.dvblink/addon/addon.xml
-                 addons/pvr.wmc/addon/addon.xml
-                 addons/pvr.iptvsimple/addon/addon.xml])
+                 addons/pvr.wmc/addon/addon.xml])
 
 AC_OUTPUT

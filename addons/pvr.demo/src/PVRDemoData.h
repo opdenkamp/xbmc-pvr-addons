@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -51,6 +52,7 @@ struct PVRDemoChannel
   bool                    bRadio;
   int                     iUniqueId;
   int                     iChannelNumber;
+  int                     iSubChannelNumber;
   int                     iEncryptionSystem;
   std::string             strChannelName;
   std::string             strIconPath;
@@ -69,7 +71,18 @@ struct PVRDemoRecording
   std::string strRecordingId;
   std::string strStreamURL;
   std::string strTitle;
+  std::string strDirectory;
   time_t      recordingTime;
+};
+
+struct PVRDemoTimer
+{
+  int             iChannelId;
+  time_t          startTime;
+  time_t          endTime;
+  PVR_TIMER_STATE state;
+  std::string     strTitle;
+  std::string     strSummary;
 };
 
 struct PVRDemoChannelGroup
@@ -99,6 +112,9 @@ public:
   virtual int GetRecordingsAmount(void);
   virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle);
 
+  virtual int GetTimersAmount(void);
+  virtual PVR_ERROR GetTimers(ADDON_HANDLE handle);
+
   virtual std::string GetSettingsFile() const;
 protected:
   virtual bool LoadDemoData(void);
@@ -106,6 +122,7 @@ private:
   std::vector<PVRDemoChannelGroup> m_groups;
   std::vector<PVRDemoChannel>      m_channels;
   std::vector<PVRDemoRecording>    m_recordings;
+  std::vector<PVRDemoTimer>        m_timers;
   time_t                           m_iEpgStart;
   CStdString                       m_strDefaultIcon;
   CStdString                       m_strDefaultMovie;

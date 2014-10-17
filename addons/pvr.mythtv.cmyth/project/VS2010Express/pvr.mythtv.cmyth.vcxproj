@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -79,7 +79,7 @@
     <ClInclude Include="..\..\src\tools.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\lib\cmyth\Win32\libcmyth.vcxproj">
+    <ProjectReference Include="..\..\..\..\lib\cmyth\Win32\libcmyth_pvr.vcxproj">
       <Project>{f9e6874d-60a8-49ba-9393-a2105e63abcf}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
@@ -103,12 +103,14 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -160,6 +162,10 @@
       <Message>
       </Message>
     </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if "$(SolutionName)"=="XBMC for Windows" robocopy $(OutDir) "$(SolutionDir)..\..\addons\$(ProjectName)" /s /NP
+if errorlevel 1 exit 0 else exit %errorlevel%</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -191,6 +197,10 @@
       <Message>
       </Message>
     </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if "$(SolutionName)"=="XBMC for Windows" robocopy $(OutDir) "$(SolutionDir)..\..\addons\$(ProjectName)" /s /NP
+if errorlevel 1 exit 0 else exit %errorlevel%</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

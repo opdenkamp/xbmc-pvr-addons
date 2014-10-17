@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/xbmc-main/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -204,3 +203,67 @@ msgstr "Conexão restabelecida ao servidor VDR"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Criar grupos de canais automaticamente no servidor"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Solicitar gravação"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "OSD VDR"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Ajustes"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Controlando OSD - pressione info para sair"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Selecione para controlar OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Modo de gravação"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Buffer de gravação (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Buffer de gravação (arquivo) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "Admin VDR"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Canais"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Provedor Permitido"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Lista Negra de Canais"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtros de Canais"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Canais de Rádio"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Salvar filtros"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Provedor desconhecido"

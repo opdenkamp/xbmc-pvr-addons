@@ -1,21 +1,68 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Catalan (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ca/)\n"
+"Language-Team: Catalan (http://www.transifex.com/projects/p/xbmc-main/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "Nom de màquina o IP del VDR"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "Port VNSI"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Prioritat"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Conversió del joc de caràcters"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Temps d'espera de connexió (s)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Permet missatges VDR"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Llegeix els enregistraments des del direcotri"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Directori d'enregistraments VDR"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Cerca del canal"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Cerca de canals - Configuració"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Inicia la cerca del canal"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Tipus de font"
 
 msgctxt "#30012"
 msgid "TV channels"
@@ -25,18 +72,142 @@ msgctxt "#30013"
 msgid "Radio channels"
 msgstr "Canals de ràdio"
 
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Canals FTA"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Canals codificats"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "Canals HD"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "País"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Inversió del cable"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Cable Symbolrate"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Modulació del cable"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Inversió Terr"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Satèl·lit"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "Tipus ATSC"
 
 msgctxt "#30024"
 msgid "Back"
 msgstr "Enrere"
 
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Cerca de canals - executant... %i %%"
+
 msgctxt "#30026"
 msgid "Type:"
 msgstr "Tipus:"
 
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Dispositiu:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Escaneig: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Senyal: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Canals nous: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Tots els canals: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "TV analògica"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Ràdio analògica"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Transponedor:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Canals nous"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Cerca del canal - Finalitzada"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "No hi ha cap dispositiu disponible - sortint"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Dispositiu DVB-S2 no disponible - intentant tornar a DVB-S"
+
 msgctxt "#30039"
 msgid "Running"
 msgstr "S'està executant"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Aturat"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Finalitzat"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Cerca del canal - Cancel·lat"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Cerca de canals - Error"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "S'ha perdut la connexió amb el servidor VDR"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "S'ha restaurat la connexió amb el servidor VDR"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Crea grups de canals de forma automàtica al servidor"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Configuració"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Canals"

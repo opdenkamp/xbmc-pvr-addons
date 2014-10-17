@@ -17,46 +17,43 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
  
 #pragma once
 
-#ifdef TARGET_WINDOWS
-#define DeleteFile  DeleteFileA
-#endif
-
 #include "libXBMC_addon.h"
 #include "platform/util/StdString.h"
 #include "libdvblinkremote/dvblinkremote.h"
-#include "platform/threads/threads.h"
 #include "platform/util/util.h"
 
-#define STREAM_READ_BUFFER_SIZE   8192
-#define BUFFER_READ_TIMEOUT       10000
-#define BUFFER_READ_WAITTIME      50
-
-class TimeShiftBuffer : public PLATFORM::CThread
+class TimeShiftBuffer
 {
 public:
-  TimeShiftBuffer(ADDON::CHelper_libXBMC_addon * XBMC, std::string streampath, std::string bufferpath);
+  TimeShiftBuffer(ADDON::CHelper_libXBMC_addon * XBMC, std::string streampath);
   ~TimeShiftBuffer(void);
+
   int ReadData(unsigned char *pBuffer, unsigned int iBufferSize);
-  bool IsValid();
   long long Seek(long long iPosition, int iWhence);
   long long Position();
   long long Length();
-  void Stop(void);
-private:
-  virtual void * Process(void);
+  void Stop();
 
-  std::string m_bufferPath;
+  time_t GetPlayingTime();
+  time_t GetBufferTimeStart();
+  time_t GetBufferTimeEnd();
+
+private:
+  bool ExecuteServerRequest(const std::string& url, std::vector<std::string>& response_values);
+  bool GetBufferParams(long long& length, time_t& duration, long long& cur_pos);
+
   void * m_streamHandle;
-  void * m_filebufferReadHandle;
-  void * m_filebufferWriteHandle;
-  bool m_shifting;
   ADDON::CHelper_libXBMC_addon * XBMC;
+  std::string streampath_;
+  time_t last_pos_req_time_;
+  time_t last_pos_;
 };
 

@@ -1,3 +1,34 @@
+1.9.18
+
+[updated] to API v1.9.2
+
+1.9.16
+
+[updated] Language files from Transifex
+
+1.9.15
+
+[updated] Speed up timeshift startup time
+[added] If available add genre to EPG
+[added] Support for grouping recordings. Grouping can be by rec. directory,
+        rec. date, first letter, tv channel or series
+[fixed] Another timezone offsets fix
+
+1.9.14
+
+[updated] Require DVB Viewer Recording Service 1.26.0 or later
+[updated] Removed external XML library. Use TinyXML instead
+[added] Low performance mode for devices like the raspberry pi
+[fixed] Timers starting near 12pm could have wrong date
+
+1.9.13
+
+[updated] Language files from Transifex
+
+1.9.12
+
+[updated] Language files from Transifex
+
 1.9.11
 [added] add timeshift buffer functions
 

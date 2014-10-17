@@ -1,0 +1,121 @@
+# XBMC Media Center language file
+# Addon Name: VU+ / Enigma2 Client
+# Addon id: pvr.vuplus
+# Addon Provider: Joerg Dembski
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Welsh (http://www.transifex.com/projects/p/xbmc-main/language/cy/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cy\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
+
+msgctxt "#30000"
+msgid "VU+ hostname or IP address"
+msgstr "Enw gwesteiwr neu gyfeiriad IP VU+"
+
+msgctxt "#30002"
+msgid "Streaming Port"
+msgstr "Porth Ffrydio"
+
+msgctxt "#30003"
+msgid "Username"
+msgstr "Enw defnyddiwr"
+
+msgctxt "#30004"
+msgid "Password"
+msgstr "Cyfrinair"
+
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Ymateb amser allan mewn eiliadau"
+
+msgctxt "#30008"
+msgid "Icon Path"
+msgstr "Llwybr Eiconau"
+
+msgctxt "#30010"
+msgid "Update Interval in minutes"
+msgstr "Cyfnod diweddaru mewn munudau"
+
+msgctxt "#30011"
+msgid "Automatic Timerlist Cleanup"
+msgstr "Glanhau Amserlen yn Awtomatig"
+
+msgctxt "#30012"
+msgid "Webinterface Port"
+msgstr "Porth Rhyngwyneb Gwe"
+
+msgctxt "#30013"
+msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "Sapio cyn newid sianel (h.y. ar gyfer blychau Tiwniwr Unigol)"
+
+msgctxt "#30014"
+msgid "Folder for channeldata"
+msgstr "Ffolder ar gyfer data sianel"
+
+msgctxt "#30015"
+msgid "Check for bouquett updates"
+msgstr "Gwirio am ddiweddariad bouquett"
+
+msgctxt "#30016"
+msgid "Check for channel updates"
+msgstr "Gwirio am ddiweddariad sianeli"
+
+msgctxt "#30017"
+msgid "Use only the DVB boxes' current recording path"
+msgstr "Defnyddio llwybr recordio cyfredol y blwch DVB"
+
+msgctxt "#30018"
+msgid "General"
+msgstr "Cyffredinol"
+
+msgctxt "#30019"
+msgid "Channels"
+msgstr "Sianeli"
+
+msgctxt "#30020"
+msgid "Advanced"
+msgstr "Uwch"
+
+msgctxt "#30021"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30022"
+msgid "Recordings / Timer"
+msgstr "Recordiadau / Amserydd"
+
+msgctxt "#30023"
+msgid "Recording folder on the receiver"
+msgstr "Ffolder recordio ar y derbynnydd"
+
+msgctxt "#30024"
+msgid "Send DeepStandby-Command"
+msgstr "Anfon DeepStandby-Command"
+
+msgctxt "#30025"
+msgid "Fetch only one TV bouquet"
+msgstr "Estyn dim ond un bouquet Teledu"
+
+msgctxt "#30026"
+msgid "TV-Bouquet"
+msgstr "TV-Bouquet"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "Estyn piconau o'r rhyngwyneb gwe"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Datgysylltwyd o '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Ail gysylltwyd â '%s'"

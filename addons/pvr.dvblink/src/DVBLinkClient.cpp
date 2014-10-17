@@ -17,7 +17,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -56,7 +57,7 @@ std::string DVBLinkClient::GetBuildInRecorderObjectID()
 
 
 
-DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon  *XBMC, CHelper_libXBMC_pvr *PVR,std::string clientname, std::string hostname, long port,bool showinfomsg, std::string username, std::string password, bool usetimeshift, std::string timeshiftpath)
+DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon  *XBMC, CHelper_libXBMC_pvr *PVR,std::string clientname, std::string hostname, long port,bool showinfomsg, std::string username, std::string password, bool usetimeshift)
 {
   this->PVR = PVR;
   this->XBMC = XBMC;
@@ -65,14 +66,10 @@ DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon  *XBMC, CHelper_libXBMC_pvr *
   m_connected = false;
   m_currentChannelId = 0;
   m_showinfomsg = showinfomsg;
+  m_usetimeshift = usetimeshift;
 
-  m_usetimeshift = usetimeshift && XBMC->DirectoryExists(timeshiftpath.c_str());
-
-  m_timeshiftpath.append(timeshiftpath);
-  m_timeshiftpath.append(clientname);
-
-  m_httpClient = new HttpPostClient(XBMC,hostname,port, username, password);
-  m_dvblinkRemoteCommunication = DVBLinkRemote::Connect((HttpClient&)*m_httpClient, m_hostname.c_str(), 8080, username.c_str(), password.c_str());
+  m_httpClient = new HttpPostClient(XBMC,hostname, port, username, password);
+  m_dvblinkRemoteCommunication = DVBLinkRemote::Connect((HttpClient&)*m_httpClient, m_hostname.c_str(), port, username.c_str(), password.c_str());
 
   DVBLinkRemoteStatusCode status;
   m_timerCount = -1;
@@ -209,88 +206,70 @@ PVR_ERROR DVBLinkClient::GetTimers(ADDON_HANDLE handle)
   PVR_ERROR result = PVR_ERROR_FAILED;
   PLATFORM::CLockObject critsec(m_mutex);
 
-  GetSchedulesRequest getSchedulesRequest;
-  StoredSchedules sschedules;
+  GetRecordingsRequest recordingsRequest;
+  RecordingList recordings;
 
   DVBLinkRemoteStatusCode status;
-  int count = 0;
-  if ((status = m_dvblinkRemoteCommunication->GetSchedules(getSchedulesRequest, sschedules)) != DVBLINK_REMOTE_STATUS_OK)
+  if ((status = m_dvblinkRemoteCommunication->GetRecordings(recordingsRequest, recordings)) != DVBLINK_REMOTE_STATUS_OK)
   {
     std::string error;
     m_dvblinkRemoteCommunication->GetLastError(error);
-    XBMC->Log(LOG_ERROR,  "Could not get timers (Error code : %d Description : %s)", (int)status,error.c_str());
-   // XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(32006), (int)status);
+    XBMC->Log(LOG_ERROR,  "Could not get timers (Error code : %d Description : %s)", (int)status, error.c_str());
     return result;
   }
 
-  XBMC->Log(LOG_INFO, "Found %d epg timers", sschedules.GetEpgSchedules().size());
+  XBMC->Log(LOG_INFO, "Found %d timers", recordings.size());
   
   if (m_showinfomsg)
   {
-    XBMC->QueueNotification(QUEUE_INFO, XBMC->GetLocalizedString(32007), sschedules.GetEpgSchedules().size());
+    XBMC->QueueNotification(QUEUE_INFO, XBMC->GetLocalizedString(32007), recordings.size());
   }
 
-  for (std::vector<StoredEpgSchedule*>::iterator it = sschedules.GetEpgSchedules().begin(); it < sschedules.GetEpgSchedules().end(); it++) 
+  for (size_t i=0; i < recordings.size(); i++)
   {
-    StoredEpgSchedule* schedule = (StoredEpgSchedule*)*it;
+    Recording* rec = recordings[i];
+
     PVR_TIMER xbmcTimer;
     memset(&xbmcTimer, 0, sizeof(PVR_TIMER));
-    PVR_STR2INT(xbmcTimer.iClientIndex, schedule->GetID().c_str());
+    //fake index
+    xbmcTimer.iClientIndex = i;
+    //misuse strDirectory to keep id of the timer
+    PVR_STRCPY(xbmcTimer.strDirectory, rec->GetID().c_str());
       
-    xbmcTimer.iClientChannelUid = GetInternalUniqueIdFromChannelId(schedule->GetChannelID());
+    xbmcTimer.iClientChannelUid = GetInternalUniqueIdFromChannelId(rec->GetChannelID());
     xbmcTimer.state = PVR_TIMER_STATE_SCHEDULED;
-    xbmcTimer.bIsRepeating = schedule->Repeat;
-    PVR_STR2INT(xbmcTimer.iEpgUid, schedule->GetProgramID().c_str());
-    EpgSearchResult epgSearchResult;
-    if (DoEPGSearch(epgSearchResult,schedule->GetChannelID(), -1, -1, schedule->GetProgramID()))
-    {
-      if (epgSearchResult.size() < 1 || epgSearchResult[0]->GetEpgData().size() < 1)
-      {
-        XBMC->Log(LOG_INFO, "No EPG program data for timer '%s' on channel '%s' with program id '%s'", schedule->GetID().c_str(),schedule->GetChannelID().c_str(),schedule->GetProgramID().c_str());
-        continue;
-      }
-      ChannelEpgData * channelepgdata = epgSearchResult[0];
-      Program * program = channelepgdata->GetEpgData()[0];
+    if (rec->IsActive)
+      xbmcTimer.state = PVR_TIMER_STATE_RECORDING;
+    if (rec->IsConflict)
+      xbmcTimer.state = PVR_TIMER_STATE_CONFLICT_NOK;
+    if (!rec->GetProgram().IsRecord)
+      xbmcTimer.state = PVR_TIMER_STATE_CANCELLED;
+
+    xbmcTimer.bIsRepeating = rec->GetProgram().IsSeries;
+
+    PVR_STR2INT(xbmcTimer.iEpgUid, rec->GetProgram().GetID().c_str());
     
-      xbmcTimer.startTime =program->GetStartTime();
-      xbmcTimer.endTime = program->GetStartTime() + program->GetDuration();
-      PVR_STRCPY(xbmcTimer.strTitle, program->GetTitle().c_str());
-      PVR_STRCPY(xbmcTimer.strSummary, program->ShortDescription.c_str());
-      PVR->TransferTimerEntry(handle, &xbmcTimer);
-      XBMC->Log(LOG_INFO, "Added EPG timer : %s", program->GetTitle().c_str());
-      
-      count++;
-    }      
+    xbmcTimer.startTime =rec->GetProgram().GetStartTime();
+    xbmcTimer.endTime = rec->GetProgram().GetStartTime() + rec->GetProgram().GetDuration();
+    PVR_STRCPY(xbmcTimer.strTitle, rec->GetProgram().GetTitle().c_str());
+    PVR_STRCPY(xbmcTimer.strSummary, rec->GetProgram().ShortDescription.c_str());
 
-  }
+    int genre_type, genre_subtype;
+    SetEPGGenre(rec->GetProgram(), genre_type, genre_subtype);
+    if (genre_type == EPG_GENRE_USE_STRING)
+    {
+      xbmcTimer.iGenreType = EPG_EVENT_CONTENTMASK_UNDEFINED;
+    } else
+    {
+      xbmcTimer.iGenreType = genre_type;
+      xbmcTimer.iGenreSubType = genre_subtype;
+    }
 
-  XBMC->Log(LOG_INFO, "Found %d manual timers", sschedules.GetManualSchedules().size());
-
-  if (m_showinfomsg)
-  {
-    XBMC->QueueNotification(QUEUE_INFO, XBMC->GetLocalizedString(32008), sschedules.GetManualSchedules().size());
-  }
-
-  for (std::vector<StoredManualSchedule*>::iterator it = sschedules.GetManualSchedules().begin(); it < sschedules.GetManualSchedules().end(); it++) 
-  {
-    StoredManualSchedule* schedule = (StoredManualSchedule*)*it;
-    PVR_TIMER xbmcTimer;
-    memset(&xbmcTimer, 0, sizeof(PVR_TIMER));
-    PVR_STR2INT(xbmcTimer.iClientIndex, schedule->GetID().c_str());
-      
-    xbmcTimer.iClientChannelUid = GetInternalUniqueIdFromChannelId(schedule->GetChannelID());
-
-
-    xbmcTimer.state = PVR_TIMER_STATE_SCHEDULED;
-    xbmcTimer.startTime = schedule->GetStartTime();
-    xbmcTimer.endTime =  schedule->GetStartTime() + schedule->GetDuration();
-    PVR_STRCPY(xbmcTimer.strTitle, schedule->Title.c_str());
-    //TODO: PAE: Add weekdays
-    XBMC->Log(LOG_INFO, "Added manual timer : %s", schedule->Title.c_str());
     PVR->TransferTimerEntry(handle, &xbmcTimer);
-    count++;
+    XBMC->Log(LOG_INFO, "Added EPG timer : %s", rec->GetProgram().GetTitle().c_str());
   }
-  m_timerCount = count;
+
+  m_timerCount = recordings.size();
   result = PVR_ERROR_NO_ERROR;
   return result;
 }
@@ -302,7 +281,7 @@ PVR_ERROR DVBLinkClient::AddTimer(const PVR_TIMER &timer)
   DVBLinkRemoteStatusCode status;
   AddScheduleRequest * addScheduleRequest = NULL;
   std::string channelId = m_channelMap[timer.iClientChannelUid]->GetID();
-  if (timer.iEpgUid != 0)
+  if (timer.iEpgUid != -1)
   {
     char programId [33];
     PVR_INT2STR(programId,timer.iEpgUid);
@@ -336,13 +315,11 @@ PVR_ERROR DVBLinkClient::DeleteTimer(const PVR_TIMER &timer)
   PVR_ERROR result = PVR_ERROR_FAILED;
   PLATFORM::CLockObject critsec(m_mutex);
   DVBLinkRemoteStatusCode status;
-  char scheduleId [33];
-  PVR_INT2STR(scheduleId, timer.iClientIndex);
   
-  RemoveScheduleRequest removeSchedule(scheduleId);
+  //recording id is kept in strDirectory!
+  RemoveRecordingRequest removeRecording(timer.strDirectory);
 
-
-  if ((status = m_dvblinkRemoteCommunication->RemoveSchedule(removeSchedule)) == DVBLINK_REMOTE_STATUS_OK)
+  if ((status = m_dvblinkRemoteCommunication->RemoveRecording(removeRecording)) == DVBLINK_REMOTE_STATUS_OK)
   {
     XBMC->Log(LOG_INFO, "Timer deleted");
     PVR->TriggerTimerUpdate();
@@ -359,12 +336,8 @@ PVR_ERROR DVBLinkClient::DeleteTimer(const PVR_TIMER &timer)
 
 PVR_ERROR DVBLinkClient::UpdateTimer(const PVR_TIMER &timer)
 {
-  PVR_ERROR deleteResult = DeleteTimer(timer);
-  if (deleteResult == PVR_ERROR_NO_ERROR)
-  {
-    return AddTimer(timer);
-  }
-  return deleteResult;
+  //DVBLink serverdoes not support timer update (e.g. delete/re-create)
+  return PVR_ERROR_FAILED;
 }
 
 int DVBLinkClient::GetRecordingsAmount()
@@ -372,8 +345,6 @@ int DVBLinkClient::GetRecordingsAmount()
 
   return m_recordingCount;
 }
-
-
 
 std::string DVBLinkClient::GetRecordedTVByDateObjectID(const std::string& buildInRecoderObjectID)
 {
@@ -392,7 +363,6 @@ std::string DVBLinkClient::GetRecordedTVByDateObjectID(const std::string& buildI
       PlaybackContainer * container = (PlaybackContainer *) *it;
       
      
-     // if (strcmp(container->GetName().c_str(), "By Date") == 0)
       if (container->GetObjectID().find("F6F08949-2A07-4074-9E9D-423D877270BB") != std::string::npos)
       {
         result = container->GetObjectID();
@@ -468,6 +438,17 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
     xbmcRecording.iDuration =  tvitem->GetMetadata().GetDuration();
     PVR_STRCPY(xbmcRecording.strChannelName, tvitem->ChannelName.c_str());
     PVR_STRCPY(xbmcRecording.strThumbnailPath, tvitem->GetThumbnailUrl().c_str());
+    int genre_type, genre_subtype;
+    SetEPGGenre(tvitem->GetMetadata(), genre_type, genre_subtype);
+    if (genre_type == EPG_GENRE_USE_STRING)
+    {
+      xbmcRecording.iGenreType = EPG_EVENT_CONTENTMASK_UNDEFINED;
+    } else
+    {
+      xbmcRecording.iGenreType = genre_type;
+      xbmcRecording.iGenreSubType = genre_subtype;
+    }
+
     PVR->TransferRecordingEntry(handle, &xbmcRecording);
 
   }
@@ -506,20 +487,26 @@ const char * DVBLinkClient::GetLiveStreamURL(const PVR_CHANNEL &channel, DVBLINK
   options.SetAudioTrack(audiotrack);
   Channel * c = m_channelMap[channel.iUniqueId];
   DVBLinkRemoteStatusCode status;
-  switch (streamtype)
+  if (m_usetimeshift)
   {
-  case HTTP:
-    streamRequest = new RawHttpStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str());
-    break;
-  case RTP:
-    streamRequest = new RealTimeTransportProtocolStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str(), options);
-    break;
-  case HLS:
-    streamRequest = new HttpLiveStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str(), options);
-    break;
-  case ASF:
-    streamRequest = new WindowsMediaStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str(), options);
-    break;
+    streamRequest = new RawHttpTimeshiftStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str());
+  } else
+  {
+    switch (streamtype)
+    {
+    case HTTP:
+      streamRequest = new RawHttpStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str());
+      break;
+    case RTP:
+      streamRequest = new RealTimeTransportProtocolStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str(), options);
+      break;
+    case HLS:
+      streamRequest = new HttpLiveStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str(), options);
+      break;
+    case ASF:
+      streamRequest = new WindowsMediaStreamRequest(m_hostname.c_str(), c->GetDvbLinkID(), m_clientname.c_str(), options);
+      break;
+    }
   }
 
   if ((status = m_dvblinkRemoteCommunication->PlayChannel(*streamRequest, *m_stream)) != DVBLINK_REMOTE_STATUS_OK)
@@ -539,14 +526,14 @@ const char * DVBLinkClient::GetLiveStreamURL(const PVR_CHANNEL &channel, DVBLINK
 
 bool DVBLinkClient::OpenLiveStream(const PVR_CHANNEL &channel, DVBLINK_STREAMTYPE streamtype, int width, int height, int bitrate, std::string audiotrack)
 {
-  if (m_usetimeshift && streamtype == HTTP)
+  if (m_usetimeshift)
   {
     if (m_tsBuffer)
     {
       SAFE_DELETE(m_tsBuffer);
     }
-    m_tsBuffer = new TimeShiftBuffer(XBMC, GetLiveStreamURL(channel, streamtype, width, height, bitrate, audiotrack), m_timeshiftpath);
-    return m_tsBuffer->IsValid();
+    m_tsBuffer = new TimeShiftBuffer(XBMC, GetLiveStreamURL(channel, streamtype, width, height, bitrate, audiotrack));
+    return true;
   }
   return false;
 }
@@ -575,6 +562,27 @@ long long DVBLinkClient::LengthLiveStream(void)
 {
   if(m_tsBuffer)
     return m_tsBuffer->Length();
+  return 0;
+}
+
+time_t DVBLinkClient::GetPlayingTime()
+{
+  if(m_tsBuffer)
+    return m_tsBuffer->GetPlayingTime();
+  return 0;
+}
+
+time_t DVBLinkClient::GetBufferTimeStart()
+{
+  if(m_tsBuffer)
+    return m_tsBuffer->GetBufferTimeStart();
+  return 0;
+}
+
+time_t DVBLinkClient::GetBufferTimeEnd()
+{
+  if(m_tsBuffer)
+    return m_tsBuffer->GetBufferTimeEnd();
   return 0;
 }
 
@@ -610,53 +618,53 @@ void DVBLinkClient::StopStreaming(bool bUseChlHandle)
   SAFE_DELETE(request);
 }
 
-void DVBLinkClient::SetEPGGenre(Program *program, EPG_TAG *tag)
+void DVBLinkClient::SetEPGGenre(dvblinkremote::ItemMetadata& metadata, int& genre_type, int& genre_subtype)
 {
-  if (program->IsCatNews)
+  genre_type = EPG_GENRE_USE_STRING;
+  genre_subtype = 0x00;
+
+  if (metadata.IsCatNews)
   {
-    tag->iGenreType = 0x20;
-    tag->iGenreSubType = 0x00;
+    genre_type = EPG_EVENT_CONTENTMASK_NEWSCURRENTAFFAIRS;
+    genre_subtype = 0x00;
   }
 
-  if (program->IsCatDocumentary)
+  if (metadata.IsCatDocumentary)
   {
-    tag->iGenreType = 0x20;
-    tag->iGenreSubType = 0x03;
-  }
-
-
-  if (program->IsCatEducational)
-  {
-    tag->iGenreType = 0x90;
-  }
-
-  if (program->IsCatSports)
-  {
-    tag->iGenreType = 0x40;
+    genre_type = EPG_EVENT_CONTENTMASK_NEWSCURRENTAFFAIRS;
+    genre_subtype = 0x03;
   }
 
 
-
-
-  if (program->IsCatMovie)
+  if (metadata.IsCatEducational)
   {
-    tag->iGenreType = 0x10;
-    tag->iGenreSubType =program->IsCatThriller ? 0x01 : program->IsCatScifi ? 0x03 :program->IsCatHorror ? 0x03 : program->IsCatComedy ? 0x04 : program->IsCatSoap ? 0x05 : program->IsCatRomance ? 0x06 :program->IsCatDrama ? 0x08 : 0;
+    genre_type = EPG_EVENT_CONTENTMASK_EDUCATIONALSCIENCE;
   }
 
-  if (program->IsCatKids)
+  if (metadata.IsCatSports)
   {
-    tag->iGenreType = 0x50;
+    genre_type = EPG_EVENT_CONTENTMASK_SPORTS;
   }
 
-  if (program->IsCatMusic)
+  if (metadata.IsCatMovie)
   {
-    tag->iGenreType = 0x60;
+    genre_type = EPG_EVENT_CONTENTMASK_MOVIEDRAMA;
+    genre_subtype =metadata.IsCatThriller ? 0x01 : metadata.IsCatScifi ? 0x03 :metadata.IsCatHorror ? 0x03 : metadata.IsCatComedy ? 0x04 : metadata.IsCatSoap ? 0x05 : metadata.IsCatRomance ? 0x06 :metadata.IsCatDrama ? 0x08 : 0;
   }
 
-  if (program->IsCatSpecial)
+  if (metadata.IsCatKids)
   {
-    tag->iGenreType = 0xB0;
+    genre_type = EPG_EVENT_CONTENTMASK_CHILDRENYOUTH;
+  }
+
+  if (metadata.IsCatMusic)
+  {
+    genre_type = EPG_EVENT_CONTENTMASK_MUSICBALLETDANCE;
+  }
+
+  if (metadata.IsCatSpecial)
+  {
+    genre_type = EPG_EVENT_CONTENTMASK_SPECIAL;
   }
 }
 
@@ -713,11 +721,19 @@ PVR_ERROR DVBLinkClient::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL
         broadcast.iParentalRating     = 0;
         broadcast.iStarRating         = p->Rating;
         broadcast.bNotify             = false;
-        broadcast.iSeriesNumber       = 0;
+        broadcast.iSeriesNumber       = p->SeasonNumber;
         broadcast.iEpisodeNumber      = p->EpisodeNumber;
         broadcast.iEpisodePartNumber  = 0;
-        broadcast.strEpisodeName      = "";
-        SetEPGGenre(p, &broadcast);
+        broadcast.strEpisodeName      = p->SubTitle.c_str();
+
+        int genre_type, genre_subtype;
+        SetEPGGenre(*p, genre_type, genre_subtype);
+        broadcast.iGenreType = genre_type;
+        if (genre_type == EPG_GENRE_USE_STRING)
+          broadcast.strGenreDescription = p->Keywords.c_str();
+        else
+          broadcast.iGenreSubType = genre_subtype;
+
         PVR->TransferEpgEntry(handle, &broadcast);
       }
     }

@@ -1,22 +1,269 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Indonesian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/id/)\n"
+"Language-Team: Indonesian (http://www.transifex.com/projects/p/xbmc-main/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "Hostname atau alamat IP VDR"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "Port VNSI"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Prioritas"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Konversi Set Karakter"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Timeout koneksi (s)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Perbolehkan pesan VDR"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Baca rekaman dari direktori"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Direktori perekaman VDR"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Cari Kanal"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Cari Kanal - Setelan"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Mulai pencarian kanal"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Tipe sumber"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "Saluran TV"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Saluran Radio"
+
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Kanal siaran gratis"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Kanal yang diacak"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "Kanal HD"
+
+msgctxt "#30017"
+msgid "Country"
+msgstr "Negara"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Inversi Kabel"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Symbolrate Kabel"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Modulasi Kabel"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Inversi Terr"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Satelit"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "Tipe ATSC"
+
+msgctxt "#30024"
+msgid "Back"
+msgstr "Mundur"
+
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Pencarian kanal - sedang berlangsung... %i %%"
+
 msgctxt "#30026"
 msgid "Type:"
 msgstr "Tipe:"
+
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Perangkat:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Pindai: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Sinyal: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Kanal baru: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Semua kanal: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "TV analog"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Radio analog"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Transponder:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Kanal baru"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Pencarian kanal - Selesai"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Tidak ada perangkat tersedia - Program dihentikan"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Tidak ada perangkat DVB-S2 tersedia - Mencoba kembali ke DVB-S"
+
+msgctxt "#30039"
+msgid "Running"
+msgstr "Menjalankan"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Terhenti"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Selesai"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Pencarian kanal - digagalkan"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Pencarian kanal - Error"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Koneksi ke Server VDR terputus"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "Koneksi ke Server VDR tersambung kembali"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Buat grup kanal secara otomatis di server"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Meminta Timeshift"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "OSD VDR"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Konfigurasi"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Mengatur OSD - tekan info untuk keluar"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Pilih untuk menjalankan OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Modus Timeshift"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Penyangga Timeshift (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Penyangga Timeshift (Berkas) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "Admin VDR"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Saluran"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Whitelist Penyedia"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Blacklist Kanal"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filter Kanal"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Kanal Radio"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Simpan filter"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Penyedia tidak dikenal"

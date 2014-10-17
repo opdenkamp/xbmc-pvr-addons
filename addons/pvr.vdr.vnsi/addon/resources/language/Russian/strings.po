@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Russian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ru/)\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/xbmc-main/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -204,3 +203,67 @@ msgstr "Установлена связь с сервером VDR"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Автоматически создать на сервере группы каналов"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Запросить сдвиг времени"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "Экранное меню VDR"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Настройка"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Контролируется OSD - нажмите Информация для выхода"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Выберите для контроля OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Режим сдвига времени"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Буфер сдвига времени (RAM) x100 МБ"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Буфер сдвига времени (Файл) x1 ГБ"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "Администратор VDR"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Каналы"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Белый лист провайдеров"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Черный список канала"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Фильтр канала"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Радиостанции"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Сохранить фильтры"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Неизвестный провайдер"

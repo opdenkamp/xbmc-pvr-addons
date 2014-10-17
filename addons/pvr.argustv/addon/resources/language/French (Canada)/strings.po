@@ -1,0 +1,45 @@
+# XBMC Media Center language file
+# Addon Name: ARGUS TV client
+# Addon id: pvr.argustv
+# Addon Provider: Fred Hoogduin, Marcel Groothuis
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: French (Canada) (http://www.transifex.com/projects/p/xbmc-main/language/fr_CA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "#30000"
+msgid "ARGUS TV Hostname"
+msgstr "Nom d'hôte ARGUS TV"
+
+msgctxt "#30001"
+msgid "ARGUS TV webserver port"
+msgstr "Port de serveur Web ARGUS TV"
+
+msgctxt "#30002"
+msgid "Include Radio"
+msgstr "Inclure la radio"
+
+msgctxt "#30003"
+msgid "Connect timeout (s)"
+msgstr "Délai d'attente de connexion (s)"
+
+msgctxt "#30004"
+msgid "Windows user account"
+msgstr "Compte utilisateur Windows"
+
+msgctxt "#30005"
+msgid "Password"
+msgstr "Mot de passe"
+
+msgctxt "#30006"
+msgid "Delay after tuning (ms)"
+msgstr "Délai après syntonisation (ms)"

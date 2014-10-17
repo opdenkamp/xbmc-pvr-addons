@@ -1,0 +1,165 @@
+# XBMC Media Center language file
+# Addon Name: MediaPortal PVR Client
+# Addon id: pvr.mediaportal.tvserver
+# Addon Provider: Marcel Groothuis
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Indonesian (http://www.transifex.com/projects/p/xbmc-main/language/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "Hostname Mediaportal"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "Port plugin Mediaportal XBMC"
+
+msgctxt "#30002"
+msgid "Free-to-air only"
+msgstr "Siaran yang gratis saja."
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "Mencakup Radio"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "Pemindahan kanal secara cepat (Jangan hentikan timeshift)"
+
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "Timeout koneksi (s)"
+
+msgctxt "#30006"
+msgid "Import only TV Channels from group"
+msgstr "Hanya impor kanal TV dari group"
+
+msgctxt "#30007"
+msgid "Import only Radio Channels from group"
+msgstr "Hanya impor kanal radio dari group"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "Rubah hostname menjadi alamat IP"
+
+msgctxt "#30009"
+msgid "EPG: Read genre strings (slow)"
+msgstr "EPG: Baca informasi genre (lambat)"
+
+msgctxt "#30010"
+msgid "Wait time after tuning a channel (ms)"
+msgstr "Waktu tunggu setelah setel sebuah kanal (ms)"
+
+msgctxt "#30015"
+msgid "Streaming method"
+msgstr "Metode aliran"
+
+msgctxt "#30016"
+msgid "Windows user account (SMB)"
+msgstr "Akun pengguna WIndows (SMB)"
+
+msgctxt "#30017"
+msgid "Windows password (SMB)"
+msgstr "Kata sandi Windows (SMB)"
+
+msgctxt "#30018"
+msgid "Use RTSP streaming"
+msgstr "Gunakan pengaliran RTSP"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Koneksi"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
+
+msgctxt "#30042"
+msgid "Playback"
+msgstr "Playback"
+
+msgctxt "#30050"
+msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "TVServerXBMC anda dengan versi '%s' terlalu tua. Silahkan upgrade ke versi '%s' atau di atasnya!"
+
+msgctxt "#30051"
+msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgstr "Versi TVServerXBMC anda terlalu tua. Silahkan upgrade ke versi '%s' atau di atasnya!"
+
+msgctxt "#30052"
+msgid "Recording playback failed. Empty URL of filename."
+msgstr "Pemutaran rekaman gagal. URL berkas kosong."
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "Semua kartu sedang sibuk."
+
+msgctxt "#30061"
+msgid "Channel is scrambled"
+msgstr "Kanal diacak"
+
+msgctxt "#30062"
+msgid "No video or audio detected"
+msgstr "Tidak ada video atau audio terdeteksi"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "Tidak ada sinyal terdeteksi"
+
+msgctxt "#30064"
+msgid "Unknown error"
+msgstr "Error tidak dikenal"
+
+msgctxt "#30065"
+msgid "Unable to start graph"
+msgstr "Tidak dapat memulai grafis"
+
+msgctxt "#30066"
+msgid "Unknown channel"
+msgstr "Kanal tidak dikenal"
+
+msgctxt "#30067"
+msgid "No tuning details"
+msgstr "Tidak ada detil penyetelan"
+
+msgctxt "#30068"
+msgid "Channel is not mapped to any card"
+msgstr "Kanal tidak terpetakan ke satu kartupun"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "Kartu dinon-aktifkan"
+
+msgctxt "#30070"
+msgid "Connection to slave failed"
+msgstr "Koneksi ke slave gagal."
+
+msgctxt "#30071"
+msgid "Not the owner"
+msgstr "Bukan pemilik"
+
+msgctxt "#30072"
+msgid "Graph building failed"
+msgstr "Pembangunan grafis gagal"
+
+msgctxt "#30073"
+msgid "SW Encoder missing"
+msgstr "SW Encoder tidak ditemukan"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "Tidak ada spasi disk kosong"
+
+msgctxt "#30075"
+msgid "No PMT found"
+msgstr "PMT tidak ditemukan"

@@ -1,5 +1,20 @@
+v1.9.180 (03-09-2014)
+- Updated to API v1.9.2
+v1.9.178 (01-07-2014)
+- Updated language files from Transifex
+v1.9.177 (01-05-2014)
+- fill initial last played position for recordings
+v1.9.176 (22-04-2014)
+- improved timer conflicts detection
+- fix threads on OS X
+v1.9.175 (17-03-2014)
+- Updated language files from Transifex
+v1.9.174 (03-03-2014)
+- Updated language files from Transifex
+v1.9.173 (30-01-2014)
+- added service events monitor
 v1.9.172 (23-12-2013)
-- base new timers on templates retrieved from ARGUS TV server.
+- base new timers on templates retrieved from ARGUS TV server
 v1.9.171 (11-12-2013)
 - removed redundant notification
 v1.9.170 (28-09-2013)

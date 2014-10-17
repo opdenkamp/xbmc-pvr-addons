@@ -1,0 +1,121 @@
+# XBMC Media Center language file
+# Addon Name: NextPVR PVR Client
+# Addon id: pvr.nextpvr
+# Addon Provider: Graeme Blackley
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Latvian (http://www.transifex.com/projects/p/xbmc-main/language/lv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+
+msgctxt "#30000"
+msgid "NextPVR Hostname"
+msgstr "NextPVR saimniekvārds"
+
+msgctxt "#30001"
+msgid "NextPVR Port (usually 8866 or 7799)"
+msgstr "NextPVR ports (parasti 8866 vai 7799)"
+
+msgctxt "#30002"
+msgid "NextPVR PinCode"
+msgstr "NextPVR pinkods"
+
+msgctxt "#30003"
+msgid "Enable TimeShift with Live TV"
+msgstr "Ieslēgt laika nobīdi ar tiešraides TV"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Savienojums"
+
+msgctxt "#30041"
+msgid "Advanced"
+msgstr "Papildus"
+
+msgctxt "#30050"
+msgid "NextPVR server is too old."
+msgstr "NextPVR serveris ir pārāk vecs."
+
+msgctxt "#30051"
+msgid "Upgrade to '%s' or higher!"
+msgstr "Janiniet uz '%s' vai augstāku!"
+
+msgctxt "#30052"
+msgid "Connection failed. Incorrect PIN?"
+msgstr "Savienojums neizdevās. Vai nepareizs PIN?"
+
+msgctxt "#30053"
+msgid "Tuner no longer available"
+msgstr "Uztvērējs vairs nav pieejams"
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Uzlikt taimeri"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Ierakstīšanas veids"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Ierakstīt vienreiz"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Ierakstīt sezonu (JAUNAS sērijas šajā kanālā)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Ierakstīt sezonu (visas sērijas šajā kanālā)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Ierakstīt sezonu (katru dienu šajā laikā)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Ierakstīt sezonu (katru nedēļu šajā laikā)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Ierakstīt sezonu (pirmdien-piektdien šajā laikā)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Ierakstīt sezonu (brīvdienās šajā laikā)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Paturēt"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Visi ieraksti"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Pirms-papildinājums (minūtes)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Pirms-papildinājums (minūtes)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Ierakstīšanas direktorija"
+
+msgctxt "#30135"
+msgid "Default"
+msgstr "Noklusējums"

@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Czech (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/cs/)\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/xbmc-main/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -91,11 +90,11 @@ msgstr "Přehrávání"
 
 msgctxt "#30050"
 msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Vaše verze TVServerXBMC '%s' je příliš stará. Aktualizujte prosím na '%s', nebo novější."
+msgstr "vaše verze TVServerXBMC '%s' je příliš stará. Aktualizujte prosím na '%s', nebo novější."
 
 msgctxt "#30051"
 msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Vaše verze TVServerXBMC je příliš stará. Aktualizujte prosím na '%s', nebo novější."
+msgstr "vaše verze TVServerXBMC je příliš stará. Aktualizujte prosím na '%s', nebo novější."
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."

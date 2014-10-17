@@ -1,25 +1,96 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Estonian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/et/)\n"
+"Language-Team: Estonian (http://www.transifex.com/projects/p/xbmc-main/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "VDR hosti nimi või IP"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "VNSI port"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Tähtsus"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Märgistiku muutmine"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Ühenduse aegumine (s)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Luba VDR teated"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Kanaliotsing"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Kanaliotsing - seaded"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Alusta kanaliotsingut"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Allika tüüp"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "TV kanalid"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Raadio kanalid"
+
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Vabalevi kanalid"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Krüptitud kanalid"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "HD kanalid"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "Maa"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Kaabli modulatsioon"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Satelliit"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "ATSC tüüp"
 
 msgctxt "#30024"
 msgid "Back"
@@ -29,6 +100,70 @@ msgctxt "#30026"
 msgid "Type:"
 msgstr "Tüüp:"
 
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Seade:"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Signaal: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Uued kanalid: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Kõik kanalid: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Analoog TV"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Analoog raadio"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Transponder:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Uued kanalid"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Kanaliotsing - lõpetatud"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Ühtegi seadet pole saadaval - väljumine"
+
 msgctxt "#30039"
 msgid "Running"
 msgstr "Töötab"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Peatatud"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Lõpetatud"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Kanaliotsing - tühistatud"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Kanaliotsing - tõrge"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Seadistus"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanalid"

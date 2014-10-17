@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: English (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/en/)\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-main/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -70,6 +69,8 @@ msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
 msgstr ""
 
+#empty strings from id 30013 to 30018
+
 msgctxt "#30019"
 msgid "General"
 msgstr ""
@@ -85,6 +86,8 @@ msgstr ""
 msgctxt "#30022"
 msgid "MythTV"
 msgstr ""
+
+#empty strings from id 30023 to 30024
 
 msgctxt "#30025"
 msgid "Internal template"
@@ -126,6 +129,8 @@ msgctxt "#30034"
 msgid "Allow recordings to expire?"
 msgstr ""
 
+#empty strings from id 30035 to 30048
+
 msgctxt "#30049"
 msgid "Recording template"
 msgstr ""
@@ -134,14 +139,20 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr ""
 
+#empty string with id 30051
+
 msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr ""
+
+#empty strings from id 30053 to 30099
 
 # Systeminformation labels
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr ""
+
+#empty strings from id 30101 to 30299
 
 # Notifications
 msgctxt "#30300"
@@ -196,6 +207,8 @@ msgctxt "#30312"
 msgid "No broadcast found"
 msgstr ""
 
+#empty strings from id 30313 to 30410
+
 # Menu Hooks
 msgctxt "#30411"
 msgid "Delete and re-record"
@@ -205,9 +218,13 @@ msgctxt "#30412"
 msgid "Keep LiveTV recording"
 msgstr ""
 
+#empty strings from id 30413 to 30420
+
 msgctxt "#30421"
 msgid "Show/hide rules with status 'Not Recording'"
 msgstr ""
+
+#empty strings from id 30422 to 30430
 
 msgctxt "#30431"
 msgid "Record all showings (this channel)"

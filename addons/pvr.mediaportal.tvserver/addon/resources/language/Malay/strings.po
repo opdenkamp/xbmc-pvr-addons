@@ -1,0 +1,165 @@
+# XBMC Media Center language file
+# Addon Name: MediaPortal PVR Client
+# Addon id: pvr.mediaportal.tvserver
+# Addon Provider: Marcel Groothuis
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Malay (http://www.transifex.com/projects/p/xbmc-main/language/ms/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ms\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "Nama hos Mediaportal"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "Port pemalam XBMC Mediaportal"
+
+msgctxt "#30002"
+msgid "Free-to-air only"
+msgstr "Free-to-air sahaja"
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "Sertakan Radio"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "Pertukaran saluran pantas (tidak henti anjak masa)"
+
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "Had masa tamat sambung"
+
+msgctxt "#30006"
+msgid "Import only TV Channels from group"
+msgstr "Hanya import Saluran TV dari kumpulan"
+
+msgctxt "#30007"
+msgid "Import only Radio Channels from group"
+msgstr "Hanya import Saluran Radio dari kumpulan"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "Tukar nama hos ke alamat-IP"
+
+msgctxt "#30009"
+msgid "EPG: Read genre strings (slow)"
+msgstr "EPG: Baca rentetan genre (perlahan)"
+
+msgctxt "#30010"
+msgid "Wait time after tuning a channel (ms)"
+msgstr "Tunggu masa selepas menala saluran (ms)"
+
+msgctxt "#30015"
+msgid "Streaming method"
+msgstr "Kaedah penstriman"
+
+msgctxt "#30016"
+msgid "Windows user account (SMB)"
+msgstr "Akaun pengguna Windows (SMB)"
+
+msgctxt "#30017"
+msgid "Windows password (SMB)"
+msgstr "Kata laluan Windows (SMB)"
+
+msgctxt "#30018"
+msgid "Use RTSP streaming"
+msgstr "Guna penstriman RTSP"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Sambungan"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
+
+msgctxt "#30042"
+msgid "Playback"
+msgstr "Main Balik"
+
+msgctxt "#30050"
+msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "TVServerXBMC versi '%s' anda terlalu tua. Sila kemaskini ke '%s' atau lebih baharu!"
+
+msgctxt "#30051"
+msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgstr "TVServerXBMC versi anda terlalu tua. Sila kemaskini ke '%s' atau lebih baharu!"
+
+msgctxt "#30052"
+msgid "Recording playback failed. Empty URL of filename."
+msgstr "Main balik rakaman gagal. URL nama fail kosong."
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "Semua kad sibuk"
+
+msgctxt "#30061"
+msgid "Channel is scrambled"
+msgstr "Saluran bercelaru"
+
+msgctxt "#30062"
+msgid "No video or audio detected"
+msgstr "Tiada video atau audio dikesan"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "Tiada isyarat dikesan"
+
+msgctxt "#30064"
+msgid "Unknown error"
+msgstr "Ralat tidak diketahui"
+
+msgctxt "#30065"
+msgid "Unable to start graph"
+msgstr "Tidak boleh mulakan graf"
+
+msgctxt "#30066"
+msgid "Unknown channel"
+msgstr "Saluran tidak diketahui"
+
+msgctxt "#30067"
+msgid "No tuning details"
+msgstr "Tiada perincian penalaan"
+
+msgctxt "#30068"
+msgid "Channel is not mapped to any card"
+msgstr "Saluran tidak dipetakan ke mana-mana kad"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "Kad dilumpuhkan"
+
+msgctxt "#30070"
+msgid "Connection to slave failed"
+msgstr "Sambungan ke hamba gagal"
+
+msgctxt "#30071"
+msgid "Not the owner"
+msgstr "Bukan pemilik"
+
+msgctxt "#30072"
+msgid "Graph building failed"
+msgstr "Pembinaan kad gagal"
+
+msgctxt "#30073"
+msgid "SW Encoder missing"
+msgstr "Pengekod SW hilang"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "Tiada ruang cakera bebas"
+
+msgctxt "#30075"
+msgid "No PMT found"
+msgstr "Tiada PMT ditemui"

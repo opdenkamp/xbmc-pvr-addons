@@ -1,0 +1,269 @@
+# XBMC Media Center language file
+# Addon Name: VDR VNSI Client
+# Addon id: pvr.vdr.vnsi
+# Addon Provider: FernetMenta, Team XBMC
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Welsh (http://www.transifex.com/projects/p/xbmc-main/language/cy/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cy\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
+
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "Enw gwesteiwr neu gyfeiriad IP VDR"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "Porth VNSI"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Blaenoriaeth:"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Trosi'r Set Nod"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Amser allan cysylltu (e)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Caniatáu Negeseuon VDR"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Darllen recordiadau o gyferiadur"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Cyfeiriadur recordiadau VDR"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Chwilio sianeli"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Chwilio sianeli - Gosodiadau"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Cychwyn chwilio Sianeli"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Math Ffynhonnell"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "Sianeli teledu"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Sianeli radio"
+
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Sianeli Rhydd"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Sianeli caeëdig"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "Sianeli Clir"
+
+msgctxt "#30017"
+msgid "Country"
+msgstr "Gwlad"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Gwrthdroad Cebl"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Graddfa Symbol Cebl"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Modyliad cebl"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Gwthdroad Terr"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Lloeren"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "Math ATSC"
+
+msgctxt "#30024"
+msgid "Back"
+msgstr "Nôl"
+
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Chwilio sianeli - rhedeg %i %%"
+
+msgctxt "#30026"
+msgid "Type:"
+msgstr "Math:"
+
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Dyfeisiau:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Sgan: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Signal: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Sianeli newydd: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Pob sianel: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Teledu Analog"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Radio Analog"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Trawspondydd:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Sianeli newydd"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Chwilio sianel - Wedi gorffen"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Dim dyfais ar gael - gadael"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Dim dyfais DVB-S2 ar gael - ceisio mynd yn ôl i DVB-S"
+
+msgctxt "#30039"
+msgid "Running"
+msgstr "Rhedeg"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Ataliwyd"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Gorffennwyd"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Chwilio sianeli - Diddymwyd"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Chwilio sianel - Gwall"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Collwyd y cysylltiad â'r Gweinydd VDR"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "Cysylltiad â'r Gweinydd VDR wedi ei adfer"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Creu grwpiau sianel yn awtomatig ar y gweinydd"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Gofyn am Sy,mud Amser"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr " OSD VDR"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Gosod"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Rheoli OSD - pwyso gwyb i adael"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Dewis i reoli'r OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Modd Symud Amser"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Byffer Symud Amser(RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Byffer Symud Amser (File) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "Gweinyddiaeth VDR"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Sianeli"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Rhestr wen darparwr"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Rhestr ddu sianel"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Hidlau sianel"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Sianeli radio"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Cadw hidlau"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Darparwr Anhysbys"

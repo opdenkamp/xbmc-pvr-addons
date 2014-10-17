@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -26,7 +27,7 @@
 #include "libXBMC_pvr.h"
 #include <stdlib.h>
 #include <string>
-#include <ctime>
+#include "DateTime.h"
 
 /* VDR:
 enum eTimerFlags { tfNone      = 0x0000,
@@ -65,6 +66,9 @@ enum KeepMethodType
 
 };
 
+const time_t cUndefinedDate = 946681200;   ///> 01-01-2000 00:00:00 in time_t
+const int    cSecsInDay  = 86400;          ///> Amount of seconds in one day
+
 class cTimer
 {
   public:
@@ -87,11 +91,15 @@ class cTimer
     bool Repeat() const { return (m_schedtype == TvDatabase::Once ? false : true); };
     bool Done() const { return m_done; };
     bool IsManual() const { return m_ismanual; };
-    bool IsActive() const { return !m_canceled; };
+    bool IsActive() const { return (m_canceled==cUndefinedDate); };
     bool IsRecording() const { return m_isrecording; };
     TvDatabase::ScheduleRecordingType RepeatFlags2SchedRecType(int repeatflags);
     std::string AddScheduleCommand();
     std::string UpdateScheduleCommand();
+    void SetScheduleRecordingType(TvDatabase::ScheduleRecordingType schedType);
+    void SetKeepMethod(TvDatabase::KeepMethodType keepmethod);
+    void SetPreRecordInterval(int minutes);
+    void SetPostRecordInterval(int minutes);
 
   private:
     int SchedRecType2RepeatFlags(TvDatabase::ScheduleRecordingType schedtype);
@@ -105,24 +113,23 @@ class cTimer
     int GetLifetime(void);
     int XBMC2MepoPriority(int xbmcprio);
     int Mepo2XBMCPriority(int mepoprio);
-    time_t Now();
 
     // MediaPortal database fields:
     int         m_index;               ///> MediaPortal id_Schedule
     int         m_channel;             ///> MediaPortal idChannel
     TvDatabase::ScheduleRecordingType m_schedtype; ///> MediaPortal scheduleType
     std::string m_title;               ///> MediaPortal programName
-    time_t      m_starttime;           ///> MediaPortal startTime
-    time_t      m_endtime;             ///> MediaPortal endTime
+    MPTV::CDateTime m_startTime;       ///> MediaPortal startTime
+    MPTV::CDateTime m_endTime;         ///> MediaPortal endTime
     //                                      skipped: maxAirings field
     int         m_priority;            ///> MediaPortal priority (not the XBMC one!!!)
     std::string m_directory;           ///> MediaPortal directory
     //                                      skipped:  quality field
     TvDatabase::KeepMethodType m_keepmethod;       ///> MediaPortal keepMethod
-    time_t      m_keepdate;            ///> MediaPortal keepDate
+    MPTV::CDateTime m_keepDate;        ///> MediaPortal keepDate
     int         m_prerecordinterval;   ///> MediaPortal preRecordInterval
     int         m_postrecordinterval;  ///> MediaPortal postRecordInterval
-    time_t      m_canceled;            ///> MediaPortal canceled (date + time)
+    MPTV::CDateTime m_canceled;        ///> MediaPortal canceled (date + time)
     //                                      skipped: recommendedCard
     bool        m_series;              ///> MediaPortal series
     //                                      skipped: idParentSchedule: not yet supported in XBMC
@@ -135,8 +142,5 @@ class cTimer
 
     int         m_progid;              ///> MediaPortal Program ID
 };
-
-const time_t cUndefinedDate = 946681200;   ///> 01-01-2000 00:00:00 in time_t
-const int    cSecsInDay  = 86400;          ///> Amount of seconds in one day
 
 #endif //__TIMERS_H

@@ -1,0 +1,165 @@
+# XBMC Media Center language file
+# Addon Name: MediaPortal PVR Client
+# Addon id: pvr.mediaportal.tvserver
+# Addon Provider: Marcel Groothuis
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: French (Canada) (http://www.transifex.com/projects/p/xbmc-main/language/fr_CA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "Nom d'hôte de MediaPortal"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "Port du plugiciel XBMC de MediaPortal"
+
+msgctxt "#30002"
+msgid "Free-to-air only"
+msgstr "Diffusé en clair uniquement"
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "Inclure la radio"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "Changement rapide des chaînes (ne pas arrêter le décalage temporel)"
+
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "Délai d'attente de connexion (s)"
+
+msgctxt "#30006"
+msgid "Import only TV Channels from group"
+msgstr "Importer seulement les chaînes télé du groupe"
+
+msgctxt "#30007"
+msgid "Import only Radio Channels from group"
+msgstr "Importer seulement les chaînes radio du groupe"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "Convertir le nom d'hôte en adresse IP"
+
+msgctxt "#30009"
+msgid "EPG: Read genre strings (slow)"
+msgstr "GÉP : lire les données de genre (lent)"
+
+msgctxt "#30010"
+msgid "Wait time after tuning a channel (ms)"
+msgstr "Temps d'attente après changement de chaîne (ms)"
+
+msgctxt "#30015"
+msgid "Streaming method"
+msgstr "Méthode de lecture en transit"
+
+msgctxt "#30016"
+msgid "Windows user account (SMB)"
+msgstr "Compte utilisateur Windows (SMB)"
+
+msgctxt "#30017"
+msgid "Windows password (SMB)"
+msgstr "Mot de passe Windows (SMB)"
+
+msgctxt "#30018"
+msgid "Use RTSP streaming"
+msgstr "Utiliser la lecture en transit RTSP"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Connexion"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
+
+msgctxt "#30042"
+msgid "Playback"
+msgstr "Lecture"
+
+msgctxt "#30050"
+msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Votre version « %s » de TVServerXBMC est trop ancienne. Veuillez mettre à niveau vers « %s » ou ultérieure!"
+
+msgctxt "#30051"
+msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgstr "Votre version de TVServerXBMC est trop ancienne. Veuillez mettre à niveau vers « %s » ou ultérieure!"
+
+msgctxt "#30052"
+msgid "Recording playback failed. Empty URL of filename."
+msgstr "La lecture de l'enregistrement a échoué. L'URL du nom de fichier est vide."
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "Toutes les cartes sont occupées"
+
+msgctxt "#30061"
+msgid "Channel is scrambled"
+msgstr "La chaîne est brouillée"
+
+msgctxt "#30062"
+msgid "No video or audio detected"
+msgstr "Aucun vidéo ou audio détecté"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "Aucun signal détecté"
+
+msgctxt "#30064"
+msgid "Unknown error"
+msgstr "Erreur inconnue"
+
+msgctxt "#30065"
+msgid "Unable to start graph"
+msgstr "Impossible de démarrer le graphe"
+
+msgctxt "#30066"
+msgid "Unknown channel"
+msgstr "Chaîne inconnue"
+
+msgctxt "#30067"
+msgid "No tuning details"
+msgstr "Aucun détail de syntonisation"
+
+msgctxt "#30068"
+msgid "Channel is not mapped to any card"
+msgstr "La chaîne n'est mappée à aucune carte"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "La carte est désactivée"
+
+msgctxt "#30070"
+msgid "Connection to slave failed"
+msgstr "Échec de connexion à l'esclave"
+
+msgctxt "#30071"
+msgid "Not the owner"
+msgstr "Pas le propriétaire"
+
+msgctxt "#30072"
+msgid "Graph building failed"
+msgstr "Échec de montage des graphes"
+
+msgctxt "#30073"
+msgid "SW Encoder missing"
+msgstr "Encodeur SW manquant"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "Aucun espace disque libre"
+
+msgctxt "#30075"
+msgid "No PMT found"
+msgstr "Aucun PMT trouvé"

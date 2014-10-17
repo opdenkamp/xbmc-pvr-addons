@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -42,6 +43,7 @@ ADDON_STATUS m_CurStatus      = ADDON_STATUS_UNKNOWN;
  * and exported to the other source files.
  */
 std::string   g_szHostname              = DEFAULT_HOST;
+std::string   g_szWolMac                = "";
 int           g_iPort                   = DEFAULT_PORT;
 bool          g_bCharsetConv            = DEFAULT_CHARCONV;     ///< Convert VDR's incoming strings to UTF8 character set
 bool          g_bHandleMessages         = DEFAULT_HANDLE_MSG;   ///< Send VDR's OSD status messages to XBMC OSD
@@ -49,6 +51,7 @@ int           g_iConnectTimeout         = DEFAULT_TIMEOUT;      ///< The Socket 
 int           g_iPriority               = DEFAULT_PRIORITY;     ///< The Priority this client have in response to other clients
 bool          g_bAutoChannelGroups      = DEFAULT_AUTOGROUPS;
 int           g_iTimeshift              = 1;
+std::string   g_szIconPath              = "";
 
 CHelper_libXBMC_addon *XBMC   = NULL;
 CHelper_libXBMC_codec *CODEC  = NULL;
@@ -122,6 +125,20 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   }
   free(buffer);
 
+  buffer = (char*) malloc(64);
+  buffer[0] = 0; /* Set the end of string */
+
+  /* Read setting "wol_mac" from settings.xml */
+  if (XBMC->GetSetting("wol_mac", buffer))
+    g_szWolMac = buffer;
+  else
+  {
+    /* If setting is unknown fallback to empty default */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'wol_mac' setting, falling back to default");
+    g_szWolMac = "";
+  }
+  free(buffer);
+
   /* Read setting "port" from settings.xml */
   if (!XBMC->GetSetting("port", &g_iPort))
   {
@@ -178,8 +195,22 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     g_bAutoChannelGroups = DEFAULT_AUTOGROUPS;
   }
 
+  /* Read setting "iconpath" from settings.xml */
+  buffer = (char*) malloc(512);
+  buffer[0] = 0; /* Set the end of string */
+
+  if (XBMC->GetSetting("iconpath", buffer))
+    g_szIconPath = buffer;
+  else
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'iconpath' setting");
+    g_szIconPath = "";
+  }
+  free(buffer);
+
   VNSIData = new cVNSIData;
-  if (!VNSIData->Open(g_szHostname, g_iPort))
+  if (!VNSIData->Open(g_szHostname, g_iPort, NULL, g_szWolMac))
   {
     ADDON_Destroy();
     m_CurStatus = ADDON_STATUS_LOST_CONNECTION;
@@ -262,6 +293,16 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     if (tmp_sHostname != g_szHostname)
       return ADDON_STATUS_NEED_RESTART;
   }
+  else if (str == "wol_mac")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'wol_mac'");
+    string tmp_sWol_mac;
+    XBMC->Log(LOG_INFO, "Changed Setting 'wol_mac' from %s to %s", g_szWolMac.c_str(), (const char*) settingValue);
+    tmp_sWol_mac = g_szWolMac;
+    g_szWolMac = (const char*) settingValue;
+    if (tmp_sWol_mac != g_szWolMac)
+      return ADDON_STATUS_NEED_RESTART;
+  }
   else if (str == "port")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'port' from %u to %u", g_iPort, *(int*) settingValue);
@@ -279,7 +320,7 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   else if (str == "timeshift")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'timeshift' from %u to %u", g_iTimeshift, *(int*) settingValue);
-    g_iPriority = *(int*) settingValue;
+    g_iTimeshift = *(int*) settingValue;
   }
   else if (str == "convertchar")
   {

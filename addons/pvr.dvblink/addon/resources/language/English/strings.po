@@ -1,17 +1,20 @@
 # XBMC Media Center language file
+# Addon Name: DVBLink PVR Client
+# Addon id: pvr.dvblink
+# Addon Provider: DVBLogic
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC-Addons\n"
-"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
-"POT-Creation-Date: 2012-12-11 20:52+0000\n"
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-main/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #settings labels
 
@@ -95,7 +98,7 @@ msgctxt "#30112"
 msgid "Timeshift buffer path"
 msgstr ""
 
-#empty strings from id 30111 to 30199
+#empty strings from id 30113 to 30199
 
 msgctxt "#30200"
 msgid "Advanced"
@@ -111,8 +114,8 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr ""
 
-#category labels
 #empty strings from id 30203 to 32000
+#category labels
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"

@@ -22,6 +22,7 @@
 #include "libXBMC_pvr.h"
 #include "Cards.h"
 #include "GenreTable.h"
+#include "DateTime.h"
 
 using namespace std;
 
@@ -41,8 +42,9 @@ private:
   string m_fileName;          ///< The recording filename without path
   string m_stream;
   string m_originalurl;
-  time_t m_StartTime;
-  int m_Duration;
+  MPTV::CDateTime m_startTime;
+  MPTV::CDateTime m_endTime;
+  int m_duration;
   string m_title;             // Title of this event
   string m_description;       // Description of this event
   string m_episodeName;       // Short description of this event (typically the episode name in case of a series)
@@ -51,8 +53,8 @@ private:
   string m_episodePart;
   int m_scheduleID;
   int m_keepUntil;
-  time_t m_keepUntilDate;     ///< MediaPortal keepUntilDate
-  CCards* m_cardSettings;     ///< Pointer to the MediaPortal card settings. Will be used to determine the base path of the recordings
+  MPTV::CDateTime m_keepUntilDate; ///< MediaPortal keepUntilDate
+  CCards* m_cardSettings;          ///< Pointer to the MediaPortal card settings. Will be used to determine the base path of the recordings
   string m_genre;
   int m_genre_type;
   int m_genre_subtype;
@@ -68,8 +70,8 @@ public:
   bool ParseLine(const std::string& data);
   const char *ChannelName(void) const { return m_channelName.c_str(); }
   int Index(void) const { return m_Index; }
-  time_t StartTime(void) const { return m_StartTime; }
-  time_t Duration(void) const { return m_Duration; }
+  time_t StartTime(void) const;
+  int Duration(void) const;
   const char *Title(void) const { return m_title.c_str(); }
   const char *Description(void) const { return m_description.c_str(); }
   const char *EpisodeName(void) const { return m_episodeName.c_str(); }
@@ -80,6 +82,7 @@ public:
   int Lifetime(void) const;
   int TimesWatched(void) const {return m_timesWatched; }
   int LastPlayedPosition(void) const { return m_lastPlayedPosition; }
+  bool IsRecording(void) {return m_isRecording; }
 
   /**
    * \brief Filename of this recording with full path (at server side)

@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Dutch (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/nl/)\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/xbmc-main/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -48,3 +47,179 @@ msgstr "Zet Live TV aan"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Live TV toestaan geplande opnamen te verplaatsen"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Conflict afhandeling"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Geef voorkeur aan Live TV indien opname later begint"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Geef voorkeur aan opname en stop Live TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Geef voorkeur aan Live TV en annuleer conflicterende opname"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV Backend ethernet adres (WOL)"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Algemene instellingen"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Template provider"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "interne"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Interne template"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Automatisch naar metadata zoeken"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Markeer reclames in nieuwe opnames"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Transcode nieuwe opnames"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Start Gebruikers Taak #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Start Gebruikers Taak #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Start Gebruikers Taak #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Start Gebruikers Taak #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Transcoder"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Sta opnames toe te expireren?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Opname template"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Geavanceerd"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Activeer Demuxing MPEG-TS"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Protocol versie: %i - Database versie: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Verbinding met MythTV backend geslaagd"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Kan niet met MythTV database verbinden"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Verbinding met MythTV backend verbroken"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Verbinding met MythTV herstelt"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Geen antwoord van de MythTV backend"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Kanaal niet beschikbaar"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Opnameapparaat niet beschikbaar"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Annuleer conflicterende opname: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Live TV gestopt in verband met conflicterende opname: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "niet aan het opnemen"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Geactiveerd"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Geen uitzending gevonden"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Verwijder en her-opnemen"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Behoud LiveTV opname"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Toon/verber regels met status 'niet aan het opnemen'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Neem alle uitzendingen op (dit kanaal)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Neem deze uitzending elke week op"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Neem deze uitzending elke dag op"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "neem een uitzending op (alle kanalen)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Neem alle nieuwe afleveringen op (dit kanaal)"

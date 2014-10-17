@@ -1,0 +1,225 @@
+# XBMC Media Center language file
+# Addon Name: MythTV cmyth PVR Client
+# Addon id: pvr.mythtv.cmyth
+# Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Croatian (http://www.transifex.com/projects/p/xbmc-main/language/hr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+msgctxt "#30000"
+msgid "MythTV Backend Hostname or IP"
+msgstr "MythTV naziv računala ili IP"
+
+msgctxt "#30001"
+msgid "MythTV Backend Port"
+msgstr "Ulaz MythTV pozadinskog softvera"
+
+msgctxt "#30002"
+msgid "MythTV Database Username"
+msgstr "Korisničko ime MythTV baze podataka"
+
+msgctxt "#30003"
+msgid "MythTV Database Password"
+msgstr "Lozinka MythTV baze podataka"
+
+msgctxt "#30004"
+msgid "MythTV Database Databasename"
+msgstr "Naziv MythTV baze podataka"
+
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "Uključi više informacija otklanjanja greške u datoteku zapisa"
+
+msgctxt "#30006"
+msgid "Enable Live TV"
+msgstr "Omogući televiziju"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "Omogući TV programu da pomiče rasporede emisija"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Sukob rukovanja"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Preferiraj gledanje televizije kada snimanje počine kasnije"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Preferiraj snimanje i zaustavi gledanje televizije"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Preferiraj gledanje televizije i poništi sukobljeno snimanje"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "Ethernet adresa (WOL) MythTV pozadinskog softvera"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Općenito"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Predložak usluga"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Unutarnji"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Unutarnji predložak"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Automatski potraži meta podatke"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Oznaka reklamiranja novog snimanja"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Enkôdiraj novo snimanje"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Pokreni korisnikov posao #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Pokreni korisnikov posao #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Pokreni korisnikov posao #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Pokreni korisnikov posao #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Enkôder"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Dopusti istek snimanja?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Predlošci snimanja"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Napredno"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Omogući razdvajanje MPEG-TS"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Inačica protokola: %i - Inačica baze podataka: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Neuspjelo povezivanje s MythTV pozadinskim softverom"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Neuspjelo povezivanje na MythTV bazu podataka"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Povezivanje na MythTV pozadinski softver izgubljeno"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Povezivanje na MythTV pozadinski softver uspostavljeno"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Nema odgovora od MythTV pozadinskog softvera"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Program nedostupan"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Snimanje nedostupno"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Poništavanje sukobljenog snimanja: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Zaustavljanje gledanja televizije zbog sukoba snimanja: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Ne snima se"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Omogućeno"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Onemogućeno"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Nema pronađenog emitiranja"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Obriši i ponovno snimi"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Nastavi snimanje TV programa"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Sakrij/Prikaži pravila sa statusom 'Nije snimljeno'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Snimi sve emisije (ovaj program)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Snimi ovu emisiju svaki tjedan"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Snimi ovu emisiju svaki dan"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Snimi jednu emisiju (svi programi)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Snimi sve nove epizode (svi programi)"

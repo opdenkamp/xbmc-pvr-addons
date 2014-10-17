@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Catalan (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ca/)\n"
+"Language-Team: Catalan (http://www.transifex.com/projects/p/xbmc-main/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,7 +22,7 @@ msgstr "Nom de màquina del MediaPortal"
 
 msgctxt "#30001"
 msgid "Mediaportal XBMC plugin Port"
-msgstr "Port de l'afegitó per XBMC del MediaPortal"
+msgstr "Port del connector per l'XBMC del MediaPortal"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -51,7 +50,7 @@ msgstr "Importa només canals de ràdio del grup"
 
 msgctxt "#30008"
 msgid "Convert hostname to IP-adress"
-msgstr "Converteix nom de màquina a adreça IP"
+msgstr "Converteix el nom de màquina a adreça IP"
 
 msgctxt "#30009"
 msgid "EPG: Read genre strings (slow)"
@@ -103,7 +102,7 @@ msgstr "Ha fallat la reproducció de l'enregistrament. L'URL del fitxer és buid
 
 msgctxt "#30060"
 msgid "All cards are busy"
-msgstr "Totes les tarjes es troben ocupades"
+msgstr "Totes les targetes estan ocupades"
 
 msgctxt "#30061"
 msgid "Channel is scrambled"
@@ -135,15 +134,15 @@ msgstr "Cap detall de sintonització"
 
 msgctxt "#30068"
 msgid "Channel is not mapped to any card"
-msgstr "El canal no es troba mapejat a cap tarja"
+msgstr "El canal no està mapejat a cap targeta"
 
 msgctxt "#30069"
 msgid "Card is disabled"
-msgstr "La tarja es troba desactivada"
+msgstr "La targeta està inhabilitada"
 
 msgctxt "#30070"
 msgid "Connection to slave failed"
-msgstr "Ha fallt la connexió a l'esclau"
+msgstr "Ha fallat la connexió a l'esclau"
 
 msgctxt "#30071"
 msgid "Not the owner"

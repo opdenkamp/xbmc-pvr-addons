@@ -1,0 +1,181 @@
+# XBMC Media Center language file
+# Addon Name: MythTV cmyth PVR Client
+# Addon id: pvr.mythtv.cmyth
+# Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Welsh (http://www.transifex.com/projects/p/xbmc-main/language/cy/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cy\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
+
+msgctxt "#30000"
+msgid "MythTV Backend Hostname or IP"
+msgstr "Enw gwesteiwr cefn MythTV neu IP"
+
+msgctxt "#30001"
+msgid "MythTV Backend Port"
+msgstr "Porth Cefn MythTV"
+
+msgctxt "#30002"
+msgid "MythTV Database Username"
+msgstr "Enw Defnyddiwr Cronfa Ddata MythTV"
+
+msgctxt "#30003"
+msgid "MythTV Database Password"
+msgstr "Cyfrinair Cronfa Ddata MythTV"
+
+msgctxt "#30004"
+msgid "MythTV Database Databasename"
+msgstr "Enw Cronfa Ddata Cronfa Ddata MythTV"
+
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "Cynnwys rhagor o wybodaeth dadfygio yn y ffeil cofnod"
+
+msgctxt "#30006"
+msgid "Enable Live TV"
+msgstr "Galluogi Teledu Byw"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "Caniatáu i Deledu Byw symud sioeau wedi eu hamserlenni"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Trin gwrthdaro"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Ffafrio Teledu Byw pan fod slot hwyrach gan recordiad"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Ffafrio recordio ac atal Teledu Byw"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Ffafrio Teledu Byw a diddymu recordio sy'n gwrthdaro"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Cyffredinol"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Darparwr templed"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Mewnol"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Templed mewnol"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Chwilio'r Metadata'n Awtomatig"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Baner Masnachol i recordiadau newydd"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Trawscodio recordiadau newydd"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Rhedeg Gwaith Defnyddiwr #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Rhedeg Gwaith Defnyddiwr #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Rhedeg Gwaith Defnyddiwr #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Rhedeg Gwaith Defnyddiwr #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Trawscodydd"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Caniatáu i recordiadau ddod i ben"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Templed recordio"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Uwch"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Fersiwn protocol: %i - Fersiwn cronfa ddata: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Methwyd cysylltu i gefn MythTV"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Methwyd cysylltu i gronfa ddata MythTV"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Cysylltiad wedi ei golli i gefn MythTV"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Wedi adfer cysylltiad i MythTV"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Dim ymateb gan gefn MythTV"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Sianel ddim ar gael"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Recordydd ddim ar gael"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Diddymu recordio sy'n gwrthdaro: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Atal Teledu Byw oherwydd recordio sy'n gwrthdaro: %s"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Galluogwyd"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Analluogwyd"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Dileu ac ail recordio"

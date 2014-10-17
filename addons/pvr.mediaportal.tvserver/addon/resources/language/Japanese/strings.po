@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Japanese (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ja/)\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/xbmc-main/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -32,6 +31,10 @@ msgstr "Free-to-air のみ"
 msgctxt "#30003"
 msgid "Include Radio"
 msgstr "ラジオも含める"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "高速チャンネルスイッチ（タイムシフトは止めない）"
 
 msgctxt "#30005"
 msgid "Connect timeout (s)"

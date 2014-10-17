@@ -1,21 +1,68 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Chinese (Traditional) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/zh_TW/)\n"
+"Language-Team: Chinese (Traditional) (http://www.transifex.com/projects/p/xbmc-main/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "VDR的主機名稱或IP"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "VNSI端口"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "優先順序"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "字元集轉換"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "連接超時(秒)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "允許VDR訊息"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "從目錄中讀取錄影檔案"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "VDR錄影目錄"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "頻道搜尋"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "頻道搜尋－設定"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "開始頻道搜尋"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "來源類型"
 
 msgctxt "#30012"
 msgid "TV channels"
@@ -25,18 +72,174 @@ msgctxt "#30013"
 msgid "Radio channels"
 msgstr "無線電廣播頻道"
 
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "FTA頻道"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "加密頻道"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "高清頻道"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "國家"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "電纜倒位"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "電纜符碼率"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "電纜調變器"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Terr 倒位"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "衛星"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "ATSC類型"
 
 msgctxt "#30024"
 msgid "Back"
 msgstr "返回"
 
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "頻道搜索 - 運行中... %i %%"
+
 msgctxt "#30026"
 msgid "Type:"
 msgstr "類型："
 
+msgctxt "#30027"
+msgid "Device:"
+msgstr "設備："
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "掃描： %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "信號： %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "新頻道： %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "所有頻道： %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "類比電視"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "類比電台"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "發射機應答器："
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "新頻道"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "頻道搜索－已完成"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "沒有可用設備－退出中"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "沒有可用的DVB-S2設備 - 試圖退回使用DVB-S"
+
 msgctxt "#30039"
 msgid "Running"
 msgstr "正在執行"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "已停止"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "已完成"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "頻道搜索 - 取消"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "頻道搜索 - 錯誤"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "VDR服務器失去連線"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "VDR服務器連線已恢復"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "自動在服務器上建立頻道群組"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "請求時間平移"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD選單"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "系統設定"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "控制OSD選單中 － 按 info 鍵離開"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "選擇控制OSD選單"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "時間平移模式"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "時間平移緩衝 (RAM) x 100MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "時間平移緩衝 (檔案) x 1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR 管理"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "頻道"

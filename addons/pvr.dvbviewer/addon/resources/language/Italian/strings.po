@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Italian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/it/)\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/xbmc-main/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,36 +22,108 @@ msgstr "Indirizzo IP del servizio di registrazione DVBViewer"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
-msgstr "Porta interfaccia web"
+msgstr "Porta dell'interfaccia web"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "Porta streaming"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "Porta registrazione"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "Nome utente"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Password"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Carica canali da favourites.xml invece che da channels.dat"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Utilizza i preferiti invece della lista canali"
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Utilizza file dei preferiti locali"
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Seleziona il file favourites.xml"
 
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Abilita Timeshift"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Path per il buffer del timeshift"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Utilizza streaming RTSP per la TV live"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Abilità modalità leggera (disabilita loghi e anteprime)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Raggruppa registrazioni"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "disabilitato"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "per cartella di registrazione"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "per data di registrazione"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "per lettera iniziale"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "per canale tv"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "per serie"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Generale"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Avanzato"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Registrazioni"
+
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Impossibile connettersi al servizio di registrazione"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Non posso connettermi al DVBViewer Recording Service"
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "È richiesta la versione 1.%d o superiore del servizio di registrazione"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Versione %s del DVBViewer Recording Service richiesta"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Impossibile analizzare la lista canali"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Controlla il log XBMC per maggiori informazioni"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Impossibile aprire favourites.xml locale"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Impossibile analizzare la lista preferiti"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Impossibile analizzare la lista timer"

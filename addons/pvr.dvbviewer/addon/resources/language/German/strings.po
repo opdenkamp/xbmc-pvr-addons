@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
-# Addon version: 1.6.5
-# Addon Provider: jdembski, A600
+# Addon Provider: jdembski, A600, Manuel Mausz, Portisch
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: German (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/de/)\n"
+"Language-Team: German (http://www.transifex.com/projects/p/xbmc-main/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,40 +18,112 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "DVBViewer Recording Service IP Address"
-msgstr "DVBViewer Aufnahme Service IP Addresse"
+msgstr "IP-Adresse des DVBViewer-Aufnahmedienstes"
 
 msgctxt "#30001"
 msgid "Webinterface Port"
-msgstr "Webinterface Port"
+msgstr "Weboberflächenport"
 
 msgctxt "#30002"
-msgid "Streaming Port"
-msgstr "Streaming Port"
-
-msgctxt "#30003"
-msgid "Recordings Port"
-msgstr "Port für Aufnahmen"
-
-msgctxt "#30004"
 msgid "Username"
 msgstr "Benutzername"
 
-msgctxt "#30005"
+msgctxt "#30003"
 msgid "Password"
 msgstr "Passwort"
 
-msgctxt "#30006"
-msgid "Load channels from favourites.xml instead of from channels.dat"
-msgstr "Lade Kanäle aus favourites.xml an Stelle von channels.dat"
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Favoriten anstelle einer Kanalliste verwenden"
 
-msgctxt "#30007"
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Lokale Favoritendatei verwenden"
+
+msgctxt "#30012"
 msgid "Select the favourites.xml file"
-msgstr "Wähle die favourites.xml Datei"
+msgstr "Wähle die favourites.xml-Datei"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Timeshift aktivieren"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Timeshift Puffer-Pfad"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "RTSP-Streaming für Live TV verwenden"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Niedrigen Leistungsmodus aktivieren (deaktiviert Logos & Miniaturansichten)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Gruppenaufnahmen"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "deaktiviert"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "nach Aufnameverzeichnis"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "nach Aufnahmedatum"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "nach dem ersten Buchstaben"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "nach Fernsehsender"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "nach Serie"
+
+msgctxt "#30100"
+msgid "General"
+msgstr "Allgemein"
+
+msgctxt "#30101"
+msgid "Advanced"
+msgstr "Fortgeschritten"
+
+msgctxt "#30102"
+msgid "Recordings"
+msgstr "Aufnahmen"
 
 msgctxt "#30500"
-msgid "Can't connect to the Recording Service"
-msgstr "Kann keine Verbindung mit dem Aufnahme Service herstellen."
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Mit dem DVBViewer-Aufnahmedienst konnte nicht verbunden werden"
 
 msgctxt "#30501"
-msgid "Recording Service version 1.%d or higher required"
-msgstr "Aufnhame Service Version 1.%d oder höher erforderlich"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer Aufnahme-Dienst Version %s oder höher wird benötigt"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Kanal-Liste konnte nicht eingelesen werden"
+
+msgctxt "#30503"
+msgid "Check XBMC log for more information"
+msgstr "Überprüfen Sie das XBMC-Protokoll für weitere Informationen"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Lokale favourites.xml konnte nicht geladen werden"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Favoriten-Liste konnte nicht eingelesen werden"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Timer-Liste konnte nicht eingelesen werden"

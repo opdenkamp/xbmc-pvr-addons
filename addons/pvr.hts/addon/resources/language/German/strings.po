@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: Tvheadend HTSP Client
 # Addon id: pvr.hts
-# Addon version: 1.6.11
 # Addon Provider: Lars Op den Kamp, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: German (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/de/)\n"
+"Language-Team: German (http://www.transifex.com/projects/p/xbmc-main/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,15 +18,15 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Tvheadend hostname or IP address"
-msgstr "Tvheadend Hostname oder IP"
+msgstr "Tvheadend-Hostname oder IP-Adresse"
 
 msgctxt "#30001"
 msgid "HTTP port"
-msgstr "HTTP Port"
+msgstr "HTTP-Port"
 
 msgctxt "#30002"
 msgid "HTSP port"
-msgstr "HTSP Port"
+msgstr "HTSP-Port"
 
 msgctxt "#30003"
 msgid "Username"
@@ -39,15 +38,15 @@ msgstr "Passwort"
 
 msgctxt "#30006"
 msgid "Connect timeout in seconds"
-msgstr "Verbindungszeit Überschreitung in Sekunden"
+msgstr "Verbindungs-Timeout in Sekunden"
 
 msgctxt "#30007"
 msgid "Response timeout in seconds"
-msgstr "Antwortzeit Überschreitung in Sekunden"
+msgstr "Antwort-Timeout in Sekunden"
 
 msgctxt "#30100"
 msgid "Tvheadend transcoding settings"
-msgstr "Tvheadend Transkodierungseinstellungen"
+msgstr "Tvheadend-Transkodierungseinstellungen"
 
 msgctxt "#30101"
 msgid "Transcoding settings"

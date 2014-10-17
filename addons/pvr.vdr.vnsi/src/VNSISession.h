@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -70,6 +71,9 @@ protected:
   int              m_port;
   std::string      m_name;
   PLATFORM::CMutex m_mutex;
+  int              m_protocol;
+  std::string      m_server;
+  std::string      m_version;
 
 private:
 
@@ -77,8 +81,5 @@ private:
 
   PLATFORM::CTcpConnection *m_socket;
   PLATFORM::CMutex          m_readMutex;
-  int                       m_protocol;
-  std::string               m_server;
-  std::string               m_version;
   bool                      m_connectionLost;
 };

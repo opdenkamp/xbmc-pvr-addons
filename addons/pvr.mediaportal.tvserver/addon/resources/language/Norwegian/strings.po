@@ -1,34 +1,165 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Norwegian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/no/)\n"
+"Language-Team: Norwegian (http://www.transifex.com/projects/p/xbmc-main/language/no/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: no\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "MediaPortal vertsnavn"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "MediaPortal XBMC plugin port"
+
+msgctxt "#30002"
+msgid "Free-to-air only"
+msgstr "Kun gratis kanaler"
+
 msgctxt "#30003"
 msgid "Include Radio"
 msgstr "Inkluder radio"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "Kjapp kanalskifte(ikke stopp timeshift)"
+
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "Tilkobling tidsavbrudd(er)"
+
+msgctxt "#30006"
+msgid "Import only TV Channels from group"
+msgstr "Importer kun TV kanaler fra gruppe"
+
+msgctxt "#30007"
+msgid "Import only Radio Channels from group"
+msgstr "Importer kun Radio kanaler fra gruppe"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "Konverter vertsnavn til Ip-adresse"
+
+msgctxt "#30009"
+msgid "EPG: Read genre strings (slow)"
+msgstr "EPG: Les sjanger (treg)"
+
+msgctxt "#30010"
+msgid "Wait time after tuning a channel (ms)"
+msgstr "Tid å vente etter lasting av kanal (ms)"
+
+msgctxt "#30015"
+msgid "Streaming method"
+msgstr "Streming metode"
+
+msgctxt "#30016"
+msgid "Windows user account (SMB)"
+msgstr "Windows bruker konto (SMB)"
+
+msgctxt "#30017"
+msgid "Windows password (SMB)"
+msgstr "Windows bruker passord (SMB)"
+
+msgctxt "#30018"
+msgid "Use RTSP streaming"
+msgstr "Bruk RTSP streaming"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Tilkobling"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
 
 msgctxt "#30042"
 msgid "Playback"
 msgstr "Avspilling"
 
+msgctxt "#30050"
+msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Din TVServerXBMC versjon '%s' er for gammel. Oppgrader til '%s' eller høyere!"
+
+msgctxt "#30051"
+msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgstr "Din TVServerXBMC versjon er for gammel. Oppgrader til '%s' eller høyere!"
+
+msgctxt "#30052"
+msgid "Recording playback failed. Empty URL of filename."
+msgstr "Avspilling av opptak feilet. URL eller filnavn mangler."
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "Alle kort er opptatt"
+
+msgctxt "#30061"
+msgid "Channel is scrambled"
+msgstr "Kanal er kodet"
+
+msgctxt "#30062"
+msgid "No video or audio detected"
+msgstr "Finner ingen video eller lyd"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "Ingen signal funnet"
+
 msgctxt "#30064"
 msgid "Unknown error"
 msgstr "Ukjent feil"
 
+msgctxt "#30065"
+msgid "Unable to start graph"
+msgstr "Kan ikke starte graf"
+
 msgctxt "#30066"
 msgid "Unknown channel"
 msgstr "Ukjent kanal"
+
+msgctxt "#30067"
+msgid "No tuning details"
+msgstr "Ingen tuning detaljer"
+
+msgctxt "#30068"
+msgid "Channel is not mapped to any card"
+msgstr "Kanal er ikke mappet til noe kort"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "Kort er deaktivert"
+
+msgctxt "#30070"
+msgid "Connection to slave failed"
+msgstr "Tilkobling til slave feilet"
+
+msgctxt "#30071"
+msgid "Not the owner"
+msgstr "Ikke eieren"
+
+msgctxt "#30072"
+msgid "Graph building failed"
+msgstr "Graf bygging feilet"
+
+msgctxt "#30073"
+msgid "SW Encoder missing"
+msgstr "SW Encoder mangler"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "Ikke nok ledig lagringsplass"
+
+msgctxt "#30075"
+msgid "No PMT found"
+msgstr "Fant ikke PMT"

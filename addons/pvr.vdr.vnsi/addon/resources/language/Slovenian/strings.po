@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Slovenian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/sl/)\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/xbmc-main/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -35,7 +34,7 @@ msgstr "Pretvorba kodnega sistema"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
-msgstr "Najdaljši dovoljeni čas povezave (s)"
+msgstr "Časovni pretek povezave (s)"
 
 msgctxt "#30005"
 msgid "Allow VDR Messages"
@@ -119,7 +118,7 @@ msgstr "Nazaj"
 
 msgctxt "#30025"
 msgid "Channel search - running... %i %%"
-msgstr "Iskanje programov - teče... %i %%"
+msgstr "Iskanje programov - teče ... %i %%"
 
 msgctxt "#30026"
 msgid "Type:"
@@ -195,12 +194,76 @@ msgstr "Iskanje programov - napaka"
 
 msgctxt "#30044"
 msgid "Lost connection to VDR Server"
-msgstr "Izgubljena povezava s strežnikom VDR"
+msgstr "Povezava s strežnikom VDR je bila izgubljena"
 
 msgctxt "#30045"
 msgid "Connection to VDR Server restored"
-msgstr "Obnovljena povezava s strežnikom VDR"
+msgstr "Povezava s strežnikom VDR je obnovljena"
 
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Samodejno ustvari skupine programov na strežniku"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Zahtevaj časovni zamik"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Nastavitve"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Upravljanje OSD - pritisnite info za izhod"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Izberite za upravljanje OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Način časovnega zamika"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Medpomnenje časovnega zamika (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Medpomnenje časovnega zamika (datoteka) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Admin"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Programi"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Dovoljeni ponudniki"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Onemogočeni programi"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtri programov"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radijski programi"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Shrani filtre"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Neznan ponudnik"

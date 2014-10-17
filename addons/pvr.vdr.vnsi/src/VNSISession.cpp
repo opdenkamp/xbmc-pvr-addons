@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -44,8 +45,8 @@ using namespace ADDON;
 using namespace PLATFORM;
 
 cVNSISession::cVNSISession()
-  : m_socket(NULL)
-  , m_protocol(0)
+  : m_protocol(0)
+  , m_socket(NULL)
   , m_connectionLost(false)
 {
 }
@@ -131,7 +132,8 @@ bool cVNSISession::Login()
     m_version   = ServerVersion;
     m_protocol  = (int)protocol;
 
-    if (m_protocol != VNSI_PROTOCOLVERSION)     throw "Protocol versions do not match";
+    if (m_protocol < VNSI_MIN_PROTOCOLVERSION)
+      throw "Protocol versions do not match";
 
     if (m_name.empty())
       XBMC->Log(LOG_NOTICE, "Logged in at '%lu+%i' to '%s' Version: '%s' with protocol version '%d'",

@@ -1,0 +1,141 @@
+# XBMC Media Center language file
+# Addon Name: DVBLink PVR Client
+# Addon id: pvr.dvblink
+# Addon Provider: DVBLogic
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "General"
+msgstr "常规"
+
+msgctxt "#30001"
+msgid "Server Address"
+msgstr "服务器地址"
+
+msgctxt "#30002"
+msgid "Server Port"
+msgstr "服务器端口"
+
+msgctxt "#30003"
+msgid "Client name"
+msgstr "客户端名称"
+
+msgctxt "#30004"
+msgid "Connection timeout (s)"
+msgstr "连接超时（秒）"
+
+msgctxt "#30005"
+msgid "Username"
+msgstr "用户名"
+
+msgctxt "#30006"
+msgid "Password"
+msgstr "密码"
+
+msgctxt "#30100"
+msgid "Stream"
+msgstr "媒体流"
+
+msgctxt "#30102"
+msgid "Stream format"
+msgstr "流格式"
+
+msgctxt "#30103"
+msgid "Height"
+msgstr "高"
+
+msgctxt "#30104"
+msgid "Width"
+msgstr "宽"
+
+msgctxt "#30105"
+msgid "Bitrate"
+msgstr "码率"
+
+msgctxt "#30106"
+msgid "Audio track"
+msgstr "音轨"
+
+msgctxt "#30107"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30108"
+msgid "RTP"
+msgstr "RTP"
+
+msgctxt "#30109"
+msgid "HLS"
+msgstr "HLS"
+
+msgctxt "#30110"
+msgid "ASF"
+msgstr "ASF"
+
+msgctxt "#30111"
+msgid "Enable Timeshift"
+msgstr "启用时光平移"
+
+msgctxt "#30112"
+msgid "Timeshift buffer path"
+msgstr "时光平移缓存路径"
+
+msgctxt "#30200"
+msgid "Advanced"
+msgstr "高级"
+
+msgctxt "#30201"
+msgid "Use channel handle instead of client id"
+msgstr "使用频道句柄而非客户端 ID"
+
+msgctxt "#30202"
+msgid "Show information messages"
+msgstr "显示信息"
+
+msgctxt "#32001"
+msgid "Connected to DVBLink Server '%s'"
+msgstr "连接到 DVBLink 服务器“%s”"
+
+msgctxt "#32002"
+msgid "Found '%d' channels"
+msgstr "找到 %d 个频道"
+
+msgctxt "#32003"
+msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
+msgstr "无法连接 DVBLink 服务器“%s”（错误码：%d）"
+
+msgctxt "#32004"
+msgid "Could not get recordings (Error code : %d)"
+msgstr "无法获取录像（错误码：%d）"
+
+msgctxt "#32006"
+msgid "Could not get timers(Error code : %d)"
+msgstr "无法获取定时器（错误码：%d）"
+
+msgctxt "#32007"
+msgid "Found %d EPG timers"
+msgstr "找到 %d 个电子节目单定时器"
+
+msgctxt "#32008"
+msgid "Found %d manual timers"
+msgstr "找到 %d 个人工定时器"
+
+msgctxt "#32009"
+msgid "Found %d recordings"
+msgstr "找到 %d 个录像"
+
+msgctxt "#32010"
+msgid "Could not get stream for channel %s (Error code : %d)"
+msgstr "无法获取频道 %s 的媒体流（错误码：%d）"

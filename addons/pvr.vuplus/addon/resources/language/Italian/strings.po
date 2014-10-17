@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
-# Addon version: 1.6.6
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Italian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/it/)\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/xbmc-main/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,7 +22,7 @@ msgstr "Nome host o indirizzo IP VU+"
 
 msgctxt "#30002"
 msgid "Streaming Port"
-msgstr "Porta di streaming"
+msgstr "Porta per lo streaming"
 
 msgctxt "#30003"
 msgid "Username"
@@ -51,15 +50,15 @@ msgstr "Pulizia automatica della lista dei timer"
 
 msgctxt "#30012"
 msgid "Webinterface Port"
-msgstr "Porta interfaccia web"
+msgstr "Porta dell'interfaccia web"
 
 msgctxt "#30013"
 msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
-msgstr "Zap prima del cambio canale (e.g. per le postazioni con sintonizzatore singolo)"
+msgstr "Zap prima del cambio canale (ad es: per i dispositivi con sintonizzatore singolo)"
 
 msgctxt "#30014"
 msgid "Folder for channeldata"
-msgstr "Cartella dei dati canale"
+msgstr "Cartella per i dati dei canali"
 
 msgctxt "#30015"
 msgid "Check for bouquett updates"
@@ -71,7 +70,7 @@ msgstr "Controlla aggiornamenti dei canali"
 
 msgctxt "#30017"
 msgid "Use only the DVB boxes' current recording path"
-msgstr "Usa solo il percorso di registrazione corrente di DVB"
+msgstr "Usa solo il percorso di registrazione corrente del dispositivo DVB"
 
 msgctxt "#30018"
 msgid "General"
@@ -83,7 +82,7 @@ msgstr "Canali"
 
 msgctxt "#30020"
 msgid "Advanced"
-msgstr "Avanzato"
+msgstr "Avanzate"
 
 msgctxt "#30021"
 msgid "HTTP"
@@ -91,7 +90,7 @@ msgstr "HTTP"
 
 msgctxt "#30022"
 msgid "Recordings / Timer"
-msgstr "Registrazioni/Timer"
+msgstr "Registrazioni / Timer"
 
 msgctxt "#30023"
 msgid "Recording folder on the receiver"
@@ -99,7 +98,7 @@ msgstr "Cartella per le registrazioni del ricevitore"
 
 msgctxt "#30024"
 msgid "Send DeepStandby-Command"
-msgstr "Spedisci DeepStandby-Command"
+msgstr "Invia comando di DeepStandby"
 
 msgctxt "#30025"
 msgid "Fetch only one TV bouquet"
@@ -107,7 +106,11 @@ msgstr "Prendi un solo bouquet TV"
 
 msgctxt "#30026"
 msgid "TV-Bouquet"
-msgstr "TV-Bouquet"
+msgstr "Bouquet TV"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "Raccogli picons dall'interfaccia web"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

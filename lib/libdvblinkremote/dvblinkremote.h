@@ -207,6 +207,11 @@ namespace dvblinkremote
   const std::string DVBLINK_REMOTE_STREAM_TYPE_RAW_HTTP = "raw_http";
 
   /**
+    * A constant string representing a Raw HTTP stream type with timeshifting capabilities.
+    */
+  const std::string DVBLINK_REMOTE_STREAM_TYPE_RAW_HTTP_TIMESHIFT = "raw_http_timeshift";
+
+  /**
     * A constant string representing a Raw UDP stream type.
     */
   const std::string DVBLINK_REMOTE_STREAM_TYPE_RAW_UDP = "raw_udp";

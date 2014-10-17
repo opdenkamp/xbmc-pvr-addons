@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -92,6 +93,10 @@ bool PVRDemoData::LoadDemoData(void)
       /* channel number */
       if (!XMLUtils::GetInt(pChannelNode, "number", channel.iChannelNumber))
         channel.iChannelNumber = iUniqueChannelId;
+
+      /* sub channel number */
+      if (!XMLUtils::GetInt(pChannelNode, "subnumber", channel.iSubChannelNumber))
+        channel.iSubChannelNumber = 0;
 
       /* CAID */
       if (!XMLUtils::GetInt(pChannelNode, "encryption", channel.iEncryptionSystem))
@@ -228,6 +233,10 @@ bool PVRDemoData::LoadDemoData(void)
       else
         recording.strStreamURL = strTmp;
 
+      /* recording path */
+      if (XMLUtils::GetString(pRecordingNode, "directory", strTmp))
+        recording.strDirectory = strTmp;
+
       iUniqueGroupId++;
       strTmp.Format("%d", iUniqueGroupId);
       recording.strRecordingId = strTmp;
@@ -274,6 +283,70 @@ bool PVRDemoData::LoadDemoData(void)
     }
   }
 
+  /* load timers */
+  pElement = pRootElement->FirstChildElement("timers");
+  if (pElement)
+  {
+    TiXmlNode *pTimerNode = NULL;
+    while ((pTimerNode = pElement->IterateChildren(pTimerNode)) != NULL)
+    {
+      CStdString strTmp;
+      int iTmp;
+      PVRDemoTimer timer;
+      time_t timeNow = time(NULL);
+      struct tm* now = localtime(&timeNow);
+
+      /* channel id */
+      if (!XMLUtils::GetInt(pTimerNode, "channelid", iTmp))
+        continue;
+      PVRDemoChannel &channel = m_channels.at(iTmp - 1);
+      timer.iChannelId = channel.iUniqueId;
+
+      /* state */
+      if (XMLUtils::GetInt(pTimerNode, "state", iTmp))
+        timer.state = (PVR_TIMER_STATE) iTmp;
+
+      /* title */
+      if (!XMLUtils::GetString(pTimerNode, "title", strTmp))
+        continue;
+      timer.strTitle = strTmp;
+
+      /* summary */
+      if (!XMLUtils::GetString(pTimerNode, "summary", strTmp))
+        continue;
+      timer.strSummary = strTmp;
+
+      /* start time */
+      if (XMLUtils::GetString(pTimerNode, "starttime", strTmp))
+      {
+        CStdString::size_type delim = strTmp.Find(':');
+        if (delim != CStdString::npos)
+        {
+          now->tm_hour = (int)strtol(strTmp.Left(delim), NULL, 0);
+          now->tm_min  = (int)strtol(strTmp.Mid(delim + 1), NULL, 0);
+
+          timer.startTime = mktime(now);
+        }
+      }
+
+      /* end time */
+      if (XMLUtils::GetString(pTimerNode, "endtime", strTmp))
+      {
+        CStdString::size_type delim = strTmp.Find(':');
+        if (delim != CStdString::npos)
+        {
+          now->tm_hour = (int)strtol(strTmp.Left(delim), NULL, 0);
+          now->tm_min  = (int)strtol(strTmp.Mid(delim + 1), NULL, 0);
+
+          timer.endTime = mktime(now);
+        }
+      }
+
+      XBMC->Log(LOG_DEBUG, "loaded timer '%s' channel '%d' start '%d' end '%d'", timer.strTitle.c_str(), timer.iChannelId, timer.startTime, timer.endTime);
+      m_timers.push_back(timer);
+    }
+  }
+
   return true;
 }
 
@@ -295,6 +368,7 @@ PVR_ERROR PVRDemoData::GetChannels(ADDON_HANDLE handle, bool bRadio)
       xbmcChannel.iUniqueId         = channel.iUniqueId;
       xbmcChannel.bIsRadio          = channel.bRadio;
       xbmcChannel.iChannelNumber    = channel.iChannelNumber;
+      xbmcChannel.iSubChannelNumber = channel.iSubChannelNumber;
       strncpy(xbmcChannel.strChannelName, channel.strChannelName.c_str(), sizeof(xbmcChannel.strChannelName) - 1);
       strncpy(xbmcChannel.strStreamURL, channel.strStreamURL.c_str(), sizeof(xbmcChannel.strStreamURL) - 1);
       xbmcChannel.iEncryptionSystem = channel.iEncryptionSystem;
@@ -318,6 +392,7 @@ bool PVRDemoData::GetChannel(const PVR_CHANNEL &channel, PVRDemoChannel &myChann
       myChannel.iUniqueId         = thisChannel.iUniqueId;
       myChannel.bRadio            = thisChannel.bRadio;
       myChannel.iChannelNumber    = thisChannel.iChannelNumber;
+      myChannel.iSubChannelNumber = thisChannel.iSubChannelNumber;
       myChannel.iEncryptionSystem = thisChannel.iEncryptionSystem;
       myChannel.strChannelName    = thisChannel.strChannelName;
       myChannel.strIconPath       = thisChannel.strIconPath;
@@ -372,8 +447,8 @@ PVR_ERROR PVRDemoData::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHA
         memset(&xbmcGroupMember, 0, sizeof(PVR_CHANNEL_GROUP_MEMBER));
 
         strncpy(xbmcGroupMember.strGroupName, group.strGroupName, sizeof(xbmcGroupMember.strGroupName) - 1);
-        xbmcGroupMember.iChannelUniqueId = channel.iUniqueId;
-        xbmcGroupMember.iChannelNumber   = channel.iChannelNumber;
+        xbmcGroupMember.iChannelUniqueId  = channel.iUniqueId;
+        xbmcGroupMember.iChannelNumber    = channel.iChannelNumber;
 
         PVR->TransferChannelGroupMember(handle, &xbmcGroupMember);
       }
@@ -455,8 +530,39 @@ PVR_ERROR PVRDemoData::GetRecordings(ADDON_HANDLE handle)
     strncpy(xbmcRecording.strRecordingId, recording.strRecordingId.c_str(), sizeof(xbmcRecording.strRecordingId) - 1);
     strncpy(xbmcRecording.strTitle,       recording.strTitle.c_str(),       sizeof(xbmcRecording.strTitle) - 1);
     strncpy(xbmcRecording.strStreamURL,   recording.strStreamURL.c_str(),   sizeof(xbmcRecording.strStreamURL) - 1);
+    strncpy(xbmcRecording.strDirectory,   recording.strDirectory.c_str(),   sizeof(xbmcRecording.strDirectory) - 1);
 
     PVR->TransferRecordingEntry(handle, &xbmcRecording);
+  }
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+int PVRDemoData::GetTimersAmount(void)
+{
+  return m_timers.size();
+}
+
+PVR_ERROR PVRDemoData::GetTimers(ADDON_HANDLE handle)
+{
+  int i = 0;
+  for (std::vector<PVRDemoTimer>::iterator it = m_timers.begin() ; it != m_timers.end() ; it++)
+  {
+    PVRDemoTimer &timer = *it;
+
+    PVR_TIMER xbmcTimer;
+    memset(&xbmcTimer, 0, sizeof(PVR_TIMER));
+
+    xbmcTimer.iClientIndex      = ++i;
+    xbmcTimer.iClientChannelUid = timer.iChannelId;
+    xbmcTimer.startTime         = timer.startTime;
+    xbmcTimer.endTime           = timer.endTime;
+    xbmcTimer.state             = timer.state;
+
+    strncpy(xbmcTimer.strTitle, timer.strTitle.c_str(), sizeof(timer.strTitle) - 1);
+    strncpy(xbmcTimer.strSummary, timer.strSummary.c_str(), sizeof(timer.strSummary) - 1);
+
+    PVR->TransferTimerEntry(handle, &xbmcTimer);
   }
 
   return PVR_ERROR_NO_ERROR;

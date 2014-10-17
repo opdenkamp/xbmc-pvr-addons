@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
-# Addon version: 1.6.6
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/es_MX/)\n"
+"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/xbmc-main/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -32,3 +31,19 @@ msgstr "General"
 msgctxt "#30019"
 msgid "Channels"
 msgstr "Canales"
+
+msgctxt "#30020"
+msgid "Advanced"
+msgstr "Avanzado"
+
+msgctxt "#30021"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "Desconectado desde '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "Reconectado a '%s'"

@@ -1,26 +1,165 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Chinese (Traditional) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/zh_TW/)\n"
+"Language-Team: Chinese (Traditional) (http://www.transifex.com/projects/p/xbmc-main/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "Mediaportal主機名稱"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "Mediaportal XBMC外掛程式端口"
+
+msgctxt "#30002"
+msgid "Free-to-air only"
+msgstr "只有Free-to-air"
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "包含收音機"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "快速頻道切換(不停止時光平移)"
+
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "連接超時(秒)"
+
+msgctxt "#30006"
+msgid "Import only TV Channels from group"
+msgstr "只從群組導入的電視頻道"
+
+msgctxt "#30007"
+msgid "Import only Radio Channels from group"
+msgstr "只從群組導入的廣播頻道"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "轉換主機名稱到IP位址"
+
+msgctxt "#30009"
+msgid "EPG: Read genre strings (slow)"
+msgstr "電子節目表：讀取類別字符串流 (慢)"
+
+msgctxt "#30010"
+msgid "Wait time after tuning a channel (ms)"
+msgstr "頻道調整後的等待時間 (毫秒)"
+
+msgctxt "#30015"
+msgid "Streaming method"
+msgstr "串流方式"
+
+msgctxt "#30016"
+msgid "Windows user account (SMB)"
+msgstr "視窗使用帳戶 (SMB)"
+
+msgctxt "#30017"
+msgid "Windows password (SMB)"
+msgstr "視窗密碼 (SMB)"
+
+msgctxt "#30018"
+msgid "Use RTSP streaming"
+msgstr "使用RTSP串流"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "連接"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
+
 msgctxt "#30042"
 msgid "Playback"
 msgstr "播放"
 
+msgctxt "#30050"
+msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "您的TVServerXBMC版本'%s' 太舊了。請升級到'%s' 或更高版本！"
+
+msgctxt "#30051"
+msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgstr "您的TVServerXBMC版本太舊了。請升級到'%s' 或更高版本！"
+
+msgctxt "#30052"
+msgid "Recording playback failed. Empty URL of filename."
+msgstr "錄影撥放失敗。檔案名稱是失效的URL連結。"
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "所有的電視卡都在忙碌中"
+
+msgctxt "#30061"
+msgid "Channel is scrambled"
+msgstr "頻道已加碼"
+
+msgctxt "#30062"
+msgid "No video or audio detected"
+msgstr "偵測不到影片或音樂"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "偵測不到訊號"
+
 msgctxt "#30064"
 msgid "Unknown error"
 msgstr "未知的錯誤"
+
+msgctxt "#30065"
+msgid "Unable to start graph"
+msgstr "無法開啟圖形"
+
+msgctxt "#30066"
+msgid "Unknown channel"
+msgstr "未知的頻道"
+
+msgctxt "#30067"
+msgid "No tuning details"
+msgstr "無調整的詳細訊息"
+
+msgctxt "#30068"
+msgid "Channel is not mapped to any card"
+msgstr "頻道沒有映射到任何電視卡"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "電視卡已禁用"
+
+msgctxt "#30070"
+msgid "Connection to slave failed"
+msgstr "連接到從屬失敗"
+
+msgctxt "#30071"
+msgid "Not the owner"
+msgstr "不是所有者"
+
+msgctxt "#30072"
+msgid "Graph building failed"
+msgstr "圖形建立失敗"
+
+msgctxt "#30073"
+msgid "SW Encoder missing"
+msgstr "SW編碼器丟失"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "沒有多餘的硬碟空間"
+
+msgctxt "#30075"
+msgid "No PMT found"
+msgstr "找不到PMT"

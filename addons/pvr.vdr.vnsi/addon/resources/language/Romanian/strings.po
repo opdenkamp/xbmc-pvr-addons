@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Romanian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/ro/)\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/xbmc-main/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -31,7 +30,7 @@ msgstr "Prioritate"
 
 msgctxt "#30003"
 msgid "Character Set Conversion"
-msgstr "Conversie caracter set"
+msgstr "Conversie set de caractere"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
@@ -91,11 +90,11 @@ msgstr "Țară"
 
 msgctxt "#30018"
 msgid "Cable Inversion"
-msgstr "Inversare cablu"
+msgstr "Inversiune cablu"
 
 msgctxt "#30019"
 msgid "Cable Symbolrate"
-msgstr "Symbolrate cablu"
+msgstr "Simbol Rate cablu"
 
 msgctxt "#30020"
 msgid "Cable modulation"
@@ -103,11 +102,11 @@ msgstr "Modulare Cablu"
 
 msgctxt "#30021"
 msgid "Terr Inversion"
-msgstr "Inversie Terr"
+msgstr "Inversiune Terr"
 
 msgctxt "#30022"
 msgid "Satellite"
-msgstr "Sateliţi"
+msgstr "Satelit"
 
 msgctxt "#30023"
 msgid "ATSC Type"
@@ -131,7 +130,7 @@ msgstr "Aparat:"
 
 msgctxt "#30028"
 msgid "Scan: %i"
-msgstr "Scan: %i"
+msgstr "Scanare: %i"
 
 msgctxt "#30029"
 msgid "Signal: %i %%"
@@ -147,11 +146,11 @@ msgstr "Toate canalele: %i"
 
 msgctxt "#30032"
 msgid "Analog TV"
-msgstr "TV Analogic"
+msgstr "TV analogic"
 
 msgctxt "#30033"
 msgid "Analog Radio"
-msgstr "Radio analog"
+msgstr "Radio analogic"
 
 msgctxt "#30034"
 msgid "Transponder:"
@@ -163,7 +162,7 @@ msgstr "Canale noi"
 
 msgctxt "#30036"
 msgid "Channel search - Finished"
-msgstr "Căutare canale - terminată"
+msgstr "Căutare canale - Finalizat"
 
 msgctxt "#30037"
 msgid "No device available - exiting"
@@ -183,15 +182,15 @@ msgstr "Oprit"
 
 msgctxt "#30041"
 msgid "Finished"
-msgstr "Terminat"
+msgstr "Finalizat"
 
 msgctxt "#30042"
 msgid "Channel search - Canceled"
-msgstr "Căutare canale - anulată"
+msgstr "Căutare canale - Anulată"
 
 msgctxt "#30043"
 msgid "Channel search - Error"
-msgstr "Căutare canale - eroare"
+msgstr "Căutare canale - Eroare"
 
 msgctxt "#30044"
 msgid "Lost connection to VDR Server"
@@ -203,4 +202,68 @@ msgstr "Conexiunea la serverul VDR restaurată"
 
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
-msgstr "Creează grupuri canale automat pe server"
+msgstr "Creează automat grupuri de canale pe server"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Cere inregistrare temporară"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Configurare"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Controlul OSD - apasa info pentru iesire"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Selecteaza ca sa controlezi OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Mod înregistrare temporară"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Înregistrare temporară (RAM) x 100MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Înregistrare temporară (fisier) x 1GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "Administrare VDR"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Canale"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Listă furnizori acceptați"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Listă canale respinse "
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtre canale"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Filtre radio"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Salvează filtrele"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Furnizor necunoscut"

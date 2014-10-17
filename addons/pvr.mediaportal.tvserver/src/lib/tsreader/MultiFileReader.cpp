@@ -358,7 +358,6 @@ long MultiFileReader::RefreshTSBufferFile()
   unsigned long bytesRead;
   MultiFileReaderFile *file;
 
-  long result;
   int64_t currentPosition;
   int32_t filesAdded, filesRemoved;
   int32_t filesAdded2, filesRemoved2;
@@ -390,7 +389,7 @@ long MultiFileReader::RefreshTSBufferFile()
     uint32_t readLength = sizeof(currentPosition) + sizeof(filesAdded) + sizeof(filesRemoved);
     unsigned char* readBuffer = new unsigned char[readLength];
 
-    result = m_TSBufferFile.Read(readBuffer, readLength, &bytesRead);
+    long result = m_TSBufferFile.Read(readBuffer, readLength, &bytesRead);
 
     if (!SUCCEEDED(result) || bytesRead!=readLength)
       Error |= 0x02;

@@ -1,42 +1,269 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Croatian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/hr/)\n"
+"Language-Team: Croatian (http://www.transifex.com/projects/p/xbmc-main/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "VDR naziv računala ili IP"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "VNSI ulaz"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Prioritet"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Skup znakova konverzije"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Istek vremena povezivanja (sek)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Dopusti VDR poruke"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Čitaj snimanja iz direktorija"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "VDR direktorij snimanja"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Pretraživanje programa"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Pretraživanje programa - Postavke"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Pokreni pretraživanje programa"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Vrsta izvora"
+
 msgctxt "#30012"
 msgid "TV channels"
-msgstr "TV kanali"
+msgstr "TV programi"
 
 msgctxt "#30013"
 msgid "Radio channels"
-msgstr "Radio kanali"
+msgstr "Radio programi"
+
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Nekôdirani programi"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Kôdirani programi"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "HD programi"
 
 msgctxt "#30017"
 msgid "Country"
 msgstr "Zemlja"
 
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Inverzija kabla"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Protok simbola kabla"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Modulacija kabla"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Zemaljska inverzija"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Satelit"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "ATSC vrsta"
+
 msgctxt "#30024"
 msgid "Back"
 msgstr "Nazad"
 
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Pretraživanje programa - pokretanje... %i %%"
+
 msgctxt "#30026"
 msgid "Type:"
-msgstr "Tip:"
+msgstr "Vrsta:"
+
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Uređaj:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Pretraži: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Signal: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Novi programi: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Svi programi: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Analogna TV"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Analogni Radio"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Transponder:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Novi programi"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Pretraživanje programa - Završeno"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Nema dostupnih uređaja - izlazim"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Nema dostupnih DVB-S2 uređaja - pokušavam prebaciti na DVB-S"
 
 msgctxt "#30039"
 msgid "Running"
-msgstr "Pokrenut"
+msgstr "Pokrenuto"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Zaustavljeno"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Završeno"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Pretraživanje programa - Prekinuto"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Pretraživanje programa - Greška"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Izgubljena veza s VDR poslužiteljem"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "Povezivanje s VDR poslužiteljem ponovno uspostavljeno"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Stvori grupu programa automatski na poslužitelju"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Omogući vremensko premotavanje"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Postavljanje"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Upravljanje OSD - pritisni info za izlaz"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Odaberi za upravljanje OSD-om"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Način vremenskog premotavanja"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Međumemorija vremenskog premotavanja (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Međumemorija vremenskog premotavanja (Datoteka) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR administrator"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Programi"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Dopušteni pružatelj usluga"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Blokirani programi"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Filtri programa"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radio programi"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Spremi filter"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Nepoznat pružatelj usluge"

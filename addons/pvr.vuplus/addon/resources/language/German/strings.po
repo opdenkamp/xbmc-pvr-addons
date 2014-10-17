@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
-# Addon version: 1.6.6
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: German (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/de/)\n"
+"Language-Team: German (http://www.transifex.com/projects/p/xbmc-main/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "VU+ hostname or IP address"
-msgstr "VU+ IP"
+msgstr "VU+ Hostname oder IP-Adresse"
 
 msgctxt "#30002"
 msgid "Streaming Port"
@@ -39,19 +38,19 @@ msgstr "Antwort-Timeout in Sekunden"
 
 msgctxt "#30008"
 msgid "Icon Path"
-msgstr "Picon-Pfad"
+msgstr "Icon-Pfad"
 
 msgctxt "#30010"
 msgid "Update Interval in minutes"
-msgstr "Aktualisierungsintervall (in Minuten)"
+msgstr "Aktualisierungsintervall in Minuten"
 
 msgctxt "#30011"
 msgid "Automatic Timerlist Cleanup"
-msgstr "Entferne abgeschlossene Timer"
+msgstr "Entferne abgeschlossene Timer automatisch"
 
 msgctxt "#30012"
 msgid "Webinterface Port"
-msgstr "Webinterface Port"
+msgstr "Weboberfläche Port"
 
 msgctxt "#30013"
 msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
@@ -71,11 +70,11 @@ msgstr "Überprüfe auf Kanalaktualisierungen"
 
 msgctxt "#30017"
 msgid "Use only the DVB boxes' current recording path"
-msgstr "Aktuellen Box-Aufnahmenpfad nutzen"
+msgstr "Nur den aktuellen Box-Aufnahmenpfad nutzen"
 
 msgctxt "#30018"
 msgid "General"
-msgstr "Allgemeines"
+msgstr "Allgemein"
 
 msgctxt "#30019"
 msgid "Channels"
@@ -83,7 +82,7 @@ msgstr "Sender"
 
 msgctxt "#30020"
 msgid "Advanced"
-msgstr "Fortgeschritten"
+msgstr "Erweitert"
 
 msgctxt "#30021"
 msgid "HTTP"
@@ -103,7 +102,7 @@ msgstr "Sende DeepStandby-Befehl"
 
 msgctxt "#30025"
 msgid "Fetch only one TV bouquet"
-msgstr "Nur ein TV-Bouquet"
+msgstr "Lade nur ein TV-Bouquet"
 
 msgctxt "#30026"
 msgid "TV-Bouquet"
@@ -111,14 +110,11 @@ msgstr "TV-Bouquet"
 
 msgctxt "#30027"
 msgid "Fetch picons from webinterface"
-msgstr "Lade Picons vom Web-Interface"
-
-#empty strings from id 30028 to 30499
-#notifications
+msgstr "Lade Picons aus der Weboberfläche"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"
-msgstr "Verbindung '%s' unterbrochen"
+msgstr "Verbindung zu '%s' unterbrochen"
 
 msgctxt "#30501"
 msgid "Reconnected to '%s'"

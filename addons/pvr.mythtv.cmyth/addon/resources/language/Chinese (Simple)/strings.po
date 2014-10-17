@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/zh/)\n"
+"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,27 +18,27 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "MythTV Backend Hostname or IP"
-msgstr "MythTV后端主机名或IP地址"
+msgstr "MythTV 后端主机名或 IP 地址"
 
 msgctxt "#30001"
 msgid "MythTV Backend Port"
-msgstr "MythTV后端端口"
+msgstr "MythTV 后端端口"
 
 msgctxt "#30002"
 msgid "MythTV Database Username"
-msgstr "MythTV数据库用户名"
+msgstr "MythTV 数据库用户名"
 
 msgctxt "#30003"
 msgid "MythTV Database Password"
-msgstr "MythTV数据库密码"
+msgstr "MythTV 数据库密码"
 
 msgctxt "#30004"
 msgid "MythTV Database Databasename"
-msgstr "MythTV数据库库名"
+msgstr "MythTV 数据库库名"
 
 msgctxt "#30005"
 msgid "Include more debug information in the log file"
-msgstr "log文件记录更多调试信息"
+msgstr "日志文件记录更多调试信息"
 
 msgctxt "#30006"
 msgid "Enable Live TV"
@@ -48,3 +47,179 @@ msgstr "启用直播电视"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "允许直播电视移动预定节目"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "冲突处理"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "当录像推迟时继续直播电视"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "停止直播电视以继续录像"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "取消冲突录像以继续直播电视"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV 后端网络地址（WOL）"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "常规"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "模板来源"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "内置"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "内置模板"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "自动查找元数据"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "标记新录像"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "转码新录像"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "运行用户任务#1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "运行用户任务#2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "运行用户任务#3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "运行用户任务#4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "转码器"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "允许录像过期？"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "录像模板"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "高级"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "启用分离 MPEG-TS"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "协议版本：%i - 数据库版本：%i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "连接 MythTV 后端失败"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "连接 MythTV 数据库失败"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "MythTV 后端连接丢失"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "MythTV 连接已恢复"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "MythTV 后端无响应"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "频道不可用"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "录像机不可用"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "正取消冲突录像：%s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "停止直播电视于冲突录像：%s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "未录制"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "启用"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "禁用"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "无播出"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "删除重新录像"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "保留直播电视录像"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "“未录制”状态显示/隐藏规则"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "录制所有节目（此频道）"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "每周录制此节目"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "每日录制此节目"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "录制单个节目（所有频道）"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "录制所有新分集（此频道）"

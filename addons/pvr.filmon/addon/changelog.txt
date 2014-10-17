@@ -1,0 +1,10 @@
+0.4.0
+
+Add support for HLS.
+Fix recording storage.
+Notification on each channel load.
+
+0.3.0
+
+Initial working version.
+

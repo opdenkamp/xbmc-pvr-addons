@@ -14,13 +14,15 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with GNU Make; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. 
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
 
 #include "PidTable.h"
 #include "client.h" //XBMC->Log
+#include "utils.h"
 
 using namespace ADDON;
 
@@ -104,7 +106,7 @@ void CPidTable::Copy(const CPidTable &pids)
 }
 
 
-bool CPidTable::HasTeletextPageInfo(int page)
+bool CPidTable::HasTeletextPageInfo(int UNUSED(page))
 { //MG: todo
   //std::vector<TeletextServiceInfo>::iterator vit = TeletextInfo.begin();
   //while(vit != TeletextInfo.end())

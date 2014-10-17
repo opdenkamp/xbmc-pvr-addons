@@ -91,38 +91,6 @@ const char* booltostring(const bool b)
   return (b==true) ? "True" : "False";
 }
 
-time_t DateTimeToTimeT(const std::string& datetime)
-{
-  struct tm timeinfo;
-  int year, month ,day;
-  int hour, minute, second;
-  int count;
-  time_t retval;
-
-  count = sscanf(datetime.c_str(), "%4d-%2d-%2d %2d:%2d:%2d", &year, &month, &day, &hour, &minute, &second);
-
-  if(count != 6)
-    return -1;
-
-  timeinfo.tm_hour = hour;
-  timeinfo.tm_min = minute;
-  timeinfo.tm_sec = second;
-  timeinfo.tm_year = year - 1900;
-  timeinfo.tm_mon = month - 1;
-  timeinfo.tm_mday = day;
-  // Make the other fields empty:
-  timeinfo.tm_isdst = -1;
-  timeinfo.tm_wday = 0;
-  timeinfo.tm_yday = 0;
-
-  retval = mktime (&timeinfo);
-
-  if(retval < 0)
-    retval = 0;
-
-  return retval;
-}
-
 std::string ToThumbFileName(const char* strChannelName)
 {
   CStdString strThumbName = strChannelName;
@@ -130,6 +98,12 @@ std::string ToThumbFileName(const char* strChannelName)
   strThumbName.Replace(":","_");
   strThumbName.Replace("/","_");
   strThumbName.Replace("\\","_");
+  strThumbName.Replace(">","_");
+  strThumbName.Replace("<","_");
+  strThumbName.Replace("*","_");
+  strThumbName.Replace("?","_");
+  strThumbName.Replace("\"","_");
+  strThumbName.Replace("|","_");
 
   return strThumbName;
 }
@@ -137,25 +111,22 @@ std::string ToThumbFileName(const char* strChannelName)
 std::string ToXBMCPath(const std::string& strFileName)
 {
   CStdString strXBMCFileName = strFileName;
-  CStdString SMBPrefix = "smb://";
 
-  if (g_szSMBusername.length() > 0)
+  if (strXBMCFileName.Left(2) == "\\\\")
   {
-    SMBPrefix += g_szSMBusername;
-    if (g_szSMBpassword.length() > 0)
+    CStdString SMBPrefix = "smb://";
+
+    if (g_szSMBusername.length() > 0)
     {
-      SMBPrefix += ":" + g_szSMBpassword;
+      SMBPrefix += g_szSMBusername;
+      if (g_szSMBpassword.length() > 0)
+      {
+        SMBPrefix += ":" + g_szSMBpassword;
+      }
+      SMBPrefix += "@";
     }
-    SMBPrefix += "@";
+    strXBMCFileName.Replace("\\\\", SMBPrefix);
   }
-#ifndef TARGET_WINDOWS
-  else
-  {
-    SMBPrefix += "Guest@";
-  }
-#endif
-
-  strXBMCFileName.Replace("\\\\", SMBPrefix);
   strXBMCFileName.Replace('\\', '/');
 
   return strXBMCFileName;

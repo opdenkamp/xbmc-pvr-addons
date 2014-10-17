@@ -14,7 +14,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with GNU Make; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -25,6 +26,7 @@
 #include <stdlib.h>
 #include "SectionDecoder.h"
 #include "TSHeader.h"
+#include "utils.h"
 
 using namespace ADDON;
 
@@ -242,7 +244,7 @@ void CSectionDecoder::OnTsPacket(CTsHeader& header,byte* tsPacket)
   }
 }
 
-void CSectionDecoder::OnNewSection(CSection& section)
+void CSectionDecoder::OnNewSection(CSection& UNUSED(section))
 {
 }
 

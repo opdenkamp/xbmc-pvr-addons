@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: German (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/de/)\n"
+"Language-Team: German (http://www.transifex.com/projects/p/xbmc-main/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -35,7 +34,7 @@ msgstr "Textkonvertierung (UTF-8)"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
-msgstr "Verbindungszeitüberlauf (s)"
+msgstr "Verbindungstimeout (s)"
 
 msgctxt "#30005"
 msgid "Allow VDR Messages"
@@ -67,23 +66,23 @@ msgstr "Empfangsart"
 
 msgctxt "#30012"
 msgid "TV channels"
-msgstr "TV Kanäle"
+msgstr "TV Sender"
 
 msgctxt "#30013"
 msgid "Radio channels"
-msgstr "Radio Kanäle"
+msgstr "Radio Sender"
 
 msgctxt "#30014"
 msgid "FTA channels"
-msgstr "Frei empfangbare Kanäle"
+msgstr "Frei empfangbare Sender"
 
 msgctxt "#30015"
 msgid "Scrambled channels"
-msgstr "Verschlüsselte Kanäle"
+msgstr "Verschlüsselte Sender"
 
 msgctxt "#30016"
 msgid "HD channels"
-msgstr "HD Kanäle"
+msgstr "HD Sender"
 
 msgctxt "#30017"
 msgid "Country"
@@ -111,7 +110,7 @@ msgstr "Satellit"
 
 msgctxt "#30023"
 msgid "ATSC Type"
-msgstr "ATSC Type"
+msgstr "ATSC Typ"
 
 msgctxt "#30024"
 msgid "Back"
@@ -139,11 +138,11 @@ msgstr "Signal: %i %%"
 
 msgctxt "#30030"
 msgid "New channels: %i"
-msgstr "Neue Kanäle: %i"
+msgstr "Neue Sender: %i"
 
 msgctxt "#30031"
 msgid "All channels: %i"
-msgstr "Alle Kanäle: %i"
+msgstr "Alle Sender: %i"
 
 msgctxt "#30032"
 msgid "Analog TV"
@@ -159,15 +158,15 @@ msgstr "Transponder:"
 
 msgctxt "#30035"
 msgid "New channels"
-msgstr "Neue Kanäle"
+msgstr "Neue Sender"
 
 msgctxt "#30036"
 msgid "Channel search - Finished"
-msgstr "Kanalsuche - Abgeschlossen"
+msgstr "Sendersuche - Abgeschlossen"
 
 msgctxt "#30037"
 msgid "No device available - exiting"
-msgstr "Kein Empfangsgerät verfügbar"
+msgstr "Kein Empfangsgerät verfügbar - Beende Vorgang"
 
 msgctxt "#30038"
 msgid "No DVB-S2 device available - trying fallback to DVB-S"
@@ -183,15 +182,15 @@ msgstr "Angehalten"
 
 msgctxt "#30041"
 msgid "Finished"
-msgstr "Fertig"
+msgstr "Abgeschlossen"
 
 msgctxt "#30042"
 msgid "Channel search - Canceled"
-msgstr "Kanalsuche - Abgebrochen"
+msgstr "Sendersuche - Abgebrochen"
 
 msgctxt "#30043"
 msgid "Channel search - Error"
-msgstr "Kanalsuche - Fehler"
+msgstr "Sendersuche - Fehler"
 
 msgctxt "#30044"
 msgid "Lost connection to VDR Server"
@@ -203,4 +202,68 @@ msgstr "Verbindung zum VDR Server wiederhergestellt"
 
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
-msgstr "Kanalgruppen automatisch am Server erzeugen"
+msgstr "Sendergruppen automatisch auf dem Server anlegen"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Fordere Timeshift an"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Setup"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "OSD-Steuerung aktiv - Drücke Info zum Verlassen"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Auswählen zur OSD-Steuerung"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Timeshift-Modus"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Timeshift Puffer (RAM) x100MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Timeshift Puffer (Datei) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Admin"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanäle"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Weißliste der Anbieter"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Weißliste der Kanäle"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Kanalfilter"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radiokanäle"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Filter speichern"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Anbieter unbekannt"

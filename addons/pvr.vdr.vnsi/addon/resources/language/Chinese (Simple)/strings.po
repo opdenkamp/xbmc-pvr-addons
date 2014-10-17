@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/zh/)\n"
+"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,11 +18,11 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "VDR Hostname or IP"
-msgstr "VDR主机名或IP地址"
+msgstr "VDR 主机名或 IP 地址"
 
 msgctxt "#30001"
 msgid "VNSI Port"
-msgstr "VNSI端口"
+msgstr "VNSI 端口"
 
 msgctxt "#30002"
 msgid "Priority"
@@ -39,15 +38,15 @@ msgstr "连接超时（秒）"
 
 msgctxt "#30005"
 msgid "Allow VDR Messages"
-msgstr "允许VDR信息"
+msgstr "允许 VDR 信息"
 
 msgctxt "#30006"
 msgid "Read recordings from directory"
-msgstr "从目录读取录制"
+msgstr "读取录像于目录"
 
 msgctxt "#30007"
 msgid "VDR recordings directory"
-msgstr "VDR录制目录"
+msgstr "VDR 录像目录"
 
 msgctxt "#30008"
 msgid "Channel search"
@@ -75,7 +74,7 @@ msgstr "电台频道"
 
 msgctxt "#30014"
 msgid "FTA channels"
-msgstr "FTA频道"
+msgstr "免费频道"
 
 msgctxt "#30015"
 msgid "Scrambled channels"
@@ -103,7 +102,7 @@ msgstr "电缆调制"
 
 msgctxt "#30021"
 msgid "Terr Inversion"
-msgstr "Terr反转"
+msgstr "Terr 反转"
 
 msgctxt "#30022"
 msgid "Satellite"
@@ -111,7 +110,7 @@ msgstr "卫星"
 
 msgctxt "#30023"
 msgid "ATSC Type"
-msgstr "ATSC类型"
+msgstr "ATSC 类型"
 
 msgctxt "#30024"
 msgid "Back"
@@ -171,7 +170,7 @@ msgstr "无可用设备 - 正退出"
 
 msgctxt "#30038"
 msgid "No DVB-S2 device available - trying fallback to DVB-S"
-msgstr "无可用DVB-S2设备 - 尝试DVB-S"
+msgstr "无可用 DVB-S2 设备 - 尝试 DVB-S"
 
 msgctxt "#30039"
 msgid "Running"
@@ -195,12 +194,76 @@ msgstr "频道搜索 - 错误"
 
 msgctxt "#30044"
 msgid "Lost connection to VDR Server"
-msgstr "失去与VDR服务器的连接"
+msgstr "失去与 VDR 服务器的连接"
 
 msgctxt "#30045"
 msgid "Connection to VDR Server restored"
-msgstr "与VDR服务器的连接已恢复"
+msgstr "与 VDR 服务器的连接已恢复"
 
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "自动在服务器上创建频道组"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "请求时光平移"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "设置"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "控制 OSD - 按 info 退出"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "选择控制 OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "时光平移模式"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "时光平移缓存（RAM）x100MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "时光平移缓存（文件）x1GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR 管理"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "频道"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "来源白名单"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "频道黑名单"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "频道筛选"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "电台频道"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "保存筛选"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "未知来源"

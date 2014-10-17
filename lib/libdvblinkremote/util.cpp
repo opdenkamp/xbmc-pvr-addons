@@ -202,7 +202,7 @@ bool Util::GetXmlFirstChildElementTextAsBoolean(const tinyxml2::XMLElement* pare
     s = el->GetText();
   }
 
-  if (s && strcmp(s, "true") != 0)
+  if (s && strcmp(s, "true") == 0)
   {
     value = true;
   }

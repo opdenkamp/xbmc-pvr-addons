@@ -19,7 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301  USA
  *
  *
  * Alternatively, you can license this library under a commercial license,
@@ -43,9 +44,6 @@
 #define NOMINMAX                      // don't define min() and max() to prevent a clash with std::min() and std::max
 #include <windows.h>
 #include <wchar.h>
-
-/* String to 64-bit int */
-#define atoll(S) _atoi64(S)
 
 /* Platform dependent path separator */
 #ifndef PATH_SEPARATOR_CHAR

@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Hungarian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/hu/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/xbmc-main/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -48,3 +47,179 @@ msgstr "Élő TV engedélyezése"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Az Élő TV elmozdíthatja az ütemezett műsorokat"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Konfliktuskezelés"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Élő tévé előnyben részesítése felvételkor"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Felvétel előnyben részesítése, Élő tv megállítása"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Élő tévé előnyben részesítése és a felvételi konfliktus törlése"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV háttérkiszolgáló ethernet cím (WOL)"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Menük"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Minta szolgáltató"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Belső"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Belső minta"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Metaadatok automatikus átnézése"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Új felvételek megjelölése"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Új felvételek átkódolása"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "User Job #1 futtatása"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "User Job #2 futtatása"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "User Job #3 futtatása"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "User Job #4 futtatása"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Átkódoló"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Engedélyezed a felvételek lejártát ?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Felvétel minta"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Haladó"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Az MPEG-TS adatfolyamok szétválasztásának engedélyezése"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Protokol verzió: %i - Adatbázis verzió: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Nincs kapcsolat a MythTV-vel"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Nincs kapcsolat a MythTV adatbázissal"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "A kapcsolat a MythTV-vel megszakadt"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "A kapcsolat a MythTV-vel visszaállt"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "A MythTV nem válaszol"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "A csatorna nem elérhető"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Felvevő nem elérhető"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Felvételi konfliktus törlése:  %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Élő tv megállítása és a felvételi konfliktus törlése :  %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Nem vesz fel"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Engedélyezve"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Letiltva"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Nem található adás"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Törlés és újra-felvétel"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "LiveTV felvétel folyamatosan"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Megjeleníti/Elrejti a szabályokat a 'nincs felvétel alatt'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Minden műsor felvétele (ezen a csatornán)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Ezt a műsort minden héten vegye fel"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Ezt a műsort minden nap vegye fel"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Egy műsor felvétele (bármilyen csatornán)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Az összes új epizód felvétele (ezen a csatornán)"

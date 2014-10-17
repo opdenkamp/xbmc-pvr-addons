@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
-# Addon version: 1.6.7
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: German (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/de/)\n"
+"Language-Team: German (http://www.transifex.com/projects/p/xbmc-main/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -48,3 +47,179 @@ msgstr "Aktiviere Live TV"
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Erlaube Live TV geplante Aufnahmen zu verschieben"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Konfliktbehandlung"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Bevorzuge Live TV, wenn Aufnahme später beginnt"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Bevorzuge Aufnahmen und unterbreche Live TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Bevorzuge Live TV und breche überschneidende Aufnahme ab"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV-Backend-Ethernet-Adresse (WOL)"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Allgemein"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "Vorlagenanbieter"
+
+msgctxt "#30021"
+msgid "Internal"
+msgstr "Intern"
+
+msgctxt "#30022"
+msgid "MythTV"
+msgstr "MythTV"
+
+msgctxt "#30025"
+msgid "Internal template"
+msgstr "Interne Vorlage"
+
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Automatisch Metadaten suchen"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Kennzeichne Werbung in neuen Aufnahmen"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Transkodiere neue Aufnahmen"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Starte benutzerdefinierten Job #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Starte benutzerdefinierten Job #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Starte benutzerdefinierten Job #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Starte benutzerdefinierten Job #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Transcoder"
+
+msgctxt "#30034"
+msgid "Allow recordings to expire?"
+msgstr "Erlaube Aufnahmen abzulaufen?"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Aufnahmevorlage"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Erweitert"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Demuxen des MPEG-TS aktivieren"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Protokollversion: %i - Datenbankversion: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "Konnte keine Verbindung zum MythTV Backend herstellen"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "Konnte keine Verbindung mit der MythTV Datenbank herstellen"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "Die Verbindung zum MythTV Backend wurde unterbrochen"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Verbindung zu MythTV wiederhergestellt"
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "Keine Antwort vom MythTV Backend"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Kanal nicht verfügbar"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Aufnahmegerät nicht verfügbar"
+
+msgctxt "#30307"
+msgid "Canceling conflicting recording: %s"
+msgstr "Breche überschneidende Aufnahme ab: %s"
+
+msgctxt "#30308"
+msgid "Stopping Live TV due to conflicting recording: %s"
+msgstr "Unterbreche Live TV wegen überschneidender Aufnahme: %s"
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Keine Aufnahme"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Aktiviert"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Ausschalten"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Keine Ausstrahlung gefunden"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Löschen und neu aufnehmen"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "LiveTV-Aufnahme beibehalten"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Anzeigen/Verstecken von Regeln mit dem Status  'Keine Aufnahme'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Alle Vorführungen aufzeichnen (dieser Sender)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Diese Vorführung jede Woche aufzeichnen"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Diese Vorführung jeden Tag aufzeichnen"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Eine Vorführung aufzeichnen (alle Sender)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Alle neuen Folgen aufzeichnen (dieser Sender)"

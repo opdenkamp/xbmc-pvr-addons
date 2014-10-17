@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Danish (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/da/)\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/xbmc-main/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -204,3 +203,67 @@ msgstr "Forbindelsen er genoprettet til VDR server"
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Opret automatisk en kanalgruppe på serveren"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Ønsk tidsforskydning"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Opsætning"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Kontrollere OSD - tryk på info for at forlade"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Vælg for at kontrollere OSD"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Tidsforskydningstilstand"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Tidsforskydningsbuffer (RAM) X 100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Tidsforskyningsbuffer (Fil) X 1 Gb"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Administration"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanaler"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Udbyder whitelist"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Kanal sortliste"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Kanalfiltre"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radiokanaler"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Gem filtre"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Udbyder Ukendt"

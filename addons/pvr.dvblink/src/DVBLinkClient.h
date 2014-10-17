@@ -17,7 +17,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -40,12 +41,10 @@
 #define DVBLINK_BUILD_IN_RECORDER_SOURCE_ID   "8F94B459-EFC0-4D91-9B29-EC3D72E92677"
 #define DVBLINK_RECODINGS_BY_DATA_ID   "F6F08949-2A07-4074-9E9D-423D877270BB"
 
-
-
 class DVBLinkClient : public PLATFORM::CThread
 {
 public:
-  DVBLinkClient(ADDON::CHelper_libXBMC_addon *XBMC, CHelper_libXBMC_pvr *PVR, std::string clientname, std::string hostname, long port, bool showinfomsg, std::string username, std::string password, bool usetimeshift, std::string timeshiftpath);
+  DVBLinkClient(ADDON::CHelper_libXBMC_addon *XBMC, CHelper_libXBMC_pvr *PVR, std::string clientname, std::string hostname, long port, bool showinfomsg, std::string username, std::string password, bool usetimeshift);
   ~DVBLinkClient(void);
   int GetChannelsAmount();
   PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
@@ -68,10 +67,13 @@ public:
   long long PositionLiveStream(void);
   long long LengthLiveStream(void);
   int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize);
+  time_t GetPlayingTime();
+  time_t GetBufferTimeStart();
+  time_t GetBufferTimeEnd();
 
 private:
   bool DoEPGSearch(dvblinkremote::EpgSearchResult& epgSearchResult, const std::string& channelId, const long startTime, const long endTime, const std::string & programId = "");
-  void SetEPGGenre(dvblinkremote::Program *program, EPG_TAG *tag);
+  void SetEPGGenre(dvblinkremote::ItemMetadata& metadata, int& genre_type, int& genre_subtype);
   std::string GetBuildInRecorderObjectID();
   std::string GetRecordedTVByDateObjectID(const std::string& buildInRecoderObjectID);
   int GetInternalUniqueIdFromChannelId(const std::string& channelId);
@@ -93,7 +95,6 @@ private:
   std::string m_clientname;
   std::string m_hostname;
   TimeShiftBuffer *m_tsBuffer;
-  std::string m_timeshiftpath;
   bool m_usetimeshift;
   bool m_showinfomsg;
   bool m_updating;

@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: German (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/de/)\n"
+"Language-Team: German (http://www.transifex.com/projects/p/xbmc-main/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Mediaportal Hostname"
-msgstr "Mediaportal Hostname oder IP"
+msgstr "Mediaportal Hostname oder IP-Adresse"
 
 msgctxt "#30001"
 msgid "Mediaportal XBMC plugin Port"
@@ -39,7 +38,7 @@ msgstr "Schneller Kanalwechsel (ohne Unterbrechung von Timeshift)"
 
 msgctxt "#30005"
 msgid "Connect timeout (s)"
-msgstr "Verbindungszeitüberlauf (s)"
+msgstr "Verbindungs-Timeout (s)"
 
 msgctxt "#30006"
 msgid "Import only TV Channels from group"
@@ -51,11 +50,11 @@ msgstr "Importiere nur Radiokanäle aus Gruppe"
 
 msgctxt "#30008"
 msgid "Convert hostname to IP-adress"
-msgstr "Konvertiere Hostname nach IP-Adresse"
+msgstr "Übersetze Hostname zu IP-Adresse"
 
 msgctxt "#30009"
 msgid "EPG: Read genre strings (slow)"
-msgstr "EPG: Genre Texte hochladen (langsam)"
+msgstr "EPG: Genre Texte lesen (langsam)"
 
 msgctxt "#30010"
 msgid "Wait time after tuning a channel (ms)"
@@ -91,15 +90,15 @@ msgstr "Wiedergabe"
 
 msgctxt "#30050"
 msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Ihre TVServerXBMC plugin '%s' ist zu alt. Sie brauchen mindestens Version '%s'!"
+msgstr "Dein TVServerXBMC plugin '%s' ist zu alt. Du brauchst mindestens Version '%s'!"
 
 msgctxt "#30051"
 msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Ihre TVServerXBMC plugin Version ist zu alt. Sie brauchen mindestens Version '%s'!"
+msgstr "Dein TVServerXBMC plugin ist zu alt. Du brauchst mindestens Version '%s'!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
-msgstr "Aufnahme fehlgeschlagen. Leere URL oder Dateiname."
+msgstr "Aufnahme-Wiedergabe fehlgeschlagen. Leere URL oder Dateiname."
 
 msgctxt "#30060"
 msgid "All cards are busy"
@@ -147,7 +146,7 @@ msgstr "Verbindung zum Slave fehlgeschlagen"
 
 msgctxt "#30071"
 msgid "Not the owner"
-msgstr "Kein Besitzer"
+msgstr "Nicht der Besitzer"
 
 msgctxt "#30072"
 msgid "Graph building failed"

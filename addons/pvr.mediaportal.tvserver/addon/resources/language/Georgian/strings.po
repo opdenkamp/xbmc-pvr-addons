@@ -1,0 +1,165 @@
+# XBMC Media Center language file
+# Addon Name: MediaPortal PVR Client
+# Addon id: pvr.mediaportal.tvserver
+# Addon Provider: Marcel Groothuis
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Georgian (http://www.transifex.com/projects/p/xbmc-main/language/ka/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ka\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "Mediaportal-ის სერვერის სახელი"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "Mediaportal XBMC ჩადგმის პორტი"
+
+msgctxt "#30002"
+msgid "Free-to-air only"
+msgstr "მხოლოდ უფასო არხები"
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "რადიოს ჩათვლით"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "არხების სწრაფი გადართვა (არ აჩერებს დროში გადაადგილებას)"
+
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "შეერთების დაყოვნება(ები)"
+
+msgctxt "#30006"
+msgid "Import only TV Channels from group"
+msgstr "სატელევიზიო არხების მხოლოდ ამ ჯუფიდან შემოტანა"
+
+msgctxt "#30007"
+msgid "Import only Radio Channels from group"
+msgstr "რადიო არხების მხოლოდ ამ ჯგუფიდან შემოტანა"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "სერვერის სახელის IP მისამართში გადაყვანა"
+
+msgctxt "#30009"
+msgid "EPG: Read genre strings (slow)"
+msgstr "EPG: ჟანრების სტრიქონების წაკითხვა (ნელი)"
+
+msgctxt "#30010"
+msgid "Wait time after tuning a channel (ms)"
+msgstr "არხზე გადართვიდან მოლოდინის დრო (მილიწამი)"
+
+msgctxt "#30015"
+msgid "Streaming method"
+msgstr "სტრიმინგის მეთოდი"
+
+msgctxt "#30016"
+msgid "Windows user account (SMB)"
+msgstr "Windows-ის მომხმარებლის ანგარიში (SMB)"
+
+msgctxt "#30017"
+msgid "Windows password (SMB)"
+msgstr "Windows-ის პაროლი (SMB)"
+
+msgctxt "#30018"
+msgid "Use RTSP streaming"
+msgstr "RTSP სტრიმინგის გამოყენება"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "შეერთება"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
+
+msgctxt "#30042"
+msgid "Playback"
+msgstr "დაკვრა"
+
+msgctxt "#30050"
+msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "თქვენი TVServerXBMC ვერსია '%s' ძალიან ძველია. გთხოვთ განაახლოთ '%s' ან უფრო ახალ ვერსიამდე."
+
+msgctxt "#30051"
+msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgstr "თქვენი TVServerXBMC ვერსია ძალიან ძველია. გთხოვთ განაახლოთ '%s' ან უფრო ახალ ვერსიამდე."
+
+msgctxt "#30052"
+msgid "Recording playback failed. Empty URL of filename."
+msgstr "ჩანაწერის დაკვრა შეუძლებელია. ცარიელი URL ან ფაილის სახელი."
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "ყველა ბარათი დაკავებულია"
+
+msgctxt "#30061"
+msgid "Channel is scrambled"
+msgstr "არხი დაშიფრულია"
+
+msgctxt "#30062"
+msgid "No video or audio detected"
+msgstr "არ არის ვიდეო ან აუდიო"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "არ არის სიგნალი"
+
+msgctxt "#30064"
+msgid "Unknown error"
+msgstr "უცნობი შეცდომა"
+
+msgctxt "#30065"
+msgid "Unable to start graph"
+msgstr "გრაფი ვერ ჩაირთო"
+
+msgctxt "#30066"
+msgid "Unknown channel"
+msgstr "უცნობი არხი"
+
+msgctxt "#30067"
+msgid "No tuning details"
+msgstr "არ არის ტუნერის დეტალები"
+
+msgctxt "#30068"
+msgid "Channel is not mapped to any card"
+msgstr "არხი არ არის მიბმული არც ერთ ბარათზე"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "ბარათი გამორთულია"
+
+msgctxt "#30070"
+msgid "Connection to slave failed"
+msgstr "ქვემდომთან კავშირი ვერ შედგა"
+
+msgctxt "#30071"
+msgid "Not the owner"
+msgstr "არ არის მეპატრონე"
+
+msgctxt "#30072"
+msgid "Graph building failed"
+msgstr "გრაფის შექმნა შეუძლებელია"
+
+msgctxt "#30073"
+msgid "SW Encoder missing"
+msgstr "არ არის SW კოდერი"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "არ არის ცარიელი ადგილი"
+
+msgctxt "#30075"
+msgid "No PMT found"
+msgstr "არ არის PMT"

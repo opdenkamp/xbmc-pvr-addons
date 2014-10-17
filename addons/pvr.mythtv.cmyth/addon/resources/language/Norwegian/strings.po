@@ -1,0 +1,69 @@
+# XBMC Media Center language file
+# Addon Name: MythTV cmyth PVR Client
+# Addon id: pvr.mythtv.cmyth
+# Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: XBMC Translation Team\n"
+"Language-Team: Norwegian (http://www.transifex.com/projects/p/xbmc-main/language/no/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: no\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "MythTV Backend Hostname or IP"
+msgstr "MythTV Backend Brukernavn eller IP"
+
+msgctxt "#30001"
+msgid "MythTV Backend Port"
+msgstr "MythTV Backend Port"
+
+msgctxt "#30002"
+msgid "MythTV Database Username"
+msgstr "MythTV Database Brukernavn"
+
+msgctxt "#30003"
+msgid "MythTV Database Password"
+msgstr "MythTV Database Passord"
+
+msgctxt "#30004"
+msgid "MythTV Database Databasename"
+msgstr "MythTV Database Databasenavn"
+
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "Inkluder mer debug informasjon i logg filen"
+
+msgctxt "#30006"
+msgid "Enable Live TV"
+msgstr "Aktiver Live TV"
+
+msgctxt "#30007"
+msgid "Allow Live TV to move scheduled shows"
+msgstr "Tillat at Live TV flytter avtalte programmer"
+
+msgctxt "#30019"
+msgid "General"
+msgstr "Generelt"
+
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Avansert"
+
+msgctxt "#30305"
+msgid "Channel unavailable"
+msgstr "Kanal utilgjengelig"
+
+msgctxt "#30310"
+msgid "Enabled"
+msgstr "Aktivert"
+
+msgctxt "#30311"
+msgid "Disabled"
+msgstr "Deaktivert"

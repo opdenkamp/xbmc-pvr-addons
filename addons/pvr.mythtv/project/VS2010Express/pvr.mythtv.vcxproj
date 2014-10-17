@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\avinfo.cpp" />
+    <ClCompile Include="..\..\src\categories.cpp" />
+    <ClCompile Include="..\..\src\client.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythChannel.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythEPGInfo.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythProgramInfo.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythRecordingRule.cpp" />
+    <ClCompile Include="..\..\src\cppmyth\MythScheduleManager.cpp" />
+    <ClCompile Include="..\..\src\demux.cpp" />
+    <ClCompile Include="..\..\src\demuxer\bitstream.cpp" />
+    <ClCompile Include="..\..\src\demuxer\debug.cpp" />
+    <ClCompile Include="..\..\src\demuxer\elementaryStream.cpp" />
+    <ClCompile Include="..\..\src\demuxer\ES_AAC.cpp" />
+    <ClCompile Include="..\..\src\demuxer\ES_AC3.cpp" />
+    <ClCompile Include="..\..\src\demuxer\ES_h264.cpp" />
+    <ClCompile Include="..\..\src\demuxer\ES_MPEGAudio.cpp" />
+    <ClCompile Include="..\..\src\demuxer\ES_MPEGVideo.cpp" />
+    <ClCompile Include="..\..\src\demuxer\ES_Subtitle.cpp" />
+    <ClCompile Include="..\..\src\demuxer\ES_Teletext.cpp" />
+    <ClCompile Include="..\..\src\demuxer\tsDemuxer.cpp" />
+    <ClCompile Include="..\..\src\fileOps.cpp" />
+    <ClCompile Include="..\..\src\guidialogbase.cpp" />
+    <ClCompile Include="..\..\src\guidialogyesno.cpp" />
+    <ClCompile Include="..\..\src\pvrclient-mythtv.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\categories.h" />
+    <ClInclude Include="..\..\src\client.h" />
+    <ClInclude Include="..\..\src\cppmyth.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythChannel.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythEPGInfo.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythProgramInfo.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythRecordingRule.h" />
+    <ClInclude Include="..\..\src\cppmyth\MythScheduleManager.h" />
+    <ClInclude Include="..\..\src\demux.h" />
+    <ClInclude Include="..\..\src\demuxer\bitstream.h" />
+    <ClInclude Include="..\..\src\demuxer\common.h" />
+    <ClInclude Include="..\..\src\demuxer\debug.h" />
+    <ClInclude Include="..\..\src\demuxer\elementaryStream.h" />
+    <ClInclude Include="..\..\src\demuxer\ES_AAC.h" />
+    <ClInclude Include="..\..\src\demuxer\ES_AC3.h" />
+    <ClInclude Include="..\..\src\demuxer\ES_h264.h" />
+    <ClInclude Include="..\..\src\demuxer\ES_MPEGAudio.h" />
+    <ClInclude Include="..\..\src\demuxer\ES_MPEGVideo.h" />
+    <ClInclude Include="..\..\src\demuxer\ES_Subtitle.h" />
+    <ClInclude Include="..\..\src\demuxer\ES_Teletext.h" />
+    <ClInclude Include="..\..\src\demuxer\tsDemuxer.h" />
+    <ClInclude Include="..\..\src\demuxer\tsPacket.h" />
+    <ClInclude Include="..\..\src\demuxer\tsTable.h" />
+    <ClInclude Include="..\..\src\fileOps.h" />
+    <ClInclude Include="..\..\src\guidialogbase.h" />
+    <ClInclude Include="..\..\src\guidialogyesno.h" />
+    <ClInclude Include="..\..\src\pvrclient-mythtv.h" />
+    <ClInclude Include="..\..\src\tools.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\lib\cppmyth\project\VS2010Express\cppmyth\libcppmyth.vcxproj">
+      <Project>{086b2f32-c84b-481c-bb7e-accb4b2a0671}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\lib\cppmyth\project\VS2010Express\jansson\libjansson.vcxproj">
+      <Project>{e95631f0-9035-4be4-b8e1-e2c6b0e3f0c3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
+      <Project>{fe4573f6-a794-4ad3-b37f-49e51f1140e6}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml.in" />
+    <None Include="..\..\addon\changelog.txt" />
+    <None Include="..\..\addon\resources\language\English\strings.po" />
+    <None Include="..\..\addon\resources\settings.xml" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>XBMC_mythtv</RootNamespace>
+    <ProjectName>pvr.mythtv</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>XBMC_mythtv_win32</TargetName>
+    <OutDir>..\..\addon\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>XBMC_mythtv_win32</TargetName>
+    <OutDir>..\..\addon\</OutDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <CustomBuildBeforeTargets />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>XBMC_MythTV_win32</TargetName>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;_WINDOWS;_MSVC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\..\..\project\BuildDependencies\include;..\..\..\..\lib\cppmyth\cppmyth\src</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libboost_system-vc100-mt-gd-1_46_1;libboost_regex-vc100-mt-gd-1_46_1;libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Inputs>
+      </Inputs>
+      <Outputs>
+      </Outputs>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if "$(SolutionName)"=="XBMC for Windows" robocopy $(OutDir) "$(SolutionDir)..\..\addons\$(ProjectName)" /s /NP
+if errorlevel 1 exit 0 else exit %errorlevel%</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\..\xbmc;..\..\..\..\lib;..\..\..\..\lib\platform\windows;..\..\..\..\project\BuildDependencies\include;..\..\..\..\lib\cppmyth\cppmyth\src</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WINSOCKAPI_;USE_DEMUX;__STDC_CONSTANT_MACROS;__STDC_FORMAT_MACROS;__WINDOWS__;TARGET_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libboost_system-vc100-mt-1_46_1;libboost_regex-vc100-mt-1_46_1</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>..\..\..\..\project\BuildDependencies\lib</AdditionalLibraryDirectories>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+      <Inputs>
+      </Inputs>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if "$(SolutionName)"=="XBMC for Windows" robocopy $(OutDir) "$(SolutionDir)..\..\addons\$(ProjectName)" /s /NP
+if errorlevel 1 exit 0 else exit %errorlevel%</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

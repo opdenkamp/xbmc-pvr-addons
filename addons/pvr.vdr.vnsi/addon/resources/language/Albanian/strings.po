@@ -1,22 +1,209 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Albanian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/sq/)\n"
+"Language-Team: Albanian (http://www.transifex.com/projects/p/xbmc-main/language/sq/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: sq\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "VDR Hostname ose IP"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "Porti VNSI"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Prioriteti"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Shndërrimi i Character Set"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Timeout i lidhjes (s)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Lejo Mesazhet Nga VDR"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Lexo regjistrimiet nga regjistri"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Regjistri i regjistrimeve së VDR"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Kërkimi i kanaleve"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Kërkimi i kanaleve - Cilësimet"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Fillo kërkimin e kanaleve"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Tipi i Burimit"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "TV Kanalet"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Radio Kanalet"
+
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Kanale të lira"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Kanale të mbyllur"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "Kanalet HD"
+
+msgctxt "#30017"
+msgid "Country"
+msgstr "Vendi"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Cable Inversion"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Cable Symbolrate"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Cable modulation"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Terr Inversion"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Sateliti"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "Tipi ATSC"
+
 msgctxt "#30024"
 msgid "Back"
 msgstr "Mbrapa"
+
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Kërkimi kanaleve - duke kërkuar...  %i %%"
+
+msgctxt "#30026"
+msgid "Type:"
+msgstr "Tipi: "
+
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Aparati:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Kërkimi: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Sinjali: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Kanale të reja: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Gjithë kanalet: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "TV analog"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Radio analog"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Transponderi:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Kanale të reja"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Kërkimi i kanaleve - Përfundoj"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Asnjë aparat në dispozicion - duke përfunduar"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Asnjë aparat DVB-S2 në dispozicion - duke provuar ndërrimin në DVB-S"
+
+msgctxt "#30039"
+msgid "Running"
+msgstr "Duke punuar"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Ndaloi"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Përfundoi"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Kërkimi kanaleve - U anulua"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Kërkimi kanaleve - Gabim"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "U humb lidhja me Serverin VDR"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "U rilidh lidhja me Serverin VDR"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Krijo grupe kanalesh automatikisht në server"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanalet"

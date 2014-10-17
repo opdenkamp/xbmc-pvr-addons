@@ -5,7 +5,6 @@
 
 #include "client.h"
 #include "TimeshiftBuffer.h"
-#include "xmlParser.h"
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 #include <list>
@@ -21,7 +20,7 @@
 
 // minimum version required
 #define RS_VERSION_MAJOR   1
-#define RS_VERSION_MINOR   25
+#define RS_VERSION_MINOR   26
 #define RS_VERSION_PATCH1  0
 #define RS_VERSION_PATCH2  0
 #define RS_VERSION_NUM  (RS_VERSION_MAJOR << 24 | RS_VERSION_MINOR << 16 | \
@@ -42,6 +41,11 @@ typedef enum DVB_UPDATE_STATE
 
 class DvbChannel
 {
+public:
+  DvbChannel()
+    : backendNr(0), epgId(0)
+  {}
+
 public:
   /*!< @brief unique id passed to xbmc database. see FIXME for more details */
   unsigned int id;
@@ -69,13 +73,20 @@ public:
   bool hidden;
 };
 
-struct DvbEPGEntry
+class DvbEPGEntry
 {
+public:
+  DvbEPGEntry()
+    : genre(0)
+  {}
+
+public:
   int iEventId;
   CStdString strTitle;
   unsigned int iChannelUid;
   time_t startTime;
   time_t endTime;
+  unsigned int genre;
   CStdString strPlotOutline;
   CStdString strPlot;
 };
@@ -127,11 +138,29 @@ public:
   unsigned int iClientIndex;
 };
 
-struct DvbRecording
+class DvbRecording
 {
+public:
+  enum Group
+  {
+    GroupDisabled = 0,
+    GroupByDirectory,
+    GroupByDate,
+    GroupByFirstLetter,
+    GroupByTVChannel,
+    GroupBySeries,
+  };
+
+public:
+  DvbRecording()
+    : genre(0)
+  {}
+
+public:
   CStdString id;
   time_t startTime;
   int duration;
+  unsigned int genre;
   CStdString title;
   CStdString streamURL;
   CStdString plot;
@@ -143,7 +172,6 @@ struct DvbRecording
 typedef std::vector<DvbChannel *> DvbChannels_t;
 typedef std::vector<DvbGroup> DvbGroups_t;
 typedef std::vector<DvbTimer> DvbTimers_t;
-typedef std::vector<DvbRecording> DvbRecordings_t;
 
 class Dvb
   : public PLATFORM::CThread
@@ -181,10 +209,7 @@ public:
 
   bool OpenLiveStream(const PVR_CHANNEL& channelinfo);
   void CloseLiveStream();
-  int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize);
-  long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */);
-  long long PositionLiveStream(void);
-  long long LengthLiveStream(void);
+  TimeshiftBuffer *GetTimeshiftBuffer();
   CStdString& GetLiveStreamURL(const PVR_CHANNEL& channelinfo);
 
 protected:
@@ -193,18 +218,14 @@ protected:
 private:
   // functions
   CStdString GetHttpXML(const CStdString& url);
-  CStdString URLEncodeInline(const CStdString& strData);
+  CStdString URLEncodeInline(const CStdString& data);
   bool LoadChannels();
   DvbTimers_t LoadTimers();
   void TimerUpdates();
-  void GenerateTimer(const PVR_TIMER& timer, bool bNewtimer = true);
+  void GenerateTimer(const PVR_TIMER& timer, bool newtimer = true);
   int GetTimerId(const PVR_TIMER& timer);
 
   // helper functions
-  bool GetXMLValue(const XMLNode& node, const char* tag, int& value);
-  bool GetXMLValue(const XMLNode& node, const char* tag, bool& value);
-  bool GetXMLValue(const XMLNode& node, const char* tag, CStdString& value,
-      bool localize = false);
   void RemoveNullChars(CStdString& str);
   bool CheckBackendVersion();
   bool UpdateBackendStatus(bool updateSettings = false);
@@ -215,17 +236,17 @@ private:
   CStdString BuildURL(const char* path, ...);
   CStdString BuildExtURL(const CStdString& baseURL, const char* path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
-  uint64_t ParseUInt64(const CStdString& str);
+  long GetGMTOffset();
 
 private:
   bool m_connected;
   unsigned int m_backendVersion;
 
-  int m_timezone;
-  CStdString m_epgLanguage;
+  long m_timezone;
   struct { long long total, used; } m_diskspace;
+  std::vector<CStdString> m_recfolders;
 
-  CStdString m_strURL;
+  CStdString m_url;
   unsigned int m_currentChannel;
 
   /* channels + active (not hidden) channels */
@@ -236,14 +257,13 @@ private:
   DvbGroups_t m_groups;
   unsigned int m_groupAmount;
 
-  unsigned int m_iUpdateTimer;
-  bool m_bUpdateTimers;
-  bool m_bUpdateEPG;
-  DvbRecordings_t m_recordings;
+  bool m_updateTimers;
+  bool m_updateEPG;
+  unsigned int m_recordingAmount;
   TimeshiftBuffer *m_tsBuffer;
 
   DvbTimers_t m_timers;
-  unsigned int m_iClientIndexCounter;
+  unsigned int m_newTimerIndex;
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;

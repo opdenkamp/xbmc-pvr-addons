@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Dutch (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/nl/)\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/xbmc-main/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -31,15 +30,15 @@ msgstr "Prioriteit"
 
 msgctxt "#30003"
 msgid "Character Set Conversion"
-msgstr "Character Set Conversie"
+msgstr "Karaktersetconversie"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
-msgstr "Connectie timeout (s)"
+msgstr "Connectietimeout (s)"
 
 msgctxt "#30005"
 msgid "Allow VDR Messages"
-msgstr "Berichten vanuit VDR toestaan"
+msgstr "VDR-berichten toestaan"
 
 msgctxt "#30006"
 msgid "Read recordings from directory"
@@ -47,7 +46,7 @@ msgstr "Lees opnames van directory"
 
 msgctxt "#30007"
 msgid "VDR recordings directory"
-msgstr "VDR opname directory"
+msgstr "VDR opnamemap"
 
 msgctxt "#30008"
 msgid "Channel search"
@@ -55,15 +54,15 @@ msgstr "Kanalen scannen"
 
 msgctxt "#30009"
 msgid "Channel search - Settings"
-msgstr "Kanalen scan - opties"
+msgstr "Kanalenscan - Instellingen"
 
 msgctxt "#30010"
 msgid "Start Channel search"
-msgstr "kanalen scan starten"
+msgstr "Kanalenscan starten"
 
 msgctxt "#30011"
 msgid "Source Type"
-msgstr "Bron Type"
+msgstr "Brontype"
 
 msgctxt "#30012"
 msgid "TV channels"
@@ -71,7 +70,7 @@ msgstr "TV kanalen"
 
 msgctxt "#30013"
 msgid "Radio channels"
-msgstr "Radio kanalen"
+msgstr "Radiokanalen"
 
 msgctxt "#30014"
 msgid "FTA channels"
@@ -91,27 +90,27 @@ msgstr "Land"
 
 msgctxt "#30018"
 msgid "Cable Inversion"
-msgstr "Kabel Inversion"
+msgstr "Kabelinversie"
 
 msgctxt "#30019"
 msgid "Cable Symbolrate"
-msgstr "Kabel Symbolrate"
+msgstr "Kabelsymboolrate"
 
 msgctxt "#30020"
 msgid "Cable modulation"
-msgstr "Kabel modulation"
+msgstr "Kabelmodulatie"
 
 msgctxt "#30021"
 msgid "Terr Inversion"
-msgstr "Antenne Inversion"
+msgstr "Antenneinversie"
 
 msgctxt "#30022"
 msgid "Satellite"
-msgstr "Sateliet"
+msgstr "Satelliet"
 
 msgctxt "#30023"
 msgid "ATSC Type"
-msgstr "ATSC type"
+msgstr "ATSCtype"
 
 msgctxt "#30024"
 msgid "Back"
@@ -127,7 +126,7 @@ msgstr "Type:"
 
 msgctxt "#30027"
 msgid "Device:"
-msgstr "Device:"
+msgstr "Apparaat:"
 
 msgctxt "#30028"
 msgid "Scan: %i"
@@ -167,7 +166,7 @@ msgstr "Kanalen zoeken - Klaar"
 
 msgctxt "#30037"
 msgid "No device available - exiting"
-msgstr "Geen device beschikbaar - exiting"
+msgstr "Geen device beschikbaar - afsluiten"
 
 msgctxt "#30038"
 msgid "No DVB-S2 device available - trying fallback to DVB-S"
@@ -187,20 +186,84 @@ msgstr "Klaar"
 
 msgctxt "#30042"
 msgid "Channel search - Canceled"
-msgstr "Kanalen scan - Geanuleerd"
+msgstr "Kanalenscan - Geannuleerd"
 
 msgctxt "#30043"
 msgid "Channel search - Error"
-msgstr "Kanalen scan - Fout"
+msgstr "Kanalenscan - Fout"
 
 msgctxt "#30044"
 msgid "Lost connection to VDR Server"
-msgstr "Connectie naar VDR Server Verloren"
+msgstr "Connectie naar VDR Server verloren"
 
 msgctxt "#30045"
 msgid "Connection to VDR Server restored"
-msgstr "Connectie naar VDR Server Hervat"
+msgstr "Connectie naar VDR Server hervat"
 
 msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
-msgstr "Automatisch Kanaal Groepen maken op de server"
+msgstr "Automatisch kanaalgroepen maken op de server"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Vraag Timeshift aan"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Setup"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "OSD Beheren - druk op info om te sluiten"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Selecteer om de OSD te beheren"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Timeshiftmodus"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Timeshiftbuffer (RAM)x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Timeshiftbuffer (Bestand) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Beheer"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanalen"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Providerwhitelist"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Kanaalblacklijst"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Kanaalfilters"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Radiokanalen"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Filters opslaan"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Provider onbekend"

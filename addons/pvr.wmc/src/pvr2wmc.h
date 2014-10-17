@@ -15,7 +15,8 @@
 *
 *  You should have received a copy of the GNU General Public License
 *  along with XBMC; see the file COPYING.  If not, write to
-*  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+*  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+*  MA 02110-1301  USA
 *  http://www.gnu.org/copyleft/gpl.html
 *
 */
@@ -24,14 +25,6 @@
 #include "platform/util/StdString.h"
 #include "client.h"
 #include "Socket.h"
-
-struct PVR_CHANNELGroup
-{
-	bool             bRadio;
-	int              iGroupId;
-	std::string      strGroupName;
-	std::vector<int> members;
-};
 
 class Pvr2Wmc 
 {
@@ -66,6 +59,7 @@ public:
 	PVR_ERROR RenameRecording(const PVR_RECORDING &recording);
 	PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition);
 	int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording);
+	PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &recording, int count);
 
 	// recording streams
 	bool OpenRecordedStream(const PVR_RECORDING &recording);
@@ -80,19 +74,15 @@ public:
 	long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */) ;
 	long long PositionLiveStream(void) ;
 	bool SwitchChannel(const PVR_CHANNEL &channel);
-	long long LengthLiveStream(void) ;
+	long long LengthLiveStream(void);
 	long long ActualFileSize(int count);
 	PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
 	
 	bool CheckErrorOnServer();
+	void TriggerUpdates(vector<CStdString> results);
 
 private:
-	std::vector<PVR_CHANNELGroup> _groups;
-	std::vector<PVR_CHANNEL>      _channels;
 	int _serverBuild;
-	time_t                       _iEpgStart;
-	CStdString                   _strDefaultIcon;
-	CStdString                   _strDefaultMovie;
 	CStdString Timer2String(const PVR_TIMER &xTmr);
 	CStdString Channel2String(const PVR_CHANNEL &xTmr);
 
@@ -108,7 +98,11 @@ private:
 	bool _streamWTV;					// if true, stream wtv files
 	long long _lastStreamSize;			// last value found for file stream
 	bool _isStreamFileGrowing;			// true if server reports that a live/rec stream is still growing
+	long long _readCnt;					// keep a count of the number of reads executed during playback
 
 	int _initialStreamResetCnt;			// used to count how many times we reset the stream position (due to 2 pass demuxer)
 	long long _initialStreamPosition;	// used to set an initial position (multiple clients watching the same live tv buffer)
+
+	bool _insertDurationHeader;			// if true, insert a duration header for active Rec TS file
+	CStdString _durationHeader;			// the header to insert (received from server)
 };

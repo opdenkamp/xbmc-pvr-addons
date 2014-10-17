@@ -1,21 +1,68 @@
 # XBMC Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
-# Addon version: 1.6.4
 # Addon Provider: FernetMenta, Team XBMC
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Bulgarian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/bg/)\n"
+"Language-Team: Bulgarian (http://www.transifex.com/projects/p/xbmc-main/language/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "VDR хост или IP адрес"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "VNSI порт"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Приоритет"
+
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Конвертиране на кодировката"
+
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "Таймаут при свързване (с)"
+
+msgctxt "#30005"
+msgid "Allow VDR Messages"
+msgstr "Включи VDR съобщенията"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Чети записите от папката"
+
+msgctxt "#30007"
+msgid "VDR recordings directory"
+msgstr "Папка за VDR записи"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Търсене на канал"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Търсене на канал - Настройки"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Започни търсене на канала"
+
+msgctxt "#30011"
+msgid "Source Type"
+msgstr "Вид на източника"
 
 msgctxt "#30012"
 msgid "TV channels"
@@ -25,18 +72,198 @@ msgctxt "#30013"
 msgid "Radio channels"
 msgstr "Радио канали"
 
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "Отворени канали"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Кодирани канали"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "HD канали"
+
 msgctxt "#30017"
 msgid "Country"
-msgstr "Държава"
+msgstr "Страна"
+
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "Кабелна инверсия"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Символна кабелна скорост"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Кабелна модулация"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Наземна инверсия"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Сателитна"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "ATSC вид"
 
 msgctxt "#30024"
 msgid "Back"
 msgstr "Назад"
 
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Търсене на канала... %i %%"
+
 msgctxt "#30026"
 msgid "Type:"
-msgstr "Тип:"
+msgstr "Вид:"
+
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Устройство:"
+
+msgctxt "#30028"
+msgid "Scan: %i"
+msgstr "Сканирано: %i"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Сигнал: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Нови канали: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Всички канали: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Аналогова телевизия"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Аналогово радио"
+
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Транспондер:"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Нови канали"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Приключи търсенето на канали"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Няма достъпно устройство - изход"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "Няма достъпно DVB-S2 устройство - ще се опитам да се върна към DVB-S"
 
 msgctxt "#30039"
 msgid "Running"
-msgstr "Изпълнява се"
+msgstr "Работи"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Спряно"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Завършено"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Търсенето на канали прекъсна"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Грешка при търсенето на канали"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "Изгубена връзка с VDR сървъра"
+
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "Връзката с VDR сървъра е възстановена"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Създай автоматично канални групи на сървъра"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Изисквай таймшиф"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR екранно меню"
+
+msgctxt "#30101"
+msgid "Setup"
+msgstr "Настройване"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Контролиране на екранното меню - натиснете инфо, за да излезете"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Изберете, за да контролирате екранното меню"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Таймшифт режим"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Таймшифт буфер (RAM) x100 МБ"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Таймшифт буфер (Файл) x1 ГБ"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR админ"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Канали"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Бял списък с доставчици"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Черен списък с канали"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Филтри на каналите"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Радио канали"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Съхрани филтрите"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Неизвестен доставчик"

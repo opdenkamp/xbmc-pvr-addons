@@ -26,13 +26,13 @@ using namespace std;
 #include "utils.h"
 #include "timers.h"
 #include "client.h"
+#include "DateTime.h"
 
 using namespace ADDON;
 
 cRecording::cRecording()
 {
-  m_StartTime       = 0;
-  m_Duration        = 0;
+  m_duration        = 0;
   m_Index           = -1;
   m_cardSettings    = NULL;
   m_channelID       = 0;
@@ -58,8 +58,6 @@ void cRecording::SetCardSettings(CCards* cardSettings)
 
 bool cRecording::ParseLine(const std::string& data)
 {
-  time_t endtime;
-
   vector<string> fields;
 
   Tokenize(data, fields, "|");
@@ -89,23 +87,20 @@ bool cRecording::ParseLine(const std::string& data)
     //[20] stopTime (int)
 
     m_Index = atoi(fields[0].c_str());
-    m_StartTime = DateTimeToTimeT(fields[1]);
 
-    if (m_StartTime < 0)
+    if ( m_startTime.SetFromDateTime(fields[1]) == false )
     {
       XBMC->Log(LOG_ERROR, "%s: Unable to convert start time '%s' into date+time", __FUNCTION__, fields[1].c_str());
       return false;
     }
 
-    endtime = DateTimeToTimeT(fields[2]);
-
-    if (endtime < 0)
+    if ( m_endTime.SetFromDateTime(fields[2]) == false )
     {
       XBMC->Log(LOG_ERROR, "%s: Unable to convert end time '%s' into date+time", __FUNCTION__, fields[2].c_str());
       return false;
     }
 
-    m_Duration = endtime - m_StartTime;
+    m_duration = m_endTime - m_startTime;
 
     m_channelName = fields[3];
     m_title = fields[4];
@@ -124,9 +119,7 @@ bool cRecording::ParseLine(const std::string& data)
     // low disk space. The special value 99 means that this recording will live
     // forever, and a value of 0 means that this recording can be deleted any
     // time if a recording with a higher priority needs disk space."
-    m_keepUntilDate = DateTimeToTimeT(fields[8]);
-
-    if (m_keepUntilDate < 0)
+    if ( m_keepUntilDate.SetFromDateTime(fields[8]) == false )
     {
       // invalid date (or outside time_t boundaries)
       m_keepUntilDate = cUndefinedDate;
@@ -227,7 +220,7 @@ int cRecording::Lifetime(void) const
       break;
     case TvDatabase::TillDate: //until keepdate
       {
-        double diffseconds = difftime(m_keepUntilDate, m_StartTime);
+        int diffseconds = m_keepUntilDate - m_startTime;
         int daysremaining = (int)(diffseconds / cSecsInDay);
         // Calculate value in the range 1...98, based on m_keepdate
         if ((daysremaining < MAXLIFETIME) && (daysremaining >= 0))
@@ -301,4 +294,15 @@ void cRecording::SplitFilePath(void)
 void cRecording::SetGenreTable(CGenreTable* genretable)
 {
   m_genretable = genretable;
+}
+
+time_t cRecording::StartTime(void) const
+{
+  time_t time = m_startTime.GetAsTime();
+  return time;
+}
+
+int cRecording::Duration(void) const
+{
+  return m_duration;
 }

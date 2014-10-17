@@ -54,6 +54,7 @@ std::string            g_szUserPath   = "";
 std::string            g_szClientPath = "";
 CHelper_libXBMC_addon *XBMC           = NULL;
 CHelper_libXBMC_pvr   *PVR            = NULL;
+CHelper_libXBMC_gui   *GUI            = NULL;
 
 extern "C" {
 
@@ -89,6 +90,15 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
 
+  GUI = new CHelper_libXBMC_gui;
+  if (!GUI->RegisterMe(hdl))
+  {
+    SAFE_DELETE(GUI);
+    SAFE_DELETE(PVR);
+    SAFE_DELETE(XBMC);
+    return ADDON_STATUS_PERMANENT_FAILURE;
+  }
+
   XBMC->Log(LOG_INFO, "Creating MediaPortal PVR-Client");
 
   m_CurStatus    = ADDON_STATUS_UNKNOWN;
@@ -104,6 +114,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   if (m_CurStatus != ADDON_STATUS_OK)
   {
     SAFE_DELETE(g_client);
+    SAFE_DELETE(GUI);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
   }
@@ -118,6 +129,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 void ADDON_Destroy()
 {
   SAFE_DELETE(g_client);
+  SAFE_DELETE(GUI);
   SAFE_DELETE(PVR);
   SAFE_DELETE(XBMC);
 
@@ -144,7 +156,7 @@ bool ADDON_HasSettings()
   return true;
 }
 
-unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet)
+unsigned int ADDON_GetSettings(ADDON_StructSetting*** UNUSED(sSet))
 {
   return 0;
 }
@@ -418,7 +430,7 @@ void ADDON_FreeSettings()
 
 }
 
-void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data)
+void ADDON_Announce(const char* UNUSED(flag), const char* UNUSED(sender), const char* UNUSED(message), const void* UNUSED(data))
 {
 }
 
@@ -473,7 +485,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES *pProperties)
+PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* UNUSED(pProperties))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -535,7 +547,7 @@ PVR_ERROR DialogChannelScan()
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &item)
+PVR_ERROR CallMenuHook(const PVR_MENUHOOK& UNUSED(menuhook), const PVR_MENUHOOK_DATA& UNUSED(item))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -572,22 +584,22 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
     return g_client->GetChannels(handle, bRadio);
 }
 
-PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel)
+PVR_ERROR DeleteChannel(const PVR_CHANNEL& UNUSED(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR RenameChannel(const PVR_CHANNEL &channel)
+PVR_ERROR RenameChannel(const PVR_CHANNEL& UNUSED(channel))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channelinfo)
+PVR_ERROR DialogChannelSettings(const PVR_CHANNEL& UNUSED(channelinfo))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channelinfo)
+PVR_ERROR DialogAddChannel(const PVR_CHANNEL& UNUSED(channelinfo))
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -877,7 +889,7 @@ bool CanSeekStream(void)
 }
 
 /** UNUSED API FUNCTIONS */
-PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR MoveChannel(const PVR_CHANNEL& UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 DemuxPacket* DemuxRead(void) { return NULL; }
 void DemuxAbort(void) {}
 void DemuxReset(void) {}

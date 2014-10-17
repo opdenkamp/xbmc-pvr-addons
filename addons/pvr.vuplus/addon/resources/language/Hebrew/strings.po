@@ -1,16 +1,15 @@
 # XBMC Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
-# Addon version: 1.6.6
 # Addon Provider: Joerg Dembski
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Hebrew (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/he/)\n"
+"Language-Team: Hebrew (http://www.transifex.com/projects/p/xbmc-main/language/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "VU+ hostname or IP address"
-msgstr "VU+ שם מארח או כתובת IP"
+msgstr "שם מארח או כתובת IP של VU+‎"
 
 msgctxt "#30002"
 msgid "Streaming Port"
@@ -108,6 +107,10 @@ msgstr "תמשוך רק תוכנית זרה אחת"
 msgctxt "#30026"
 msgid "TV-Bouquet"
 msgstr "תוכנית זרה"
+
+msgctxt "#30027"
+msgid "Fetch picons from webinterface"
+msgstr "קבלת ה־picons ממנשק הדפדפן"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

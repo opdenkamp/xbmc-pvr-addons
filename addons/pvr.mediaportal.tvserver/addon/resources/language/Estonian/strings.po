@@ -1,22 +1,165 @@
 # XBMC Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
-# Addon version: 1.6.7
 # Addon Provider: Marcel Groothuis
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: XBMC Translation Team\n"
-"Language-Team: Estonian (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/et/)\n"
+"Language-Team: Estonian (http://www.transifex.com/projects/p/xbmc-main/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Mediaportal Hostname"
+msgstr "Mediaportal hosti nimi"
+
+msgctxt "#30001"
+msgid "Mediaportal XBMC plugin Port"
+msgstr "Mediaportal XBMC plugina port"
+
+msgctxt "#30002"
+msgid "Free-to-air only"
+msgstr "Ainult vabalevi"
+
+msgctxt "#30003"
+msgid "Include Radio"
+msgstr "Hõlma raadio"
+
+msgctxt "#30004"
+msgid "Fast channel switching (don't stop timeshift)"
+msgstr "Kiire kanali vahetus (ära peata ajanihutust)"
+
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "Ühenduse aegumine (s)"
+
+msgctxt "#30006"
+msgid "Import only TV Channels from group"
+msgstr "Impordi grupist ainult TV kanalid"
+
+msgctxt "#30007"
+msgid "Import only Radio Channels from group"
+msgstr "Impordi grupist ainult raadio kanalid"
+
+msgctxt "#30008"
+msgid "Convert hostname to IP-adress"
+msgstr "Muuda hosti nimi IP aadressiks"
+
+msgctxt "#30009"
+msgid "EPG: Read genre strings (slow)"
+msgstr "EPG: Loe žanri stringid (aeglane)"
+
+msgctxt "#30010"
+msgid "Wait time after tuning a channel (ms)"
+msgstr "Viivitus peale häälestust (ms)"
+
+msgctxt "#30015"
+msgid "Streaming method"
+msgstr "Voogesitus meetod"
+
+msgctxt "#30016"
+msgid "Windows user account (SMB)"
+msgstr "Windowsi kasutaja konto (SMB)"
+
+msgctxt "#30017"
+msgid "Windows password (SMB)"
+msgstr "Windowsi salasõna (SMB)"
+
+msgctxt "#30018"
+msgid "Use RTSP streaming"
+msgstr "Kasuta RTSP voogesitust"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Ühendus"
+
+msgctxt "#30041"
+msgid "MediaPortal"
+msgstr "MediaPortal"
+
 msgctxt "#30042"
 msgid "Playback"
 msgstr "Taasesitus"
+
+msgctxt "#30050"
+msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Sinu TVServerXBMC versioon '%s' on liiga vana. Palun uuenda '%s' või uuema peale!"
+
+msgctxt "#30051"
+msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgstr "Sinu TVServerXBMC versioon on liiga vana. Palun uuenda '%s' või uuema peale!"
+
+msgctxt "#30052"
+msgid "Recording playback failed. Empty URL of filename."
+msgstr "Salvestise esitlus nurjus. Tühi URL või faili nimi."
+
+msgctxt "#30060"
+msgid "All cards are busy"
+msgstr "Kõik kaardid on hõivatud"
+
+msgctxt "#30061"
+msgid "Channel is scrambled"
+msgstr "Kanal on krüpteeritud"
+
+msgctxt "#30062"
+msgid "No video or audio detected"
+msgstr "Videot ega heli ei leitud"
+
+msgctxt "#30063"
+msgid "No signal detected"
+msgstr "Signaali ei leitud"
+
+msgctxt "#30064"
+msgid "Unknown error"
+msgstr "Tundmatu tõrge"
+
+msgctxt "#30065"
+msgid "Unable to start graph"
+msgstr "Graafiku käivitamine nurjus"
+
+msgctxt "#30066"
+msgid "Unknown channel"
+msgstr "Tundmatu kanal"
+
+msgctxt "#30067"
+msgid "No tuning details"
+msgstr "Häälestuse detailid puuduvad"
+
+msgctxt "#30068"
+msgid "Channel is not mapped to any card"
+msgstr "Kanal pole ühegi kaardiga seotud"
+
+msgctxt "#30069"
+msgid "Card is disabled"
+msgstr "Kaart on keelatud"
+
+msgctxt "#30070"
+msgid "Connection to slave failed"
+msgstr "Alluvaga ühenduse loomine nurjus"
+
+msgctxt "#30071"
+msgid "Not the owner"
+msgstr "Ei ole omanik"
+
+msgctxt "#30072"
+msgid "Graph building failed"
+msgstr "Graafiku ehitamine nurjus"
+
+msgctxt "#30073"
+msgid "SW Encoder missing"
+msgstr "Tarkvaraline kodeerija puudub"
+
+msgctxt "#30074"
+msgid "No free disk space"
+msgstr "Kettaruum on otsas"
+
+msgctxt "#30075"
+msgid "No PMT found"
+msgstr "PMT ei leitud"

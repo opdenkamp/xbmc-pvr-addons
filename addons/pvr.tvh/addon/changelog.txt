@@ -1,4 +1,5 @@
 0.9.5
+ - added support for getting and setting startExtra, stopExtra, retention, priority properties of recordings and timers (@ksooo)
  - sync the whole project with upstream
  - upgraded Windows compiler toolchain
  - don't display connection error popups, let XBMC handle it. This way the "Do not show connection lost warnings" option in XBMC actually works as intended.

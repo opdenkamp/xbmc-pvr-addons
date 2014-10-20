@@ -147,6 +147,9 @@ const char *Pvr2Wmc::GetBackendVersion(void)
 
 int Pvr2Wmc::GetChannelsAmount(void)
 {
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
+
 	return _socketClient.GetInt("GetChannelCount", true);
 }
 
@@ -195,6 +198,14 @@ void Pvr2Wmc::TriggerUpdates(vector<CStdString> results)
 			PVR->TriggerChannelUpdate();
 		else if (v[0] == "updateChannelGroups")
 			PVR->TriggerChannelGroupsUpdate();
+		else if (v[0] == "updateEPGForChannel")
+		{
+			if (v.size() > 1)
+			{
+				unsigned int channelUid = strtoul(v[1].c_str(), 0, 10);
+				PVR->TriggerEpgUpdate(channelUid);
+			}
+		}
 		else if (v[0] == "message")
 		{
 			if (v.size() < 4)
@@ -303,6 +314,9 @@ PVR_ERROR Pvr2Wmc::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 int Pvr2Wmc::GetChannelGroupsAmount(void)
 {
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
+
 	return _socketClient.GetInt("GetChannelGroupCount", true);
 }
 
@@ -424,6 +438,9 @@ PVR_ERROR Pvr2Wmc::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &chan
 // timer functions -------------------------------------------------------------
 int Pvr2Wmc::GetTimersAmount(void)
 {
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
+
 	return _socketClient.GetInt("GetTimerCount", true);
 }
 
@@ -679,6 +696,9 @@ PVR_ERROR Pvr2Wmc::GetTimers(ADDON_HANDLE handle)
 // recording functions ------------------------------------------------------------------------
 int Pvr2Wmc::GetRecordingsAmount(void)
 {
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
+
 	return _socketClient.GetInt("GetRecordingsAmount", true);
 }
 
@@ -794,6 +814,9 @@ PVR_ERROR Pvr2Wmc::RenameRecording(const PVR_RECORDING &recording)
 // set the recording resume position in the wmc database
 PVR_ERROR Pvr2Wmc::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int lastplayedposition)
 {
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
+
 	CStdString command;
 	command.Format("SetResumePosition|%s|%d", recording.strRecordingId, lastplayedposition);
 	vector<CStdString> results = _socketClient.GetVector(command, true);					
@@ -806,6 +829,9 @@ PVR_ERROR Pvr2Wmc::SetRecordingLastPlayedPosition(const PVR_RECORDING &recording
 // the return value is ignored by the xbmc player.  That's why TriggerRecordingUpdate is required in the setting above
 int Pvr2Wmc::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 {
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
+
 	CStdString command;
 	command.Format("GetResumePosition|%s", recording.strRecordingId); 
 	int pos = _socketClient.GetInt(command, true);
@@ -815,6 +841,9 @@ int Pvr2Wmc::GetRecordingLastPlayedPosition(const PVR_RECORDING &recording)
 // set the recording playcount in the wmc database
 PVR_ERROR Pvr2Wmc::SetRecordingPlayCount(const PVR_RECORDING &recording, int count)
 {
+	if (IsServerDown())
+		return PVR_ERROR_SERVER_ERROR;
+
 	CStdString command;
 	command.Format("SetPlayCount|%s|%d", recording.strRecordingId, count);
 	vector<CStdString> results = _socketClient.GetVector(command, true);					
@@ -1214,9 +1243,6 @@ bool Pvr2Wmc::OpenRecordedStream(const PVR_RECORDING &recording)
 
 PVR_ERROR Pvr2Wmc::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 {
-	if (IsServerDown())
-		return PVR_ERROR_SERVER_ERROR;
-
 	if (!g_bSignalEnable || _discardSignalStatus)
 	{
 		return PVR_ERROR_NO_ERROR;
@@ -1227,6 +1253,9 @@ PVR_ERROR Pvr2Wmc::SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 	// Only send request to backend every N times
 	if (_signalStatusCount-- <= 0)
 	{
+		if (IsServerDown())
+			return PVR_ERROR_SERVER_ERROR;
+
       // Reset count to throttle value
 		_signalStatusCount = g_signalThrottle;
 

@@ -61,9 +61,20 @@ namespace PLATFORM
 
         for(addr = address; !bReturn && addr; addr = addr->ai_next)
         {
-          m_socket = TcpCreateSocket(addr, &m_iError, iTimeoutMs);
+          m_socket = TcpCreateSocket(addr, &m_iError);
           if (m_socket != INVALID_SOCKET_VALUE)
-            bReturn = true;
+          {
+            if (!TcpConnectSocket(m_socket, addr, &m_iError, iTimeoutMs))
+            {
+              TcpSocketClose(m_socket);
+              m_strError = strerror(m_iError);
+            }
+            else
+            {
+              TcpSetNoDelay(m_socket);
+              bReturn = true;
+            }
+          }
           else
             m_strError = strerror(m_iError);
         }
@@ -81,6 +92,7 @@ namespace PLATFORM
       virtual void Shutdown(void)
       {
         TcpSocketShutdown(m_socket);
+        TcpSocketClose(m_socket);
         m_socket = INVALID_SOCKET_VALUE;
       }
 
@@ -100,7 +112,7 @@ namespace PLATFORM
       }
 
     protected:
-      virtual tcp_socket_t TcpCreateSocket(struct addrinfo* addr, int* iError, uint64_t iTimeout)
+      virtual tcp_socket_t TcpCreateSocket(struct addrinfo* addr, int* iError)
       {
         tcp_socket_t fdSock = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
         if (fdSock == INVALID_SOCKET_VALUE)
@@ -108,14 +120,6 @@ namespace PLATFORM
           *iError = errno;
           return (tcp_socket_t)INVALID_SOCKET_VALUE;
         }
-
-        if (!TcpConnectSocket(fdSock, addr, iError, iTimeout))
-        {
-          TcpSocketClose(fdSock);
-          return (tcp_socket_t)INVALID_SOCKET_VALUE;
-        }
-
-        TcpSetNoDelay(fdSock);
 
         return fdSock;
       }

@@ -20,8 +20,16 @@
 
 #include "MythChannel.h"
 
+#include <cctype>
+#include <cstring>
+#include <cstdlib>
+
+#define CHANNUM_STR_SIZE  10
+
 MythChannel::MythChannel()
-  : m_channel()
+: m_channel()
+, m_numMajor(0)
+, m_numMinor(0)
 {
 }
 
@@ -29,6 +37,37 @@ MythChannel::MythChannel(Myth::ChannelPtr channel)
   : m_channel()
 {
   m_channel.swap(channel);
+  if (m_channel)
+  {
+    BreakNumber(m_channel->chanNum.c_str(), &m_numMajor, &m_numMinor);
+  }
+  else
+  {
+    m_numMajor = 0;
+    m_numMinor = 0;
+  }
+}
+
+void MythChannel::BreakNumber(const char *numstr, unsigned *major, unsigned *minor)
+{
+  // ATSC channel number use "_" or "." for major and minor separator
+  char str[CHANNUM_STR_SIZE + 1];
+  char *p1 = str;
+  char *p2 = str;
+  strncpy(str, numstr, CHANNUM_STR_SIZE);
+  str[CHANNUM_STR_SIZE] = '\0';
+  while(isspace(*p1))
+    ++p1;
+  p2 = p1;
+  while (isdigit(*p2))
+    ++p2;
+  *p2++ = '\0';
+  *major = (unsigned)atoi(p1);
+  p1 = p2;
+  while (isdigit(*p2))
+    ++p2;
+  *p2 = '\0';
+  *minor = (unsigned)atoi(p1);
 }
 
 bool MythChannel::IsNull() const

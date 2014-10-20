@@ -165,6 +165,7 @@ private:
   int FillRecordings();
   MythChannel FindRecordingChannel(const MythProgramInfo& programInfo);
   bool IsMyLiveRecording(const MythProgramInfo& programInfo);
+  void FillRecordingAVInfo(MythProgramInfo& programInfo, Myth::Stream *stream);
 
   // Timers
   MythRecordingRule PVRtoMythRecordingRule(const PVR_TIMER &timer);

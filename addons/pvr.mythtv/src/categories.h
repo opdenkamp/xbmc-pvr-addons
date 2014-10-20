@@ -25,7 +25,7 @@
 #include <map>
 
 typedef std::multimap<int, std::string> CategoryByIdMap;
-typedef std::multimap<std::string, int> CategoryByNameMap;
+typedef std::map<std::string, int> CategoryByNameMap;
 
 class Categories
 {

@@ -23,12 +23,14 @@
 #include "mythdebug.h"
 #include "private/builtin.h"
 #include "private/mythsocket.h"
-#include "private/mythjsonbinder.h"
-#include "private/janssonptr.h"
 #include "private/mythwsrequest.h"
 #include "private/mythwsresponse.h"
+#include "private/janssonptr.h"
+#include "private/mythjsonparser.h"
+#include "private/mythjsonbinder.h"
 #include "private/platform/threads/mutex.h"
 #include "private/platform/util/util.h"
+#include "private/uriparser.h"
 
 #include <jansson.h>
 
@@ -36,29 +38,12 @@
 
 using namespace Myth;
 
-JanssonPtr ParseResponseJSON(WSResponse& resp)
-{
-  // Read content response
-  JanssonPtr root;
-  size_t r, content_length = resp.GetContentLength();
-  char *content = new char[content_length + 1];
-  if ((r = resp.ReadContent(content, content_length)) == content_length)
-  {
-    json_error_t error;
-    content[content_length] = '\0';
-    DBG(MYTH_DBG_PROTO,"%s: %s\n", __FUNCTION__, content);
-    // Parse JSON content
-    root.reset(json_loads(content, 0, &error));
-    if (!root.isValid())
-      DBG(MYTH_DBG_ERROR, "%s: failed to parse: %d: %s\n", __FUNCTION__, error.line, error.text);
-  }
-  else
-  {
-    DBG(MYTH_DBG_ERROR, "%s: read error\n", __FUNCTION__);
-  }
-  delete[] content;
-  return root;
-}
+#define WS_ROOT_MYTH          "/Myth"
+#define WS_ROOT_CAPTURE       "/Capture"
+#define WS_ROOT_CHANNEL       "/Channel"
+#define WS_ROOT_GUIDE         "/Guide"
+#define WS_ROOT_CONTENT       "/Content"
+#define WS_ROOT_DVR           "/Dvr"
 
 WSAPI::WSAPI(const std::string& server, unsigned port)
 : m_mutex(new PLATFORM::CMutex)
@@ -68,8 +53,7 @@ WSAPI::WSAPI(const std::string& server, unsigned port)
 , m_version()
 , m_serverHostName()
 {
-  // Try it !
-  CheckService();
+  m_checked = InitWSAPI();
 }
 
 WSAPI::~WSAPI()
@@ -77,7 +61,85 @@ WSAPI::~WSAPI()
   SAFE_DELETE(m_mutex);
 }
 
-bool WSAPI::CheckServerHostName()
+bool WSAPI::InitWSAPI()
+{
+  bool status = false;
+  // Reset array of version
+  memset(m_serviceVersion, 0, sizeof(m_serviceVersion));
+  // Check the core service Myth
+  WSServiceVersion_t& mythwsv = m_serviceVersion[WS_Myth];
+  if (!GetServiceVersion(WS_Myth, mythwsv))
+  {
+    DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
+    return false;
+  }
+  if (mythwsv.ranking > MYTH_API_VERSION_MAX_RANKING) {}
+  else if (mythwsv.ranking >= 0x00020000)
+    status = CheckServerHostName2_0() & CheckVersion2_0();
+
+  if (status)
+  {
+    GetServiceVersion(WS_Capture, m_serviceVersion[WS_Capture]);
+    GetServiceVersion(WS_Channel, m_serviceVersion[WS_Channel]);
+    GetServiceVersion(WS_Guide, m_serviceVersion[WS_Guide]);
+    GetServiceVersion(WS_Content, m_serviceVersion[WS_Content]);
+    GetServiceVersion(WS_Dvr, m_serviceVersion[WS_Dvr]);
+    DBG(MYTH_DBG_INFO, "%s: MythTV API service is available: %s:%d(%s) protocol(%d) schema(%d)\n",
+            __FUNCTION__, m_serverHostName.c_str(), m_port, m_version.version.c_str(),
+            (unsigned)m_version.protocol, (unsigned)m_version.schema);
+    return true;
+  }
+  DBG(MYTH_DBG_ERROR, "%s: MythTV API service is not supported or unavailable: %s:%d (%u.%u)\n",
+          __FUNCTION__, m_server.c_str(), m_port, mythwsv.major, mythwsv.minor);
+  return false;
+}
+
+bool WSAPI::GetServiceVersion(WSServiceId_t id, WSServiceVersion_t& wsv)
+{
+  static const char * WSServiceRoot[WS_INVALID + 1] =
+  {
+    WS_ROOT_MYTH,         ///< WS_Myth
+    WS_ROOT_CAPTURE,      ///< WS_Capture
+    WS_ROOT_CHANNEL,      ///< WS_Channel
+    WS_ROOT_GUIDE,        ///< WS_Guide
+    WS_ROOT_CONTENT,      ///< WS_Content
+    WS_ROOT_DVR,          ///< WS_Dvr
+    "/?",                 ///< WS_INVALID
+  };
+  std::string url(WSServiceRoot[id]);
+  url.append("/version");
+  WSRequest req = WSRequest(m_server, m_port);
+  req.RequestAccept(CT_JSON);
+  req.RequestService(url);
+  WSResponse resp(req);
+  if (resp.IsSuccessful())
+  {
+    // Parse content response
+    JanssonPtr root = MythJSON::ParseResponseJSON(resp);
+    if (root.isValid() && json_is_object(root.get()))
+    {
+      const json_t *field = json_object_get(root.get(), "String");
+      if (field != NULL)
+      {
+        const char *val = json_string_value(field);
+        if (val != NULL)
+        {
+          if (sscanf(val, "%d.%d", &(wsv.major), &(wsv.minor)) == 2)
+          {
+            wsv.ranking = ((wsv.major & 0xFFFF) << 16) | (wsv.minor & 0xFFFF);
+            return true;
+          }
+        }
+      }
+    }
+  }
+  wsv.major = 0;
+  wsv.minor = 0;
+  wsv.ranking = 0;
+  return false;
+}
+
+bool WSAPI::CheckServerHostName2_0()
 {
   m_serverHostName.clear();
 
@@ -85,13 +147,13 @@ bool WSAPI::CheckServerHostName()
   req.RequestAccept(CT_JSON);
   req.RequestService("/Myth/GetHostName");
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
   // Parse content response
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (root.isValid() && json_is_object(root.get()))
   {
     const json_t *field = json_object_get(root.get(), "String");
@@ -101,6 +163,7 @@ bool WSAPI::CheckServerHostName()
       if (val != NULL)
       {
         m_serverHostName = val;
+        m_namedCache[val] = m_server;
         return true;
       }
     }
@@ -108,30 +171,31 @@ bool WSAPI::CheckServerHostName()
   return false;
 }
 
-bool WSAPI::CheckVersion()
+bool WSAPI::CheckVersion2_0()
 {
   m_version.protocol = 0;
   m_version.schema = 0;
   m_version.version.clear();
+  WSServiceVersion_t& wsv = m_serviceVersion[WS_Myth];
 
   WSRequest req = WSRequest(m_server, m_port);
   req.RequestAccept(CT_JSON);
   req.RequestService("/Myth/GetConnectionInfo");
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
   // Parse content response
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (root.isValid() && json_is_object(root.get()))
   {
     const json_t *con = json_object_get(root.get(), "ConnectionInfo");
     if (con != NULL)
     {
       const json_t *ver = json_object_get(con, "Version");
-      MythJSON::BindObject(ver, &m_version, MythDTO::getVersionBindArray(0));
+      MythJSON::BindObject(ver, &m_version, MythDTO::getVersionBindArray(wsv.ranking));
       if (m_version.protocol)
         return true;
     }
@@ -142,19 +206,17 @@ bool WSAPI::CheckVersion()
 unsigned WSAPI::CheckService()
 {
   PLATFORM::CLockObject lock(*m_mutex);
-  if (m_checked)
+  if (m_checked || (m_checked = InitWSAPI()))
     return (unsigned)m_version.protocol;
-
-  if (CheckServerHostName() && CheckVersion())
-  {
-    DBG(MYTH_DBG_INFO, "%s: MythTV API service is available: %s:%d(%s) protocol(%d) schema(%d)\n",
-            __FUNCTION__, m_serverHostName.c_str(), m_port, m_version.version.c_str(),
-            (unsigned)m_version.protocol, (unsigned)m_version.schema);
-    m_checked = true;
-    return (unsigned)m_version.protocol;
-  }
-  DBG(MYTH_DBG_ERROR, "%s: MythTV API service is unavailable: %s:%d\n", __FUNCTION__, m_server.c_str(), m_port);
   return 0;
+}
+
+WSServiceVersion_t WSAPI::CheckService(WSServiceId_t id)
+{
+  PLATFORM::CLockObject lock(*m_mutex);
+  if (m_checked || (m_checked = InitWSAPI()))
+    return m_serviceVersion[id];
+  return m_serviceVersion[WS_INVALID];
 }
 
 void WSAPI::InvalidateService()
@@ -170,11 +232,33 @@ std::string WSAPI::GetServerHostName()
 
 VersionPtr WSAPI::GetVersion()
 {
-  Version *p = new Version();
-  p->version = m_version.version;
-  p->protocol = m_version.protocol;
-  p->schema = m_version.schema;
-  return VersionPtr(p);
+  return VersionPtr(new Version(m_version));
+}
+
+std::string WSAPI::ResolveHostName(const std::string& hostname)
+{
+  PLATFORM::CLockObject lock(*m_mutex);
+  std::map<std::string, std::string>::const_iterator it = m_namedCache.find(hostname);
+  if (it != m_namedCache.end())
+    return it->second;
+  Myth::SettingPtr addr = this->GetSetting("BackendServerIP6", hostname);
+  if (addr && !addr->value.empty() && addr->value != "::1")
+  {
+    std::string& ret = m_namedCache[hostname];
+    ret.assign(addr->value);
+    DBG(MYTH_DBG_DEBUG, "%s: resolving hostname %s as %s\n", __FUNCTION__, hostname.c_str(), ret.c_str());
+    return ret;
+  }
+  addr = this->GetSetting("BackendServerIP", hostname);
+  if (addr && !addr->value.empty())
+  {
+    std::string& ret = m_namedCache[hostname];
+    ret.assign(addr->value);
+    DBG(MYTH_DBG_DEBUG, "%s: resolving hostname %s as %s\n", __FUNCTION__, hostname.c_str(), ret.c_str());
+    return ret;
+  }
+  DBG(MYTH_DBG_ERROR, "%s: unknown host (%s)\n", __FUNCTION__, hostname.c_str());
+  return std::string();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -182,13 +266,9 @@ VersionPtr WSAPI::GetVersion()
 ////  Service operations
 ////
 
-SettingPtr WSAPI::GetSetting(const std::string& key, const std::string hostname)
+SettingPtr WSAPI::GetSetting2_0(const std::string& key, const std::string& hostname)
 {
   SettingPtr ret;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -197,12 +277,12 @@ SettingPtr WSAPI::GetSetting(const std::string& key, const std::string hostname)
   req.SetContentParam("HostName", hostname);
   req.SetContentParam("Key", key);
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return ret;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -239,13 +319,9 @@ SettingPtr WSAPI::GetSetting(const std::string& key, bool myhost)
   return GetSetting(key, hostname);
 }
 
-SettingMapPtr WSAPI::GetSettings(const std::string hostname)
+SettingMapPtr WSAPI::GetSettings2_0(const std::string& hostname)
 {
   SettingMapPtr ret(new SettingMap);
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -253,12 +329,12 @@ SettingMapPtr WSAPI::GetSettings(const std::string hostname)
   req.RequestService("/Myth/GetSetting");
   req.SetContentParam("HostName", hostname);
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return ret;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -297,13 +373,8 @@ SettingMapPtr WSAPI::GetSettings(bool myhost)
   return GetSettings(hostname);
 }
 
-bool WSAPI::PutSetting(const std::string& key, const std::string& value, bool myhost)
+bool WSAPI::PutSetting2_0(const std::string& key, const std::string& value, bool myhost)
 {
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return false;
-
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
   req.RequestAccept(CT_JSON);
@@ -315,12 +386,12 @@ bool WSAPI::PutSetting(const std::string& key, const std::string& value, bool my
   req.SetContentParam("Key", key);
   req.SetContentParam("Value", value);
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -334,15 +405,337 @@ bool WSAPI::PutSetting(const std::string& key, const std::string& value, bool my
   return true;
 }
 
-ProgramListPtr WSAPI::GetRecordedList(unsigned n, bool descending)
+///////////////////////////////////////////////////////////////////////////////
+////
+//// Capture service
+////
+CaptureCardListPtr WSAPI::GetCaptureCardList1_4()
+{
+  CaptureCardListPtr ret(new CaptureCardList);
+  unsigned proto = (unsigned)m_version.protocol;
+
+  // Get bindings for protocol version
+  const bindings_t *bindcard = MythDTO::getCaptureCardBindArray(proto);
+
+  // Initialize request header
+  WSRequest req = WSRequest(m_server, m_port);
+  req.RequestAccept(CT_JSON);
+  req.RequestService("/Capture/GetCaptureCardList");
+  req.SetContentParam("HostName", m_serverHostName.c_str());
+  WSResponse resp(req);
+  if (!resp.IsSuccessful())
+  {
+    DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
+    return ret;
+  }
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
+  if (!root.isValid() || !json_is_object(root.get()))
+  {
+    DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
+    return ret;
+  }
+  DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
+
+  // Object: CaptureCardList
+  const json_t *clist = json_object_get(root.get(), "CaptureCardList");
+  // Object: CaptureCards[]
+  const json_t *cards = json_object_get(clist, "CaptureCards");
+  // Iterates over the sequence elements.
+  for (size_t ci = 0; ci < json_array_size(cards); ++ci)
+  {
+    const json_t *card = json_array_get(cards, ci);
+    CaptureCardPtr captureCard(new CaptureCard());  // Using default constructor
+    // Bind the new captureCard
+    MythJSON::BindObject(card, captureCard.get(), bindcard);
+    ret->push_back(captureCard);
+  }
+  return ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+////
+//// Channel Service
+////
+VideoSourceListPtr WSAPI::GetVideoSourceList1_2()
+{
+  VideoSourceListPtr ret(new VideoSourceList);
+  unsigned proto = (unsigned)m_version.protocol;
+
+  // Get bindings for protocol version
+  const bindings_t *bindvsrc = MythDTO::getVideoSourceBindArray(proto);
+
+  // Initialize request header
+  WSRequest req = WSRequest(m_server, m_port);
+  req.RequestAccept(CT_JSON);
+  req.RequestService("/Channel/GetVideoSourceList");
+  WSResponse resp(req);
+  if (!resp.IsSuccessful())
+  {
+    DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
+    return ret;
+  }
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
+  if (!root.isValid() || !json_is_object(root.get()))
+  {
+    DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
+    return ret;
+  }
+  DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
+
+  // Object: VideoSourceList
+  const json_t *slist = json_object_get(root.get(), "VideoSourceList");
+  // Object: VideoSources[]
+  const json_t *vsrcs = json_object_get(slist, "VideoSources");
+  // Iterates over the sequence elements.
+  for (size_t vi = 0; vi < json_array_size(vsrcs); ++vi)
+  {
+    const json_t *vsrc = json_array_get(vsrcs, vi);
+    VideoSourcePtr videoSource(new VideoSource());  // Using default constructor
+    // Bind the new videoSource
+    MythJSON::BindObject(vsrc, videoSource.get(), bindvsrc);
+    ret->push_back(videoSource);
+  }
+  return ret;
+}
+
+ChannelListPtr WSAPI::GetChannelList1_2(uint32_t sourceid, bool onlyVisible)
+{
+  ChannelListPtr ret(new ChannelList);
+  char buf[32];
+  int32_t req_index = 0, req_count = 100, count = 0;
+  unsigned proto = (unsigned)m_version.protocol;
+
+  // Get bindings for protocol version
+  const bindings_t *bindlist = MythDTO::getListBindArray(proto);
+  const bindings_t *bindchan = MythDTO::getChannelBindArray(proto);
+
+  // Initialize request header
+  WSRequest req = WSRequest(m_server, m_port);
+  req.RequestAccept(CT_JSON);
+  req.RequestService("/Channel/GetChannelInfoList");
+
+  do
+  {
+    req.ClearContent();
+    uint32str(sourceid, buf);
+    req.SetContentParam("SourceID", buf);
+    int32str(req_index, buf);
+    req.SetContentParam("StartIndex", buf);
+    int32str(req_count, buf);
+    req.SetContentParam("Count", buf);
+
+    DBG(MYTH_DBG_DEBUG, "%s: request index(%d) count(%d)\n", __FUNCTION__, req_index, req_count);
+    WSResponse resp(req);
+    if (!resp.IsSuccessful())
+    {
+      DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
+      break;
+    }
+    JanssonPtr root = MythJSON::ParseResponseJSON(resp);
+    if (!root.isValid() || !json_is_object(root.get()))
+    {
+      DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
+      break;
+    }
+    DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
+
+    // Object: ChannelInfoList
+    const json_t *clist = json_object_get(root.get(), "ChannelInfoList");
+    ItemList list = ItemList(); // Using default constructor
+    MythJSON::BindObject(clist, &list, bindlist);
+    // List has ProtoVer. Check it or sound alarm
+    if (list.protoVer != proto)
+    {
+      InvalidateService();
+      break;
+    }
+    count = 0;
+    // Object: ChannelInfos[]
+    const json_t *chans = json_object_get(clist, "ChannelInfos");
+    // Iterates over the sequence elements.
+    for (size_t ci = 0; ci < json_array_size(chans); ++ci)
+    {
+      ++count;
+      const json_t *chan = json_array_get(chans, ci);
+      ChannelPtr channel(new Channel());  // Using default constructor
+      // Bind the new channel
+      MythJSON::BindObject(chan, channel.get(), bindchan);
+      if (channel->chanId && (!onlyVisible || channel->visible))
+        ret->push_back(channel);
+    }
+    DBG(MYTH_DBG_DEBUG, "%s: received count(%d)\n", __FUNCTION__, count);
+    req_index += count; // Set next requested index
+  }
+  while (count == req_count);
+
+  return ret;
+}
+
+ChannelListPtr WSAPI::GetChannelList1_5(uint32_t sourceid, bool onlyVisible)
+{
+  ChannelListPtr ret(new ChannelList);
+  char buf[32];
+  int32_t req_index = 0, req_count = 100, count = 0;
+  unsigned proto = (unsigned)m_version.protocol;
+
+  // Get bindings for protocol version
+  const bindings_t *bindlist = MythDTO::getListBindArray(proto);
+  const bindings_t *bindchan = MythDTO::getChannelBindArray(proto);
+
+  // Initialize request header
+  WSRequest req = WSRequest(m_server, m_port);
+  req.RequestAccept(CT_JSON);
+  req.RequestService("/Channel/GetChannelInfoList");
+
+  do
+  {
+    req.ClearContent();
+    req.SetContentParam("Details", "true");
+    req.SetContentParam("OnlyVisible", BOOLSTR(onlyVisible));
+    uint32str(sourceid, buf);
+    req.SetContentParam("SourceID", buf);
+    int32str(req_index, buf);
+    req.SetContentParam("StartIndex", buf);
+    int32str(req_count, buf);
+    req.SetContentParam("Count", buf);
+
+    DBG(MYTH_DBG_DEBUG, "%s: request index(%d) count(%d)\n", __FUNCTION__, req_index, req_count);
+    WSResponse resp(req);
+    if (!resp.IsSuccessful())
+    {
+      DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
+      break;
+    }
+    JanssonPtr root = MythJSON::ParseResponseJSON(resp);
+    if (!root.isValid() || !json_is_object(root.get()))
+    {
+      DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
+      break;
+    }
+    DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
+
+    // Object: ChannelInfoList
+    const json_t *clist = json_object_get(root.get(), "ChannelInfoList");
+    ItemList list = ItemList(); // Using default constructor
+    MythJSON::BindObject(clist, &list, bindlist);
+    // List has ProtoVer. Check it or sound alarm
+    if (list.protoVer != proto)
+    {
+      InvalidateService();
+      break;
+    }
+    count = 0;
+    // Object: ChannelInfos[]
+    const json_t *chans = json_object_get(clist, "ChannelInfos");
+    // Iterates over the sequence elements.
+    for (size_t ci = 0; ci < json_array_size(chans); ++ci)
+    {
+      ++count;
+      const json_t *chan = json_array_get(chans, ci);
+      ChannelPtr channel(new Channel());  // Using default constructor
+      // Bind the new channel
+      MythJSON::BindObject(chan, channel.get(), bindchan);
+      if (channel->chanId)
+        ret->push_back(channel);
+    }
+    DBG(MYTH_DBG_DEBUG, "%s: received count(%d)\n", __FUNCTION__, count);
+    req_index += count; // Set next requested index
+  }
+  while (count == req_count);
+
+  return ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+////
+//// Guide service
+////
+ProgramMapPtr WSAPI::GetProgramGuide1_0(uint32_t chanid, time_t starttime, time_t endtime)
+{
+  ProgramMapPtr ret(new ProgramMap);
+  char buf[32];
+  int32_t count = 0;
+  unsigned proto = (unsigned)m_version.protocol;
+
+  // Get bindings for protocol version
+  const bindings_t *bindlist = MythDTO::getListBindArray(proto);
+  const bindings_t *bindchan = MythDTO::getChannelBindArray(proto);
+  const bindings_t *bindprog = MythDTO::getProgramBindArray(proto);
+
+  // Initialize request header
+  WSRequest req = WSRequest(m_server, m_port);
+  req.RequestAccept(CT_JSON);
+  req.RequestService("/Guide/GetProgramGuide");
+  uint32str(chanid, buf);
+  req.SetContentParam("StartChanId", buf);
+  req.SetContentParam("NumChannels", "1");
+  time2iso8601utc(starttime, buf);
+  req.SetContentParam("StartTime", buf);
+  time2iso8601utc(endtime, buf);
+  req.SetContentParam("EndTime", buf);
+  req.SetContentParam("Details", "true");
+
+  WSResponse resp(req);
+  if (!resp.IsSuccessful())
+  {
+    DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
+    return ret;
+  }
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
+  if (!root.isValid() || !json_is_object(root.get()))
+  {
+    DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
+    return ret;
+  }
+  DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
+
+  // Object: ProgramGuide
+  const json_t *glist = json_object_get(root.get(), "ProgramGuide");
+  ItemList list = ItemList(); // Using default constructor
+  MythJSON::BindObject(glist, &list, bindlist);
+  // List has ProtoVer. Check it or sound alarm
+  if (list.protoVer != proto)
+  {
+    InvalidateService();
+    return ret;
+  }
+  // Object: Channels[]
+  const json_t *chans = json_object_get(glist, "Channels");
+  // Iterates over the sequence elements.
+  for (size_t ci = 0; ci < json_array_size(chans); ++ci)
+  {
+    const json_t *chan = json_array_get(chans, ci);
+    Channel channel;
+    MythJSON::BindObject(chan, &channel, bindchan);
+    // Object: Programs[]
+    const json_t *progs = json_object_get(chan, "Programs");
+    // Iterates over the sequence elements.
+    for (size_t pi = 0; pi < json_array_size(progs); ++pi)
+    {
+      ++count;
+      const json_t *prog = json_array_get(progs, pi);
+      ProgramPtr program(new Program());  // Using default constructor
+      // Bind the new program
+      MythJSON::BindObject(prog, program.get(), bindprog);
+      program->channel = channel;
+      ret->insert(std::make_pair(program->startTime, program));
+    }
+  }
+  DBG(MYTH_DBG_DEBUG, "%s: received count(%d)\n", __FUNCTION__, count);
+
+  return ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+////
+//// Dvr service
+////
+ProgramListPtr WSAPI::GetRecordedList1_5(unsigned n, bool descending)
 {
   ProgramListPtr ret(new ProgramList);
   char buf[32];
   uint32_t req_index = 0, req_count = 100, count = 0, total = 0;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
+  unsigned proto = (unsigned)m_version.protocol;
 
   // Get bindings for protocol version
   const bindings_t *bindlist = MythDTO::getListBindArray(proto);
@@ -371,12 +764,12 @@ ProgramListPtr WSAPI::GetRecordedList(unsigned n, bool descending)
 
     DBG(MYTH_DBG_DEBUG, "%s: request index(%d) count(%d)\n", __FUNCTION__, req_index, req_count);
     WSResponse resp(req);
-    if (!resp.IsValid())
+    if (!resp.IsSuccessful())
     {
       DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
       break;
     }
-    JanssonPtr root = ParseResponseJSON(resp);
+    JanssonPtr root = MythJSON::ParseResponseJSON(resp);
     if (!root.isValid() || !json_is_object(root.get()))
     {
       DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -431,14 +824,11 @@ ProgramListPtr WSAPI::GetRecordedList(unsigned n, bool descending)
   return ret;
 }
 
-ProgramPtr WSAPI::GetRecorded(uint32_t chanid, time_t recstartts)
+ProgramPtr WSAPI::GetRecorded1_5(uint32_t chanid, time_t recstartts)
 {
   ProgramPtr ret;
   char buf[32];
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
+  unsigned proto = (unsigned)m_version.protocol;
 
   // Get bindings for protocol version
   const bindings_t *bindprog = MythDTO::getProgramBindArray(proto);
@@ -454,12 +844,12 @@ ProgramPtr WSAPI::GetRecorded(uint32_t chanid, time_t recstartts)
   time2iso8601utc(recstartts, buf);
   req.SetContentParam("StartTime", buf);
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return ret;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -492,40 +882,7 @@ ProgramPtr WSAPI::GetRecorded(uint32_t chanid, time_t recstartts)
   return ret;
 }
 
-bool WSAPI::UpdateRecordedWatchedStatus79(uint32_t chanid, time_t recstartts, bool watched)
-{
-  char buf[32];
-  
-  // Initialize request header
-  WSRequest req = WSRequest(m_server, m_port);
-  req.RequestAccept(CT_JSON);
-  req.RequestService("/Dvr/UpdateRecordedWatchedStatus", HRM_POST);
-  uint32str(chanid, buf);
-  req.SetContentParam("ChanId", buf);
-  time2iso8601utc(recstartts, buf);
-  req.SetContentParam("StartTime", buf);
-  req.SetContentParam("Watched", BOOLSTR(watched));
-  WSResponse resp(req);
-  if (!resp.IsValid())
-  {
-    DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
-    return false;
-  }
-  JanssonPtr root = ParseResponseJSON(resp);
-  if (!root.isValid() || !json_is_object(root.get()))
-  {
-    DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
-    return false;
-  }
-  DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
-
-  const json_t *field = json_object_get(root.get(), "bool");
-  if (!field || strcmp(json_string_value(field), "true"))
-    return false;
-  return true;
-}
-
-bool WSAPI::DeleteRecording82(uint32_t chanid, time_t recstartts, bool forceDelete, bool allowRerecord)
+bool WSAPI::DeleteRecording2_1(uint32_t chanid, time_t recstartts, bool forceDelete, bool allowRerecord)
 {
   char buf[32];
 
@@ -540,12 +897,12 @@ bool WSAPI::DeleteRecording82(uint32_t chanid, time_t recstartts, bool forceDele
   req.SetContentParam("ForceDelete", BOOLSTR(forceDelete));
   req.SetContentParam("AllowRerecord", BOOLSTR(allowRerecord));
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -559,7 +916,7 @@ bool WSAPI::DeleteRecording82(uint32_t chanid, time_t recstartts, bool forceDele
   return true;
 }
 
-bool WSAPI::UnDeleteRecording82(uint32_t chanid, time_t recstartts)
+bool WSAPI::UnDeleteRecording2_1(uint32_t chanid, time_t recstartts)
 {
   char buf[32];
 
@@ -572,12 +929,12 @@ bool WSAPI::UnDeleteRecording82(uint32_t chanid, time_t recstartts)
   time2iso8601utc(recstartts, buf);
   req.SetContentParam("StartTime", buf);
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -591,331 +948,40 @@ bool WSAPI::UnDeleteRecording82(uint32_t chanid, time_t recstartts)
   return true;
 }
 
-CaptureCardListPtr WSAPI::GetCaptureCardList()
+bool WSAPI::UpdateRecordedWatchedStatus4_5(uint32_t chanid, time_t recstartts, bool watched)
 {
-  CaptureCardListPtr ret(new CaptureCardList);
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
-
-  // Get bindings for protocol version
-  const bindings_t *bindcard = MythDTO::getCaptureCardBindArray(proto);
-
-  // Initialize request header
-  WSRequest req = WSRequest(m_server, m_port);
-  req.RequestAccept(CT_JSON);
-  req.RequestService("/Capture/GetCaptureCardList");
-  req.SetContentParam("HostName", m_serverHostName.c_str());
-  WSResponse resp(req);
-  if (!resp.IsValid())
-  {
-    DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
-    return ret;
-  }
-  JanssonPtr root = ParseResponseJSON(resp);
-  if (!root.isValid() || !json_is_object(root.get()))
-  {
-    DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
-    return ret;
-  }
-  DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
-
-  // Object: CaptureCardList
-  const json_t *clist = json_object_get(root.get(), "CaptureCardList");
-  // Object: CaptureCards[]
-  const json_t *cards = json_object_get(clist, "CaptureCards");
-  // Iterates over the sequence elements.
-  for (size_t ci = 0; ci < json_array_size(cards); ++ci)
-  {
-    const json_t *card = json_array_get(cards, ci);
-    CaptureCardPtr captureCard(new CaptureCard());  // Using default constructor
-    // Bind the new captureCard
-    MythJSON::BindObject(card, captureCard.get(), bindcard);
-    ret->push_back(captureCard);
-  }
-  return ret;
-}
-
-VideoSourceListPtr WSAPI::GetVideoSourceList()
-{
-  VideoSourceListPtr ret(new VideoSourceList);
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
-
-  // Get bindings for protocol version
-  const bindings_t *bindvsrc = MythDTO::getVideoSourceBindArray(proto);
-
-  // Initialize request header
-  WSRequest req = WSRequest(m_server, m_port);
-  req.RequestAccept(CT_JSON);
-  req.RequestService("/Channel/GetVideoSourceList");
-  WSResponse resp(req);
-  if (!resp.IsValid())
-  {
-    DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
-    return ret;
-  }
-  JanssonPtr root = ParseResponseJSON(resp);
-  if (!root.isValid() || !json_is_object(root.get()))
-  {
-    DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
-    return ret;
-  }
-  DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
-
-  // Object: VideoSourceList
-  const json_t *slist = json_object_get(root.get(), "VideoSourceList");
-  // Object: VideoSources[]
-  const json_t *vsrcs = json_object_get(slist, "VideoSources");
-  // Iterates over the sequence elements.
-  for (size_t vi = 0; vi < json_array_size(vsrcs); ++vi)
-  {
-    const json_t *vsrc = json_array_get(vsrcs, vi);
-    VideoSourcePtr videoSource(new VideoSource());  // Using default constructor
-    // Bind the new videoSource
-    MythJSON::BindObject(vsrc, videoSource.get(), bindvsrc);
-    ret->push_back(videoSource);
-  }
-  return ret;
-}
-
-ChannelListPtr WSAPI::GetChannelList75(uint32_t sourceid, bool onlyVisible)
-{
-  ChannelListPtr ret(new ChannelList);
   char buf[32];
-  int32_t req_index = 0, req_count = 100, count = 0;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
-
-  // Get bindings for protocol version
-  const bindings_t *bindlist = MythDTO::getListBindArray(proto);
-  const bindings_t *bindchan = MythDTO::getChannelBindArray(proto);
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
   req.RequestAccept(CT_JSON);
-  req.RequestService("/Channel/GetChannelInfoList");
-
-  do
-  {
-    req.ClearContent();
-    uint32str(sourceid, buf);
-    req.SetContentParam("SourceID", buf);
-    int32str(req_index, buf);
-    req.SetContentParam("StartIndex", buf);
-    int32str(req_count, buf);
-    req.SetContentParam("Count", buf);
-
-    DBG(MYTH_DBG_DEBUG, "%s: request index(%d) count(%d)\n", __FUNCTION__, req_index, req_count);
-    WSResponse resp(req);
-    if (!resp.IsValid())
-    {
-      DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
-      break;
-    }
-    JanssonPtr root = ParseResponseJSON(resp);
-    if (!root.isValid() || !json_is_object(root.get()))
-    {
-      DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
-      break;
-    }
-    DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
-
-    // Object: ChannelInfoList
-    const json_t *clist = json_object_get(root.get(), "ChannelInfoList");
-    ItemList list = ItemList(); // Using default constructor
-    MythJSON::BindObject(clist, &list, bindlist);
-    // List has ProtoVer. Check it or sound alarm
-    if (list.protoVer != proto)
-    {
-      InvalidateService();
-      break;
-    }
-    count = 0;
-    // Object: ChannelInfos[]
-    const json_t *chans = json_object_get(clist, "ChannelInfos");
-    // Iterates over the sequence elements.
-    for (size_t ci = 0; ci < json_array_size(chans); ++ci)
-    {
-      ++count;
-      const json_t *chan = json_array_get(chans, ci);
-      ChannelPtr channel(new Channel());  // Using default constructor
-      // Bind the new channel
-      MythJSON::BindObject(chan, channel.get(), bindchan);
-      if (channel->chanId && (!onlyVisible || channel->visible))
-        ret->push_back(channel);
-    }
-    DBG(MYTH_DBG_DEBUG, "%s: received count(%d)\n", __FUNCTION__, count);
-    req_index += count; // Set next requested index
-  }
-  while (count == req_count);
-
-  return ret;
-}
-
-ChannelListPtr WSAPI::GetChannelList82(uint32_t sourceid, bool onlyVisible)
-{
-  ChannelListPtr ret(new ChannelList);
-  char buf[32];
-  int32_t req_index = 0, req_count = 100, count = 0;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
-
-  // Get bindings for protocol version
-  const bindings_t *bindlist = MythDTO::getListBindArray(proto);
-  const bindings_t *bindchan = MythDTO::getChannelBindArray(proto);
-
-  // Initialize request header
-  WSRequest req = WSRequest(m_server, m_port);
-  req.RequestAccept(CT_JSON);
-  req.RequestService("/Channel/GetChannelInfoList");
-
-  do
-  {
-    req.ClearContent();
-    req.SetContentParam("Details", "true");
-    req.SetContentParam("OnlyVisible", BOOLSTR(onlyVisible));
-    uint32str(sourceid, buf);
-    req.SetContentParam("SourceID", buf);
-    int32str(req_index, buf);
-    req.SetContentParam("StartIndex", buf);
-    int32str(req_count, buf);
-    req.SetContentParam("Count", buf);
-
-    DBG(MYTH_DBG_DEBUG, "%s: request index(%d) count(%d)\n", __FUNCTION__, req_index, req_count);
-    WSResponse resp(req);
-    if (!resp.IsValid())
-    {
-      DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
-      break;
-    }
-    JanssonPtr root = ParseResponseJSON(resp);
-    if (!root.isValid() || !json_is_object(root.get()))
-    {
-      DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
-      break;
-    }
-    DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
-
-    // Object: ChannelInfoList
-    const json_t *clist = json_object_get(root.get(), "ChannelInfoList");
-    ItemList list = ItemList(); // Using default constructor
-    MythJSON::BindObject(clist, &list, bindlist);
-    // List has ProtoVer. Check it or sound alarm
-    if (list.protoVer != proto)
-    {
-      InvalidateService();
-      break;
-    }
-    count = 0;
-    // Object: ChannelInfos[]
-    const json_t *chans = json_object_get(clist, "ChannelInfos");
-    // Iterates over the sequence elements.
-    for (size_t ci = 0; ci < json_array_size(chans); ++ci)
-    {
-      ++count;
-      const json_t *chan = json_array_get(chans, ci);
-      ChannelPtr channel(new Channel());  // Using default constructor
-      // Bind the new channel
-      MythJSON::BindObject(chan, channel.get(), bindchan);
-      if (channel->chanId)
-        ret->push_back(channel);
-    }
-    DBG(MYTH_DBG_DEBUG, "%s: received count(%d)\n", __FUNCTION__, count);
-    req_index += count; // Set next requested index
-  }
-  while (count == req_count);
-
-  return ret;
-}
-
-ProgramMapPtr WSAPI::GetProgramGuide(uint32_t chanid, time_t starttime, time_t endtime)
-{
-  ProgramMapPtr ret(new ProgramMap);
-  char buf[32];
-  int32_t count = 0;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
-
-  // Get bindings for protocol version
-  const bindings_t *bindlist = MythDTO::getListBindArray(proto);
-  const bindings_t *bindchan = MythDTO::getChannelBindArray(proto);
-  const bindings_t *bindprog = MythDTO::getProgramBindArray(proto);
-
-  // Initialize request header
-  WSRequest req = WSRequest(m_server, m_port);
-  req.RequestAccept(CT_JSON);
-  req.RequestService("/Guide/GetProgramGuide");
+  req.RequestService("/Dvr/UpdateRecordedWatchedStatus", HRM_POST);
   uint32str(chanid, buf);
-  req.SetContentParam("StartChanId", buf);
-  req.SetContentParam("NumChannels", "1");
-  time2iso8601utc(starttime, buf);
+  req.SetContentParam("ChanId", buf);
+  time2iso8601utc(recstartts, buf);
   req.SetContentParam("StartTime", buf);
-  time2iso8601utc(endtime, buf);
-  req.SetContentParam("EndTime", buf);
-  req.SetContentParam("Details", "true");
-
+  req.SetContentParam("Watched", BOOLSTR(watched));
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
-    return ret;
+    return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
-    return ret;
+    return false;
   }
   DBG(MYTH_DBG_DEBUG, "%s: content parsed\n", __FUNCTION__);
 
-  // Object: ProgramGuide
-  const json_t *glist = json_object_get(root.get(), "ProgramGuide");
-  ItemList list = ItemList(); // Using default constructor
-  MythJSON::BindObject(glist, &list, bindlist);
-  // List has ProtoVer. Check it or sound alarm
-  if (list.protoVer != proto)
-  {
-    InvalidateService();
-    return ret;
-  }
-  // Object: Channels[]
-  const json_t *chans = json_object_get(glist, "Channels");
-  // Iterates over the sequence elements.
-  for (size_t ci = 0; ci < json_array_size(chans); ++ci)
-  {
-    const json_t *chan = json_array_get(chans, ci);
-    Channel channel;
-    MythJSON::BindObject(chan, &channel, bindchan);
-    // Object: Programs[]
-    const json_t *progs = json_object_get(chan, "Programs");
-    // Iterates over the sequence elements.
-    for (size_t pi = 0; pi < json_array_size(progs); ++pi)
-    {
-      ++count;
-      const json_t *prog = json_array_get(progs, pi);
-      ProgramPtr program(new Program());  // Using default constructor
-      // Bind the new program
-      MythJSON::BindObject(prog, program.get(), bindprog);
-      program->channel = channel;
-      ret->insert(std::make_pair(program->startTime, program));
-    }
-  }
-  DBG(MYTH_DBG_DEBUG, "%s: received count(%d)\n", __FUNCTION__, count);
-
-  return ret;
+  const json_t *field = json_object_get(root.get(), "bool");
+  if (!field || strcmp(json_string_value(field), "true"))
+    return false;
+  return true;
 }
 
-void WSAPI::ProcessRecordIN(unsigned proto, RecordSchedule& record)
+static void ProcessRecordIN(unsigned proto, RecordSchedule& record)
 {
   // Converting API codes to internal types
   record.type_t = RuleTypeFromString(proto, record.type);
@@ -924,32 +990,12 @@ void WSAPI::ProcessRecordIN(unsigned proto, RecordSchedule& record)
   record.dupIn_t = DupInFromString(proto, record.dupIn);
 }
 
-void WSAPI::ProcessRecordOUT(unsigned proto, RecordSchedule& record)
-{
-  char buf[10];
-  struct tm stm;
-  time_t st = record.startTime;
-  localtime_r(&st, &stm);
-  // Set find time & day
-  sprintf(buf, "%.2d:%.2d:%.2d", stm.tm_hour, stm.tm_min, stm.tm_sec);
-  record.findTime = buf;
-  record.findDay = stm.tm_wday;
-  // Converting internal types to API codes
-  record.type = RuleTypeToString(proto, record.type_t);
-  record.searchType = SearchTypeToString(proto, record.searchType_t);
-  record.dupMethod = DupMethodToString(proto, record.dupMethod_t);
-  record.dupIn = DupInToString(proto, record.dupIn_t);
-}
-
-RecordScheduleListPtr WSAPI::GetRecordScheduleList()
+RecordScheduleListPtr WSAPI::GetRecordScheduleList1_5()
 {
   RecordScheduleListPtr ret(new RecordScheduleList);
   char buf[32];
   int32_t req_index = 0, req_count = 100, count = 0;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
+  unsigned proto = (unsigned)m_version.protocol;
 
   // Get bindings for protocol version
   const bindings_t *bindlist = MythDTO::getListBindArray(proto);
@@ -970,12 +1016,12 @@ RecordScheduleListPtr WSAPI::GetRecordScheduleList()
 
     DBG(MYTH_DBG_DEBUG, "%s: request index(%d) count(%d)\n", __FUNCTION__, req_index, req_count);
     WSResponse resp(req);
-    if (!resp.IsValid())
+    if (!resp.IsSuccessful())
     {
       DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
       break;
     }
-    JanssonPtr root = ParseResponseJSON(resp);
+    JanssonPtr root = MythJSON::ParseResponseJSON(resp);
     if (!root.isValid() || !json_is_object(root.get()))
     {
       DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1015,14 +1061,11 @@ RecordScheduleListPtr WSAPI::GetRecordScheduleList()
   return ret;
 }
 
-RecordSchedulePtr WSAPI::GetRecordSchedule(uint32_t recordid)
+RecordSchedulePtr WSAPI::GetRecordSchedule1_5(uint32_t recordid)
 {
   RecordSchedulePtr ret;
   char buf[32];
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
+  unsigned proto = (unsigned)m_version.protocol;
 
   // Get bindings for protocol version
   const bindings_t *bindrec = MythDTO::getRecordScheduleBindArray(proto);
@@ -1033,12 +1076,12 @@ RecordSchedulePtr WSAPI::GetRecordSchedule(uint32_t recordid)
   uint32str(recordid, buf);
   req.SetContentParam("RecordId", buf);
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return ret;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1059,12 +1102,30 @@ RecordSchedulePtr WSAPI::GetRecordSchedule(uint32_t recordid)
   return ret;
 }
 
-bool WSAPI::AddRecordSchedule75(RecordSchedule& record)
+static void ProcessRecordOUT(unsigned proto, RecordSchedule& record)
+{
+  char buf[10];
+  struct tm stm;
+  time_t st = record.startTime;
+  localtime_r(&st, &stm);
+  // Set find time & day
+  sprintf(buf, "%.2d:%.2d:%.2d", stm.tm_hour, stm.tm_min, stm.tm_sec);
+  record.findTime = buf;
+  record.findDay = stm.tm_wday;
+  // Converting internal types to API codes
+  record.type = RuleTypeToString(proto, record.type_t);
+  record.searchType = SearchTypeToString(proto, record.searchType_t);
+  record.dupMethod = DupMethodToString(proto, record.dupMethod_t);
+  record.dupIn = DupInToString(proto, record.dupIn_t);
+}
+
+bool WSAPI::AddRecordSchedule1_5(RecordSchedule& record)
 {
   char buf[32];
   uint32_t recordid;
+  unsigned proto = (unsigned)m_version.protocol;
 
-  ProcessRecordOUT(75, record);
+  ProcessRecordOUT(proto, record);
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1124,12 +1185,12 @@ bool WSAPI::AddRecordSchedule75(RecordSchedule& record)
   req.SetContentParam("Transcoder", buf);
 
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1144,12 +1205,13 @@ bool WSAPI::AddRecordSchedule75(RecordSchedule& record)
   return true;
 }
 
-bool WSAPI::AddRecordSchedule76(RecordSchedule& record)
+bool WSAPI::AddRecordSchedule1_7(RecordSchedule& record)
 {
   char buf[32];
   uint32_t recordid;
+  unsigned proto = (unsigned)m_version.protocol;
 
-  ProcessRecordOUT(76, record);
+  ProcessRecordOUT(proto, record);
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1213,12 +1275,12 @@ bool WSAPI::AddRecordSchedule76(RecordSchedule& record)
   req.SetContentParam("Transcoder", buf);
 
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1233,11 +1295,12 @@ bool WSAPI::AddRecordSchedule76(RecordSchedule& record)
   return true;
 }
 
-bool WSAPI::UpdateRecordSchedule76(RecordSchedule& record)
+bool WSAPI::UpdateRecordSchedule1_7(RecordSchedule& record)
 {
   char buf[32];
+  unsigned proto = (unsigned)m_version.protocol;
 
-  ProcessRecordOUT(76, record);
+  ProcessRecordOUT(proto, record);
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1303,12 +1366,12 @@ bool WSAPI::UpdateRecordSchedule76(RecordSchedule& record)
   req.SetContentParam("Transcoder", buf);
 
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1322,13 +1385,9 @@ bool WSAPI::UpdateRecordSchedule76(RecordSchedule& record)
   return true;
 }
 
-bool WSAPI::DisableRecordSchedule(uint32_t recordid)
+bool WSAPI::DisableRecordSchedule1_5(uint32_t recordid)
 {
   char buf[32];
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return false;
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1339,12 +1398,12 @@ bool WSAPI::DisableRecordSchedule(uint32_t recordid)
   req.SetContentParam("RecordId", buf);
 
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1358,13 +1417,9 @@ bool WSAPI::DisableRecordSchedule(uint32_t recordid)
   return true;
 }
 
-bool WSAPI::EnableRecordSchedule(uint32_t recordid)
+bool WSAPI::EnableRecordSchedule1_5(uint32_t recordid)
 {
   char buf[32];
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return false;
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1375,12 +1430,12 @@ bool WSAPI::EnableRecordSchedule(uint32_t recordid)
   req.SetContentParam("RecordId", buf);
 
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1394,13 +1449,9 @@ bool WSAPI::EnableRecordSchedule(uint32_t recordid)
   return true;
 }
 
-bool WSAPI::RemoveRecordSchedule(uint32_t recordid)
+bool WSAPI::RemoveRecordSchedule1_5(uint32_t recordid)
 {
   char buf[32];
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return false;
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1411,12 +1462,12 @@ bool WSAPI::RemoveRecordSchedule(uint32_t recordid)
   req.SetContentParam("RecordId", buf);
 
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return false;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1430,10 +1481,10 @@ bool WSAPI::RemoveRecordSchedule(uint32_t recordid)
   return true;
 }
 
-ProgramListPtr WSAPI::GetUpcomingList75()
+ProgramListPtr WSAPI::GetUpcomingList1_5()
 {
   // Only for backward compatibility (0.27)
-  ProgramListPtr ret = GetUpcomingList79();
+  ProgramListPtr ret = GetUpcomingList2_2();
   // Add being recorded (https://code.mythtv.org/trac/changeset/3084ebc/mythtv)
   ProgramListPtr recordings = GetRecordedList(20, true);
   for (Myth::ProgramList::iterator it = recordings->begin(); it != recordings->end(); ++it)
@@ -1444,15 +1495,12 @@ ProgramListPtr WSAPI::GetUpcomingList75()
   return ret;
 }
 
-ProgramListPtr WSAPI::GetUpcomingList79()
+ProgramListPtr WSAPI::GetUpcomingList2_2()
 {
   ProgramListPtr ret(new ProgramList);
   char buf[32];
   int32_t req_index = 0, req_count = 100, count = 0;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
+  unsigned proto = (unsigned)m_version.protocol;
 
   // Get bindings for protocol version
   const bindings_t *bindlist = MythDTO::getListBindArray(proto);
@@ -1476,12 +1524,12 @@ ProgramListPtr WSAPI::GetUpcomingList79()
 
     DBG(MYTH_DBG_DEBUG, "%s: request index(%d) count(%d)\n", __FUNCTION__, req_index, req_count);
     WSResponse resp(req);
-    if (!resp.IsValid())
+    if (!resp.IsSuccessful())
     {
       DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
       break;
     }
-    JanssonPtr root = ParseResponseJSON(resp);
+    JanssonPtr root = MythJSON::ParseResponseJSON(resp);
     if (!root.isValid() || !json_is_object(root.get()))
     {
       DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1526,15 +1574,12 @@ ProgramListPtr WSAPI::GetUpcomingList79()
   return ret;
 }
 
-ProgramListPtr WSAPI::GetConflictList()
+ProgramListPtr WSAPI::GetConflictList1_5()
 {
   ProgramListPtr ret(new ProgramList);
   char buf[32];
   int32_t req_index = 0, req_count = 100, count = 0;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
+  unsigned proto = (unsigned)m_version.protocol;
 
   // Get bindings for protocol version
   const bindings_t *bindlist = MythDTO::getListBindArray(proto);
@@ -1557,12 +1602,12 @@ ProgramListPtr WSAPI::GetConflictList()
 
     DBG(MYTH_DBG_DEBUG, "%s: request index(%d) count(%d)\n", __FUNCTION__, req_index, req_count);
     WSResponse resp(req);
-    if (!resp.IsValid())
+    if (!resp.IsSuccessful())
     {
       DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
       break;
     }
-    JanssonPtr root = ParseResponseJSON(resp);
+    JanssonPtr root = MythJSON::ParseResponseJSON(resp);
     if (!root.isValid() || !json_is_object(root.get()))
     {
       DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1607,15 +1652,12 @@ ProgramListPtr WSAPI::GetConflictList()
   return ret;
 }
 
-ProgramListPtr WSAPI::GetExpiringList()
+ProgramListPtr WSAPI::GetExpiringList1_5()
 {
   ProgramListPtr ret(new ProgramList);
   char buf[32];
   int32_t req_index = 0, req_count = 100, count = 0;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
+  unsigned proto = (unsigned)m_version.protocol;
 
   // Get bindings for protocol version
   const bindings_t *bindlist = MythDTO::getListBindArray(proto);
@@ -1638,12 +1680,12 @@ ProgramListPtr WSAPI::GetExpiringList()
 
     DBG(MYTH_DBG_DEBUG, "%s: request index(%d) count(%d)\n", __FUNCTION__, req_index, req_count);
     WSResponse resp(req);
-    if (!resp.IsValid())
+    if (!resp.IsSuccessful())
     {
       DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
       break;
     }
-    JanssonPtr root = ParseResponseJSON(resp);
+    JanssonPtr root = MythJSON::ParseResponseJSON(resp);
     if (!root.isValid() || !json_is_object(root.get()))
     {
       DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);
@@ -1688,13 +1730,13 @@ ProgramListPtr WSAPI::GetExpiringList()
   return ret;
 }
 
-WSStreamPtr WSAPI::GetFile(const std::string& filename, const std::string& sgname)
+///////////////////////////////////////////////////////////////////////////////
+////
+//// Content service
+////
+WSStreamPtr WSAPI::GetFile1_32(const std::string& filename, const std::string& sgname)
 {
   WSStreamPtr ret;
-  unsigned proto;
-
-  if (!(proto = CheckService()))
-    return ret;
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1702,7 +1744,7 @@ WSStreamPtr WSAPI::GetFile(const std::string& filename, const std::string& sgnam
   req.SetContentParam("StorageGroup", sgname);
   req.SetContentParam("FileName", filename);
   WSResponse *resp = new WSResponse(req);
-  if (!resp->IsValid())
+  if (!resp->IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     delete resp;
@@ -1712,14 +1754,10 @@ WSStreamPtr WSAPI::GetFile(const std::string& filename, const std::string& sgnam
   return ret;
 }
 
-WSStreamPtr WSAPI::GetChannelIcon(uint32_t chanid, unsigned width, unsigned height)
+WSStreamPtr WSAPI::GetChannelIcon1_32(uint32_t chanid, unsigned width, unsigned height)
 {
   WSStreamPtr ret;
-  unsigned proto;
   char buf[32];
-
-  if (!(proto = CheckService()))
-    return ret;
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1734,7 +1772,7 @@ WSStreamPtr WSAPI::GetChannelIcon(uint32_t chanid, unsigned width, unsigned heig
     req.SetContentParam("Height", buf);
   }
   WSResponse *resp = new WSResponse(req);
-  if (!resp->IsValid())
+  if (!resp->IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     delete resp;
@@ -1744,14 +1782,10 @@ WSStreamPtr WSAPI::GetChannelIcon(uint32_t chanid, unsigned width, unsigned heig
   return ret;
 }
 
-WSStreamPtr WSAPI::GetPreviewImage(uint32_t chanid, time_t recstartts, unsigned width, unsigned height)
+WSStreamPtr WSAPI::GetPreviewImage1_32(uint32_t chanid, time_t recstartts, unsigned width, unsigned height)
 {
   WSStreamPtr ret;
-  unsigned proto;
   char buf[32];
-
-  if (!(proto = CheckService()))
-    return ret;
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1768,7 +1802,16 @@ WSStreamPtr WSAPI::GetPreviewImage(uint32_t chanid, time_t recstartts, unsigned 
     req.SetContentParam("Height", buf);
   }
   WSResponse *resp = new WSResponse(req);
-  if (!resp->IsValid())
+  /* try redirection if any */
+  if (resp->GetStatusCode() == 301 && !resp->Redirection().empty())
+  {
+    URIParser uri(resp->Redirection());
+    WSRequest rreq(ResolveHostName(uri.Host()), uri.Port());
+    rreq.RequestService(std::string("/").append(uri.Path()));
+    delete resp;
+    resp = new WSResponse(rreq);
+  }
+  if (!resp->IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     delete resp;
@@ -1778,14 +1821,10 @@ WSStreamPtr WSAPI::GetPreviewImage(uint32_t chanid, time_t recstartts, unsigned 
   return ret;
 }
 
-WSStreamPtr WSAPI::GetRecordingArtwork(const std::string& type, const std::string& inetref, uint16_t season, unsigned width, unsigned height)
+WSStreamPtr WSAPI::GetRecordingArtwork1_32(const std::string& type, const std::string& inetref, uint16_t season, unsigned width, unsigned height)
 {
   WSStreamPtr ret;
-  unsigned proto;
   char buf[32];
-
-  if (!(proto = CheckService()))
-    return ret;
 
   // Initialize request header
   WSRequest req = WSRequest(m_server, m_port);
@@ -1802,7 +1841,7 @@ WSStreamPtr WSAPI::GetRecordingArtwork(const std::string& type, const std::strin
     req.SetContentParam("Height", buf);
   }
   WSResponse *resp = new WSResponse(req);
-  if (!resp->IsValid())
+  if (!resp->IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     delete resp;
@@ -1812,14 +1851,11 @@ WSStreamPtr WSAPI::GetRecordingArtwork(const std::string& type, const std::strin
   return ret;
 }
 
-ArtworkListPtr WSAPI::GetRecordingArtworkList(uint32_t chanid, time_t recstartts)
+ArtworkListPtr WSAPI::GetRecordingArtworkList1_32(uint32_t chanid, time_t recstartts)
 {
   ArtworkListPtr ret(new ArtworkList);
-  unsigned proto;
   char buf[32];
-
-  if (!(proto = CheckService()))
-    return ret;
+  unsigned proto = (unsigned)m_version.protocol;
 
   // Get bindings for protocol version
   const bindings_t *bindartw = MythDTO::getArtworkBindArray(proto);
@@ -1832,12 +1868,12 @@ ArtworkListPtr WSAPI::GetRecordingArtworkList(uint32_t chanid, time_t recstartts
   time2iso8601utc(recstartts, buf);
   req.SetContentParam("StartTime", buf);
   WSResponse resp(req);
-  if (!resp.IsValid())
+  if (!resp.IsSuccessful())
   {
     DBG(MYTH_DBG_ERROR, "%s: invalid response\n", __FUNCTION__);
     return ret;
   }
-  JanssonPtr root = ParseResponseJSON(resp);
+  JanssonPtr root = MythJSON::ParseResponseJSON(resp);
   if (!root.isValid() || !json_is_object(root.get()))
   {
     DBG(MYTH_DBG_ERROR, "%s: unexpected content\n", __FUNCTION__);

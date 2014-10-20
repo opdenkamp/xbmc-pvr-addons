@@ -41,7 +41,7 @@ Categories::Categories()
   CategoryByIdMap::const_iterator it;
   for (it = m_categoriesById.begin(); it != m_categoriesById.end(); ++it)
   {
-    m_categoriesByName.insert(CategoryByNameMap::value_type(it->second, it->first));
+    m_categoriesByName[it->second] = it->first;
   }
 }
 

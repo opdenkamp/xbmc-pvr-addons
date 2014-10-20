@@ -1,3 +1,11 @@
+v1.9.23
+- Handles version of services
+- Allow HTTP redirection to get slave previews
+- New format for program UID string
+- demuxer: optimizing, fix PES header
+- Fix category override
+- Transfer sub channel number
+
 v1.9.22
 - Fix identifier for DVB-SUBTITLE
 - Add setting to enable or disable EDL functionnality

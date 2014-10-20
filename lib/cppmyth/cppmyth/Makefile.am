@@ -9,10 +9,12 @@ libcppmyth_la_SOURCES = \
 	src/private/mythdto/mythdto.cpp \
 	src/private/builtin.c \
 	src/private/mythsocket.cpp \
+	src/private/mythjsonparser.cpp \
 	src/private/mythjsonbinder.cpp \
 	src/private/mythwscontent.cpp \
 	src/private/mythwsrequest.cpp \
 	src/private/mythwsresponse.cpp \
+	src/private/uriparser.cpp \
 	src/proto/mythprotobase.cpp \
 	src/proto/mythprotoevent.cpp \
 	src/proto/mythprotomonitor.cpp \

@@ -39,8 +39,15 @@ public:
 
   const unsigned char* ReadAV(uint64_t pos, size_t n);
 
-  bool GetMainStream(ElementaryStream::STREAM_INFO* info) const;
-  std::vector<ElementaryStream::STREAM_INFO> GetStreams() const;
+  typedef struct
+  {
+    uint16_t pid;
+    STREAM_TYPE stream_type;
+    ElementaryStream::STREAM_INFO stream_info;
+  } STREAM_AVINFO;
+
+  bool GetMainStream(STREAM_AVINFO *info) const;
+  std::vector<STREAM_AVINFO> GetStreams() const;
 
 private:
   Myth::Stream *m_file;

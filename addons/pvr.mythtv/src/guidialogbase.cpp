@@ -25,6 +25,7 @@
 GUIDialogBase::GUIDialogBase(const char *xmlFileName, const char *defaultSkin)
 : m_xmlFileName(xmlFileName)
 , m_defaultSkin(defaultSkin)
+, m_window(NULL)
 {
 }
 

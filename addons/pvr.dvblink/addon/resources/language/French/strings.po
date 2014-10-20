@@ -49,8 +49,8 @@ msgid "Stream"
 msgstr "Flux"
 
 msgctxt "#30102"
-msgid "Stream format"
-msgstr "Format du flux"
+msgid "Enable transcoding"
+msgstr "Enable transcoding"
 
 msgctxt "#30103"
 msgid "Height"
@@ -91,6 +91,13 @@ msgstr "Veuillez utiliser l'identifiant de la chaîne à la place de celui du cl
 msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Afficher les messages d'informations"
+
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Combine title and episode name for recordings"
+
+#empty strings from id 30204 to 32000
+#category labels
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"

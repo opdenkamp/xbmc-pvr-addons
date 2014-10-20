@@ -41,10 +41,13 @@
 #define DVBLINK_BUILD_IN_RECORDER_SOURCE_ID   "8F94B459-EFC0-4D91-9B29-EC3D72E92677"
 #define DVBLINK_RECODINGS_BY_DATA_ID   "F6F08949-2A07-4074-9E9D-423D877270BB"
 
+typedef std::map<std::string, std::string> recording_id_to_url_map_t;
+
 class DVBLinkClient : public PLATFORM::CThread
 {
 public:
-  DVBLinkClient(ADDON::CHelper_libXBMC_addon *XBMC, CHelper_libXBMC_pvr *PVR, std::string clientname, std::string hostname, long port, bool showinfomsg, std::string username, std::string password, bool usetimeshift);
+    DVBLinkClient(ADDON::CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* pvr, CHelper_libXBMC_gui* gui, std::string clientname, std::string hostname, long port, 
+        bool showinfomsg, std::string username, std::string password, bool add_episode_to_rec_title);
   ~DVBLinkClient(void);
   int GetChannelsAmount();
   PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
@@ -58,8 +61,8 @@ public:
   PVR_ERROR DeleteTimer(const PVR_TIMER &timer);
   PVR_ERROR UpdateTimer(const PVR_TIMER &timer);
   bool GetStatus();
-  const char * GetLiveStreamURL(const PVR_CHANNEL &channel, DVBLINK_STREAMTYPE streamtype, int width, int height, int bitrate, std::string audiotrack);
-  bool OpenLiveStream(const PVR_CHANNEL &channel, DVBLINK_STREAMTYPE streamtype, int width, int height, int bitrate, std::string audiotrack);
+  bool StartStreaming(const PVR_CHANNEL &channel, dvblinkremote::StreamRequest* streamRequest, std::string& stream_url);
+  bool OpenLiveStream(const PVR_CHANNEL &channel, bool use_timeshift, bool use_transcoder, int width, int height, int bitrate, std::string audiotrack);
   void StopStreaming(bool bUseChlHandle);
   int GetCurrentChannelId();
   void GetDriveSpace(long long *iTotal, long long *iUsed);
@@ -70,6 +73,7 @@ public:
   time_t GetPlayingTime();
   time_t GetBufferTimeStart();
   time_t GetBufferTimeEnd();
+  bool GetRecordingURL(const char* recording_id, std::string& url);
 
 private:
   bool DoEPGSearch(dvblinkremote::EpgSearchResult& epgSearchResult, const std::string& channelId, const long startTime, const long endTime, const std::string & programId = "");
@@ -78,6 +82,9 @@ private:
   std::string GetRecordedTVByDateObjectID(const std::string& buildInRecoderObjectID);
   int GetInternalUniqueIdFromChannelId(const std::string& channelId);
   virtual void * Process(void);
+
+  std::string make_timer_hash(const std::string& timer_id, const std::string& schedule_id);
+  bool parse_timer_hash(const char* timer_hash, std::string& timer_id, std::string& schedule_id);
 
   HttpPostClient* m_httpClient; 
   dvblinkremote::IDVBLinkRemoteConnection* m_dvblinkRemoteCommunication;
@@ -91,14 +98,15 @@ private:
   PLATFORM::CMutex        m_mutex;
   CHelper_libXBMC_pvr *PVR;
   ADDON::CHelper_libXBMC_addon  *XBMC; 
-  DVBLINK_STREAMTYPE m_streamtype;
+  CHelper_libXBMC_gui   *GUI;
   std::string m_clientname;
   std::string m_hostname;
-  TimeShiftBuffer *m_tsBuffer;
-  bool m_usetimeshift;
+  LiveStreamerBase* m_live_streamer;
+  bool m_add_episode_to_rec_title;
   bool m_showinfomsg;
   bool m_updating;
   std::string m_recordingsid;
+  recording_id_to_url_map_t m_recording_id_to_url_map;
 };
 
 /*!

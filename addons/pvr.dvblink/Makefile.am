@@ -20,6 +20,9 @@ libdvblink_addon_la_SOURCES = src/client.cpp \
                               src/base64.cpp \
                               src/HttpPostClient.cpp \
                               src/TimeShiftBuffer.cpp \
+                              src/RecordingStreamer.cpp \
+                              src/DialogDeleteTimer.cpp \
+                              src/DialogRecordPref.cpp \
                               src/DVBLinkClient.cpp
 libdvblink_addon_la_LDFLAGS = @TARGET_LDFLAGS@
 

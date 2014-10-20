@@ -1,3 +1,12 @@
+[B]Version 1.9.5[/B]
+Added: display of episode name and number in recordings list
+Fixed: no channels/recordings if DVBLink server is not available during xbmc start-up
+Fixed: single and recurring manual recordings
+Fixed: interrupted playback of the recording, which is still being recorded
+Added: Series recording capabilities
+Fixed: transcoded live TV streaming
+Added: transcoded live TV with timeshifting capabilities
+
 [B]Version 1.9.4[/B]
 Updated to API v1.9.2
 

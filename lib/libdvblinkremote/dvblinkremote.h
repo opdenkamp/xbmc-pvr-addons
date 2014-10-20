@@ -192,6 +192,21 @@ namespace dvblinkremote
   const std::string DVBLINK_REMOTE_STREAM_TYPE_ANDROID = "rtp";
 
   /**
+  * A constant string representing a MP4 stream type.
+  */
+  const std::string DVBLINK_REMOTE_STREAM_TYPE_MP4 = "mp4";
+
+  /**
+  * A constant string representing transport stream, transcoded to use h264 video and aac audio, with timeshifting capabilities.
+  */
+  const std::string DVBLINK_REMOTE_STREAM_TYPE_H264TS_HTTP_TIMESHIFT = "h264ts_http_timeshift";
+
+  /**
+  * A constant string representing transport stream, transcoded to use h264 video and aac audio.
+  */
+  const std::string DVBLINK_REMOTE_STREAM_TYPE_H264TS = "h264ts";
+
+  /**
     * A constant string representing a Http Live stream type for IOS devices.
     */
   const std::string DVBLINK_REMOTE_STREAM_TYPE_IPHONE = "hls";

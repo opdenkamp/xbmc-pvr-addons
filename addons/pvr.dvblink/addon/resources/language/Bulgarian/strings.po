@@ -49,8 +49,8 @@ msgid "Stream"
 msgstr "Поток"
 
 msgctxt "#30102"
-msgid "Stream format"
-msgstr "Стрийминг формат"
+msgid "Enable transcoding"
+msgstr "Enable transcoding"
 
 msgctxt "#30103"
 msgid "Height"
@@ -99,6 +99,13 @@ msgstr "Допълнителни"
 msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Показвай информативни съобщения"
+
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Combine title and episode name for recordings"
+
+#empty strings from id 30204 to 32000
+#category labels
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"

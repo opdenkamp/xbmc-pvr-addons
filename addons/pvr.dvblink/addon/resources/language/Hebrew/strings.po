@@ -49,8 +49,8 @@ msgid "Stream"
 msgstr "זרימה"
 
 msgctxt "#30102"
-msgid "Stream format"
-msgstr "מבנה זרימה"
+msgid "Enable transcoding"
+msgstr "Enable transcoding"
 
 msgctxt "#30103"
 msgid "Height"
@@ -104,6 +104,13 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "הצג הודעות מידע"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Combine title and episode name for recordings"
+
+#empty strings from id 30204 to 32000
+#category labels
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "מחובר לשרת DVBLink '%s'"
@@ -139,3 +146,27 @@ msgstr "נמצאו %d הקלטות"
 msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "לא היתה אפשרות לקבל הזרמה לערוץ %s (קוד שגיאה : %d)"
+
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Series recording"
+
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr "Record this episode only"
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Record all episodes"
+
+msgctxt "#32014"
+msgid "Delete timer"
+msgstr "Delete timer"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Delete this timer only"
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr "Delete the entire series"

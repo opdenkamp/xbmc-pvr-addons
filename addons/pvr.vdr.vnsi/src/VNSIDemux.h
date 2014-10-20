@@ -48,6 +48,7 @@ public:
 
   bool OpenChannel(const PVR_CHANNEL &channelinfo);
   void Abort();
+  void Close();
   bool GetStreamProperties(PVR_STREAM_PROPERTIES* props);
   DemuxPacket* Read();
   bool SwitchChannel(const PVR_CHANNEL &channelinfo);

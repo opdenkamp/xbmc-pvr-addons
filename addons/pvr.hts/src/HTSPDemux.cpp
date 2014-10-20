@@ -69,6 +69,7 @@ void CHTSPDemux::Close()
   if (m_session->IsConnected() && m_subs > 0)
     SendUnsubscribe(m_subs);
   m_subs = 0;
+  m_streams.Clear();
 }
 
 void CHTSPDemux::SetSpeed(int speed)
@@ -83,9 +84,6 @@ bool CHTSPDemux::SeekTime(int time, bool backward, double *startpts)
 
 bool CHTSPDemux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
 {
-  CLockObject lock(m_mutex);
-  if (!m_startedCondition.Wait(m_mutex, m_bIsOpen, STREAM_PROPS_TIMEOUT_MS))
-    return false;
   return m_streams.GetProperties(props);
 }
 
@@ -221,7 +219,6 @@ bool CHTSPDemux::SwitchChannel(const PVR_CHANNEL &channelinfo)
   else
   {
     m_channel = channelinfo.iUniqueId;
-    m_streams.Clear();
 
     return true;
   }
@@ -258,8 +255,8 @@ inline void HTSPResetDemuxStreamInfo(PVR_STREAM_PROPERTIES::PVR_STREAM &stream)
 
 inline void HTSPSetDemuxStreamInfoAudio(PVR_STREAM_PROPERTIES::PVR_STREAM &stream, htsmsg_t *msg)
 {
-  stream.iChannels   = htsmsg_get_u32_or_default(msg, "channels" , 0);
-  stream.iSampleRate = htsmsg_get_u32_or_default(msg, "rate" , 0);
+  stream.iChannels   = htsmsg_get_u32_or_default(msg, "channels" , 2);
+  stream.iSampleRate = htsmsg_get_u32_or_default(msg, "rate" , 48000);
 }
 
 inline void HTSPSetDemuxStreamInfoVideo(PVR_STREAM_PROPERTIES::PVR_STREAM &stream, htsmsg_t *msg)
@@ -396,14 +393,11 @@ void CHTSPDemux::ParseSubscriptionStart(htsmsg_t *m)
   }
 
   m_bIsOpen = true;
-  m_startedCondition.Signal();
 }
 
 void CHTSPDemux::ParseSubscriptionStop(htsmsg_t *m)
 {
   XBMC->Log(LOG_INFO, "%s - subscription ended on adapter %s", __FUNCTION__, m_SourceInfo.si_adapter.c_str());
-  CLockObject lock(m_mutex);
-  m_streams.Clear();
 
   /* reset the signal status */
   m_Quality.fe_status = "";

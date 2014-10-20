@@ -80,5 +80,4 @@ private:
   PLATFORM::CEvent*                    m_seekEvent;
   double                               m_seekTime;
   PLATFORM::CMutex                     m_mutex;
-  PLATFORM::CCondition<bool>           m_startedCondition;
 };

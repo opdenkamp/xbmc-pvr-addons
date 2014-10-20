@@ -96,6 +96,52 @@ void CHTSPVFS::Close ( void )
   m_path   = "";
 }
 
+bool CHTSPVFS::FillBuffer()
+{
+  htsmsg_t   *m;
+  const void *buf;
+  size_t      len;
+
+  /* Build */
+  m = htsmsg_create_map();
+  htsmsg_add_u32(m, "id",   m_fileId);
+  htsmsg_add_s64(m, "size", m_buffer.free());
+
+  tvhtrace("vfs read id=%d size=%lld",
+           m_fileId, (long long)m_buffer.free());
+
+  /* Send */
+  {
+    CLockObject lock(m_conn.Mutex());
+    m = m_conn.SendAndWait("fileRead", m);
+  }
+
+  if (m == NULL)
+  {
+    tvherror("vfs fileRead failed to send");
+    return false;
+  }
+
+  /* Process */
+  if (htsmsg_get_bin(m, "data", &buf, &len))
+  {
+    htsmsg_destroy(m);
+    tvherror("vfs fileRead malformed response");
+    return false;
+  }
+
+  /* Store */
+  if (m_buffer.write((unsigned char*)buf, len) != (ssize_t)len)
+  {
+    htsmsg_destroy(m);
+    tvherror("vfs partial buffer write");
+    return false;
+  }
+
+  htsmsg_destroy(m);
+  return true;
+}
+
 int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
 {
   ssize_t ret;
@@ -104,50 +150,10 @@ int CHTSPVFS::Read ( unsigned char *buf, unsigned int len )
   if (!m_fileId)
     return -1;
 
-  /* Fetch data */
-  if (m_buffer.avail() <= len)
-  {
-    htsmsg_t   *m;
-    const void *buf;
-    size_t      len;
-  
-    /* Build */
-    m = htsmsg_create_map();
-    htsmsg_add_u32(m, "id",   m_fileId);
-    htsmsg_add_s64(m, "size", m_buffer.free());
-
-    tvhtrace("vfs read id=%d size=%lld",
-             m_fileId, (long long)m_buffer.free());
-    
-    /* Send */
-    {
-      CLockObject lock(m_conn.Mutex());
-      m = m_conn.SendAndWait("fileRead", m);
-    }
-      
-    if (m == NULL)
-    {
-      tvherror("vfs fileRead failed to send");
+  /* Fill the buffer if necessary */
+  if (len > m_buffer.avail())
+    if (!FillBuffer())
       return -1;
-    }
-
-    /* Process */
-    if (htsmsg_get_bin(m, "data", &buf, &len))
-    {
-      htsmsg_destroy(m);
-      tvherror("vfs fileRead malformed response");
-      return -1;
-    }
-
-    /* Store */
-    if (m_buffer.write((unsigned char*)buf, len) != (ssize_t)len)
-    {
-      htsmsg_destroy(m);
-      tvherror("vfs partial buffer write");
-      return -1;
-    }
-    htsmsg_destroy(m);
-  }
 
   /* Read */
   ret       = m_buffer.read(buf, len);

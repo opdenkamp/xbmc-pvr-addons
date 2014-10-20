@@ -312,6 +312,7 @@ private:
   long long Tell   ( void );
   long long Size   ( void );
 
+  bool      FillBuffer    ();
   bool      SendFileOpen  ( bool force = false );
   void      SendFileClose ( void );
   long long SendFileSeek  ( int64_t pos, int whence, bool force = false );

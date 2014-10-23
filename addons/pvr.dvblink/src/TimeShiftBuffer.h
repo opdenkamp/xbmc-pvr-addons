@@ -17,7 +17,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+ *  MA 02110-1301  USA
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -29,29 +30,64 @@
 #include "libdvblinkremote/dvblinkremote.h"
 #include "platform/util/util.h"
 
-class TimeShiftBuffer
+class LiveStreamerBase
 {
 public:
-  TimeShiftBuffer(ADDON::CHelper_libXBMC_addon * XBMC, std::string streampath);
+    LiveStreamerBase(ADDON::CHelper_libXBMC_addon * XBMC);
+    virtual ~LiveStreamerBase();
+
+    virtual bool Start(std::string& streampath);
+    virtual void Stop();
+    virtual int ReadData(unsigned char *pBuffer, unsigned int iBufferSize);
+
+    virtual long long Seek(long long iPosition, int iWhence){ return -1; }
+    virtual long long Position(){ return -1; }
+    virtual long long Length(){ return -1; }
+
+    virtual time_t GetPlayingTime(){ return 0; }
+    virtual time_t GetBufferTimeStart(){ return 0; }
+    virtual time_t GetBufferTimeEnd(){ return 0; }
+
+    virtual dvblinkremote::StreamRequest* GetStreamRequest(long dvblink_channel_id, const std::string& client_id, const std::string& host_name,
+        bool use_transcoder, int width, int height, int bitrate, std::string audiotrack) {return NULL;}
+
+protected:
+    void * m_streamHandle;
+    ADDON::CHelper_libXBMC_addon * XBMC;
+    std::string streampath_;
+};
+
+class LiveTVStreamer : public LiveStreamerBase
+{
+public:
+    LiveTVStreamer(ADDON::CHelper_libXBMC_addon * XBMC);
+
+    virtual dvblinkremote::StreamRequest* GetStreamRequest(long dvblink_channel_id, const std::string& client_id, const std::string& host_name,
+        bool use_transcoder, int width, int height, int bitrate, std::string audiotrack);
+};
+
+
+class TimeShiftBuffer : public LiveStreamerBase
+{
+public:
+  TimeShiftBuffer(ADDON::CHelper_libXBMC_addon * XBMC);
   ~TimeShiftBuffer(void);
 
-  int ReadData(unsigned char *pBuffer, unsigned int iBufferSize);
-  long long Seek(long long iPosition, int iWhence);
-  long long Position();
-  long long Length();
-  void Stop();
+  virtual long long Seek(long long iPosition, int iWhence);
+  virtual long long Position();
+  virtual long long Length();
 
-  time_t GetPlayingTime();
-  time_t GetBufferTimeStart();
-  time_t GetBufferTimeEnd();
+  virtual time_t GetPlayingTime();
+  virtual time_t GetBufferTimeStart();
+  virtual time_t GetBufferTimeEnd();
 
-private:
+  virtual dvblinkremote::StreamRequest* GetStreamRequest(long dvblink_channel_id, const std::string& client_id, const std::string& host_name,
+      bool use_transcoder, int width, int height, int bitrate, std::string audiotrack);
+
+protected:
   bool ExecuteServerRequest(const std::string& url, std::vector<std::string>& response_values);
   bool GetBufferParams(long long& length, time_t& duration, long long& cur_pos);
 
-  void * m_streamHandle;
-  ADDON::CHelper_libXBMC_addon * XBMC;
-  std::string streampath_;
   time_t last_pos_req_time_;
   time_t last_pos_;
 };

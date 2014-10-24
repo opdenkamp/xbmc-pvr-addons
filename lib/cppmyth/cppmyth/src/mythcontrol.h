@@ -33,11 +33,14 @@ namespace Myth
   {
   public:
     Control(const std::string& server, unsigned protoPort, unsigned wsapiPort);
+    Control(const std::string& server, unsigned protoPort, unsigned wsapiPort, bool blockShutdown);
     ~Control();
 
     bool Open();
     void Close();
     bool IsOpen() { return m_monitor.IsOpen(); }
+    bool HasHanging() const { return m_monitor.HasHanging(); }
+    void CleanHanging() { m_monitor.CleanHanging(); }
 
     /**
      * @brief Check availability of API services
@@ -457,6 +460,24 @@ namespace Myth
     MarkListPtr GetCommBreakList(const Program& program, int unit = 0)
     {
       return m_monitor.GetCommBreakList(program, unit);
+    }
+
+    /**
+     * @brief Prevents backend from shutting down until a the next call to AllowShutdown().
+     * @return bool
+     */
+    bool BlockShutdown()
+    {
+      return m_monitor.BlockShutdown();
+    }
+
+    /**
+     * @brief Allows backend to shut down again after a previous call to BlockShutdown().
+     * @return bool
+     */
+    bool AllowShutdown()
+    {
+      return m_monitor.AllowShutdown();
     }
 
   private:

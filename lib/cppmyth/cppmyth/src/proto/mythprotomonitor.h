@@ -34,8 +34,10 @@ namespace Myth
   {
   public:
     ProtoMonitor(const std::string& server, unsigned port);
+    ProtoMonitor(const std::string& server, unsigned port, bool blockShutdown);
 
     bool Open();
+    void Close();
     bool IsOpen();
 
     ProtoRecorderPtr GetNextFreeRecorder(int rnum)
@@ -92,27 +94,38 @@ namespace Myth
       //if (m_protoVersion >= ??) return GetCommBreakList__(program, unit);
       return GetCommBreakList75(program, unit);
     }
+    bool BlockShutdown()
+    {
+      m_blockShutdown = true;
+      return BlockShutdown75();
+    }
+    bool AllowShutdown()
+    {
+      m_blockShutdown = false;
+      return AllowShutdown75();
+    }
 
   private:
+    bool m_blockShutdown;
+
     bool Announce75();
     ProtoRecorderPtr GetNextFreeRecorder75(int rnum);
     ProtoRecorderPtr GetRecorderFromNum75(int rnum);
-
     bool QueryFreeSpaceSummary75(int64_t *total, int64_t *used);
     std::string GetSetting75(const std::string& hostname, const std::string& setting);
     bool SetSetting75(const std::string& hostname, const std::string& setting, const std::string& value);
-
     bool QueryGenpixmap75(const Program& program);
     bool DeleteRecording75(const Program& program, bool force, bool forget);
     bool UndeleteRecording75(const Program& program);
     bool StopRecording75(const Program& program);
     bool CancelNextRecording75(int rnum, bool cancel);
     StorageGroupFilePtr QuerySGFile75(const std::string& hostname, const std::string& sgname, const std::string& filename);
-
     MarkListPtr GetCutList75(const Program& program, int unit);
     MarkListPtr GetCutList__(const Program& program, int unit);
     MarkListPtr GetCommBreakList75(const Program& program, int unit);
     MarkListPtr GetCommBreakList__(const Program& program, int unit);
+    bool BlockShutdown75();
+    bool AllowShutdown75();
 
     // Not implemented
     //int64_t GetBookmark75(Program& program);

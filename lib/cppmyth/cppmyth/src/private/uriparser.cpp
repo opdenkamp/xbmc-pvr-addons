@@ -45,7 +45,7 @@ void URIParser::URIScan(char *uri, URI_t *parts)
   char *p;
   char *after_scheme = uri;
   memset(parts, '\0', sizeof(URI_t));
-          
+
   /* look for fragment identifier */
   if ((p = strchr(uri, '#')) != NULL)
   {

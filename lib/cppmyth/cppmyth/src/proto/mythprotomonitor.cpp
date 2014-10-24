@@ -38,6 +38,13 @@ using namespace Myth;
 
 ProtoMonitor::ProtoMonitor(const std::string& server, unsigned port)
 : ProtoBase(server, port)
+, m_blockShutdown(false)
+{
+}
+
+ProtoMonitor::ProtoMonitor(const std::string& server, unsigned port, bool blockShutdown)
+: ProtoBase(server, port)
+, m_blockShutdown(blockShutdown)
 {
 }
 
@@ -55,9 +62,20 @@ bool ProtoMonitor::Open()
       ok = Announce75();
   }
   if (ok)
+  {
+    if (m_blockShutdown)
+      BlockShutdown();
     return true;
+  }
   Close();
   return false;
+}
+
+void ProtoMonitor::Close()
+{
+  ProtoBase::Close();
+  // Clean hanging and disable retry
+  m_tainted = m_hang = false;
 }
 
 bool ProtoMonitor::IsOpen()
@@ -581,4 +599,48 @@ MarkListPtr ProtoMonitor::GetCommBreakList__(const Program& program, int unit)
   DBG(MYTH_DBG_ERROR, "%s: failed\n", __FUNCTION__);
   FlushMessage();
   return list;
+}
+
+bool ProtoMonitor::BlockShutdown75()
+{
+  std::string field;
+
+  PLATFORM::CLockObject lock(*m_mutex);
+  if (!IsOpen())
+    return false;
+  std::string cmd("BLOCK_SHUTDOWN");
+
+  if (!SendCommand(cmd.c_str()))
+    return false;
+
+  if (!ReadField(field) || !IsMessageOK(field))
+    goto out;
+  DBG(MYTH_DBG_DEBUG, "%s: succeeded\n", __FUNCTION__);
+  return true;
+  out:
+  DBG(MYTH_DBG_ERROR, "%s: failed\n", __FUNCTION__);
+  FlushMessage();
+  return false;
+}
+
+bool ProtoMonitor::AllowShutdown75()
+{
+  std::string field;
+
+  PLATFORM::CLockObject lock(*m_mutex);
+  if (!IsOpen())
+    return false;
+  std::string cmd("ALLOW_SHUTDOWN");
+
+  if (!SendCommand(cmd.c_str()))
+    return false;
+
+  if (!ReadField(field) || !IsMessageOK(field))
+    goto out;
+  DBG(MYTH_DBG_DEBUG, "%s: succeeded\n", __FUNCTION__);
+  return true;
+  out:
+  DBG(MYTH_DBG_ERROR, "%s: failed\n", __FUNCTION__);
+  FlushMessage();
+  return false;
 }

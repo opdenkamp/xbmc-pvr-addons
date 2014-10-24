@@ -60,8 +60,7 @@ bool ProtoTransfer::Open()
 
   if (!ok)
   {
-    // Close without notice
-    m_hang = true;
+    m_hang = true; // set hang to close without notice
     Close();
     return false;
   }
@@ -71,6 +70,9 @@ bool ProtoTransfer::Open()
 void ProtoTransfer::Close()
 {
   ProtoBase::Close();
+  // Clean hanging and disable retry
+  m_tainted = m_hang = false;
+  // Reset transfer
   filePosition = fileRequest = 0;
   m_fileId = 0;
 }

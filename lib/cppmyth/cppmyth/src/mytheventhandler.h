@@ -49,6 +49,7 @@ namespace Myth
 
     bool Start() { return m_imp->Start(); }
     void Stop() { m_imp->Stop(); }
+    void Reset() { m_imp->Reset(); }
     std::string GetServer() const { return m_imp->GetServer(); }
     unsigned GetPort() const { return m_imp->GetPort(); }
     bool IsRunning() { return m_imp->IsRunning(); }
@@ -68,6 +69,7 @@ namespace Myth
       virtual unsigned GetPort() const { return m_port; }
       virtual bool Start() = 0;
       virtual void Stop() = 0;
+      virtual void Reset() = 0;
       virtual bool IsRunning() = 0;
       virtual bool IsConnected() = 0;
       virtual unsigned CreateSubscription(EventSubscriber *sub) = 0;

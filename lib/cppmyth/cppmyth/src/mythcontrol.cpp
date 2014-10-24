@@ -27,7 +27,14 @@ Control::Control(const std::string& server, unsigned protoPort, unsigned wsapiPo
 : m_monitor(server, protoPort)
 , m_wsapi(server, wsapiPort)
 {
-  m_monitor.Open();
+  Open();
+}
+
+Control::Control(const std::string& server, unsigned protoPort, unsigned wsapiPort, bool blockShutdown)
+: m_monitor(server, protoPort, blockShutdown)
+, m_wsapi(server, wsapiPort)
+{
+  Open();
 }
 
 Control::~Control()

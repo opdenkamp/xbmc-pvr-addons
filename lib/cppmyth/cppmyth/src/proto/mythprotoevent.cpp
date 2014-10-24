@@ -70,8 +70,15 @@ bool ProtoEvent::Open()
 
   if (ok)
     return true;
-  this->Close();
+  Close();
   return false;
+}
+
+void ProtoEvent::Close()
+{
+  ProtoBase::Close();
+  // Clean hanging and disable retry
+  m_tainted = m_hang = false;
 }
 
 bool ProtoEvent::Announce75()
@@ -183,7 +190,7 @@ int ProtoEvent::RcvBackendMessage(unsigned timeout, EventMessage& msg)
     }
 
     FlushMessage();
-    return (m_hang ? -(m_socket->GetErrNo()) : 1);
+    return (m_hang ? -(ENOTCONN) : 1);
   }
   else if (r < 0)
     return r;

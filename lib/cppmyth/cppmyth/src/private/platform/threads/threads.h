@@ -49,8 +49,9 @@ namespace PLATFORM
       StopThread(0);
     }
 
-    static void *ThreadHandler(CThread *thread)
+    static void *ThreadHandler(void *_thread)
     {
+      CThread *thread = static_cast<CThread *>(_thread);
       void *retVal = NULL;
 
       if (thread)

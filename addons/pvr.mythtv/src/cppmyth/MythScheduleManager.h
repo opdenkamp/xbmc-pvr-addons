@@ -78,7 +78,6 @@ public:
     MSM_ERROR_SUCCESS = 1
   };
 
-  MythScheduleManager();
   MythScheduleManager(const std::string& server, unsigned protoPort, unsigned wsapiPort);
   ~MythScheduleManager();
 
@@ -99,6 +98,8 @@ public:
   ScheduleList FindUpComingByRuleId(uint32_t recordid) const;
   ScheduledPtr FindUpComingByIndex(uint32_t index) const;
 
+  bool OpenControl();
+  void CloseControl();
   void Update();
 
   class VersionHelper

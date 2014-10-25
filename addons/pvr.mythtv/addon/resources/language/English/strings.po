@@ -185,7 +185,11 @@ msgctxt "#30061"
 msgid "Never"
 msgstr ""
 
-#empty strings from id 30062 to 30099
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr ""
+
+#empty strings from id 30063 to 30099
 
 # Systeminformation labels
 msgctxt "#30100"

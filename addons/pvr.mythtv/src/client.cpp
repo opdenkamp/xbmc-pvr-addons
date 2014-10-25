@@ -53,6 +53,7 @@ bool          g_bDemuxing               = DEFAULT_HANDLE_DEMUXING;
 int           g_iTuneDelay              = DEFAULT_TUNE_DELAY;
 int           g_iGroupRecordings        = GROUP_RECORDINGS_ALWAYS;
 int           g_iEnableEDL              = ENABLE_EDL_ALWAYS;
+bool          g_bBlockMythShutdown      = DEFAULT_BLOCK_SHUTDOWN;
 
 ///* Client member variables */
 ADDON_STATUS  m_CurStatus               = ADDON_STATUS_UNKNOWN;
@@ -83,8 +84,10 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   XBMC = new CHelper_libXBMC_addon;
 
   if (!XBMC->RegisterMe(hdl))
+  {
+    SAFE_DELETE(XBMC);
     return ADDON_STATUS_PERMANENT_FAILURE;
-
+  }
   XBMC->Log(LOG_DEBUG, "Creating MythTV PVR-Client");
   XBMC->Log(LOG_DEBUG, "Addon compiled with XBMC_PVR_API_VERSION: %s and XBMC_PVR_MIN_API_VERSION: %s", GetPVRAPIVersion(), GetMininumPVRAPIVersion());
   XBMC->Log(LOG_DEBUG, "Register handle @ libXBMC_addon...done");
@@ -101,6 +104,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   PVR = new CHelper_libXBMC_pvr;
   if (!PVR->RegisterMe(hdl))
   {
+    SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
@@ -112,6 +116,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   {
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
+    SAFE_DELETE(GUI);
     return ADDON_STATUS_PERMANENT_FAILURE;
   }
   XBMC->Log(LOG_DEBUG, "Register handle @ libXBMC_gui...done");
@@ -120,6 +125,7 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   CODEC = new CHelper_libXBMC_codec;
   if (!CODEC->RegisterMe(hdl))
   {
+    SAFE_DELETE(CODEC);
     SAFE_DELETE(PVR);
     SAFE_DELETE(XBMC);
     SAFE_DELETE(GUI);
@@ -257,6 +263,14 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     g_iEnableEDL = ENABLE_EDL_ALWAYS;
   }
 
+  /* Read setting "block_shutdown" from settings.xml */
+  if (!XBMC->GetSetting("block_shutdown", &g_bBlockMythShutdown))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'block_shutdown' setting, falling back to '%b' as default", DEFAULT_BLOCK_SHUTDOWN);
+    g_bBlockMythShutdown = DEFAULT_BLOCK_SHUTDOWN;
+  }
+
   free (buffer);
   XBMC->Log(LOG_DEBUG, "Loading settings...done");
 
@@ -373,6 +387,13 @@ void ADDON_Announce(const char *flag, const char *sender, const char *message, c
       else if (strcmp("OnWake", message) == 0)
         g_client->OnWake();
     }
+    else if (strcmp("GUI", flag) == 0)
+    {
+      if (strcmp("OnScreensaverDeactivated", message) == 0)
+        g_client->OnActivatedGUI();
+      else if (strcmp("OnScreensaverActivated", message) == 0)
+        g_client->OnDeactivatedGUI();
+    }
   }
 }
 
@@ -431,6 +452,11 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     if (g_bDemuxing != *(bool*)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
+  else if (str == "host_ether")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'host_ether' from %s to %s", g_szMythHostEther.c_str(), (const char*)settingValue);
+    g_szMythHostEther = (const char*)settingValue;
+  }
   else if (str == "extradebug")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'extra debug' from %u to %u", g_bExtraDebug, *(bool*)settingValue);
@@ -453,7 +479,8 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     if (g_bLiveTVPriority != *(bool*) settingValue && m_CurStatus != ADDON_STATUS_LOST_CONNECTION)
     {
       g_bLiveTVPriority = *(bool*)settingValue;
-      g_client->SetLiveTVPriority(g_bLiveTVPriority);
+      if (g_client)
+        g_client->SetLiveTVPriority(g_bLiveTVPriority);
     }
   }
   else if (str == "rec_template_provider")
@@ -536,6 +563,16 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
     XBMC->Log(LOG_INFO, "Changed Setting 'enable_edl' from %u to %u", g_iEnableEDL, *(int*)settingValue);
     if (g_iEnableEDL != *(int*)settingValue)
       g_iEnableEDL = *(int*)settingValue;
+  }
+  else if (str == "block_shutdown")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'block_shutdown' from %u to %u", g_bBlockMythShutdown, *(bool*)settingValue);
+    if (g_bBlockMythShutdown != *(bool*)settingValue)
+    {
+      g_bBlockMythShutdown = *(bool*)settingValue;
+      if (g_client)
+        g_bBlockMythShutdown ? g_client->BlockBackendShutdown() : g_client->AllowBackendShutdown();
+    }
   }
   return ADDON_STATUS_OK;
 }

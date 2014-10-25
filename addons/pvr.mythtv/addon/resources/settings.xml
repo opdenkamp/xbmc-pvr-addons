@@ -25,6 +25,7 @@
   <category label="30050">
     <setting id="extradebug" type="bool" label="30005" default="false" />
     <setting id="demuxing" type="bool" label="30052" default="false" />
+    <setting id="block_shutdown" type="bool" label="30062" default="true" />
     <setting id="tunedelay" type="slider" option="int" range="5,1,30" label="30053" />
     <setting id="group_recordings" type="enum" label="30054" lvalues="30055|30056|30057" default="0" />
     <setting id="enable_edl" type="enum" label="30058" lvalues="30059|30060|30061" default="0" />

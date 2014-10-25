@@ -39,6 +39,7 @@ PVRClientMythTV::PVRClientMythTV()
 , m_recordingStream(NULL)
 , m_eventSubscriberId(0)
 , m_hang(false)
+, m_powerSaving(false)
 , m_fileOps(NULL)
 , m_scheduleManager(NULL)
 , m_categories()
@@ -101,7 +102,7 @@ void PVRClientMythTV::SetDebug()
 bool PVRClientMythTV::Connect()
 {
   SetDebug();
-  m_control = new Myth::Control(g_szMythHostname, g_iProtoPort, g_iWSApiPort);
+  m_control = new Myth::Control(g_szMythHostname, g_iProtoPort, g_iWSApiPort, g_bBlockMythShutdown);
   if (!m_control->IsOpen())
   {
     SAFE_DELETE(m_control);
@@ -126,7 +127,6 @@ bool PVRClientMythTV::Connect()
   m_eventHandler->SubscribeForEvent(m_eventSubscriberId, Myth::EVENT_SCHEDULE_CHANGE);
   m_eventHandler->SubscribeForEvent(m_eventSubscriberId, Myth::EVENT_ASK_RECORDING);
   m_eventHandler->SubscribeForEvent(m_eventSubscriberId, Myth::EVENT_RECORDING_LIST_CHANGE);
-  m_eventHandler->Start();
 
   // Create schedule manager
   m_scheduleManager = new MythScheduleManager(g_szMythHostname, g_iProtoPort, g_iWSApiPort);
@@ -134,6 +134,8 @@ bool PVRClientMythTV::Connect()
   // Create file operation helper (image caching)
   m_fileOps = new FileOps(g_szMythHostname, g_iWSApiPort);
 
+  // Start event handler
+  m_eventHandler->Start();
   return true;
 }
 
@@ -181,18 +183,40 @@ PVR_ERROR PVRClientMythTV::GetDriveSpace(long long *iTotal, long long *iUsed)
 
 void PVRClientMythTV::OnSleep()
 {
-  if (m_eventHandler)
-    m_eventHandler->Stop();
   if (m_fileOps)
     m_fileOps->Suspend();
+  if (m_eventHandler)
+    m_eventHandler->Stop();
+  if (m_scheduleManager)
+    m_scheduleManager->CloseControl();
+  if (m_control)
+    m_control->Close();
 }
 
 void PVRClientMythTV::OnWake()
 {
+  if (m_control)
+    m_control->Open();
+  if (m_scheduleManager)
+    m_scheduleManager->OpenControl();
   if (m_eventHandler)
     m_eventHandler->Start();
   if (m_fileOps)
     m_fileOps->Resume();
+}
+
+void PVRClientMythTV::OnDeactivatedGUI()
+{
+  if (g_bBlockMythShutdown)
+    AllowBackendShutdown();
+  m_powerSaving = true;
+}
+
+void PVRClientMythTV::OnActivatedGUI()
+{
+  if (g_bBlockMythShutdown)
+    BlockBackendShutdown();
+  m_powerSaving = false;
 }
 
 void PVRClientMythTV::HandleBackendMessage(const Myth::EventMessage& msg)
@@ -217,20 +241,29 @@ void PVRClientMythTV::HandleBackendMessage(const Myth::EventMessage& msg)
         m_hang = true;
         if (m_control)
           m_control->Close();
+        if (m_scheduleManager)
+          m_scheduleManager->CloseControl();
         XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30302)); // Connection to MythTV backend lost
       }
       else if (msg.subject[0] == EVENTHANDLER_CONNECTED)
       {
-        if (m_hang && m_control && m_control->Open())
+        if (m_hang)
         {
+          if (m_control)
+            m_control->Open();
+          if (m_scheduleManager)
+            m_scheduleManager->OpenControl();
           m_hang = false;
           XBMC->QueueNotification(QUEUE_INFO, XBMC->GetLocalizedString(30303)); // Connection to MythTV restored
         }
+        // Refreshing all
+        HandleScheduleChange();
+        HandleRecordingListChange(Myth::EventMessage());
       }
       else if (msg.subject[0] == EVENTHANDLER_NOTCONNECTED)
       {
-        // Try wake up
-        if (!g_szMythHostEther.empty())
+        // Try wake up if GUI is activated
+        if (!m_powerSaving && !g_szMythHostEther.empty())
           XBMC->WakeOnLan(g_szMythHostEther.c_str());
       }
       break;
@@ -291,7 +324,7 @@ void PVRClientMythTV::HandleAskRecording(const Myth::EventMessage& msg)
 void PVRClientMythTV::HandleRecordingListChange(const Myth::EventMessage& msg)
 {
   unsigned cs = (unsigned)msg.subject.size();
-  if (cs == 1)
+  if (cs <= 1)
   {
     if (g_bExtraDebug)
       XBMC->Log(LOG_DEBUG, "%s: Reload all recordings", __FUNCTION__);
@@ -369,6 +402,13 @@ void PVRClientMythTV::RunHouseKeeping()
   if (g_bExtraDebug)
     XBMC->Log(LOG_DEBUG, "%s", __FUNCTION__);
 
+  // Reconnect handler when backend connection has hanging during last period
+  if (!m_hang && m_control->HasHanging())
+  {
+    XBMC->Log(LOG_NOTICE, "%s: Ask to refresh handler connection since control connection has hanging", __FUNCTION__);
+    m_eventHandler->Reset();
+    m_control->CleanHanging();
+  }
   if (m_recordingChangePinCount)
   {
     PVR->TriggerRecordingUpdate();
@@ -1121,31 +1161,6 @@ bool PVRClientMythTV::IsMyLiveRecording(const MythProgramInfo& programInfo)
     }
   }
   return false;
-}
-
-void PVRClientMythTV::FillRecordingAVInfo(MythProgramInfo& programInfo, Myth::Stream *stream)
-{
-  AVInfo info(stream);
-  AVInfo::STREAM_AVINFO mInfo;
-  if (info.GetMainStream(&mInfo))
-  {
-    // Set video frame rate
-    if (mInfo.stream_info.fps_scale > 0)
-    {
-      float fps = 0;
-      switch(mInfo.stream_type)
-      {
-        case STREAM_TYPE_VIDEO_H264:
-          fps = (float)(mInfo.stream_info.fps_rate) / (mInfo.stream_info.fps_scale * (mInfo.stream_info.interlaced ? 2 : 1));
-          break;
-        default:
-          fps = (float)(mInfo.stream_info.fps_rate) / mInfo.stream_info.fps_scale;
-      }
-      programInfo.SetPropsVideoFrameRate(fps);
-    }
-    // Set video aspec
-    programInfo.SetPropsVideoAspec(mInfo.stream_info.aspect);
-  }
 }
 
 int PVRClientMythTV::GetTimersAmount(void)
@@ -2062,7 +2077,19 @@ void PVRClientMythTV::SetLiveTVPriority(bool enabled)
   }
 }
 
-std::string PVRClientMythTV::MakeProgramTitle(const std::string& title, const std::string& subtitle) const
+void PVRClientMythTV::BlockBackendShutdown()
+{
+  if (m_control)
+    m_control->BlockShutdown();
+}
+
+void PVRClientMythTV::AllowBackendShutdown()
+{
+  if (m_control)
+    m_control->AllowShutdown();
+}
+
+std::string PVRClientMythTV::MakeProgramTitle(const std::string& title, const std::string& subtitle)
 {
   std::string epgtitle;
   if (subtitle.empty())
@@ -2080,13 +2107,13 @@ std::string PVRClientMythTV::MakeProgramTitle(const std::string& title, const st
 // Timecode is the count of minutes since epoch modulo 0xFFFF. Now therefore it
 // is usable for a period of +/- 32767 minutes (+/-22 days) around itself.
 
-int PVRClientMythTV::MakeBroadcastID(unsigned int chanid, time_t starttime) const
+int PVRClientMythTV::MakeBroadcastID(unsigned int chanid, time_t starttime)
 {
   int timecode = (int)(difftime(starttime, 0) / 60) & 0xFFFF;
   return (int)((timecode << 16) | (chanid & 0xFFFF));
 }
 
-void PVRClientMythTV::BreakBroadcastID(int broadcastid, unsigned int *chanid, time_t *attime) const
+void PVRClientMythTV::BreakBroadcastID(int broadcastid, unsigned int *chanid, time_t *attime)
 {
   time_t now;
   int ntc, ptc, distance;
@@ -2106,4 +2133,29 @@ void PVRClientMythTV::BreakBroadcastID(int broadcastid, unsigned int *chanid, ti
 
   *attime = mktime(&epgtm);
   *chanid = (unsigned int)broadcastid & 0xFFFF;
+}
+
+void PVRClientMythTV::FillRecordingAVInfo(MythProgramInfo& programInfo, Myth::Stream *stream)
+{
+  AVInfo info(stream);
+  AVInfo::STREAM_AVINFO mInfo;
+  if (info.GetMainStream(&mInfo))
+  {
+    // Set video frame rate
+    if (mInfo.stream_info.fps_scale > 0)
+    {
+      float fps = 0;
+      switch(mInfo.stream_type)
+      {
+        case STREAM_TYPE_VIDEO_H264:
+          fps = (float)(mInfo.stream_info.fps_rate) / (mInfo.stream_info.fps_scale * (mInfo.stream_info.interlaced ? 2 : 1));
+          break;
+        default:
+          fps = (float)(mInfo.stream_info.fps_rate) / mInfo.stream_info.fps_scale;
+      }
+      programInfo.SetPropsVideoFrameRate(fps);
+    }
+    // Set video aspec
+    programInfo.SetPropsVideoAspec(mInfo.stream_info.aspect);
+  }
 }

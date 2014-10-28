@@ -135,10 +135,10 @@ namespace PLATFORM
 
     virtual void Shutdown(void)
     {
-      if (m_socket && WaitReady())
+      CLockObject lock(m_mutex);
+      if (m_socket)
       {
         m_socket->Shutdown();
-        MarkReady();
       }
     }
 

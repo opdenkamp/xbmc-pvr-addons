@@ -595,10 +595,7 @@ int AVContext::parse_ts_psi()
     len = (size_t)av_rb16(this->payload + 2);
     if ((len & 0x3000) != 0x3000)
       return AVCONTEXT_TS_ERROR;
-
     len &= 0x0fff;
-    if (len > TABLE_BUFFER_SIZE)
-      return AVCONTEXT_TS_ERROR;
 
     this->packet->packet_table.Reset();
 
@@ -669,8 +666,9 @@ int AVContext::parse_ts_psi()
         uint16_t channel = av_rb16(psi);
         uint16_t pmt_pid = av_rb16(psi + 2);
 
-        if ((pmt_pid & 0xe000) != 0xe000)
-          return AVCONTEXT_TS_ERROR;
+        // Reserved fields in table sections must be "set" to '1' bits.
+        //if ((pmt_pid & 0xe000) != 0xe000)
+        //  return AVCONTEXT_TS_ERROR;
 
         pmt_pid &= 0x1fff;
 
@@ -723,8 +721,9 @@ int AVContext::parse_ts_psi()
         uint8_t pes_type = av_rb8(psi);
         uint16_t pes_pid = av_rb16(psi + 1);
 
-        if ((pes_pid & 0xe000) != 0xe000)
-          return AVCONTEXT_TS_ERROR;
+        // Reserved fields in table sections must be "set" to '1' bits.
+        //if ((pes_pid & 0xe000) != 0xe000)
+        //  return AVCONTEXT_TS_ERROR;
 
         pes_pid &= 0x1fff;
 
@@ -749,31 +748,39 @@ int AVContext::parse_ts_psi()
           stream_info = parse_pes_descriptor(psi, len, &stream_type);
 
           ElementaryStream* es;
-          if (stream_type == STREAM_TYPE_VIDEO_MPEG1)
-            es = new ES_MPEG2Video(pes_pid);
-          else if (stream_type == STREAM_TYPE_VIDEO_MPEG2)
-            es = new ES_MPEG2Video(pes_pid);
-          else if (stream_type == STREAM_TYPE_AUDIO_MPEG1)
-            es = new ES_MPEG2Audio(pes_pid);
-          else if (stream_type == STREAM_TYPE_AUDIO_MPEG2)
-            es = new ES_MPEG2Audio(pes_pid);
-          else if (stream_type == STREAM_TYPE_VIDEO_H264)
-            es = new ES_h264(pes_pid);
-          else if (stream_type == STREAM_TYPE_AUDIO_AAC)
-            es = new ES_AAC(pes_pid);
-          else if (stream_type == STREAM_TYPE_AUDIO_AC3)
-            es = new ES_AC3(pes_pid);
-          else if (stream_type == STREAM_TYPE_AUDIO_EAC3)
-            es = new ES_AC3(pes_pid);
-          else if (stream_type == STREAM_TYPE_DVB_SUBTITLE)
-            es = new ES_Subtitle(pes_pid);
-          else if (stream_type == STREAM_TYPE_DVB_TELETEXT)
-            es = new ES_Teletext(pes_pid);
-          else
+          switch (stream_type)
           {
+          case STREAM_TYPE_VIDEO_MPEG1:
+          case STREAM_TYPE_VIDEO_MPEG2:
+            es = new ES_MPEG2Video(pes_pid);
+            break;
+          case STREAM_TYPE_AUDIO_MPEG1:
+          case STREAM_TYPE_AUDIO_MPEG2:
+            es = new ES_MPEG2Audio(pes_pid);
+            break;
+          case STREAM_TYPE_AUDIO_AAC:
+          case STREAM_TYPE_AUDIO_AAC_ADTS:
+          case STREAM_TYPE_AUDIO_AAC_LATM:
+            es = new ES_AAC(pes_pid);
+            break;
+          case STREAM_TYPE_VIDEO_H264:
+            es = new ES_h264(pes_pid);
+            break;
+          case STREAM_TYPE_AUDIO_AC3:
+          case STREAM_TYPE_AUDIO_EAC3:
+            es = new ES_AC3(pes_pid);
+            break;
+          case STREAM_TYPE_DVB_SUBTITLE:
+            es = new ES_Subtitle(pes_pid);
+            break;
+          case STREAM_TYPE_DVB_TELETEXT:
+            es = new ES_Teletext(pes_pid);
+            break;
+          default:
             // No parser: pass-through
             es = new ElementaryStream(pes_pid);
             es->has_stream_info = true;
+            break;
           }
 
           es->stream_type = stream_type;
@@ -929,14 +936,12 @@ int AVContext::parse_ts_pes()
 
     if (this->packet->packet_table.offset == 6)
     {
-      if (memcmp(this->packet->packet_table.buf, "\x00\x00\x01", 3))
+      if (memcmp(this->packet->packet_table.buf, "\x00\x00\x01", 3) == 0)
       {
-        this->packet->packet_table.Reset();
-       return AVCONTEXT_TS_ERROR;
+        uint8_t stream_id = av_rb8(this->packet->packet_table.buf + 3);
+        if (stream_id == 0xbd || (stream_id >= 0xc0 && stream_id <= 0xef))
+          this->packet->packet_table.len = 9;
       }
-      uint8_t stream_id = av_rb8(this->packet->packet_table.buf + 3);
-      if (stream_id == 0xbd || (stream_id >= 0xc0 && stream_id <= 0xef))
-        this->packet->packet_table.len = 9;
     }
     else if (this->packet->packet_table.offset == 9)
     {

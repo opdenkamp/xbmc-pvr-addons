@@ -170,9 +170,10 @@ void AVInfo::Process()
   }
 
   int ret = 0;
-  bool analyzed = false;
+  bool analyzed = false; ///< become true once all channel streams are parsed
+  size_t throughput = 0; ///< to limit size of analyzed data
 
-  while (!analyzed)
+  while (!analyzed && throughput < ES_MAX_BUFFER_SIZE)
   {
     {
       ret = m_AVContext->TSResync();
@@ -187,6 +188,7 @@ void AVInfo::Process()
       ElementaryStream::STREAM_PKT pkt;
       while (get_stream_data(&pkt))
       {
+        throughput += pkt.size;
         if (pkt.streamChange)
         {
           // Update stream properties. Analyzing will be closed once setup is completed for all streams.
@@ -218,27 +220,35 @@ void AVInfo::Process()
   XBMC->Log(LOG_DEBUG, LOGTAG"%s: terminated with status %d", __FUNCTION__, ret);
 }
 
-bool AVInfo::GetMainStream(ElementaryStream::STREAM_INFO* info) const
+bool AVInfo::GetMainStream(STREAM_AVINFO *info) const
 {
   if (!m_AVContext || m_AVStatus < 0 || !m_nosetup.empty())
     return false;
   ElementaryStream* found = m_AVContext->GetStream(m_mainStreamPID);
   if (found == NULL)
     return false;
-  *info = found->stream_info;
+  info->pid = found->pid;
+  info->stream_type = found->stream_type;
+  info->stream_info = found->stream_info;
   return true;
 }
 
-std::vector<ElementaryStream::STREAM_INFO> AVInfo::GetStreams() const
+std::vector<AVInfo::STREAM_AVINFO> AVInfo::GetStreams() const
 {
-  std::vector<ElementaryStream::STREAM_INFO> ret;
+  std::vector<STREAM_AVINFO> ret;
   if (!m_AVContext || m_AVStatus < 0 || !m_nosetup.empty())
     return ret;
   std::vector<ElementaryStream*> streams = m_AVContext->GetStreams();
   std::vector<ElementaryStream*>::const_iterator it;
   ret.reserve(streams.size());
   for (it = streams.begin(); it < streams.end(); ++it)
-    ret.push_back((*it)->stream_info);
+  {
+    STREAM_AVINFO info;
+    info.pid = (*it)->pid;
+    info.stream_type = (*it)->stream_type;
+    info.stream_info = (*it)->stream_info;
+    ret.push_back(info);
+  }
   return ret;
 }
 

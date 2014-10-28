@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
-  id="pvr.wmc-@OS@-@ARCHITECTURE@"
-  version="0.3.101"
-  name="Windows Media Center Client - @OS@ @ARCHITECTURE@ Edition"
-  provider-name="KrustyReturns">
+  id="pvr.wmc"
+  version="0.3.103"
+  name="PVR WMC Client"
+  provider-name="KrustyReturns and scarecrow420">
   <requires>
     <c-pluff version="0.1"/>
     <import addon="xbmc.pvr" version="1.9.2"/>
+    <import addon="xbmc.gui" version="5.3.0"/>
   </requires>
   <extension
     point="xbmc.pvrclient"
@@ -16,9 +17,9 @@
     library_freebsd="XBMC_WMC.pvr"
     library_windx="XBMC_WMC_win32.dll"
     library_android="libXBMC_WMC.so" />
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en">WMC PVR Client</summary>
-    <description lang="en">An xbmc client to interface to Windows Media Center's record and EPG service.  Thanks to JeffreyF, Tomba73, Riztnack, Staknhalo, Scarecrow420, Hoopsdavis, TheImmortal.  Special thanks to DBurckh.</description>
+    <extension point="xbmc.addon.metadata">
+    <summary lang="en">PVR WMC Client</summary>
+    <description lang="en">@OS@ @ARCHITECTURE@ Edition. A PVR client to interface with Windows Media Center's Recording and EPG services.  Thanks to Tomba73 and Hoopsdavis.  Special thanks to DBurckh.</description>
     <disclaimer lang="en">This is experimental software. Use at your own risk.</disclaimer>
     <platform>@OS@</platform>
   </extension>

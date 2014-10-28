@@ -58,6 +58,7 @@ namespace Myth
     unsigned m_eventSubscriberId;
     ProtoTransferPtr m_transfer;
     ProgramPtr m_recording;
+    volatile bool m_readAhead;
   };
 
 }

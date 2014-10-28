@@ -137,24 +137,25 @@ const char* ElementaryStream::GetStreamCodecName(STREAM_TYPE stream_type)
       return "aac";
     case STREAM_TYPE_AUDIO_AAC_LATM:
       return "aac_latm";
-    case STREAM_TYPE_VIDEO_MPEG4:
-      return "mpeg4video";
     case STREAM_TYPE_VIDEO_H264:
       return "h264";
-    case STREAM_TYPE_VIDEO_VC1:
-      return "vc1";
-    case STREAM_TYPE_AUDIO_LPCM:
-      return "lpcm";
     case STREAM_TYPE_AUDIO_AC3:
       return "ac3";
     case STREAM_TYPE_AUDIO_EAC3:
       return "eac3";
-    case STREAM_TYPE_AUDIO_DTS:
-      return "dts";
     case STREAM_TYPE_DVB_TELETEXT:
       return "teletext";
     case STREAM_TYPE_DVB_SUBTITLE:
       return "dvbsub";
+    case STREAM_TYPE_VIDEO_MPEG4:
+      return "mpeg4video";
+    case STREAM_TYPE_VIDEO_VC1:
+      return "vc1";
+    case STREAM_TYPE_AUDIO_LPCM:
+      return "lpcm";
+    case STREAM_TYPE_AUDIO_DTS:
+      return "dts";
+    case STREAM_TYPE_PRIVATE_DATA:
     default:
       return "data";
   }

@@ -121,8 +121,8 @@ msgid "Transcoder"
 msgstr "Енкодер"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "Да се разреши ли завършването на записа?"
+msgid "Allow recordings to expire"
+msgstr "Да се разреши ли завършването на записа"
 
 msgctxt "#30049"
 msgid "Recording template"

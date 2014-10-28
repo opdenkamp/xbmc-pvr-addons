@@ -65,6 +65,7 @@ Demux::Demux(Myth::Stream *file)
   : CThread()
   , m_file(file)
   , m_channel(1)
+  , m_demuxPacketBuffer(100)
   , m_av_buf_size(AV_BUFFER_SIZE)
   , m_av_pos(0)
   , m_av_buf(NULL)
@@ -103,8 +104,7 @@ Demux::Demux(Myth::Stream *file)
 
 Demux::~Demux()
 {
-  StopThread(0);
-  Flush();
+  Abort();
 
   // Free AV context
   if (m_AVContext)
@@ -254,11 +254,14 @@ void Demux::Flush(void)
 void Demux::Abort()
 {
   StopThread(0);
+  Flush();
 }
 
 DemuxPacket* Demux::Read()
 {
   DemuxPacket* packet(NULL);
+  if (IsStopped())
+    return packet;
   if (m_demuxPacketBuffer.Pop(packet, 100))
     return packet;
   return PVR->AllocateDemuxPacket(0);
@@ -270,9 +273,9 @@ bool Demux::SeekTime(int time, bool backwards, double* startpts)
   if (m_PTS == PTS_UNSET)
     return false;
   // time is in MSEC not PTS_TIME_BASE. Rescale time to PTS (90Khz)
-  uint64_t pts = (uint64_t)time * PTS_TIME_BASE / 1000;
+  int64_t pts = (int64_t)time * PTS_TIME_BASE / 1000;
   // Compute offset from current PTS
-  int64_t offset = (int64_t)(pts - m_PTS);
+  int64_t offset = pts - m_PTS;
   // Limit offset to deal with invalid request or PTS discontinuity
   // Backwards  : Limiting offset to +6 secs
   // Forwards   : Limiting offset to -6 secs
@@ -283,26 +286,15 @@ bool Demux::SeekTime(int time, bool backwards, double* startpts)
   // Compute desired time position
   int64_t desired = m_curTime + offset;
 
-  CLockObject lock(m_mutex);
-
-  std::map<int64_t, AV_POSMAP_ITEM>::const_iterator it;
-  if (offset < 0)
-  {
-    it = m_posmap.upper_bound(desired);
-    if (backwards && it != m_posmap.begin())
-      --it;
-  }
-  else
-  {
-    it = m_posmap.upper_bound(desired);
-    // On end shift back if possible
-    if (it == m_posmap.end() && it != m_posmap.begin())
-      return false;
-  }
-
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, LOGTAG"%s: bw:%d tm:%d tm_pts:%"PRIu64" c_pts:%"PRIu64" offset:%+6.3f c_tm:%+6.3f n_tm:%+6.3f", __FUNCTION__,
+    XBMC->Log(LOG_DEBUG, LOGTAG"%s: bw:%d tm:%d tm_pts:%"PRId64" c_pts:%"PRIu64" offset:%+6.3f c_tm:%+6.3f n_tm:%+6.3f", __FUNCTION__,
             backwards, time, pts, m_PTS, (double)offset / PTS_TIME_BASE, (double)m_curTime / PTS_TIME_BASE, (double)desired / PTS_TIME_BASE);
+
+  CLockObject lock(m_mutex);
+  std::map<int64_t, AV_POSMAP_ITEM>::const_iterator it;
+  it = m_posmap.upper_bound(desired);
+  if (backwards && it != m_posmap.begin())
+    --it;
 
   if (it != m_posmap.end())
   {
@@ -381,10 +373,7 @@ void Demux::reset_posmap()
 
 static inline int stream_identifier(int composition_id, int ancillary_id)
 {
-  return ((composition_id & 0xff00) >> 8)
-    | ((composition_id & 0xff) << 8)
-    | ((ancillary_id & 0xff00) << 16)
-    | ((ancillary_id & 0xff) << 24);
+  return (composition_id & 0xffff) | ((ancillary_id & 0xffff) << 16);
 }
 
 static void recode_language(const char* muxLanguage, char* strLanguage)
@@ -481,14 +470,18 @@ bool Demux::update_pvr_stream(uint16_t pid)
   if (!es)
     return false;
 
+  const char* codec_name = es->GetStreamCodecName();
+  xbmc_codec_t codec = CODEC->GetCodecByName(codec_name);
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, LOGTAG"%s: update info PES %.4x %s", __FUNCTION__, es->pid, es->GetStreamCodecName());
+    XBMC->Log(LOG_DEBUG, LOGTAG"%s: update info PES %.4x %s", __FUNCTION__, es->pid, codec_name);
 
   CLockObject Lock(m_mutex);
 
   XbmcPvrStream* stream = m_streams.GetStreamById(es->pid);
   if (stream)
   {
+    stream->iCodecId       = codec.codec_id;
+    stream->iCodecType     = codec.codec_type;
     recode_language(es->stream_info.language, stream->strLanguage);
     stream->iIdentifier    = stream_identifier(es->stream_info.composition_id, es->stream_info.ancillary_id);
     stream->iFPSScale      = es->stream_info.fps_scale;

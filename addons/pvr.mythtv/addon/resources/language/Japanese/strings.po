@@ -97,8 +97,8 @@ msgid "Transcoder"
 msgstr "トランスコーダー"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "録音の期限切れを許可しますか？"
+msgid "Allow recordings to expire"
+msgstr "録音の期限切れを許可しますか"
 
 msgctxt "#30049"
 msgid "Recording template"

@@ -47,10 +47,12 @@ public:
   bool HasCoverart() const;
   bool HasFanart() const;
   // Custom props
-  void SetPropsFrameRate(float fps);
-  float GetPropsFrameRate() const;
-  void SetPropsAspec(float aspec);
-  float GetPropsAspec() const;
+  void SetPropsVideoFrameRate(float fps);
+  float GetPropsVideoFrameRate() const;
+  void SetPropsVideoAspec(float aspec);
+  float GetPropsVideoAspec() const;
+  void SetPropsSerie(bool flag);
+  bool GetPropsSerie() const;
   // Program fields
   std::string UID() const;
   std::string ProgramID() const;
@@ -86,13 +88,15 @@ private:
   {
   public:
     Props()
-    : m_frameRate(0)
-    , m_aspec(0)
+    : m_videoFrameRate(0)
+    , m_videoAspec(0)
+    , m_serie(false)
     {}
     ~Props() {}
 
-    float m_frameRate;
-    float m_aspec;
+    float m_videoFrameRate;
+    float m_videoAspec;
+    bool m_serie;               ///< true if program is serie else false
   };
   MYTH_SHARED_PTR<Props> m_props;
 

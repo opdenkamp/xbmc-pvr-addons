@@ -37,14 +37,13 @@ WSStream::WSStream(WSResponse *response)
 
 WSStream::~WSStream()
 {
-  if (m_response != NULL)
-    SAFE_DELETE(m_response);
+  SAFE_DELETE(m_response);
 }
 
 bool WSStream::EndOfStream()
 {
   if (m_response != NULL)
-    return (m_response->GetConsumed() == m_response->GetContentLength());
+    return (m_response->GetConsumed() >= m_response->GetContentLength());
   return true;
 }
 

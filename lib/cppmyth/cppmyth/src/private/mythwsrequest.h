@@ -50,7 +50,7 @@ namespace Myth
     void RequestAccept(CT_t contentType);
     void SetContentParam(const std::string& param, const std::string& value);
     void SetContentCustom(CT_t contentType, const char *content);
-    const std::string& GetContent() const;
+    const std::string& GetContent() const { return m_contentData; }
     void ClearContent();
 
     void MakeMessage(std::string& msg) const
@@ -60,8 +60,8 @@ namespace Myth
       else if (m_service_method == HRM_HEAD) MakeMessageHEAD(msg);
     }
 
-    const std::string& GetServer() const;
-    unsigned GetPort() const;
+    const std::string& GetServer() const { return m_server; }
+    unsigned GetPort() const { return m_port; }
 
   private:
     std::string m_server;

@@ -121,8 +121,8 @@ msgid "Transcoder"
 msgstr "Pretvornik"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "Ali dovolite posnetkom, da potečejo?"
+msgid "Allow recordings to expire"
+msgstr "Ali dovolite posnetkom, da potečejo"
 
 msgctxt "#30049"
 msgid "Recording template"

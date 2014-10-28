@@ -117,8 +117,8 @@ msgid "Transcoder"
 msgstr "Bộ chuyển mã"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "Cho phép các bản thu hết hạn?"
+msgid "Allow recordings to expire"
+msgstr "Cho phép các bản thu hết hạn"
 
 msgctxt "#30049"
 msgid "Recording template"

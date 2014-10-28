@@ -40,10 +40,11 @@ RecordingPlayback::RecordingPlayback(EventHandler& handler)
 , m_eventSubscriberId(0)
 , m_transfer(NULL)
 , m_recording(NULL)
+, m_readAhead(false)
 {
   m_eventSubscriberId = m_eventHandler.CreateSubscription(this);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_UPDATE_FILE_SIZE);
-  ProtoPlayback::Open();
+  Open();
 }
 
 RecordingPlayback::RecordingPlayback(const std::string& server, unsigned port)
@@ -52,12 +53,12 @@ RecordingPlayback::RecordingPlayback(const std::string& server, unsigned port)
 , m_eventSubscriberId(0)
 , m_transfer(NULL)
 , m_recording(NULL)
+, m_readAhead(false)
 {
-  // Start my private handler. It will be stopped and closed by destructor.
-  m_eventHandler.Start();
+  // Private handler will be stopped and closed by destructor.
   m_eventSubscriberId = m_eventHandler.CreateSubscription(this);
   m_eventHandler.SubscribeForEvent(m_eventSubscriberId, EVENT_UPDATE_FILE_SIZE);
-  ProtoPlayback::Open();
+  Open();
 }
 
 RecordingPlayback::~RecordingPlayback()
@@ -73,7 +74,13 @@ bool RecordingPlayback::Open()
   PLATFORM::CLockObject lock(*m_mutex);
   if (ProtoPlayback::IsOpen())
     return true;
-  return ProtoPlayback::Open();
+  if (ProtoPlayback::Open())
+  {
+    if (!m_eventHandler.IsRunning())
+      m_eventHandler.Start();
+    return true;
+  }
+  return false;
 }
 
 void RecordingPlayback::Close()
@@ -81,8 +88,7 @@ void RecordingPlayback::Close()
   // Begin critical section
   PLATFORM::CLockObject lock(*m_mutex);
   CloseTransfer();
-  if (ProtoPlayback::IsOpen())
-    ProtoPlayback::Close();
+  ProtoPlayback::Close();
 }
 
 bool RecordingPlayback::OpenTransfer(ProgramPtr recording)
@@ -140,16 +146,23 @@ int RecordingPlayback::Read(void *buffer, unsigned n)
   ProtoTransferPtr transfer(m_transfer);
   if (transfer)
   {
-    int r = 0;
-    int64_t s = transfer->fileSize - transfer->filePosition; // Acceptable block size
-    if (s > 0)
+    if (!m_readAhead)
     {
-      if (s < (int64_t)n)
-      n = (unsigned)s ;
-      // Request block data from transfer socket
-      r = TransferRequestBlock(*transfer, buffer, n);
+      int64_t s = transfer->fileSize - transfer->filePosition; // Acceptable block size
+      if (s > 0)
+      {
+        if (s < (int64_t)n)
+          n = (unsigned)s;
+        // Request block data from transfer socket
+        return TransferRequestBlock(*transfer, buffer, n);
+      }
+      return 0;
     }
-    return r;
+    else
+    {
+      // Request block data from transfer socket
+      return TransferRequestBlock(*transfer, buffer, n);
+    }
   }
   return -1;
 }
@@ -189,6 +202,8 @@ void RecordingPlayback::HandleBackendMessage(const EventMessage& msg)
           int64_t newsize;
           if (0 == str2int64(msg.subject[3].c_str(), &newsize))
           {
+            // The file grows. Allow reading ahead
+            m_readAhead = true;
             recording->fileSize = transfer->fileSize = newsize;
             DBG(MYTH_DBG_DEBUG, "%s: (%d) %s %" PRIi64 "\n", __FUNCTION__,
                     msg.event, recording->fileName.c_str(), newsize);

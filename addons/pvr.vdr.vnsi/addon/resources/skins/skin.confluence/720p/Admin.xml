@@ -66,7 +66,7 @@
         <texture>Confluence_Logo.png</texture>
       </control>
       <control type="list" id="10">
-        <defaultcontrol always="true">1</defaultcontrol>
+        <defaultcontrol>1</defaultcontrol>
         <left>10</left>
         <top>82</top>
         <width>260</width>
@@ -74,7 +74,7 @@
         <onleft>10</onleft>
         <onright>11</onright>
         <onup>10</onup>
-        <ondown>9000</ondown>
+        <ondown>10</ondown>
         <pagecontrol>-</pagecontrol>
         <scrolltime>300</scrolltime>
         <itemlayout height="54" width="260">
@@ -96,6 +96,11 @@
             <aligny>center</aligny>
             <label>$INFO[ListItem.Label]</label>
           </control>
+          <control type="button">
+            <visible>0</visible>
+            <width>0</width>
+            <height>0</height>
+          </control>
         </itemlayout>
         <focusedlayout height="54" width="260">
           <control type="image">
@@ -115,6 +120,12 @@
             <align>right</align>
             <aligny>center</aligny>
             <label>$INFO[ListItem.Label]</label>
+          </control>
+          <control type="button">
+            <visible>0</visible>
+            <width>0</width>
+            <height>0</height>
+            <onfocus>Select</onfocus>
           </control>
         </focusedlayout>
         <content>
@@ -295,6 +306,7 @@
             <onright>36</onright>
             <onup>32</onup>
             <ondown>34</ondown>
+            <onfocus>Select</onfocus>
           </control>
           <control type="button" id="34">
             <description>channels</description>
@@ -312,6 +324,7 @@
             <onright>36</onright>
             <onup>33</onup>
             <ondown>35</ondown>
+            <onfocus>Select</onfocus>
           </control>
           <control type="button" id="35">
             <description>save</description>
@@ -342,7 +355,7 @@
             <top>70</top>
             <width>400</width>
             <height>500</height>
-            <onleft>33</onleft>
+            <onleft>35</onleft>
             <onright>37</onright>
             <viewtype label="30106">list</viewtype>
             <pagecontrol>37</pagecontrol>

@@ -14,6 +14,7 @@ AC_PREFIX_DEFAULT($PREFIX_DEFAULT)
 
 AC_PROG_CXX
 AC_PROG_CPP
+AC_PROG_LIBTOOL
 LT_INIT
 
 AC_SEARCH_LIBS([pthread_create],[pthread],, AC_MSG_ERROR([required library 'pthread' is missing]))
@@ -178,11 +179,39 @@ if test "$build_addons_with_dependencies" = "yes"; then
     AC_SUBST(ZLIB_LIBS)
   fi
   echo "Zlib: $use_zlib"
+
+  # For Filmon
+  AC_CHECK_LIB(curl, curl_easy_init, [use_curl=yes], [use_curl=no])
+  if test "$use_curl" = "yes"; then
+    AC_DEFINE([HAVE_CURL],[1],["Define to 1 if we have the curl library"])
+    CURL_LIBS='-lcurl'
+    AC_SUBST(CURL_LIBS)
+  fi
+  echo "Curl: $use_curl"
+
+  # For Filmon
+  AC_CHECK_LIB(jsoncpp, _ZNK4Json5Value4sizeEv, [use_jsoncpp=yes], [use_jsoncpp=no])
+  if test "$use_jsoncpp" = "yes"; then
+    AC_DEFINE([HAVE_JSONCPP],[1],["Define to 1 if we have the jsoncpp library"])
+    JSONCPP_LIBS='-ljsoncpp'
+    AC_SUBST(JSONCPP_LIBS)
+  fi
+  echo "JsonCPP: $use_jsoncpp"
+
+  # For Filmon
+  AC_CHECK_LIB(cryptopp, main, [use_cryptopp=yes], [use_cryptopp=no])
+  if test "$use_cryptopp" = "yes"; then
+    AC_DEFINE([HAVE_CRYPTOPP],[1],["Define to 1 if we have the cryptopp library"])
+    CRYPTOPP_LIBS='-lcryptopp'
+    AC_SUBST(CRYPTOPP_LIBS)
+  fi
+  echo "CryptoCPP: $use_cryptopp"
 fi
 
 ### Addons with dependencies
 AM_CONDITIONAL([ADDON_MYTHTV], [test "$build_addons_with_dependencies" = "yes" -a "$use_mysql" = "yes" -a "$use_boost" = "yes"])
 AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addons_with_dependencies" = "yes" -a "$use_zlib" = "yes"])
+AM_CONDITIONAL([ADDON_FILMON], [test "$build_addons_with_dependencies" = "yes" -a "$use_curl" = "yes" -a "$use_jsoncpp" = "yes" -a "$use_cryptopp" = "yes"])
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then
@@ -297,6 +326,7 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.demo/Makefile \
                  addons/pvr.dvblink/Makefile \
                  addons/pvr.dvbviewer/Makefile \
+                 addons/pvr.filmon/Makefile \
                  addons/pvr.hts/Makefile \
                  addons/pvr.iptvsimple/Makefile \
                  addons/pvr.mediaportal.tvserver/Makefile \
@@ -311,6 +341,7 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.demo/addon/addon.xml
                  addons/pvr.dvblink/addon/addon.xml
                  addons/pvr.dvbviewer/addon/addon.xml
+                 addons/pvr.filmon/addon/addon.xml
                  addons/pvr.hts/addon/addon.xml
                  addons/pvr.iptvsimple/addon/addon.xml
                  addons/pvr.mediaportal.tvserver/addon/addon.xml

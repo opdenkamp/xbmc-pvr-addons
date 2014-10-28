@@ -32,6 +32,8 @@
     <ClCompile Include="..\..\src\demuxer\ES_Teletext.cpp" />
     <ClCompile Include="..\..\src\demuxer\tsDemuxer.cpp" />
     <ClCompile Include="..\..\src\fileOps.cpp" />
+    <ClCompile Include="..\..\src\guidialogbase.cpp" />
+    <ClCompile Include="..\..\src\guidialogyesno.cpp" />
     <ClCompile Include="..\..\src\pvrclient-mythtv.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +61,8 @@
     <ClInclude Include="..\..\src\demuxer\tsPacket.h" />
     <ClInclude Include="..\..\src\demuxer\tsTable.h" />
     <ClInclude Include="..\..\src\fileOps.h" />
+    <ClInclude Include="..\..\src\guidialogbase.h" />
+    <ClInclude Include="..\..\src\guidialogyesno.h" />
     <ClInclude Include="..\..\src\pvrclient-mythtv.h" />
     <ClInclude Include="..\..\src\tools.h" />
   </ItemGroup>

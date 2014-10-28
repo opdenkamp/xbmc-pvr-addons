@@ -39,7 +39,13 @@ public:
   bool IsRadio() const;
   uint32_t SourceID() const;
   uint32_t MultiplexID() const;
+  unsigned NumberMajor() const { return m_numMajor; }
+  unsigned NumberMinor() const { return m_numMinor; }
 
 private:
   Myth::ChannelPtr m_channel;
+  unsigned m_numMajor;
+  unsigned m_numMinor;
+
+  static void BreakNumber(const char *numstr, unsigned *major, unsigned *minor);
 };

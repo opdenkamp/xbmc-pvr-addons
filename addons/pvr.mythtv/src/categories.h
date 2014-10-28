@@ -25,7 +25,7 @@
 #include <map>
 
 typedef std::multimap<int, std::string> CategoryByIdMap;
-typedef std::multimap<std::string, int> CategoryByNameMap;
+typedef std::map<std::string, int> CategoryByNameMap;
 
 class Categories
 {
@@ -33,10 +33,10 @@ public:
   Categories();
 
   std::string Category(int category) const;
-  int Category(const std::string &category) const;
+  int Category(const std::string& category) const;
 
 private:
-  CategoryByIdMap DefaultEITCategories() const;
+  void LoadEITCategories(const char *filePath);
 
   CategoryByIdMap   m_categoriesById;
   CategoryByNameMap m_categoriesByName;

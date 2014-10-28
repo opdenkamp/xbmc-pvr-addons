@@ -113,8 +113,8 @@ msgid "Transcoder"
 msgstr "ტრანსკოდერი"
 
 msgctxt "#30034"
-msgid "Allow recordings to expire?"
-msgstr "ჩანაწერებს გაუვიდეს ვადა?"
+msgid "Allow recordings to expire"
+msgstr "ჩანაწერებს გაუვიდეს ვადა"
 
 msgctxt "#30049"
 msgid "Recording template"

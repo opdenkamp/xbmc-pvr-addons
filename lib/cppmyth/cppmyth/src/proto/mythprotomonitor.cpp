@@ -64,7 +64,7 @@ bool ProtoMonitor::IsOpen()
 {
   // Try reconnect
   if (m_hang)
-    return Open();
+    return ProtoMonitor::Open();
   return ProtoBase::IsOpen();
 }
 

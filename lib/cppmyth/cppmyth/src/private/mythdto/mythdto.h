@@ -76,7 +76,7 @@ typedef struct
 namespace MythDTO
 {
   /** @brief Returns bindings for Myth::Version */
-  const bindings_t *getVersionBindArray(unsigned proto);
+  const bindings_t *getVersionBindArray(unsigned ranking);
   /** @brief Returns bindings for Myth::List */
   const bindings_t *getListBindArray(unsigned proto);
   /** @brief Returns bindings for Myth::Channel */

@@ -58,6 +58,11 @@
             <aligny>center</aligny>
             <label>$INFO[ListItem.Label]</label>
           </control>
+          <control type="button">
+            <visible>0</visible>
+            <width>0</width>
+            <height>0</height>
+          </control>
         </itemlayout>
         <focusedlayout height="90" width="356">
           <control type="image">
@@ -90,6 +95,12 @@
             <animation effect="fade" start="100" end="70"
               time="300" tween="sine" easing="inout" condition="!Control.HasFocus(10)">Conditional
             </animation>
+          </control>
+          <control type="button">
+            <visible>0</visible>
+            <width>0</width>
+            <height>0</height>
+            <onfocus>Select</onfocus>
           </control>
         </focusedlayout>
         <content>
@@ -300,6 +311,7 @@
               <texturenofocus border="1">separator5.png
               </texturenofocus>
               <label>$ADDON[pvr.vdr.vnsi 30109]</label>
+              <onfocus>Select</onfocus>
             </control>
             <control type="button" id="34">
               <description>channels</description>
@@ -314,6 +326,7 @@
               <texturenofocus border="1">separator5.png
               </texturenofocus>
               <label>$ADDON[pvr.vdr.vnsi 30110]</label>
+              <onfocus>Select</onfocus>
             </control>
             <control type="button" id="35">
               <description>save</description>
@@ -343,7 +356,7 @@
             <width>658</width>
             <height>840</height>
             <onup>36</onup>
-            <onleft>38</onleft>
+            <onleft>35</onleft>
             <onright>37</onright>
             <ondown>36</ondown>
             <pagecontrol>37</pagecontrol>

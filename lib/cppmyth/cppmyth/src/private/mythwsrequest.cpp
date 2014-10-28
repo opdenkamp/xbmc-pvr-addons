@@ -88,11 +88,6 @@ void WSRequest::SetContentCustom(CT_t contentType, const char *content)
   m_contentData = content;
 }
 
-const std::string& WSRequest::GetContent() const
-{
-  return m_contentData;
-}
-
 void WSRequest::ClearContent()
 {
   m_contentData.clear();
@@ -161,14 +156,4 @@ void WSRequest::MakeMessageHEAD(std::string& msg) const
     msg.append("Accept: ").append(MimeFromContentType(m_accept)).append("\r\n");
   msg.append("Accept-Charset: ").append(m_charset).append("\r\n");
   msg.append("\r\n");
-}
-
-const std::string& WSRequest::GetServer() const
-{
-  return m_server;
-}
-
-unsigned WSRequest::GetPort() const
-{
-  return m_port;
 }

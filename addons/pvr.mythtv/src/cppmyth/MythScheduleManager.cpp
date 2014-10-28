@@ -307,10 +307,6 @@ MythScheduleManager::MSM_ERROR MythScheduleManager::DisableRecording(unsigned in
       }
     }
 
-    if (method == METHOD_UNKNOWN)
-    {
-      return MSM_ERROR_NOT_IMPLEMENTED;
-    }
     if (method == METHOD_UPDATE_INACTIVE)
     {
       handle.SetInactive(true);
@@ -396,10 +392,6 @@ MythScheduleManager::MSM_ERROR MythScheduleManager::EnableRecording(unsigned int
       }
     }
 
-    if (method == METHOD_UNKNOWN)
-    {
-      return MSM_ERROR_NOT_IMPLEMENTED;
-    }
     if (method == METHOD_UPDATE_INACTIVE)
     {
       handle.SetInactive(false);
@@ -508,10 +500,6 @@ MythScheduleManager::MSM_ERROR MythScheduleManager::UpdateRecording(unsigned int
         break;
     }
 
-    if (method == METHOD_UNKNOWN)
-    {
-      return MSM_ERROR_NOT_IMPLEMENTED;
-    }
     if (method == METHOD_DISCREET_UPDATE)
     {
       if (!m_control->UpdateRecordSchedule(*(handle.GetPtr())))

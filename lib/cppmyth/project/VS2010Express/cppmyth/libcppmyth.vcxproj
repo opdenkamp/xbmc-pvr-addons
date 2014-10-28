@@ -229,10 +229,12 @@
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">CompileAsC</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\cppmyth\src\private\mythjsonbinder.cpp" />
+    <ClCompile Include="..\..\..\cppmyth\src\private\mythjsonparser.cpp" />
     <ClCompile Include="..\..\..\cppmyth\src\private\mythsocket.cpp" />
     <ClCompile Include="..\..\..\cppmyth\src\private\mythwscontent.cpp" />
     <ClCompile Include="..\..\..\cppmyth\src\private\mythwsrequest.cpp" />
     <ClCompile Include="..\..\..\cppmyth\src\private\mythwsresponse.cpp" />
+    <ClCompile Include="..\..\..\cppmyth\src\private\uriparser.cpp" />
     <ClCompile Include="..\..\..\cppmyth\src\proto\mythprotobase.cpp" />
     <ClCompile Include="..\..\..\cppmyth\src\proto\mythprotoevent.cpp" />
     <ClCompile Include="..\..\..\cppmyth\src\proto\mythprotomonitor.cpp" />

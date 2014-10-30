@@ -358,9 +358,9 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       g_bAddRecEpisode2title = *(bool*)settingValue;
       return ADDON_STATUS_NEED_RESTART;
   }
-  else if (str == "group_recordings_by_title")
+  else if (str == "group_recordings_by_series")
   {
-      XBMC->Log(LOG_INFO, "Changed Setting 'group_recordings_by_title' from %u to %u", g_bGroupRecBySeries, *(int*)settingValue);
+      XBMC->Log(LOG_INFO, "Changed Setting 'group_recordings_by_series' from %u to %u", g_bGroupRecBySeries, *(int*)settingValue);
       g_bGroupRecBySeries = *(bool*)settingValue;
       return ADDON_STATUS_NEED_RESTART;
   }

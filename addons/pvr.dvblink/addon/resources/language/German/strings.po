@@ -109,8 +109,8 @@ msgid "Combine title and episode name for recordings"
 msgstr "In Aufnahmen Titel und Episodennummer anzeigen"
 
 msgctxt "#30204"
-msgid "Group Recordings by Title"
-msgstr "Aufnahmen nach Title gruppieren"
+msgid "Group Recordings by Series"
+msgstr "Aufnahmen nach Serien gruppieren"
 
 #empty strings from id 30205 to 32000
 #category labels

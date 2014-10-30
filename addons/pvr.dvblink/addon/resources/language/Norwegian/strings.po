@@ -109,8 +109,8 @@ msgid "Combine title and episode name for recordings"
 msgstr "Combine title and episode name for recordings"
 
 msgctxt "#30204"
-msgid "Group Recordings by Title"
-msgstr "Group Recordings by Title"
+msgid "Group Recordings by Series"
+msgstr "Group Recordings by Series"
 
 #empty strings from id 30205 to 32000
 #category labels

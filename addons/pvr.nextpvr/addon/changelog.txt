@@ -1,3 +1,6 @@
+v1.9.19
+- added getBackendHostname function
+
 v1.9.18
 - Fixed mime-type for MPEG-TS
 

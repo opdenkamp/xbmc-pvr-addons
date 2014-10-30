@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.filmon"
-  version="0.4.5"
+  version="0.4.6"
   name="PVR Filmon Client"
   provider-name="Stephen Denham">
   <requires>

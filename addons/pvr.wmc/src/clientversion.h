@@ -23,5 +23,5 @@
 
 inline CStdString PVRWMC_GetClientVersion()
 {
-	return "0.3.109";	// ALSO CHANGE IN REV NUMBER in 'addon.xml.in' 
+	return "0.3.110";	// ALSO CHANGE IN REV NUMBER in 'addon.xml.in' 
 }

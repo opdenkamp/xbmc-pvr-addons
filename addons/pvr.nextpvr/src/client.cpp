@@ -32,7 +32,7 @@ using namespace ADDON;
  * and exported to the other source files.
  */
 std::string      g_szHostname           = DEFAULT_HOST;                  ///< The Host name or IP of the NextPVR server
-std::string      g_szPin	            = DEFAULT_HOST;                  ///< The Host name or IP of the NextPVR server
+std::string      g_szPin                = DEFAULT_HOST;                  ///< The Host name or IP of the NextPVR server
 int              g_iPort                = DEFAULT_PORT;                  ///< The web listening port (default: 8866) 
 
 /* Client member variables */
@@ -352,6 +352,14 @@ const char * GetConnectionString(void)
     return g_client->GetConnectionString();
   else
     return "addon error!";
+}
+
+//-- GetBackendHostname -------------------------------------------------------
+// Return a String with the backend host name
+//-----------------------------------------------------------------------------
+const char * GetBackendHostname(void)
+{
+  return g_szHostname.c_str();
 }
 
 //-- GetDriveSpace ------------------------------------------------------------

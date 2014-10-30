@@ -1,3 +1,6 @@
+[B]Version 1.9.13[/B]
+Added: getBackendHostname function
+
 [B]Version 1.9.12[/B]
 Added: Grouping recordings by series
 Added: Year to the episode title

@@ -151,10 +151,8 @@ inline unsigned long GetTickCount(void)
 };
 #endif /* TARGET_LINUX || TARGET_DARWIN */
 
-/* Handling of 2-byte Windows wchar strings on non-Windows targets
- * Used by The MediaPortal and ForTheRecord pvr addons
- */
-typedef uint16_t Wchar_t; /* sizeof(wchar_t) = 4 bytes on Linux, but the MediaPortal buffer files have 2-byte wchars */
+/* Handling of 2-byte Windows wchar strings on non-Windows targets */
+typedef uint16_t Wchar_t; /* sizeof(wchar_t) = 4 bytes on Linux */
 
 /* This is a replacement of the Windows wcslen() function which assumes that
  * wchar_t is a 2-byte character.

@@ -73,7 +73,11 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr ""
 
-#empty strings from id 30014 to 30018
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr ""
+
+#empty strings from id 30015 to 30018
 
 msgctxt "#30019"
 msgid "General"

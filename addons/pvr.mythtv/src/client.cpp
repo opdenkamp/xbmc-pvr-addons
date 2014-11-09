@@ -35,6 +35,7 @@ std::string   g_szMythHostname          = DEFAULT_HOST;                     ///<
 std::string   g_szMythHostEther         = "";                               ///< The Host MAC address of the mythtv server
 int           g_iProtoPort              = DEFAULT_PROTO_PORT;               ///< The mythtv protocol port (default is 6543)
 int           g_iWSApiPort              = DEFAULT_WSAPI_PORT;               ///< The mythtv sevice API port (default is 6544)
+std::string   g_szWSSecurityPin         = DEFAULT_WSAPI_SECURITY_PIN;       ///< The default security pin for the mythtv wsapi
 bool          g_bExtraDebug             = DEFAULT_EXTRA_DEBUG;              ///< Output extensive debug information to the log
 bool          g_bLiveTV                 = DEFAULT_LIVETV;                   ///< LiveTV support (or recordings only)
 bool          g_bLiveTVPriority         = DEFAULT_LIVETV_PRIORITY;          ///< MythTV Backend setting to allow live TV to move scheduled shows
@@ -169,6 +170,17 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     XBMC->Log(LOG_ERROR, "Couldn't get 'wsport' setting, falling back to '%d' as default", DEFAULT_WSAPI_PORT);
     g_iWSApiPort = DEFAULT_WSAPI_PORT;
   }
+
+  /* Read setting "wssecuritypin" from settings.xml */
+  if (XBMC->GetSetting("wssecuritypin", buffer))
+    g_szWSSecurityPin = buffer;
+  else
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'wssecuritypin' setting, falling back to '%s' as default", DEFAULT_WSAPI_SECURITY_PIN);
+    g_szWSSecurityPin = DEFAULT_WSAPI_SECURITY_PIN;
+  }
+  buffer[0] = 0;
 
   /* Read setting "extradebug" from settings.xml */
   if (!XBMC->GetSetting("extradebug", &g_bExtraDebug))
@@ -445,6 +457,15 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       g_iWSApiPort = *(int*)settingValue;
       return ADDON_STATUS_NEED_RESTART;
     }
+  }
+  else if (str == "wssecuritypin")
+  {
+    std::string tmp_sWSSecurityPin;
+    XBMC->Log(LOG_INFO, "Changed Setting 'wssecuritypin' from %s to %s", g_szWSSecurityPin.c_str(), (const char*)settingValue);
+    tmp_sWSSecurityPin = g_szWSSecurityPin;
+    g_szWSSecurityPin = (const char*)settingValue;
+    if (tmp_sWSSecurityPin != g_szWSSecurityPin)
+      return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "demuxing")
   {

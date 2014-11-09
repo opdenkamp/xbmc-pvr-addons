@@ -1,3 +1,7 @@
+v1.9.28
+- jansson 2.7: fix compilation on ios8/arm64
+- Cleaned cache by max age
+
 v1.9.27
 - change library name to Kodi
 

@@ -7,7 +7,6 @@ AC_CONFIG_SRCDIR([cppmyth/src/mythtypes.cpp])
 AC_CONFIG_HEADERS([config.h])
 
 # Configure external packages.
-AC_CONFIG_SUBDIRS([jansson])
 
 # Checks for programs.
 AC_PROG_CC

@@ -2,8 +2,7 @@ noinst_LTLIBRARIES = libcppmyth.la
 #lib_LTLIBRARIES    = libcppmyth.la
 
 AM_CPPFLAGS = -fPIC -Wall -Wextra \
-	-I@abs_srcdir@/src \
-	-I@abs_top_srcdir@/jansson/src
+	-I@abs_srcdir@/src
 
 libcppmyth_la_SOURCES = \
 	src/private/mythdto/mythdto.cpp \

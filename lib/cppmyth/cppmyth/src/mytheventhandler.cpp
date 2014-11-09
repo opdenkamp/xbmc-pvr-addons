@@ -242,10 +242,9 @@ void BasicEventHandler::AnnounceStatus(const char *status)
 
 void BasicEventHandler::AnnounceTimer()
 {
-  char buf[32];
   EventMessage msg;
   msg.event = EVENT_HANDLER_TIMER;
-  msg.subject.push_back(buf);
+  msg.subject.push_back("");
   DispatchEvent(msg);
 }
 

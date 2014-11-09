@@ -293,18 +293,18 @@ fi
 if test "x${libdir}" != 'x${exec_prefix}/lib'; then
   LIBDIR=${libdir}
 elif test "$prefix" = "NONE"; then
-  LIBDIR=$PREFIX_DEFAULT/lib/xbmc/addons
+  LIBDIR=$PREFIX_DEFAULT/lib/kodi/addons
 else
-  LIBDIR=$prefix/lib/xbmc/addons
+  LIBDIR=$prefix/lib/kodi/addons
 fi
 AC_SUBST(LIBDIR)
 
 if test "x${datadir}" != 'x${datarootdir}' && test "x${datarootdir}" = 'x${prefix}/share'; then
   DATADIR=${datadir}
 elif test "$prefix" = "NONE"; then
-  DATADIR=$PREFIX_DEFAULT/share/xbmc/addons
+  DATADIR=$PREFIX_DEFAULT/share/kodi/addons
 else
-  DATADIR=$prefix/share/xbmc/addons 
+  DATADIR=$prefix/share/kodi/addons
 fi
 AC_SUBST(DATADIR)
 

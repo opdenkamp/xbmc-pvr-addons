@@ -4,9 +4,6 @@ endif
 if ADDON_IPTVSIMPLE
           ADDON_IPTVSIMPLE_SUBDIRS = pvr.iptvsimple
 endif
-if ADDON_MYTHTV
-          ADDON_MYTHTV_SUBDIRS = pvr.mythtv.cmyth
-endif
 
 ### Keep this in alphabetical order
 SUBDIRS = pvr.argustv \

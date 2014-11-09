@@ -24,6 +24,7 @@ Makefile.in
 Makefile.include
 Makefile.include.in
 missing
+compile
 
 *.o
 *.a
@@ -32,6 +33,7 @@ missing
 *.la
 *.pvr
 *.zip
+*.m4
 
 *.idb
 *.tlog

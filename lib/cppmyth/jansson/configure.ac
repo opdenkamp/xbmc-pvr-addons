@@ -1,10 +1,11 @@
 AC_PREREQ([2.60])
-AC_INIT([jansson], [2.6], [petri@digip.org])
+AC_INIT([jansson], [2.7], [petri@digip.org])
 
+AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([1.10 foreign])
 
 AC_CONFIG_SRCDIR([src/value.c])
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([jansson_private_config.h])
 
 # Checks for programs.
 AC_PROG_CC
@@ -19,6 +20,8 @@ AC_CHECK_HEADERS([endian.h fcntl.h locale.h sched.h unistd.h sys/param.h sys/sta
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_INT32_T
 AC_TYPE_UINT32_T
+AC_TYPE_UINT16_T
+AC_TYPE_UINT8_T
 AC_TYPE_LONG_LONG_INT
 
 AC_C_INLINE
@@ -88,6 +91,11 @@ if test "x$use_windows_cryptoapi" = xyes; then
 AC_DEFINE([USE_WINDOWS_CRYPTOAPI], [1],
   [Define to 1 if CryptGenRandom should be used for seeding the hash function])
 fi
+
+if test x$GCC = xyes; then
+    AM_CFLAGS="-Wall -Wextra -Wdeclaration-after-statement"
+fi
+AC_SUBST([AM_CFLAGS])
 
 AC_CONFIG_FILES([
         jansson.pc

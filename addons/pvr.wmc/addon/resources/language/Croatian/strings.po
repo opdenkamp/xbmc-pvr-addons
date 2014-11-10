@@ -1,0 +1,185 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Croatian (http://www.transifex.com/projects/p/xbmc-main/language/hr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Naziv računala ili IP"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "Zadržite IP adresu 127.0.0.1, ako je poslužitelj pokrenut na ovom sustavu"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Broj ulaza"
+
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Istek vremena streama, nepoznat problem"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Nema pronađenih video podataka na ovom programu"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Prijemnik je potreban za snimanje"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Neuspjelo brisanje snimanja, datoteka je u upotrebi ili nemate dozvolu za brisanje"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Neuspjelo brisanje snimanja, datoteka snimanja ne postoji"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Datoteka snimanja nije pronađena"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Alternativan program je odabran: "
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Alternativno vrijeme je odabrano: "
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Nemoguće pokretanje, prijemnik više nije dostupan"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Sadržaj programa je zaštićen"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "Vrijeme završetka povećano je od"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "Omogući pozive stanja signala"
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "Vrijeme osvježavanja stanja signala (sek)"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Spremi stanje Nastavi-gledanje/Odgledano na poslužitelj"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Mapa TV snimanja nije pronađena"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Mapa TV snimanja ne može se otvoriti"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Ažuriranje (%s) inačice WMC poslužitelja je dostupno"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Svi prijemnici za ovaj program su zauzeti"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "Istek vremena emitiranja"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "Greška emitiranja, ranije isključeno"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Istek vremena streama snimanja"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Stream snimanja ranije isključen"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Koristi WakeOnLAN za buđenje poslužitelja"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Slanje WakeOnLAN na poslužitelj..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "Vrijeme pomaka između klijenta i pozadinskog softvera %s minuta"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Osobitosti snimanja"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Snimi samo ovu epizodu"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Snimi cijelu seriju"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Prikaži vrstu:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Nove i reprize"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Samo nove"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "Samo emitiranje uživo"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "Program:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Bilo koji program"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Vrijeme emitiranja:"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Bilo koje vrijeme"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Obriši zakazano snimanje"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Obriši samo zakazano snimanje ove epizode"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Obriši cijelu seriju"

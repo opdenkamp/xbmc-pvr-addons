@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Latvian (http://www.transifex.com/projects/p/xbmc-main/language/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "Mediaportal saimniekvārds"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Mediaportal XBMC spraudņa ports"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Mediaportal Kodi spraudņa ports"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "Atskaņošana"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Jūsu TVServerXBMC versija '%s' ir pārāk veca. Lūdzu, uzlabojiet to uz '%s' vai jaunāku!"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Jūsu TVServerKodi versija '%s' ir pārāk veca. Lūdzu, uzlabojiet to uz '%s' vai jaunāku!"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Jūsu TVServerXBMC versija ir pārāk veca. Lūdzu, uzlabojiet to uz '%s' vai jaunāku!"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "Jūsu TVServerKodi versija ir pārāk veca. Lūdzu, uzlabojiet to uz '%s' vai jaunāku!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,51 @@ msgstr "Diskā nav brīvas vietas"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "PMT nav atrasts"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Raidlaiks"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Kanāli"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Paturēt"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Ierakstīt vienreiz"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Jebkurā laikā"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Jebkurš kanāls"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Kamēr nav nepieciešama vietas uz diska"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Kamēr nav noskatīts"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "Dienas"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "Vienmēr"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Aizmugursistēmas noklusējuma iestatījumi"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Kodi noklusējuma iestatījumi"

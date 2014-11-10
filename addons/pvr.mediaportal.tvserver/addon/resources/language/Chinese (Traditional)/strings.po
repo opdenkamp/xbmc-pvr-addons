@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Chinese (Traditional) (http://www.transifex.com/projects/p/xbmc-main/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "Mediaportal主機名稱"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Mediaportal XBMC外掛程式端口"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Mediaportal Kodi外掛程式端口"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "播放"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "您的TVServerXBMC版本'%s' 太舊了。請升級到'%s' 或更高版本！"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "您的TVServerKodi版本'%s' 太舊了。請升級到'%s' 或更高版本！"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "您的TVServerXBMC版本太舊了。請升級到'%s' 或更高版本！"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "您的TVServerKodi版本太舊了。請升級到'%s' 或更高版本！"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,23 @@ msgstr "沒有多餘的硬碟空間"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "找不到PMT"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "播放時間"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "頻道"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "保留"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "天"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "總是"

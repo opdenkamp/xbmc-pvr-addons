@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/xbmc-main/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "Όνομα Υπολογιστή του Mediaportal"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Θύρα του Mediaportal plugin του XBMC"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Θύρα του plugin Mediaportal του Kodi"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "Αναπαραγωγή"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Η έκδοση '%s' του TVServerXBMC είναι πολύ παλιά. Αναβαθμίστε στην '%s' ή ανώτερη!"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Η έκδοση '%s' του TVServerKodi είναι πολύ παλιά. Αναβαθμίστε στην '%s' ή ανώτερη!"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Η έκδοση του TVServerXBMC είναι πολύ παλιά. Αναβαθμίστε στην '%s' ή ανώτερη!"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "Η έκδοση του TVServerKodi είναι πολύ παλιά. Αναβαθμίστε στην '%s' ή ανώτερη!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,91 @@ msgstr "Ανεπαρκής αποθηκευτικός χώρος"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "Δε βρέθηκε κανένα PMT"
+
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Ρυθμίσεις προγραμματισμού"
+
+msgctxt "#30101"
+msgid "Frequency"
+msgstr "Συχνότητα"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Ώρα προβολής"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Κανάλια"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Διατήρηση"
+
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Εγγραφή λεπτών πριν την έναρξη"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Εγγραφή λεπτών μετά το τέλος"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Εγγραφή Μία Φορά"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Εγγραφή Καθημερινά (Αυτό το πρόγραμμα)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Εγγραφή Εβδομαδιαία"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "Εγγραφή τα Σαββατοκύριακα"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "Εγγραφή τις Καθημερινές"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Αυτή τη φορά"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Κάθε φορά"
+
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Αυτό το Κανάλι"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Κάθε Κανάλι"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Μέχρι να απαιτηθεί χώρος"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Μέχρι να Προβληθεί"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "Μέρες"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "Πάντα"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Προεπιλογή backend"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Προεπιλογή του Kodi"

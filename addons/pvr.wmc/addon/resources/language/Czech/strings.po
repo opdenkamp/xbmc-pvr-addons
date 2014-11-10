@@ -1,0 +1,185 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/xbmc-main/language/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Název serveru nebo IP adresa"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "Pokud server běží na stejném systému, ponechte IP adresu 127.0.0.1"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Číslo portu"
+
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Stream timeout, neznámý problém"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Na tomto kanále nebyla nalezena žádná video data"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Pro nahrávání je nutný TV tuner"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Smazaní nahrávky se nezdařilo, soubor je používán nebo je chráněn proti zápisu"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Smazaní nahrávky se nezdařilo, soubor se záznamem neexistuje"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Soubor nahrávky nebyl nalezen"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Vybrán alternativní kanál:"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Vybrán alternativí čas:"
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Nelze spustit, TV tuner není již k dispozici"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Obsah kanálu je chráněn"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "Čas ukončení prodloužit o "
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "Povolit hlášení stavu signálu"
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "Interval obnovy stavu signálu (s) "
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Uložit čas \"Začít od\" / \"Shlédnuto\" na serveru"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Složka pro TV nahrávky nenalezena"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Složku pro TV nahrávky nelze otevřít"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Pro ServerWMC je k dispozici aktualizace (%s) "
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Všechny TV tunery pro tento kanál jsou zaneprázdněny"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "Timeout LiveTV"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "Chyba LiveTV, ukončeno dříve"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Timeout nahrávání streamu"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Nahrávání streamu ukončeno dříve"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Použít WakeOnLAN k probuzení serveru"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Posílám WakeOnLAN na server"
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "Časový posun mezi klientem a backendem v %s minutách"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Předvolby nahrávání"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Nahrát pouze tuto epizodu"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Nahrát serii"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Zobrazit typ:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Nové a opakované"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Pouze nové"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "Pouze živé"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "Kanál:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Každý kanál"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Čas vysílání:"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Kdykoli"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Smazat časovač"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Odstranit časovač pouze pro tuto epizodu"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Smazat celou řadu"

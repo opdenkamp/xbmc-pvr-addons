@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: DVBLink PVR Client
 # Addon id: pvr.dvblink
 # Addon Provider: DVBLogic
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Icelandic (http://www.transifex.com/projects/p/xbmc-main/language/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr "Straumur"
 
 msgctxt "#30102"
 msgid "Enable transcoding"
-msgstr "Enable transcoding"
+msgstr "Virkja umkóðun"
 
 msgctxt "#30103"
 msgid "Height"
@@ -104,13 +104,6 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Sýna upplýsingaskilaboð"
 
-msgctxt "#30203"
-msgid "Combine title and episode name for recordings"
-msgstr "Combine title and episode name for recordings"
-
-#empty strings from id 30204 to 32000
-#category labels
-
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Tengdur við DVBLink miðlara '%s'"
@@ -147,26 +140,14 @@ msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "Gat ekki náð í straum fyrir rásina %s (Villukóði : %d)"
 
-msgctxt "#32011"
-msgid "Series recording"
-msgstr "Series recording"
-
 msgctxt "#32012"
 msgid "Record this episode only"
-msgstr "Record this episode only"
-
-msgctxt "#32013"
-msgid "Record all episodes"
-msgstr "Record all episodes"
+msgstr "Aðeins taka upp þennan þátt"
 
 msgctxt "#32014"
 msgid "Delete timer"
-msgstr "Delete timer"
-
-msgctxt "#32015"
-msgid "Delete this timer only"
-msgstr "Delete this timer only"
+msgstr "Eyða tímatöku"
 
 msgctxt "#32016"
 msgid "Delete the entire series"
-msgstr "Delete the entire series"
+msgstr "Eyða fyrir alla þáttaröðina"

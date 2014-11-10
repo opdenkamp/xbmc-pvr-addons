@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/xbmc-main/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "Mediaportal Hostnaam"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Mediaportal XBMC plugin poort"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Mediaportal Kodi plugin poort"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "Afspelen"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Uw TVServerXBMC plugin '%s' is te oud. U heeft minimaal versie '%s' of nieuwer nodig!"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Uw TVServerKodi plugin '%s' is te oud. U heeft minimaal versie '%s' of nieuwer nodig!"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Uw TVServerXBMC plugin is te oud. U heeft minimaal versie '%s' of nieuwer nodig!"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "Uw TVServerKodi plugin is te oud. U heeft minimaal versie '%s' of nieuwer nodig!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,91 @@ msgstr "Geen vrije schijfruimte"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "Geen PMT gevonden"
+
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Schema instellingen"
+
+msgctxt "#30101"
+msgid "Frequency"
+msgstr "Frequentie"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Uitzendtijd"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Kanalen"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Behouden"
+
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Opnameminuten voor start"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Opnameminuten na einde"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Eenmaal opnemen"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Dagelijks opnemen (Dit programma)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Wekelijks opnemen"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "opnemen weekenden"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "opnemen week dagen"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Deze tijd"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Altijd"
+
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Dit kanaal"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Elk kanaal"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Tot wanneer ruimte benodigd is."
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Tot bekeken"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "dagen"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "Altijd"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Backend standaard"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Kodi standaard"

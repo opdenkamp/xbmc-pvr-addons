@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: DVBLink PVR Client
 # Addon id: pvr.dvblink
 # Addon Provider: DVBLogic
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: French (http://www.transifex.com/projects/p/xbmc-main/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr "Flux"
 
 msgctxt "#30102"
 msgid "Enable transcoding"
-msgstr "Enable transcoding"
+msgstr "Activer le transcodage"
 
 msgctxt "#30103"
 msgid "Height"
@@ -72,6 +72,18 @@ msgctxt "#30107"
 msgid "HTTP"
 msgstr "HTTP"
 
+msgctxt "#30108"
+msgid "RTP"
+msgstr "RTP"
+
+msgctxt "#30109"
+msgid "HLS"
+msgstr "HLS"
+
+msgctxt "#30110"
+msgid "ASF"
+msgstr "ASF"
+
 msgctxt "#30111"
 msgid "Enable Timeshift"
 msgstr "Activer le différé"
@@ -92,13 +104,6 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Afficher les messages d'informations"
 
-msgctxt "#30203"
-msgid "Combine title and episode name for recordings"
-msgstr "Combine title and episode name for recordings"
-
-#empty strings from id 30204 to 32000
-#category labels
-
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Connexion rétablie au serveur '%s'"
@@ -106,3 +111,51 @@ msgstr "Connexion rétablie au serveur '%s'"
 msgctxt "#32002"
 msgid "Found '%d' channels"
 msgstr "'%d' chaîne(s) trouvée(s)"
+
+msgctxt "#32003"
+msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
+msgstr "Impossible de se connecter au serveur DVBLink '%s' (Erreur : %d)"
+
+msgctxt "#32004"
+msgid "Could not get recordings (Error code : %d)"
+msgstr "Impossible d'avoir les enregistrements (Erreur : %d)"
+
+msgctxt "#32006"
+msgid "Could not get timers(Error code : %d)"
+msgstr "Impossible d'avoir les programmations (Code erreur : %d)"
+
+msgctxt "#32007"
+msgid "Found %d EPG timers"
+msgstr "Trouvé %d programmations par le guide"
+
+msgctxt "#32008"
+msgid "Found %d manual timers"
+msgstr "Trouvé %d programmations manuelles"
+
+msgctxt "#32009"
+msgid "Found %d recordings"
+msgstr "Trouvé %d enregistrements"
+
+msgctxt "#32010"
+msgid "Could not get stream for channel %s (Error code : %d)"
+msgstr "Impossible d'avoir le flux de la chaîne %s (Erreur : %d)"
+
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr "Enregistre cet épisode seulement"
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Enregistrer tous les épisodes"
+
+msgctxt "#32014"
+msgid "Delete timer"
+msgstr "Supprimer la minuterie"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Supprimer cette minuterie seulement"
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr "Supprime la série entière"

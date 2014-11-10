@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
 # Addon Provider: jdembski, A600, Manuel Mausz, Portisch
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/xbmc-main/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,9 +60,33 @@ msgctxt "#30040"
 msgid "Enable low performance mode (disables logos & thumbnails)"
 msgstr "저성능 모드 사용 (로고와 썸네일 사용하지 않음)"
 
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "그룹 녹화"
+
 msgctxt "#30051"
 msgid "disabled"
 msgstr "사용 안 함"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "디렉토리 이름으로 "
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "녹화 날자로 "
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "글자순으로"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "채널 번호로 "
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "시리즈 이름으로"
 
 msgctxt "#30100"
 msgid "General"
@@ -75,3 +99,31 @@ msgstr "고급"
 msgctxt "#30102"
 msgid "Recordings"
 msgstr "녹화"
+
+msgctxt "#30500"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "DVBViewer 녹화 서비스에 연결할 수 없습니다"
+
+msgctxt "#30501"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer 녹화 서비스 버전 %s 이상이 필요합니다"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "채널 목록을 파싱할 수 없습니다"
+
+msgctxt "#30503"
+msgid "Check Kodi log for more information"
+msgstr "더 많은 정보는 Kodi 로그를  확인 하세요"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "로컬 즐겨찾기 파일-favourites.xml 을  열 수 없음"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "즐겨찾기 목록을 파싱할 수 없음"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "타이머 목록을 파싱할 수 없습니다"

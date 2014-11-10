@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/xbmc-main/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,12 +21,12 @@ msgid "Mediaportal Hostname"
 msgstr "Nome del server Mediaportal"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Porta del plugin Mediaportal di XBMC"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Porta del plugin Mediaportal di Kodi"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
-msgstr "Solo Free-to-air"
+msgstr "Solo free-to-air"
 
 msgctxt "#30003"
 msgid "Include Radio"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "Riproduzione"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "La tua versione di TVServerXBMC '%s' è troppo vecchia. Per favore, aggiornala a '%s' o superiore!"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "La tua versione di TVServerKodi '%s' è troppo vecchia. Per favore, aggiornala a '%s' o superiore!"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "La tua versione di TVServerXBMC è troppo vecchia. Per favore, aggiornala a '%s' o superiore!"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "La tua versione di TVServerKodi è troppo vecchia. Per favore, aggiornala a '%s' o superiore!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,83 @@ msgstr "Spazio disco esaurito"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "Nessun PMT trovato"
+
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Impostazioni di programmazione"
+
+msgctxt "#30101"
+msgid "Frequency"
+msgstr "Frequenza"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Ora di trasmissione"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Canali"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Mantieni"
+
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Registra minuti prima dell'inizio"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Registra minuti dopo la fine"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Registra una volta"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Registra giornalmente (questo programma)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Registra settimanalmente"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "Registra nei weekend"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "Registra nei giorni feriali"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Questa volta"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Qualunque ora"
+
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Questo Canale"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Qualunque canale"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "Giorni"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "Sempre"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Predefinito del backend"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Kodi default"

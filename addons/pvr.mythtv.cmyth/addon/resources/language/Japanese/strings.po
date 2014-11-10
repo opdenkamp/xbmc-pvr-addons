@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Japanese (http://www.transifex.com/projects/p/xbmc-main/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,27 +38,31 @@ msgstr "MythTV データベース名"
 
 msgctxt "#30005"
 msgid "Include more debug information in the log file"
-msgstr "ログファイルに更に詳しいデバッグ情報を含める"
+msgstr "ログファイルにより詳しいデバッグ情報を含める"
 
 msgctxt "#30006"
 msgid "Enable Live TV"
-msgstr "ライブTV を有効に"
+msgstr " テレビ放送を有効に"
 
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
-msgstr "ライブTV がスケジュールされたショーの移動を許可する"
+msgstr "テレビ放送に録画予約した番組の移動を許可する"
 
 msgctxt "#30008"
 msgid "Conflict handling"
-msgstr "コンフリクトの処理"
+msgstr "競合の処理"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "録画用のスロットがある限り、テレビ放送を優先する"
 
 msgctxt "#30010"
 msgid "Prefer recording and stop Live TV"
-msgstr "ライブTV を停止して録画する"
+msgstr "録画を優先して、テレビ放送視聴を止める"
 
 msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
-msgstr "競合する録画をキャンセルしてライブTV を視聴する"
+msgstr "テレビ放送視聴を優先して、競合する録画を中止する"
 
 msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
@@ -67,6 +71,10 @@ msgstr "MythTV バックエンドのイーサネットアドレス (WOL)"
 msgctxt "#30019"
 msgid "General"
 msgstr "一般"
+
+msgctxt "#30020"
+msgid "Template provider"
+msgstr "テンプレート提供"
 
 msgctxt "#30021"
 msgid "Internal"
@@ -82,11 +90,15 @@ msgstr "内部テンプレート"
 
 msgctxt "#30026"
 msgid "Automatically Look Up Metadata"
-msgstr "メタデータを自動でロック"
+msgstr "自動的に番組情報を取得する"
+
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "新しい録画でCM検知する"
 
 msgctxt "#30028"
 msgid "Transcode new recordings"
-msgstr "新しい録音をトランスコード"
+msgstr "新しい録画をトランスコードする"
 
 msgctxt "#30029"
 msgid "Run User Job #1"
@@ -110,7 +122,7 @@ msgstr "トランスコーダー"
 
 msgctxt "#30034"
 msgid "Allow recordings to expire?"
-msgstr "録音の期限切れを許可しますか？"
+msgstr "録画の自動削除を設定しますか？"
 
 msgctxt "#30049"
 msgid "Recording template"
@@ -126,7 +138,7 @@ msgstr "MPEG-TS 分離を有効"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
-msgstr "プロトコルのバージョン: %i - データベースのバージョン: %i"
+msgstr "プロトコル バージョン: %i - データベース バージョン: %i"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"
@@ -134,19 +146,19 @@ msgstr "MythTV backendの接続に失敗しました。"
 
 msgctxt "#30301"
 msgid "Failed to connect to MythTV database"
-msgstr "MythTV データベースの接続に失敗しました。"
+msgstr "MythTV データベースへの接続に失敗しました。"
 
 msgctxt "#30302"
 msgid "Connection to MythTV backend lost"
-msgstr "MythTVバックエンドの接続を失った"
+msgstr "MythTVバックエンドとの接続が切れました"
 
 msgctxt "#30303"
 msgid "Connection to MythTV restored"
-msgstr "MythTVの接続が復元された"
+msgstr "MythTVバックエンドとの接続が復元しました"
 
 msgctxt "#30304"
 msgid "No response from MythTV backend"
-msgstr "MythTVバックエンドから応答がありません"
+msgstr "MythTVバックエンドから応答なし"
 
 msgctxt "#30305"
 msgid "Channel unavailable"
@@ -154,19 +166,19 @@ msgstr "チャンネル利用不可"
 
 msgctxt "#30306"
 msgid "Recorder unavailable"
-msgstr "レコーダーが使用できない"
+msgstr "レコーダーが利用不可"
 
 msgctxt "#30307"
 msgid "Canceling conflicting recording: %s"
-msgstr "競合する録画をキャンセルしました : %s"
+msgstr "競合する録画を中止しています : %s"
 
 msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
-msgstr "録画と競合するためライブTV を視聴停止しました : %s"
+msgstr "録画と競合するためテレビ放送視聴を停止しました : %s"
 
 msgctxt "#30309"
 msgid "Not recording"
-msgstr "録画しません"
+msgstr "録画しない"
 
 msgctxt "#30310"
 msgid "Enabled"
@@ -176,13 +188,21 @@ msgctxt "#30311"
 msgid "Disabled"
 msgstr "無効"
 
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "放送が見つかりません"
+
 msgctxt "#30411"
 msgid "Delete and re-record"
 msgstr "削除して再録画"
 
 msgctxt "#30412"
 msgid "Keep LiveTV recording"
-msgstr "ライブTV の録画を保つ"
+msgstr "テレビ放送の録画をつづける"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "「録画しない」状態の表示・非表示切り替え"
 
 msgctxt "#30431"
 msgid "Record all showings (this channel)"
@@ -190,16 +210,16 @@ msgstr "すべてを録画する (このチャンネル)"
 
 msgctxt "#30432"
 msgid "Record this showing every week"
-msgstr "毎週録画する"
+msgstr "この番組を毎週録画する"
 
 msgctxt "#30433"
 msgid "Record this showing every day"
-msgstr "毎日録画する"
+msgstr "この番組を毎日録画する"
 
 msgctxt "#30434"
 msgid "Record one showing (all channels)"
-msgstr "すべてを録画する (すべてのチャンネル)"
+msgstr "この番組を1回録画する (すべてのチャンネル)"
 
 msgctxt "#30435"
 msgid "Record all new episodes (this channel)"
-msgstr "すべてを新しいエピソードを録画する (このチャンネル)"
+msgstr "すべての新しい回を録画する (このチャンネル)"

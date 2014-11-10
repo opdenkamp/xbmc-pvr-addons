@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
 # Addon Provider: Graeme Blackley
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Welsh (http://www.transifex.com/projects/p/xbmc-main/language/cy/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +55,66 @@ msgstr "Methodd y cysylltiad. PIN anghywir?"
 msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Tiwniwr ddim ar gael"
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[AILDDIGWYDD]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Ychwanegu Amserydd"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Math o Recordiad"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Recordio Unwaith"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Recordio'r Tymor ( Rhifynnau Newydd ar y sianel hon)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Recordio'r Tymor ( Pob rhifyn ar y sianel hon)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Recordio'r Tymor ( Dyddiol, yr amser yma)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Recordio'r Tymor ( Wythnosol, yr amser yma)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Recordio'r Tymor ( Llun-Gwener, yr amser yma)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Recordio'r Tymor ( Penwythnosau, yr amser yma)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Cadw"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Pob Recordiad"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Blaen amser (munudau)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Blaen amser (munudau)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Cyfeiriadur Recordio"
 
 msgctxt "#30135"
 msgid "Default"

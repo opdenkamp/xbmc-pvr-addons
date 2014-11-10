@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
 # Addon Provider: Graeme Blackley
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: English (Australia) (http://www.transifex.com/projects/p/xbmc-main/language/en_AU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,9 +16,105 @@ msgstr ""
 "Language: en_AU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "NextPVR Hostname"
+msgstr "NextPVR Hostname"
+
+msgctxt "#30001"
+msgid "NextPVR Port (usually 8866 or 7799)"
+msgstr "NextPVR Port (usually 8866 or 7799)"
+
+msgctxt "#30002"
+msgid "NextPVR PinCode"
+msgstr "NextPVR PinCode"
+
+msgctxt "#30003"
+msgid "Enable TimeShift with Live TV"
+msgstr "Enable TimeShift with Live TV"
+
+msgctxt "#30040"
+msgid "Connection"
+msgstr "Connection"
+
 msgctxt "#30041"
 msgid "Advanced"
 msgstr "Advanced"
+
+msgctxt "#30050"
+msgid "NextPVR server is too old."
+msgstr "NextPVR server is too old."
+
+msgctxt "#30051"
+msgid "Upgrade to '%s' or higher!"
+msgstr "Upgrade to '%s' or higher!"
+
+msgctxt "#30052"
+msgid "Connection failed. Incorrect PIN?"
+msgstr "Connection failed. Incorrect PIN?"
+
+msgctxt "#30053"
+msgid "Tuner no longer available"
+msgstr "Tuner no longer available"
+
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Add Timer"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Recording Type"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Record Once"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Record Season (NEW episodes on this channel)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Record Season (All episodes on this channel)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Record Season (Daily, this timeslot)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Record Season (Weekly, this timeslot)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Record Season (Monday-Friday, this timeslot)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Record Season (Weekends, this timeslot)"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "Keep"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "All Recordings"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Pre-Padding (minutes)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Pre-Padding (minutes)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Recording Directory"
 
 msgctxt "#30135"
 msgid "Default"

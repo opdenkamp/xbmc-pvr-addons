@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Croatian (http://www.transifex.com/projects/p/xbmc-main/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "MediaPortal naziv računala"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Ulaz Mediaportal XBMC dodatka"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Ulaz Mediaportal Kodi dodatka"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "Reprodukcija"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Vaš XBMC TV poslužitelj inačice '%s' je zastario. Nadogradite ga na '%s' ili noviju inačicu!"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Vaš Kodi TV poslužitelj inačice '%s' je zastario. Nadogradite ga na '%s' ili noviju inačicu!"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Inačica vašeg XBMC TV poslužitelja je prestara. Nadogradite ga na '%s' ili noviju inačicu!"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "Inačica vašeg Kodi TV poslužitelja je prestara. Nadogradite ga na '%s' ili noviju inačicu!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,91 @@ msgstr "Nema slobodnog prostora na disku"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "PMT nije pronađen"
+
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Postavke rasporeda"
+
+msgctxt "#30101"
+msgid "Frequency"
+msgstr "Frekvencija"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Vrijeme emitiranja"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Programi"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Zadrži"
+
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Dodatne minute prije početka snimanja"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Dodatne minute snimanja nakon završetka"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Snimi jednom"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Dnevno snimaj (ovaj program)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Tjedno snimaj"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "Snimaj vikendom"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "Snimaj svaki dan"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Ovaj puta"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Bilo koje vrijeme"
+
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Ovaj program"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Bilo koji program"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Dok ima slobodnog prostora"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Dok se pogleda"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "Dana"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "Uvijek"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Zadani pozadinski softver"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Kodi zadan"

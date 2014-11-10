@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: VU+ / Enigma2 Client
 # Addon id: pvr.vuplus
 # Addon Provider: Joerg Dembski
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Polish (http://www.transifex.com/projects/p/xbmc-main/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +46,7 @@ msgstr "Aktualizuj w interwale minut"
 
 msgctxt "#30011"
 msgid "Automatic Timerlist Cleanup"
-msgstr "Automatyczne czyszczenie listy planowanych nagrań"
+msgstr "Automatyczne czyszczenie harmonogramu nagrań"
 
 msgctxt "#30012"
 msgid "Webinterface Port"
@@ -90,7 +90,7 @@ msgstr "HTTP"
 
 msgctxt "#30022"
 msgid "Recordings / Timer"
-msgstr "Nagrania / Planowane nagrania"
+msgstr "Nagrania / Harmonogram"
 
 msgctxt "#30023"
 msgid "Recording folder on the receiver"
@@ -111,6 +111,10 @@ msgstr "Bukiet"
 msgctxt "#30027"
 msgid "Fetch picons from webinterface"
 msgstr "Pobieraj loga kanałów przez interfejs webowy"
+
+msgctxt "#30028"
+msgid "Use Secure HTTP (https)"
+msgstr "Używaj zabezpieczonego HTTP (HTTPS)"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

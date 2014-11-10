@@ -1,23 +1,20 @@
-# XBMC Media Center language file
-# Addon Name: WMC PVR Client
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
 # Addon id: pvr.wmc
-# Addon version: 1.0.0
-# Addon Provider: V. Da Costa
+# Addon Provider: KrustyReturns and scarecrow420
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Main Translation Project (Frodo)\n"
+"Project-Id-Version: XBMC Main\n"
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
-"Language-Team: English (http://www.transifex.com/projects/p/XBMC-Main-Frodo/language/en/)\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbmc-main/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-# Settings labels
 
 msgctxt "#30000"
 msgid "Server Hostname or IP"
@@ -131,6 +128,8 @@ msgctxt "#30027"
 msgid "Time drift between client and backend of %s minutes"
 msgstr ""
 
+#empty strings from id 30028 to 30099
+
 msgctxt "#30100"
 msgid "Recording Preference"
 msgstr ""
@@ -167,6 +166,8 @@ msgctxt "#30108"
 msgid "Any Channel"
 msgstr ""
 
+#empty string with id 30109
+
 msgctxt "#30110"
 msgid "Airtime:"
 msgstr ""
@@ -175,6 +176,7 @@ msgctxt "#30111"
 msgid "Anytime"
 msgstr ""
 
+#empty strings from id 30112 to 30119
 
 msgctxt "#30120"
 msgid "Delete Timer"

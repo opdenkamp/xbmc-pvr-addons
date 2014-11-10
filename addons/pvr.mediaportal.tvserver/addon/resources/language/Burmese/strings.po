@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Burmese (http://www.transifex.com/projects/p/xbmc-main/language/my/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,12 +41,12 @@ msgid "Connection"
 msgstr "ကွန်နက်ရှင်"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "သင်၏ TVServerXBMC ဗားရှင်း '%s' သည်အရမ်းဟောင်းနေသည်။'%s' သို့မဟုတ် သူ့ထက်မြင့်သောဗားရှင်းသို့အဆင့်မြင့်ပါ"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "သင်၏ TVServerKodi ဗားရှင်း '%s' သည်အရမ်းဟောင်းနေသည်။'%s' သို့မဟုတ် သူ့ထက်မြင့်သောဗားရှင်းသို့အဆင့်မြင့်ပါ"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "သင်၏ TVServerXBMC ဗားရှင်း '%s' သည်အရမ်;ဟောင်းနေသည်။'%s' သို့မဟုတ် သူ့ထက်မြင့်သောဗားရှင်းသို့အဆင့်မြင့်ပါ"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "သင်၏ TVServerKodi ဗားရှင်း '%s' သည်အရမ်;ဟောင်းနေသည်။'%s' သို့မဟုတ် သူ့ထက်မြင့်သောဗားရှင်းသို့အဆင့်မြင့်ပါ"
 
 msgctxt "#30060"
 msgid "All cards are busy"
@@ -83,3 +83,15 @@ msgstr "နေရာလွတ်မရှိပါ။"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "PMT ကိုမတွေ့ပါ။"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Channel များ"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "ရက်များ"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "အမြဲတမ်း"

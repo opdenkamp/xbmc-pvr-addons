@@ -1,3 +1,6 @@
+0.3.104
+- Updated Language files from Transifex
+
 0.3.103
 - rename addon in addon.xml file
 - add support for TriggerEPGUpdate

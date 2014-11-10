@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
 # Addon Provider: FernetMenta, Team XBMC
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Slovenian (http://www.transifex.com/projects/p/xbmc-main/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -207,6 +207,14 @@ msgstr "Samodejno ustvari skupine programov na strežniku"
 msgctxt "#30047"
 msgid "Request Timeshift"
 msgstr "Zahtevaj časovni zamik"
+
+msgctxt "#30048"
+msgid "Path to channel icons"
+msgstr "Pot do ikon za kanale"
+
+msgctxt "#30049"
+msgid "VDR Server MAC for Wake-on-LAN"
+msgstr "VDR strežnik za Wake-on-LAN"
 
 msgctxt "#30100"
 msgid "VDR OSD"

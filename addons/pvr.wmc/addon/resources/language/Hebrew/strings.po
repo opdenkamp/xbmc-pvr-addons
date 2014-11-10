@@ -1,0 +1,81 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Hebrew (http://www.transifex.com/projects/p/xbmc-main/language/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: he\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "פורט"
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "היסט זמן בין לקוח PVR לשרת בן %s דקות"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "העדפות הקלטה"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "הקלט פרק זה בלבד"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "הקלט סדרה"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "הראה סוג:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "חדש וחוזר"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "חדש בלבד"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "חי בלבד"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "ערוץ:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "כל ערוץ"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "זמן אוויר:"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "בכל זמן"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "מחק תזמון"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "מחק את התיזמון של פרק זה בלבד"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "מחק את כל הסדרה"

@@ -1,0 +1,185 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: French (Canada) (http://www.transifex.com/projects/p/xbmc-main/language/fr_CA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Nom d'hôte ou IP du serveur"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "Si le serveur tourne sur ce système, gardez l'adresse IP 127.0.0.1"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Numéro de port"
+
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Arrêt du flux, problème inconnu"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Aucune donnée vidéo trouvée sur cette chaîne"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Un syntoniseur est nécessaire pour l’enregistrement"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Échec lors de la suppression de l'enregistrement, le fichier est utilisé ou protégé en écriture"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Échec lors de la suppression de l'enregistrement, le fichier enregistré n'existe pas"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Le fichier enregistré est introuvable"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Chaîne alternative choisie :"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Heure alternative choisie :"
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Démarrage impossible, le syntoniseur n'est plus disponible"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Le contenu de la chaîne est protégé"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "Heure de fin augmentée de"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "Activer les appels d'état du signal"
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "Rafraîchir les intervalles d'état du signal (sec)"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Stocker l'état de reprise/regardé sur le serveur"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Le dossier de la télé enregistrée est introuvable"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Le dossier de la télé enregistrée ne peut pas être ouvert"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Une mise à jour de version (%s) est disponible pour ServerWMC"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Tous les syntoniseurs sont occupés pour cette chaîne"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "La télé en direct s'est interrompue"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "Erreur de la télé en direct, arrêt prématuré"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Le flux d'enregistrement s'est interrompu"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Arrêt prématuré du flux d'enregistrement"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Utiliser le réveil par le réseau pour réveiller le serveur"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Envoi du réveil par le réseau au serveur..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "Décalage temporel de %s minutes entre le client et le dorsal"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Préférences d'enregistrement"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "N'enregistrer que cet épisode"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Enregistrer la série"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Type d'émissions :"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Nouvelles et rediffusions"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Nouvelles seulement"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "En direct seulement"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "Chaîne :"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "N'importe quelle chaîne"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Heure de diffusion :"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "N'importe quand"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Supprimer la minuterie"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Supprimer la minuterie de cet épisode seulement"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Supprimer toute la série"

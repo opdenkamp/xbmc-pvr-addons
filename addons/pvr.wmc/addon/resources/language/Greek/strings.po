@@ -1,0 +1,185 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Greek (http://www.transifex.com/projects/p/xbmc-main/language/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Όνομα Υπολογιστή ή διεύθυνση IP"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "Διατήρηση της διεύθυνσης IP 127.0.0.1, αν ο διακομιστής τρέχει στο ίδιο σύστημα"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Αριθμός Θύρας"
+
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Λήξη χρονικού ορίου της ροής, άγνωστο πρόβλημα"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Δε βρέθηκαν δεδομένα βίντεο σε αυτό το κανάλι"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Απαιτείται δέκτης (tuner) για εγγραφή"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Αποτυχία διαγραφής της εγγραφής, το αρχείο είναι ανοικτό ή έχει προστασία"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Αποτυχία διαγραφής της εγγραφής, το αρχείο δεν υπάρχει"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Δε βρέθηκε η εγγραφή"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Εναλλακτικό κανάλι:"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Εναλλακτικός χρόνος:"
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Αδυναμία έναρξης, ο δέκτης δεν είναι διαθέσιμος"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Το περιεχόμενο του καναλιού έχει προστασία"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "Ο χρόνος λήξης αυξήθηκε κατά"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "Ενεργοποίηση κλήσεων SignalStatus"
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "Διάστημα Ανανέωσης του SignalStatus (δευτ)"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Αποθήκευση Χρόνου Συνέχισης/Προβληθέντος στο διακομιστή"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Δε βρέθηκε ο φάκελος εγγραφών TV"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Δεν ανοίγει ο φάκελος εγγραφών TV"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Είναι διαθέσιμη ενημέρωση του ServerWMC (%s)"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Όλοι οι δέκτες για αυτό το κανάλι είναι απασχολημένοι"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "Λήξη χρονικού ορίου της LiveTV"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "Σφάλμα της LiveTV, πρόωρη έξοδος"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Λήξη χρονικού ορίου της ροής εγγραφής"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Πρόωρη έξοδος της ροής εγγραφής"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Χρήση WakeOnLAN για εκκίνηση του διακομιστή"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Αποστολή σήματος WakeOnLAN στο διακομιστή..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "Η παρέκκλιση ώρας μεταξύ πελάτη και backend είναι %s λεπτά"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Προτίμηση Εγγραφής"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Εγγραφή μόνο αυτού του επεισοδίου"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Εγγραφή της σειράς"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Τύπος:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Νέα και επαναλήψεις"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Μόνο νέα"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "Μόνο ζωντανά"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "Κανάλι:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Κάθε Κανάλι"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Ώρα προβολής:"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Κάθε φορά"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Διαγραφή Χρονοδιακόπτη"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Διαγραφή του χρονοδιακόπτη μόνο αυτού του επεισοδίου"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Διαγραφή όλης της σειράς"

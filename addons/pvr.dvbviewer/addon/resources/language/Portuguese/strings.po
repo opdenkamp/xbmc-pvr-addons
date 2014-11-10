@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: DVBViewer Client
 # Addon id: pvr.dvbviewer
 # Addon Provider: jdembski, A600, Manuel Mausz, Portisch
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Portuguese (http://www.transifex.com/projects/p/xbmc-main/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr "Porta da interface Web"
 
 msgctxt "#30002"
 msgid "Username"
-msgstr "Nome de Utilizador"
+msgstr "Nome de utilizador"
 
 msgctxt "#30003"
 msgid "Password"
@@ -54,7 +54,7 @@ msgstr "Localização do buffer de Ver Mais Tarde"
 
 msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
-msgstr "Usar emissão RTSP para TV ao vivo"
+msgstr "Usar emissão RTSP para TV em directo"
 
 msgctxt "#30040"
 msgid "Enable low performance mode (disables logos & thumbnails)"
@@ -113,8 +113,8 @@ msgid "Unable to parse channel list"
 msgstr "Não foi possível analisar a lista de canais"
 
 msgctxt "#30503"
-msgid "Check XBMC log for more information"
-msgstr "Verifique o registo do XBMC para mais informação"
+msgid "Check Kodi log for more information"
+msgstr "Verifique o registo do Kodi para mais informação"
 
 msgctxt "#30504"
 msgid "Unable to open local favourites.xml"

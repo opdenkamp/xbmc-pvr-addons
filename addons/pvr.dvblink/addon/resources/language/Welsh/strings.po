@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: DVBLink PVR Client
 # Addon id: pvr.dvblink
 # Addon Provider: DVBLogic
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Welsh (http://www.transifex.com/projects/p/xbmc-main/language/cy/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,6 +19,22 @@ msgstr ""
 msgctxt "#30000"
 msgid "General"
 msgstr "Cyffredinol"
+
+msgctxt "#30001"
+msgid "Server Address"
+msgstr "Cyfeiriad Gweinydd"
+
+msgctxt "#30002"
+msgid "Server Port"
+msgstr "Porth y Gweinydd"
+
+msgctxt "#30003"
+msgid "Client name"
+msgstr "Enw'r cleient"
+
+msgctxt "#30004"
+msgid "Connection timeout (s)"
+msgstr "Daeth y cysylltiad i ben"
 
 msgctxt "#30005"
 msgid "Username"
@@ -32,13 +48,41 @@ msgctxt "#30100"
 msgid "Stream"
 msgstr "Ffrydio"
 
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Galluogi trawscodio"
+
+msgctxt "#30103"
+msgid "Height"
+msgstr "Uchder"
+
+msgctxt "#30104"
+msgid "Width"
+msgstr "Lled"
+
 msgctxt "#30105"
 msgid "Bitrate"
 msgstr "Didradd"
 
+msgctxt "#30106"
+msgid "Audio track"
+msgstr "Trac sain"
+
 msgctxt "#30107"
 msgid "HTTP"
 msgstr "HTTP"
+
+msgctxt "#30108"
+msgid "RTP"
+msgstr "RTP"
+
+msgctxt "#30109"
+msgid "HLS"
+msgstr "HLS"
+
+msgctxt "#30110"
+msgid "ASF"
+msgstr "ASF"
 
 msgctxt "#30111"
 msgid "Enable Timeshift"
@@ -51,3 +95,51 @@ msgstr "Llwybr byffro Symud Amser"
 msgctxt "#30200"
 msgid "Advanced"
 msgstr "Uwch"
+
+msgctxt "#30201"
+msgid "Use channel handle instead of client id"
+msgstr "Defnyddiwch enw sianel yn lle enw cleient"
+
+msgctxt "#30202"
+msgid "Show information messages"
+msgstr "Dangoswch gwybodaeth negeseuon"
+
+msgctxt "#32001"
+msgid "Connected to DVBLink Server '%s'"
+msgstr "Cysylltu i Weinydd DVBLink '%s'"
+
+msgctxt "#32002"
+msgid "Found '%d' channels"
+msgstr "Wedi canfod '%d' sianel"
+
+msgctxt "#32003"
+msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
+msgstr "Methu cysylltu â Gweinydd DVBLink ' (Cod gwall : %d)"
+
+msgctxt "#32004"
+msgid "Could not get recordings (Error code : %d)"
+msgstr "Methu derbyn recordiadau (Cod gwall: %d)"
+
+msgctxt "#32006"
+msgid "Could not get timers(Error code : %d)"
+msgstr "Methu cael amseryddion (Cod gwall: %d)"
+
+msgctxt "#32007"
+msgid "Found %d EPG timers"
+msgstr "Wedi canfod %d amserlenydd"
+
+msgctxt "#32008"
+msgid "Found %d manual timers"
+msgstr "Wedi canfod %d amserydd llaw"
+
+msgctxt "#32009"
+msgid "Found %d recordings"
+msgstr "Wedi canfod %d recordiad"
+
+msgctxt "#32010"
+msgid "Could not get stream for channel %s (Error code : %d)"
+msgstr "Methu estyn llif ar gyfer sianel %s (Cod gwall: %d)"
+
+msgctxt "#32014"
+msgid "Delete timer"
+msgstr "Dileu'r amserydd"

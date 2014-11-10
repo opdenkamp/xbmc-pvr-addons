@@ -1,3 +1,6 @@
+1.9.16
+- updated language files from Transifex
+
 1.9.15
 - updated to API v1.9.2
 

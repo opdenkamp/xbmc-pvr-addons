@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: NextPVR PVR Client
 # Addon id: pvr.nextpvr
 # Addon Provider: Graeme Blackley
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Norwegian (http://www.transifex.com/projects/p/xbmc-main/language/no/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,9 +56,65 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "Tuner er ikke lengre tilgjengelig"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[REPRISE]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Legg til tidsur"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Opptakstype"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Ta opp en gang"
+
+msgctxt "#30122"
+msgid "Record Season (NEW episodes on this channel)"
+msgstr "Ta opp sesong (NYE episoder på denne kanalen)"
+
+msgctxt "#30123"
+msgid "Record Season (All episodes on this channel)"
+msgstr "Ta opp sesong (Alle episoder på denne kanalen)"
+
+msgctxt "#30124"
+msgid "Record Season (Daily, this timeslot)"
+msgstr "Ta opp sesong (Daglig, på dette tidspunkt)"
+
+msgctxt "#30125"
+msgid "Record Season (Weekly, this timeslot)"
+msgstr "Ta opp sesong (Ukentlig på dette tidspunkt)"
+
+msgctxt "#30126"
+msgid "Record Season (Monday-Friday, this timeslot)"
+msgstr "Ta opp sesong (Mandag-Fredag, dette tidspunkt)"
+
+msgctxt "#30127"
+msgid "Record Season (Weekends, this timeslot)"
+msgstr "Ta opp sesong (Helger, dette tidspunkt)"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Behold"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Alle opptak"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Førmargin (minutter)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Førmargin (minutter)"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Opptaksmappe"
 
 msgctxt "#30135"
 msgid "Default"

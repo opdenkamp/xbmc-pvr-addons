@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Czech (http://www.transifex.com/projects/p/xbmc-main/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "Název počítače Mediaportal"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Port modulu XBMC Mediaportal"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Port modulu Kodi Mediaportal"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "Přehrávání"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "vaše verze TVServerXBMC '%s' je příliš stará. Aktualizujte prosím na '%s', nebo novější."
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "vaše verze TVServerKodi '%s' je příliš stará. Aktualizujte prosím na '%s', nebo novější."
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "vaše verze TVServerXBMC je příliš stará. Aktualizujte prosím na '%s', nebo novější."
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "vaše verze TVServerKodi je příliš stará. Aktualizujte prosím na '%s', nebo novější."
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,91 @@ msgstr "Žádné volné místo na disku"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "PMT nenalezeno"
+
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Nastavení plánu"
+
+msgctxt "#30101"
+msgid "Frequency"
+msgstr "Frekvence"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Čas vysílání"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Kanály"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Ponechat"
+
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Počet nahraných minut před začátkem"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Počet nahraných minut po konci"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Nahrát jednou"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Nahrát denně (tento program)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Nahrávat týdně"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "Nahrávat o víkendu"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "Nahrávat v pracovní dny"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Nyní"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Kdykoli"
+
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Tento kanál"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Každý kanál"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Dokud není potřeba místo na HDD"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Dokud není shlédnuto"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "dní"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "Vždy"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Backend výchozí nástavení"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Kodi výchozí nastavení"

@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MythTV cmyth PVR Client
 # Addon id: pvr.mythtv.cmyth
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière, Tonny Petersen
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Lithuanian (http://www.transifex.com/projects/p/xbmc-main/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +92,10 @@ msgctxt "#30026"
 msgid "Automatically Look Up Metadata"
 msgstr "Automatiškai ieškoti metaduomenų"
 
+msgctxt "#30027"
+msgid "Commercial Flag new recordings"
+msgstr "Reklamos žymė naujiems įrašams"
+
 msgctxt "#30028"
 msgid "Transcode new recordings"
 msgstr "Perkoduoti naujus įrašus"
@@ -127,6 +131,10 @@ msgstr "Įrašo šablonas"
 msgctxt "#30050"
 msgid "Advanced"
 msgstr "Pažangus"
+
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Įjungti MPEG-TS išskaidymą"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
@@ -188,6 +196,10 @@ msgctxt "#30411"
 msgid "Delete and re-record"
 msgstr "Ištrinti ir įrašyti iš naujo"
 
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Išlaikyti televizijos įrašą"
+
 msgctxt "#30421"
 msgid "Show/hide rules with status 'Not Recording'"
 msgstr "Rodyti/slėpti taisykles su būsena 'Neįrašoma'"
@@ -203,6 +215,10 @@ msgstr "Įrašyti šią laidą kiekvieną savaitę"
 msgctxt "#30433"
 msgid "Record this showing every day"
 msgstr "Įrašyti šią laidą kiekvieną dieną"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Įrašyti vieną transliaciją (visi kanalai)"
 
 msgctxt "#30435"
 msgid "Record all new episodes (this channel)"

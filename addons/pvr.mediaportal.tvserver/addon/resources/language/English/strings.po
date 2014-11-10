@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: English (http://www.transifex.com/projects/p/xbmc-main/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgid "Mediaportal Hostname"
 msgstr ""
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
+msgid "Mediaportal Kodi plugin Port"
 msgstr ""
 
 msgctxt "#30002"
@@ -99,11 +99,11 @@ msgstr ""
 #On-screen error messages
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
 msgstr ""
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
 msgstr ""
 
 msgctxt "#30052"
@@ -208,6 +208,8 @@ msgctxt "#30106"
 msgid "Record minutes after end"
 msgstr ""
 
+#empty strings from id 30107 to 30109
+
 # Frequency:
 msgctxt "#30110"
 msgid "Record Once"
@@ -229,6 +231,8 @@ msgctxt "#30114"
 msgid "Record Week Days"
 msgstr ""
 
+#empty strings from id 30115 to 30119
+
 # Airtime:
 msgctxt "#30120"
 msgid "This time"
@@ -238,6 +242,8 @@ msgctxt "#30121"
 msgid "Anytime"
 msgstr ""
 
+#empty strings from id 30122 to 30124
+
 # Channel:
 msgctxt "#30125"
 msgid "This Channel"
@@ -246,6 +252,8 @@ msgstr ""
 msgctxt "#30126"
 msgid "Any Channel"
 msgstr ""
+
+#empty strings from id 30127 to 30129
 
 # Keep:
 msgctxt "#30130"
@@ -264,10 +272,12 @@ msgctxt "#30133"
 msgid "Always"
 msgstr ""
 
+#empty string with id 30134
+
 msgctxt "#30135"
 msgid "Backend default"
 msgstr ""
 
 msgctxt "#30136"
-msgid "XBMC default"
+msgid "Kodi default"
 msgstr ""

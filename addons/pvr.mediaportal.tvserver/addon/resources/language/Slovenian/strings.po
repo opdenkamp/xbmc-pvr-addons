@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Slovenian (http://www.transifex.com/projects/p/xbmc-main/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "Ime gostitelja Mediaportal"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Vrata vtičnika XBMC za Mediaportal"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Vrata vtičnika Kodi za Mediaportal"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "Predvajanje"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Vaša različica TVServerXBMC-ja '%s' je prestara. Posodobite na '%s' ali novejše!"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Vaša različica TVServerKodi-ja '%s' je prestara. Posodobite na '%s' ali novejše!"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Vaša različica TVServerXBMC-ja je prestara. Posodobite na '%s' ali novejše!"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "Vaša različica TVServerKodi-ja je prestara. Posodobite na '%s' ali novejše!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,27 @@ msgstr "Ni več prostora na disku"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "PMT ni mogoče najti"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Programi"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Obdrži"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Posnemi enkrat"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "Dni"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "Vedno"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Kodi privzeto"

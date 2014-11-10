@@ -1,0 +1,45 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Bulgarian (http://www.transifex.com/projects/p/xbmc-main/language/bg/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: bg\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Хост или IP адрес на сървъра"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Номер на порта"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Записаният файл не е открит"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Запиши само този епизод"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "Канал:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Всеки канал"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Изтрий брояча"

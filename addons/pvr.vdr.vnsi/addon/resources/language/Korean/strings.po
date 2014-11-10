@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: VDR VNSI Client
 # Addon id: pvr.vdr.vnsi
 # Addon Provider: FernetMenta, Team XBMC
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/xbmc-main/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,9 +88,21 @@ msgctxt "#30017"
 msgid "Country"
 msgstr "국가"
 
+msgctxt "#30018"
+msgid "Cable Inversion"
+msgstr "케이블 반전"
+
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "케이블 심볼 레이트"
+
 msgctxt "#30020"
 msgid "Cable modulation"
 msgstr "케이블 변조"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Terr 반전"
 
 msgctxt "#30022"
 msgid "Satellite"
@@ -192,14 +204,74 @@ msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "서버에 자동으로 채널 그룹 생성"
 
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "타임쉬프트 요청"
+
+msgctxt "#30048"
+msgid "Path to channel icons"
+msgstr "채널 아이콘 경로"
+
+msgctxt "#30049"
+msgid "VDR Server MAC for Wake-on-LAN"
+msgstr "Wake-on-LAN 을 위한 VDR 서버의 MAC 주소"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
 msgctxt "#30101"
 msgid "Setup"
 msgstr "설정"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "OSD 제어 - info 키를 눌러 종료"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "OSD 제어를 선택"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "타임쉬프트 모드"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "타임쉬프트 버퍼 (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "타임쉬프트 버퍼 (파일) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR 관리"
 
 msgctxt "#30108"
 msgid "Channels"
 msgstr "채널"
 
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "허용된 제공자"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "채널 블랙리스트"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "채널 필터"
+
 msgctxt "#30112"
 msgid "Radio Channels"
 msgstr "라디오 채널"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "필터 저장"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "알려지지 않은 제공자"

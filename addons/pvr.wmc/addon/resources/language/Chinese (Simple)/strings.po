@@ -1,0 +1,185 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "服务器主机名或 IP 地址"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "如果服务器在本机运行，保持 IP 地址为 127.0.0.1"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "端口号"
+
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "流超时，未知问题"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "此频道未发现视频数据"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "录像需要电视接收设备"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "录像删除失败，文件使用中或写保护"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "录像删除失败，录像文件不存在"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "录像文件未找到"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "备选频道选择："
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "备选定时器选择："
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "无法启动，电视接收设备不可用"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "频道内容被保护"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "结束时间增加"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "启用信号状态调用"
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "刷新信号状态间隔（秒）"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "保存 恢复/已观看 状态到服务器"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "录像文件夹未找到"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "录像文件夹无法打开"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "有可用的 ServerWMC 版本更新（%s）"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "此频道的所有电视接收设备忙"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "直播电视超时"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "直播电视错误，过早退出"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "录像流超时"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "录像流过早退出"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "使用网络唤醒来唤醒服务器"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "发送网络唤醒消息给服务器..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "客户端和后端间的时间偏移为 %s 分钟"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "录像偏好"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "仅录本集"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "录制全剧"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "显示类型："
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "新的和重播"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "仅新的"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "仅直播"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "频道："
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "所有频道"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "播出时间："
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "所有时间"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "删除定时器"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "仅删除本集定时器"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "删除整剧"

@@ -1,0 +1,65 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/xbmc-main/language/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Sunucu Ana Bilgisayar Adı veya IP Adresi"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Liman Numarası"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Bu seriyi kayıt et"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Gösteri türü:"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Sadece yeni"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "Sadece canlı"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "Kanal:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Herhangi Bir Kanal"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Her Zaman"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Silme Zamanlayıcı"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Sadece bu bölüm zamanlayıcısını sil"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Tüm seriyi sil"

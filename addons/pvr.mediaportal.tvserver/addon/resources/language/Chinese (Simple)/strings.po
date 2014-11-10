@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Chinese (Simple) (http://www.transifex.com/projects/p/xbmc-main/language/zh/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "Mediaportal 主机名"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Mediaportal XBMC 插件端口"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Mediaportal Kodi 插件端口"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "播放"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "TVServerXBMC 版本“%s”太旧，请升级到“%s”或更高版本！"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "TVServerKodi 版本“%s”太旧，请升级到“%s”或更高版本！"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "TVServerXBMC 版本太旧，请升级到“%s”或更高版本！"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "TVServerKodi 版本太旧，请升级到“%s”或更高版本！"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,91 @@ msgstr "无可用磁盘空间"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "未找到 PMT"
+
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "预约设置"
+
+msgctxt "#30101"
+msgid "Frequency"
+msgstr "频次"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "播出时间"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "频道"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "保留"
+
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "提前多少分钟开始录像"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "延迟多少分钟结束录像"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "单次录像"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "每日录像（此节目）"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "每周录像"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "周末录像"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "工作日录像"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "此时刻"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "所有时间"
+
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "此频道"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "所有频道"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "直到需要空间"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "直到已观看"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "天"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "总是"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "后端默认"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Kodi 默认"

@@ -1,0 +1,57 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Amharic (http://www.transifex.com/projects/p/xbmc-main/language/am/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: am\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "ተከታታዩን መቅረጫ"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "አይነት ማሳያ:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "አዲስ እና የተደገመ"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "አዲስ ብቻ"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "በቀጥታ የሚተላለፍ ብቻ"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "ጣቢያ:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "ማንኛውም ጣቢያ"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "ያየር ጊዜ:"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "በማንኛውም ጊዜ"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "በጠቅላላ ተከታታዩን ማጥፊያ"

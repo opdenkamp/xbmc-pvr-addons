@@ -1,0 +1,169 @@
+# Kodi Media Center language file
+# Addon Name: VDR VNSI Client
+# Addon id: pvr.vdr.vnsi
+# Addon Provider: FernetMenta, Team XBMC
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Mongolian (Mongolia) (http://www.transifex.com/projects/p/xbmc-main/language/mn_MN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: mn_MN\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "VDR Hostname or IP"
+msgstr "VDR нэр эсвэл IP"
+
+msgctxt "#30001"
+msgid "VNSI Port"
+msgstr "VNSI порт"
+
+msgctxt "#30002"
+msgid "Priority"
+msgstr "Эрэмбэ"
+
+msgctxt "#30008"
+msgid "Channel search"
+msgstr "Суваг хайх"
+
+msgctxt "#30009"
+msgid "Channel search - Settings"
+msgstr "Суваг хайх - Тохиргоо"
+
+msgctxt "#30010"
+msgid "Start Channel search"
+msgstr "Суваг хайж эхлэх"
+
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "ТВ сувгууд"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Радио сувгууд"
+
+msgctxt "#30014"
+msgid "FTA channels"
+msgstr "FTA сувгууд"
+
+msgctxt "#30015"
+msgid "Scrambled channels"
+msgstr "Холилдсон сувгууд"
+
+msgctxt "#30016"
+msgid "HD channels"
+msgstr "HD сувгууд"
+
+msgctxt "#30017"
+msgid "Country"
+msgstr "Улс"
+
+msgctxt "#30022"
+msgid "Satellite"
+msgstr "Хиймэл дагуул"
+
+msgctxt "#30023"
+msgid "ATSC Type"
+msgstr "ATSC төрөл"
+
+msgctxt "#30024"
+msgid "Back"
+msgstr "Буцах"
+
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Суваг хайх - хайж байна... %i %%"
+
+msgctxt "#30026"
+msgid "Type:"
+msgstr "Төрөл:"
+
+msgctxt "#30027"
+msgid "Device:"
+msgstr "Төхөөрөмж:"
+
+msgctxt "#30029"
+msgid "Signal: %i %%"
+msgstr "Дохио: %i %%"
+
+msgctxt "#30030"
+msgid "New channels: %i"
+msgstr "Шинэ сувгууд: %i"
+
+msgctxt "#30031"
+msgid "All channels: %i"
+msgstr "Бүх сувгууд: %i"
+
+msgctxt "#30032"
+msgid "Analog TV"
+msgstr "Аналог ТВ"
+
+msgctxt "#30033"
+msgid "Analog Radio"
+msgstr "Аналог радио"
+
+msgctxt "#30035"
+msgid "New channels"
+msgstr "Шинэ сувгууд"
+
+msgctxt "#30036"
+msgid "Channel search - Finished"
+msgstr "Суваг хайх - Дууссан"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Боломжтой төхөөрөмж алга - гарч байна"
+
+msgctxt "#30039"
+msgid "Running"
+msgstr "Ажиллаж байна"
+
+msgctxt "#30040"
+msgid "Stopped"
+msgstr "Зогссон"
+
+msgctxt "#30041"
+msgid "Finished"
+msgstr "Дууссан"
+
+msgctxt "#30042"
+msgid "Channel search - Canceled"
+msgstr "Суваг хайх - Цуцласан"
+
+msgctxt "#30043"
+msgid "Channel search - Error"
+msgstr "Суваг хайх - Алдаа"
+
+msgctxt "#30044"
+msgid "Lost connection to VDR Server"
+msgstr "VDR сервер уруух холболт алдагдсан"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR админ"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Сувгууд"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Сувгийн хар жагсаалт"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Сувгийн шүүлтүүр"
+
+msgctxt "#30112"
+msgid "Radio Channels"
+msgstr "Радио сувгууд"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Шүүлт хадгалах"

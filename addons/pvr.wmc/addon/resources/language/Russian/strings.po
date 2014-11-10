@@ -1,0 +1,185 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/xbmc-main/language/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Имя сервера либо его IP"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "Оставить IP адрес как 127.0.0.1, если сервер работает на той же машине"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Номер порта"
+
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Лимит времени трансляции, проблема неизвестна"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "На данном канале не обнаружен видеосигнал"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Для записи требуется блок настройки"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Удаление записи не выполнено, файл используется либо защищен"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Удаление записи не выполнено, файл используется либо не существует"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Файл с записью не найден"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Выбран альтернативный канал:"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Выбрано альтернативное время"
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Не может запуститься, тюнер больше не доступен"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Содержание канала защищено"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "Время завершения продлено на"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "Активировать сигналы SignalStatus "
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "Интервал обновления SignalStatus (сек.)"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Хранить Просмотренное и Отметки о продолжении воспроизведения на сервере"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Директория с телевизионными записями не обнаружена"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Директория с телевизионными записями не может быть открыта"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Доступна обновленная версия ServerWMC (%s)"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Все тюнеры для данного канала заняты"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "Наступил лимит вещания LiveTV"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "Ошибка LiveTV, раннее завершение"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Лимит времени трансляции записи"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Раннее завершение трансляции записи"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Использовать WakeOnLAN чтобы включать сервер"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Отправка WakeOnLAN на сервер..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "Сдвиг по времени между клиентом и сервером в %s минут"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Настройка записи"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Запись только данного эпизода"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Запись сериала"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Тип показа:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Новый, перезапуск"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Только новый"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "Только прямая трансляция"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "Канал:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Любой Канал"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Время трансляции:"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Любое время"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Удалить таймер"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Удалить только данный таймер эпизода"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Удалить все серии"

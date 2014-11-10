@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: DVBLink PVR Client
 # Addon id: pvr.dvblink
 # Addon Provider: DVBLogic
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: French (Canada) (http://www.transifex.com/projects/p/xbmc-main/language/fr_CA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr "Flux"
 
 msgctxt "#30102"
 msgid "Enable transcoding"
-msgstr "Enable transcoding"
+msgstr "Activer le transcodage"
 
 msgctxt "#30103"
 msgid "Height"
@@ -106,10 +106,7 @@ msgstr "Montrer les messages d'information"
 
 msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
-msgstr "Combine title and episode name for recordings"
-
-#empty strings from id 30204 to 32000
-#category labels
+msgstr "Combiner le titre et le nom de l'épisode pour les enregistrements"
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
@@ -149,24 +146,24 @@ msgstr "Impossible d'obtenir le flux de la chaîne %s (code d'erreur : %d)"
 
 msgctxt "#32011"
 msgid "Series recording"
-msgstr "Series recording"
+msgstr "Enregistrement d'une série"
 
 msgctxt "#32012"
 msgid "Record this episode only"
-msgstr "Record this episode only"
+msgstr "N'enregistrer que cet épisode"
 
 msgctxt "#32013"
 msgid "Record all episodes"
-msgstr "Record all episodes"
+msgstr "Enregistrer tous les épisodes"
 
 msgctxt "#32014"
 msgid "Delete timer"
-msgstr "Delete timer"
+msgstr "Supprimer la minuterie"
 
 msgctxt "#32015"
 msgid "Delete this timer only"
-msgstr "Delete this timer only"
+msgstr "Ne supprimer que cette minuterie "
 
 msgctxt "#32016"
 msgid "Delete the entire series"
-msgstr "Delete the entire series"
+msgstr "Supprimer toute la série"

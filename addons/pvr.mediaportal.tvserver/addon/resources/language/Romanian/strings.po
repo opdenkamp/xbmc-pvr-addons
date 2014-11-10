@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Romanian (http://www.transifex.com/projects/p/xbmc-main/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "Mediaportal Hostname"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Portul pluginului Mediaportal XBMC"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Portul pluginului Mediaportal Kodi"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "Redare"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Versiunea ta de TVServerXBMC  '%s'  este prea veche. Va rugam actualizați la  '%s' sau mai nouă."
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "Versiunea ta de TVServerKodi  '%s'  este prea veche. Va rugam actualizați la  '%s' sau mai nouă."
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "Versiunea ta de TVServerXBMC este prea veche. Va rugam actualizați la  '%s' sau mai nouă."
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "Versiunea ta de TVServerKodi este prea veche. Va rugam actualizați la  '%s' sau mai nouă."
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,23 @@ msgstr "Spațiu indisponibil pe disk"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "PMT nu a fost gasit"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Canale"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Păstrează"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Înregistrează o dată"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "zile"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "Întotdeauna"

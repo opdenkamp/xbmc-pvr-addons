@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MediaPortal PVR Client
 # Addon id: pvr.mediaportal.tvserver
 # Addon Provider: Marcel Groothuis
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Galician (http://www.transifex.com/projects/p/xbmc-main/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "Mediaportal Hostname"
 msgstr "Nome do host de Mediaportal"
 
 msgctxt "#30001"
-msgid "Mediaportal XBMC plugin Port"
-msgstr "Extensión para o porto do XBMC de Mediaportal"
+msgid "Mediaportal Kodi plugin Port"
+msgstr "Extensión para o porto do Kodi de Mediaportal"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -89,12 +89,12 @@ msgid "Playback"
 msgstr "Reprodución"
 
 msgctxt "#30050"
-msgid "Your TVServerXBMC version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "A versión '%s' de TVServerXBMC é demasiado vella, por favor actualiza á '%s' ou superior!"
+msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
+msgstr "A versión '%s' de TVServerKodi é demasiado vella, por favor actualiza á '%s' ou superior!"
 
 msgctxt "#30051"
-msgid "Your TVServerXBMC version is too old. Please upgrade to '%s' or higher!"
-msgstr "A versión de TVServerXBMC é demasiado vella, por favor actualiza á '%s' ou superior!"
+msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
+msgstr "A versión de TVServerKodi é demasiado vella, por favor actualiza á '%s' ou superior!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -163,3 +163,91 @@ msgstr "Sen espazo libre"
 msgctxt "#30075"
 msgid "No PMT found"
 msgstr "Non se atopou o PMT"
+
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Axustes da programación"
+
+msgctxt "#30101"
+msgid "Frequency"
+msgstr "Frecuencia"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Hora de emisión"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Canles"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Manter"
+
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Minutos de gravación antes de comezar"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Minutos de gravación despois de rematar"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Gravar unha vez"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Gravar diariamente (Este programa)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Gravar semanalmente"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "Gravar as fins de semana"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "Gravar os días da semana"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "A esta hora"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Calquera hora"
+
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Esta Canle"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Calquera Canle"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Até que precise de espazo"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Até que o vexa"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "Días"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "Sempre"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Motor predefinido"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Kodi predefinido"

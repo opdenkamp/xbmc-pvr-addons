@@ -1,0 +1,185 @@
+# Kodi Media Center language file
+# Addon Name: PVR WMC Client
+# Addon id: pvr.wmc
+# Addon Provider: KrustyReturns and scarecrow420
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/xbmc-main/language/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Kiszolgálónév vagy IP cím"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "Az IP cím legyen 127.0.0.1, ha a szerver ugyanazon a rendszeren fut"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Port Szám"
+
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Stream időtúllépés, ismeretlen hiba"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Nem található videó ezen a csatornán!"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Tuner szükséges a felvételhez"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Felvétel törlése sikertelen, a fájl használatban van vagy írásvédett"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Felvétel törlése sikertelen, a fájl nem létezik"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Felvétel fájl nem található"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Alternatív csatorna kiválasztva:"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Alternatív időpont kiválasztva:"
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Nem lehet elkezdeni, a vevőkártya már nem elérhető"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "A csatornatartalom védett"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "A véde időpont megnövelve"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "JelStátusz hívások engedélyezése"
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "JelStátusz frissítés intervallum (mp.)"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Folytatandó/Megnézett státuszok tárolása a kiszolgálón"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Felvétel TV könyvtár nem található"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Felvétel TV mappa nem megnyitható"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "SzerverWMC verziófrissítés elérhető (%s)"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Minden tuner ehhez a csatornához foglalt"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "LiveTV időtullépés"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "LiveTV hiba, korábbi kilépés"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Rögzített stream időtullpés"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Rögzített stram korábbi kilépés"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "WakeOnLAN használata a szerver bekapcsolásához"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "WakeOnLAN küldése a szervernek..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "Időkülönbség %s perc a kliens és háttérszolgáltatás között"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Felvétel Beállítások"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Csak ezen epizód rögzítése"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Sorozat felvétele"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Tipus megjelenítése:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Új és ismétlés"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Csak új"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "Csak élő"
+
+msgctxt "#30107"
+msgid "Channel:"
+msgstr "Csatorna:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Bármely Csatorna"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Adásidő:"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Bármikor"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Időzítő Törlése"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Csak egy epizód időzítő törlés"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Teljes sorozat törlése"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.demo"
-  version="1.9.9"
+  version="1.9.10"
   name="PVR Demo Client"
   provider-name="Pulse-Eight Ltd.">
   <requires>
@@ -24,8 +24,9 @@
     <summary lang="cy">Dangosydd Rhaglen Rhagleni</summary>
     <summary lang="da">Demo PVR Klient</summary>
     <summary lang="de">Demo PVR Client</summary>
-    <summary lang="el">Πελάτης PVR Demo</summary>
+    <summary lang="el">Δοκιμαστικός Πελάτης PVR</summary>
     <summary lang="en">Demo PVR Client</summary>
+    <summary lang="en_AU">Demo PVR Client</summary>
     <summary lang="en_NZ">Demo PVR Client</summary>
     <summary lang="en_US">Demo PVR Client</summary>
     <summary lang="es">Demo Cliente PVR</summary>
@@ -33,10 +34,11 @@
     <summary lang="es_MX">Cliente Demo PVR</summary>
     <summary lang="et">Demo PVR klient</summary>
     <summary lang="eu">PVR Bezeroaren Demoa</summary>
+    <summary lang="fi">PVR-demoasiakasohjelma</summary>
     <summary lang="fr">Client PVR de démonstration</summary>
     <summary lang="fr_CA">Client numériscope de démo</summary>
     <summary lang="gl">Cliente PVR Demo</summary>
-    <summary lang="he">הדגמה לקוח PVR</summary>
+    <summary lang="he">לקוח דוגמה עבור PVR</summary>
     <summary lang="hr">Demo PVR klijent</summary>
     <summary lang="hu">Demo PVR ügyfél</summary>
     <summary lang="hy">Նախնական PVR բաժանորդ</summary>
@@ -52,7 +54,7 @@
     <summary lang="my">PVR Client သရုပ်ပြမှု့</summary>
     <summary lang="nl">Demo PVR cliënt</summary>
     <summary lang="no">Demo PVR-klient</summary>
-    <summary lang="pl">Demo klienta PVR</summary>
+    <summary lang="pl">Klient TV Demo</summary>
     <summary lang="pt">Cliente PVR Demo</summary>
     <summary lang="pt_BR">Cliente de PVR de Demonstração</summary>
     <summary lang="ro">Demo client PVR</summary>
@@ -77,8 +79,9 @@
     <description lang="cy">Dangosydd Rhaglen Rhagleni</description>
     <description lang="da">Demo PVR Klient</description>
     <description lang="de">Demo PVR Client</description>
-    <description lang="el">Πελάτης PVR Demo</description>
+    <description lang="el">Δοκιμαστικός Πελάτης PVR</description>
     <description lang="en">Demo PVR Client</description>
+    <description lang="en_AU">Demo PVR Client</description>
     <description lang="en_NZ">Demo PVR Client</description>
     <description lang="en_US">Demo PVR Client</description>
     <description lang="es">Demo Cliente PVR</description>
@@ -86,10 +89,11 @@
     <description lang="es_MX">Cliente Demo PVR</description>
     <description lang="et">Demo PVR klient</description>
     <description lang="eu">PVR Bezeroaren Demoa</description>
+    <description lang="fi">PVR-demoasiakasohjelma</description>
     <description lang="fr">Client PVR de démonstration</description>
     <description lang="fr_CA">Client numériscope de démo</description>
     <description lang="gl">Cliente PVR Demo</description>
-    <description lang="he">הדגמה לקוח PVR</description>
+    <description lang="he">לקוח דוגמה עבור PVR</description>
     <description lang="hr">Demo PVR klijent</description>
     <description lang="hu">Demo PVR ügyfél</description>
     <description lang="hy">Նախնական PVR բաժանորդ</description>
@@ -105,7 +109,7 @@
     <description lang="my">PVR Client သရုပ်ပြမှု့</description>
     <description lang="nl">Demo PVR cliënt</description>
     <description lang="no">Demo PVR-klient</description>
-    <description lang="pl">Demo klienta PVR</description>
+    <description lang="pl">Klient TV Demo</description>
     <description lang="pt">Cliente PVR Demo</description>
     <description lang="pt_BR">Cliente de PVR de Demonstração</description>
     <description lang="ro">Demo client PVR</description>
@@ -132,6 +136,7 @@
     <disclaimer lang="de">Enthält nur Fragmente</disclaimer>
     <disclaimer lang="el">Περιέχει μόνο εικονικά κανάλια</disclaimer>
     <disclaimer lang="en">Just contains stubs</disclaimer>
+    <disclaimer lang="en_AU">Just contains stubs</disclaimer>
     <disclaimer lang="en_NZ">Just contains stubs</disclaimer>
     <disclaimer lang="en_US">Just contains stubs</disclaimer>
     <disclaimer lang="es">Sólo contiene fragmentos</disclaimer>
@@ -139,6 +144,7 @@
     <disclaimer lang="es_MX">Solo contiene talones</disclaimer>
     <disclaimer lang="et">Sisaldab ainult juppe</disclaimer>
     <disclaimer lang="eu">Kodearen puskak ditu</disclaimer>
+    <disclaimer lang="fi">Sisältää vain tyngän</disclaimer>
     <disclaimer lang="fr">Ne contient que des clips</disclaimer>
     <disclaimer lang="fr_CA">Ne contient que des fragments</disclaimer>
     <disclaimer lang="gl">Só contén fragmentos</disclaimer>
@@ -149,6 +155,8 @@
     <disclaimer lang="is">Inniheldur aðeins búta</disclaimer>
     <disclaimer lang="it">Contiene solo tronconi</disclaimer>
     <disclaimer lang="ja">単なるスタブです</disclaimer>
+    <disclaimer lang="ko"> 단순한 stub만 포함</disclaimer>
+    <disclaimer lang="lt">Tiesiog tuščia struktūra</disclaimer>
     <disclaimer lang="lv">Satur tikai nepabeigtas lietas</disclaimer>
     <disclaimer lang="mk">некакви записи</disclaimer>
     <disclaimer lang="ms">Hanya mengandungi stub</disclaimer>
@@ -158,7 +166,7 @@
     <disclaimer lang="pl">Tylko symuluje działanie</disclaimer>
     <disclaimer lang="pt">Só contém fragmentos</disclaimer>
     <disclaimer lang="pt_BR">Só contém esboços</disclaimer>
-    <disclaimer lang="ro">Contine numai cioturi</disclaimer>
+    <disclaimer lang="ro">Conține numai cioturi</disclaimer>
     <disclaimer lang="ru">Содержит заглушки</disclaimer>
     <disclaimer lang="si">අක්කඩ පමණක් අන්තර්ගතයි.</disclaimer>
     <disclaimer lang="sk">Obsahuje len útržky</disclaimer>

@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: DVBLink PVR Client
 # Addon id: pvr.dvblink
 # Addon Provider: DVBLogic
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Romanian (http://www.transifex.com/projects/p/xbmc-main/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,6 +19,22 @@ msgstr ""
 msgctxt "#30000"
 msgid "General"
 msgstr "General"
+
+msgctxt "#30001"
+msgid "Server Address"
+msgstr "Adresă server"
+
+msgctxt "#30002"
+msgid "Server Port"
+msgstr "Port server"
+
+msgctxt "#30003"
+msgid "Client name"
+msgstr "Nume client"
+
+msgctxt "#30004"
+msgid "Connection timeout (s)"
+msgstr "Expirare conexiune (s)"
 
 msgctxt "#30005"
 msgid "Username"
@@ -32,13 +48,41 @@ msgctxt "#30100"
 msgid "Stream"
 msgstr "Flux"
 
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Activare transcodare"
+
+msgctxt "#30103"
+msgid "Height"
+msgstr "Înălțime"
+
+msgctxt "#30104"
+msgid "Width"
+msgstr "Lățime"
+
 msgctxt "#30105"
 msgid "Bitrate"
 msgstr "Rată de biți"
 
+msgctxt "#30106"
+msgid "Audio track"
+msgstr "Pistă audio"
+
 msgctxt "#30107"
 msgid "HTTP"
 msgstr "HTTP"
+
+msgctxt "#30108"
+msgid "RTP"
+msgstr "RTP"
+
+msgctxt "#30109"
+msgid "HLS"
+msgstr "HLS"
+
+msgctxt "#30110"
+msgid "ASF"
+msgstr "ASF"
 
 msgctxt "#30111"
 msgid "Enable Timeshift"
@@ -51,3 +95,51 @@ msgstr "Calea buffer-ului de înregistrare"
 msgctxt "#30200"
 msgid "Advanced"
 msgstr "Avansat"
+
+msgctxt "#30201"
+msgid "Use channel handle instead of client id"
+msgstr "Utilizați canalul în loc de id-ul de client"
+
+msgctxt "#30202"
+msgid "Show information messages"
+msgstr "Afișează mesaje de informare"
+
+msgctxt "#32001"
+msgid "Connected to DVBLink Server '%s'"
+msgstr "Conectat la serverul DVBLink '%s'"
+
+msgctxt "#32002"
+msgid "Found '%d' channels"
+msgstr "S-au găsit '%d' canale"
+
+msgctxt "#32003"
+msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
+msgstr "Nu s-a putut conecta la serverul DVBLink '%s' (cod de eroare : %d)"
+
+msgctxt "#32004"
+msgid "Could not get recordings (Error code : %d)"
+msgstr "Nu s-a putut obține înregistrări (cod de eroare : %d)"
+
+msgctxt "#32006"
+msgid "Could not get timers(Error code : %d)"
+msgstr "Nu s-a putut obține cronometre (cod de eroare : %d)"
+
+msgctxt "#32007"
+msgid "Found %d EPG timers"
+msgstr "S-au găsit %d cronometre EPG"
+
+msgctxt "#32008"
+msgid "Found %d manual timers"
+msgstr "S-au găsit %d cronometre manuale"
+
+msgctxt "#32009"
+msgid "Found %d recordings"
+msgstr "S-au găsit %d înregistrări"
+
+msgctxt "#32010"
+msgid "Could not get stream for channel %s (Error code : %d)"
+msgstr "Nu s-a putut obține fluxul pentru canalul %s (cod de eroare: %d)"
+
+msgctxt "#32014"
+msgid "Delete timer"
+msgstr "Șterge cronometru"

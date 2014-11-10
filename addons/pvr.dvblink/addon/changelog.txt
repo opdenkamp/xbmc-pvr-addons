@@ -1,3 +1,6 @@
+[B]Version 1.9.6[/B]
+Updated: language files from Transifex
+
 [B]Version 1.9.5[/B]
 Added: display of episode name and number in recordings list
 Fixed: no channels/recordings if DVBLink server is not available during xbmc start-up

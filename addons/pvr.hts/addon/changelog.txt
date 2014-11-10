@@ -1,3 +1,7 @@
+1.9.33
+- improved data resync after connection restore
+- added support for getting and setting "startExtra", "stopExtra", "retention", "priority" properties of recordings and timers
+
 1.9.31
 - updated to API v1.9.2
 

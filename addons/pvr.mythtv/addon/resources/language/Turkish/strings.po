@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MythTV PVR Client
 # Addon id: pvr.mythtv
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/xbmc-main/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +40,10 @@ msgctxt "#30006"
 msgid "Enable Live TV"
 msgstr "Canlı TV aktifleştir"
 
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Kaydı tercih et ve Live TV durdur"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Genel"
@@ -60,13 +64,93 @@ msgctxt "#30025"
 msgid "Internal template"
 msgstr "Dahili görünüm"
 
+msgctxt "#30026"
+msgid "Automatically Look Up Metadata"
+msgstr "Metadata'ya Otomatik Olarak Bak"
+
+msgctxt "#30028"
+msgid "Transcode new recordings"
+msgstr "Yeni dönüştürücü kayıtları"
+
+msgctxt "#30029"
+msgid "Run User Job #1"
+msgstr "Kullanıcı çalışmaları #1"
+
+msgctxt "#30030"
+msgid "Run User Job #2"
+msgstr "Kullanıcı çalışmaları #2"
+
+msgctxt "#30031"
+msgid "Run User Job #3"
+msgstr "Kullanıcı çalışmaları #3"
+
+msgctxt "#30032"
+msgid "Run User Job #4"
+msgstr "Kullanıcı çalışmaları #4"
+
+msgctxt "#30033"
+msgid "Transcoder"
+msgstr "Dönüştürücü"
+
+msgctxt "#30049"
+msgid "Recording template"
+msgstr "Şablon kaydedildi."
+
 msgctxt "#30050"
 msgid "Advanced"
 msgstr "Gelişmiş"
 
+msgctxt "#30055"
+msgid "Always"
+msgstr "Her zaman"
+
+msgctxt "#30057"
+msgid "Never"
+msgstr "Asla"
+
+msgctxt "#30059"
+msgid "Always"
+msgstr "Her zaman"
+
+msgctxt "#30061"
+msgid "Never"
+msgstr "Asla"
+
+msgctxt "#30100"
+msgid "Protocol version: %i - Database version: %i"
+msgstr "Protokol sürümü: %i - Veritabanı sürümğ: %i"
+
+msgctxt "#30300"
+msgid "Failed to connect to MythTV backend"
+msgstr "MythTV arka ucuna erişilemiyor"
+
+msgctxt "#30301"
+msgid "Failed to connect to MythTV database"
+msgstr "MythTV veritabanı ile bağlantı başarısız"
+
+msgctxt "#30302"
+msgid "Connection to MythTV backend lost"
+msgstr "MythTV arka ucu bağlantısı koptu"
+
+msgctxt "#30303"
+msgid "Connection to MythTV restored"
+msgstr "Bağlantı düzenlendi."
+
+msgctxt "#30304"
+msgid "No response from MythTV backend"
+msgstr "MythTV arka ucundan cevap alınamıyor"
+
 msgctxt "#30305"
 msgid "Channel unavailable"
 msgstr "Kanal kullanılamıyor"
+
+msgctxt "#30306"
+msgid "Recorder unavailable"
+msgstr "Kaydedici kullanılamıyor."
+
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Kaydedilemedi."
 
 msgctxt "#30310"
 msgid "Enabled"
@@ -76,6 +160,38 @@ msgctxt "#30311"
 msgid "Disabled"
 msgstr "Devre dışı"
 
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Hiçbir yayın bulunamadı"
+
 msgctxt "#30411"
 msgid "Delete and re-record"
 msgstr "Sil ve yeniden kaydet"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "LiveTV kaydını devam ettir"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "'Kaydedilemeyenler' durumu için kuralları Göster/Gizle"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Tüm kayıtları göster (bu kanal için)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Tüm Hafta  kayıtlarını göster"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Hergün kaydı höster"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Kayıt göster (Tüm Kanallar)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Tüm bölümleri göster (nu kanal için)"

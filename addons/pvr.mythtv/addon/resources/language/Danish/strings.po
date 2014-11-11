@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MythTV PVR Client
 # Addon id: pvr.mythtv
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Danish (http://www.transifex.com/projects/p/xbmc-main/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +63,10 @@ msgstr "Foretræk optagelse og stop Live TV"
 msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
 msgstr "Foretræk Live TV og aflys modstridende optagelser"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV Backend Ethernet-adressen (WOL)"
 
 msgctxt "#30019"
 msgid "General"
@@ -128,6 +132,26 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr "Udvidet"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Aktiver demuxing MPEG-TS"
+
+msgctxt "#30055"
+msgid "Always"
+msgstr "Altid"
+
+msgctxt "#30057"
+msgid "Never"
+msgstr "Aldrig"
+
+msgctxt "#30059"
+msgid "Always"
+msgstr "Altid"
+
+msgctxt "#30061"
+msgid "Never"
+msgstr "Aldrig"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Protokolversion: %i - Databaseversion: %i"
@@ -180,6 +204,10 @@ msgctxt "#30311"
 msgid "Disabled"
 msgstr "Deaktiveret"
 
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Ingen udsendelse fundet"
+
 msgctxt "#30411"
 msgid "Delete and re-record"
 msgstr "Slet og optag på ny"
@@ -187,3 +215,27 @@ msgstr "Slet og optag på ny"
 msgctxt "#30412"
 msgid "Keep LiveTV recording"
 msgstr "Gem LiveTV optagelse"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Vis/skjul regler med status 'Ikke Optagelse'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Optag alle fremvisninger (denne kanal)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Optag denne udsendelse hver uge"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Optag denne udsendelse hver dag"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Optag en udsendelse (alle kanaler)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Optag alle nye episoder (denne kanal)"

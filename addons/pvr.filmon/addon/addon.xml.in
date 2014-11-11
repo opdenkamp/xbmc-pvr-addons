@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.filmon"
-  version="0.4.0"
+  version="0.4.1"
   name="PVR Filmon Client"
   provider-name="Stephen Denham">
   <requires>
@@ -17,8 +17,14 @@
     library_windx="XBMC_Filmon_win32.dll"
     library_android="libXBMC_Filmon.so" />
   <extension point="xbmc.addon.metadata">
+    <summary lang="bg">Filmon ПВР клиент</summary>
+    <summary lang="de">Filmon PVR-Client</summary>
     <summary lang="en">Filmon PVR Client</summary>
-    <description lang="en">Filmon frontend. Supports live TV, recordings, EPG. Requires a Filmon subscription. Before enabling: (a) in Filmon set channels as favourite to see them in XBMC (b) enter your username and password in this addon's settings. Note: recordings can take several minutes to appear after timer is completed.</description>
+    <summary lang="en_US">Filmon PVR Client</summary>
+    <summary lang="fr_CA">Client de numériscope Filmon</summary>
+    <description lang="en">Filmon frontend. Supports live TV, recordings, EPG. Requires a Filmon subscription. Before enabling: (a) in Filmon set channels as favourite to see them in Kodi (b) enter your username and password in this addon's settings. Note: recordings can take several minutes to appear after timer is completed.</description>
+    <description lang="en_US">Filmon frontend. Supports live TV, recordings, EPG. Requires a Filmon subscription. Before enabling: (a) in Filmon set channels as favorite to see them in Kodi (b) enter your username and password in this addon's settings. Note: recordings can take several minutes to appear after timer is completed.</description>
+    <description lang="fr_CA">Frontal Filmon. Prend en charge la télé en direct, les enregistrements et le GÉP. Exige un abonnement à Filmon. Avant de l'activer : (a) dans Filmon, définir les chaînes comme favorites pour les voir dans Kodi (b)  saisir votre nom d'utilisateur et votre mot de passe dans les paramètres de l'addiciel. Note : en fin de minuterie, les enregistrements peuvent prendre plusieurs minutes avant d'apparaître.</description>
     <platform>@OS@</platform>
   </extension>
 </addon>

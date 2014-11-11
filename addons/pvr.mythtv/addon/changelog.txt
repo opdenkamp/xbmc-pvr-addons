@@ -1,3 +1,6 @@
+v1.9.24
+- Updated language files from Transifex
+
 v1.9.23
 - Handles version of services
 - Allow HTTP redirection to get slave previews

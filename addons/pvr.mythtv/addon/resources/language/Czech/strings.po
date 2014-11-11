@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MythTV PVR Client
 # Addon id: pvr.mythtv
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Czech (http://www.transifex.com/projects/p/xbmc-main/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +63,10 @@ msgstr "Upřednostnit nahrávku a zastavit živé vysílání"
 msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
 msgstr "Upřednostnit živé vysílání a zrušit konfliktní nahrávku"
+
+msgctxt "#30012"
+msgid "MythTV Backend Ethernet address (WOL)"
+msgstr "MythTV Backend Ethernetová  adresa (WOL)"
 
 msgctxt "#30019"
 msgid "General"
@@ -128,6 +132,26 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr "Pokročilé"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Zvol demuxování  MPEG-TS"
+
+msgctxt "#30055"
+msgid "Always"
+msgstr "Vždy"
+
+msgctxt "#30057"
+msgid "Never"
+msgstr "Nikdy"
+
+msgctxt "#30059"
+msgid "Always"
+msgstr "Vždy"
+
+msgctxt "#30061"
+msgid "Never"
+msgstr "Nikdy"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Verze protokolu: %i - Verze databáze: %i"
@@ -168,6 +192,10 @@ msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
 msgstr "Zastavuji živé vysílání kvůli konfliktu s nahrávkou: %s"
 
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Nenahrávat"
+
 msgctxt "#30310"
 msgid "Enabled"
 msgstr "Povoleno"
@@ -175,3 +203,39 @@ msgstr "Povoleno"
 msgctxt "#30311"
 msgid "Disabled"
 msgstr "Zakázáno"
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Nenalezeno žádné vysílání"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Smaž a znovu nahrej"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Pokračuj v nahrávání"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Ukaž/Schovej pravidla se statusem 'Nenahrávat'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Nahraj všechny pořady (tento program)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Nahrej tento pořad každý týden"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Nahrej tento pořad každý den"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Nahrej jeden pořad (všechny programy)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Nahrej všechny nové epizody (tento program)"

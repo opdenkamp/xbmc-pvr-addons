@@ -1,4 +1,4 @@
-# XBMC Media Center language file
+# Kodi Media Center language file
 # Addon Name: MythTV PVR Client
 # Addon id: pvr.mythtv
 # Addon Provider: Christian Fetzer, Jean-Luc Barrière
@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
+"Last-Translator: Kodi Translation Team\n"
 "Language-Team: Galician (http://www.transifex.com/projects/p/xbmc-main/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,6 +136,22 @@ msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "Activar demux MPEG-TS"
 
+msgctxt "#30055"
+msgid "Always"
+msgstr "Sempre"
+
+msgctxt "#30057"
+msgid "Never"
+msgstr "Nunca"
+
+msgctxt "#30059"
+msgid "Always"
+msgstr "Sempre"
+
+msgctxt "#30061"
+msgid "Never"
+msgstr "Nunca"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Versión do protocolo: %i - Versión da Base de Datos: %i"
@@ -203,6 +219,22 @@ msgstr "Manter a gravación do LiveTV"
 msgctxt "#30421"
 msgid "Show/hide rules with status 'Not Recording'"
 msgstr "Amosar/Agochar regras co estado 'Sen Gravar'"
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Gravar todas as emisións (esta canle)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Gravar esta emisión cada semana"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Gravar esta emisión cada día"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Gravar unha emisión (todas as canles)"
 
 msgctxt "#30435"
 msgid "Record all new episodes (this channel)"

@@ -1,0 +1,82 @@
+0.9.5
+ - added support for getting and setting startExtra, stopExtra, retention, priority properties of recordings and timers (@ksooo)
+ - sync the whole project with upstream
+ - upgraded Windows compiler toolchain
+ - don't display connection error popups, let XBMC handle it. This way the "Do not show connection lost warnings" option in XBMC actually works as intended.
+ - fix a rare crash that can happen if the channel list takes too long to import (only seen it happen in the debugger)
+ - fix an integer flow when logging timeshift status
+
+0.9.4
+ - sync with latest PVR API
+ - expose ATSC subchannel numbers to XBMC
+
+0.9.3
+ - no longer triggers updates in XBMC whenever the current programme on a channel changes
+ - fix potential crash during channel switching (especially with VAAPI)
+ - adapt to the latest API changes (event -> recording link)
+ - fix a confusing log message
+ - minor improvements under the hood
+
+0.9.2
+ - another minor improvement to AsyncState class
+ - improvements to tag update checking
+
+0.9.1
+ - fix silly mistake in the new AsyncState class, could cause deadlock
+
+0.9.0
+ - workaround further issues with XBMC handling of initial data loading
+
+0.8.2
+ - increased HTSP queue size, should fix issues with missing channels/events, especially when asynchronous EPG is enabled
+ - fix default timeout values
+
+0.8.1
+ - fixed destroying the addon which caused a deadlock on exit and when resetting the database
+
+0.8.0
+ - Added thread for processing non-realtime messages, such as async updates. This should help with some stutter issues (at least during live TV).
+ - Improvements to connection setup
+ - Lots of bug fixes and tidying up
+
+0.7.0
+ - Fix idiotic variable naming clache
+ - general tidying up
+
+0.6.0
+ - Fix bug in the new async EPG triggers to XBMC
+ - Workaround for timeshift buffering bug in Tvheadend
+
+0.5.0
+ - Asynchronous EPG update in XBMC
+ - Fix problems with time bar during timeshift
+ - Fix integer overflow causing timeshift to skip to start of buffer
+ - general improvements
+
+0.4.0
+ - optimisation, drop invalid packets sooner
+ - remove GetCurrentClientChannel() implementation, not used in XBMC
+ - workaround for aspect ratio detection in XBMC
+
+0.3.0
+ - improved auth error handling
+ - some improvements to re-connection attempts
+ - delay drive space query until connection up
+ - push unumbered channels to end of list
+ - handle subscriptionStatus for untunable service
+ - increase timeout for deleting recordings to handle FS delays
+
+0.2.0
+ - sane defaults for audio channels (if info not provided by TVH)
+ - add channel icons to recordings
+ - language files updated
+ - minor tweaks
+
+0.1.0
+ - better platform compatibility
+ - trace debugging is now configurable
+ - added option to receive and handle asynchronous EPG updates
+ - general bugfixes
+
+0.0.1
+- re-implement pvr.hts in a sane way!

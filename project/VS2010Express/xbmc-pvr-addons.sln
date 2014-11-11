@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platform", "platform\platform.vcxproj", "{FE4573F6-A794-4AD3-B37F-49E51F1140E6}"
 EndProject
@@ -55,6 +55,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.dvblink", "..\..\addons\pvr.dvblink\project\VS2010Express\pvrclient_dvblink.vcxproj", "{F9F3E7B6-EF4C-4BD8-A921-3DE4C4268945}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.wmc", "..\..\addons\pvr.wmc\project\VS2010Express\pvrclient_wmc.vcxproj", "{6834B003-2511-4745-818D-F418E87DD941}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.tvh", "..\..\addons\pvr.tvh\project\VS2010Express\pvrclient_tvh.vcxproj", "{60882C9D-8793-40D9-8D78-BDC50710E648}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.mythtv", "..\..\addons\pvr.mythtv\project\VS2010Express\pvr.mythtv.vcxproj", "{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}"
 EndProject
@@ -314,6 +316,16 @@ Global
 		{6834B003-2511-4745-818D-F418E87DD941}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
 		{6834B003-2511-4745-818D-F418E87DD941}.RelWithDebInfo|Win32.Build.0 = Release|Win32
 		{6834B003-2511-4745-818D-F418E87DD941}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|Win32.ActiveCfg = Debug|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|Win32.Build.0 = Debug|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Debug|x64.ActiveCfg = Debug|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.MinSizeRel|Win32.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.MinSizeRel|x64.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|Win32.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|Win32.Build.0 = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.Release|x64.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{60882C9D-8793-40D9-8D78-BDC50710E648}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.Debug|Win32.Build.0 = Debug|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.Debug|x64.ActiveCfg = Debug|Win32
@@ -350,6 +362,7 @@ Global
 		{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
 		{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
 		{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|Win32
+>>>>>>> upstream-master
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

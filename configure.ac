@@ -313,9 +313,6 @@ AC_CONFIG_SUBDIRS([lib/cppmyth])
 ### Keep this in alphabetical order
 AC_CONFIG_FILES([Makefile \
                  lib/Makefile \
-                 lib/cmyth/Makefile \
-                 lib/cmyth/libcmyth/Makefile \
-                 lib/cmyth/librefmem/Makefile \
                  lib/jsoncpp/Makefile \
                  lib/libdvblinkremote/Makefile \
                  lib/libhts/Makefile \
@@ -331,7 +328,6 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.iptvsimple/Makefile \
                  addons/pvr.mediaportal.tvserver/Makefile \
                  addons/pvr.mythtv/Makefile \
-                 addons/pvr.mythtv.cmyth/Makefile \
                  addons/pvr.nextpvr/Makefile \
                  addons/pvr.njoy/Makefile \
                  addons/pvr.vdr.vnsi/Makefile \
@@ -346,7 +342,6 @@ AC_CONFIG_FILES([Makefile \
                  addons/pvr.iptvsimple/addon/addon.xml
                  addons/pvr.mediaportal.tvserver/addon/addon.xml
                  addons/pvr.mythtv/addon/addon.xml
-                 addons/pvr.mythtv.cmyth/addon/addon.xml
                  addons/pvr.nextpvr/addon/addon.xml
                  addons/pvr.njoy/addon/addon.xml
                  addons/pvr.vdr.vnsi/addon/addon.xml

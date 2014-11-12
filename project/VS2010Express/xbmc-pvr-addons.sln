@@ -25,8 +25,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.njoy", "..\..\addons\pv
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjsoncpp", "..\..\lib\jsoncpp\project\VS2010Express\libjsoncpp.vcxproj", "{F3A72A50-E295-49BA-ACD7-8696907E0351}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcmyth_pvr", "..\..\lib\cmyth\Win32\libcmyth_pvr.vcxproj", "{6205DD7A-4910-4491-BAF6-E651C6D99002}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.vuplus", "..\..\addons\pvr.vuplus\project\VS2010Express\pvr.vuplus.vcxproj", "{848DCDD6-7142-4507-A75A-6872A9256F3F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50} = {BDC7D21D-9FD9-41AA-BEC8-8B70E1448C50}
@@ -177,18 +175,6 @@ Global
 		{F3A72A50-E295-49BA-ACD7-8696907E0351}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
 		{F3A72A50-E295-49BA-ACD7-8696907E0351}.RelWithDebInfo|Win32.Build.0 = Release|Win32
 		{F3A72A50-E295-49BA-ACD7-8696907E0351}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Debug|Win32.Build.0 = Debug|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Debug|x64.ActiveCfg = Debug|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.MinSizeRel|Win32.ActiveCfg = Release|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.MinSizeRel|Win32.Build.0 = Release|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.MinSizeRel|x64.ActiveCfg = Release|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Release|Win32.ActiveCfg = Release|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Release|Win32.Build.0 = Release|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.Release|x64.ActiveCfg = Release|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.RelWithDebInfo|Win32.Build.0 = Release|Win32
-		{6205DD7A-4910-4491-BAF6-E651C6D99002}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
 		{848DCDD6-7142-4507-A75A-6872A9256F3F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{848DCDD6-7142-4507-A75A-6872A9256F3F}.Debug|Win32.Build.0 = Debug|Win32
 		{848DCDD6-7142-4507-A75A-6872A9256F3F}.Debug|x64.ActiveCfg = Debug|Win32

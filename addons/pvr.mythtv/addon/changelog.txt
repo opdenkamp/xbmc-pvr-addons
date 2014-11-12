@@ -1,3 +1,6 @@
+v1.9.26
+- fixed deadlock when activating the addon on some darwin (osx, ios) runtimes
+
 v1.9.25
 - Handle GUI events to activate/deactivate power saving mode
 - Don't send WOL when power saving mode is activated

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.wmc"
-  version="0.3.105"
+  version="0.3.106"
   name="PVR WMC Client"
   provider-name="KrustyReturns and scarecrow420">
   <requires>

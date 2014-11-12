@@ -1,3 +1,6 @@
+0.3.106
+- fixed deadlock when activating the addon on some darwin (osx, ios) runtimes
+
 0.3.105
 - Updated Language files from Transifex
 

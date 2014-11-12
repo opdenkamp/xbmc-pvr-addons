@@ -1,3 +1,6 @@
+[B]Version 1.9.8[/B]
+Fixed: deadlock when activating the addon on some darwin (osx, ios) runtimes
+
 [B]Version 1.9.7[/B]
 Updated: language files from Transifex
 

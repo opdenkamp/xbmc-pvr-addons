@@ -55,6 +55,8 @@ namespace Myth
     virtual unsigned GetPort() const;
     virtual int GetSocketErrNo() const;
     virtual int GetSocket() const;
+    virtual bool HasHanging() const;
+    virtual void CleanHanging();
 
   protected:
     PLATFORM::CMutex *m_mutex;
@@ -62,7 +64,8 @@ namespace Myth
     unsigned m_protoVersion;
     std::string m_server;
     unsigned m_port;
-    bool m_hang;
+    bool m_hang;                  ///< Connection hang: while true allow retry
+    bool m_tainted;               ///< Connection has hung since last reset
     size_t m_msgLength;
     size_t m_msgConsumed;
 

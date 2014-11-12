@@ -76,7 +76,7 @@ static inline void __dbg(debug_ctx_t *ctx, int level, const char *fmt, va_list a
 		if (ctx->msg_callback) {
 			ctx->msg_callback(level, msg);
 		} else {
-			fwrite(msg, strlen(msg), 1, stdout);
+			fwrite(msg, strlen(msg), 1, stderr);
 		}
 	}
 }

@@ -36,7 +36,11 @@ namespace Myth
 
     shared_ptr() : p(NULL), c(NULL) { }
 
-    explicit shared_ptr(T* s) : p(s), c(new atomic_t(1)) { }
+    explicit shared_ptr(T* s) : p(s), c(NULL)
+    {
+      if (p != NULL)
+        c = new atomic_t(1);
+    }
 
     shared_ptr(const shared_ptr& s) : p(s.p), c(s.c)
     {
@@ -101,6 +105,11 @@ namespace Myth
       c = s.c;
       s.p = tmp_p;
       s.c = tmp_c;
+    }
+
+    unsigned use_count() const
+    {
+      return (unsigned) (c != NULL ? *c : 0);
     }
 
     T *operator->() const

@@ -226,6 +226,7 @@ bool WSResponse::GetResponse()
         case 8:
           if (val && memcmp(token, "LOCATION", token_len) == 0)
             m_location.append(val);
+          break;
         case 12:
           if (val && memcmp(token, "CONTENT-TYPE", token_len) == 0)
             m_contentType = ContentTypeFromMime(val);

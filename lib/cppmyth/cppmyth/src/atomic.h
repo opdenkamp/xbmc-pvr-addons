@@ -38,10 +38,6 @@ extern "C" {
 #endif
 #endif
 
-#if defined __mips__
-#include <atomic.h>
-#endif
-
 #if defined __APPLE__
 #include <libkern/OSAtomic.h>
 typedef volatile int32_t atomic_t;
@@ -69,7 +65,16 @@ static CC_INLINE unsigned atomic_increment(atomic_t *valp)
   __val = __sync_add_and_fetch(valp, 1);
 
 #elif defined __mips__
-  __val = atomic_increment_val(valp);
+  int temp, inc = 1;
+  __asm __volatile (
+    "1:  ll     %0, %1\n"       /* load old value */
+    "    addu   %2, %0, %3\n"   /* calculate new value */
+    "    sc     %2, %1\n"       /* attempt to store */
+    "    beqz   %2, 1b\n"       /* spin if failed */
+    : "=&r" (__val), "=m" (*valp), "=&r" (temp)
+    : "r" (inc), "m" (*valp));
+  /* __val is the old value, so normalize it. */
+  ++__val;
 
 #elif defined __i486__ || defined __i586__ || defined __i686__
   __asm__ volatile (
@@ -86,7 +91,7 @@ static CC_INLINE unsigned atomic_increment(atomic_t *valp)
     : "=a" (__val)
     : "0" (1), "m" (*valp), "d" (valp)
     : "memory");
-  /* on the x86 __val is the pre-increment value, so normalize it. */
+  /* __val is the pre-increment value, so normalize it. */
   ++__val;
 
 #elif defined __powerpc__ || defined __ppc__
@@ -110,7 +115,7 @@ static CC_INLINE unsigned atomic_increment(atomic_t *valp)
       : "=r" (__oldval), "=m" (*valp)
       : "r" (__oldval), "m" (*valp), "r"((valp)), "0" (__newval));
   } while (__newval != __oldval);
-  /*  The value for __val is in '__oldval' */
+  /* The value for __val is in '__oldval' */
   __val = __oldval;
 
 #elif defined __arm__ && !defined __thumb__
@@ -163,7 +168,16 @@ static CC_INLINE unsigned atomic_decrement(atomic_t *valp)
   __val = __sync_sub_and_fetch(valp, 1);
 
 #elif defined __mips__
-  __val = atomic_decrement_val(valp);
+  int temp, sub = 1;
+  __asm __volatile (
+    "1:  ll     %0, %1\n"       /* load old value */
+    "    subu   %2, %0, %3\n"   /* calculate new value */
+    "    sc     %2, %1\n"       /* attempt to store */
+    "    beqz   %2, 1b\n"       /* spin if failed */
+    : "=&r" (__val), "=m" (*valp), "=&r" (temp)
+    : "r" (sub), "m" (*valp));
+  /* __val is the old value, so normalize it */
+  --__val;
 
 #elif defined __i486__ || defined __i586__ || defined __i686__
   __asm__ volatile (
@@ -204,7 +218,7 @@ static CC_INLINE unsigned atomic_decrement(atomic_t *valp)
       : "=r" (__oldval), "=m" (*valp)
       : "r" (__oldval), "m" (*valp), "r"((valp)), "0" (__newval));
   } while (__newval != __oldval);
-  /*  The value for __val is in '__oldval' */
+  /* The value for __val is in '__oldval' */
   __val = __oldval;
 
 #elif defined __arm__ && !defined __thumb__

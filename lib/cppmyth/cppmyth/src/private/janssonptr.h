@@ -33,11 +33,15 @@ public:
 
   JanssonPtr() : p(NULL), c(NULL) { }
 
-  explicit JanssonPtr(json_t *s) : p(s), c(new atomic_t(1)) { }
+  explicit JanssonPtr(json_t *s) : p(s), c(NULL)
+  {
+    if (p != NULL)
+      c = new atomic_t(1);
+  }
 
   JanssonPtr(const JanssonPtr& s) : p(s.p), c(s.c)
   {
-    if (c)
+    if (c != NULL)
       atomic_increment(c);
   }
 
@@ -93,6 +97,11 @@ public:
   json_t *get() const
   {
     return (c != NULL) ? p : NULL;
+  }
+
+  unsigned use_count() const
+  {
+    return (unsigned) (c != NULL ? *c : 0);
   }
 
   json_t *operator->() const

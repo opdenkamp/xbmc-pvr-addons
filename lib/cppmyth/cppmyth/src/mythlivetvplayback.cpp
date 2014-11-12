@@ -32,6 +32,7 @@
 #define MIN_TUNE_DELAY        5
 #define MAX_TUNE_DELAY        60
 #define TICK_USEC             100000  // valid range: 10000 - 999999
+#define STARTING_DELAY        1
 
 using namespace Myth;
 
@@ -93,7 +94,19 @@ bool LiveTVPlayback::Open()
   if (ProtoMonitor::Open())
   {
     if (!m_eventHandler.IsRunning())
+    {
+      uint32_t timer = 0, delay = STARTING_DELAY * 1000000;
       m_eventHandler.Start();
+      while (!m_eventHandler.IsConnected() && timer < delay)
+      {
+        usleep(TICK_USEC);
+        timer += TICK_USEC;
+      }
+      if (!m_eventHandler.IsConnected())
+        DBG(MYTH_DBG_WARN, "%s: event handler is not connected in time (%" PRIu32 "ms)\n", __FUNCTION__, (timer / 1000));
+      else
+        DBG(MYTH_DBG_DEBUG, "%s: event handler is connected (%" PRIu32 "ms)\n", __FUNCTION__, (timer / 1000));
+    }
     return true;
   }
   return false;
@@ -123,7 +136,10 @@ bool LiveTVPlayback::SpawnLiveTV(const Channel& channel, uint32_t prefcardid)
   // Begin critical section
   PLATFORM::CLockObject lock(*m_mutex);
   if (!ProtoMonitor::IsOpen() || !m_eventHandler.IsConnected())
+  {
+    DBG(MYTH_DBG_ERROR, "%s: not connected\n", __FUNCTION__);
     return false;
+  }
 
   StopLiveTV();
   // if i have'nt yet recorder then choose one

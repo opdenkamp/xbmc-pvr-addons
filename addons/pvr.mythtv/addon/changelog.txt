@@ -1,4 +1,13 @@
+v1.9.25
+- Handle GUI events to activate/deactivate power saving mode
+- Don't send WOL when power saving mode is activated
+- Don't block shutdown when power saving mode is activated
+- Handle hang: Always retry protocol connection after hang
+- Handle hang: Reconnect event handler after hanging of control connection
+
 v1.9.24
+- Block backend shutdown by default: New setting
+- Fix refreshing recordings and schedules on wake up
 - Updated language files from Transifex
 
 v1.9.23

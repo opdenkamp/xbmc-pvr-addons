@@ -172,6 +172,10 @@ msgctxt "#30061"
 msgid "Never"
 msgstr "Jamais"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Bloquer l'arrêt du serveur"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Version du protocole: %i - Version de la base de données: %i"

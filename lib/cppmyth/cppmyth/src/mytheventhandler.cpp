@@ -59,6 +59,7 @@ public:
   // Implements MythEventHandlerThread
   virtual bool Start();
   virtual void Stop();
+  virtual void Reset();
   virtual bool IsRunning();
   virtual bool IsConnected();
   virtual unsigned CreateSubscription(EventSubscriber *sub);
@@ -68,6 +69,7 @@ public:
 private:
   PLATFORM::CMutex *m_mutex;
   ProtoEvent *m_event;
+  bool m_reset;
   // About subscriptions
   typedef std::map<EVENT_t, std::vector<unsigned> > subscriptionsByEvent_t;
   subscriptionsByEvent_t m_subscriptionsByEvent;
@@ -85,6 +87,7 @@ BasicEventHandler::BasicEventHandler(const std::string& server, unsigned port)
 : EventHandlerThread(server, port), PLATFORM::CThread()
 , m_mutex(new PLATFORM::CMutex)
 , m_event(new ProtoEvent(server,port))
+, m_reset(false)
 {
 }
 
@@ -112,6 +115,12 @@ void BasicEventHandler::Stop()
   }
   if (m_event->IsOpen())
     m_event->Close();
+}
+
+void BasicEventHandler::Reset()
+{
+  // Hold reset
+  m_reset = true;
 }
 
 bool BasicEventHandler::IsRunning()
@@ -206,6 +215,13 @@ void *BasicEventHandler::Process()
     else
     {
       AnnounceTimer();
+      // Reconnect if any held reset
+      if (m_reset)
+      {
+        m_reset = false;
+        m_event->Close();
+        RetryConnect();
+      }
     }
   }
   AnnounceStatus(EVENTHANDLER_STOPPED);
@@ -235,17 +251,18 @@ void BasicEventHandler::AnnounceTimer()
 
 void BasicEventHandler::RetryConnect()
 {
-  unsigned c = 0;
+  int c = 0;
   while (!PLATFORM::CThread::IsStopped())
   {
-    if (++c > 10)  // 5 seconds
+    if (--c < 0)
     {
       if (m_event->Open())
       {
         AnnounceStatus(EVENTHANDLER_CONNECTED);
+        m_reset = false; // Release to break any loop
         break;
       }
-      c = 0;
+      c = 10; // Retry after 5 seconds
       DBG(MYTH_DBG_INFO, "%s: could not open event socket (%d)\n", __FUNCTION__, m_event->GetSocketErrNo());
       AnnounceStatus(EVENTHANDLER_NOTCONNECTED);
     }

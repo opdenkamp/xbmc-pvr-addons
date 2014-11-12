@@ -56,6 +56,7 @@ ProtoBase::ProtoBase(const std::string& server, unsigned port)
 , m_server(server)
 , m_port(port)
 , m_hang(false)
+, m_tainted(false)
 , m_msgLength(0)
 , m_msgConsumed(0)
 , m_isOpen(false)
@@ -73,9 +74,9 @@ ProtoBase::~ProtoBase()
 void ProtoBase::HangException()
 {
   DBG(MYTH_DBG_ERROR, "%s: protocol connection hang with error %d\n", __FUNCTION__, m_socket->GetErrNo());
-  m_hang = true;
+  m_tainted = m_hang = true;
   ProtoBase::Close();
-  // Note: Calling OpenConnection() will reset m_hang
+  // Note: Opening connection successfully will reset m_hang
 }
 
 bool ProtoBase::SendCommand(const char *cmd, bool feedback)
@@ -102,8 +103,11 @@ bool ProtoBase::SendCommand(const char *cmd, bool feedback)
         return RcvMessageLength();
       return true;
     }
+    DBG(MYTH_DBG_ERROR, "%s: failed (%d)\n", __FUNCTION__, m_socket->GetErrNo());
+    HangException();
+    return false;
   }
-  DBG(MYTH_DBG_ERROR, "%s: failed (%d)\n", __FUNCTION__, m_socket->GetErrNo());
+  DBG(MYTH_DBG_ERROR, "%s: message size out of bound (%d)\n", __FUNCTION__, (int)l);
   return false;
 }
 
@@ -283,6 +287,8 @@ bool ProtoBase::OpenConnection(int rcvbuf)
 
   if (m_isOpen)
     ProtoBase::Close();
+  // If socket connection failed then hang will remain up allowing retry
+  m_hang = true;
   do
   {
     retry = false;
@@ -377,14 +383,24 @@ unsigned ProtoBase::GetPort() const
   return m_port;
 }
 
-inline int ProtoBase::GetSocketErrNo() const
+int ProtoBase::GetSocketErrNo() const
 {
   return m_socket->GetErrNo();
 }
 
-inline int ProtoBase::GetSocket() const
+int ProtoBase::GetSocket() const
 {
   return (int)(m_socket->GetSocket());
+}
+
+bool ProtoBase::HasHanging() const
+{
+  return m_tainted;
+}
+
+void ProtoBase::CleanHanging()
+{
+  m_tainted = false;
 }
 
 ProgramPtr ProtoBase::RcvProgramInfo75()

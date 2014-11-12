@@ -62,6 +62,7 @@
 #define ENABLE_EDL_ALWAYS                   0
 #define ENABLE_EDL_DIALOG                   1
 #define ENABLE_EDL_NEVER                    2
+#define DEFAULT_BLOCK_SHUTDOWN              true
 
 /*!
  * @brief PVR macros for string exchange
@@ -102,6 +103,7 @@ extern bool         g_bDemuxing;
 extern int          g_iTuneDelay;
 extern int          g_iGroupRecordings;
 extern int          g_iEnableEDL;
+extern bool         g_bBlockMythShutdown;
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr   *PVR;

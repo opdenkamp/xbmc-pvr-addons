@@ -25,12 +25,6 @@ AC_SEARCH_LIBS(clock_gettime, [rt])
 # Check for inttypes.
 AC_CHECK_HEADERS([inttypes.h],, AC_MSG_ERROR([required header 'inttypes.h' is missing]))
 
-# Checks for boost headers.
-#AC_LANG_PUSH([C++])
-#AC_CHECK_HEADER([boost/shared_ptr.hpp], HAVE_BOOST=1, HAVE_BOOST=0,)
-#AC_LANG_POP([C++])
-#AC_SUBST([HAVE_BOOST])
-
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_INLINE
 case $ac_cv_c_inline in

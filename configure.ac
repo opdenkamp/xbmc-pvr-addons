@@ -143,15 +143,6 @@ if test "$build_addons_with_dependencies" = "yes"; then
   echo "Building addons with dependencies"
 
   ### Libs that addons depend on
-  # Checks for boost headers
-  AC_LANG_PUSH([C++])
-  AC_CHECK_HEADER([boost/shared_ptr.hpp], use_boost=yes, use_boost=no,)
-  AC_LANG_POP([C++])
-  if test "$use_boost" = "yes"; then
-    AC_DEFINE([HAVE_BOOST],[1],["Define to 1 if we have the `boost' headers"])
-  fi
-  echo "Boost: $use_boost"
-
   AC_CHECK_LIB([z],[inflate], use_zlib=yes, use_zlib=no)
   if test "$use_zlib" = "yes"; then
     AC_DEFINE([HAVE_ZLIB],[1],["Define to 1 if we have the zlib library"])

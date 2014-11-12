@@ -27,6 +27,8 @@ can enable the build of addons with dependencies:
 
 List of addons with dependencies:
 ---------------------------------
+- Filmon addon:
+    Build dependencies:   jsoncpp, crypto++, curl
 - IPTV Simple addon:
     Build dependencies:   zlib
 

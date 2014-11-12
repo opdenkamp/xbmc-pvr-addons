@@ -44,6 +44,7 @@ compile
 *.lib
 *.pdb
 *.ilk
+*.obj
 *.suo
 *.sdf
 *.opensdf
@@ -63,6 +64,10 @@ addons/*/project/VS2010Express/Debug
 addons/*/project/VS2010Express/Release
 lib/jsoncpp/project/VS2010Express/Debug
 lib/jsoncpp/project/VS2010Express/Release
+lib/libdvblinkremote/project/VS2010Express/Debug
+lib/libdvblinkremote/project/VS2010Express/Release
+lib/tinyxml2/tinyxml2/Debug
+lib/tinyxml2/tinyxml2/Release
 addons/*/addon/*.so
 addons/*/addon/*.dll
 addons/*/addon/addon.xml

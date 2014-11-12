@@ -32,12 +32,6 @@ AC_ARG_ENABLE([addons-with-dependencies],
   [build_addons_with_dependencies=$enableval],
   [build_addons_with_dependencies=no])
 
-AC_ARG_ENABLE([mysql],
-  [AS_HELP_STRING([--disable-mysql],
-  [disable mysql])],
-  [use_mysql=$enableval],
-  [use_mysql=yes])
-
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
   BUILD_TYPE="release"
@@ -149,20 +143,6 @@ if test "$build_addons_with_dependencies" = "yes"; then
   echo "Building addons with dependencies"
 
   ### Libs that addons depend on
-  if test "$use_mysql" = "yes"; then
-    AC_PATH_PROG(MYSQL_CONFIG, mysql_config, "no")
-    if test "x$MYSQL_CONFIG" != "xno"; then
-      AC_DEFINE([HAVE_MYSQL],[1],["Define to 1 if you have the `mysql' library (-lmysqlclient)."])
-      MYSQL_INCLUDES=`$MYSQL_CONFIG --include`
-      MYSQL_LIBS=`$MYSQL_CONFIG --libs`
-      AC_SUBST(MYSQL_INCLUDES)
-      AC_SUBST(MYSQL_LIBS)
-    else
-      use_mysql=no
-    fi
-  fi
-  echo "MySQL: $use_mysql"
-
   # Checks for boost headers
   AC_LANG_PUSH([C++])
   AC_CHECK_HEADER([boost/shared_ptr.hpp], use_boost=yes, use_boost=no,)
@@ -209,7 +189,6 @@ if test "$build_addons_with_dependencies" = "yes"; then
 fi
 
 ### Addons with dependencies
-AM_CONDITIONAL([ADDON_MYTHTV], [test "$build_addons_with_dependencies" = "yes" -a "$use_mysql" = "yes" -a "$use_boost" = "yes"])
 AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addons_with_dependencies" = "yes" -a "$use_zlib" = "yes"])
 AM_CONDITIONAL([ADDON_FILMON], [test "$build_addons_with_dependencies" = "yes" -a "$use_curl" = "yes" -a "$use_jsoncpp" = "yes" -a "$use_cryptopp" = "yes"])
 

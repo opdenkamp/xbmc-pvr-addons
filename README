@@ -27,9 +27,6 @@ can enable the build of addons with dependencies:
 
 List of addons with dependencies:
 ---------------------------------
-- MythTV addon:
-    Build dependencies:   libmysqlclient, boost (headers)
-    Runtime dependencies: libmysqlclient
 - IPTV Simple addon:
     Build dependencies:   zlib
 

@@ -4,7 +4,7 @@ ifeq ($(USE_BUILDROOT),1)
 	export BUILD=i686-linux
 	export PREFIX=$(XBMCPREFIX)
 	export SYSROOT=$(BUILDROOT)/output/host/usr/arm-unknown-linux-gnueabi/sysroot
-	export CFLAGS+=-isystem$(SYSROOT)/usr/include -isystem$(SYSROOT)/opt/vc/include -isystem$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads -isystem$(PREFIX)/include -isystem$(PREFIX)/usr/include/mysql --sysroot=$(SYSROOT)
+	export CFLAGS+=-isystem$(SYSROOT)/usr/include -isystem$(SYSROOT)/opt/vc/include -isystem$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads -isystem$(PREFIX)/include  --sysroot=$(SYSROOT)
 	export CXXFLAGS=$(CFLAGS) --sysroot=$(SYSROOT)
 	export CPPFLAGS=$(CFLAGS) --sysroot=$(SYSROOT)
 	export LDFLAGS=-Wl,-rpath-link,${SYSROOT}/opt/vc/lib -L$(SYSROOT)/opt/vc/lib -L$(XBMCPREFIX)/lib

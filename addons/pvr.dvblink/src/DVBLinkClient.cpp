@@ -600,7 +600,7 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
   DVBLinkRemoteStatusCode status;
   m_recording_id_to_url_map.clear();
 
-  GetPlaybackObjectRequest getPlaybackObjectRequest(m_hostname.c_str(), m_recordingsid);
+  GetPlaybackObjectRequest getPlaybackObjectRequest(m_hostname.c_str(), m_recordingsid_by_date);
   getPlaybackObjectRequest.IncludeChildrenObjectsForRequestedObject = true;
   GetPlaybackObjectResponse getPlaybackObjectResponse;
 

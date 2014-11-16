@@ -382,7 +382,11 @@ PVR_ERROR cPVRClientNextPVR::GetEpg(ADDON_HANDLE handle, const PVR_CHANNEL &chan
         broadcast.startTime           = atol(start);
         broadcast.endTime             = atol(end);        
         broadcast.strPlot             = description;
-        broadcast.strIconPath         = "";
+
+        // artwork URL 
+        char artworkPath[128];
+        snprintf(artworkPath, sizeof(artworkPath), "/service?method=channel.show.artwork&sid=%s&event_id=%d", m_sid, broadcast.iUniqueBroadcastId);
+        broadcast.strIconPath         = artworkPath;
 
         char genre[128];
         genre[0] = '\0';
@@ -546,6 +550,12 @@ PVR_ERROR cPVRClientNextPVR::GetChannels(ADDON_HANDLE handle, bool bRadio)
         memset(&tag, 0, sizeof(PVR_CHANNEL));
         tag.iUniqueId = atoi(pChannelNode->FirstChildElement("id")->FirstChild()->Value());
         tag.iChannelNumber = atoi(pChannelNode->FirstChildElement("number")->FirstChild()->Value());
+
+        // handle major.minor style subchannels
+        if (pChannelNode->FirstChildElement("minor"))
+        {
+          tag.iSubChannelNumber = atoi(pChannelNode->FirstChildElement("minor")->FirstChild()->Value());
+        }
 
         PVR_STRCPY(tag.strChannelName, pChannelNode->FirstChildElement("name")->FirstChild()->Value());
 
@@ -744,6 +754,14 @@ PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
         {
           tag.iLastPlayedPosition = atoi(pRecordingNode->FirstChildElement("playback_position")->FirstChild()->Value());
         }
+		
+		char artworkPath[512];
+		snprintf(artworkPath, sizeof(artworkPath), "http://%s:%d/service?method=recording.artwork&sid=%s&recording_id=%s", g_szHostname.c_str(), g_iPort, m_sid, tag.strRecordingId);
+		PVR_STRCPY(tag.strIconPath, artworkPath);
+		PVR_STRCPY(tag.strThumbnailPath, artworkPath);
+
+		snprintf(artworkPath, sizeof(artworkPath), "http://%s:%d/service?method=recording.fanart&sid=%s&recording_id=%s", g_szHostname.c_str(), g_iPort, m_sid, tag.strRecordingId);
+		PVR_STRCPY(tag.strFanartPath, artworkPath);
 
         CStdString strStream;
         strStream.Format("http://%s:%d/live?recording=%s", g_szHostname, g_iPort, tag.strRecordingId);
@@ -1210,11 +1228,18 @@ bool cPVRClientNextPVR::OpenLiveStream(const PVR_CHANNEL &channelinfo)
       delete m_pLiveShiftSource;
       m_pLiveShiftSource = NULL;
     }
-  
+  	
+	char mode[32];
+	memset(mode, 0, sizeof(mode));
+	if (channelinfo.bIsRadio == false && m_supportsLiveTimeshift && g_bUseTimeshift)
+		strcpy(mode, "&mode=liveshift");
+
     char line[256];
-    sprintf(line, "GET /live?channel=%d&client=XBMC-%s HTTP/1.0\r\n", channelinfo.iChannelNumber, m_sid); 
-    if (m_supportsLiveTimeshift && g_bUseTimeshift)
-      sprintf(line, "GET /live?channel=%d&mode=liveshift&client=XBMC-%s HTTP/1.0\r\n", channelinfo.iChannelNumber, m_sid); 
+	if (channelinfo.iSubChannelNumber == 0)
+		sprintf(line, "GET /live?channel=%d%s&client=XBMC-%s HTTP/1.0\r\n", channelinfo.iChannelNumber, mode, m_sid);
+	else
+		sprintf(line, "GET /live?channel=%d.%d%s&client=XBMC-%s HTTP/1.0\r\n", channelinfo.iChannelNumber, channelinfo.iSubChannelNumber, mode, m_sid);
+
     m_streamingclient->send(line, strlen(line));
 
     sprintf(line, "Connection: close\r\n");

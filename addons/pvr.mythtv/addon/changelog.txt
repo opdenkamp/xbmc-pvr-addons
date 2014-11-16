@@ -1,4 +1,14 @@
-v1.9.29
+v1.10.1
+- Options to disable channel icons and recordings or fanart images
+
+v1.10.0
+- jansson 2.7: fix compilation on ios8/arm64
+- Cleaned cache by max age
+- Improves loading of channels and recordings
+- Adding WS API Security Pin parameter
+- Adding episode info (subtitle) to EPG title
+
+v1.29.0
 - fixed resource leak on file cache failure
 
 v1.9.28

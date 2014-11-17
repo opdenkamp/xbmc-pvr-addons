@@ -1,3 +1,8 @@
+[B]Version 1.9.1.2[/B]
+Added: grouping recordings by series
+Fixed: used space calculation
+Fixed: German translation for new functionality
+
 [B]Version 1.9.1.1[/B]
 Added: display of episode name and number in recordings list
 Fixed: no channels/recordings if DVBLink server is not available during xbmc start-up

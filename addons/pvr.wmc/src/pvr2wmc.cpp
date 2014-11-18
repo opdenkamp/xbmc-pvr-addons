@@ -47,6 +47,9 @@ Pvr2Wmc::Pvr2Wmc(void)
 	_socketClient.SetClientName(g_strClientName);
 	_socketClient.SetServerPort(g_port);
 
+	_diskTotal = 0;
+	_diskUsed = 0;
+
 	_signalStatusCount = 0;			// for signal status display
 	_discardSignalStatus = false;
 
@@ -80,8 +83,9 @@ bool Pvr2Wmc::IsServerDown()
 	bool isServerDown = (results[0] != "True");								// true if server is down
 
 	// GetServiceStatus may return any updates requested by server
-	if (!isServerDown && results.size() > 1)								// if server is not down and it requests updates
+	if (!isServerDown && results.size() > 1)								// if server is not down and there are additional fields
 	{
+		ExtractDriveSpace(results);											// get drive space total/used from backend response
 		TriggerUpdates(results);											// send update array to trigger updates requested by server
 	}
 	return isServerDown;
@@ -102,9 +106,10 @@ const char *Pvr2Wmc::GetBackendVersion(void)
 		time_t now = time(NULL);
 		char datestr[32];
 		strftime(datestr, 32, "%Y-%m-%d %H:%M:%S", gmtime(&now));
-		
+
+		// Also send this client's setting for backend servername (so server knows how it is being accessed)
 		CStdString request;
-		request.Format("GetServerVersion|%s", datestr);
+		request.Format("GetServerVersion|%s|%s", datestr, g_strServerName.c_str());
 		vector<CStdString> results = _socketClient.GetVector(request, true);
 		if (results.size() > 0)
 		{
@@ -143,6 +148,14 @@ const char *Pvr2Wmc::GetBackendVersion(void)
 		return strVersion.c_str();	// return server version to caller
 	}
 	return "Not accessible";	//  server version check failed
+}
+
+PVR_ERROR Pvr2Wmc::GetDriveSpace(long long *iTotal, long long *iUsed)
+{
+	*iTotal = _diskTotal;
+	*iUsed = _diskUsed;
+
+	return PVR_ERROR_NO_ERROR;
 }
 
 int Pvr2Wmc::GetChannelsAmount(void)
@@ -263,6 +276,31 @@ void Pvr2Wmc::TriggerUpdates(vector<CStdString> results)
 	}
 }
 
+void Pvr2Wmc::ExtractDriveSpace(vector<CStdString> results)
+{
+	FOREACH(response, results)
+	{
+		vector<CStdString> v = split(*response, "|");				// split to unpack string
+
+		if (v.size() < 1)
+		{
+			continue;
+		}
+
+		if (v[0] == "driveSpace")
+		{
+			if (v.size() > 1)
+			{
+				
+				long long totalSpace = strtoll(v[1].c_str(), 0, 10);
+				long long freeSpace = strtoll(v[2].c_str(), 0, 10);
+				long long usedSpace = strtoll(v[3].c_str(), 0, 10);
+				_diskTotal = totalSpace / 1024;
+				_diskUsed = usedSpace / 1024;
+			}
+		}
+	}
+}
 // xbmc call: get all channels for either tv or radio
 PVR_ERROR Pvr2Wmc::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
@@ -283,7 +321,7 @@ PVR_ERROR Pvr2Wmc::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
 		if (v.size() < 9)
 		{
-			XBMC->Log(LOG_DEBUG, "Wrong number of fields xfered for channel group data");
+			XBMC->Log(LOG_DEBUG, "Wrong number of fields xfered for channel data");
 			continue;
 		}
 
@@ -306,6 +344,12 @@ PVR_ERROR Pvr2Wmc::GetChannels(ADDON_HANDLE handle, bool bRadio)
 		if (v[5].compare("NULL") != 0)										// if icon path is null
 			STRCPY(xChannel.strIconPath,  v[5].c_str()); 
 		xChannel.bIsHidden = Str2Bool(v[6]);
+
+		// Populate Stream DLNA URL if present
+		if (v.size() >= 10 && v[9] != "")
+		{
+			STRCPY(xChannel.strStreamURL, v[9].c_str());
+		}
 
 		PVR->TransferChannelEntry(handle, &xChannel);
 	}

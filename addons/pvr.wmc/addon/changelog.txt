@@ -1,3 +1,7 @@
+0.3.109
+- tidy up display of PVR data for Kodi (connection string, backend drive space total/used)
+- add support for accepting HDHR streaming URLs for channels
+
 0.3.108
 - Updated Language files from Transifex
 

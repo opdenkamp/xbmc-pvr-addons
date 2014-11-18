@@ -354,15 +354,17 @@ extern "C" {
 
 	const char *GetConnectionString(void)
 	{
-		static CStdString strConnectionString = "connected";
+		static CStdString strConnectionString;
+		strConnectionString.Format("%s:%u", g_strServerName, g_port);
 		return strConnectionString.c_str();
 	}
 
 	PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 	{
-		*iTotal = 1024 * 1024 * 1024;
-		*iUsed  = 0;
-		return PVR_ERROR_NO_ERROR;
+		if (_wmc)
+			return _wmc->GetDriveSpace(iTotal, iUsed);
+
+		return PVR_ERROR_SERVER_ERROR;
 	}
 
 	PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)

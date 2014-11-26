@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_WMC
+ADDONBINNAME    = Kodi_WMC
 ADDONNAME       = pvr.wmc
 LIBNAME         = libpvrwmc-addon
 lib_LTLIBRARIES = libpvrwmc-addon.la

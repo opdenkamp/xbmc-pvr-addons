@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_VDR_vnsi
+ADDONBINNAME    = Kodi_VDR_vnsi
 ADDONNAME       = pvr.vdr.vnsi
 LIBNAME         = libvdrvnsi-addon
 lib_LTLIBRARIES = libvdrvnsi-addon.la

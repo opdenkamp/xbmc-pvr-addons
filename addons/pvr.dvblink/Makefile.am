@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_DVBLink
+ADDONBINNAME    = Kodi_DVBLink
 ADDONNAME       = pvr.dvblink
 LIBNAME         = libdvblink-addon
 lib_LTLIBRARIES = libdvblink-addon.la

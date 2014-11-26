@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_vuplus
+ADDONBINNAME    = Kodi_vuplus
 ADDONNAME       = pvr.vuplus
 LIBNAME         = libvuplus-addon
 lib_LTLIBRARIES = libvuplus-addon.la

@@ -48,7 +48,7 @@
     <OutDir>..\..\addon\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>XBMC_vuplus_win32</TargetName>
+    <TargetName>Kodi_vuplus_win32</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

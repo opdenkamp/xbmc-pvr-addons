@@ -12,12 +12,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_VDR_vnsi.pvr"
-    library_osx="XBMC_VDR_vnsi.pvr"
-    library_freebsd="XBMC_VDR_vnsi.pvr"
-    library_wingl="XBMC_VDR_vnsi_WIN32.dll"
-    library_windx="XBMC_VDR_vnsi_WIN32.dll"
-    library_android="libXBMC_VDR_vnsi.so"/>
+    library_linux="Kodi_VDR_vnsi.pvr"
+    library_osx="Kodi_VDR_vnsi.pvr"
+    library_freebsd="Kodi_VDR_vnsi.pvr"
+    library_wingl="Kodi_VDR_vnsi_WIN32.dll"
+    library_windx="Kodi_VDR_vnsi_WIN32.dll"
+    library_android="libKodi_VDR_vnsi.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="af">PVR kliënt om VDR te konnekteer aan Kodi oor die VNSI koppelvlak</summary>
     <summary lang="be">PVR client to connect VDR to Kodi over the VNSI interface</summary>

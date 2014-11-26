@@ -12,11 +12,11 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_MythTV.pvr"
-    library_osx="XBMC_MythTV.pvr"
-    library_wingl="XBMC_MythTV_win32.dll"
-    library_windx="XBMC_MythTV_win32.dll"
-    library_android="libXBMC_MythTV.so"/>
+    library_linux="Kodi_MythTV.pvr"
+    library_osx="Kodi_MythTV.pvr"
+    library_wingl="Kodi_MythTV_win32.dll"
+    library_windx="Kodi_MythTV_win32.dll"
+    library_android="libKodi_MythTV.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="af">Kodi voorprogram vir MythTV</summary>
     <summary lang="be">Kodi frontend for MythTV</summary>

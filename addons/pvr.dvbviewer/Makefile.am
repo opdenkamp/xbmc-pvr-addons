@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_dvbviewer
+ADDONBINNAME    = Kodi_dvbviewer
 ADDONNAME       = pvr.dvbviewer
 LIBNAME         = libdvbviewer-addon
 lib_LTLIBRARIES = libdvbviewer-addon.la

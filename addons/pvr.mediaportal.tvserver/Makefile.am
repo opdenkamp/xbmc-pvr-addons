@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_Mediaportal
+ADDONBINNAME    = Kodi_Mediaportal
 ADDONNAME       = pvr.mediaportal.tvserver
 LIBNAME         = libmediaportal-addon
 lib_LTLIBRARIES = libmediaportal-addon.la

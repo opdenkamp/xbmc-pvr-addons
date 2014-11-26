@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_Njoy
+ADDONBINNAME    = Kodi_Njoy
 ADDONNAME       = pvr.njoy
 LIBNAME         = libpvrnjoy-addon
 lib_LTLIBRARIES = libpvrnjoy-addon.la

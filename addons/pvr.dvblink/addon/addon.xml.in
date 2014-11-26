@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.dvblink"
-  version="1.9.8"
+  version="1.9.9"
   name="DVBLink PVR Client"
   provider-name="DVBLogic">
   <requires>

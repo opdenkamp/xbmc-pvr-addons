@@ -1,3 +1,6 @@
+v1.9.21
+- change library name to Kodi
+
 v1.9.20
 - fixed deadlock when activating the addon on some darwin (osx, ios) runtimes
 

@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_Filmon
+ADDONBINNAME    = Kodi_Filmon
 ADDONNAME       = pvr.filmon
 LIBNAME         = libpvrfilmon-addon
 lib_LTLIBRARIES = libpvrfilmon-addon.la

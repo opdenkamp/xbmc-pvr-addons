@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.njoy"
-  version="1.9.11"
+  version="1.9.12"
   name="Njoy N7 PVR Client"
   provider-name="Team XBMC">
   <requires>
@@ -10,12 +10,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_osx="XBMC_Njoy.pvr"
-    library_linux="XBMC_Njoy.pvr"
-    library_freebsd="XBMC_Njoy.pvr"
-    library_wingl="XBMC_njoy_win32.dll"
-    library_windx="XBMC_njoy_win32.dll"
-    library_android="libXBMC_Njoy.so"/>
+    library_osx="Kodi_Njoy.pvr"
+    library_linux="Kodi_Njoy.pvr"
+    library_freebsd="Kodi_Njoy.pvr"
+    library_wingl="Kodi_njoy_win32.dll"
+    library_windx="Kodi_njoy_win32.dll"
+    library_android="libKodi_Njoy.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="am">Njoy N7 PVR Client</summary>
     <summary lang="bg">Njoy N7 ПВР клиент</summary>

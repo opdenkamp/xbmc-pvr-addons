@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_ArgusTV
+ADDONBINNAME    = Kodi_ArgusTV
 ADDONNAME       = pvr.argustv
 LIBNAME         = libargustv-addon
 lib_LTLIBRARIES = libargustv-addon.la

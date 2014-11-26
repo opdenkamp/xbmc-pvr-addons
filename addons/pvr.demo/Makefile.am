@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_Demo
+ADDONBINNAME    = Kodi_Demo
 ADDONNAME       = pvr.demo
 LIBNAME         = libpvrdemo-addon
 lib_LTLIBRARIES = libpvrdemo-addon.la

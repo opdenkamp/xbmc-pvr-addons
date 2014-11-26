@@ -1,3 +1,6 @@
+0.4.4
+change library name to Kodi
+
 0.4.3
 fixed build error due to compiler warnings on some distributions (@anssih)
 

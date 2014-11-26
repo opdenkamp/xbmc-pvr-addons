@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.wmc"
-  version="0.3.106"
+  version="0.3.107"
   name="PVR WMC Client"
   provider-name="KrustyReturns and scarecrow420">
   <requires>
@@ -11,12 +11,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_WMC.pvr"
-    library_wingl="XBMC_WMC_win32.dll"
-    library_osx="XBMC_WMC.pvr"
-    library_freebsd="XBMC_WMC.pvr"
-    library_windx="XBMC_WMC_win32.dll"
-    library_android="libXBMC_WMC.so" />
+    library_linux="Kodi_WMC.pvr"
+    library_wingl="Kodi_WMC_win32.dll"
+    library_osx="Kodi_WMC.pvr"
+    library_freebsd="Kodi_WMC.pvr"
+    library_windx="Kodi_WMC_win32.dll"
+    library_android="libKodi_WMC.so" />
     <extension point="xbmc.addon.metadata">
     <summary lang="cs">PVR WMC klient</summary>
     <summary lang="de">PVR WMC-Client</summary>

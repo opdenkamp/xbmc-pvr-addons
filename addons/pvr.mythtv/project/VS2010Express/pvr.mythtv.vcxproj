@@ -125,7 +125,7 @@
     <CustomBuildBeforeTargets />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>XBMC_MythTV_win32</TargetName>
+    <TargetName>Kodi_MythTV_win32</TargetName>
     <CustomBuildAfterTargets>
     </CustomBuildAfterTargets>
   </PropertyGroup>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.demo"
-  version="1.9.12"
+  version="1.9.13"
   name="PVR Demo Client"
   provider-name="Pulse-Eight Ltd.">
   <requires>
@@ -10,12 +10,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_Demo.pvr"
-	library_osx="XBMC_Demo.pvr"
-    library_freebsd="XBMC_Demo.pvr"
-    library_wingl="XBMC_Demo_win32.dll"
-    library_windx="XBMC_Demo_win32.dll"
-    library_android="libXBMC_Demo.so" />
+    library_linux="Kodi_Demo.pvr"
+	library_osx="Kodi_Demo.pvr"
+    library_freebsd="Kodi_Demo.pvr"
+    library_wingl="Kodi_Demo_win32.dll"
+    library_windx="Kodi_Demo_win32.dll"
+    library_android="libKodi_Demo.so" />
   <extension point="xbmc.addon.metadata">
     <summary lang="am">የ PVR ደንበኛ ናሙና </summary>
     <summary lang="bg">Демонстрация на ПВР клиента</summary>

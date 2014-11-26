@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_NextPVR
+ADDONBINNAME    = Kodi_NextPVR
 ADDONNAME       = pvr.nextpvr
 LIBNAME         = libnextpvr-addon
 lib_LTLIBRARIES = libnextpvr-addon.la

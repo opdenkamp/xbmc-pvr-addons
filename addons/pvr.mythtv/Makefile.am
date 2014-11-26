@@ -5,7 +5,7 @@
 # how to reach the author.
 #
 
-ADDONBINNAME    = XBMC_MythTV
+ADDONBINNAME    = Kodi_MythTV
 ADDONNAME       = pvr.mythtv
 LIBNAME         = libmythtv-addon
 lib_LTLIBRARIES = libmythtv-addon.la

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.dvblink"
-  version="1.9.8"
+  version="1.9.9"
   name="DVBLink PVR Client"
   provider-name="DVBLogic">
   <requires>
@@ -10,12 +10,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_DVBLink.pvr"
-    library_osx="XBMC_DVBLink.pvr"
-    library_freebsd="XBMC_DVBLink.pvr"
-    library_wingl="XBMC_DVBLink_win32.dll"
-    library_windx="XBMC_DVBLink_win32.dll"
-    library_android="libXBMC_DVBLink.so"/>
+    library_linux="Kodi_DVBLink.pvr"
+    library_osx="Kodi_DVBLink.pvr"
+    library_freebsd="Kodi_DVBLink.pvr"
+    library_wingl="Kodi_DVBLink_win32.dll"
+    library_windx="Kodi_DVBLink_win32.dll"
+    library_android="libKodi_DVBLink.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="bg">ПВР добавка за DVBLink</summary>
     <summary lang="cs">PVR plugin pro DVBLink</summary>

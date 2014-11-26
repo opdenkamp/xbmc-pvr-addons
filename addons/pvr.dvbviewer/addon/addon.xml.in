@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.dvbviewer"
-  version="1.9.21"
+  version="1.9.22"
   name="DVBViewer Client"
   provider-name="jdembski, A600, Manuel Mausz, Portisch">
   <requires>
@@ -10,12 +10,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_dvbviewer.pvr"
-    library_osx="XBMC_dvbviewer.pvr"
-    library_freebsd="XBMC_dvbviewer.pvr"
-    library_wingl="XBMC_dvbviewer_win32.dll"
-    library_windx="XBMC_dvbviewer_win32.dll"
-    library_android="libXBMC_dvbviewer.so"/>
+    library_linux="Kodi_dvbviewer.pvr"
+    library_osx="Kodi_dvbviewer.pvr"
+    library_freebsd="Kodi_dvbviewer.pvr"
+    library_wingl="Kodi_dvbviewer_win32.dll"
+    library_windx="Kodi_dvbviewer_win32.dll"
+    library_android="libKodi_dvbviewer.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="af">Kodi se voorprogram vir DVBViewer</summary>
     <summary lang="be">Kodi's frontend for DVBViewer</summary>

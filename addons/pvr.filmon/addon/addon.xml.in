@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.filmon"
-  version="0.4.3"
+  version="0.4.4"
   name="PVR Filmon Client"
   provider-name="Stephen Denham">
   <requires>
@@ -10,12 +10,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_Filmon.pvr"
-	library_osx="XBMC_Filmon.pvr"
-    library_freebsd="XBMC_Filmon.pvr"
-    library_wingl="XBMC_Filmon_win32.dll"
-    library_windx="XBMC_Filmon_win32.dll"
-    library_android="libXBMC_Filmon.so" />
+    library_linux="Kodi_Filmon.pvr"
+	library_osx="Kodi_Filmon.pvr"
+    library_freebsd="Kodi_Filmon.pvr"
+    library_wingl="Kodi_Filmon_win32.dll"
+    library_windx="Kodi_Filmon_win32.dll"
+    library_android="libKodi_Filmon.so" />
   <extension point="xbmc.addon.metadata">
     <summary lang="bg">Filmon ПВР клиент</summary>
     <summary lang="de">Filmon PVR-Client</summary>

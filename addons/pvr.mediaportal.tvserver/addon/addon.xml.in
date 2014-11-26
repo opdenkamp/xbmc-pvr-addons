@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.mediaportal.tvserver"
-  version="1.9.20"
+  version="1.9.21"
   name="MediaPortal PVR Client"
   provider-name="Marcel Groothuis">
   <requires>
@@ -11,12 +11,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_Mediaportal.pvr"
-    library_osx="XBMC_Mediaportal.pvr"
-    library_freebsd="XBMC_Mediaportal.pvr"
-    library_wingl="XBMC_Mediaportal_win32.dll"
-    library_windx="XBMC_Mediaportal_win32.dll"
-    library_android="libXBMC_Mediaportal.so"/>
+    library_linux="Kodi_Mediaportal.pvr"
+    library_osx="Kodi_Mediaportal.pvr"
+    library_freebsd="Kodi_Mediaportal.pvr"
+    library_wingl="Kodi_Mediaportal_win32.dll"
+    library_windx="Kodi_Mediaportal_win32.dll"
+    library_android="libKodi_Mediaportal.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="af">Kodi voorprogram vir die MediaPortal TV Bediener (ffmpeg + tsreader weergawe)</summary>
     <summary lang="be">Kodi frontend for the MediaPortal TV Server (ffmpeg + tsreader version)</summary>

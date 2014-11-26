@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.argustv"
-  version="1.9.183"
+  version="1.9.184"
   name="ARGUS TV client"
   provider-name="Fred Hoogduin, Marcel Groothuis">
   <requires>
@@ -10,12 +10,12 @@
   </requires>
   <extension
     point="xbmc.pvrclient"
-    library_linux="XBMC_ArgusTV.pvr"
-    library_osx="XBMC_ArgusTV.pvr"
-    library_freebsd="XBMC_ArgusTV.pvr"
-    library_wingl="XBMC_ArgusTV_win32.dll"
-    library_windx="XBMC_ArgusTV_win32.dll"
-    library_android="libXBMC_ArgusTV.so"/>
+    library_linux="Kodi_ArgusTV.pvr"
+    library_osx="Kodi_ArgusTV.pvr"
+    library_freebsd="Kodi_ArgusTV.pvr"
+    library_wingl="Kodi_ArgusTV_win32.dll"
+    library_windx="Kodi_ArgusTV_win32.dll"
+    library_android="libKodi_ArgusTV.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="af">Kodi voorprogram vir die ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="be">Kodi frontend for the ARGUS TV PVR http://www.argus-tv.com//</summary>

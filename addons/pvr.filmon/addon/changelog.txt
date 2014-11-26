@@ -1,3 +1,6 @@
+0.4.3
+fixed build error due to compiler warnings on some distributions (@anssih)
+
 0.4.2
 fixed deadlock when activating the addon on some darwin (osx, ios) runtimes
 

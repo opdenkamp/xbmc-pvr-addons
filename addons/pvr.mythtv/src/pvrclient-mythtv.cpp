@@ -102,7 +102,7 @@ void PVRClientMythTV::SetDebug()
 bool PVRClientMythTV::Connect()
 {
   SetDebug();
-  m_control = new Myth::Control(g_szMythHostname, g_iProtoPort, g_iWSApiPort, g_bBlockMythShutdown);
+  m_control = new Myth::Control(g_szMythHostname, g_iProtoPort, g_iWSApiPort, g_szWSSecurityPin, g_bBlockMythShutdown);
   if (!m_control->IsOpen())
   {
     SAFE_DELETE(m_control);
@@ -115,7 +115,7 @@ bool PVRClientMythTV::Connect()
   if (!m_control->CheckService())
   {
     SAFE_DELETE(m_control);
-    XBMC->Log(LOG_ERROR,"Failed to connect to MythTV backend on %s:%d", g_szMythHostname.c_str(), g_iWSApiPort);
+    XBMC->Log(LOG_ERROR,"Failed to connect to MythTV backend on %s:%d with pin %s", g_szMythHostname.c_str(), g_iWSApiPort, g_szWSSecurityPin.c_str());
     return false;
   }
 
@@ -129,10 +129,10 @@ bool PVRClientMythTV::Connect()
   m_eventHandler->SubscribeForEvent(m_eventSubscriberId, Myth::EVENT_RECORDING_LIST_CHANGE);
 
   // Create schedule manager
-  m_scheduleManager = new MythScheduleManager(g_szMythHostname, g_iProtoPort, g_iWSApiPort);
+  m_scheduleManager = new MythScheduleManager(g_szMythHostname, g_iProtoPort, g_iWSApiPort, g_szWSSecurityPin);
 
   // Create file operation helper (image caching)
-  m_fileOps = new FileOps(g_szMythHostname, g_iWSApiPort);
+  m_fileOps = new FileOps(this, g_szMythHostname, g_iWSApiPort, g_szWSSecurityPin);
 
   // Start event handler
   m_eventHandler->Start();
@@ -416,6 +416,11 @@ void PVRClientMythTV::RunHouseKeeping()
   }
 }
 
+void PVRClientMythTV::HandleCleanedCache()
+{
+  PVR->TriggerRecordingUpdate();
+}
+
 PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
 {
   if (g_bExtraDebug)
@@ -438,7 +443,8 @@ PVR_ERROR PVRClientMythTV::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANN
       // EPG_TAG expects strings as char* and not as copies (like the other PVR types).
       // Therefore we have to make sure that we don't pass invalid (freed) memory to TransferEpgEntry.
       // In particular we have to use local variables and must not pass returned string values directly.
-      tag.strTitle = it->second->title.c_str();
+      std::string epgTitle = MakeProgramTitle(it->second->title, it->second->subTitle);
+      tag.strTitle = epgTitle.c_str();
       tag.strPlot = it->second->description.c_str();
       tag.strGenreDescription = it->second->category.c_str();
       tag.iUniqueBroadcastId = MakeBroadcastID(it->second->channel.chanId, it->first);
@@ -725,7 +731,7 @@ PVR_ERROR PVRClientMythTV::GetRecordings(ADDON_HANDLE handle)
       //@TODO: tag.iLastPlayedPosition
 
       std::string id = it->second.UID();
-      std::string title = this->MakeProgramTitle(it->second.Title(), it->second.Subtitle());
+      std::string title = MakeProgramTitle(it->second.Title(), it->second.Subtitle());
 
       PVR_STRCPY(tag.strRecordingId, id.c_str());
       PVR_STRCPY(tag.strTitle, title.c_str());
@@ -1268,7 +1274,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     std::string title = it->second->Title();
     if (!rulemarker.empty())
       title.append(" ").append(rulemarker);
-    PVR_STRCPY(tag.strTitle, this->MakeProgramTitle(title, it->second->Subtitle()).c_str());
+    PVR_STRCPY(tag.strTitle, MakeProgramTitle(title, it->second->Subtitle()).c_str());
 
     // Summary
     PVR_STRCPY(tag.strSummary, it->second->Description().c_str());
@@ -1847,7 +1853,7 @@ bool PVRClientMythTV::OpenRecordedStream(const PVR_RECORDING &recording)
       m_recordingStream = new Myth::RecordingPlayback(*m_eventHandler);
     else
     {
-      // Query backend server IP 
+      // Query backend server IP
       std::string backend_addr(m_control->GetBackendServerIP6(prog.HostName()));
       if (backend_addr.empty())
         backend_addr = m_control->GetBackendServerIP(prog.HostName());
@@ -2091,6 +2097,7 @@ void PVRClientMythTV::AllowBackendShutdown()
 
 std::string PVRClientMythTV::MakeProgramTitle(const std::string& title, const std::string& subtitle)
 {
+  // Must contain the original title at the begining
   std::string epgtitle;
   if (subtitle.empty())
     epgtitle = title;

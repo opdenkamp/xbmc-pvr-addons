@@ -105,14 +105,14 @@ bool MythRecordingRuleNode::IsInactiveRule() const
 //// MythScheduleManager
 ////
 
-MythScheduleManager::MythScheduleManager(const std::string& server, unsigned protoPort, unsigned wsapiPort)
+MythScheduleManager::MythScheduleManager(const std::string& server, unsigned protoPort, unsigned wsapiPort, const std::string& wsapiSecurityPin)
 : m_lock()
 , m_control(NULL)
 , m_protoVersion(0)
 , m_versionHelper(NULL)
 , m_showNotRecording(false)
 {
-  m_control = new Myth::Control(server, protoPort, wsapiPort);
+  m_control = new Myth::Control(server, protoPort, wsapiPort, wsapiSecurityPin);
   this->Update();
 }
 
@@ -140,7 +140,7 @@ void MythScheduleManager::Setup()
   }
 }
 
-uint32_t MythScheduleManager::MakeIndex(ScheduledPtr scheduled) const
+uint32_t MythScheduleManager::MakeIndex(const ScheduledPtr &scheduled) const
 {
   // Recordings must keep same identifier even after refreshing cache (cf Update).
   // Numeric hash of UID is used to make the constant numeric identifier.

@@ -39,7 +39,7 @@
 #include <vector>
 #include <map>
 
-class PVRClientMythTV : public Myth::EventSubscriber
+class PVRClientMythTV : public Myth::EventSubscriber, FileConsumer
 {
 public:
   PVRClientMythTV();
@@ -63,6 +63,9 @@ public:
   void HandleAskRecording(const Myth::EventMessage& msg);
   void HandleRecordingListChange(const Myth::EventMessage& msg);
   void RunHouseKeeping();
+
+  // Implement FileConsumer
+  void HandleCleanedCache();
 
   // EPG
   PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);

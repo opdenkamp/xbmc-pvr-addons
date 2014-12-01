@@ -45,10 +45,11 @@ using namespace Myth;
 #define WS_ROOT_CONTENT       "/Content"
 #define WS_ROOT_DVR           "/Dvr"
 
-WSAPI::WSAPI(const std::string& server, unsigned port)
+WSAPI::WSAPI(const std::string& server, unsigned port, const std::string& securityPin)
 : m_mutex(new PLATFORM::CMutex)
 , m_server(server)
 , m_port(port)
+, m_securityPin(securityPin)
 , m_checked(false)
 , m_version()
 , m_serverHostName()
@@ -181,6 +182,11 @@ bool WSAPI::CheckVersion2_0()
   WSRequest req = WSRequest(m_server, m_port);
   req.RequestAccept(CT_JSON);
   req.RequestService("/Myth/GetConnectionInfo");
+  if (!m_securityPin.empty())
+  {
+    // Skip if null or empty
+    req.SetContentParam("Pin", m_securityPin);
+  }
   WSResponse resp(req);
   if (!resp.IsSuccessful())
   {

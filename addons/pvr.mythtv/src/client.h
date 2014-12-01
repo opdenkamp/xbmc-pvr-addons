@@ -41,6 +41,7 @@
 #define DEFAULT_LIVETV                      true
 #define DEFAULT_PROTO_PORT                  6543
 #define DEFAULT_WSAPI_PORT                  6544
+#define DEFAULT_WSAPI_SECURITY_PIN          "0000"
 #define DEFAULT_RECORD_TEMPLATE             1
 
 #define SUBTITLE_SEPARATOR                  " - "
@@ -84,6 +85,7 @@ extern std::string  g_szMythHostname;           ///< The Host name or IP of the 
 extern std::string  g_szMythHostEther;          ///< The Host MAC address of the mythtv server
 extern int          g_iProtoPort;               ///< The mythtv protocol port (default is 6543)
 extern int          g_iWSApiPort;               ///< The mythtv service API port (default is 6544)
+extern std::string  g_szWSSecurityPin;          ///< The default security pin for the mythtv wsapi
 extern bool         g_bExtraDebug;              ///< Debug logging
 extern bool         g_bLiveTV;                  ///< LiveTV support (or recordings only)
 extern bool         g_bLiveTVPriority;          ///< MythTV Backend setting to allow live TV to move scheduled shows

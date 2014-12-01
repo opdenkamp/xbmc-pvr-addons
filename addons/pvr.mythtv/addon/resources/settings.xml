@@ -4,6 +4,7 @@
     <setting id="host" type="text" label="30000" default="127.0.0.1" />
     <setting id="port" type="number" option="int" label="30001" default="6543" />
     <setting id="wsport" type="number" option="int" label="30013" default="6544" />
+    <setting id="wssecuritypin" type="text" label="30014" default="0000" />
     <setting id="host_ether" type="text" label="30012" default="" />
     <setting id="livetv" type="bool" label="30006" default="true" />
     <setting id="livetv_priority" type="bool" label="30007" default="true" />

@@ -104,6 +104,10 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Afficher les messages d'informations"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Combine Titre et nom de l' épisode por enregistrements"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Connexion rétablie au serveur '%s'"
@@ -139,6 +143,10 @@ msgstr "Trouvé %d enregistrements"
 msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "Impossible d'avoir le flux de la chaîne %s (Erreur : %d)"
+
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Enregistrement de series"
 
 msgctxt "#32012"
 msgid "Record this episode only"

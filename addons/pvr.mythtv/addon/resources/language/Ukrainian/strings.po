@@ -48,6 +48,22 @@ msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
 msgstr "Дозволити Live TV переміщувати заплановані шоу"
 
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Вирішення конфліктів"
+
+msgctxt "#30009"
+msgid "Prefer Live TV when recording has later slot"
+msgstr "Надати перевагу Live TV, коли записи є в пізнішому терміні"
+
+msgctxt "#30010"
+msgid "Prefer recording and stop Live TV"
+msgstr "Надати перевагу запису і зупинки Live TV"
+
+msgctxt "#30011"
+msgid "Prefer Live TV and cancel conflicting recording"
+msgstr "Надати перевагу Live TV і скасувати суперечливі записи"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Загальні"
@@ -96,6 +112,10 @@ msgctxt "#30033"
 msgid "Transcoder"
 msgstr "Перекодовувач"
 
+msgctxt "#30034"
+msgid "Allow recordings to expire"
+msgstr "Дозволити записам згасати"
+
 msgctxt "#30049"
 msgid "Recording template"
 msgstr "Шаблон запису"
@@ -104,13 +124,33 @@ msgctxt "#30050"
 msgid "Advanced"
 msgstr "Більше"
 
+msgctxt "#30052"
+msgid "Enable demuxing MPEG-TS"
+msgstr "Ввімкнути демультиплексування MPEG-TS"
+
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "Тонке налаштування затримки (сек)"
+
+msgctxt "#30054"
+msgid "Group recordings by title"
+msgstr "Групувати записи за назвою"
+
 msgctxt "#30055"
 msgid "Always"
 msgstr "Завжди"
 
+msgctxt "#30056"
+msgid "Only for series"
+msgstr "Тільки для серіалів"
+
 msgctxt "#30057"
 msgid "Never"
 msgstr "Ніколи"
+
+msgctxt "#30058"
+msgid "Enable commercial skips (EDL)"
+msgstr "Включити пропуск реклами (EDL)"
 
 msgctxt "#30059"
 msgid "Always"
@@ -120,9 +160,17 @@ msgctxt "#30061"
 msgid "Never"
 msgstr "Ніколи"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Блокувати фонове вимикання"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Версія протоколу: %i - Версія даних: %i"
+
+msgctxt "#30110"
+msgid "Enabling EDL"
+msgstr "Ввімкнення EDL"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"
@@ -160,6 +208,10 @@ msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
 msgstr "Зупинка Живого Телебачення із-за конфліктних записів: %s"
 
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Не записувати"
+
 msgctxt "#30310"
 msgid "Enabled"
 msgstr "Увімкн."
@@ -167,3 +219,39 @@ msgstr "Увімкн."
 msgctxt "#30311"
 msgid "Disabled"
 msgstr "Вимкн."
+
+msgctxt "#30312"
+msgid "No broadcast found"
+msgstr "Не знайдено трансляції"
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "Видалити і перезаписати"
+
+msgctxt "#30412"
+msgid "Keep LiveTV recording"
+msgstr "Залишати запис Live TV"
+
+msgctxt "#30421"
+msgid "Show/hide rules with status 'Not Recording'"
+msgstr "Показати/приховати правила, які мають статус \"Не записувати\""
+
+msgctxt "#30431"
+msgid "Record all showings (this channel)"
+msgstr "Записувати всі серіали (на цьому каналі)"
+
+msgctxt "#30432"
+msgid "Record this showing every week"
+msgstr "Записувати цей серіал щотижня"
+
+msgctxt "#30433"
+msgid "Record this showing every day"
+msgstr "Записувати цей серіал щодня"
+
+msgctxt "#30434"
+msgid "Record one showing (all channels)"
+msgstr "Записувати один серіал (всі канали)"
+
+msgctxt "#30435"
+msgid "Record all new episodes (this channel)"
+msgstr "Записувати всі нові серії (на цьому каналі)"

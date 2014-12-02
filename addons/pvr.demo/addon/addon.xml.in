@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.demo"
-  version="1.9.13"
+  version="1.9.14"
   name="PVR Demo Client"
   provider-name="Pulse-Eight Ltd.">
   <requires>
@@ -38,7 +38,7 @@
     <summary lang="fr">Client PVR de démonstration</summary>
     <summary lang="fr_CA">Client numériscope de démo</summary>
     <summary lang="gl">Cliente PVR Demo</summary>
-    <summary lang="he">לקוח דוגמה עבור PVR</summary>
+    <summary lang="he">דוגמה של לקוח טלוויזיה חיה</summary>
     <summary lang="hr">Demo PVR klijent</summary>
     <summary lang="hu">Demo PVR ügyfél</summary>
     <summary lang="hy">Նախնական PVR բաժանորդ</summary>
@@ -64,7 +64,6 @@
     <summary lang="sl">Demo odjemalec PVR</summary>
     <summary lang="sr">Пробни PVR клијент</summary>
     <summary lang="sv">Demo PVR Klient</summary>
-    <summary lang="ta_IN"> PVR கிளையன் செயல்முறை</summary>
     <summary lang="tg">Муштарии намоишии PVR</summary>
     <summary lang="th">ตัวอย่างลูกข่าย PVR</summary>
     <summary lang="tr">PVR Tanıtım İstemcisi</summary>
@@ -93,7 +92,7 @@
     <description lang="fr">Client PVR de démonstration</description>
     <description lang="fr_CA">Client numériscope de démo</description>
     <description lang="gl">Cliente PVR Demo</description>
-    <description lang="he">לקוח דוגמה עבור PVR</description>
+    <description lang="he">דוגמה של לקוח טלוויזיה חיה</description>
     <description lang="hr">Demo PVR klijent</description>
     <description lang="hu">Demo PVR ügyfél</description>
     <description lang="hy">Նախնական PVR բաժանորդ</description>
@@ -119,7 +118,6 @@
     <description lang="sl">Demo odjemalec PVR</description>
     <description lang="sr">Пробни PVR клијент</description>
     <description lang="sv">Demo PVR Klient</description>
-    <description lang="ta_IN"> PVR கிளையன் செயல்முறை</description>
     <description lang="tg">Муштарии намоишии PVR</description>
     <description lang="th">ตัวอย่างลูกข่าย PVR</description>
     <description lang="tr">PVR Tanıtım İstemcisi</description>
@@ -148,7 +146,7 @@
     <disclaimer lang="fr">Ne contient que des clips</disclaimer>
     <disclaimer lang="fr_CA">Ne contient que des fragments</disclaimer>
     <disclaimer lang="gl">Só contén fragmentos</disclaimer>
-    <disclaimer lang="he">רק מכיל stubs</disclaimer>
+    <disclaimer lang="he">מכיל רק stubs</disclaimer>
     <disclaimer lang="hr">Samo sadrži kratke informacije</disclaimer>
     <disclaimer lang="hu">Csak tesztfunkciókat tartalmaz</disclaimer>
     <disclaimer lang="id">Hanya mengandung stub</disclaimer>
@@ -173,7 +171,6 @@
     <disclaimer lang="sl">Vsebuje le fiktivne vsebine</disclaimer>
     <disclaimer lang="sr">Садржи само назнаке садржаја</disclaimer>
     <disclaimer lang="sv">Innehåller bara stubbar</disclaimer>
-    <disclaimer lang="ta_IN">செயல் இடங்கள் உள்ளன</disclaimer>
     <disclaimer lang="tg">Танҳо дорои сарпӯшак мебошад</disclaimer>
     <disclaimer lang="tr">Sadece taslakları içerir</disclaimer>
     <disclaimer lang="uk">Не містить нічого</disclaimer>

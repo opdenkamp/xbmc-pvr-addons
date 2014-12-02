@@ -38,7 +38,7 @@ msgstr "Response timeout in seconds"
 
 msgctxt "#30008"
 msgid "Icon Path"
-msgstr "Icon Path"
+msgstr "Патека за икони"
 
 msgctxt "#30010"
 msgid "Update Interval in minutes"
@@ -62,15 +62,15 @@ msgstr "Папки за channeldata"
 
 msgctxt "#30015"
 msgid "Check for bouquett updates"
-msgstr "Провери за надградба на пакети"
+msgstr "Провери дали има нови пакети"
 
 msgctxt "#30016"
 msgid "Check for channel updates"
-msgstr "Провери за надградба на канали"
+msgstr "Провери дали има нови канали"
 
 msgctxt "#30017"
 msgid "Use only the DVB boxes' current recording path"
-msgstr "Користи само патека за сниманје на DVB уредите"
+msgstr "Користи ја патеката за снимање од DVB уредот"
 
 msgctxt "#30018"
 msgid "General"
@@ -98,11 +98,11 @@ msgstr "Папка за снимање на ресиверот"
 
 msgctxt "#30024"
 msgid "Send DeepStandby-Command"
-msgstr "Испрати DeepStandby-Наредба"
+msgstr "Испрати Наредба за DeepStandby"
 
 msgctxt "#30025"
 msgid "Fetch only one TV bouquet"
-msgstr "Превземи само TV пакет"
+msgstr "Превземи само еден TV пакет"
 
 msgctxt "#30026"
 msgid "TV-Bouquet"
@@ -111,6 +111,10 @@ msgstr "ТВ-Пакет"
 msgctxt "#30027"
 msgid "Fetch picons from webinterface"
 msgstr "Превземи икони од интернет"
+
+msgctxt "#30028"
+msgid "Use Secure HTTP (https)"
+msgstr "Користи Secure HTTP (https)"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"

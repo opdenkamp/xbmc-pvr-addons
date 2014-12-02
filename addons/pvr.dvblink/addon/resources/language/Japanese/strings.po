@@ -22,11 +22,11 @@ msgstr "一般"
 
 msgctxt "#30001"
 msgid "Server Address"
-msgstr "サーバのアドレス"
+msgstr "サーバーのアドレス"
 
 msgctxt "#30002"
 msgid "Server Port"
-msgstr "サーバのポート番号"
+msgstr "サーバーのポート番号"
 
 msgctxt "#30003"
 msgid "Client name"
@@ -122,7 +122,7 @@ msgstr "録画が取得できませんでした (エラーコード : %d)"
 
 msgctxt "#32006"
 msgid "Could not get timers(Error code : %d)"
-msgstr "タイマーが取得できませんでした (エラーコード : %d)"
+msgstr "録画予約が取得できませんでした (エラーコード : %d)"
 
 msgctxt "#32007"
 msgid "Found %d EPG timers"
@@ -130,24 +130,36 @@ msgstr "EPG タイマー %d がみつかりました"
 
 msgctxt "#32008"
 msgid "Found %d manual timers"
-msgstr "手動タイマー %d がみつかりました"
+msgstr "%d 件の手動予約がみつかりました"
 
 msgctxt "#32009"
 msgid "Found %d recordings"
-msgstr "録画 %d がみつかりました"
+msgstr "%d 件の録画がみつかりました"
 
 msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "チャンネル %s のストリームが取得できませんでした (エラーコード : %d)"
 
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "番組の毎回録画"
+
 msgctxt "#32012"
 msgid "Record this episode only"
-msgstr "このエピソードだけ録画"
+msgstr "この回だけ録画"
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "すべての回を録画する"
 
 msgctxt "#32014"
 msgid "Delete timer"
-msgstr "タイマーを削除"
+msgstr "録画予約を削除"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "この予約のみ削除"
 
 msgctxt "#32016"
 msgid "Delete the entire series"
-msgstr "シリーズ全体を削除"
+msgstr "すべての回を削除"

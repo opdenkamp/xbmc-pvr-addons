@@ -58,7 +58,7 @@ msgstr "Używaj RTSP do strumieniowania telewizji"
 
 msgctxt "#30040"
 msgid "Enable low performance mode (disables logos & thumbnails)"
-msgstr "Aktywuj tryb niskiej wydajności (bez logo i miniatur)"
+msgstr "Używaj trybu niskiej wydajności (bez logo i miniatur)"
 
 msgctxt "#30050"
 msgid "Group recordings"

@@ -140,6 +140,10 @@ msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "Activer le démultiplexage MPEG-TS"
 
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "Durée de syntonisation (sec)"
+
 msgctxt "#30054"
 msgid "Group recordings by title"
 msgstr "Regrouper les enregistrements par titre"

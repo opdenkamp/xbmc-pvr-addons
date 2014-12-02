@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.wmc"
-  version="0.3.107"
+  version="0.3.108"
   name="PVR WMC Client"
   provider-name="KrustyReturns and scarecrow420">
   <requires>
@@ -22,12 +22,17 @@
     <summary lang="de">PVR WMC-Client</summary>
     <summary lang="el">Πελάτης PVR του WMC</summary>
     <summary lang="en">PVR WMC Client</summary>
+    <summary lang="en_AU">PVR WMC Client</summary>
     <summary lang="en_NZ">PVR WMC Client</summary>
     <summary lang="en_US">PVR WMC Client</summary>
     <summary lang="es">Cliente WMC PVR</summary>
+    <summary lang="es_AR">Cliente PVR WMC</summary>
+    <summary lang="fr">Client PVR WMC</summary>
     <summary lang="fr_CA">Client de numériscope pour CMW</summary>
     <summary lang="gl">Cliente PVR do WMC</summary>
-    <summary lang="he">לקוח WMC</summary>
+    <summary lang="he">לקוח טלוויזיה חיה עבור WMC</summary>
+    <summary lang="hr">PVR WMC klijent</summary>
+    <summary lang="hu">PVR WMC Kliens</summary>
     <summary lang="id">Klien PVR WMC</summary>
     <summary lang="ko">PVR WMC 클라이언트</summary>
     <summary lang="lt">PVR WMC klientas</summary>
@@ -36,20 +41,35 @@
     <summary lang="pt">Cliente PVR WMC</summary>
     <summary lang="pt_BR">Cliente de PVR WMC</summary>
     <summary lang="ru">Клиент PVR WMC</summary>
+    <summary lang="sk">PVR WMC klient</summary>
+    <summary lang="sl">PVR WMC Odjemalec</summary>
+    <summary lang="sv">PVR WMC-klient</summary>
+    <summary lang="uk">Клієнт PVR WMC</summary>
+    <summary lang="zh">WMC PVR 客户端</summary>
     <description lang="cs">Edice pro @OS@ @ARCHITECTURE@. PVR klient pro použití nahrávacích a EPG služeb Windows Media Centra. Díky pro Tomba73 a Hoopsdavis. Speciální díky pro DBurckh.</description>
+    <description lang="de">@OS@ @ARCHITECTURE@ Edition. Ein PVR-Client zur Verknüpfung mit den Aufnahme- und EPG-Diensten des Windows Media Centers. Dank an Tomba73 und Hoopsdavis. Besonderer Dank an DBurckh.</description>
     <description lang="el">Έκδοση @OS@ @ARCHITECTURE@. Ένας πελάτης PVR για διασύνδεση με τις υπηρεσίες Εγγραφής και EPG του Windows Media Center.  Ευχαριστούμε τους Tomba73 και Hoopsdavis.  Ένα ιδιαίτερο ευχαριστώ στον DBurckh.</description>
     <description lang="en">@OS@ @ARCHITECTURE@ Edition. A PVR client to interface with Windows Media Center's Recording and EPG services.  Thanks to Tomba73 and Hoopsdavis.  Special thanks to DBurckh.</description>
+    <description lang="en_AU">@OS@ @ARCHITECTURE@ Edition. A PVR client to interface with Windows Media Centre's Recording and EPG services.  Thanks to Tomba73 and Hoopsdavis.  Special thanks to DBurckh.</description>
     <description lang="en_NZ">@OS@ @ARCHITECTURE@ Edition. A PVR client to interface with Windows Media Center's Recording and EPG services.  Thanks to Tomba73 and Hoopsdavis.  Special thanks to DBurckh.</description>
     <description lang="en_US">@OS@ @ARCHITECTURE@ Edition. A PVR client to interface with Windows Media Center's Recording and EPG services.  Thanks to Tomba73 and Hoopsdavis.  Special thanks to DBurckh.</description>
     <description lang="es">Edición @OS@ @ARCHITECTURE@. Un cliente PVR que hace de interface con los servicios de grabación y EPG de Windows Media Center. Agradecimientos a Tomba73 y Hoopsdavis. Agradecimientos especiales a DBurckh.</description>
+    <description lang="es_AR">Edición @OS@ @ARCHITECTURE@. Un cliente A PVR para interactuar con los servicios Recording &amp; EPG de Windows Media Center.  Gracias a Tomba73 y Hoopsdavis. Agradecimientos especiales a DBurckh.</description>
+    <description lang="fr">@OS@ @ARCHITECTURE@ Edition. Un client PVR à l'interface avec les services d'enregistrement et de EPG de Windows Media Center. Merci à Tomba73 et Hoopsdavis. Un merci spécial à DBurckh.</description>
     <description lang="fr_CA">Édition @ARCHITECTURE@ @SE@. Un client de numériscope pour interfacer avec les services d'enregistrement et de GÉP du Centre Multimédia Windows. Merci à Tomba73 et Hoopsdavis. Un grand merci à DBurckh.</description>
+    <description lang="he">גרסת @OS@ @ARCHITECTURE@. לקוח טלוויזיה חיה של Windows Media Center. תומך בהזרמת שידורים חיים והקלטות, הצגת לוח שידורים ותזמון הקלטות.</description>
+    <description lang="hr">@OS@ @ARCHITECTURE@ izdanje. PVR klijent za povezivanje sa snimanjima i EPG uslugom Windows Media Centra..  Zahvaljujemo Tomba73 i Hoopsdavis.  Posebna zahvala DBurckh.</description>
+    <description lang="hu">@OS@ @ARCHITECTURE@ Kiadás. Egy PVR kliens a Windows Media Center felvételeihez és EPG szolgáltatáshoz. Köszönet: JeffreyF, Tomba73, Hoopsdavis. Különleges köszönet: DBurckh.</description>
     <description lang="id">Edisi @OS@ @ARCHITECTURE@. Sebuah klien PVR untuk berhubungan dengan Perekaman Windows Media Center dan layanan EPG. Terimakasih untuk Tomba73 dan Hoopsdavis. Terimakasih khusus untuk DBurckh.</description>
     <description lang="ko">@OS@ @ARCHITECTURE@ Edition. Windows Media Center의 녹화 및 EPG 서비스와 연결되는 PVR 클라이언트입니다. Tomba73 과 Hoopsdavis 에게 감사드립니다. DBurckh 에게 특별한 감사의 말을 남깁니다.</description>
     <description lang="lt">@OS@ @ARCHITECTURE@ leidimas. PVR kliento sąsaja su Windows Media Center's įrašymo ir EPG paslaugomis. Dėkojame Tomba73 ir Hoopsdavis. Ypatingai ačiū DBurckh.</description>
     <description lang="nl">@OS@ @ARCHITECTUUR@ Editie. Een PVR cliënt voor de samenwerking met Windows mediacenter`s opnemen en EPG service met dan aan Tomba73 and Hoopsdavis.  Special thanks to DBurckh.</description>
-    <description lang="pl">Edycja dla @OS@ @ARCHITECTURE@. Klient TV usług nagrywania i przewodnika telewizyjnego dla Windows Media Center. Podziękowania dla Tomba73 i Hoopsdavis. Specjalne podziękowania dla DBurckh.</description>
+    <description lang="pl">Edycja dla @OS@ @ARCHITECTURE@. Klient TV usług nagrywania i przewodnika programów dla Windows Media Center. Podziękowania dla Tomba73 i Hoopsdavis. Specjalne podziękowania dla DBurckh.</description>
+    <description lang="pt">@ OS @ @  ARQUITETURA @ Edition. Um cliente de PVR para fazer a interface com a gravação e serviços dev EPG  do Windows Media Center. Graças a Tomba73 e Hoopsdavis. Um agradecimento especial a DBurckh.</description>
     <description lang="pt_BR">Edição @OS@ @ARCHITECTURE@. Um cliente de PVR para fazer a ponte com recurso de gravação e serviços de EPG do Windows Media Center.  Obrigado Tomba73 e Hoopsdavis. Agradecimento Especial a DBurckh.</description>
     <description lang="ru">Редакция @OS@ @ARCHITECTURE@.Клиент PVR для взаимодействия с записью Windows Media Center и сервисом EPG. Благодарности Tomba73 и Hoopsdavis. Особые благодарности DBurckh.</description>
+    <description lang="sv">@OS@ @ARCHITECTURE@ Utgåva. En PVR-klient för att hantera Windows Media Centers inspelnings- och EPG-tjänst. Tack till Tomba73 och Hoopsdavis. Speciellt tack till DBurckh.</description>
+    <description lang="zh">@OS@ @ARCHITECTURE@ 版。针对 Windows 媒体中心录像和电子节目单服务的 PVR 客户端界面。感谢 Tomba73 和 Hoopsdavis，特别感谢 DBurckh。</description>
     <disclaimer lang="bg">Това е експериментален софтуер. Използвайте го на свой собствен риск.</disclaimer>
     <disclaimer lang="cs">Toto je experimentální software. Použití je na vlastní riziko.</disclaimer>
     <disclaimer lang="de">Dies ist eine experimentelle Software. Benutzung auf eigene Gefahr.</disclaimer>
@@ -64,6 +84,7 @@
     <disclaimer lang="fr">Logiciel expérimental. À utiliser à vos risques et périls.</disclaimer>
     <disclaimer lang="fr_CA">Ce logiciel est expérimental. Utilisez à vos propres risques.</disclaimer>
     <disclaimer lang="gl">Aínda se está no desenvolvemento. Usar baixo o seu propio risco.</disclaimer>
+    <disclaimer lang="he">זוהי הרחבה נסיונית. השימוש באחריות המשתמש בלבד.</disclaimer>
     <disclaimer lang="hr">Ovo je eksperimentalan softver. Koristite ga na vlastitu odgovornost.</disclaimer>
     <disclaimer lang="hu">Fejlesztés alatt! A saját felelősségére használja!</disclaimer>
     <disclaimer lang="id">Perangkat lunak ini masih eksperimental. Resiko ditanggung penumpang.</disclaimer>
@@ -80,8 +101,10 @@
     <disclaimer lang="pt_BR">Este é um trabalho em progresso. Use a seu próprio risco</disclaimer>
     <disclaimer lang="ru">Это экспериментальное ПО. Используйте под свою ответственность.</disclaimer>
     <disclaimer lang="sk">Toto je experimentálny softvér. Používajte ho preto na vlastné riziko.</disclaimer>
+    <disclaimer lang="sl">To je eksperimentalena programska oprema. Uporaba na lastno odgovornost</disclaimer>
     <disclaimer lang="sv">Detta är en experimentell mjukvara. Används på egen risk.</disclaimer>
     <disclaimer lang="tr">Bu deneysel bir yazılımdır. Kullanım riski kendi sorumluluğunuzdadır.</disclaimer>
+    <disclaimer lang="uk">Це експериментальне програмне забезпечення. Використовуйте на свій страх і ризик.</disclaimer>
     <disclaimer lang="zh">试验性软件，使用风险自担。</disclaimer>
     <platform>@OS@</platform>
   </extension>

@@ -104,6 +104,10 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Prikaži sporočila informacij"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Kombiniraj naslov in ime epizode za snemanje"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Povezan z DVBLink strežnikom '%s'"
@@ -140,6 +144,26 @@ msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "Pridobitev pretoka za kanal %s neuspešna (Koda napake : %d)"
 
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Snemam serijo"
+
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr "Posnemi samo to epizodo"
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Posnemi vse epizode"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Izbriši časovnik"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Izbriši samo ta časovnik"
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr "Izbriši celotno serijo"

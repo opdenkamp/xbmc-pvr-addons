@@ -32,6 +32,14 @@ msgctxt "#30003"
 msgid "Password"
 msgstr "Пароль"
 
+msgctxt "#30010"
+msgid "Use favourites instead of channel list"
+msgstr "Використовувати закладки замість списку каналів"
+
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Використовувати місцевий файл закладок"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Вибір файлу favourites.xml"
@@ -47,3 +55,11 @@ msgstr "Більше"
 msgctxt "#30102"
 msgid "Recordings"
 msgstr "Записи"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Неможливо відкрити місцевий файл favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Не можу обробити список закладок"

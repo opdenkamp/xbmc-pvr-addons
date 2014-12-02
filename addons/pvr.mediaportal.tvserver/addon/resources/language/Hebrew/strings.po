@@ -18,15 +18,15 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Mediaportal Hostname"
-msgstr "שם מארח Mediaportal"
+msgstr "שם מארח או כתובת IP"
 
 msgctxt "#30001"
 msgid "Mediaportal Kodi plugin Port"
-msgstr "פורט לפלאגין Kodi בMediaportal"
+msgstr "פורט"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
-msgstr "ערוצים חופשיים לא מסחריים בלבד"
+msgstr "ערוצי שידור חופשי בלבד"
 
 msgctxt "#30003"
 msgid "Include Radio"
@@ -34,31 +34,31 @@ msgstr "כלול ערוצי רדיו"
 
 msgctxt "#30004"
 msgid "Fast channel switching (don't stop timeshift)"
-msgstr "העברה מהירה בין ערוצים (אל תעצור timeshift)"
+msgstr "העברת ערוץ מהירה (לא לעצור תזוזה בזמן)"
 
 msgctxt "#30005"
 msgid "Connect timeout (s)"
-msgstr "זמן לניסיון חיבור (שניות)"
+msgstr "זמן מירבי לניסיון חיבור (שניות)"
 
 msgctxt "#30006"
 msgid "Import only TV Channels from group"
-msgstr "ייבא ערוצי טלוויזיה רק מקבוצת"
+msgstr "יבא ערוצי טלוויזיה רק מקבוצת"
 
 msgctxt "#30007"
 msgid "Import only Radio Channels from group"
-msgstr "יבא רק תחנות רדיו מקבוצה"
+msgstr "יבא ערוצי רדיו רק מקבוצת"
 
 msgctxt "#30008"
 msgid "Convert hostname to IP-adress"
-msgstr "הפוך שם מחשב לכתובת IP"
+msgstr "המרת שם מארח לכתובת IP"
 
 msgctxt "#30009"
 msgid "EPG: Read genre strings (slow)"
-msgstr "מדריך התוכניות: קרא ז'אנרים של תוכניות (איטי)"
+msgstr "לוח שידורים: קרא מחרוזות סגנון (איטי)"
 
 msgctxt "#30010"
 msgid "Wait time after tuning a channel (ms)"
-msgstr "המתן אחרי מעבר ערוץ (מילישניות)"
+msgstr "זמן המתנה לאחר העברת ערוץ (אלפית שנ')"
 
 msgctxt "#30015"
 msgid "Streaming method"
@@ -66,11 +66,11 @@ msgstr "שיטת הזרמה"
 
 msgctxt "#30016"
 msgid "Windows user account (SMB)"
-msgstr "חשבון משתמש של חלונות (SMB)"
+msgstr "חשבון משתמש חלונות (SMB)"
 
 msgctxt "#30017"
 msgid "Windows password (SMB)"
-msgstr "סיסמה של חלונות (SMB)"
+msgstr "סיסמת חלונות (SMB)"
 
 msgctxt "#30018"
 msgid "Use RTSP streaming"
@@ -90,27 +90,27 @@ msgstr "ניגון"
 
 msgctxt "#30050"
 msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "גירסת '%s' של הפלאגין TVServerKodi ישנה מדי. אנא עדכן ל'%s' או חדשה יותר!"
+msgstr "גרסה '%s' של TVServerKodi ישנה מדי. יש לעדכן לגרסה '%s' ומעלה!"
 
 msgctxt "#30051"
 msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
-msgstr "גירסת הפלאגין TVServerKodi ישנה מדי. אנא עדכן ל'%s' או חדשה יותר!"
+msgstr "גרסת TVServerKodi ישנה מדי. יש לעדכן לגרסה '%s' ומעלה!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
-msgstr "ניגון ההקלטה נכשלה. נקה את הURL או שם הקובץ."
+msgstr "ניגון ההקלטה נכשל. כתובת הקובץ ריקה."
 
 msgctxt "#30060"
 msgid "All cards are busy"
-msgstr "כל הכרטיסים עסוקים"
+msgstr "כל המקלטים תפוסים"
 
 msgctxt "#30061"
 msgid "Channel is scrambled"
-msgstr "הערוץ מעורבל/מוצפן"
+msgstr "הערוץ מוצפן"
 
 msgctxt "#30062"
 msgid "No video or audio detected"
-msgstr "לא זוהה וידאו או אודיו"
+msgstr "לא זוהה וידאו או שמע"
 
 msgctxt "#30063"
 msgid "No signal detected"
@@ -118,31 +118,31 @@ msgstr "אין קליטה"
 
 msgctxt "#30064"
 msgid "Unknown error"
-msgstr "שגיאה לא ידועה"
+msgstr "שגיאה לא מוכרת"
 
 msgctxt "#30065"
 msgid "Unable to start graph"
-msgstr "אין אפשרות להתחיל את הגרף"
+msgstr "לא ניתן לפתוח תרשים"
 
 msgctxt "#30066"
 msgid "Unknown channel"
-msgstr "ערוץ לא ידוע"
+msgstr "ערוץ לא מוכר"
 
 msgctxt "#30067"
 msgid "No tuning details"
-msgstr "אין נתוני כוונון"
+msgstr "אין נתוני קליטה"
 
 msgctxt "#30068"
 msgid "Channel is not mapped to any card"
-msgstr "הערוץ לא ממופה לשום כרטיס"
+msgstr "הערוץ לא ממופה לאף מקלט"
 
 msgctxt "#30069"
 msgid "Card is disabled"
-msgstr "הכרטיס מנוטרל"
+msgstr "המקלט מנוטרל"
 
 msgctxt "#30070"
 msgid "Connection to slave failed"
-msgstr "התקשורת לslave נכשלה"
+msgstr "החיבור לשרת משני נכשל"
 
 msgctxt "#30071"
 msgid "Not the owner"
@@ -150,11 +150,11 @@ msgstr "לא הבעלים"
 
 msgctxt "#30072"
 msgid "Graph building failed"
-msgstr "בניית גרף נכשלה"
+msgstr "בניית תרשים נכשלה"
 
 msgctxt "#30073"
 msgid "SW Encoder missing"
-msgstr "מקודד SW חסר"
+msgstr "מקודד תוכנה חסר"
 
 msgctxt "#30074"
 msgid "No free disk space"
@@ -166,7 +166,7 @@ msgstr "לא נמצא PMT"
 
 msgctxt "#30100"
 msgid "Schedule settings"
-msgstr "הגדרות לוח שידורים"
+msgstr "הגדרות תזמונים"
 
 msgctxt "#30101"
 msgid "Frequency"
@@ -174,7 +174,7 @@ msgstr "תדירות"
 
 msgctxt "#30102"
 msgid "Airtime"
-msgstr "זמן אוויר"
+msgstr "זמן שידור"
 
 msgctxt "#30103"
 msgid "Channels"
@@ -182,23 +182,23 @@ msgstr "ערוצים"
 
 msgctxt "#30104"
 msgid "Keep"
-msgstr "שמור"
+msgstr "השאר"
 
 msgctxt "#30105"
 msgid "Record minutes before start"
-msgstr "דקות הקלטה לפני ההתחלה "
+msgstr "הקדמת תזמון תחילת הקלטה (דק')"
 
 msgctxt "#30106"
 msgid "Record minutes after end"
-msgstr "דקות הקלטה לפני הסיום"
+msgstr "איחור תזמון סיום הקלטה (דק')"
 
 msgctxt "#30110"
 msgid "Record Once"
-msgstr "הקלט פעם אחת"
+msgstr "הקלטה חד פעמית"
 
 msgctxt "#30111"
 msgid "Record Daily (This program)"
-msgstr "הקלטה יומית (התוכנית הזאת)"
+msgstr "הקלטה יומית (תוכנית זו)"
 
 msgctxt "#30112"
 msgid "Record Weekly"
@@ -206,15 +206,15 @@ msgstr "הקלטה שבועית"
 
 msgctxt "#30113"
 msgid "Record Weekends"
-msgstr "הקלטת סופי שבוע\nהקלטה סופי שבוע"
+msgstr "הקלטה בסופ\"ש"
 
 msgctxt "#30114"
 msgid "Record Week Days"
-msgstr "הקלטה ימי השבוע"
+msgstr "הקלטה בימי חול"
 
 msgctxt "#30120"
 msgid "This time"
-msgstr "בזמן הזה"
+msgstr "זמן זה"
 
 msgctxt "#30121"
 msgid "Anytime"
@@ -230,7 +230,7 @@ msgstr "כל ערוץ"
 
 msgctxt "#30130"
 msgid "Until space needed"
-msgstr "עד שטח נצרך"
+msgstr "עד שנפח האחסון נדרש"
 
 msgctxt "#30131"
 msgid "Until Watched"
@@ -246,7 +246,7 @@ msgstr "תמיד"
 
 msgctxt "#30135"
 msgid "Backend default"
-msgstr "ברירת מחדל של ממשק אחורי"
+msgstr "ברירת מחדל של שרת אחורי"
 
 msgctxt "#30136"
 msgid "Kodi default"

@@ -54,7 +54,7 @@ msgstr "Rozwiązuj nazwę hosta na adres IP"
 
 msgctxt "#30009"
 msgid "EPG: Read genre strings (slow)"
-msgstr "Przewodnik TV: wczytuj gatunki (powolne)"
+msgstr "Przewodnik: wczytuj gatunki (wolne)"
 
 msgctxt "#30010"
 msgid "Wait time after tuning a channel (ms)"
@@ -130,7 +130,7 @@ msgstr "Nieznany kanał"
 
 msgctxt "#30067"
 msgid "No tuning details"
-msgstr "Brak danych do dostrojenia"
+msgstr "Brak danych dostrajania"
 
 msgctxt "#30068"
 msgid "Channel is not mapped to any card"

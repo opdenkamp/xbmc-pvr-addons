@@ -18,11 +18,11 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "VU+ hostname or IP address"
-msgstr "שם מארח או כתובת IP של VU+‎"
+msgstr "שם מארח או כתובת IP"
 
 msgctxt "#30002"
 msgid "Streaming Port"
-msgstr "פתחת זרימה"
+msgstr "פורט הזרמה"
 
 msgctxt "#30003"
 msgid "Username"
@@ -34,43 +34,43 @@ msgstr "סיסמה"
 
 msgctxt "#30007"
 msgid "Response timeout in seconds"
-msgstr "אורך פסק זמן לתגובה בשניות"
+msgstr "זמן המתנה מירבי לתגובה בשניות"
 
 msgctxt "#30008"
 msgid "Icon Path"
-msgstr "נתיב אייקונים"
+msgstr "נתיב סמלי ערוצים"
 
 msgctxt "#30010"
 msgid "Update Interval in minutes"
-msgstr "מרווח בין עדכונים בדקות"
+msgstr "מרווח זמני עדכונים בדקות"
 
 msgctxt "#30011"
 msgid "Automatic Timerlist Cleanup"
-msgstr "ניקוי רשימת הקלטות אוטומטית"
+msgstr "ניקוי רשימת תזמונים אוטומטית"
 
 msgctxt "#30012"
 msgid "Webinterface Port"
-msgstr "פיתחת ממשק רשת"
+msgstr "פורט ממשק רשת"
 
 msgctxt "#30013"
 msgid "Zap before channelswitch (i.e. for Single Tuner boxes)"
-msgstr "Zap before channelswitch (i.e. for Single Tuner boxes)"
+msgstr "העבר ערוץ במכשיר לפני העברה ב־Kodi (מכשיר בעל מקלט בודד)"
 
 msgctxt "#30014"
 msgid "Folder for channeldata"
-msgstr "תיקיה עבור מידע ערוצים"
+msgstr "תיקיית נתוני ערוצים"
 
 msgctxt "#30015"
 msgid "Check for bouquett updates"
-msgstr "בדוק לעדכונים לזרים"
+msgstr "חיפוש עדכוני סל ערוצים"
 
 msgctxt "#30016"
 msgid "Check for channel updates"
-msgstr "בדוק לעדכוני ערוץ"
+msgstr "חיפוש עדכוני ערוץ"
 
 msgctxt "#30017"
 msgid "Use only the DVB boxes' current recording path"
-msgstr "השתמש בנתיבי הקלטה רק של קופסאות DVB נוכחיים"
+msgstr "שימוש בנתיב הקלטה נוכחי של מכשיר ה־DVB בלבד"
 
 msgctxt "#30018"
 msgid "General"
@@ -90,36 +90,36 @@ msgstr "HTTP"
 
 msgctxt "#30022"
 msgid "Recordings / Timer"
-msgstr "הקלטות / מתזמנים"
+msgstr "הקלטות / תזמון"
 
 msgctxt "#30023"
 msgid "Recording folder on the receiver"
-msgstr "תיקית הקלטות על המקלט"
+msgstr "תיקיית הקלטות בשרת אחורי"
 
 msgctxt "#30024"
 msgid "Send DeepStandby-Command"
-msgstr "שלח פקודת DeepStandby"
+msgstr "שלח פקודת שינה עמוקה"
 
 msgctxt "#30025"
 msgid "Fetch only one TV bouquet"
-msgstr "תמשוך רק תוכנית זרה אחת"
+msgstr "משוך סל ערוצים יחיד בלבד"
 
 msgctxt "#30026"
 msgid "TV-Bouquet"
-msgstr "תוכנית זרה"
+msgstr "סל ערוצים"
 
 msgctxt "#30027"
 msgid "Fetch picons from webinterface"
-msgstr "קבלת ה־picons ממנשק הדפדפן"
+msgstr "משוך סמלי ערוצים מממשק הדפדפן"
 
 msgctxt "#30028"
 msgid "Use Secure HTTP (https)"
-msgstr "השתמש ב HTTP מאובטח (https)"
+msgstr "השתמש ב־HTTP מאובטח (https)"
 
 msgctxt "#30500"
 msgid "Disconnected from '%s'"
-msgstr "התנתק מ '%s'"
+msgstr "נותק מ־'%s'"
 
 msgctxt "#30501"
 msgid "Reconnected to '%s'"
-msgstr "התחבר שוב ל '%s'"
+msgstr "חובר חזרה ל־'%s'"

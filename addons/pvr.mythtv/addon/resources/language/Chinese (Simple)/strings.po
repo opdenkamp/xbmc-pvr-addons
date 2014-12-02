@@ -68,6 +68,10 @@ msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
 msgstr "MythTV 后端网络地址（WOL）"
 
+msgctxt "#30013"
+msgid "MythTV Backend Port for API services"
+msgstr "针对 API 服务的 MythTV 后端端口"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "常规"
@@ -94,7 +98,7 @@ msgstr "自动查找元数据"
 
 msgctxt "#30027"
 msgid "Commercial Flag new recordings"
-msgstr "标记新录像"
+msgstr "广告标记新录像"
 
 msgctxt "#30028"
 msgid "Transcode new recordings"
@@ -102,19 +106,19 @@ msgstr "转码新录像"
 
 msgctxt "#30029"
 msgid "Run User Job #1"
-msgstr "运行用户任务#1"
+msgstr "运行用户任务 #1"
 
 msgctxt "#30030"
 msgid "Run User Job #2"
-msgstr "运行用户任务#2"
+msgstr "运行用户任务 #2"
 
 msgctxt "#30031"
 msgid "Run User Job #3"
-msgstr "运行用户任务#3"
+msgstr "运行用户任务 #3"
 
 msgctxt "#30032"
 msgid "Run User Job #4"
-msgstr "运行用户任务#4"
+msgstr "运行用户任务 #4"
 
 msgctxt "#30033"
 msgid "Transcoder"
@@ -136,25 +140,57 @@ msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "启用分离 MPEG-TS"
 
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "换台延迟（秒）"
+
+msgctxt "#30054"
+msgid "Group recordings by title"
+msgstr "按标题分组录像"
+
 msgctxt "#30055"
 msgid "Always"
 msgstr "总是"
+
+msgctxt "#30056"
+msgid "Only for series"
+msgstr "仅系列"
 
 msgctxt "#30057"
 msgid "Never"
 msgstr "从不"
 
+msgctxt "#30058"
+msgid "Enable commercial skips (EDL)"
+msgstr "启用跳过广告（EDL）"
+
 msgctxt "#30059"
 msgid "Always"
 msgstr "总是"
+
+msgctxt "#30060"
+msgid "Dialog"
+msgstr "对话"
 
 msgctxt "#30061"
 msgid "Never"
 msgstr "从不"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "阻止后端关闭"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "协议版本：%i - 数据库版本：%i"
+
+msgctxt "#30110"
+msgid "Enabling EDL"
+msgstr "EDL 启用中"
+
+msgctxt "#30111"
+msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
+msgstr "发现剪辑表或广告过滤，\n对此节目激活 EDL 功能吗？"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

@@ -16,13 +16,117 @@ msgstr ""
 "Language: he\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "שם מארח או כתובת IP"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "יש להשאיר כתובת IP כ־127.0.0.1, אם השרת האחורי רץ על מערכת זו"
+
 msgctxt "#30002"
 msgid "Port Number"
 msgstr "פורט"
 
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "ההזרמה נותקה, תקלה לא מוכרת"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "לא נמצאו נתוני וידאו בערוץ זה"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "המקלט נדרש להקלטה מתוזמנת"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "מחיקת ההקלטה נכשלה, הקובץ בשימוש או מוגן מפני כתיבה"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "מחיקת ההקלטה נכשלה, קובץ ההקלטה לא קיים"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "קובץ הקלטה לא נמצא"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "ערוץ חלופי נבחר:"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "זמן חלופי נבחר:"
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "לא ניתן להתחיל, המקלט אינו זמין עוד"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "תוכן הערוץ מוגן"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "זמן סיום הוארך ב־"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "אפשר בדיקת מצב אות"
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "מרווח זמני עדכון מצב אות (שנ')"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "אחסן בשרת דגלי מצב 'המשך צפיה'/'נצפה'"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "תיקיית הקלטות לא נמצאה"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "תיקיית הקלטות אינה נגישה"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "עדכון גרסת ServerWMC זמין (%s)"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "כל המקלטים לערוץ זה תפוסים"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "שידור חי נותק"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "שגיאת שידור חי, נעצר בפתאומית"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "הזרמת הקלטה נותקה"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "הזרמת הקלטה נעצרה בפתאומיות"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "הער שרת באמצעות WakeOnLAN"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "מעיר שרת באמצעות WakeOnLAN..."
+
 msgctxt "#30027"
 msgid "Time drift between client and backend of %s minutes"
-msgstr "היסט זמן בין לקוח PVR לשרת בן %s דקות"
+msgstr "היסט זמן בין לקוח לשרת אחורי בן %s דקות"
 
 msgctxt "#30100"
 msgid "Recording Preference"
@@ -30,15 +134,15 @@ msgstr "העדפות הקלטה"
 
 msgctxt "#30101"
 msgid "Record this episode only"
-msgstr "הקלט פרק זה בלבד"
+msgstr "הקלטת פרק זה בלבד"
 
 msgctxt "#30102"
 msgid "Record the series"
-msgstr "הקלט סדרה"
+msgstr "הקלטת סדרה"
 
 msgctxt "#30103"
 msgid "Show type:"
-msgstr "הראה סוג:"
+msgstr "סוג תוכנית:"
 
 msgctxt "#30104"
 msgid "New and rerun"
@@ -50,7 +154,7 @@ msgstr "חדש בלבד"
 
 msgctxt "#30106"
 msgid "Live only"
-msgstr "חי בלבד"
+msgstr "שידור חי בלבד"
 
 msgctxt "#30107"
 msgid "Channel:"
@@ -62,7 +166,7 @@ msgstr "כל ערוץ"
 
 msgctxt "#30110"
 msgid "Airtime:"
-msgstr "זמן אוויר:"
+msgstr "זמן שידור:"
 
 msgctxt "#30111"
 msgid "Anytime"
@@ -70,12 +174,12 @@ msgstr "בכל זמן"
 
 msgctxt "#30120"
 msgid "Delete Timer"
-msgstr "מחק תזמון"
+msgstr "מחיקת תזמון"
 
 msgctxt "#30121"
 msgid "Delete this episode timer only"
-msgstr "מחק את התיזמון של פרק זה בלבד"
+msgstr "מחיקת תזמון הקלטת פרק זה בלבד"
 
 msgctxt "#30122"
 msgid "Delete the entire series"
-msgstr "מחק את כל הסדרה"
+msgstr "מחיקת כל הסדרה"

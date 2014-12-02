@@ -16,6 +16,170 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Посилання або IP-адреса сервера"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "Використовуйте IP адресу 127.0.0.1, якщо сервер розташований на цьому ж пристрої"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Номер порту"
+
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Затримка потоку, невідома проблема"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Не знайдено даних на цьому каналі"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Потрібен тюнер для запису"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Не вдалось видалити запис, файл використовується або захищений від запису"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Не вдалось видалити запис, файл запису не існує"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Файл запису не  знайдено"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Обрано альтернативний канал:"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Обрано альтернативний час:"
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Не вдалося запустити, тюнер більше не доступний"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Зміст каналу захищений"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "Час закінчення збільшився на"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "Ввімкнути СигналСтан дзвінків"
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "Інтервал оновлення СигналуСтану (сек)"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Записувати статус Продовження/Перегляду на сервері"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Теку ТБ записів неможливо відкрити"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Теку ТБ записів неможливо відкрити"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Доступна нова версія СервераWMC (%s)"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Всі тюнери для цього каналу зайняті"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "Закінчився час Live TV"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "Помилка в Live TV, вимкнувся швидше терміну"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Закінчився час запису потоку "
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Потік запису закінчився рано"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Використовувати WOL щоб розбудити сервер"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Надсилання WOL сигналу до сервера..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "Зміщення в часі між клієнтом і сервером в %s хвилин"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Налаштування запису"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Записати тільки цю серію"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Записати серіал"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Тип ТВ-шоу:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Нові і перезапущені"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Лише нові"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "Лише наживо"
+
 msgctxt "#30107"
 msgid "Channel:"
-msgstr "Канал"
+msgstr "Канал:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Будь-який канал"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Ефірний час:"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Будь-коли"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Видалити таймер"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Видалити таймер лише для цієї серії"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Видалити весь серіал"

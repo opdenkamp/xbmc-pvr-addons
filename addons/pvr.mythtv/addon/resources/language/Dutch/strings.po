@@ -68,6 +68,10 @@ msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
 msgstr "MythTV Backend ethernet adres (WOL)"
 
+msgctxt "#30013"
+msgid "MythTV Backend Port for API services"
+msgstr "MythTV Backend poort voor API services"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Algemene instellingen"
@@ -136,25 +140,57 @@ msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "Activeer Demuxing MPEG-TS"
 
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "Tuner vertraging (sec)"
+
+msgctxt "#30054"
+msgid "Group recordings by title"
+msgstr "Groepeer opnamen via titel"
+
 msgctxt "#30055"
 msgid "Always"
 msgstr "Altijd"
+
+msgctxt "#30056"
+msgid "Only for series"
+msgstr "Alleen voor series"
 
 msgctxt "#30057"
 msgid "Never"
 msgstr "Nooit"
 
+msgctxt "#30058"
+msgid "Enable commercial skips (EDL)"
+msgstr "Activeer reclame skips (EDL)"
+
 msgctxt "#30059"
 msgid "Always"
 msgstr "Altijd"
+
+msgctxt "#30060"
+msgid "Dialog"
+msgstr "Dialoog"
 
 msgctxt "#30061"
 msgid "Never"
 msgstr "Nooit"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Blokeer backend afsluiten"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Protocol versie: %i - Database versie: %i"
+
+msgctxt "#30110"
+msgid "Enabling EDL"
+msgstr "Activeren EDL"
+
+msgctxt "#30111"
+msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
+msgstr "EEN knip lijst of reclame skips zijn gevonden.\nWil je de EDL functionaliteit activeren voor deze uitzending?"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

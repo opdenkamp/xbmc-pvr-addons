@@ -72,6 +72,10 @@ msgctxt "#30061"
 msgid "Never"
 msgstr "Никогаш"
 
+msgctxt "#30309"
+msgid "Not recording"
+msgstr "Ne Snima"
+
 msgctxt "#30310"
 msgid "Enabled"
 msgstr "Овозможено"

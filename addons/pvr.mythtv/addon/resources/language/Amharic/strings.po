@@ -83,3 +83,7 @@ msgstr "ተችሏል"
 msgctxt "#30311"
 msgid "Disabled"
 msgstr "ተሰናክሏል "
+
+msgctxt "#30411"
+msgid "Delete and re-record"
+msgstr "ማጥፊያ እና እንደገና-መቅረጫ"

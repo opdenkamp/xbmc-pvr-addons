@@ -24,6 +24,10 @@ msgctxt "#30004"
 msgid "Password"
 msgstr "Нууц үг"
 
+msgctxt "#30007"
+msgid "Response timeout in seconds"
+msgstr "Хариу хугацаа хэтрэлт, секундээр"
+
 msgctxt "#30018"
 msgid "General"
 msgstr "Ерөнхий"

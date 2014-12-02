@@ -24,6 +24,10 @@ msgctxt "#30002"
 msgid "Port Number"
 msgstr "Liman Numarası"
 
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Sadece bu bölümü kaydet"
+
 msgctxt "#30102"
 msgid "Record the series"
 msgstr "Bu seriyi kayıt et"

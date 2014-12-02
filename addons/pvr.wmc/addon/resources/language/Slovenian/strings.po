@@ -16,6 +16,54 @@ msgstr ""
 "Language: sl\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Ime serverja ali IP"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "Obdrži IP naslov 127.0.0.1, če dela strežnik na istem istemu"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Številka vrat"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Na tem kanalu ni video podatkov"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Za snemanje potrebujete tuner"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Nastavitve snemanja"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Posnemi samo to epizodo"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Samo nov"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "V živo"
+
 msgctxt "#30107"
 msgid "Channel:"
 msgstr "Program:"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Kadarkoli"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Izbriši časovnik"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Izbriši celotno serijo"

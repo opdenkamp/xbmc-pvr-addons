@@ -104,6 +104,10 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Visa informationsmeddelanden"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Kombinera titel och episodnamn för inspelningar"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Ansluten till DVBLink server '%s'"
@@ -140,13 +144,25 @@ msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "Kunde inte hämta ström för kanal %s (felkod: %d)"
 
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Serieinspelning"
+
 msgctxt "#32012"
 msgid "Record this episode only"
 msgstr "Spela in endast detta avsnitt"
 
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Spela in alla episoder"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Ta bort timer"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Ta endast bort denna timer"
 
 msgctxt "#32016"
 msgid "Delete the entire series"

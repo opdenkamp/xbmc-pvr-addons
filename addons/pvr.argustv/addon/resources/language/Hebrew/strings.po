@@ -18,11 +18,11 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "ARGUS TV Hostname"
-msgstr "שם מארח של ARGUS TV  "
+msgstr "שם מארח או כתובת IP"
 
 msgctxt "#30001"
 msgid "ARGUS TV webserver port"
-msgstr "פתחת שרת רשת של ARGUS TV"
+msgstr "פורט"
 
 msgctxt "#30002"
 msgid "Include Radio"
@@ -30,7 +30,7 @@ msgstr "כלול ערוצי רדיו"
 
 msgctxt "#30003"
 msgid "Connect timeout (s)"
-msgstr "זמן לניסיון חיבור (שניות)"
+msgstr "זמן מירבי לניסיון חיבור (שנ')"
 
 msgctxt "#30004"
 msgid "Windows user account"
@@ -42,4 +42,4 @@ msgstr "סיסמה"
 
 msgctxt "#30006"
 msgid "Delay after tuning (ms)"
-msgstr "השהיה לאחר כיונון (מילי שניות)"
+msgstr "השהיה לאחר העברת ערוץ (אלפית שנ')"

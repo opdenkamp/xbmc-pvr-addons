@@ -164,6 +164,10 @@ msgctxt "#30075"
 msgid "No PMT found"
 msgstr "PMT ni mogoče najti"
 
+msgctxt "#30101"
+msgid "Frequency"
+msgstr "Frekvenca"
+
 msgctxt "#30103"
 msgid "Channels"
 msgstr "Programi"
@@ -175,6 +179,14 @@ msgstr "Obdrži"
 msgctxt "#30110"
 msgid "Record Once"
 msgstr "Posnemi enkrat"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Tokrat"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Kadarkoli"
 
 msgctxt "#30132"
 msgid "Days"

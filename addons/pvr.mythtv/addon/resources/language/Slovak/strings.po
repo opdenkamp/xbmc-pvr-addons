@@ -68,6 +68,10 @@ msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
 msgstr "Ethernetová adresa backendu MythTV (WOL)"
 
+msgctxt "#30013"
+msgid "MythTV Backend Port for API services"
+msgstr "Sieťový port MythTV backendu pre služby API"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Všeobecné"

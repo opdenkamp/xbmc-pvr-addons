@@ -104,6 +104,10 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Mostrar mensajes de información"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Combinar nombres de títulos y episodios para grabaciones"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Conectado al servidor DVBLink '%s'"
@@ -140,13 +144,25 @@ msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "No se puede encontrar el stream para el canal %s (código de error: %d)"
 
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Grabación de serie"
+
 msgctxt "#32012"
 msgid "Record this episode only"
 msgstr "Grabar sólo este episodio"
 
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Grabar todos los episodios"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Eliminar temporizador"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Solamente borrar este temporizador"
 
 msgctxt "#32016"
 msgid "Delete the entire series"

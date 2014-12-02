@@ -104,6 +104,10 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "显示信息"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "录像时结合标题和集名"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "连接到 DVBLink 服务器“%s”"
@@ -140,13 +144,25 @@ msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "无法获取频道 %s 的媒体流（错误码：%d）"
 
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "整剧录制"
+
 msgctxt "#32012"
 msgid "Record this episode only"
 msgstr "仅录本集"
 
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "录制所有分集"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "删除定时器"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "仅删除本定时器"
 
 msgctxt "#32016"
 msgid "Delete the entire series"

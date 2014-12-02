@@ -18,19 +18,19 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "MythTV Backend Hostname or IP"
-msgstr "Nom d'hôte du serveur MythTV ou IP"
+msgstr "Nom d'hôte ou adresse IP du dorsal MythTV"
 
 msgctxt "#30001"
 msgid "MythTV Backend Port"
-msgstr "Port du serveur MythTV"
+msgstr "Port du dorsal MythTV"
 
 msgctxt "#30002"
 msgid "MythTV Database Username"
-msgstr "Nom d'utilisateur de base de données MythTV"
+msgstr "Nom d'utilisateur de la base de données MythTV"
 
 msgctxt "#30003"
 msgid "MythTV Database Password"
-msgstr "Mot de passe de base de données MythTV"
+msgstr "Mot de passe de la base de données MythTV"
 
 msgctxt "#30004"
 msgid "MythTV Database Databasename"
@@ -38,15 +38,15 @@ msgstr "Nom de la base de données MythTV"
 
 msgctxt "#30005"
 msgid "Include more debug information in the log file"
-msgstr "Renseigner en détails le journal des évènements"
+msgstr "Inclure plus d'informations de débogage dans le fichier journal"
 
 msgctxt "#30006"
 msgid "Enable Live TV"
-msgstr "Activer la télévision en direct"
+msgstr "Activer la télé en direct"
 
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
-msgstr "Autoriser la TV à modifier la planification des programmes"
+msgstr "Permettre à la télé en direct de déplacer les émissions planifiées"
 
 msgctxt "#30008"
 msgid "Conflict handling"
@@ -54,23 +54,23 @@ msgstr "Gestion des conflits"
 
 msgctxt "#30009"
 msgid "Prefer Live TV when recording has later slot"
-msgstr "Préférer la TV en direct si possible"
+msgstr "Préférer la télé en direct quand l'enregistrement a une tranche horaire ultérieure"
 
 msgctxt "#30010"
 msgid "Prefer recording and stop Live TV"
-msgstr "Préférer l'enregistrement et arrêter la TV"
+msgstr "Préférer l'enregistrement et arrêter la télé en direct"
 
 msgctxt "#30011"
 msgid "Prefer Live TV and cancel conflicting recording"
-msgstr "Préférer la TV et annuler l'enregistrement"
+msgstr "Préférer la télé en direct et arrêter les enregistrements en conflit"
 
 msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
-msgstr "Adresse Ethernet du serveur MythTV (WOL)"
+msgstr "Adresse Ethernet (WOL) du dorsa MythTV"
 
 msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
-msgstr "Port du serveur MythTV pour les services API"
+msgstr "Port du dorsal MythTV pour les services API"
 
 msgctxt "#30019"
 msgid "General"
@@ -78,7 +78,7 @@ msgstr "Général"
 
 msgctxt "#30020"
 msgid "Template provider"
-msgstr "Fournisseur de modèle"
+msgstr "Fournisseur de modèles"
 
 msgctxt "#30021"
 msgid "Internal"
@@ -98,7 +98,7 @@ msgstr "Rechercher automatiquement les métadonnées"
 
 msgctxt "#30027"
 msgid "Commercial Flag new recordings"
-msgstr "Marquer les annonces publicitaires des enregistrements"
+msgstr "Marquer les publicités des nouveaux enregistrements"
 
 msgctxt "#30028"
 msgid "Transcode new recordings"
@@ -106,19 +106,19 @@ msgstr "Transcoder les nouveaux enregistrements"
 
 msgctxt "#30029"
 msgid "Run User Job #1"
-msgstr "Lancer la tâche utilisateur #1"
+msgstr "Exécuter le travail d'utilisateur no 1"
 
 msgctxt "#30030"
 msgid "Run User Job #2"
-msgstr "Lancer la tâche utilisateur #2"
+msgstr "Exécuter le travail d'utilisateur no 2"
 
 msgctxt "#30031"
 msgid "Run User Job #3"
-msgstr "Lancer la tâche utilisateur #3"
+msgstr "Exécuter le travail d'utilisateur no 3"
 
 msgctxt "#30032"
 msgid "Run User Job #4"
-msgstr "Lancer la tâche utilisateur #4"
+msgstr "Exécuter le travail d'utilisateur no 4"
 
 msgctxt "#30033"
 msgid "Transcoder"
@@ -126,7 +126,7 @@ msgstr "Transcodeur"
 
 msgctxt "#30034"
 msgid "Allow recordings to expire"
-msgstr "Autoriser les enregistrements à expirer"
+msgstr "Permettre l'expiration des enregistrements"
 
 msgctxt "#30049"
 msgid "Recording template"
@@ -139,6 +139,10 @@ msgstr "Avancé"
 msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "Activer le démultiplexage MPEG-TS"
+
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "Délai de syntonisation (secondes)"
 
 msgctxt "#30054"
 msgid "Group recordings by title"
@@ -158,7 +162,7 @@ msgstr "Jamais"
 
 msgctxt "#30058"
 msgid "Enable commercial skips (EDL)"
-msgstr "Activer la prise en charge des sauts publicitaires (EDL)"
+msgstr "Activer le saut des publicités (EDL)"
 
 msgctxt "#30059"
 msgid "Always"
@@ -166,43 +170,47 @@ msgstr "Toujours"
 
 msgctxt "#30060"
 msgid "Dialog"
-msgstr "Dialogue"
+msgstr "Boîte de dialogue"
 
 msgctxt "#30061"
 msgid "Never"
 msgstr "Jamais"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Bloquer l'extinction du dorsal"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
-msgstr "Version du protocole: %i - Version de la base de données: %i"
+msgstr "Version du protocole : %i - Version de la base de données : %i"
 
 msgctxt "#30110"
 msgid "Enabling EDL"
-msgstr "Activation de EDL"
+msgstr "Activation de l'EDL"
 
 msgctxt "#30111"
 msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
-msgstr "Une liste de coupures ou des sauts publicitaires ont été trouvés.\nVoulez-vous activer la fonctionnalité EDL pour cette représentation ?"
+msgstr "Une liste de coupures ou des sauts publicitaires ont été trouvés.\nVoulez-vous activer la fonctionnalité EDL pour cette émission ?"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"
-msgstr "Impossible de se connecter au serveur MythTV"
+msgstr "Échec lors de la connexion au dorsal MythTV"
 
 msgctxt "#30301"
 msgid "Failed to connect to MythTV database"
-msgstr "Impossible de se connecter à la base de données MythTV"
+msgstr "Échec lors de la connexion à la base de données MythTV"
 
 msgctxt "#30302"
 msgid "Connection to MythTV backend lost"
-msgstr "Connexion au serveur MythTV perdue"
+msgstr "La connexion au dorsal MythTV a été perdue"
 
 msgctxt "#30303"
 msgid "Connection to MythTV restored"
-msgstr "Connexion au serveur MythTV rétablie"
+msgstr "La connexion à MythTV est rétablie"
 
 msgctxt "#30304"
 msgid "No response from MythTV backend"
-msgstr "Pas de réponse du serveur MythTV"
+msgstr "Aucune réponse du dorsal MythTV"
 
 msgctxt "#30305"
 msgid "Channel unavailable"
@@ -214,15 +222,15 @@ msgstr "Enregistreur indisponible"
 
 msgctxt "#30307"
 msgid "Canceling conflicting recording: %s"
-msgstr "Annuler l'enregistrement en conflit: %s"
+msgstr "Annulation de l'enregistrement en conflit : %s"
 
 msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
-msgstr "Arrêter la TV en direct pour l'enregistrement en conflit: %s"
+msgstr "Arrêt de la télé en direct dû à un enregistrement en conflit : %s"
 
 msgctxt "#30309"
 msgid "Not recording"
-msgstr "Pas d'enregistrement"
+msgstr "N'enregistre pas"
 
 msgctxt "#30310"
 msgid "Enabled"
@@ -238,31 +246,31 @@ msgstr "Aucune diffusion trouvée"
 
 msgctxt "#30411"
 msgid "Delete and re-record"
-msgstr "Supprimer et réenregistrer"
+msgstr "Supprimer et ré-enregistrer"
 
 msgctxt "#30412"
 msgid "Keep LiveTV recording"
-msgstr "Garder l'enregistrement sur la TV en direct"
+msgstr "Garder l'enregistrement de la télé en direct"
 
 msgctxt "#30421"
 msgid "Show/hide rules with status 'Not Recording'"
-msgstr "Montrer/cacher les règles avec statut 'Pas d'enregistrement'"
+msgstr "Montrer/cacher les règles ayant un état « N'enregistre pas »"
 
 msgctxt "#30431"
 msgid "Record all showings (this channel)"
-msgstr "Enregistrer toutes les émissions (cette chaîne)"
+msgstr "Enregistrer toutes les présentations (cette chaîne)"
 
 msgctxt "#30432"
 msgid "Record this showing every week"
-msgstr "Enregistrer cette émission toutes les semaines"
+msgstr "Enregistrer cette présentation toutes les semaines"
 
 msgctxt "#30433"
 msgid "Record this showing every day"
-msgstr "Enregistrer cette émission tous les jours"
+msgstr "Enregistrer cette présentation tous les jours"
 
 msgctxt "#30434"
 msgid "Record one showing (all channels)"
-msgstr "Enregistrer une émission (toutes les chaînes)"
+msgstr "Enregistrer une présentation (toutes les chaînes)"
 
 msgctxt "#30435"
 msgid "Record all new episodes (this channel)"

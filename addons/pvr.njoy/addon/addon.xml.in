@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.njoy"
-  version="1.9.12"
+  version="1.9.13"
   name="Njoy N7 PVR Client"
   provider-name="Team XBMC">
   <requires>
@@ -36,7 +36,7 @@
     <summary lang="fr">Client PVR Njoy N7</summary>
     <summary lang="fr_CA">Client numériscope Njoy N7</summary>
     <summary lang="gl">Cliente PVR de Njoy N7</summary>
-    <summary lang="he">לקוח Njoy N7</summary>
+    <summary lang="he">לקוח טלוויזיה חיה עבור Njoy N7</summary>
     <summary lang="hr">Njoy N7 PVR klijent</summary>
     <summary lang="hu">Njoy N7 PVR ügyfél</summary>
     <summary lang="id">Klien Njoy N7 PVR</summary>
@@ -62,7 +62,6 @@
     <summary lang="sl">Odjemalec PVR Njoy N7</summary>
     <summary lang="sr">PVR клијент Njoy N7</summary>
     <summary lang="sv">Njoy N7 PVR Klient</summary>
-    <summary lang="ta_IN">Njoy N7 PVR கிளையன்</summary>
     <summary lang="tg">Муштарии Njoy N7 PVR</summary>
     <summary lang="th">Njoy N7 PVR Client</summary>
     <summary lang="tr">Njoy N7 PVR İstemcisi</summary>

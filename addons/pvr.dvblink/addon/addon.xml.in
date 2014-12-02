@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.dvblink"
-  version="1.9.9"
+  version="1.9.10"
   name="DVBLink PVR Client"
   provider-name="DVBLogic">
   <requires>
@@ -32,7 +32,7 @@
     <summary lang="fr">Plugin PVR pour DVBLink</summary>
     <summary lang="fr_CA">Plugiciel de numériscope pour DVBLink</summary>
     <summary lang="gl">Complemento PVR do DVBLink</summary>
-    <summary lang="he">תוסף PVR עבור DVBLink</summary>
+    <summary lang="he">לקוח טלוויזיה חיה עבור DVBLink</summary>
     <summary lang="hr">PVR dodatak za DVBLink</summary>
     <summary lang="hu">PVR Kiegészítő a DVBLink-hez</summary>
     <summary lang="id">Plugin PVR untuk DVBlink</summary>
@@ -70,7 +70,7 @@
     <description lang="fr">Plugin PVR pour DVBLink de DvbLogic.com. Supporte la lecture en continu de la télévision en directe et de son enregistrement, guide de programme, programmations.</description>
     <description lang="fr_CA">Plugiciel de numériscope pour DVBLink de DvbLogic.com, prenant en charge la lecture en transit de la télé en direct &amp; les enregistrements, GÉP, des minuteries</description>
     <description lang="gl">Complemento PVR do DVBLink de DvbLogic.com; soporta transmisión de TV en directo e Gravacións, Guía e temporizadores</description>
-    <description lang="he">תוסף PVR עבור DVBLink מאת DvbLogic.com; תומך בהזרמת שידורים חיים והקלטות, לוח שידורים ותזמונים</description>
+    <description lang="he">לקוח טלוויזיה חיה של DVBLink מ־DvbLogic.com. תומך בהזרמת שידורים חיים והקלטות, הצגת לוח שידורים ותזמון הקלטות.</description>
     <description lang="hr">PVR dodatak za DVBLink od DvbLogic.com; podržava streamanje TV programa i snimanje, elektronski programski vodič (EPG) i zakazana snimanja</description>
     <description lang="hu">PVR Kiegészítő a DVBLink-hez a DvbLogic.com-tól; támogatja a Live TV streamet &amp; felvételt, EPG-t, időzítőt.</description>
     <description lang="id">Plugin PVR untuk DVBLink dari DvbLogic.com; mendukung siaran dari Live TV dan Perekaman, EPG, dan Timer.</description>
@@ -82,7 +82,7 @@
     <description lang="ms">Plugin PVR untuk DVBLink dari DvbLogic.com; menyokong penstriman Siaran Langsung &amp; Rakaman, EPG dan Pemasa</description>
     <description lang="nl">PVR plug-in voor DVBLink van DvbLogic.com; ondersteunt het streamen van Live TV &amp; opnames, EPG, Timers</description>
     <description lang="no">PVR-innstikk til DVBLink fra DvbLogic.com - støtter strømming av Live-TV, opptak, EPG og tidsur.</description>
-    <description lang="pl">Klient DVBLink od DvbLogic.com wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika TV.</description>
+    <description lang="pl">Klient DVBLink od DvbLogic.com wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
     <description lang="pt">Plugin PVR para DVBLink de DvbLogic.com; suporta transmissão de TV em directo e gravações, EPG, temporizadores.</description>
     <description lang="pt_BR">Plugin de PVR para DVBLink de DvbLogic.com; suporta streaming de tv ao vivo e gravações, EPG, Agendamentos</description>
     <description lang="ro">Plugin PVR pentru DVBLink de la DvbLogic.com; se poate difuza în flux a televiziunii în direct și a înregistrăriilor, EPG, Cronometre</description>
@@ -113,7 +113,7 @@
     <disclaimer lang="fr">Logiciel en cours d'élaboration ! Les auteurs ne sont en aucun cas responsables de l'échec des enregistrements, programmations défectueuses, temps perdu ou autres effets indésirables..</disclaimer>
     <disclaimer lang="fr_CA">Ce logiciel est instable! Les auteurs ne sont aucunement responsables des enregistrements défaillants, des minuteries erronées, des heures perdues ou tout autre effet indésirable.</disclaimer>
     <disclaimer lang="gl">Este é software non estable, os autores non se fan responsábeis dos erros nas gravacións, temporizadores incorrectos, e outros efectos non desexados.</disclaimer>
-    <disclaimer lang="he">זוהי תוכנה בלתי יציבה!מחברי התכנה אינם אחראים להקלטות כושלות,מתזמני הקלטות שגויים,שעות מבוזבזות,או כל תוצאה בלתי רצויה...</disclaimer>
+    <disclaimer lang="he">זוהי איננה הרחבה יציבה! המפתחים אינם אחראים על כשלון בניגון, זמנים שגויים במדריך השידורים, שעות מבוזבזות או כל תופעה לא רצויה אחרת.</disclaimer>
     <disclaimer lang="hr">Ovo je nestabilan softver! Autori nisu ni na koji način odgovorni za neuspjelo snimanje, netočna vremena snimanja, izgubljene sate, ili bilo koje druge nepoželjne učinke...</disclaimer>
     <disclaimer lang="hu">Ez nem stabil szoftver! A készítők nem vállalnak felelősséget, a hibás felvételért, rossz időzítésért, elvesztegetett időért...</disclaimer>
     <disclaimer lang="hy">Սա անկայուն ծրագրային ապահովում է: Հեղինակները պատասխանատու չեն վատ ձայնագրումների, սխալ ժամանակացույցերի, կորած ժամանակի կամ այլ ոչ ցանկալի երևույթների համար:</disclaimer>
@@ -141,7 +141,6 @@
     <disclaimer lang="sq">Ky program nuk është ende stabël! Autorët e këtij programi nuk janë në as një menyr përgjegjës për rregistrime të gabuara, timer të pasaktë, kohë të humbur ose efekte të tilla të padëshirueshme.</disclaimer>
     <disclaimer lang="sr">Овај софтвер је нестабилан! Аутори ни на који начин нису одговорни за неуспела снимања, неисправна заказана снимања, изгубљене сате или друге нежељене ефекте.</disclaimer>
     <disclaimer lang="sv">Detta är ostabil mjukvara! Upphovsmännen är inte ansvariga för misslyckade inspelningar, inkorrekta timers, bortslösade timmar, eller några andra oönskade effekter..</disclaimer>
-    <disclaimer lang="ta_IN">இந்த நிலையற்ற மென்பொருள்! தோல்வியடைந்தது பதிவுகள், தவறான டைமர்கள், வீணாகி மணி, அல்லது வேறு எந்த விரும்பத்தகாத விளைவுகலுக்கு இதன் ஆசிரியர்கள் பொறுப்பு இல்லை.</disclaimer>
     <disclaimer lang="tg">Ин нармафзори ноустувор аст! Муаллифон барои вайрониҳои сабт, вақтсанҷҳои нодуруст, соатҳои бефоида ва дигар таъсирҳои номатлуб ҷавобгар намебошанд.</disclaimer>
     <disclaimer lang="tr">Bu stabil olmayan program! Yapımcılar hatalı kayıtlardan, bozuk sürelerden, harcanan vakitten veya herhangi bir olumsuz etkiden dolayı sorumlu tutulamaz.</disclaimer>
     <disclaimer lang="uk">Це нестабільна програма! Автори не несуть відповідальності за попсуті записи, неправильні таймери, втрачений час та інші небажані ефекти.</disclaimer>

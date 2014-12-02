@@ -27,3 +27,7 @@ msgstr "Хэрэглэгчийн нэр"
 msgctxt "#30006"
 msgid "Password"
 msgstr "Нууц үг"
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Код хөрвүүлэлтийг идэвхижүүлэх"

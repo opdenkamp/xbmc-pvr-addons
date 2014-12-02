@@ -106,7 +106,7 @@ msgstr "Pokazuj komunikaty informacyjne"
 
 msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
-msgstr "Scalaj tytuł i nazwę odcinka w nagraniach"
+msgstr "Scalaj tytuł i nazwę odcinka nagrań"
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
@@ -130,7 +130,7 @@ msgstr "Problem z pobraniem harmonogramu nagrań (Kod błędu: %d)"
 
 msgctxt "#32007"
 msgid "Found %d EPG timers"
-msgstr "Znaleziono %d zaplanowanych nagrań wg przewodnika"
+msgstr "Znaleziono %d zaplanowanych nagrań"
 
 msgctxt "#32008"
 msgid "Found %d manual timers"

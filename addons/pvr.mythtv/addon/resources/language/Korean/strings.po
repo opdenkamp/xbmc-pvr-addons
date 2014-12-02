@@ -68,6 +68,10 @@ msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
 msgstr "MythTV 백엔드 이더넷 주소 (WOL)"
 
+msgctxt "#30013"
+msgid "MythTV Backend Port for API services"
+msgstr "MythTV 백엔드 포트 (API 서비스용)"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "일반"
@@ -120,6 +124,10 @@ msgctxt "#30033"
 msgid "Transcoder"
 msgstr "트랜스코더"
 
+msgctxt "#30034"
+msgid "Allow recordings to expire"
+msgstr "녹화 만료 허용"
+
 msgctxt "#30049"
 msgid "Recording template"
 msgstr "녹화 템플릿"
@@ -132,25 +140,57 @@ msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "MPEG-TS 디먹싱 사용"
 
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "튜닝 지연 (초)"
+
+msgctxt "#30054"
+msgid "Group recordings by title"
+msgstr "제목을 기준으로 그룹 녹화"
+
 msgctxt "#30055"
 msgid "Always"
 msgstr "항상"
+
+msgctxt "#30056"
+msgid "Only for series"
+msgstr "시리즈만"
 
 msgctxt "#30057"
 msgid "Never"
 msgstr "사용 안 함"
 
+msgctxt "#30058"
+msgid "Enable commercial skips (EDL)"
+msgstr "광고 건너뛰기 사용 (EDL)"
+
 msgctxt "#30059"
 msgid "Always"
 msgstr "항상"
+
+msgctxt "#30060"
+msgid "Dialog"
+msgstr "대화창"
 
 msgctxt "#30061"
 msgid "Never"
 msgstr "사용 안 함"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "백엔드 종료 방지"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "프로토콜 버전: %i - 데이터베이스 버전: %i"
+
+msgctxt "#30110"
+msgid "Enabling EDL"
+msgstr "EDL 사용"
+
+msgctxt "#30111"
+msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
+msgstr "컷 목록 또는 광고 건너뛰기가 발견됐습니다.\n이 쇼에 대해 EDL 기능을 활성화하시겠습니까?"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

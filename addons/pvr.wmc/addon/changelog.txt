@@ -1,3 +1,6 @@
+0.3.108
+- Updated Language files from Transifex
+
 0.3.107
 - change library name to Kodi
 

@@ -244,6 +244,10 @@ msgctxt "#30133"
 msgid "Always"
 msgstr "Toujours"
 
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Retour défaut"
+
 msgctxt "#30136"
 msgid "Kodi default"
 msgstr "Kodi par défaut"

@@ -172,6 +172,18 @@ msgctxt "#30104"
 msgid "Keep"
 msgstr "Залишити"
 
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Записати один раз"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Будь-коли"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Будь-який канал"
+
 msgctxt "#30132"
 msgid "Days"
 msgstr "дн."

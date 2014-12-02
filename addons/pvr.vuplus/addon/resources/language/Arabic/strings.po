@@ -35,3 +35,11 @@ msgstr "محطات"
 msgctxt "#30020"
 msgid "Advanced"
 msgstr "منقدم"
+
+msgctxt "#30500"
+msgid "Disconnected from '%s'"
+msgstr "قطع الاتصال من '%s'"
+
+msgctxt "#30501"
+msgid "Reconnected to '%s'"
+msgstr "أعيد الاتصال بـ '%s'"

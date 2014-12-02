@@ -68,6 +68,10 @@ msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
 msgstr "Lokalni ethernet naslov hrbtenice MythTV (WOL)"
 
+msgctxt "#30013"
+msgid "MythTV Backend Port for API services"
+msgstr "MythTv vrata hrbtenice za API storitve"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Splošno"
@@ -136,9 +140,17 @@ msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "Omogoči pretvarjanje MPEG-TS"
 
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "Nastavljiv zamik (sekunde)"
+
 msgctxt "#30055"
 msgid "Always"
 msgstr "Vedno"
+
+msgctxt "#30056"
+msgid "Only for series"
+msgstr "Samo za serije"
 
 msgctxt "#30057"
 msgid "Never"
@@ -148,6 +160,10 @@ msgctxt "#30059"
 msgid "Always"
 msgstr "Vedno"
 
+msgctxt "#30060"
+msgid "Dialog"
+msgstr "Dialog"
+
 msgctxt "#30061"
 msgid "Never"
 msgstr "Nikoli"
@@ -155,6 +171,10 @@ msgstr "Nikoli"
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Različica protokola: %i - Različica baze: %i"
+
+msgctxt "#30110"
+msgid "Enabling EDL"
+msgstr "Omogočanje EDL"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

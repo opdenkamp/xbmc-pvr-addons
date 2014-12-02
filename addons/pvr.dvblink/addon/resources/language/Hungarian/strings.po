@@ -104,6 +104,10 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Információs üzenetek mutatása"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Kombinálja a címed és az epizódnevet a felvtelhez"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Kapcsolódva a DVBLink Kiszolgálóhoz '%s'"
@@ -140,13 +144,25 @@ msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "Nem található stream a %s csatornához (Hibakód : %d)"
 
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Sorozat felvétel"
+
 msgctxt "#32012"
 msgid "Record this episode only"
 msgstr "Csak ezen epizód rögzítése"
 
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Minden epizód felvétele"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Időzítő törlése"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Csak ezen időzítő törlése"
 
 msgctxt "#32016"
 msgid "Delete the entire series"

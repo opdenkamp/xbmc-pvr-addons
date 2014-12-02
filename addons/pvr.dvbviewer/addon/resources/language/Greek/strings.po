@@ -62,7 +62,7 @@ msgstr "Λειτουργία χαμηλής απόδοσης (απενεργοπ
 
 msgctxt "#30050"
 msgid "Group recordings"
-msgstr "Εγγραφές γκρουπ"
+msgstr "Εγγραφές σε γκρουπ"
 
 msgctxt "#30051"
 msgid "disabled"

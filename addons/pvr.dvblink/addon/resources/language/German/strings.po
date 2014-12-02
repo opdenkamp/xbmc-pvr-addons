@@ -34,7 +34,7 @@ msgstr "Clientname"
 
 msgctxt "#30004"
 msgid "Connection timeout (s)"
-msgstr "Zeitüberschreitung der Verbindung (s)"
+msgstr "Verbindungszeitüberschreitung (s)"
 
 msgctxt "#30005"
 msgid "Username"
@@ -46,7 +46,7 @@ msgstr "Passwort"
 
 msgctxt "#30100"
 msgid "Stream"
-msgstr "Streamen"
+msgstr "Stream"
 
 msgctxt "#30102"
 msgid "Enable transcoding"
@@ -66,7 +66,7 @@ msgstr "Bitrate"
 
 msgctxt "#30106"
 msgid "Audio track"
-msgstr "Audiospur"
+msgstr "Tonspur"
 
 msgctxt "#30107"
 msgid "HTTP"
@@ -90,7 +90,7 @@ msgstr "Timeshift aktivieren"
 
 msgctxt "#30112"
 msgid "Timeshift buffer path"
-msgstr "Timeshift Puffer-Pfad"
+msgstr "Timeshift-Puffer-Pfad"
 
 msgctxt "#30200"
 msgid "Advanced"

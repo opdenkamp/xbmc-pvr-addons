@@ -16,130 +16,173 @@ msgstr ""
 "Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
+#settings labels
+
 msgctxt "#30000"
 msgid "General"
-msgstr "General"
+msgstr ""
 
 msgctxt "#30001"
 msgid "Server Address"
-msgstr "Adresă server"
+msgstr ""
 
 msgctxt "#30002"
 msgid "Server Port"
-msgstr "Port server"
+msgstr ""
 
 msgctxt "#30003"
 msgid "Client name"
-msgstr "Nume client"
+msgstr ""
 
 msgctxt "#30004"
 msgid "Connection timeout (s)"
-msgstr "Expirare conexiune (s)"
+msgstr ""
 
 msgctxt "#30005"
 msgid "Username"
-msgstr "Utilizator"
+msgstr ""
 
 msgctxt "#30006"
 msgid "Password"
-msgstr "Parolă"
+msgstr ""
+
+#empty strings from id 30007 to 30099
 
 msgctxt "#30100"
 msgid "Stream"
-msgstr "Flux"
+msgstr ""
+
+#empty string with id 30101
 
 msgctxt "#30102"
 msgid "Enable transcoding"
-msgstr "Activare transcodare"
+msgstr ""
 
 msgctxt "#30103"
 msgid "Height"
-msgstr "Înălțime"
+msgstr ""
 
 msgctxt "#30104"
 msgid "Width"
-msgstr "Lățime"
+msgstr ""
 
 msgctxt "#30105"
 msgid "Bitrate"
-msgstr "Rată de biți"
+msgstr ""
 
 msgctxt "#30106"
 msgid "Audio track"
-msgstr "Pistă audio"
+msgstr ""
 
 msgctxt "#30107"
 msgid "HTTP"
-msgstr "HTTP"
+msgstr ""
 
 msgctxt "#30108"
 msgid "RTP"
-msgstr "RTP"
+msgstr ""
 
 msgctxt "#30109"
 msgid "HLS"
-msgstr "HLS"
+msgstr ""
 
 msgctxt "#30110"
 msgid "ASF"
-msgstr "ASF"
+msgstr ""
 
 msgctxt "#30111"
 msgid "Enable Timeshift"
-msgstr "Activează programul de înregistrare"
+msgstr ""
 
 msgctxt "#30112"
 msgid "Timeshift buffer path"
-msgstr "Calea buffer-ului de înregistrare"
+msgstr ""
+
+#empty strings from id 30113 to 30199
 
 msgctxt "#30200"
 msgid "Advanced"
-msgstr "Avansat"
+msgstr ""
+
+#Messages labels
 
 msgctxt "#30201"
 msgid "Use channel handle instead of client id"
-msgstr "Utilizați canalul în loc de id-ul de client"
+msgstr ""
 
 msgctxt "#30202"
 msgid "Show information messages"
-msgstr "Afișează mesaje de informare"
+msgstr ""
+
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr ""
+
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Group Recordings by Series"
+
+#empty strings from id 30205 to 32000
+#category labels
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
-msgstr "Conectat la serverul DVBLink '%s'"
+msgstr ""
 
 msgctxt "#32002"
 msgid "Found '%d' channels"
-msgstr "S-au găsit '%d' canale"
+msgstr ""
 
 msgctxt "#32003"
 msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
-msgstr "Nu s-a putut conecta la serverul DVBLink '%s' (cod de eroare : %d)"
+msgstr ""
 
 msgctxt "#32004"
 msgid "Could not get recordings (Error code : %d)"
-msgstr "Nu s-a putut obține înregistrări (cod de eroare : %d)"
+msgstr ""
+
+#empty string with id 32005
 
 msgctxt "#32006"
 msgid "Could not get timers(Error code : %d)"
-msgstr "Nu s-a putut obține cronometre (cod de eroare : %d)"
+msgstr ""
 
 msgctxt "#32007"
 msgid "Found %d EPG timers"
-msgstr "S-au găsit %d cronometre EPG"
+msgstr ""
 
 msgctxt "#32008"
 msgid "Found %d manual timers"
-msgstr "S-au găsit %d cronometre manuale"
+msgstr ""
 
 msgctxt "#32009"
 msgid "Found %d recordings"
-msgstr "S-au găsit %d înregistrări"
+msgstr ""
 
 msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
-msgstr "Nu s-a putut obține fluxul pentru canalul %s (cod de eroare: %d)"
+msgstr ""
+
+msgctxt "#32011"
+msgid "Series recording"
+msgstr ""
+
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr ""
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr ""
 
 msgctxt "#32014"
 msgid "Delete timer"
-msgstr "Șterge cronometru"
+msgstr ""
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr ""
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr ""

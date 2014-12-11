@@ -58,7 +58,7 @@ std::string DVBLinkClient::GetBuildInRecorderObjectID()
 }
 
 DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* pvr, CHelper_libXBMC_gui* gui, std::string clientname, std::string hostname, 
-    long port, bool showinfomsg, std::string username, std::string password, bool add_episode_to_rec_title)
+    long port, bool showinfomsg, std::string username, std::string password, bool add_episode_to_rec_title, bool group_recordings_by_series)
 {
   PVR = pvr;
   XBMC = xbmc;
@@ -69,6 +69,7 @@ DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* p
   m_currentChannelId = 0;
   m_showinfomsg = showinfomsg;
   m_add_episode_to_rec_title = add_episode_to_rec_title;
+  m_group_recordings_by_series = group_recordings_by_series;
 
   m_httpClient = new HttpPostClient(XBMC,hostname, port, username, password);
   m_dvblinkRemoteCommunication = DVBLinkRemote::Connect((HttpClient&)*m_httpClient, m_hostname.c_str(), port, username.c_str(), password.c_str());
@@ -100,7 +101,12 @@ DVBLinkClient::DVBLinkClient(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_pvr* p
     }
 
     m_recordingsid = GetBuildInRecorderObjectID();
-    m_recordingsid.append(DVBLINK_RECODINGS_BY_DATA_ID);
+
+    m_recordingsid_by_date = m_recordingsid;
+    m_recordingsid_by_date.append(DVBLINK_RECODINGS_BY_DATA_ID);
+    
+    m_recordingsid_by_series = m_recordingsid;
+    m_recordingsid_by_series.append(DVBLINK_RECODINGS_BY_SERIES_ID);
 
     m_updating = true;
     CreateThread();
@@ -482,13 +488,13 @@ PVR_ERROR DVBLinkClient::DeleteRecording(const PVR_RECORDING& recording)
   return result;
 }
 
-static std::string get_subtitle(int season, int episode, const std::string& episode_name)
+static std::string get_subtitle(int season, int episode, const std::string& episode_name, int year)
 {
     std::string se_str;
+    char buf[1024];
+
     if (season > 0 || episode > 0)
     {
-        char buf[1024];
-
         se_str += "(";
         if (season > 0)
         {
@@ -502,9 +508,86 @@ static std::string get_subtitle(int season, int episode, const std::string& epis
         }
         se_str += ")";
     }
+
+    if (year > 0)
+    {
+        if (se_str.size() > 0)
+            se_str += " ";
+        
+        se_str += "[";
+        sprintf(buf, "%04d", year);
+        se_str += buf;
+        se_str += "]";
+    }
+
     if (episode_name.size() > 0)
-        se_str += " " + episode_name;
+    {
+        if (se_str.size() > 0)
+            se_str += " - ";
+        
+        se_str += episode_name;
+    }
+
     return se_str;
+}
+
+static void get_timer_id_from_recording_id(const std::string& recording_id, std::string& timer_id)
+{
+    //find last /
+    std::string::size_type pos = recording_id.rfind("/");
+    if (pos != std::string::npos)
+    {
+        timer_id = recording_id.substr(pos + 1);
+    } else
+    {
+        timer_id = recording_id;
+    }
+}
+
+bool DVBLinkClient::build_recording_series_map(std::map<std::string, std::string>& rec_id_to_series_name)
+{
+    //get all series containers
+    PVR_ERROR result = PVR_ERROR_FAILED;
+    DVBLinkRemoteStatusCode status;
+
+    GetPlaybackObjectRequest getPlaybackObjectRequest(m_hostname.c_str(), m_recordingsid_by_series);
+    getPlaybackObjectRequest.IncludeChildrenObjectsForRequestedObject = true;
+    GetPlaybackObjectResponse getPlaybackObjectResponse;
+
+    if ((status = m_dvblinkRemoteCommunication->GetPlaybackObject(getPlaybackObjectRequest, getPlaybackObjectResponse)) != DVBLINK_REMOTE_STATUS_OK)
+    {
+        std::string error;
+        m_dvblinkRemoteCommunication->GetLastError(error);
+        XBMC->Log(LOG_ERROR, "Could not get recording series container (Error code : %d Description : %s)", (int)status, error.c_str());
+        return false;
+    }
+
+    PlaybackContainerList& series_containers = getPlaybackObjectResponse.GetPlaybackContainers();
+    for (size_t i = 0; i<series_containers.size(); i++)
+    {
+        //ask for the items of this container
+        GetPlaybackObjectRequest container_items_req(m_hostname.c_str(), series_containers.at(i)->GetObjectID());
+        container_items_req.IncludeChildrenObjectsForRequestedObject = true;
+        GetPlaybackObjectResponse container_items_resp;
+
+        if ((status = m_dvblinkRemoteCommunication->GetPlaybackObject(container_items_req, container_items_resp)) == DVBLINK_REMOTE_STATUS_OK)
+        {
+            PlaybackItemList& playback_items = container_items_resp.GetPlaybackItems();
+            for (size_t j = 0; j<playback_items.size(); j++)
+            {
+                std::string timer_id;
+                get_timer_id_from_recording_id(playback_items.at(j)->GetObjectID(), timer_id);
+                rec_id_to_series_name[timer_id] = series_containers.at(i)->GetName();
+            }
+        } else
+        {
+            std::string error;
+            m_dvblinkRemoteCommunication->GetLastError(error);
+            XBMC->Log(LOG_ERROR, "Could not get recording items for container %s (Error code : %d Description : %s)", series_containers.at(i)->GetObjectID().c_str(), (int)status, error.c_str());
+        }
+    }
+
+    return true;
 }
 
 PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
@@ -514,7 +597,7 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
   DVBLinkRemoteStatusCode status;
   m_recording_id_to_url_map.clear();
 
-  GetPlaybackObjectRequest getPlaybackObjectRequest(m_hostname.c_str(), m_recordingsid);
+  GetPlaybackObjectRequest getPlaybackObjectRequest(m_hostname.c_str(), m_recordingsid_by_date);
   getPlaybackObjectRequest.IncludeChildrenObjectsForRequestedObject = true;
   GetPlaybackObjectResponse getPlaybackObjectResponse;
 
@@ -534,6 +617,12 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
     XBMC->QueueNotification(QUEUE_INFO, XBMC->GetLocalizedString(32009), getPlaybackObjectResponse.GetPlaybackItems().size());
   }
 
+    //get a map of recording per series
+    std::map<std::string, std::string> rec_id_to_series_name;
+
+    if (m_group_recordings_by_series)
+    build_recording_series_map(rec_id_to_series_name);
+
   for (std::vector<PlaybackItem*>::iterator it = getPlaybackObjectResponse.GetPlaybackItems().begin(); it < getPlaybackObjectResponse.GetPlaybackItems().end(); it++)
   {    
     RecordedTvItem * tvitem = (RecordedTvItem *) *it;
@@ -546,7 +635,7 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
     if (m_add_episode_to_rec_title)
     {
         //form a title as "name - (SxxExx) subtitle" because XBMC does not display episode/season information almost anywhere
-        std::string se_str = get_subtitle(tvitem->GetMetadata().SeasonNumber, tvitem->GetMetadata().EpisodeNumber, tvitem->GetMetadata().SubTitle);
+        std::string se_str = get_subtitle(tvitem->GetMetadata().SeasonNumber, tvitem->GetMetadata().EpisodeNumber, tvitem->GetMetadata().SubTitle, (int)tvitem->GetMetadata().Year);
         if (se_str.size() > 0)
             title += " - " + se_str;
     }
@@ -569,6 +658,18 @@ PVR_ERROR DVBLinkClient::GetRecordings(ADDON_HANDLE handle)
     {
       xbmcRecording.iGenreType = genre_type;
       xbmcRecording.iGenreSubType = genre_subtype;
+    }
+
+    if (m_group_recordings_by_series)
+    {
+        //compare timer_ids
+        std::string timer_id;
+        get_timer_id_from_recording_id(tvitem->GetObjectID(), timer_id);
+
+        if (rec_id_to_series_name.find(timer_id) != rec_id_to_series_name.end())
+        {
+            PVR_STRCPY(xbmcRecording.strDirectory, rec_id_to_series_name[timer_id].c_str());
+        }
     }
 
     PVR->TransferRecordingEntry(handle, &xbmcRecording);
@@ -605,7 +706,7 @@ void DVBLinkClient::GetDriveSpace(long long *iTotal, long long *iUsed)
   if ((status = m_dvblinkRemoteCommunication->GetRecordingSettings(recordingsettingsrequest, settings)) == DVBLINK_REMOTE_STATUS_OK)
   {
     *iTotal = settings.TotalSpace;
-    *iUsed = settings.AvailableSpace;
+    *iUsed = (settings.TotalSpace - settings.AvailableSpace);
   }
 }
 

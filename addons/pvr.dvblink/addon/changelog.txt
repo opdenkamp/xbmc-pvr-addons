@@ -1,3 +1,9 @@
+[B]Version 1.9.11[/B]
+Added: grouping recordings by series
+Fixed: used space calculation
+Fixed: German translation for new functionality
+Fixed: Crash on switching channels with timeshift on
+
 [B]Version 1.9.10[/B]
 Updated: language files from Transifex
 

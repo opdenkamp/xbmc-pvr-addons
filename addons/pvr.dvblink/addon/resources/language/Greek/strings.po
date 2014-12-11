@@ -108,6 +108,10 @@ msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
 msgstr "Συνδυασμός τίτλου και ονόματος επεισοδίου στις εγγραφές"
 
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Group Recordings by Series"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Συνδέθηκε στο Διακομιστή DVBLink '%s'"

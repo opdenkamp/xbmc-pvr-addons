@@ -239,7 +239,10 @@ time_t TimeShiftBuffer::GetPlayingTime()
     time_t duration;
     if (GetBufferParams(length, duration, cur_pos))
     {
-      ret_val = now - (time_t)((length - cur_pos) * duration / length);
+        if (length == 0)
+            ret_val = now;
+        else
+          ret_val = now - (time_t)((length - cur_pos) * duration / length);
     }
 
     last_pos_ = ret_val;

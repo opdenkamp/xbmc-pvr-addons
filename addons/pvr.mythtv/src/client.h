@@ -56,6 +56,7 @@
 #define MENUHOOK_EPG_REC_CHAN_DAILY         6
 #define MENUHOOK_EPG_REC_ONE_SHOWING        7
 #define MENUHOOK_EPG_REC_NEW_EPISODES       8
+#define MENUHOOK_REFRESH_CHANNEL_ICONS      9
 
 #define DEFAULT_HANDLE_DEMUXING             false
 #define DEFAULT_TUNE_DELAY                  5

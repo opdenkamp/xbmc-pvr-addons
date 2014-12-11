@@ -378,6 +378,13 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   menuhookEpgRec5.iHookId = MENUHOOK_EPG_REC_NEW_EPISODES;
   menuhookEpgRec5.iLocalizedStringId = 30435;
   PVR->AddMenuHook(&menuhookEpgRec5);
+
+  PVR_MENUHOOK menuhookSettingRCI;
+  menuhookSettingRCI.category = PVR_MENUHOOK_SETTING;
+  menuhookSettingRCI.iHookId = MENUHOOK_REFRESH_CHANNEL_ICONS;
+  menuhookSettingRCI.iLocalizedStringId = 30422;
+  PVR->AddMenuHook(&menuhookSettingRCI);
+
   XBMC->Log(LOG_DEBUG, "Creating menu hooks...done");
 
   XBMC->Log(LOG_DEBUG, "Addon created successfully");
@@ -834,7 +841,7 @@ int GetRecordingsAmount(bool deleted)
 {
   if (g_client == NULL)
     return 0;
-
+  (void)deleted;
   return g_client->GetRecordingsAmount();
 }
 
@@ -842,7 +849,7 @@ PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted)
 {
   if (g_client == NULL)
     return PVR_ERROR_SERVER_ERROR;
-
+  (void)deleted;
   return g_client->GetRecordings(handle);
 }
 
@@ -1160,7 +1167,7 @@ time_t GetBufferTimeEnd()
 void DemuxReset() {}
 const char * GetLiveStreamURL(const PVR_CHANNEL &) { return ""; }
 void SetSpeed(int) {};
-PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { (void)recording; return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteAllRecordingsFromTrash() { return PVR_ERROR_NOT_IMPLEMENTED; }
 
 } //end extern "C"

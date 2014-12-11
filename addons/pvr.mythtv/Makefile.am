@@ -10,8 +10,7 @@ ADDONNAME       = pvr.mythtv
 LIBNAME         = libmythtv-addon
 lib_LTLIBRARIES = libmythtv-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/cppmyth/cppmyth/libcppmyth.la \
-                  @abs_top_srcdir@/lib/cppmyth/jansson/src/libjansson.la
+LIBS            = @abs_top_srcdir@/lib/cppmyth/cppmyth/libcppmyth.la
 
 include ../Makefile.include.am
 

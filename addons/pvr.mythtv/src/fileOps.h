@@ -32,6 +32,13 @@
 #include <list>
 #include <map>
 
+class FileConsumer
+{
+public:
+  virtual ~FileConsumer() {};
+  virtual void HandleCleanedCache() = 0;
+};
+
 class FileOps : public PLATFORM::CThread
 {
 public:
@@ -86,8 +93,9 @@ public:
 
   static const int c_timeoutProcess              = 10;       // Wake the thread every 10s
   static const int c_maximumAttemptsOnReadError  = 3;        // Retry when reading file failed
+  static const int c_cacheMaxAge                 = 2635200;  // Clean cache every 2635200s (30.5 days)
 
-  FileOps(const std::string& server, unsigned wsapiport);
+  FileOps(FileConsumer *consumer, const std::string& server, unsigned wsapiport, const std::string& wsapiSecurityPin);
   virtual ~FileOps();
 
   std::string GetChannelIconPath(const MythChannel& channel);
@@ -102,7 +110,8 @@ protected:
 
   bool CheckFile(const std::string &localFilename);
   void *OpenFile(const std::string &localFilename);
-  bool CacheFile(void *destination, Myth::Stream *source);
+  bool CacheFile(void *file, Myth::Stream *source);
+  void InitBasePath();
   void CleanCache();
 
   static std::string GetFileName(const std::string& path, char separator = PATH_SEPARATOR_CHAR);
@@ -112,8 +121,11 @@ protected:
   std::map<std::string, std::string> m_preview;
   std::map<std::pair<FileType, std::string>, std::string> m_artworks;
 
+  FileConsumer *m_consumer;
   Myth::WSAPI *m_wsapi;
   std::string m_localBasePath;
+  std::string m_localBaseStampName;
+  time_t m_localBaseStamp;
 
   struct JobItem {
     JobItem(const std::string& localFilename, FileType type, const MythProgramInfo& recording)

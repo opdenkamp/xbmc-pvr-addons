@@ -72,6 +72,10 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr "Port du dorsal MythTV pour les services API"
 
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "Code PIN de sécurité pour les services API"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Général"

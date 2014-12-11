@@ -104,6 +104,10 @@ msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
 msgstr "Kayıtlar için başlık ve bölüm adını eşleştir"
 
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Group Recordings by Series"
+
 msgctxt "#32002"
 msgid "Found '%d' channels"
 msgstr "\"%d\" kanalları bulundu"

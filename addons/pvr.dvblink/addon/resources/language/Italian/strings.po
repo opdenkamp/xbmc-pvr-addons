@@ -16,138 +16,173 @@ msgstr ""
 "Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#settings labels
+
 msgctxt "#30000"
 msgid "General"
-msgstr "Generale"
+msgstr ""
 
 msgctxt "#30001"
 msgid "Server Address"
-msgstr "Indirizzo server"
+msgstr ""
 
 msgctxt "#30002"
 msgid "Server Port"
-msgstr "Porta server"
+msgstr ""
 
 msgctxt "#30003"
 msgid "Client name"
-msgstr "Nome client"
+msgstr ""
 
 msgctxt "#30004"
 msgid "Connection timeout (s)"
-msgstr "Tempo per la connessione (s)"
+msgstr ""
 
 msgctxt "#30005"
 msgid "Username"
-msgstr "Nome utente"
+msgstr ""
 
 msgctxt "#30006"
 msgid "Password"
-msgstr "Password"
+msgstr ""
+
+#empty strings from id 30007 to 30099
 
 msgctxt "#30100"
 msgid "Stream"
-msgstr "Stream"
+msgstr ""
+
+#empty string with id 30101
 
 msgctxt "#30102"
 msgid "Enable transcoding"
-msgstr "Abilita transcodifica"
+msgstr ""
 
 msgctxt "#30103"
 msgid "Height"
-msgstr "Altezza"
+msgstr ""
 
 msgctxt "#30104"
 msgid "Width"
-msgstr "Larghezza"
+msgstr ""
 
 msgctxt "#30105"
 msgid "Bitrate"
-msgstr "Bitrate"
+msgstr ""
 
 msgctxt "#30106"
 msgid "Audio track"
-msgstr "Traccia audio"
+msgstr ""
 
 msgctxt "#30107"
 msgid "HTTP"
-msgstr "HTTP"
+msgstr ""
 
 msgctxt "#30108"
 msgid "RTP"
-msgstr "RTP"
+msgstr ""
 
 msgctxt "#30109"
 msgid "HLS"
-msgstr "HLS"
+msgstr ""
 
 msgctxt "#30110"
 msgid "ASF"
-msgstr "ASF"
+msgstr ""
 
 msgctxt "#30111"
 msgid "Enable Timeshift"
-msgstr "Abilita Timeshift"
+msgstr ""
 
 msgctxt "#30112"
 msgid "Timeshift buffer path"
-msgstr "Percorso per il buffer del timeshift"
+msgstr ""
+
+#empty strings from id 30113 to 30199
 
 msgctxt "#30200"
 msgid "Advanced"
-msgstr "Avanzate"
+msgstr ""
+
+#Messages labels
 
 msgctxt "#30201"
 msgid "Use channel handle instead of client id"
-msgstr "Usa handle canale al posto dell'id canale"
+msgstr ""
 
 msgctxt "#30202"
 msgid "Show information messages"
-msgstr "Mostra messaggi di informazione"
+msgstr ""
+
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr ""
+
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Group Recordings by Series"
+
+#empty strings from id 30205 to 32000
+#category labels
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
-msgstr "Connesso al server DVBLink '%s'"
+msgstr ""
 
 msgctxt "#32002"
 msgid "Found '%d' channels"
-msgstr "Trovato '%d' canali"
+msgstr ""
 
 msgctxt "#32003"
 msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
-msgstr "Non posso connettermi al server DVBLink '%s' (Codice d'errore: %d)"
+msgstr ""
 
 msgctxt "#32004"
 msgid "Could not get recordings (Error code : %d)"
-msgstr "Non posso ottenere le registrazioni (Codice d'errore: %d)"
+msgstr ""
+
+#empty string with id 32005
 
 msgctxt "#32006"
 msgid "Could not get timers(Error code : %d)"
-msgstr "Non posso ottenere i timer (Codice d'errore: %d)"
+msgstr ""
 
 msgctxt "#32007"
 msgid "Found %d EPG timers"
-msgstr "Trovati %d timer EPG"
+msgstr ""
 
 msgctxt "#32008"
 msgid "Found %d manual timers"
-msgstr "Trovati %d timer manuali"
+msgstr ""
 
 msgctxt "#32009"
 msgid "Found %d recordings"
-msgstr "Trovato %d registrazioni"
+msgstr ""
 
 msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
-msgstr "Non posso ottenere lo stream per il canale %s (Codice d'errore: %d)"
+msgstr ""
+
+msgctxt "#32011"
+msgid "Series recording"
+msgstr ""
 
 msgctxt "#32012"
 msgid "Record this episode only"
-msgstr "Registra questo episodio solo"
+msgstr ""
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr ""
 
 msgctxt "#32014"
 msgid "Delete timer"
-msgstr "Cancella timer"
+msgstr ""
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr ""
 
 msgctxt "#32016"
 msgid "Delete the entire series"
-msgstr "Elimina l'intera serie"
+msgstr ""

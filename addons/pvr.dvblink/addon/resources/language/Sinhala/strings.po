@@ -16,122 +16,173 @@ msgstr ""
 "Language: si\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#settings labels
+
 msgctxt "#30000"
 msgid "General"
-msgstr "සාමාන්‍ය"
+msgstr ""
 
 msgctxt "#30001"
 msgid "Server Address"
-msgstr "මෙහෙකරු ලිපිනය"
+msgstr ""
 
 msgctxt "#30002"
 msgid "Server Port"
-msgstr "මෙහෙකරු තිර්ථය"
+msgstr ""
 
 msgctxt "#30003"
 msgid "Client name"
-msgstr "ආයත්තකයාගේ නම"
+msgstr ""
 
 msgctxt "#30004"
 msgid "Connection timeout (s)"
-msgstr "සම්බන්ධවීමේ කාලය(න්) ඉවරයි"
+msgstr ""
 
 msgctxt "#30005"
 msgid "Username"
-msgstr "පරිශීලක නම"
+msgstr ""
 
 msgctxt "#30006"
 msgid "Password"
-msgstr "මුරපදය"
+msgstr ""
+
+#empty strings from id 30007 to 30099
 
 msgctxt "#30100"
 msgid "Stream"
-msgstr "ප්‍රවාහය"
+msgstr ""
+
+#empty string with id 30101
+
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr ""
 
 msgctxt "#30103"
 msgid "Height"
-msgstr "උස"
+msgstr ""
 
 msgctxt "#30104"
 msgid "Width"
-msgstr "පළල"
+msgstr ""
 
 msgctxt "#30105"
 msgid "Bitrate"
-msgstr "මාත්‍රා අනුපාතය"
+msgstr ""
 
 msgctxt "#30106"
 msgid "Audio track"
-msgstr "ශ්‍රවණ තැටිය"
+msgstr ""
 
 msgctxt "#30107"
 msgid "HTTP"
-msgstr "HTTP"
+msgstr ""
 
 msgctxt "#30108"
 msgid "RTP"
-msgstr "RTP"
+msgstr ""
 
 msgctxt "#30109"
 msgid "HLS"
-msgstr "HLS"
+msgstr ""
 
 msgctxt "#30110"
 msgid "ASF"
-msgstr "ASF"
+msgstr ""
 
 msgctxt "#30111"
 msgid "Enable Timeshift"
-msgstr "කාල සාරුව ක්‍රියාත්මක කරන්න"
+msgstr ""
 
 msgctxt "#30112"
 msgid "Timeshift buffer path"
-msgstr "කාල සාරු අවරෝධක පෙත"
+msgstr ""
+
+#empty strings from id 30113 to 30199
 
 msgctxt "#30200"
 msgid "Advanced"
-msgstr "උසස්"
+msgstr ""
+
+#Messages labels
 
 msgctxt "#30201"
 msgid "Use channel handle instead of client id"
-msgstr "සේවාදායක හඳුනාගැනීමේ අංකය වෙනුවෙන් වාසි මාර්ගය භාවිතා කරන්න"
+msgstr ""
 
 msgctxt "#30202"
 msgid "Show information messages"
-msgstr "තොරතුරු පණිවිඩ පෙන්වන්න"
+msgstr ""
+
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr ""
+
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Group Recordings by Series"
+
+#empty strings from id 30205 to 32000
+#category labels
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
-msgstr "DVBLink මෙහෙයුම්කරු වෙත සම්බන්ධ කරන්න '%s'"
+msgstr ""
 
 msgctxt "#32002"
 msgid "Found '%d' channels"
-msgstr "'%d' මග සොයාගත්තා"
+msgstr ""
 
 msgctxt "#32003"
 msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
-msgstr "DVBLink මෙහෙයුම්කරු වෙත සම්බන්ධ කළ නොහැක '%s' ( දෝෂ කේතය : %d)"
+msgstr ""
 
 msgctxt "#32004"
 msgid "Could not get recordings (Error code : %d)"
-msgstr "පටිගත කිරීම් ගත නොහැක (දෝෂ කේතය : %d)"
+msgstr ""
+
+#empty string with id 32005
 
 msgctxt "#32006"
 msgid "Could not get timers(Error code : %d)"
-msgstr "මුහුර්තකය ගත නොහැක (දෝෂ කේතය : %d )"
+msgstr ""
 
 msgctxt "#32007"
 msgid "Found %d EPG timers"
-msgstr "%d EPG මුහුර්තක සොයාගත්තා"
+msgstr ""
 
 msgctxt "#32008"
 msgid "Found %d manual timers"
-msgstr "%d කාර්ය මුහුර්තක සොයාගත්තා"
+msgstr ""
 
 msgctxt "#32009"
 msgid "Found %d recordings"
-msgstr "%d පටිගත කිරීම් සොයාගත්තා"
+msgstr ""
 
 msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
-msgstr "නාලිකාවට ප්‍රවාහයක් ලබාගත නොහැක %s ( දෝෂ කේතාංකය : %d)"
+msgstr ""
+
+msgctxt "#32011"
+msgid "Series recording"
+msgstr ""
+
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr ""
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr ""
+
+msgctxt "#32014"
+msgid "Delete timer"
+msgstr ""
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr ""
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr ""

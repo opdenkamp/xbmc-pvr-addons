@@ -194,8 +194,8 @@ void *FileOps::Process()
       if (g_bExtraDebug)
         XBMC->Log(LOG_DEBUG,"%s: Job fetched: type: %d, local: %s", __FUNCTION__, job.m_fileType, job.m_localFilename.c_str());
       // Try to open the destination file
-      void *localFile = OpenFile(job.m_localFilename.c_str());
-      if (!localFile)
+      void *file = OpenFile(job.m_localFilename.c_str());
+      if (!file)
         continue;
 
       // Connect to the stream
@@ -215,10 +215,14 @@ void *FileOps::Process()
       default:
         break;
       }
-      //  Cache it to the local addon cache
+
       if (fileStream && fileStream->GetSize() > 0)
       {
-        if (CacheFile(localFile, fileStream.get()))
+        // Cache it to the local addon cache
+        bool cached = CacheFile(file, fileStream.get());
+        XBMC->CloseFile(file);
+
+        if (cached)
         {
           if (g_bExtraDebug)
             XBMC->Log(LOG_DEBUG, "%s: File Cached: type: %d, local: %s", __FUNCTION__, job.m_fileType, job.m_localFilename.c_str());
@@ -227,13 +231,13 @@ void *FileOps::Process()
         {
           XBMC->Log(LOG_DEBUG, "%s: Caching file failed: type: %d, local: %s", __FUNCTION__, job.m_fileType, job.m_localFilename.c_str());
           if (XBMC->FileExists(job.m_localFilename.c_str(), true))
-          {
             XBMC->DeleteFile(job.m_localFilename.c_str());
-          }
         }
       }
       else
       {
+        XBMC->CloseFile(file);
+
         // Failed to open file for reading. Unfortunately it cannot be determined if this is a permanent or a temporary problem (new recording's preview hasn't been generated yet).
         // Increase the error count and retry to cache the file a few times
         if (!fileStream)
@@ -309,7 +313,7 @@ void *FileOps::OpenFile(const std::string& localFilename)
   return file;
 }
 
-bool FileOps::CacheFile(void *destination, Myth::Stream *source)
+bool FileOps::CacheFile(void *file, Myth::Stream *source)
 {
   int64_t size = source->GetSize();
   char *buffer = new char[FILEOPS_STREAM_BUFFER_SIZE];
@@ -323,7 +327,7 @@ bool FileOps::CacheFile(void *destination, Myth::Stream *source)
     char *p = buffer;
     while (br > 0)
     {
-      int bw = XBMC->WriteFile(destination, p, br);
+      int bw = XBMC->WriteFile(file, p, br);
       if (bw <= 0)
         break;
 
@@ -331,7 +335,6 @@ bool FileOps::CacheFile(void *destination, Myth::Stream *source)
       p += bw;
     }
   }
-  XBMC->CloseFile(destination);
   delete[] buffer;
 
   if (size)

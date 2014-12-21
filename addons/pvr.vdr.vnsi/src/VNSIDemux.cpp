@@ -109,7 +109,8 @@ DemuxPacket* cVNSIDemux::Read()
   else if (resp->getOpCodeID() == VNSI_STREAM_MUXPKT)
   {
     // figure out the stream id for this packet
-    int iStreamId = m_streams.GetStreamId(resp->getStreamID());
+    int pid = resp->getStreamID();
+    int iStreamId = m_streams.GetStreamId(pid);
 
     // stream found ?
     if(iStreamId != -1 && resp->getMuxSerial() == m_MuxPacketSerial)
@@ -122,10 +123,17 @@ DemuxPacket* cVNSIDemux::Read()
       p->iStreamId  = iStreamId;
       delete resp;
 
-      if (p->dts != DVD_NOPTS_VALUE)
-        m_CurrentDTS = p->dts;
-      else if (p->pts != DVD_NOPTS_VALUE)
-        m_CurrentDTS = p->pts;
+      XbmcPvrStream *stream = m_streams.GetStreamById(pid);
+      xbmc_codec_type_t type = XBMC_CODEC_TYPE_UNKNOWN;
+      if (stream != NULL)
+        type = stream->iCodecType;
+      if (type == XBMC_CODEC_TYPE_VIDEO || type == XBMC_CODEC_TYPE_AUDIO)
+      {
+        if (p->dts != DVD_NOPTS_VALUE)
+          m_CurrentDTS = p->dts;
+        else if (p->pts != DVD_NOPTS_VALUE)
+          m_CurrentDTS = p->pts;
+      }
       return p;
     }
     else if (iStreamId != -1 && resp->getMuxSerial() != m_MuxPacketSerial)

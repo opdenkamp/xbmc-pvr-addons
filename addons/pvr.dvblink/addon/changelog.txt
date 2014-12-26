@@ -1,3 +1,8 @@
+[B]Version 1.9.12[/B]
+Added: Grouping recordings by series
+Added: Year to the episode title
+Fixed: incorrect available disk space calculations
+
 [B]Version 1.9.11[/B]
 Updated: Fixed crash when switching channels with enabled timeshifting
 

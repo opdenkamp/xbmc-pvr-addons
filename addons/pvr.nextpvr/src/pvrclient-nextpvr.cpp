@@ -559,7 +559,7 @@ PVR_ERROR cPVRClientNextPVR::GetChannels(ADDON_HANDLE handle, bool bRadio)
           }
         }
 
-        PVR_STRCPY(tag.strInputFormat, "video/x-mpegts");
+        PVR_STRCPY(tag.strInputFormat, "video/mp2t");
 
         // check if it's a radio channel
         tag.bIsRadio = false;

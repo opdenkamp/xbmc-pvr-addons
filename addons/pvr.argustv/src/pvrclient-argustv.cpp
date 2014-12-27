@@ -465,7 +465,7 @@ PVR_ERROR cPVRClientArgusTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
         tag.bIsHidden = false;
         //Use OpenLiveStream to read from the timeshift .ts file or an rtsp stream
         memset(tag.strStreamURL, 0, sizeof(tag.strStreamURL));
-        strncpy(tag.strInputFormat, "video/x-mpegts", sizeof(tag.strInputFormat));
+        strncpy(tag.strInputFormat, "video/mp2t", sizeof(tag.strInputFormat));
         tag.iChannelNumber = channel->LCN();
 
         if (!tag.bIsRadio)

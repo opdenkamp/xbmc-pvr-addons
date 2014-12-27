@@ -1,3 +1,6 @@
+v1.9.18
+- Fixed mime-type for MPEG-TS
+
 v1.9.17
 - updated language files from Transifex
 

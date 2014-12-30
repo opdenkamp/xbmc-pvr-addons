@@ -41,4 +41,5 @@
 #define DEFAULT_AUDIOTRACK          "eng"
 #define DEFAULT_USETIMESHIFT        false
 #define DEFAULT_ADDRECEPISODE2TITLE true
+#define DEFAULT_GROUPRECBYSERIES    true
 

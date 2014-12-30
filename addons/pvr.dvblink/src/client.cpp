@@ -59,6 +59,7 @@ int         g_iBitrate              = DEFAULT_BITRATE;               ///< Bitrat
 std::string g_szAudiotrack          = DEFAULT_AUDIOTRACK;            ///< Audiotrack to include in stream when using transcoding
 bool        g_bUseTimeshift         = DEFAULT_USETIMESHIFT;          ///< Use timeshift
 bool        g_bAddRecEpisode2title  = DEFAULT_ADDRECEPISODE2TITLE;   ///< Concatenate title and episode info for recordings
+bool        g_bGroupRecBySeries = DEFAULT_GROUPRECBYSERIES;         ///< Group Recordings as Directories by series
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr   *PVR          = NULL;
 CHelper_libXBMC_gui   *GUI          = NULL;
@@ -212,6 +213,14 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
       g_bAddRecEpisode2title = DEFAULT_ADDRECEPISODE2TITLE;
   }
 
+  /* Read setting "Group recordings by title" from settings.xml */
+  if (!XBMC->GetSetting("group_recordings_by_series", &g_bGroupRecBySeries))
+  {
+      /* If setting is unknown fallback to defaults */
+      XBMC->Log(LOG_ERROR, "Couldn't get 'group_recordings_by_series' setting, falling back to 'true' as default");
+      g_bGroupRecBySeries = DEFAULT_GROUPRECBYSERIES;
+  }
+
   /* Read setting "height" from settings.xml */
   if (!XBMC->GetSetting("height", &g_iHeight))
   {
@@ -250,7 +259,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "settings: enable_transcoding='%i' host='%s', port=%i", g_bUseTranscoding, g_szHostname.c_str(), g_lPort);
   
-  dvblinkclient = new DVBLinkClient(XBMC, PVR, GUI, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword, g_bAddRecEpisode2title);
+  dvblinkclient = new DVBLinkClient(XBMC, PVR, GUI, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword, g_bAddRecEpisode2title, g_bGroupRecBySeries);
 
     if (dvblinkclient->GetStatus())
         m_CurStatus = ADDON_STATUS_OK;
@@ -347,6 +356,12 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   {
       XBMC->Log(LOG_INFO, "Changed Setting 'add_rec_episode_info' from %u to %u", g_bAddRecEpisode2title, *(int*)settingValue);
       g_bAddRecEpisode2title = *(bool*)settingValue;
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (str == "group_recordings_by_series")
+  {
+      XBMC->Log(LOG_INFO, "Changed Setting 'group_recordings_by_series' from %u to %u", g_bGroupRecBySeries, *(int*)settingValue);
+      g_bGroupRecBySeries = *(bool*)settingValue;
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "height")

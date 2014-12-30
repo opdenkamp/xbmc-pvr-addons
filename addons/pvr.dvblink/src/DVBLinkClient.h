@@ -84,6 +84,7 @@ private:
   int GetInternalUniqueIdFromChannelId(const std::string& channelId);
   virtual void * Process(void);
   bool build_recording_series_map(std::map<std::string, std::string>& rec_id_to_series_name);
+  bool get_dvblink_program_id(std::string& channelId, int start_time, std::string& dvblink_program_id);
 
   std::string make_timer_hash(const std::string& timer_id, const std::string& schedule_id);
   bool parse_timer_hash(const char* timer_hash, std::string& timer_id, std::string& schedule_id);

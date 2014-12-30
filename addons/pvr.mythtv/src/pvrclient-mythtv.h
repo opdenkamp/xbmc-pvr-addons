@@ -39,7 +39,7 @@
 #include <vector>
 #include <map>
 
-class PVRClientMythTV : public Myth::EventSubscriber
+class PVRClientMythTV : public Myth::EventSubscriber, FileConsumer
 {
 public:
   PVRClientMythTV();
@@ -59,10 +59,14 @@ public:
 
   // Implements EventSubscriber
   void HandleBackendMessage(const Myth::EventMessage& msg);
+  void HandleChannelChange();
   void HandleScheduleChange();
   void HandleAskRecording(const Myth::EventMessage& msg);
   void HandleRecordingListChange(const Myth::EventMessage& msg);
   void RunHouseKeeping();
+
+  // Implement FileConsumer
+  void HandleCleanedCache();
 
   // EPG
   PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
@@ -77,7 +81,6 @@ public:
   PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group);
 
   // Recordings
-  void UpdateRecordings();
   int GetRecordingsAmount(void);
   PVR_ERROR GetRecordings(ADDON_HANDLE handle);
   PVR_ERROR DeleteRecording(const PVR_RECORDING &recording);
@@ -148,15 +151,18 @@ private:
   Categories m_categories;
 
   // Channels
-  typedef std::map<uint32_t, MythChannel> ChannelIdMap;
-  typedef std::multimap<std::string, MythChannel> ChannelNumberMap;
-  typedef std::map<std::string, std::vector<uint32_t> > ChannelGroupMap;
+  typedef std::map<unsigned int, MythChannel> ChannelIdMap;
   ChannelIdMap m_channelsById;
-  ChannelNumberMap m_channelsByNumber;
-  ChannelGroupMap m_channelGroups;
-  typedef std::map<int, int> PVRChannelMap;
+  typedef struct { unsigned int iUniqueId; bool bIsRadio; } PVRChannelItem;
+  typedef std::vector<PVRChannelItem> PVRChannelList;
+  typedef std::map<std::string, PVRChannelList> PVRChannelGroupMap;
+  PVRChannelList m_PVRChannels;
+  PVRChannelGroupMap m_PVRChannelGroups;
+  typedef std::map<unsigned int, unsigned int> PVRChannelMap;
   PVRChannelMap m_PVRChannelUidById;
-  void LoadChannelsAndChannelGroups();
+  mutable PLATFORM::CMutex m_channelsLock;
+  int FillChannelsAndChannelGroups();
+  MythChannel FindChannel(uint32_t channelId) const;
   int FindPVRChannelUid(uint32_t channelId) const;
 
   // Demuxer TS
@@ -164,11 +170,11 @@ private:
 
   // Recordings
   ProgramInfoMap m_recordings;
-  PLATFORM::CMutex m_recordingsLock;
+  mutable PLATFORM::CMutex m_recordingsLock;
   unsigned m_recordingChangePinCount;
   void ForceUpdateRecording(ProgramInfoMap::iterator it);
   int FillRecordings();
-  MythChannel FindRecordingChannel(const MythProgramInfo& programInfo);
+  MythChannel FindRecordingChannel(const MythProgramInfo& programInfo) const;
   bool IsMyLiveRecording(const MythProgramInfo& programInfo);
 
   // Timers

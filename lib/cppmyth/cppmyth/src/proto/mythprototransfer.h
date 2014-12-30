@@ -37,8 +37,8 @@ namespace Myth
   public:
     ProtoTransfer(const std::string& server, unsigned port, const std::string& pathname, const std::string& sgname);
 
-    bool Open();
-    void Close();
+    virtual bool Open();
+    virtual void Close();
 
     void Lock();
     void Unlock();

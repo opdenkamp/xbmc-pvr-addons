@@ -36,9 +36,9 @@ namespace Myth
     ProtoMonitor(const std::string& server, unsigned port);
     ProtoMonitor(const std::string& server, unsigned port, bool blockShutdown);
 
-    bool Open();
-    void Close();
-    bool IsOpen();
+    virtual bool Open();
+    virtual void Close();
+    virtual bool IsOpen();
 
     ProtoRecorderPtr GetNextFreeRecorder(int rnum)
     {

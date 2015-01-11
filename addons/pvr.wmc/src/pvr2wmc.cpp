@@ -1176,12 +1176,15 @@ long long Pvr2Wmc::ActualFileSize(int count)
 }
 
 // return the length of the current stream file
-long long Pvr2Wmc::LengthLiveStream(void) 
+long long Pvr2Wmc::LengthLiveStream(void)
 {
 	if (_insertDurationHeader)			// if true, return a fake file 2Mb length to xbmc, this makes xbmc try to determine
 		return FAKE_TS_LENGTH;			// the ts time duration giving us a chance to insert the real duration
 	if (_lastStreamSize > 0)
 		return _lastStreamSize;
+	if (_streamWTV)
+		return XBMC->GetFileLength(_streamFile);
+
 	return -1;
 }
 

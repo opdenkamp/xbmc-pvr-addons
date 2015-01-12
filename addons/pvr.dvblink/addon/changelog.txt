@@ -1,5 +1,6 @@
 [B]Version 1.9.13[/B]
 Added: getBackendHostname function
+Fixed: no timers are added from EPG of DVBLink TV Adviser product
 
 [B]Version 1.9.12[/B]
 Added: Grouping recordings by series

@@ -269,7 +269,7 @@ PVR_ERROR DVBLinkClient::GetTimers(ADDON_HANDLE handle)
 
     xbmcTimer.bIsRepeating = rec->GetProgram().IsRepeatRecord;
 
-    PVR_STR2INT(xbmcTimer.iEpgUid, rec->GetProgram().GetID().c_str());
+    xbmcTimer.iEpgUid = rec->GetProgram().GetStartTime();
     
     xbmcTimer.startTime =rec->GetProgram().GetStartTime();
     xbmcTimer.endTime = rec->GetProgram().GetStartTime() + rec->GetProgram().GetDuration();
@@ -294,6 +294,23 @@ PVR_ERROR DVBLinkClient::GetTimers(ADDON_HANDLE handle)
   m_timerCount = recordings.size();
   result = PVR_ERROR_NO_ERROR;
   return result;
+}
+
+bool DVBLinkClient::get_dvblink_program_id(std::string& channelId, int start_time, std::string& dvblink_program_id)
+{
+    bool ret_val = false;
+
+    EpgSearchResult epgSearchResult;
+    if (DoEPGSearch(epgSearchResult, channelId, start_time, start_time))
+    {
+        if (epgSearchResult.size() > 0 && epgSearchResult.at(0)->GetEpgData().size() > 0)
+        {
+            dvblink_program_id = epgSearchResult.at(0)->GetEpgData().at(0)->GetID();
+            ret_val = true;
+        }
+    }
+
+    return ret_val;
 }
 
 static bool is_bit_set(int bit_num, unsigned char bit_field)
@@ -328,9 +345,15 @@ PVR_ERROR DVBLinkClient::AddTimer(const PVR_TIMER &timer)
             }
         }
 
-        char programId [128];
-        PVR_INT2STR(programId,timer.iEpgUid);
-        addScheduleRequest = new AddScheduleByEpgRequest(channelId, programId, record_series);
+        std::string dvblink_program_id;
+        if (get_dvblink_program_id(channelId, timer.iEpgUid, dvblink_program_id))
+        {
+            addScheduleRequest = new AddScheduleByEpgRequest(channelId, dvblink_program_id, record_series);
+        }
+        else
+        {
+            return PVR_ERROR_FAILED;
+        }
     }
     else
     {
@@ -951,7 +974,7 @@ PVR_ERROR DVBLinkClient::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL
         EPG_TAG broadcast;
         memset(&broadcast, 0, sizeof(EPG_TAG));
 
-        PVR_STR2INT(broadcast.iUniqueBroadcastId, p->GetID().c_str() );
+        broadcast.iUniqueBroadcastId = p->GetStartTime();
         broadcast.strTitle = p->GetTitle().c_str();
         broadcast.iChannelNumber      = channel.iChannelNumber;
         broadcast.startTime           = p->GetStartTime();

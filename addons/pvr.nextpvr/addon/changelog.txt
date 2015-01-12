@@ -1,5 +1,9 @@
 v1.9.19
 - added getBackendHostname function
+- added support for ATSC subchannel numbers, fixing 'no tuner available' message users were getting with this type of channel
+- fixes a problem with playback of radio stations
+- added recording artwork
+- added fanart 
 
 v1.9.18
 - Fixed mime-type for MPEG-TS

@@ -1,4 +1,9 @@
+1.9.25
+
+[added] getBackendHostname function
+
 1.9.24
+
 [fixed] mime-type for MPEG-TS
 
 1.9.23
@@ -6,9 +11,11 @@
 [updated] Language files from Transifex
 
 1.9.22
+
 change library name to Kodi
 
 1.9.21
+
 [fixed] deadlock when activating the addon on some darwin (osx, ios) runtimes
 
 1.9.20

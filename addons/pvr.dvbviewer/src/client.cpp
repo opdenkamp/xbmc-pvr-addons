@@ -339,6 +339,11 @@ const char *GetConnectionString(void)
   return conn.c_str();
 }
 
+const char *GetBackendHostname(void)
+{
+  return g_hostname.c_str();
+}
+
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 {
   if (!DvbData || !DvbData->IsConnected())

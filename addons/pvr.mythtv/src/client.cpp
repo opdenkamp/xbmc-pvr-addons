@@ -708,6 +708,11 @@ const char *GetConnectionString()
   return g_client->GetConnectionString();
 }
 
+const char *GetBackendHostname(void)
+{
+  return g_szMythHostname.c_str();
+}
+
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 {
   if (g_client == NULL)

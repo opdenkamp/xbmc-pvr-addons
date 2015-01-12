@@ -359,6 +359,11 @@ extern "C" {
 		return strConnectionString.c_str();
 	}
 
+	const char *GetBackendHostname(void)
+	{
+		return g_strServerName.c_str();
+	}
+
 	PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
 	{
 		if (_wmc)

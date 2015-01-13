@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.mediaportal.tvserver"
-  version="1.9.24"
+  version="1.9.25"
   name="MediaPortal PVR Client"
   provider-name="Marcel Groothuis">
   <requires>
@@ -60,7 +60,7 @@
     <summary lang="ro">Interfața Kodi pentru MediaPortal TV Server (versiunea ffmpeg + tsreader)</summary>
     <summary lang="ru">Интерфейс Kodi для ТВ-сервера MediaPortal (версия ffmpeg + tsreader)</summary>
     <summary lang="sk">Kodi rozhranie pre MediaPortal TV server (verzia ffmpeg + tsreader)</summary>
-    <summary lang="sl">Kodi-jev vmesnik za MediaPortal TV strežnik (ffmpeg + tsreader)</summary>
+    <summary lang="sl">Kodijev vmesnik za strežnik MediaPortal TV (ffmpeg + tsreader)</summary>
     <summary lang="sv">Kodi frontend för MediaPortal TV-server (ffmpeg + tsreader versionen)</summary>
     <summary lang="tr">MediaPortal TV Sunucusu için Kodi ön ucu (ffmpeg + tsreader sürümü)</summary>
     <summary lang="uk">Накладка Kodi для сервера ТВ MediaPortal'у  (версія ffmpeg + tsreader)</summary>
@@ -102,7 +102,7 @@
     <description lang="ms">Bahagian hadapan Pelayan TV MediaPortal; menyokong penstirman TV Langsung &amp; Rakaman, mendengar saluran Radio, EPG dan Pemasa. Tambahan ini gabungkan tambahan ffmpef fan tsreader terdahulu.</description>
     <description lang="nl">MediaPortal TV Server frontend. Ondersteunt het bekijken van Live TV en opnames, het luisteren van radio zenders, het tonen van de EPG en het inplannen/beheren van nieuwe opnames (Timers). Deze addon combineert de voorgaande "ffmpeg" en "tsreader" addons.</description>
     <description lang="no">MediaPortal TV Server skall. Støtter streaming av Live TV og opptak, Lytte til Radio kanaler, EPG og Timere. Dette tillegget kombinererer de tidligere ffmpeg og tsreader tilleggene.</description>
-    <description lang="pl">Klient serwera TV MediaPortal wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów. Klient ten łączy w sobie funkcje wcześniejszych klientów ffmpeg i tsreader.</description>
+    <description lang="pl">Klient serwera TV MediaPortal obsługuje strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów. Klient ten łączy w sobie funkcje wcześniejszych klientów ffmpeg i tsreader.</description>
     <description lang="pt">Frontend para o MediaPortal TV Server. Suporta transmissão de TV em directo e gravações, ouvir estações de Rádio, EPG e Temporizadores. Este add-on combina os antigos add-ons ffmpeg e tsreader.</description>
     <description lang="pt_BR">Frontend do Servidor de TV  do MediaPortal. Suporta streaming de TV Ao Vivo e Gravações, escutar canais de rádio, EPG e Agendamentos. Este addon combina os antigos addons ffmpeg e tsreader</description>
     <description lang="ro">Interfața MediaPortal TV Server. Suportă streaming TV live &amp; Înregistrări, ascultarea posturilor de radio, EPG și Înregistrare programată. Acest plugin combină ex addons ffmpeg si  tsreader.</description>

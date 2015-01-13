@@ -80,6 +80,10 @@ msgctxt "#30015"
 msgid "Refresh SignalStatus Interval (sec)"
 msgstr "Tími á milli SignalStatus upplýsinga (sek)"
 
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Vista 'Halda áfram/Horft á' stöðu á miðlara"
+
 msgctxt "#30017"
 msgid "Recorded TV folder not found"
 msgstr "Sjónvarpsupptökumappa fannst ekki"
@@ -87,6 +91,10 @@ msgstr "Sjónvarpsupptökumappa fannst ekki"
 msgctxt "#30018"
 msgid "Recorded TV folder cannot be opened"
 msgstr "Ekki hægt að opna sjónvarpsupptökumöppu"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Uppfærsla á ServerWMC útgáfu er fáanleg (%s)"
 
 msgctxt "#30020"
 msgid "All tuners for this channel are busy"
@@ -107,6 +115,18 @@ msgstr "Tengitími upptökustraums rann út"
 msgctxt "#30024"
 msgid "Recording stream exited early"
 msgstr "Upptökustraumur hætti snemma"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Nota VaknaViðNet (WakeOnLAN) til að vekja miðlara"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Sendi VaknaViðNet (WakeOnLAN) til miðlara..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "Tímaskekkja á milli biðlara og bakenda uppá %s mínútur"
 
 msgctxt "#30100"
 msgid "Recording Preference"

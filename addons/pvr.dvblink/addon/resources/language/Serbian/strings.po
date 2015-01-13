@@ -36,6 +36,10 @@ msgctxt "#30105"
 msgid "Bitrate"
 msgstr "Brzina protoka"
 
+msgctxt "#30107"
+msgid "HTTP"
+msgstr "HTTP"
+
 msgctxt "#30111"
 msgid "Enable Timeshift"
 msgstr "Омогући временски помак"
@@ -43,3 +47,7 @@ msgstr "Омогући временски помак"
 msgctxt "#30112"
 msgid "Timeshift buffer path"
 msgstr "Путања до међумеморије временског помака"
+
+msgctxt "#30200"
+msgid "Advanced"
+msgstr "Napredno"

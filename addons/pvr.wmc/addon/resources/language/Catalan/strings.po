@@ -24,6 +24,22 @@ msgctxt "#30002"
 msgid "Port Number"
 msgstr "Número de port"
 
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Preferència d'enregistrament"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Enregistra les sèries"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Tipus de Xou:"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Només nous"
+
 msgctxt "#30106"
 msgid "Live only"
 msgstr "Només en directe"
@@ -32,6 +48,18 @@ msgctxt "#30107"
 msgid "Channel:"
 msgstr "Canal:"
 
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Qualsevol canal"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Temps en l'aire:"
+
 msgctxt "#30111"
 msgid "Anytime"
 msgstr "En qualsevol moment"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Elimina Comptador"

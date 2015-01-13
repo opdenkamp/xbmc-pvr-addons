@@ -24,6 +24,10 @@ msgctxt "#30004"
 msgid "Password"
 msgstr "Pasahitza"
 
+msgctxt "#30012"
+msgid "Webinterface Port"
+msgstr "Webinterface-aren Portua"
+
 msgctxt "#30018"
 msgid "General"
 msgstr "Orokorra"

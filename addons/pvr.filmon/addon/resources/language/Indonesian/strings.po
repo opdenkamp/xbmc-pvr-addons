@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Username"
-msgstr "NamaPengguna"
+msgstr "Nama Pengguna"
 
 msgctxt "#30001"
 msgid "Password"

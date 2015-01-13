@@ -56,6 +56,10 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Canlı TV için RTSP akışını kullan"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Düşük performans kipini etkinleştir (logo ve küçük resimleri devre dışı bırakır)"
+
 msgctxt "#30050"
 msgid "Group recordings"
 msgstr "Grup kayıtları"
@@ -99,6 +103,10 @@ msgstr "Kayıtlar"
 msgctxt "#30500"
 msgid "Unable to connect to the DVBViewer Recording Service"
 msgstr "DVDGösterici'nin Kayıt servisine bağlanılamıyor"
+
+msgctxt "#30501"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "DVBViewer Kayıt Hizmeti sürüm %s veya sonrası gerekli"
 
 msgctxt "#30502"
 msgid "Unable to parse channel list"

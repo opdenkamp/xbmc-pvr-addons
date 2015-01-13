@@ -72,6 +72,10 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr "MythTV Backend-Port für API-Dienste"
 
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "MythTV-Sicherheits-PIN für API-Dienste"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Allgemein"
@@ -176,6 +180,18 @@ msgctxt "#30061"
 msgid "Never"
 msgstr "Nie"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Herunterfahren des Backends verhindern"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Senderzeichen aktivieren"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "Aufnahme von Fankunst/Vorschaubilder aktivieren"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Protokollversion: %i - Datenbankversion: %i"
@@ -183,6 +199,10 @@ msgstr "Protokollversion: %i - Datenbankversion: %i"
 msgctxt "#30110"
 msgid "Enabling EDL"
 msgstr "EDL wird aktiviert"
+
+msgctxt "#30111"
+msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
+msgstr "Eine Schnittliste oder Werbungsmarkierungen wurden gefunden.\nSoll für diese Sendung die Schnittlisten-Funktionalität aktiviert werden?"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

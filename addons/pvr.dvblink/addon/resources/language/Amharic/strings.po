@@ -28,6 +28,14 @@ msgctxt "#30006"
 msgid "Password"
 msgstr "የመግቢያ ቃል"
 
+msgctxt "#30103"
+msgid "Height"
+msgstr "እርዝመት"
+
+msgctxt "#30104"
+msgid "Width"
+msgstr "ስፋት"
+
 msgctxt "#30107"
 msgid "HTTP"
 msgstr "HTTP"

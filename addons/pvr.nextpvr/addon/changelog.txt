@@ -1,3 +1,6 @@
+v1.9.20
+- updated language files from Transifex
+
 v1.9.19
 - added getBackendHostname function
 - added support for ATSC subchannel numbers, fixing 'no tuner available' message users were getting with this type of channel

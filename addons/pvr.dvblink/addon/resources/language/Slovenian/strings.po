@@ -50,7 +50,7 @@ msgstr "Pretok"
 
 msgctxt "#30102"
 msgid "Enable transcoding"
-msgstr "Vključi pretvarjanje"
+msgstr "Omogoči pretvarjanje"
 
 msgctxt "#30103"
 msgid "Height"
@@ -66,7 +66,7 @@ msgstr "Bitna hitrost"
 
 msgctxt "#30106"
 msgid "Audio track"
-msgstr "Zvočni posnetek"
+msgstr "Zvočna sled"
 
 msgctxt "#30107"
 msgid "HTTP"
@@ -98,7 +98,7 @@ msgstr "Napredno"
 
 msgctxt "#30201"
 msgid "Use channel handle instead of client id"
-msgstr "Uporabite ročico kanala namesto ID odjemalca"
+msgstr "Uporabi oznako programe namesto ID odjemalca"
 
 msgctxt "#30202"
 msgid "Show information messages"
@@ -106,15 +106,19 @@ msgstr "Prikaži sporočila informacij"
 
 msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
-msgstr "Kombiniraj naslov in ime epizode za snemanje"
+msgstr "V posnetkih združi naslov in ime epizode"
+
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Združevanje posnetkov po serijah"
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
-msgstr "Povezan z DVBLink strežnikom '%s'"
+msgstr "Povezan z strežnikom DVBLink '%s'"
 
 msgctxt "#32002"
 msgid "Found '%d' channels"
-msgstr "Najdeni '%d' kanali"
+msgstr "Najdenih '%d' programov"
 
 msgctxt "#32003"
 msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
@@ -130,7 +134,7 @@ msgstr "Pridobitev časovnikov neuspešna (Koda napake : %d)"
 
 msgctxt "#32007"
 msgid "Found %d EPG timers"
-msgstr "Najdeno %d EPG časovnikov"
+msgstr "Najdeno %d časovnikov EPG"
 
 msgctxt "#32008"
 msgid "Found %d manual timers"
@@ -142,15 +146,15 @@ msgstr "Najdeno %d posnetkov"
 
 msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
-msgstr "Pridobitev pretoka za kanal %s neuspešna (Koda napake : %d)"
+msgstr "Pridobitev pretoka za program %s neuspešna (Koda napake : %d)"
 
 msgctxt "#32011"
 msgid "Series recording"
-msgstr "Snemam serijo"
+msgstr "Posnetek serije"
 
 msgctxt "#32012"
 msgid "Record this episode only"
-msgstr "Posnemi samo to epizodo"
+msgstr "Posnemi le to epizodo"
 
 msgctxt "#32013"
 msgid "Record all episodes"

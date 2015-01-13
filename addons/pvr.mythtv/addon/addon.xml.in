@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.mythtv"
-  version="1.11.2"
+  version="1.11.3"
   name="MythTV PVR Client"
   provider-name="Christian Fetzer, Jean-Luc Barrière">
   <requires>
@@ -21,12 +21,15 @@
     <summary lang="af">Kodi voorprogram vir MythTV</summary>
     <summary lang="be">Kodi frontend for MythTV</summary>
     <summary lang="bg">Kodi клиент за MythTV</summary>
+    <summary lang="ca">Interfície del Kodi pel MythTV</summary>
     <summary lang="cs">Rozhraní Kodi pro MythTV</summary>
+    <summary lang="cy">Blaen Kodi ar gyfer MythTV</summary>
     <summary lang="da">Kodi frontend til MythTV</summary>
     <summary lang="de">Kodi's Zugang zu MythTV</summary>
     <summary lang="el">Frontend του Kodi για το MythTV</summary>
     <summary lang="en">Kodi frontend for MythTV</summary>
     <summary lang="en_AU">Kodi frontend for MythTV</summary>
+    <summary lang="en_NZ">Kodi frontend for MythTV</summary>
     <summary lang="en_US">Kodi frontend for MythTV</summary>
     <summary lang="es">Front-end de Kodi para MythTV</summary>
     <summary lang="es_AR">Front-end de Kodi para MythTV</summary>
@@ -37,6 +40,8 @@
     <summary lang="he">לקוח טלוויזיה חיה עבור MythTV</summary>
     <summary lang="hr">Kodi sučelje za MythTV</summary>
     <summary lang="hu">Kodi MythTV előtér-kiszolgáló</summary>
+    <summary lang="id">Antarmuka Kodi untuk MythTV</summary>
+    <summary lang="is">Kodi framendi fyrir MythTV</summary>
     <summary lang="it">Frontend di Kodi per MythTV</summary>
     <summary lang="ja">MythTV 用 Kodi フロントエンド</summary>
     <summary lang="ko">MythTV Kodi 프론트엔드</summary>
@@ -49,7 +54,7 @@
     <summary lang="ro">Frontend Kodi pentru MythTV</summary>
     <summary lang="ru">Фронтэнд Kodi для MythTV</summary>
     <summary lang="sk">Kodi rozhranie pre MythTV</summary>
-    <summary lang="sl">Kodi-jev vmesnik za MythTV</summary>
+    <summary lang="sl">Kodijev vmesnik za MythTV</summary>
     <summary lang="sv">Kodi gränssnitt till MythTV</summary>
     <summary lang="tr">MythTV için Kodi ön ucu</summary>
     <summary lang="zh">Kodi 的 MythTV 前端</summary>
@@ -57,11 +62,13 @@
     <description lang="be">MythTV frontend (up to MythTV 0.28). Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers.</description>
     <description lang="bg">MythTV клиент (обновен до MythTV 0.28). Поддържа стрийминг и записване на телевизия, слушане на радио канали, електронен програмен справочник и броячи.</description>
     <description lang="cs">Rozhraní MythTV (do verze MythTV 0.28). Podporuje proudové vysílání živého vysílání a nahrávek, poslech kanálů rádia a EPG, a časovače.</description>
+    <description lang="cy">Blaen MythTV (hyd at MythTV 0.28). Cynnal ffrydio Teledu Byw a Recordiadau, gwrando ar sianeli radio, amserlenydd ac amseryddion.</description>
     <description lang="da">MythTV frontend (op til MythTV 0.28) Understøtter streaming af Live TV &amp; Optagelser, Radiokanaler, EPG samt tidsplaner.</description>
     <description lang="de">MythTV Frontend (bis zu MythTV 0.28). Unterstützt das Streamen von Live TV &amp; Aufnahmen, Hören von Radiokanälen, EPG und Timer.</description>
     <description lang="el">Frontend για το MythTV (έως το MythTV 0.28). Υποστηρίζει ροές Live TV &amp; Εγγραφές, ακρόαση Ραδιοφώνου, EPG και Χρονοδιακόπτες.</description>
     <description lang="en">MythTV frontend (up to MythTV 0.28). Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers.</description>
     <description lang="en_AU">MythTV frontend (up to MythTV 0.28). Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers.</description>
+    <description lang="en_NZ">MythTV frontend (up to MythTV 0.28). Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers.</description>
     <description lang="en_US">MythTV frontend (up to MythTV 0.28). Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and Timers.</description>
     <description lang="es">Front-end de MythTV (hasta MythTV 0.28). Soporte de transmisiones de TV en Vivo y Grabaciones, escuchar canales de Radio, Guía Electrónica de Programas (EPG) y Temporizadores. </description>
     <description lang="es_AR">Front-end de MythTV (hasta MythTV 0.28). Soporte de transmisiones de TV en Vivo y Grabaciones, escuchar canales de Radio, Guía Electrónica de Programas (EPG) y Temporizadores. </description>
@@ -71,19 +78,21 @@
     <description lang="he">לקוח טלוויזיה חיה של MythTV (עד גרסה 0.28 של MythTV). תומך בהזרמת שידורים חיים והקלטות, האזנה לרדיו, הצגת לוח שידורים ותזמון הקלטות.</description>
     <description lang="hr">MythTV sučelje (za inačice do MythTV 0.28. Podržava streamanje i snimanje TV programa, slušanje radio programa, elektronski programski vodič (EPG) i zakazana snimanja. </description>
     <description lang="hu">MythTV előtér-kiszolgáló (MythTv 0.28 verzióig). Élő adások, felvételek,és rádió adások sugárzásának támogatása EPG-vel és időzítéssel.</description>
+    <description lang="id">Antarmuka MythTV (hingga MythTV 0.28). Mendukung streaming TV Langsung &amp; Rekaman, mendengarkan channel Radio, EPG dan Penghitung waktu.</description>
+    <description lang="is">MythTV framendi (upp að MythTV 0.28). Styður streymingu frá beinum útsendingum og upptökum, hlustun á Útvarp, rafræna dagskrárvísa og tíma upptökur.</description>
     <description lang="it">Frontend MythTV (compatibile fino a MythTV 0.28). Supporta lo streaming TV in diretta, le registrazioni, l'ascolto dei canali radio, EPG e programmazioni.</description>
     <description lang="ja">MythTV (バージョン 0.28 まで) のフロントエンドです。ライブ TV ストリーミング、録画、ラジオ放送の視聴、EPG、タイマーをサポートしています。</description>
     <description lang="ko">MythTV 프론트엔드 (up to MythTV 0.28). 라이브 TV 스트리밍, 녹화, 라디오 채널 청취, EPG, 예약 지원.</description>
     <description lang="lt">MythTV sąsaja (kelias iki MythTV 0.28). Palaiko duomenų srautams pritaikyta(-as) Live TV &amp; Recordings</description>
     <description lang="mk">MythTV интерфејс (се до MythTV 0.28). Подржува стриминг на Live TV &amp; Снимки, слушање на радио канали, EPG и тајмери.</description>
     <description lang="nl">MythTV frontend (tot MythTV 0.28). Ondersteunt streaming van Live TV &amp; opnames, luisteren naar radiokanalen, EPG en Timers.</description>
-    <description lang="pl">Klient  MythTV (wersja 0.28 i wcześniejsze) wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
+    <description lang="pl">Klient  MythTV (wersja 0.28 i wcześniejsze) obsługuje strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
     <description lang="pt">Frontend MythTV (até MythTV 0.28). Permite transmissão ao vivo de Live Tv e gravações, ouvir estações de rádio, EPG e temporizadores.</description>
     <description lang="pt_BR">MythTV frontend (up para MythTV 0.28). Suporta streaming de TV ao Vivo &amp; Gravações, Escutar canais de rádios, EPG e Agendamentos.</description>
     <description lang="ro">Frontend MythTV (până la MythTV 0.28). Suportă difuzare în flux a televiziunii în direct și a înregistrăriilor, ascultarea posturilor de radio, EPG și Cronometre.</description>
     <description lang="ru">Фронтэнд MythTV (вплоть до MythTV 0.28). Поддерживает поточное ТВ и записи, прослушивание радио-каналов, ЕПГ и таймеры.</description>
     <description lang="sk">MythTV rozhranie (až do verzie MythTV 0.28). Podporuje streamovanie živého TV vysielania a nahrávok, počúvanie rozhlasových kanálov, EPG a časovače.</description>
-    <description lang="sl">Vmesnik za MythTV (do vključno MythTV 0.28). Podpira pretakanje televizije v živo &amp; posnetkov, poslušanje radia, EPG in časovnike.</description>
+    <description lang="sl">Vmesnik za MythTV (do vključno MythTV 0.28). Podpira predvajanje televizije v živo &amp; posnetkov, poslušanje radia, EPG in časovnike.</description>
     <description lang="sv">MythTV frontend (upp till MythTV 0.28). Stödjer strömmning av direktsänd TV &amp; inspelningar, radiolyssning, EPG och timers.</description>
     <description lang="zh">MythTV 前端 ( MythTV 0.28 及之后版本) 。支持直播电视和录像节目的流媒体转发，收听广播频道，电子节目表及定时器功能。</description>
     <disclaimer lang="af">Hierdie is onstabiele sagteware! Die outeurs is op geen manier verantwoordelik vir gefaalde opnames, inkorrekte tydhouers, vermorsde ure, of enige ander ongewensde effekte.</disclaimer>

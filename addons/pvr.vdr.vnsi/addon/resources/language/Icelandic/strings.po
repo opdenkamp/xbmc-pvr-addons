@@ -208,6 +208,14 @@ msgctxt "#30047"
 msgid "Request Timeshift"
 msgstr "Biðja um Tímahliðrun"
 
+msgctxt "#30048"
+msgid "Path to channel icons"
+msgstr "Slóð á táknmyndir rása"
+
+msgctxt "#30049"
+msgid "VDR Server MAC for Wake-on-LAN"
+msgstr "MAC vistfang  VDR miðlara fyrir Wake On LAN"
+
 msgctxt "#30100"
 msgid "VDR OSD"
 msgstr "Skjátexti VDR"

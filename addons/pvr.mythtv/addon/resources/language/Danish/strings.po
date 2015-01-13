@@ -136,17 +136,37 @@ msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "Aktiver demuxing MPEG-TS"
 
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "Tuning forsinkelse (sekunder)"
+
+msgctxt "#30054"
+msgid "Group recordings by title"
+msgstr "Gruppér optagelser efter titel"
+
 msgctxt "#30055"
 msgid "Always"
 msgstr "Altid"
+
+msgctxt "#30056"
+msgid "Only for series"
+msgstr "Kun for serier"
 
 msgctxt "#30057"
 msgid "Never"
 msgstr "Aldrig"
 
+msgctxt "#30058"
+msgid "Enable commercial skips (EDL)"
+msgstr "Aktivér reklame-skip (EDL)"
+
 msgctxt "#30059"
 msgid "Always"
 msgstr "Altid"
+
+msgctxt "#30060"
+msgid "Dialog"
+msgstr "Dialog"
 
 msgctxt "#30061"
 msgid "Never"
@@ -155,6 +175,14 @@ msgstr "Aldrig"
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Protokolversion: %i - Databaseversion: %i"
+
+msgctxt "#30110"
+msgid "Enabling EDL"
+msgstr "Aktiverer EDL (reklame-skip)"
+
+msgctxt "#30111"
+msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
+msgstr "En reklameudeladelsesliste er blevet fundet.\nVil du aktivere automatisk reklame-skip for dette show?"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

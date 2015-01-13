@@ -104,6 +104,10 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Sýna upplýsingaskilaboð"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Sameina titil og þáttaraðir í nafni á upptökum"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Tengdur við DVBLink miðlara '%s'"
@@ -140,13 +144,25 @@ msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "Gat ekki náð í straum fyrir rásina %s (Villukóði : %d)"
 
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Upptökur þáttaraðar"
+
 msgctxt "#32012"
 msgid "Record this episode only"
 msgstr "Aðeins taka upp þennan þátt"
 
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Taka upp allar þáttaraðir"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Eyða tímatöku"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Eyða aðeins þessari tímatöku"
 
 msgctxt "#32016"
 msgid "Delete the entire series"

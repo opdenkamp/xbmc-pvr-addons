@@ -72,6 +72,10 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr "针对 API 服务的 MythTV 后端端口"
 
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "针对 API 服务的 MythTV 安全码"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "常规"
@@ -179,6 +183,14 @@ msgstr "从不"
 msgctxt "#30062"
 msgid "Block backend shutdown"
 msgstr "阻止后端关闭"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "启用频道图标"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "启用录像同人画/缩略图"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"

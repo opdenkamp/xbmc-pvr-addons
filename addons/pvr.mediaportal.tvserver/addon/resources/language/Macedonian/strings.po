@@ -30,7 +30,7 @@ msgstr "Само Free-to-air"
 
 msgctxt "#30003"
 msgid "Include Radio"
-msgstr "Вклучено Радио"
+msgstr "Вклучи и радио"
 
 msgctxt "#30004"
 msgid "Fast channel switching (don't stop timeshift)"
@@ -38,15 +38,15 @@ msgstr "Брзо префрлување помеѓу канали (не сопи
 
 msgctxt "#30005"
 msgid "Connect timeout (s)"
-msgstr "Тајмаути на поврзување (с)"
+msgstr "Тајмаут при поврзување (сек)"
 
 msgctxt "#30006"
 msgid "Import only TV Channels from group"
-msgstr "Увези само ТВ канали од група"
+msgstr "Увези само ТВ канали од групата"
 
 msgctxt "#30007"
 msgid "Import only Radio Channels from group"
-msgstr "Увези само Радио канали од група"
+msgstr "Увези само Радио канали од групата"
 
 msgctxt "#30008"
 msgid "Convert hostname to IP-adress"
@@ -58,23 +58,23 @@ msgstr "EPG: Read genre strings (slow)"
 
 msgctxt "#30010"
 msgid "Wait time after tuning a channel (ms)"
-msgstr "Време на чекање по префрлување на канал (мс)"
+msgstr "Време на чекање по префрлување на канал (ms)"
 
 msgctxt "#30015"
 msgid "Streaming method"
-msgstr "Метод на стримање"
+msgstr "Метод на stream-ање"
 
 msgctxt "#30016"
 msgid "Windows user account (SMB)"
-msgstr "Windows user account (SMB)"
+msgstr "Windows корисничко име (SMB)"
 
 msgctxt "#30017"
 msgid "Windows password (SMB)"
-msgstr "Windows password (SMB)"
+msgstr "Windows лозинка (SMB)"
 
 msgctxt "#30018"
 msgid "Use RTSP streaming"
-msgstr "Користи RTSP стиминг"
+msgstr "Користи RTSP streaming"
 
 msgctxt "#30040"
 msgid "Connection"
@@ -90,11 +90,11 @@ msgstr "Репродукција"
 
 msgctxt "#30050"
 msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Твојот TVServerKodi верзија '%s' е престара. Надгради на '%s' или по ново!"
+msgstr "Твојот TVServerKodi верзија '%s' е престара. Надгради на '%s' или по нова!"
 
 msgctxt "#30051"
 msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
-msgstr "Твојата TVServerKodi верзија е престара. Надгради на '%s' или по ново!"
+msgstr "Твојата TVServerKodi верзија е престара. Надгради на '%s' или по нова!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -122,7 +122,7 @@ msgstr "Непозната грешка"
 
 msgctxt "#30065"
 msgid "Unable to start graph"
-msgstr "Неможе да се стартува граф"
+msgstr "Неможе да се стартува графата"
 
 msgctxt "#30066"
 msgid "Unknown channel"
@@ -138,11 +138,11 @@ msgstr "Каналот не е мапиран кон било која карт�
 
 msgctxt "#30069"
 msgid "Card is disabled"
-msgstr "Карта е оневозможена"
+msgstr "Картата е оневозможена"
 
 msgctxt "#30070"
 msgid "Connection to slave failed"
-msgstr "Конекција кон слејв неуспешна"
+msgstr "Конекцијата со slave-от е неуспешна"
 
 msgctxt "#30071"
 msgid "Not the owner"
@@ -150,7 +150,7 @@ msgstr "Не си сопственик"
 
 msgctxt "#30072"
 msgid "Graph building failed"
-msgstr "Неуспешна изградба на граф"
+msgstr "Неуспешна изградба на графата"
 
 msgctxt "#30073"
 msgid "SW Encoder missing"
@@ -158,15 +158,83 @@ msgstr "Недостасува SW енкодер"
 
 msgctxt "#30074"
 msgid "No free disk space"
-msgstr "нема слободно место на дискот"
+msgstr "Нема слободно место на дискот"
 
 msgctxt "#30075"
 msgid "No PMT found"
-msgstr "нема најдено PMT"
+msgstr "Нема пронајдено РМТ"
+
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Подеси го распоредот"
+
+msgctxt "#30101"
+msgid "Frequency"
+msgstr "Фреквенција"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Време на емитување"
 
 msgctxt "#30103"
 msgid "Channels"
 msgstr "Канали"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "Задржи"
+
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Сними неколку минути пред почетокот"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Сними неколку минути после крајот"
+
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Сними еднаш"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Снимај секој ден (од оваа програма)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Снимај неделно"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "Снимај преку викенд"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "Снимај за работни денови"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Овој пат"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Било кога"
+
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Овој канал"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Било кој канал"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Се додека не е потребен простор"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Се додека не се изгледа"
 
 msgctxt "#30132"
 msgid "Days"
@@ -175,3 +243,11 @@ msgstr "денови"
 msgctxt "#30133"
 msgid "Always"
 msgstr "Секогаш"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Основни подесувања на backend-от"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Основни подесувања на Kodi"

@@ -102,11 +102,15 @@ msgstr "Χρήση του ονόματος του καναλιού αντί το
 
 msgctxt "#30202"
 msgid "Show information messages"
-msgstr "Εμφάνιση μηνύματων πληροφοριών"
+msgstr "Εμφάνιση μηνυμάτων πληροφοριών"
 
 msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
 msgstr "Συνδυασμός τίτλου και ονόματος επεισοδίου στις εγγραφές"
+
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Εγγραφές σε γκρουπ ανά Σειρά"
 
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"

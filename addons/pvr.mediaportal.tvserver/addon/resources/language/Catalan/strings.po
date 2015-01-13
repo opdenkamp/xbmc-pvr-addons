@@ -22,7 +22,7 @@ msgstr "Nom de màquina del MediaPortal"
 
 msgctxt "#30001"
 msgid "Mediaportal Kodi plugin Port"
-msgstr "Port del connector per l'Kodi del MediaPortal"
+msgstr "Port del connector per al Kodi del MediaPortal"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -180,9 +180,29 @@ msgctxt "#30104"
 msgid "Keep"
 msgstr "Mantenir"
 
+msgctxt "#30110"
+msgid "Record Once"
+msgstr "Grava un cop"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Grava setmanalment"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Aquest cop"
+
 msgctxt "#30121"
 msgid "Anytime"
 msgstr "En qualsevol moment"
+
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Aquest canal"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Qualsevol canal"
 
 msgctxt "#30132"
 msgid "Days"
@@ -191,3 +211,7 @@ msgstr "Dies"
 msgctxt "#30133"
 msgid "Always"
 msgstr "Sempre"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Per defecte a Kodi"

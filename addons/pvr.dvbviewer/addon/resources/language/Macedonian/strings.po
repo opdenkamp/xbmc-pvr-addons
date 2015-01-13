@@ -36,9 +36,57 @@ msgctxt "#30010"
 msgid "Use favourites instead of channel list"
 msgstr "Користи ги омилените наместо листата канали"
 
+msgctxt "#30011"
+msgid "Use local favourites file"
+msgstr "Користи локален фајл за омилени"
+
 msgctxt "#30012"
 msgid "Select the favourites.xml file"
 msgstr "Одбери favourites.xml папка"
+
+msgctxt "#30020"
+msgid "Enable Timeshift"
+msgstr "Вклучи Timeshift"
+
+msgctxt "#30021"
+msgid "Timeshift buffer path"
+msgstr "Пат за Timeshift buffer-от"
+
+msgctxt "#30030"
+msgid "Use RTSP streaming for live TV"
+msgstr "Користи RTSP streaming за ТВ во живо"
+
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Работи во ниско-перформансен режим (ги исклучува логоата и сликичките)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Групирај ги снимките"
+
+msgctxt "#30051"
+msgid "disabled"
+msgstr "исклучено"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "според локација на снимките"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "според датум на снимање"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "според првата буква"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "според ТВ канал"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "според серија"
 
 msgctxt "#30100"
 msgid "General"
@@ -51,3 +99,31 @@ msgstr "Напредно"
 msgctxt "#30102"
 msgid "Recordings"
 msgstr "Снимки"
+
+msgctxt "#30500"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Невозможно поврзување со DVBViewer Recording Service-от"
+
+msgctxt "#30501"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Потребна е DVBViewer Recording Service верзија %s или повисока"
+
+msgctxt "#30502"
+msgid "Unable to parse channel list"
+msgstr "Не може да се расчлени листата на канали"
+
+msgctxt "#30503"
+msgid "Check Kodi log for more information"
+msgstr "Провери го Kodi log-от за повеќе информации"
+
+msgctxt "#30504"
+msgid "Unable to open local favourites.xml"
+msgstr "Не може да се отвори локалното favourites.xml"
+
+msgctxt "#30505"
+msgid "Unable to parse favourites list"
+msgstr "Не може да се расчлени листата на омилени"
+
+msgctxt "#30506"
+msgid "Unable to parse timer list"
+msgstr "Не може да се расчлени листата на тајмери"

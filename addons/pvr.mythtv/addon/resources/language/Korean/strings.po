@@ -72,6 +72,10 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr "MythTV 백엔드 포트 (API 서비스용)"
 
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "API 서비스용 MythTV 보안 Pin"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "일반"
@@ -98,11 +102,11 @@ msgstr "메타데이타 자동 조회"
 
 msgctxt "#30027"
 msgid "Commercial Flag new recordings"
-msgstr "Commercial Flag 새기록"
+msgstr "새 녹화 광고 플래그"
 
 msgctxt "#30028"
 msgid "Transcode new recordings"
-msgstr "트랜스코드 새 기록"
+msgstr "새 녹화 트랜스코드"
 
 msgctxt "#30029"
 msgid "Run User Job #1"
@@ -180,6 +184,14 @@ msgctxt "#30062"
 msgid "Block backend shutdown"
 msgstr "백엔드 종료 방지"
 
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "채널 아이콘 사용"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "녹화 팬아트/썸네일 사용"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "프로토콜 버전: %i - 데이터베이스 버전: %i"
@@ -190,7 +202,7 @@ msgstr "EDL 사용"
 
 msgctxt "#30111"
 msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
-msgstr "컷 목록 또는 광고 건너뛰기가 발견됐습니다.\n이 쇼에 대해 EDL 기능을 활성화하시겠습니까?"
+msgstr "컷 목록 또는 광고 건너뛰기가 발견됐습니다.\n이 쇼에 대해 EDL 기능을 사용하겠습니까?"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

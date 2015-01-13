@@ -20,6 +20,22 @@ msgctxt "#30000"
 msgid "General"
 msgstr "Општо"
 
+msgctxt "#30001"
+msgid "Server Address"
+msgstr "Адреса на серверот"
+
+msgctxt "#30002"
+msgid "Server Port"
+msgstr "Порта на серверот"
+
+msgctxt "#30003"
+msgid "Client name"
+msgstr "Име на клиентот"
+
+msgctxt "#30004"
+msgid "Connection timeout (s)"
+msgstr "Connection timeout (s)"
+
 msgctxt "#30005"
 msgid "Username"
 msgstr "Корисничко име"
@@ -28,18 +44,126 @@ msgctxt "#30006"
 msgid "Password"
 msgstr "Лозинка"
 
+msgctxt "#30100"
+msgid "Stream"
+msgstr "Stream"
+
 msgctxt "#30102"
 msgid "Enable transcoding"
 msgstr "Активирај транскодирање"
+
+msgctxt "#30103"
+msgid "Height"
+msgstr "Висина"
+
+msgctxt "#30104"
+msgid "Width"
+msgstr "Ширина"
 
 msgctxt "#30105"
 msgid "Bitrate"
 msgstr "Брзина на проток"
 
+msgctxt "#30106"
+msgid "Audio track"
+msgstr "Аудио трака"
+
 msgctxt "#30107"
 msgid "HTTP"
 msgstr "HTTP"
 
+msgctxt "#30108"
+msgid "RTP"
+msgstr "RTP"
+
+msgctxt "#30109"
+msgid "HLS"
+msgstr "HLS"
+
+msgctxt "#30110"
+msgid "ASF"
+msgstr "ASF"
+
+msgctxt "#30111"
+msgid "Enable Timeshift"
+msgstr "Овозможи Timeshift"
+
+msgctxt "#30112"
+msgid "Timeshift buffer path"
+msgstr "Timeshift buffer path"
+
 msgctxt "#30200"
 msgid "Advanced"
 msgstr "Напредно"
+
+msgctxt "#30201"
+msgid "Use channel handle instead of client id"
+msgstr "Користи channel handle наместо client id"
+
+msgctxt "#30202"
+msgid "Show information messages"
+msgstr "Прикажи ги информативните пораки"
+
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Комбинирај го името на серијата и епизодата за снимките"
+
+msgctxt "#32001"
+msgid "Connected to DVBLink Server '%s'"
+msgstr "Поврзан со DVBLink серверот '%s'"
+
+msgctxt "#32002"
+msgid "Found '%d' channels"
+msgstr "Најдени се '%d' канали"
+
+msgctxt "#32003"
+msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
+msgstr "Неуспешно е поврзувањето со DVBLink серверот '%s' (Error code : %d)"
+
+msgctxt "#32004"
+msgid "Could not get recordings (Error code : %d)"
+msgstr "Не можеа да се добијат снимките (Error код : %d)"
+
+msgctxt "#32006"
+msgid "Could not get timers(Error code : %d)"
+msgstr "Не можеа да се добијат тајмерите (Error код : %d)"
+
+msgctxt "#32007"
+msgid "Found %d EPG timers"
+msgstr "Најдени %d EPG тајмери"
+
+msgctxt "#32008"
+msgid "Found %d manual timers"
+msgstr "Најдени %d рачни тајмери"
+
+msgctxt "#32009"
+msgid "Found %d recordings"
+msgstr "Најдени %d снимки"
+
+msgctxt "#32010"
+msgid "Could not get stream for channel %s (Error code : %d)"
+msgstr "Не може да се добие stream за каналот %s (Error код : %d)"
+
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Серијата се снима"
+
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr "Сними ја само оваа епизода"
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Сними ги сите епизоди"
+
+msgctxt "#32014"
+msgid "Delete timer"
+msgstr "Избриши го тајмерот"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Избриши го само овој тајмер"
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr "Избриши ја целата серија"

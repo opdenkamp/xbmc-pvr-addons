@@ -104,6 +104,14 @@ msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Dangoswch gwybodaeth negeseuon"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Cyfuno'r enw'r teitl a'r bennod ar gyfer recordio"
+
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Grwpio Recordiadau yn ôl Cyfres"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Cysylltu i Weinydd DVBLink '%s'"
@@ -140,6 +148,26 @@ msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "Methu estyn llif ar gyfer sianel %s (Cod gwall: %d)"
 
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Recordio cyfres"
+
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr "Recordio'r bennod yma"
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Recordio pob pennod"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Dileu'r amserydd"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Dileu'r amserydd yma'n unig"
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr "Dileu'r gyfres gyfan"

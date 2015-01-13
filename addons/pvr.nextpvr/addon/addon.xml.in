@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.nextpvr"
-  version="1.9.19"
+  version="1.9.20"
   name="NextPVR PVR Client"
   provider-name="Graeme Blackley">
   <requires>
@@ -21,7 +21,7 @@
     <summary lang="af">Kodi voorprogram vir die NextPVR</summary>
     <summary lang="be">Kodi frontend for the NextPVR</summary>
     <summary lang="bg">Kodi клиент за NextPVR</summary>
-    <summary lang="ca">Interfície de l'Kodi pel NextPVR</summary>
+    <summary lang="ca">Interfície del Kodi pel NextPVR</summary>
     <summary lang="cs">Rozhraní Kodi pro NextPVR</summary>
     <summary lang="cy">Blaen Kodi ar gyfer NextPVR</summary>
     <summary lang="da">Kodi frontend til NextPVR</summary>
@@ -59,7 +59,7 @@
     <summary lang="ro">Interfața Kodi pentru NextPVR</summary>
     <summary lang="ru">Интерфейс Kodi для NextPVR</summary>
     <summary lang="sk">Kodi rozhranie pre NextPVR</summary>
-    <summary lang="sl">Kodi-jev vmesnik za NextPVR</summary>
+    <summary lang="sl">Kodijev vmesnik za NextPVR</summary>
     <summary lang="sv">Kodi-frontend för NextPVR</summary>
     <summary lang="tr">NextPVR için Kodi ön ucu</summary>
     <summary lang="uk">Накладка Kodi для NextPVR</summary>
@@ -101,7 +101,7 @@
     <description lang="my">NextPVR frontend. Live TV နှင့် Recordings ၊ ရေဒီယိုလှိုင်းများကို နားဆင်ခြင်း ၊ EPG စသည်တို့ကို ထောက်ပံ့ပေးသည်။</description>
     <description lang="nl">NextPVR frontend. Ondersteunt streaming van Live TV &amp; Recordings, het luisteren naar Radio kanalen en EPG.</description>
     <description lang="no">NextPVR frontend. Støtter visning av direkte TV og opptak, lytting til radiokanaler og EPG.</description>
-    <description lang="pl">Klient NextPVR wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
+    <description lang="pl">Klient NextPVR obsługuje strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
     <description lang="pt">Frontend NextPVR. Suporta transmissão de Live TV e Gravações, ouvir estações de Rádio e EPG.</description>
     <description lang="pt_BR">NextPVR Frontend. Suporta streaming de TV ao Vivo e Gravações, ouvir canais de rádio e EPG.</description>
     <description lang="ro">Interfața NextPVR. Suporta streaming Live TV și inregistrari, radio și ghid electronic de programe (EPG)</description>
@@ -145,7 +145,7 @@
     <disclaimer lang="ko">아직 개발 진행중입니다. 부족한 부분이 있을 수 있습니다.</disclaimer>
     <disclaimer lang="lt">Tai yra nestabili programinė įranga! Autorius jokiu būdu neatsakingas už nepavykusius įrašus, neteisingus laikmačius, iššvaistytas valandas, ar nutikus kitiems nepageidaujamiems poveikiams ...[COLOR=red](Kodi.lt siūlo/rekomenduoja testuojant šį priedą persijungti į Anglų [orinali] kalbą)[/COLOR]</disclaimer>
     <disclaimer lang="lv">Šis darbs ir procesā. Izmantojiet paši uz savu risku.</disclaimer>
-    <disclaimer lang="mk">Ова е работа која се извршува. Користи на сопствен ризик.</disclaimer>
+    <disclaimer lang="mk">Ова е сеуште незавршена програма. Користи на сопствен ризик.</disclaimer>
     <disclaimer lang="ms">Ia masih dalam pembangunan. Guna atas risiko sendiri.</disclaimer>
     <disclaimer lang="my">အသုံးပြုရန် လုပ်ဆောင်နေခြင်းဖြစ်သည်။ ကိုယ့်တာဝန်ကိုယ်ယူပြီး အသုံးပြုပါ။</disclaimer>
     <disclaimer lang="nl">Hier wordt aan gewerkt, Gebruik op eigen risico.</disclaimer>

@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "MythTV Backend Hostname or IP"
-msgstr "MythTV ana bilgisayar adı yada IP'si"
+msgstr "MythTV ana bilgisayar adı ya da IP'si"
 
 msgctxt "#30001"
 msgid "MythTV Backend Port"
@@ -36,9 +36,17 @@ msgctxt "#30004"
 msgid "MythTV Database Databasename"
 msgstr "MythTV Veritabanı Adı"
 
+msgctxt "#30005"
+msgid "Include more debug information in the log file"
+msgstr "Günlük dosyasına daha fazla hata ayıklama bilgisi ekle"
+
 msgctxt "#30006"
 msgid "Enable Live TV"
 msgstr "Canlı TV aktifleştir"
+
+msgctxt "#30008"
+msgid "Conflict handling"
+msgstr "Çakışma ele alma"
 
 msgctxt "#30010"
 msgid "Prefer recording and stop Live TV"

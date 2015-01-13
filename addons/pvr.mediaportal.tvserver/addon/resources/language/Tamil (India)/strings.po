@@ -1,0 +1,33 @@
+# Kodi Media Center language file
+# Addon Name: MediaPortal PVR Client
+# Addon id: pvr.mediaportal.tvserver
+# Addon Provider: Marcel Groothuis
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC Main\n"
+"Report-Msgid-Bugs-To: http://trac.xbmc.org/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Tamil (India) (http://www.transifex.com/projects/p/xbmc-main/language/ta_IN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ta_IN\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#30042"
+msgid "Playback"
+msgstr "பின்னணி"
+
+msgctxt "#30103"
+msgid "Channels"
+msgstr "சேனல்கள்"
+
+msgctxt "#30132"
+msgid "Days"
+msgstr "நாட்கள்"
+
+msgctxt "#30133"
+msgid "Always"
+msgstr "எப்போதும்"

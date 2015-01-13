@@ -38,7 +38,7 @@ msgstr "Akun pengguna WIndows"
 
 msgctxt "#30005"
 msgid "Password"
-msgstr "Password"
+msgstr "Sandi"
 
 msgctxt "#30006"
 msgid "Delay after tuning (ms)"

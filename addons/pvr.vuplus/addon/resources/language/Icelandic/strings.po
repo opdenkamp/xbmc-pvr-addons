@@ -112,6 +112,10 @@ msgctxt "#30027"
 msgid "Fetch picons from webinterface"
 msgstr "Sækja 'picon' frá vefviðmóti"
 
+msgctxt "#30028"
+msgid "Use Secure HTTP (https)"
+msgstr "Nota öruggara HTTP (https)"
+
 msgctxt "#30500"
 msgid "Disconnected from '%s'"
 msgstr "Aftengdur frá '%s'"

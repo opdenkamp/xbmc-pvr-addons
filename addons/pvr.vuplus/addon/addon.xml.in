@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.vuplus"
-  version="1.9.21"
+  version="1.9.22"
   name="VU+ / Enigma2 Client"
   provider-name="Joerg Dembski">
   <requires>
@@ -55,7 +55,7 @@
     <summary lang="ro">Interfața Kodi pentru decodoare VU+ / Enigma2 </summary>
     <summary lang="ru">Фронтэнд Kodi для тюнеров, основанных на VU+ /Enigma2</summary>
     <summary lang="sk">Rozhranie Kodi pre spoluprácu s prijímačmi VU+ / Enigma2</summary>
-    <summary lang="sl">Kodi-jev vmesnik za sprejemnike VU+ / Enigma2</summary>
+    <summary lang="sl">Kodijev vmesnik za sprejemnike VU+ / Enigma2</summary>
     <summary lang="sq">Frontend i Kodi'së për Aparate VU+ / Enigma2 </summary>
     <summary lang="sv">Kodi Frontend för VU+/Enigma2 baserade dekodrar</summary>
     <summary lang="tr">VU+ / Enigma2 alıcı kutuları için Kodi ön ucu</summary>
@@ -95,7 +95,7 @@
     <description lang="ms">Bahagian hadapan VU+; menyokong penstirman  Langsung &amp; Rakaman, EPG, Pemasa TV</description>
     <description lang="nl">VU+ frontend; ondersteunt het streamen van LiveTV &amp; Opnames, EPG, Timers</description>
     <description lang="no">VU+ frontend; støtte for Live TV  &amp; Opptak, EPG, Timere.</description>
-    <description lang="pl">Klient VU+ wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
+    <description lang="pl">Klient VU+ obsługuje strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
     <description lang="pt">Frontend VU+ ; suporta transmissão de TV em Directo e Gravações, EPG, Temporizadores.</description>
     <description lang="pt_BR">VU+ frontend; suporta streaming de TV Ao Vivo e Gravações, EPG, agendamentos.</description>
     <description lang="ro">Interfața VU+; suportă streaming programe TV și înregistrare, program electronic, cronometre - înregistrare programată</description>

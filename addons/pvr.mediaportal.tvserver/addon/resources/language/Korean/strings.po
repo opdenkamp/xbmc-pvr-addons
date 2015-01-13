@@ -138,7 +138,7 @@ msgstr "채널에 할당된 카드 없음"
 
 msgctxt "#30069"
 msgid "Card is disabled"
-msgstr "카드 비활성화"
+msgstr "카드 사용 안 함"
 
 msgctxt "#30070"
 msgid "Connection to slave failed"

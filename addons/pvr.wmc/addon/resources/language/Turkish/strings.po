@@ -24,6 +24,38 @@ msgctxt "#30002"
 msgid "Port Number"
 msgstr "Liman Numarası"
 
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Akış zaman aşımı, bilinmeyen sorun"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Bu kanalda video verisi bulunamadı"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Kayıt silme başarısız, dosya kullanımda veya yazma korumalı"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Kayıt silme başarısız, kaydedilen dosya mevcut değil"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Kayıt dosyası bulunamadı"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Seçilen alternatif kanal:"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Seçilen alternatif zaman:"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Kayıt Tercihi"
+
 msgctxt "#30101"
 msgid "Record this episode only"
 msgstr "Sadece bu bölümü kaydet"
@@ -35,6 +67,10 @@ msgstr "Bu seriyi kayıt et"
 msgctxt "#30103"
 msgid "Show type:"
 msgstr "Gösteri türü:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Yeni ve yeniden çalıştır"
 
 msgctxt "#30105"
 msgid "New only"
@@ -51,6 +87,10 @@ msgstr "Kanal:"
 msgctxt "#30108"
 msgid "Any Channel"
 msgstr "Herhangi Bir Kanal"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Yayın süresi:"
 
 msgctxt "#30111"
 msgid "Anytime"

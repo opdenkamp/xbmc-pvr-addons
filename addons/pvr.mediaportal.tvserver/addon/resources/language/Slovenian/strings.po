@@ -22,7 +22,7 @@ msgstr "Ime gostitelja Mediaportal"
 
 msgctxt "#30001"
 msgid "Mediaportal Kodi plugin Port"
-msgstr "Vrata vtičnika Kodi za Mediaportal"
+msgstr "Vrata vtičnika Mediaportal za Kodi"
 
 msgctxt "#30002"
 msgid "Free-to-air only"
@@ -90,11 +90,11 @@ msgstr "Predvajanje"
 
 msgctxt "#30050"
 msgid "Your TVServerKodi version '%s' is too old. Please upgrade to '%s' or higher!"
-msgstr "Vaša različica TVServerKodi-ja '%s' je prestara. Posodobite na '%s' ali novejše!"
+msgstr "Vaša različica TVServerKodija '%s' je prestara. Posodobite na '%s' ali novejše!"
 
 msgctxt "#30051"
 msgid "Your TVServerKodi version is too old. Please upgrade to '%s' or higher!"
-msgstr "Vaša različica TVServerKodi-ja je prestara. Posodobite na '%s' ali novejše!"
+msgstr "Vaša različica TVServerKodija je prestara. Posodobite na '%s' ali novejše!"
 
 msgctxt "#30052"
 msgid "Recording playback failed. Empty URL of filename."
@@ -164,9 +164,17 @@ msgctxt "#30075"
 msgid "No PMT found"
 msgstr "PMT ni mogoče najti"
 
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Nastavitve urnika"
+
 msgctxt "#30101"
 msgid "Frequency"
 msgstr "Frekvenca"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Čas predvajanja"
 
 msgctxt "#30103"
 msgid "Channels"
@@ -176,9 +184,33 @@ msgctxt "#30104"
 msgid "Keep"
 msgstr "Obdrži"
 
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Snemanje minut pred začetkom"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Snemanje minut po koncu"
+
 msgctxt "#30110"
 msgid "Record Once"
 msgstr "Posnemi enkrat"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Snemaj dnevno (ta program)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Snemaj tedensko"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "Snemanj ob vikendih"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "Snemaj med tednom"
 
 msgctxt "#30120"
 msgid "This time"
@@ -188,6 +220,22 @@ msgctxt "#30121"
 msgid "Anytime"
 msgstr "Kadarkoli"
 
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Ta program"
+
+msgctxt "#30126"
+msgid "Any Channel"
+msgstr "Katerikoli program"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Dokler se ne potrebuje prostora"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Do ogleda"
+
 msgctxt "#30132"
 msgid "Days"
 msgstr "Dni"
@@ -196,6 +244,10 @@ msgctxt "#30133"
 msgid "Always"
 msgstr "Vedno"
 
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Privzeto za hrbtenico"
+
 msgctxt "#30136"
 msgid "Kodi default"
-msgstr "Kodi privzeto"
+msgstr "Privzeto za Kodi"

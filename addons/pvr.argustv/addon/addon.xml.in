@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.argustv"
-  version="1.9.187"
+  version="1.9.188"
   name="ARGUS TV client"
   provider-name="Fred Hoogduin, Marcel Groothuis">
   <requires>
@@ -32,6 +32,7 @@
     <summary lang="en_US">Kodi frontend for the ARGUS TV PVR http://www.argus-tv.com/</summary>
     <summary lang="es">Frontend de Kodi para ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="es_AR">Frontend de Kodi para ARGUS TV PVR http://www.argus-tv.com//</summary>
+    <summary lang="es_MX">Frontend de Kodi para ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="et">Kodi esi ARGUS TV PVRile http://www.argus-tv.com//</summary>
     <summary lang="fr">Interface logicielle pour l'enregistreur vidéo ARGUS TV http://www.argus-tv.com//</summary>
     <summary lang="fr_CA">Frontal Kodi pour le numériscope ARGUS TV http://www.argus-tv.com/</summary>
@@ -40,7 +41,7 @@
     <summary lang="hr">Kodi pozadinski softver za ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="hu">Kodi ARGUS TV előtér-kiszolgáló http://www.argus-tv.com//</summary>
     <summary lang="hy">Kodi արտաքին տեսքը ARGUS TV PVR համար http://www.argus-tv.com//</summary>
-    <summary lang="id">Frontend Kodi untuk ARGUS TV PVR http://www.argus-tv.com//</summary>
+    <summary lang="id">Antarmuka Kodi untuk ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="is">Kodi framendi fyrir ARGUS TV upptökutæki (PVR) http://www.argus-tv.com//</summary>
     <summary lang="it">Frontend Kodi di ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="ja">ARGUS TV PVR 用 Kodi フロントエンド http://www.argus-tv.com//</summary>
@@ -59,10 +60,10 @@
     <summary lang="ru">Интерфейс Kodi для ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="si">TV PVR ආරක්ෂාව සඳහා Kodi ඉදිරි කොන http://www.argus-tv.com//</summary>
     <summary lang="sk">Kodi rozhranie pre ARGUS TV PVR http://www.argus-tv.com//</summary>
-    <summary lang="sl">Kodi-jev vmesnik za ARGUS TV PVR http://www.argus-tv.com//</summary>
+    <summary lang="sl">Kodijev vmesnik za ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="sq">Kodi frontend për ARGUS TV PVR http://www.argus-tv.com &amp;</summary>
     <summary lang="sv">Kodi frontend för ARGUS TV PVR http://www.argus-tv.com/</summary>
-    <summary lang="tr">ARGUS TV PVR için Kodi ön ucu http://www.argus-tv.com//</summary>
+    <summary lang="tr">ARGUS TV PVR için Kodi ön arayüz http://www.argus-tv.com//</summary>
     <summary lang="uk">Накладка Kodi для ARGUS TV PVR http://www.argus-tv.com//</summary>
     <summary lang="vi">Giao tiếp Kodi cho ARGUS TV PVR http://www.argus-tv.com/</summary>
     <summary lang="zh">Kodi 的 ARGUS TV PVR 前端 http://www.argus-tv.com//</summary>
@@ -82,6 +83,7 @@
     <description lang="en_US">ARGUS TV PVR frontend. Supports streaming of Live TV &amp; Recordings, listening to Radio channels, EPG and schedules.</description>
     <description lang="es">Frontend de ARGUS TV PVR. Soporta transmisiones de TV en Vivo y Grabaciones, escuchar canales de Radio, Guía Electrónica de Programas (EPG) y temporizadores.</description>
     <description lang="es_AR">Frontend de ARGUS TV PVR. Soporta transmisiones de TV en Vivo y Grabaciones, escuchar canales de Radio, Guía Electrónica de Programas (GEP) y temporizadores.</description>
+    <description lang="es_MX">Frontend de ARGUS TV PVR. Soporta transmisiones de TV en vivo y grabaciones, escuchar canales de Radio, Guía Electrónica de Programas  y temporizadores.</description>
     <description lang="et">ARGUS TV PVR esi. Toetab telekanalite striimimist ja salvestamist, raadio kuulamist ja elektroonilist saatekava.</description>
     <description lang="fr">Interface logicielle pour l'enregistreur vidéo ARGUS TV. Supporte la lecture en continu de télévision et son enregistrement, l'écoute de radios, les guides de programmes et les minuteries.</description>
     <description lang="fr_CA">Frontal de numériscope pour ARGUS TV, prenant en charge la lecture en transit des télés en direct &amp; les enregistrements, l'écoute de chaînes radio, le GÉP et les horaires.</description>
@@ -90,7 +92,7 @@
     <description lang="hr">ARGUS TV PVR pozadinski softver. Podržava stremanje televizije i snimanje, slušanje radio programa, EPG i zakazano snimanje.</description>
     <description lang="hu">ARGUS TV PVR előtér-kiszolgáló. Élő adások, felvételek és rádió csatornák sugárzásának támogatása EPG-vel és időzítéssel.</description>
     <description lang="hy">ARGUS TV PVR արտաքին տեսքը: TV հիմա, Ձայնագրություններ, Ռադիո ալիքների ունկնդրում, EPG և ժամանակացույցի հնարավորություն:</description>
-    <description lang="id">Frontend PVR ARGUS TV. Mendukung pengaliran TV dan Rekaman langsung, mendengarkan kanal radio, EPG dan jadwal.</description>
+    <description lang="id">Antarmuka PVR ARGUS TV. Mendukung streaming TV dan Rekaman langsung, mendengarkan kanal radio, EPG dan jadwal.</description>
     <description lang="is">ARGUS TV framendi; styður streymingu á beinum sjónvarpi og upptökum, hlustun á útvarpsstöðvar sjónvarpsvísum (EGP) og dagskráryfirlitum.</description>
     <description lang="it">Frontend ARGUS TV PVR. Supporta lo streaming e la registrazione di Live TV, l'ascolto dei canali radio, la guida ai programmi e gli orari.</description>
     <description lang="ja">ARGUS TV PVR フロントエンドです。テレビ放送のストリーミング、録画、ラジオチャンネルの視聴、EPG、録画予約をサポートしています。</description>
@@ -101,7 +103,7 @@
     <description lang="ms">Bahagian hadapan PVR ARGUS TV; menyokong penstirman TV Langsung &amp; Rakaman, mendengar saluran Radio, EPG dan jadual.</description>
     <description lang="nl">ARGUS TV PVR frontend. Ondersteunt het bekijken van Live TV en opnames, het beluisteren van radio zenders, het tonen van de EPG en het inplannen/beheren van nieuwe opnames (Timers).</description>
     <description lang="no">ARGUS TV PVR klientdel Støtter visning av Live-TV, opptak, lytting til radiokanaler, EPG og tidsopptak.</description>
-    <description lang="pl">Klient ARGUS TV PVR wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
+    <description lang="pl">Klient ARGUS TV PVR obsługuje strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
     <description lang="pt">Frontend ARGUS TV PVR. Suporta transmissão de TV em directo e gravações, audição de estações de rádio, EPG e agendamentos.</description>
     <description lang="pt_BR">Frontend do PVR ARGUS TV. Suporta streaming de TV Local &amp; Gravações, sintonização de canais de Rádio, guia de programação eletrônica (GPE) e agendamento.</description>
     <description lang="ro">Frontend PVR ARGUS TV. Suportă difuzare în flux pentru televiziune în direct și pentru înregistrări, ascultarea canalelor radio, EPG și planificări.</description>

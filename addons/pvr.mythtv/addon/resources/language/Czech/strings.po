@@ -72,6 +72,10 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr "MythTV Backend Port pro API služeb"
 
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "MythTV  bezpečnostní pin pro služby API"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Obecné"
@@ -175,6 +179,18 @@ msgstr "Dialog"
 msgctxt "#30061"
 msgid "Never"
 msgstr "Nikdy"
+
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Zablokuj vypnutí backendu."
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Povolit ikonky pro kanály"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "Povolit  fanart/náhled pro nahrávky"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"

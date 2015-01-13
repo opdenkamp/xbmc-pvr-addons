@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.dvblink"
-  version="1.9.13"
+  version="1.9.14"
   name="DVBLink PVR Client"
   provider-name="DVBLogic">
   <requires>
@@ -18,6 +18,7 @@
     library_android="libKodi_DVBLink.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="bg">ПВР добавка за DVBLink</summary>
+    <summary lang="ca">Complement PVR per a DVBLink</summary>
     <summary lang="cs">PVR plugin pro DVBLink</summary>
     <summary lang="cy">Ategyn Recordydd ar gyfer DVBLink</summary>
     <summary lang="da">PVR Plugin til DVBLink</summary>
@@ -29,6 +30,7 @@
     <summary lang="en_US">PVR Plugin for DVBLink</summary>
     <summary lang="es">Complemento PVR para DVBLink</summary>
     <summary lang="es_AR">Plugin PVR para DVBLink</summary>
+    <summary lang="es_MX">Complemento PVR para DVBLink</summary>
     <summary lang="fr">Plugin PVR pour DVBLink</summary>
     <summary lang="fr_CA">Plugiciel de numériscope pour DVBLink</summary>
     <summary lang="gl">Complemento PVR do DVBLink</summary>
@@ -41,6 +43,7 @@
     <summary lang="ja">DVBLink の PVR プラグイン</summary>
     <summary lang="ko">DVBLink를 위한 PVR 플러그인</summary>
     <summary lang="lt">PVR įskiepis skirtas DVBLink</summary>
+    <summary lang="mk">PVR Plugin за DVBLink</summary>
     <summary lang="ms">Plugin PVR untuk DVBLink</summary>
     <summary lang="nl">PVR Plug-in voor DVBLink</summary>
     <summary lang="no">PVR-innstikk til DVBLink</summary>
@@ -51,11 +54,12 @@
     <summary lang="ru">Дополнение PVR для DVBLink</summary>
     <summary lang="si">DBVLink සඳහා PVR පේනුකිරීම </summary>
     <summary lang="sk">PVR zásuvný modul pre DVBLink</summary>
-    <summary lang="sl">PVR dodatek za DVBLink</summary>
+    <summary lang="sl">Vtičnik PVR za DVBLink</summary>
     <summary lang="sv">PVR tillägg för DVBLink</summary>
     <summary lang="tr">DVDLink için PVR Eklentisi</summary>
     <summary lang="zh">DVBLink PVR 插件</summary>
     <description lang="bg">ПВР добавка за DVBLink от DvbLogic.com. Поддържа стрийминг и записване на телевизия, електронен програмен справочник и броячи.</description>
+    <description lang="ca">Complement PVR per a DVBLink de DvbLogic.com; compatible amb fluxos de TV en directe i enregistraments, EPG, temporitzadors</description>
     <description lang="cs">PVR plugin pro DVBLink od DvbLogic.com; podporuje živé TV vysílání a nahrávání, EPG, časovač</description>
     <description lang="cy">Ategyn amserydd ar gyfer DVBLink gan DvbLogic.com; cefnogi ffrydio Teledu Byw a Recordiadau ac Amseryddion</description>
     <description lang="da">PVR Plugin til DVBLink fra DvbLogic.com; understøtter streaming af TV og optagelser, EPG, Timere.</description>
@@ -67,6 +71,7 @@
     <description lang="en_US">PVR Plugin for DVBLink from DvbLogic.com; supporting streaming of Live TV &amp; Recordings, EPG, Timers</description>
     <description lang="es">Complemento PVR para DVBLink de DvbLogic.com; soporta emisiones en directo, grabaciones, EPG, programaciones</description>
     <description lang="es_AR">Plugin PVR para DVBLink de DvbLogic.com; soporta streaming de TV en vivo, grabaciones, guía de programación (EPG) y temporizadores</description>
+    <description lang="es_MX">Complemento PVR para DVBLink de DvbLogic.com; soporta emisiones de TV en vivo, grabaciones, EPG, programaciones.</description>
     <description lang="fr">Plugin PVR pour DVBLink de DvbLogic.com. Supporte la lecture en continu de la télévision en directe et de son enregistrement, guide de programme, programmations.</description>
     <description lang="fr_CA">Plugiciel de numériscope pour DVBLink de DvbLogic.com, prenant en charge la lecture en transit de la télé en direct &amp; les enregistrements, GÉP, des minuteries</description>
     <description lang="gl">Complemento PVR do DVBLink de DvbLogic.com; soporta transmisión de TV en directo e Gravacións, Guía e temporizadores</description>
@@ -79,17 +84,18 @@
     <description lang="ja">DvdLogic.com - DVBLink の PVR プラグインです。ライブTV ストリーミング、録画、EPG、タイマーをサポートしています</description>
     <description lang="ko">DvbLogic.com의 DVBLink를 위한 PVR 플러그인. 라이브 TV 스트리밍, 녹화, EPG, 타이머를 지원합니다.</description>
     <description lang="lt">PVR įskiepis skirtas DVBLink iš DvbLogic.com; palaiko Live TV transliaciją ir įrašymus, EPG, laikmačius</description>
+    <description lang="mk">PVR Plugin за DVBLink од DvbLogic.com; поддржува емитување на Live TV &amp; Снимки, EPG, Тајмери</description>
     <description lang="ms">Plugin PVR untuk DVBLink dari DvbLogic.com; menyokong penstriman Siaran Langsung &amp; Rakaman, EPG dan Pemasa</description>
     <description lang="nl">PVR plug-in voor DVBLink van DvbLogic.com; ondersteunt het streamen van Live TV &amp; opnames, EPG, Timers</description>
     <description lang="no">PVR-innstikk til DVBLink fra DvbLogic.com - støtter strømming av Live-TV, opptak, EPG og tidsur.</description>
-    <description lang="pl">Klient DVBLink od DvbLogic.com wspiera strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
+    <description lang="pl">Klient DVBLink od DvbLogic.com obsługuje strumieniowanie kanałów radiowych i telewizyjnych, nagrywanie natychmiastowe i wg harmonogramu oraz funkcje przewodnika programów.</description>
     <description lang="pt">Plugin PVR para DVBLink de DvbLogic.com; suporta transmissão de TV em directo e gravações, EPG, temporizadores.</description>
     <description lang="pt_BR">Plugin de PVR para DVBLink de DvbLogic.com; suporta streaming de tv ao vivo e gravações, EPG, Agendamentos</description>
     <description lang="ro">Plugin PVR pentru DVBLink de la DvbLogic.com; se poate difuza în flux a televiziunii în direct și a înregistrăriilor, EPG, Cronometre</description>
     <description lang="ru">Плагин PVR для DVBLink с сайта DvbLogic.com; поддержка трансляции Прямого вещания и записей Live TV &amp; Recordings, EPG, Таймеров</description>
     <description lang="si">DvbLogic.com වලින් DBVLink සඳහා PVR පේනුකිරීම; සජීව රූපවාහිනී සහ පටිගත කිරීම් ප්‍රවාහන කිරීම ,EPG, මුහුර්තක උදව් </description>
     <description lang="sk">PVR zásuvný modul pre DVBLink od firmy DvbLogic.com; je podporované streamovanie živého televízneho vysielania a nahrávok, EPG, časovačov</description>
-    <description lang="sl">PVR vmesnik za DVBLink iz DvbLogic.com; podpira pretakanje televizije v živo in posnetkov, EPG, časovnike.</description>
+    <description lang="sl">Vtičnik PVR za DVBLink z DvbLogic.com; podpira predvajanje televizije v živo &amp; posnetkov, EPG, časovnike.</description>
     <description lang="sv">PVR tillägg för DVBLink från DvbLogic.com; stöder strömmande Live TV &amp; inspelningar, EPG, timers</description>
     <description lang="zh">来自 DvbLogic.com 的 DVBLink 的 PVR 插件，支持直播电视播放和录制、电子节目单、定时器</description>
     <disclaimer lang="af">Hierdie is onstabiele sagteware! Die outeurs is op geen manier verantwoordelik vir gefaalde opnames, inkorrekte tydhouers, gemorsde ure, of enige ander ongewensde effekte.</disclaimer>
@@ -125,7 +131,7 @@
     <disclaimer lang="ko">이 소프트웨어는 불안정합니다! 제작자는 녹화 실패, 부정확한 타이머, 시간 낭비 및 기타 예상하지 못한 결과에 대해 책임지지 않습니다..</disclaimer>
     <disclaimer lang="lt">Tai yra nestabili programinė įranga! Autorius jokiu būdu neatsakingas už nepavykusius įrašus, neteisingus laikmačius, iššvaistytas valandas, ar nutikus kitiems nepageidaujamiems poveikiams ...[COLOR=red](Kodi.lt rekomenduoja testuojant šį priedą persijungti į Anglų [orinali] kalbą)[/COLOR]</disclaimer>
     <disclaimer lang="lv">Šī ir nestabila programmatūra! Autori nav atbildīgi par nesanākušiem ierakstiem, nepareiziem taimeriem, iztērētām stundām vai jebkādiem citiem nevēlamiem efektiem..</disclaimer>
-    <disclaimer lang="mk">Ова е нестабилен софтвер! Авторите на ниту еден начин не одговараат за неуспешни снимки, неточни тајмери, потрошени часови, или било кои други несакани ефекти.</disclaimer>
+    <disclaimer lang="mk">Ова е нестабилен софтвер! Авторите на ниту еден начин не одговараат за неуспешни снимки, неточни тајмери, залудно потрошени часови, или било кои други несакани ефекти.</disclaimer>
     <disclaimer lang="mn_MN">Тус програм нь гүйцэд хийгдэж дуусаагүй! Зохиогч нь алдаатай бичлэг, цагийн буруу хөтлөлт, алдагдсан цаг хугацаа эсвэл бусад ямар нэгэн хүсээгүй үр дүнд хариуцлага хүлээхгүй.</disclaimer>
     <disclaimer lang="ms">Ini merupakan perisian tidak stabil! Pengarang tidak bertanggungjawab atas kegagalan rakaman, pemasa tidak betul, masa yang dibazirkan, atau apa jua kesan yang tidak dikehendaki..</disclaimer>
     <disclaimer lang="nl">Dit is instabiele software! De auteurs zijn op geen enkele wijze verantwoordelijk voor mislukte opnames, onjuiste timers, verspilde uren, of andere ongewenste effecten ..</disclaimer>

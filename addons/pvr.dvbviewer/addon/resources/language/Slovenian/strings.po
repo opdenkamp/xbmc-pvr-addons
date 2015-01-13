@@ -58,11 +58,11 @@ msgstr "Za TV v živo uporabi pretakanje RTSP"
 
 msgctxt "#30040"
 msgid "Enable low performance mode (disables logos & thumbnails)"
-msgstr "Omogoči način nizke zmogljivosti (izključeni so logotipi in sličice)"
+msgstr "Omogoči način nizke zmogljivosti (onemogoči logotipe in sličice)"
 
 msgctxt "#30050"
 msgid "Group recordings"
-msgstr "Skupinski posnetki"
+msgstr "Združi posnetke"
 
 msgctxt "#30051"
 msgid "disabled"
@@ -82,7 +82,7 @@ msgstr "po prvi črki"
 
 msgctxt "#30055"
 msgid "by tv channel"
-msgstr "po tv kanalu"
+msgstr "po tv programu"
 
 msgctxt "#30056"
 msgid "by series"
@@ -110,20 +110,20 @@ msgstr "Potrebna je storitev DVBViewer različice %s ali novejše"
 
 msgctxt "#30502"
 msgid "Unable to parse channel list"
-msgstr "Ne morem prikazati seznama kanalov"
+msgstr "Seznama programov ni mogoče prebrati"
 
 msgctxt "#30503"
 msgid "Check Kodi log for more information"
-msgstr "Preveri Kodi zapisnik za več informacij"
+msgstr "Preverite Kodijev zapisnik za več informacij"
 
 msgctxt "#30504"
 msgid "Unable to open local favourites.xml"
-msgstr "Ne morem odpreti lokalne datoteke favourites.xml"
+msgstr "Krajevne datoteke favourites.xml ni mogoče odpreti"
 
 msgctxt "#30505"
 msgid "Unable to parse favourites list"
-msgstr "Ne morem prikazati seznama priljubljenih"
+msgstr "Seznama priljubljenih ni mogoče prebrati"
 
 msgctxt "#30506"
 msgid "Unable to parse timer list"
-msgstr "Ne morem prikazati seznama časovnika"
+msgstr "Seznama časovnikov ni mogoče prebrati"

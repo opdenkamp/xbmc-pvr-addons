@@ -20,6 +20,22 @@ msgctxt "#30000"
 msgid "General"
 msgstr "General"
 
+msgctxt "#30001"
+msgid "Server Address"
+msgstr "Dirección del servidor"
+
+msgctxt "#30002"
+msgid "Server Port"
+msgstr "Puerto del servidor"
+
+msgctxt "#30003"
+msgid "Client name"
+msgstr "Nombre del cliente"
+
+msgctxt "#30004"
+msgid "Connection timeout (s)"
+msgstr "Tiempo de espera agotado (s)"
+
 msgctxt "#30005"
 msgid "Username"
 msgstr "Usuario"
@@ -32,18 +48,82 @@ msgctxt "#30100"
 msgid "Stream"
 msgstr "Stream"
 
+msgctxt "#30102"
+msgid "Enable transcoding"
+msgstr "Habilitar la transcodificación"
+
+msgctxt "#30103"
+msgid "Height"
+msgstr "Alto"
+
+msgctxt "#30104"
+msgid "Width"
+msgstr "Ancho"
+
 msgctxt "#30105"
 msgid "Bitrate"
 msgstr "Bitrate"
+
+msgctxt "#30106"
+msgid "Audio track"
+msgstr "Pista de audio"
 
 msgctxt "#30107"
 msgid "HTTP"
 msgstr "HTTP"
 
+msgctxt "#30108"
+msgid "RTP"
+msgstr "RTP"
+
+msgctxt "#30109"
+msgid "HLS"
+msgstr "HLS"
+
+msgctxt "#30110"
+msgid "ASF"
+msgstr "ASF"
+
+msgctxt "#30111"
+msgid "Enable Timeshift"
+msgstr "Activar Timeshift"
+
+msgctxt "#30112"
+msgid "Timeshift buffer path"
+msgstr "Ruta del buffer de TimeShift"
+
 msgctxt "#30200"
 msgid "Advanced"
 msgstr "Avanzado"
 
+msgctxt "#30201"
+msgid "Use channel handle instead of client id"
+msgstr "Usar canales en lugar de ID de cliente"
+
+msgctxt "#30202"
+msgid "Show information messages"
+msgstr "Mostrar mensajes de información"
+
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Grabación de series"
+
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr "Grabar solo este episodio"
+
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Grabar todos los episodios"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Eliminar temporizador"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Eliminar solo este temporizador"
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr "Eliminar serie completa"

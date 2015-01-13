@@ -56,9 +56,33 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Utilitza flux RTSP per a TV en viu"
 
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Grup d'enregistraments"
+
 msgctxt "#30051"
 msgid "disabled"
 msgstr "Inhabilitat"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "per directori d'enregistrament"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "per la data d'enregistrament"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "per la primera lletra"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "pel canal de TV"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "per les sèries"
 
 msgctxt "#30100"
 msgid "General"

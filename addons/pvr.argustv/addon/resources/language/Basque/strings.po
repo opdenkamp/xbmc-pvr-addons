@@ -16,6 +16,10 @@ msgstr ""
 "Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30002"
+msgid "Include Radio"
+msgstr "Irratia Barne Hartu"
+
 msgctxt "#30005"
 msgid "Password"
 msgstr "Pasahitza"

@@ -80,6 +80,10 @@ msgctxt "#30015"
 msgid "Refresh SignalStatus Interval (sec)"
 msgstr "Päivitä SignalStatus-välimatka (sek)"
 
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Tallenna vain tämä jakso"
+
 msgctxt "#30107"
 msgid "Channel:"
 msgstr "Kanava:"

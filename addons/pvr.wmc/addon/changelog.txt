@@ -1,3 +1,6 @@
+0.3.111
+- Updated Language files from Transifex
+
 0.3.110
 - added getBackendHostname function
 

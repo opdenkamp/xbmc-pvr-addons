@@ -1,3 +1,6 @@
+[B]Version 1.9.14[/B]
+Updated: language files from Transifex
+
 [B]Version 1.9.13[/B]
 Added: getBackendHostname function
 Fixed: no timers are added from EPG of DVBLink TV Adviser product

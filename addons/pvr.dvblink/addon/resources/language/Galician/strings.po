@@ -108,6 +108,10 @@ msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
 msgstr "Combinar o título e o nome do episodio para as gravacións"
 
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Agrupar Gravacións por Series"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Conectado ao Servidor DVBLink '%s'"

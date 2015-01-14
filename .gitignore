@@ -4,6 +4,7 @@
 .libs
 .project
 
+.dirstamp
 .dummy
 .dummy.in
 aclocal.m4

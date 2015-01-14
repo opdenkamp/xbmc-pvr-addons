@@ -1,7 +1,7 @@
 AC_PREREQ([2.60])
 AC_INIT([cppmyth], [1.1], [jlbarriere68@gmail.com])
 
-AM_INIT_AUTOMAKE([1.10 foreign])
+AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])
 
 AC_CONFIG_SRCDIR([cppmyth/src/mythtypes.cpp])
 AC_CONFIG_HEADERS([config.h])

@@ -28,7 +28,7 @@ libdvblinkremote_la_SOURCES = channel.cpp \
 
 LIBS= @abs_top_srcdir@/lib/tinyxml2/libtinyxml2.la
  
-INCLUDES=-I..
+AM_CPPFLAGS=-I..
 
 $(LIB): libdvblinkremote.la
 	cp -f .libs/libdvblinkremote.a .

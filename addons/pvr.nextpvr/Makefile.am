@@ -14,7 +14,7 @@ LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la
 
 include ../Makefile.include.am
 
-INCLUDES+=-Isrc
+AM_CPPFLAGS+=-Isrc
 
 libnextpvr_addon_la_SOURCES = src/client.cpp \
                                   src/pvrclient-nextpvr.cpp \

@@ -14,7 +14,7 @@ LIBS            = @abs_top_srcdir@/lib/libdvblinkremote/libdvblinkremote.la
 
 include ../Makefile.include.am
 
-INCLUDES+=-Isrc
+AM_CPPFLAGS+=-Isrc
 
 libdvblink_addon_la_SOURCES = src/client.cpp \
                               src/base64.cpp \

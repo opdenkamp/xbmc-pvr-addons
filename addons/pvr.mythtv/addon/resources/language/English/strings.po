@@ -73,7 +73,11 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr ""
 
-#empty strings from id 30014 to 30018
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr ""
+
+#empty strings from id 30015 to 30018
 
 msgctxt "#30019"
 msgid "General"
@@ -189,7 +193,15 @@ msgctxt "#30062"
 msgid "Block backend shutdown"
 msgstr ""
 
-#empty strings from id 30063 to 30099
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr ""
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr ""
+
+#empty strings from id 30065 to 30099
 
 # Systeminformation labels
 msgctxt "#30100"

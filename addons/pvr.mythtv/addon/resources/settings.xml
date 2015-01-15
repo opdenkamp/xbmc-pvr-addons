@@ -4,6 +4,7 @@
     <setting id="host" type="text" label="30000" default="127.0.0.1" />
     <setting id="port" type="number" option="int" label="30001" default="6543" />
     <setting id="wsport" type="number" option="int" label="30013" default="6544" />
+    <setting id="wssecuritypin" type="text" label="30014" default="0000" />
     <setting id="host_ether" type="text" label="30012" default="" />
     <setting id="livetv" type="bool" label="30006" default="true" />
     <setting id="livetv_priority" type="bool" label="30007" default="true" />
@@ -29,5 +30,7 @@
     <setting id="tunedelay" type="slider" option="int" range="5,1,30" label="30053" />
     <setting id="group_recordings" type="enum" label="30054" lvalues="30055|30056|30057" default="0" />
     <setting id="enable_edl" type="enum" label="30058" lvalues="30059|30060|30061" default="0" />
+    <setting id="channel_icons" type="bool" label="30063" default="true" />
+    <setting id="recording_icons" type="bool" label="30064" default="true" />
   </category>
 </settings>

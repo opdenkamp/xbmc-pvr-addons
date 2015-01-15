@@ -194,6 +194,11 @@ namespace Myth
   {
     uint32_t            count;
     uint32_t            protoVer;
+
+    ItemList()
+    : count(0)
+    , protoVer(0)
+    {}
   };
 
   struct Version
@@ -201,6 +206,11 @@ namespace Myth
     std::string         version;
     uint32_t            protocol;
     uint32_t            schema;
+
+    Version()
+    : protocol(0)
+    , schema(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<Version> VersionPtr;
@@ -240,6 +250,14 @@ namespace Myth
     uint32_t            sourceId;
     uint32_t            inputId;
     bool                visible;
+
+    Channel()
+    : chanId(0)
+    , mplexId(0)
+    , sourceId(0)
+    , inputId(0)
+    , visible(true)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<Channel> ChannelPtr;
@@ -262,6 +280,19 @@ namespace Myth
     std::string         storageGroup;
     std::string         playGroup;
     uint32_t            recordedId; // Since proto 82
+
+    Recording()
+    : recordId(0)
+    , priority(0)
+    , status(0)
+    , encoderId(0)
+    , recType(0)
+    , dupInType(DI_InRecorded)
+    , dupMethod(DM_CheckNone)
+    , startTs(0)
+    , endTs(0)
+    , recordedId(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<Recording> RecordingPtr;
@@ -296,6 +327,21 @@ namespace Myth
     Channel                 channel;
     Recording               recording;
     std::vector<Artwork>    artwork;
+
+    Program()
+    : startTime(0)
+    , endTime(0)
+    , season(0)
+    , episode(0)
+    , fileSize(0)
+    , repeat(false)
+    , programFlags(0)
+    , lastModified(0)
+    , airdate(0)
+    , audioProps(0)
+    , videoProps(0)
+    , subProps(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<Program> ProgramPtr;
@@ -309,6 +355,10 @@ namespace Myth
     uint32_t            cardId;
     std::string         cardType;
     std::string         hostName;
+
+    CaptureCard()
+    : cardId(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<CaptureCard> CaptureCardPtr;
@@ -323,6 +373,14 @@ namespace Myth
     uint32_t            mplexId;
     std::string         inputName;
     uint8_t             liveTVOrder;
+
+    CardInput()
+    : inputId(0)
+    , cardId(0)
+    , sourceId(0)
+    , mplexId(0)
+    , liveTVOrder(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<CardInput> CardInputPtr;
@@ -333,6 +391,10 @@ namespace Myth
   {
     uint32_t            sourceId;
     std::string         sourceName;
+
+    VideoSource()
+    : sourceId(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<VideoSource> VideoSourcePtr;
@@ -387,6 +449,38 @@ namespace Myth
     bool                autoUserJob3;
     bool                autoUserJob4;
     uint32_t            transcoder;
+
+    RecordSchedule()
+    : recordId(0)
+    , startTime(0)
+    , endTime(0)
+    , chanId(0)
+    , findDay(0)
+    , parentId(0)
+    , inactive(false)
+    , season(0)
+    , episode(0)
+    , type_t(RT_NotRecording)
+    , searchType_t(ST_NoSearch)
+    , recPriority(0)
+    , preferredInput(0)
+    , startOffset(0)
+    , endOffset(0)
+    , dupMethod_t(DM_CheckNone)
+    , dupIn_t(DI_InRecorded)
+    , filter(0)
+    , autoExpire(false)
+    , maxEpisodes(0)
+    , maxNewest(false)
+    , autoCommflag(false)
+    , autoTranscode(false)
+    , autoMetaLookup(false)
+    , autoUserJob1(false)
+    , autoUserJob2(false)
+    , autoUserJob3(false)
+    , autoUserJob4(false)
+    , transcoder(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<RecordSchedule> RecordSchedulePtr;
@@ -400,6 +494,14 @@ namespace Myth
     int     snr;
     long    ber;
     long    ucb;
+
+    SignalStatus()
+    : lock(false)
+    , signal(0)
+    , snr(0)
+    , ber(0)
+    , ucb(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<SignalStatus> SignalStatusPtr;
@@ -410,6 +512,10 @@ namespace Myth
     std::vector<std::string>  subject;
     ProgramPtr                program;
     SignalStatusPtr           signal;
+
+    EventMessage()
+    : event(EVENT_UNKNOWN)
+    {}
   };
 
   struct StorageGroupFile
@@ -419,6 +525,11 @@ namespace Myth
     std::string               hostName;
     time_t                    lastModified;
     int64_t                   size;
+
+    StorageGroupFile()
+    : lastModified(0)
+    , size(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<StorageGroupFile> StorageGroupFilePtr;
@@ -451,6 +562,11 @@ namespace Myth
   {
     MARK_t                    markType;
     int64_t                   markValue;
+
+    Mark()
+    : markType(MARK_CUT_END)
+    , markValue(0)
+    {}
   };
 
   typedef MYTH_SHARED_PTR<Mark> MarkPtr;

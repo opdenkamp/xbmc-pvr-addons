@@ -31,6 +31,16 @@
 #  define uint32_t uint32_t
 #endif
 
+#define HAVE_UINT16_T 1
+#ifndef HAVE_UINT16_T
+#  define uint16_t uint16_t
+#endif
+
+#define HAVE_UINT8_T 1
+#ifndef HAVE_UINT8_T
+#  define uint8_t uint8_t
+#endif
+
 /* #undef HAVE_SSIZE_T */
 
 #ifndef HAVE_SSIZE_T

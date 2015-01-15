@@ -57,7 +57,7 @@ namespace Myth
   class WSAPI
   {
   public:
-    WSAPI(const std::string& server, unsigned port);
+    WSAPI(const std::string& server, unsigned port, const std::string& securityPin);
     ~WSAPI();
 
     unsigned CheckService();
@@ -354,6 +354,7 @@ namespace Myth
     PLATFORM::CMutex *m_mutex;
     std::string m_server;
     unsigned m_port;
+    std::string m_securityPin;
     bool m_checked;
     Version m_version;
     std::string m_serverHostName;

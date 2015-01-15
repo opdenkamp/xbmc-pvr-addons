@@ -78,7 +78,7 @@ public:
     MSM_ERROR_SUCCESS = 1
   };
 
-  MythScheduleManager(const std::string& server, unsigned protoPort, unsigned wsapiPort);
+  MythScheduleManager(const std::string& server, unsigned protoPort, unsigned wsapiPort, const std::string& wsapiSecurityPin);
   ~MythScheduleManager();
 
   // Called by GetTimers
@@ -139,7 +139,7 @@ private:
   VersionHelper *m_versionHelper;
   void Setup();
 
-  uint32_t MakeIndex(ScheduledPtr scheduled) const;
+  uint32_t MakeIndex(const ScheduledPtr &scheduled) const;
 
   // The list of rule nodes
   typedef std::list<RecordingRuleNodePtr> NodeList;

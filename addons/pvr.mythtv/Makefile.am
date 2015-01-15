@@ -13,9 +13,9 @@ lib_LTLIBRARIES = libmythtv-addon.la
 LIBS            = @abs_top_srcdir@/lib/cppmyth/cppmyth/libcppmyth.la \
                   @abs_top_srcdir@/lib/cppmyth/jansson/src/libjansson.la
 
-AM_CPPFLAGS = -I@abs_top_srcdir@/lib/cppmyth/cppmyth/src
-
 include ../Makefile.include.am
+
+AM_CPPFLAGS    += -I@abs_top_srcdir@/lib/cppmyth/cppmyth/src
 
 if HAVE_VERSION_SCRIPT
 libmythtv_addon_la_LDFLAGS = -Wl,--version-script=src/addon.map \

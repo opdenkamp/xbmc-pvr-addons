@@ -20,6 +20,14 @@ msgctxt "#30000"
 msgid "General"
 msgstr "Vispārīgi"
 
+msgctxt "#30001"
+msgid "Server Address"
+msgstr "Servera adrese"
+
+msgctxt "#30002"
+msgid "Server Port"
+msgstr "Servera ports"
+
 msgctxt "#30005"
 msgid "Username"
 msgstr "LIetotājvārds"
@@ -35,6 +43,14 @@ msgstr "Plūsma"
 msgctxt "#30102"
 msgid "Enable transcoding"
 msgstr "Ieslēgt transkodēšanu"
+
+msgctxt "#30103"
+msgid "Height"
+msgstr "Augstums"
+
+msgctxt "#30104"
+msgid "Width"
+msgstr "Platums"
 
 msgctxt "#30105"
 msgid "Bitrate"

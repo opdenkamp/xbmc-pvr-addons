@@ -44,6 +44,10 @@ msgctxt "#30200"
 msgid "Advanced"
 msgstr "Lisäasetukset"
 
+msgctxt "#32012"
+msgid "Record this episode only"
+msgstr "Tallenna vain tämä jakso"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Poista ajastus"

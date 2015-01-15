@@ -72,6 +72,10 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr "Θύρα του Backend MythTV για υπηρεσίες API"
 
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "Κωδικός Pin του MythTV για υπηρεσίες API"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Γενικά"
@@ -179,6 +183,14 @@ msgstr "Ποτέ"
 msgctxt "#30062"
 msgid "Block backend shutdown"
 msgstr "Να μην επιτρέπεται τερματισμός του backend"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Ενεργοποίηση εικονιδίων καναλιών"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "Ενεργοποίηση μικρογραφιών/fanart εγγραφών"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"

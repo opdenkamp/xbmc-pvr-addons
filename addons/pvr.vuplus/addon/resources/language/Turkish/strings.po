@@ -88,6 +88,10 @@ msgctxt "#30023"
 msgid "Recording folder on the receiver"
 msgstr "Alıcıdaki kayıt klasörü"
 
+msgctxt "#30028"
+msgid "Use Secure HTTP (https)"
+msgstr "Güvenli HTTP kullan (https)"
+
 msgctxt "#30500"
 msgid "Disconnected from '%s'"
 msgstr "'%s' Bağlantı kesilecek"

@@ -16,9 +16,65 @@ msgstr ""
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Server værtsnavn eller IP-adresse"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Portnummer"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Ingen video data fundet på denne kanal"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "En TV-tuner er påkrævet for at optage"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Optagelsesfil ikke fundet"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Kanalens indhold er beskyttet"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Brug netværks-opvågning til at vække serveren"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Sender opvågningssignal til server..."
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Optagelses præference"
+
 msgctxt "#30101"
 msgid "Record this episode only"
 msgstr "Record this episode only"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Optag serien"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Vis type:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Nye og genudsendelser"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Udelukkende nye"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "Udelukkende Live"
 
 msgctxt "#30107"
 msgid "Channel:"
@@ -28,9 +84,21 @@ msgctxt "#30108"
 msgid "Any Channel"
 msgstr "Hvilken som helst kanal"
 
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Visningstid"
+
 msgctxt "#30111"
 msgid "Anytime"
 msgstr "Vilkårligt tidspunkt"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Slet tidspunkt"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Slet kun dette episodetidspunkt"
 
 msgctxt "#30122"
 msgid "Delete the entire series"

@@ -27,31 +27,35 @@
 #include <ctime>
 #include <algorithm>
 
-#define FILEOPS_STREAM_BUFFER_SIZE    32000  // Buffer size to download artworks
+#define FILEOPS_STREAM_BUFFER_SIZE    32000         // Buffer size to download artworks
+#define FILEOPS_STAMP_FILENAME        "stamp"       // Base name for cache stamp file
+#define FILEOPS_NOSTAMP               (time_t)(-1)
+#define FILEOPS_CHANNEL_DUMMY_ICON    "channel.png"
+#define FILEOPS_RECORDING_DUMMY_ICON  "recording.png"
 
 using namespace ADDON;
 using namespace PLATFORM;
 
-FileOps::FileOps(const std::string& server, unsigned wsapiport)
+FileOps::FileOps(FileConsumer *consumer, const std::string& server, unsigned wsapiport, const std::string& wsapiSecurityPin)
 : CThread()
+, m_consumer(consumer)
 , m_wsapi(NULL)
 , m_localBasePath(g_szUserPath.c_str())
+, m_localBaseStampName()
+, m_localBaseStamp(FILEOPS_NOSTAMP)
 , m_queueContent()
 , m_jobQueue()
 {
-  m_localBasePath = m_localBasePath + "cache" + PATH_SEPARATOR_CHAR;
-
-  // Create the cache directories if it does not exist
-  if (!XBMC->DirectoryExists(m_localBasePath.c_str()) && !XBMC->CreateDirectory(m_localBasePath.c_str()))
-    XBMC->Log(LOG_ERROR,"%s - Failed to create cache directory %s", __FUNCTION__, m_localBasePath.c_str());
-
-  m_wsapi = new Myth::WSAPI(server, wsapiport);
+  // Initialize base path for cache directories
+  m_localBasePath.append("cache").append(PATH_SEPARATOR_STRING);
+  m_localBaseStampName.append(m_localBasePath).append(FILEOPS_STAMP_FILENAME);
+  InitBasePath();
+  m_wsapi = new Myth::WSAPI(server, wsapiport, wsapiSecurityPin);
   CreateThread();
 }
 
 FileOps::~FileOps()
 {
-  CleanCache();
   StopThread(-1); // Set stopping. don't wait as we need to signal the thread first
   m_queueContent.Signal();
   StopThread(); // Wait for thread to stop
@@ -62,6 +66,8 @@ std::string FileOps::GetChannelIconPath(const MythChannel& channel)
 {
   if (channel.IsNull() || channel.Icon().empty())
     return "";
+  if (!g_bChannelIcons)
+    return g_szClientPath + PATH_SEPARATOR_STRING + "resources" + PATH_SEPARATOR_STRING + FILEOPS_CHANNEL_DUMMY_ICON;
 
   std::string uid = Myth::IdToString(channel.ID());
   if (g_bExtraDebug)
@@ -92,6 +98,8 @@ std::string FileOps::GetPreviewIconPath(const MythProgramInfo& recording)
 {
   if (recording.IsNull())
     return "";
+  if (!g_bRecordingIcons)
+    return g_szClientPath + PATH_SEPARATOR_STRING + "resources" + PATH_SEPARATOR_STRING + FILEOPS_RECORDING_DUMMY_ICON;
 
   std::string uid = recording.UID();
   if (g_bExtraDebug)
@@ -122,6 +130,15 @@ std::string FileOps::GetArtworkPath(const MythProgramInfo& recording, FileType t
 {
   if (recording.IsNull())
     return "";
+  if (!g_bRecordingIcons)
+    switch (type)
+    {
+    case FileTypePreview:
+    case FileTypeCoverart:
+      return g_szClientPath + PATH_SEPARATOR_STRING + "resources" + PATH_SEPARATOR_STRING + FILEOPS_RECORDING_DUMMY_ICON;
+    default:
+      return "";
+    }
 
   std::string uid = recording.UID();
   if (g_bExtraDebug)
@@ -184,6 +201,16 @@ void *FileOps::Process()
     // For caching new files, the tread is woken up by m_queueContent.Signal();
     m_queueContent.Wait(c_timeoutProcess * 1000);
 
+    if (m_jobQueue.empty() && !IsStopped())
+    {
+      if (m_localBaseStamp != FILEOPS_NOSTAMP && difftime(time(NULL), m_localBaseStamp) >= c_cacheMaxAge)
+      {
+        CleanCache();
+        if (m_consumer)
+          m_consumer->HandleCleanedCache();
+      }
+    }
+
     while (!m_jobQueue.empty() && !IsStopped())
     {
       CLockObject lock(m_lock);
@@ -194,8 +221,8 @@ void *FileOps::Process()
       if (g_bExtraDebug)
         XBMC->Log(LOG_DEBUG,"%s: Job fetched: type: %d, local: %s", __FUNCTION__, job.m_fileType, job.m_localFilename.c_str());
       // Try to open the destination file
-      void *localFile = OpenFile(job.m_localFilename.c_str());
-      if (!localFile)
+      void *file = OpenFile(job.m_localFilename.c_str());
+      if (!file)
         continue;
 
       // Connect to the stream
@@ -215,10 +242,14 @@ void *FileOps::Process()
       default:
         break;
       }
-      //  Cache it to the local addon cache
+
       if (fileStream && fileStream->GetSize() > 0)
       {
-        if (CacheFile(localFile, fileStream.get()))
+        // Cache it to the local addon cache
+        bool cached = CacheFile(file, fileStream.get());
+        XBMC->CloseFile(file);
+
+        if (cached)
         {
           if (g_bExtraDebug)
             XBMC->Log(LOG_DEBUG, "%s: File Cached: type: %d, local: %s", __FUNCTION__, job.m_fileType, job.m_localFilename.c_str());
@@ -227,13 +258,13 @@ void *FileOps::Process()
         {
           XBMC->Log(LOG_DEBUG, "%s: Caching file failed: type: %d, local: %s", __FUNCTION__, job.m_fileType, job.m_localFilename.c_str());
           if (XBMC->FileExists(job.m_localFilename.c_str(), true))
-          {
             XBMC->DeleteFile(job.m_localFilename.c_str());
-          }
         }
       }
       else
       {
+        XBMC->CloseFile(file);
+
         // Failed to open file for reading. Unfortunately it cannot be determined if this is a permanent or a temporary problem (new recording's preview hasn't been generated yet).
         // Increase the error count and retry to cache the file a few times
         if (!fileStream)
@@ -309,7 +340,7 @@ void *FileOps::OpenFile(const std::string& localFilename)
   return file;
 }
 
-bool FileOps::CacheFile(void *destination, Myth::Stream *source)
+bool FileOps::CacheFile(void *file, Myth::Stream *source)
 {
   int64_t size = source->GetSize();
   char *buffer = new char[FILEOPS_STREAM_BUFFER_SIZE];
@@ -323,7 +354,7 @@ bool FileOps::CacheFile(void *destination, Myth::Stream *source)
     char *p = buffer;
     while (br > 0)
     {
-      int bw = XBMC->WriteFile(destination, p, br);
+      int bw = XBMC->WriteFile(file, p, br);
       if (bw <= 0)
         break;
 
@@ -331,12 +362,75 @@ bool FileOps::CacheFile(void *destination, Myth::Stream *source)
       p += bw;
     }
   }
-  XBMC->CloseFile(destination);
   delete[] buffer;
 
   if (size)
     XBMC->Log(LOG_NOTICE, "%s: Did not consume everything (%ld)", __FUNCTION__, (long)size);
   return true;
+}
+
+static void WriteCacheStamp(const char *path, time_t ts)
+{
+  void * hdl = XBMC->OpenFileForWrite(path, true);
+  if (hdl == NULL)
+  {
+    XBMC->Log(LOG_ERROR,"%s: Write stamp file %s failed", __FUNCTION__, path);
+    return;
+  }
+  std::string now(Myth::TimeToString(ts, true));
+  XBMC->WriteFile(hdl, now.c_str(), now.length());
+  XBMC->CloseFile(hdl);
+}
+
+static time_t ReadCacheStamp(const char *path)
+{
+  time_t ts = FILEOPS_NOSTAMP;
+  char buf[21]; // Time string as ISO-8601/UTC: %y-%m-%d"T"%H:%M:%S"Z"
+  memset(buf, 0, sizeof(buf));
+  void * hdl = XBMC->OpenFile(path, 0);
+  if (hdl == NULL)
+  {
+    XBMC->Log(LOG_ERROR,"%s: Read stamp file %s failed", __FUNCTION__, path);
+    // Try write a new one
+    ts = time(NULL);
+    WriteCacheStamp(path, ts);
+    return ts;
+  }
+  if (XBMC->ReadFile(hdl, (void*)buf, (int64_t)(sizeof(buf) - 1)))
+    ts = Myth::StringToTime(buf); // It returns FILEOPS_NOSTAMP for invalid buf
+  XBMC->CloseFile(hdl);
+  // If stamp is invalid we overwrite it
+  if (ts == FILEOPS_NOSTAMP)
+  {
+    XBMC->Log(LOG_ERROR,"%s: Bad stamp string '%s'", __FUNCTION__, buf);
+    ts = time(NULL);
+    WriteCacheStamp(path, ts);
+  }
+  return ts;
+}
+
+void FileOps::InitBasePath()
+{
+  XBMC->Log(LOG_DEBUG, "%s: Configure cache directory %s", __FUNCTION__, m_localBasePath.c_str());
+
+  CLockObject lock(m_lock);
+
+  // Create the cache directories if it does not exist
+  if (!XBMC->DirectoryExists(m_localBasePath.c_str()) && !XBMC->CreateDirectory(m_localBasePath.c_str()))
+  {
+    XBMC->Log(LOG_ERROR,"%s: Failed to create cache directory %s", __FUNCTION__, m_localBasePath.c_str());
+    return;
+  }
+  if (!XBMC->FileExists(m_localBaseStampName.c_str(), false))
+  {
+    m_localBaseStamp = time(NULL);
+    WriteCacheStamp(m_localBaseStampName.c_str(), m_localBaseStamp);
+    return;
+  }
+  m_localBaseStamp = ReadCacheStamp(m_localBaseStampName.c_str());
+  XBMC->Log(LOG_DEBUG,"%s: Cache stamp is %s", __FUNCTION__, ctime(&m_localBaseStamp));
+  if (difftime(time(NULL), m_localBaseStamp) >= c_cacheMaxAge)
+    CleanCache();
 }
 
 void FileOps::CleanCache()
@@ -372,7 +466,10 @@ void FileOps::CleanCache()
   m_preview.clear();
   m_artworks.clear();
 
-  XBMC->Log(LOG_DEBUG, "%s: Cleaned cache %s", __FUNCTION__, m_localBasePath.c_str());
+  // Reset stamp file
+  m_localBaseStamp = time(NULL);
+  WriteCacheStamp(m_localBaseStampName.c_str(), m_localBaseStamp);
+  XBMC->Log(LOG_DEBUG, "%s: New cache stamp is %s", __FUNCTION__, ctime(&m_localBaseStamp));
 }
 
 std::string FileOps::GetFileName(const std::string& path, char separator)

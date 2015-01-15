@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Server Hostname or IP"
-msgstr "서버의 호스트네임 혹은 IP 주소"
+msgstr "서버 호스트네임 또는 IP 주소"
 
 msgctxt "#30001"
 msgid "Keep IP address to 127.0.0.1, if server is running on this same system"

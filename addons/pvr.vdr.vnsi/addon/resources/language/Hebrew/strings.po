@@ -114,7 +114,7 @@ msgstr "סוג ATSC"
 
 msgctxt "#30024"
 msgid "Back"
-msgstr "חזרה"
+msgstr "אחורה"
 
 msgctxt "#30025"
 msgid "Channel search - running... %i %%"

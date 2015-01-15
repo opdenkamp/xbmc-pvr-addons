@@ -108,6 +108,10 @@ msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
 msgstr "녹화에 제목과 에피소드 조합"
 
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "시리즈별 그룹 녹화"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "DVBLink 서버 '%s' 에 연결 됨"

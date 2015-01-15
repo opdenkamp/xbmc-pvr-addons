@@ -15,50 +15,28 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
- *  MA 02110-1301  USA
+ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
 
 #include "platform/os.h"
+#include "platform/threads/mutex.h"
 #include "libXBMC_addon.h"
-#include "libXBMC_codec.h"
 #include "libXBMC_pvr.h"
 #include "libXBMC_gui.h"
+#include "libXBMC_codec.h"
 
-extern ADDON::CHelper_libXBMC_addon* XBMC;
-extern CHelper_libXBMC_codec*        CODEC;
-extern CHelper_libXBMC_pvr*          PVR;
-extern CHelper_libXBMC_gui*          GUI;
-
-#include "HTSPTypes.h"
+extern ADDON::CHelper_libXBMC_addon*  XBMC;
+extern CHelper_libXBMC_pvr*           PVR;
+extern CHelper_libXBMC_gui*           GUI;
+extern CHelper_libXBMC_codec*         CODEC;
 
 #define DEFAULT_HOST             "127.0.0.1"
 #define DEFAULT_HTTP_PORT        9981
 #define DEFAULT_HTSP_PORT        9982
-#define DEFAULT_CONNECT_TIMEOUT  6
-#define DEFAULT_RESPONSE_TIMEOUT 4
-#define DEFAULT_VIDEO_CODEC      "H264"
-#define DEFAULT_AUDIO_CODEC      "UNKNOWN"
-#define DEFAULT_RESOLUTION       480
-#define DEFAULT_TRANSCODE        false
-#define HTSP_DEBUGGING           0
+#define DEFAULT_CONNECT_TIMEOUT  10
+#define DEFAULT_RESPONSE_TIMEOUT 5
 
-extern bool                      m_bCreated;
-extern std::string               g_strHostname;
-extern int                       g_iPortHTSP;
-extern int                       g_iPortHTTP;
-extern std::string               g_strUsername;
-extern std::string               g_strPassword;
-extern int                       g_iConnectTimeout;
-extern int                       g_iResponseTimeout;
-extern bool                      g_bShowTimerNotifications;
-extern std::string               g_szUserPath;
-extern std::string               g_szClientPath;
-extern bool                      g_bTranscode;
-extern CodecDescriptor           g_audioCodec;
-extern CodecDescriptor           g_videoCodec;
-extern int                       g_iResolution;
-
-uint32_t HTSPNextSequenceNumber(void);
+class CTvheadend;
+extern CTvheadend                *tvh;

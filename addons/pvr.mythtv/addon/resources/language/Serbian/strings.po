@@ -20,6 +20,10 @@ msgctxt "#30019"
 msgid "General"
 msgstr "Opšte"
 
+msgctxt "#30050"
+msgid "Advanced"
+msgstr "Napredno"
+
 msgctxt "#30055"
 msgid "Always"
 msgstr "Uvek"

@@ -35,3 +35,11 @@ msgstr "Порт веб интерфејса"
 msgctxt "#30018"
 msgid "General"
 msgstr "Opšte"
+
+msgctxt "#30020"
+msgid "Advanced"
+msgstr "Napredno"
+
+msgctxt "#30021"
+msgid "HTTP"
+msgstr "HTTP"

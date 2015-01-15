@@ -72,6 +72,10 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr "Ulaz MythTV pozadinskog softvera za API usluge"
 
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "MythTV sigurnosni pin za API usluge"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Općenito"
@@ -179,6 +183,14 @@ msgstr "Nikada"
 msgctxt "#30062"
 msgid "Block backend shutdown"
 msgstr "Blokiraj pozadinsko isključivanje"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Omogući ikone programa"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "Omogući snimanje postere/minijature"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"

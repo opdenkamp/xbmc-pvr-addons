@@ -96,6 +96,10 @@ msgctxt "#30200"
 msgid "Advanced"
 msgstr "Avançat"
 
+msgctxt "#32002"
+msgid "Found '%d' channels"
+msgstr "S'han trobat '%d' canals"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Suprimeix el temporitzador"

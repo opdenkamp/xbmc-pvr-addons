@@ -46,7 +46,7 @@ msgstr "NextPVR sunucusu çok eski."
 
 msgctxt "#30051"
 msgid "Upgrade to '%s' or higher!"
-msgstr "'%s' yada daha yükseğine güncelleştir!"
+msgstr "'%s' ya da daha yükseğine güncelleştir!"
 
 msgctxt "#30052"
 msgid "Connection failed. Incorrect PIN?"
@@ -103,6 +103,14 @@ msgstr "Sakla"
 msgctxt "#30131"
 msgid "All Recordings"
 msgstr "Bütün kayıtlar"
+
+msgctxt "#30132"
+msgid "Pre-Padding (minutes)"
+msgstr "Ön tampon (dakika)"
+
+msgctxt "#30133"
+msgid "Pre-Padding (minutes)"
+msgstr "Ön tampon (dakika)"
 
 msgctxt "#30134"
 msgid "Recording Directory"

@@ -16,6 +16,14 @@ msgstr ""
 "Language: es_MX\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Grabar solo este episodio"
+
 msgctxt "#30107"
 msgid "Channel:"
 msgstr "Canal:"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Eliminar serie completa"

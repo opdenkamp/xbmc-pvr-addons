@@ -108,6 +108,10 @@ msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
 msgstr "Zkombinuj název serie a jméno epizody pro nahrávání"
 
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Seskup nahrávky podle serie"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Připojeno k DVBLink serveru '%s'"

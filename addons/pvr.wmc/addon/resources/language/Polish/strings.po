@@ -78,7 +78,7 @@ msgstr "Pokazuj jakość sygnału"
 
 msgctxt "#30015"
 msgid "Refresh SignalStatus Interval (sec)"
-msgstr "Interwał odświeżania jakości sygnału (sec)"
+msgstr "Częstotliwość odświeżania jakości sygnału (sec)"
 
 msgctxt "#30016"
 msgid "Store Resume/Watched status on server"

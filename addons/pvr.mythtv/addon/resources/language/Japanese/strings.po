@@ -68,6 +68,14 @@ msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
 msgstr "MythTV バックエンドのイーサネットアドレス (WOL)"
 
+msgctxt "#30013"
+msgid "MythTV Backend Port for API services"
+msgstr "APIサービスのMythTVバックエンドポート"
+
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "APIサービスのMythTVセキュリティピン"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "一般"
@@ -135,6 +143,10 @@ msgstr "高度な設定"
 msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "MPEG-TS 分離を有効"
+
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "同調遅延 (秒)"
 
 msgctxt "#30055"
 msgid "Always"

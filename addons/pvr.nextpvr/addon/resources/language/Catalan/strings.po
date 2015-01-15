@@ -56,9 +56,33 @@ msgctxt "#30053"
 msgid "Tuner no longer available"
 msgstr "El sintonitzador ja no està disponible"
 
+msgctxt "#30054"
+msgid "[RECUR]"
+msgstr "[RECUR]"
+
+msgctxt "#30100"
+msgid "Add Timer"
+msgstr "Afegeix un temporitzador"
+
+msgctxt "#30120"
+msgid "Recording Type"
+msgstr "Tipus d'enregistrament"
+
+msgctxt "#30121"
+msgid "Record Once"
+msgstr "Grava un cop"
+
 msgctxt "#30130"
 msgid "Keep"
 msgstr "Mantenir"
+
+msgctxt "#30131"
+msgid "All Recordings"
+msgstr "Tots els enregistraments"
+
+msgctxt "#30134"
+msgid "Recording Directory"
+msgstr "Directori d'enregistraments"
 
 msgctxt "#30135"
 msgid "Default"

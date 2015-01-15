@@ -523,6 +523,14 @@ const char * GetConnectionString(void)
     return "addon error!";
 }
 
+//-- GetBackendHostname -------------------------------------------------------
+// Return a String with the backend host name
+//-----------------------------------------------------------------------------
+const char * GetBackendHostname(void)
+{
+  return g_szHostname.c_str();
+}
+
 //-- GetDriveSpace ------------------------------------------------------------
 // Return the Total and Free Drive space on the PVR Backend
 //-----------------------------------------------------------------------------

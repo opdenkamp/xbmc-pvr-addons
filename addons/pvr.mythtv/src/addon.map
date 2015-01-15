@@ -27,6 +27,7 @@ global:
   DialogChannelScan;
   DialogChannelSettings;
   GetAddonCapabilities;
+  GetBackendHostname;
   GetBackendName;
   GetBackendVersion;
   GetBufferTimeEnd;

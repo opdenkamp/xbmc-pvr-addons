@@ -28,6 +28,10 @@ msgctxt "#30002"
 msgid "Priority"
 msgstr "Öncelik"
 
+msgctxt "#30003"
+msgid "Character Set Conversion"
+msgstr "Karakter Kümesi Dönüşümü"
+
 msgctxt "#30004"
 msgid "Connect timeout (s)"
 msgstr "Bağlantı süresi doldu (s)"
@@ -35,6 +39,10 @@ msgstr "Bağlantı süresi doldu (s)"
 msgctxt "#30005"
 msgid "Allow VDR Messages"
 msgstr "VDR İletilerine İzin Ver"
+
+msgctxt "#30006"
+msgid "Read recordings from directory"
+msgstr "Kayıtları dizinden oku"
 
 msgctxt "#30007"
 msgid "VDR recordings directory"
@@ -110,7 +118,7 @@ msgstr "Tara: %i"
 
 msgctxt "#30029"
 msgid "Signal: %i %%"
-msgstr "Sinyal: %i %%"
+msgstr "Sinyal: %% %i"
 
 msgctxt "#30030"
 msgid "New channels: %i"

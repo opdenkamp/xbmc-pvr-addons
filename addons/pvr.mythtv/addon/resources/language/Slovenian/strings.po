@@ -42,7 +42,7 @@ msgstr "Vključi več razhroščevalnih informacij v zapisniku"
 
 msgctxt "#30006"
 msgid "Enable Live TV"
-msgstr "Vključi TV v živo"
+msgstr "Omogoči TV v živo"
 
 msgctxt "#30007"
 msgid "Allow Live TV to move scheduled shows"
@@ -66,11 +66,15 @@ msgstr "Predvajaj TV v živo in prekliči snemanje"
 
 msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
-msgstr "Lokalni ethernet naslov hrbtenice MythTV (WOL)"
+msgstr "Krajevni ethernet naslov hrbtenice MythTV (WOL)"
 
 msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
-msgstr "MythTv vrata hrbtenice za API storitve"
+msgstr "Vrata hrbtenice MythTV za API storitve"
+
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "Varnostni pin MythTV za storitve API"
 
 msgctxt "#30019"
 msgid "General"
@@ -126,7 +130,7 @@ msgstr "Pretvornik"
 
 msgctxt "#30034"
 msgid "Allow recordings to expire"
-msgstr "Ali dovolite posnetkom, da potečejo"
+msgstr "Dovoli posnetkom, da potečejo"
 
 msgctxt "#30049"
 msgid "Recording template"
@@ -142,7 +146,11 @@ msgstr "Omogoči pretvarjanje MPEG-TS"
 
 msgctxt "#30053"
 msgid "Tuning delay (sec)"
-msgstr "Nastavljiv zamik (sekunde)"
+msgstr "Zakasnitev prilagajanja (s)"
+
+msgctxt "#30054"
+msgid "Group recordings by title"
+msgstr "Združuj posnetke po naslovih"
 
 msgctxt "#30055"
 msgid "Always"
@@ -150,11 +158,15 @@ msgstr "Vedno"
 
 msgctxt "#30056"
 msgid "Only for series"
-msgstr "Samo za serije"
+msgstr "Le za serije"
 
 msgctxt "#30057"
 msgid "Never"
 msgstr "Nikoli"
+
+msgctxt "#30058"
+msgid "Enable commercial skips (EDL)"
+msgstr "Omogoči preskakovanje oglasov (EDL)"
 
 msgctxt "#30059"
 msgid "Always"
@@ -168,6 +180,18 @@ msgctxt "#30061"
 msgid "Never"
 msgstr "Nikoli"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Blokiraj izklop hrbtenice"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Omogoči ikone programov"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "Omogoči snemanje grafike/sličic"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Različica protokola: %i - Različica baze: %i"
@@ -175,6 +199,10 @@ msgstr "Različica protokola: %i - Različica baze: %i"
 msgctxt "#30110"
 msgid "Enabling EDL"
 msgstr "Omogočanje EDL"
+
+msgctxt "#30111"
+msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
+msgstr "Obstaja seznam izrezanih delov in oglasov.\nAli želite aktivirati EDL za to oddajo?"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

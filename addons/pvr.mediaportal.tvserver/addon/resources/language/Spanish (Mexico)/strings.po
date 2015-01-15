@@ -20,6 +20,10 @@ msgctxt "#30003"
 msgid "Include Radio"
 msgstr "Incluir Radio"
 
+msgctxt "#30005"
+msgid "Connect timeout (s)"
+msgstr "Tiempo para conectar agotado (s)"
+
 msgctxt "#30016"
 msgid "Windows user account (SMB)"
 msgstr "Usuario de cuenta de Windows (SMB)"

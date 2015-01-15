@@ -72,6 +72,10 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr "MythTV Backend poort voor API services"
 
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "MythTV beveiliging wachtwoord voor API services"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Algemene instellingen"
@@ -179,6 +183,14 @@ msgstr "Nooit"
 msgctxt "#30062"
 msgid "Block backend shutdown"
 msgstr "Blokeer backend afsluiten"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Activeer kanaaliconen"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "Activeer opname fanart/miniaturen"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"

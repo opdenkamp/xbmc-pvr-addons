@@ -164,6 +164,10 @@ msgctxt "#30075"
 msgid "No PMT found"
 msgstr "Engin PMT fannst"
 
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Stillingar upptökuplans"
+
 msgctxt "#30101"
 msgid "Frequency"
 msgstr "Tíðni"
@@ -180,17 +184,57 @@ msgctxt "#30104"
 msgid "Keep"
 msgstr "Halda"
 
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Taka upp mínútur fyrir upphaf"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Taka upp mínútur eftir enda"
+
 msgctxt "#30110"
 msgid "Record Once"
 msgstr "Taka upp einu sinni"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Dagleg upptaka (þennan dagskrárlið)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Taka upp vikulega"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "Taka upp um helgar"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "Taka upp virka daga"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Í þetta skipti"
 
 msgctxt "#30121"
 msgid "Anytime"
 msgstr "Hvenær sem er"
 
+msgctxt "#30125"
+msgid "This Channel"
+msgstr "Á þessari rás"
+
 msgctxt "#30126"
 msgid "Any Channel"
 msgstr "Allar Rásir"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Þangað til vantar pláss"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Þangað til búið er að horfa á"
 
 msgctxt "#30132"
 msgid "Days"
@@ -199,3 +243,11 @@ msgstr "Dagar"
 msgctxt "#30133"
 msgid "Always"
 msgstr "Alltaf"
+
+msgctxt "#30135"
+msgid "Backend default"
+msgstr "Sjálfgefið fyrir bakenda"
+
+msgctxt "#30136"
+msgid "Kodi default"
+msgstr "Sjálfgefið fyrir Kodi"

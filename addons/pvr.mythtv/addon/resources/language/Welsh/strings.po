@@ -68,6 +68,14 @@ msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
 msgstr "Cyfeiriad ethernet Cefn MythTV (WOL)"
 
+msgctxt "#30013"
+msgid "MythTV Backend Port for API services"
+msgstr "Cefn MythTV ar gyfer gwasanaethau API"
+
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "Pin Diogelwch MythTV ar gyfer gwasanaethau API"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Cyffredinol"
@@ -136,25 +144,65 @@ msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "Galluogi demux MPEG-TS"
 
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "Oedi tiwnio (eil)"
+
+msgctxt "#30054"
+msgid "Group recordings by title"
+msgstr "Crynhoi recordiadau yn ôl teitl"
+
 msgctxt "#30055"
 msgid "Always"
 msgstr "Bob tro"
+
+msgctxt "#30056"
+msgid "Only for series"
+msgstr "Dim ond am gyfres"
 
 msgctxt "#30057"
 msgid "Never"
 msgstr "Byth"
 
+msgctxt "#30058"
+msgid "Enable commercial skips (EDL)"
+msgstr "Galluogi hepgor hysbysebion (EDL)"
+
 msgctxt "#30059"
 msgid "Always"
 msgstr "Bob tro"
+
+msgctxt "#30060"
+msgid "Dialog"
+msgstr "Deialog"
 
 msgctxt "#30061"
 msgid "Never"
 msgstr "Byth"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Rhwystro cau'r cefn"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Galluogi eiconau sianeli"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "Galluogi celf selogion/lluniau bach recordiadau"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Fersiwn protocol: %i - Fersiwn cronfa ddata: %i"
+
+msgctxt "#30110"
+msgid "Enabling EDL"
+msgstr "Galluogi EDL"
+
+msgctxt "#30111"
+msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
+msgstr "Mae rhestr dorri neu hepgoriadau hysbysebion wedi eu canfod.\nHoffech chi weithredu swyddogaethau EDL ar gyfer y sioe yma"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

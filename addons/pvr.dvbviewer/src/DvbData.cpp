@@ -155,7 +155,7 @@ PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
     PVR_STRCPY(xbmcChannel.strIconPath,    channel->logoURL.c_str());
 
     if (!channel->radio && !g_useRTSP)
-      PVR_STRCPY(xbmcChannel.strInputFormat, "video/x-mpegts");
+      PVR_STRCPY(xbmcChannel.strInputFormat, "video/mp2t");
     else
       PVR_STRCPY(xbmcChannel.strInputFormat, "");
 

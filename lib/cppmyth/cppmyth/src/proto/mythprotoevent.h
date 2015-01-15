@@ -34,8 +34,8 @@ namespace Myth
   public:
     ProtoEvent(const std::string& server, unsigned port);
 
-    bool Open();
-    void Close();
+    virtual bool Open();
+    virtual void Close();
 
     /**
      * @brief Wait for new backend message from event connection

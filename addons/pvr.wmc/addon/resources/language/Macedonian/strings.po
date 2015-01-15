@@ -16,6 +16,170 @@ msgstr ""
 "Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
+msgctxt "#30000"
+msgid "Server Hostname or IP"
+msgstr "Hostname или IP на серверот"
+
+msgctxt "#30001"
+msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
+msgstr "Задржи ја IP адресата 127.0.0.1, ако овој компјутер е серверот"
+
+msgctxt "#30002"
+msgid "Port Number"
+msgstr "Број на порта"
+
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Истече врската кон stream-от, непознат проблем"
+
+msgctxt "#30004"
+msgid "No video data found on this channel"
+msgstr "Нема видео податоци на овој канал"
+
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Потребен е тјунер за снимање"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Не може да се избрише снимката, фајлот се користи или е заштитен"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Не може да се избрише снимката, фајлот не постои"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Снимката не е најдена"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Алтернативен одбран канал:"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Алтернативно одбрано време:"
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Тјунерот повеќе не е достапен"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Содржината на каналот е заштитена"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "Крајното време зголемено за"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "Овозможи SignalStatus повици"
+
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "Обнови го интервалот за SignalStatus (сек.)"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Зачувај го статусот за Изгледани/Продолжи на серверот"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Фолдерот за ТВ снимки не е најден"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Не може да се отвори фолдерот за ТВ снимки"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Постои нова верзија на ServerWMC (%s)"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Сите тјунери за овој канал се зафатени"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "Не беше остварена врска со програмата"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "Грешка со програмата во живо, прекината е пред време"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Му истече времето на stream-от за снимање"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Рано е прекинат stream-от на снимката"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Користи WakeOnLAN за будење на серверот"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Праќање на WakeOnLAN до серверот..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "Постои временска разлика од %s минути меѓу клиентот и backend-ot"
+
+msgctxt "#30100"
+msgid "Recording Preference"
+msgstr "Преференција за снимање"
+
+msgctxt "#30101"
+msgid "Record this episode only"
+msgstr "Сними ја само оваа епизода"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Сними ја серијата"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Тип на шоу:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Нови и повторени"
+
+msgctxt "#30105"
+msgid "New only"
+msgstr "Само нови"
+
+msgctxt "#30106"
+msgid "Live only"
+msgstr "Само во живо"
+
 msgctxt "#30107"
 msgid "Channel:"
 msgstr "Канал:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Сите канали"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Време на емитување"
+
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Секое време"
+
+msgctxt "#30120"
+msgid "Delete Timer"
+msgstr "Избриши го тајмерот"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Избриши го тајмерот само за оваа епизода"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Избриши ја целата серија"

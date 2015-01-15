@@ -34,7 +34,7 @@ namespace Myth
   {
   public:
     ProtoRecorder(int num, const std::string& server, unsigned port);
-    ~ProtoRecorder();
+    virtual ~ProtoRecorder();
 
     int GetNum() const;
     bool IsPlaying() const;
@@ -56,22 +56,6 @@ namespace Myth
     ProgramPtr GetCurrentRecording()
     {
       return GetCurrentRecording75();
-    }
-    void TransferDone(ProtoTransfer& transfer)
-    {
-      ProtoPlayback::TransferDone(transfer);
-    }
-    bool TransferIsOpen(ProtoTransfer& transfer)
-    {
-      return ProtoPlayback::TransferIsOpen(transfer);
-    }
-    int TransferRequestBlock(ProtoTransfer& transfer, void *buffer, unsigned n)
-    {
-      return ProtoPlayback::TransferRequestBlock(transfer, buffer, n);
-    }
-    int64_t TransferSeek(ProtoTransfer& transfer, int64_t offset, WHENCE_t whence)
-    {
-      return ProtoPlayback::TransferSeek(transfer, offset, whence);
     }
     int64_t GetFilePosition()
     {

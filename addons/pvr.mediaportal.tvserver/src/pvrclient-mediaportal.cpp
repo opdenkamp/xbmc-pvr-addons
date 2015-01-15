@@ -43,7 +43,7 @@ using namespace ADDON;
 int g_iTVServerXBMCBuild = 0;
 
 /* PVR client version (don't forget to update also the addon.xml and the Changelog.txt files) */
-#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.9.15"
+#define PVRCLIENT_MEDIAPORTAL_VERSION_STRING    "1.9.23"
 
 /* TVServerXBMC plugin supported versions */
 #define TVSERVERXBMC_MIN_VERSION_STRING         "1.1.7.107"
@@ -707,7 +707,7 @@ PVR_ERROR cPVRClientMediaPortal::GetChannels(ADDON_HANDLE handle, bool bRadio)
           //Use OpenLiveStream to read from the timeshift .ts file or an rtsp stream
           PVR_STRCLR(tag.strStreamURL);
           if (!bRadio)
-            PVR_STRCPY(tag.strInputFormat, "video/x-mpegts");
+            PVR_STRCPY(tag.strInputFormat, "video/mp2t");
           else
             PVR_STRCLR(tag.strInputFormat);
         }

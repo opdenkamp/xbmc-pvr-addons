@@ -20,7 +20,7 @@
  *
  */
 
-#include "xbmc_codec_types.h"
+#include <xbmc_codec_types.h>
 
 #include "avinfo.h"
 #include "client.h"

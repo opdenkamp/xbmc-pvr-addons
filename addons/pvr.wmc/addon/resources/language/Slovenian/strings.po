@@ -18,11 +18,11 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "Server Hostname or IP"
-msgstr "Ime serverja ali IP"
+msgstr "Ime strežnika ali IP"
 
 msgctxt "#30001"
 msgid "Keep IP address to 127.0.0.1, if server is running on this same system"
-msgstr "Obdrži IP naslov 127.0.0.1, če dela strežnik na istem istemu"
+msgstr "Obdrži naslov IP 127.0.0.1, če teče strežnik na istem istemu"
 
 msgctxt "#30002"
 msgid "Port Number"
@@ -30,11 +30,67 @@ msgstr "Številka vrat"
 
 msgctxt "#30004"
 msgid "No video data found on this channel"
-msgstr "Na tem kanalu ni video podatkov"
+msgstr "Za ta program slika ni na voljo"
 
 msgctxt "#30005"
 msgid "Tuner is needed for recording"
 msgstr "Za snemanje potrebujete tuner"
+
+msgctxt "#30006"
+msgid "Recording delete failed, file in use or write protected"
+msgstr "Brisanje posnetka je spodletelo, datoteka je v rabi ali zaščitena pred pisanjem"
+
+msgctxt "#30007"
+msgid "Recording delete failed, recorded file doesn't exist"
+msgstr "Brisanje posnetka je spodletelo, posneta datoteka ne obstaja"
+
+msgctxt "#30008"
+msgid "Recording file not found"
+msgstr "Posnetka ni mogoče najti"
+
+msgctxt "#30009"
+msgid "Alternate channel chosen: "
+msgstr "Izbran nadomestni program:"
+
+msgctxt "#30010"
+msgid "Alternate time chosen: "
+msgstr "Izbran nadomestni čas:"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Vsebina programa je zaščitena"
+
+msgctxt "#30013"
+msgid "End time increased by "
+msgstr "Čas konca povečan za"
+
+msgctxt "#30014"
+msgid "Enable SignalStatus calls"
+msgstr "Omogoči klice SignalStatus"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Mape posnetkov TV ni mogoče najti"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Mape posnetkov TV ni mogoče odpreti"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Na voljo je posodobitev različice ServerWMC (%s)"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Uporabi signal WakeOnLAN za vklop strežnika"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Pošiljanje signala WakeOnLAN strežniku ..."
+
+msgctxt "#30027"
+msgid "Time drift between client and backend of %s minutes"
+msgstr "%s-minutni časovni zamik med odjemalcem in hrbtenico"
 
 msgctxt "#30100"
 msgid "Recording Preference"
@@ -42,19 +98,39 @@ msgstr "Nastavitve snemanja"
 
 msgctxt "#30101"
 msgid "Record this episode only"
-msgstr "Posnemi samo to epizodo"
+msgstr "Posnemi le to epizodo"
+
+msgctxt "#30102"
+msgid "Record the series"
+msgstr "Snemaj nadaljevanko"
+
+msgctxt "#30103"
+msgid "Show type:"
+msgstr "Vrsta oddaje:"
+
+msgctxt "#30104"
+msgid "New and rerun"
+msgstr "Nove in ponovitve"
 
 msgctxt "#30105"
 msgid "New only"
-msgstr "Samo nov"
+msgstr "Samo novo"
 
 msgctxt "#30106"
 msgid "Live only"
-msgstr "V živo"
+msgstr "Samo v živo"
 
 msgctxt "#30107"
 msgid "Channel:"
 msgstr "Program:"
+
+msgctxt "#30108"
+msgid "Any Channel"
+msgstr "Katerikoli program"
+
+msgctxt "#30110"
+msgid "Airtime:"
+msgstr "Termin predvajanja:"
 
 msgctxt "#30111"
 msgid "Anytime"
@@ -63,6 +139,10 @@ msgstr "Kadarkoli"
 msgctxt "#30120"
 msgid "Delete Timer"
 msgstr "Izbriši časovnik"
+
+msgctxt "#30121"
+msgid "Delete this episode timer only"
+msgstr "Izbriši samo ta časovnik epizod"
 
 msgctxt "#30122"
 msgid "Delete the entire series"

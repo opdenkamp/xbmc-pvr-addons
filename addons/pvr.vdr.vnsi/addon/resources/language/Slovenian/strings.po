@@ -210,11 +210,11 @@ msgstr "Zahtevaj časovni zamik"
 
 msgctxt "#30048"
 msgid "Path to channel icons"
-msgstr "Pot do ikon za kanale"
+msgstr "Pot do ikon programov"
 
 msgctxt "#30049"
 msgid "VDR Server MAC for Wake-on-LAN"
-msgstr "VDR strežnik za Wake-on-LAN"
+msgstr "MAC strežnika VDR za Wake-on-LAN"
 
 msgctxt "#30100"
 msgid "VDR OSD"

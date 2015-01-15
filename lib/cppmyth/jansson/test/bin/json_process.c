@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2009-2013 Petri Lehtinen <petri@digip.org>
+ * Copyright (c) 2009-2014 Petri Lehtinen <petri@digip.org>
  *
  * Jansson is free software; you can redistribute it and/or modify
  * it under the terms of the MIT license. See LICENSE for details.
  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include <jansson_private_config.h>
 #endif
 
 #include <stdio.h>
@@ -39,6 +39,7 @@ struct config {
     int use_env;
     int have_hashseed;
     int hashseed;
+    int precision;
 } conf;
 
 #define l_isspace(c) ((c) == ' ' || (c) == '\n' || (c) == '\r' || (c) == '\t')
@@ -108,6 +109,8 @@ static void read_conf(FILE *conffile)
             conf.preserve_order = atoi(val);
         if (!strcmp(line, "JSON_SORT_KEYS"))
             conf.sort_keys = atoi(val);
+        if (!strcmp(line, "JSON_REAL_PRECISION"))
+            conf.precision = atoi(val);
         if (!strcmp(line, "STRIP"))
             conf.strip = atoi(val);
         if (!strcmp(line, "HASHSEED")) {
@@ -176,11 +179,11 @@ int use_conf(char *test_path)
         fclose(conffile);
     }
 
-    if (conf.indent < 0 || conf.indent > 255) {
+    if (conf.indent < 0 || conf.indent > 31) {
         fprintf(stderr, "invalid value for JSON_INDENT: %d\n", conf.indent);
+        fclose(infile);
         return 2;
     }
-
     if (conf.indent)
         flags |= JSON_INDENT(conf.indent);
 
@@ -195,6 +198,15 @@ int use_conf(char *test_path)
 
     if (conf.sort_keys)
         flags |= JSON_SORT_KEYS;
+
+    if (conf.precision < 0 || conf.precision > 31) {
+        fprintf(stderr, "invalid value for JSON_REAL_PRECISION: %d\n",
+                conf.precision);
+        fclose(infile);
+        return 2;
+    }
+    if (conf.precision)
+        flags |= JSON_REAL_PRECISION(conf.precision);
 
     if (conf.have_hashseed)
         json_object_seed(conf.hashseed);
@@ -245,7 +257,7 @@ static int getenv_int(const char *name)
 
 int use_env()
 {
-    int indent;
+    int indent, precision;
     size_t flags = 0;
     json_t *json;
     json_error_t error;
@@ -258,11 +270,10 @@ int use_env()
     #endif
 
     indent = getenv_int("JSON_INDENT");
-    if(indent < 0 || indent > 255) {
+    if(indent < 0 || indent > 31) {
         fprintf(stderr, "invalid value for JSON_INDENT: %d\n", indent);
         return 2;
     }
-
     if(indent > 0)
         flags |= JSON_INDENT(indent);
 
@@ -278,23 +289,35 @@ int use_env()
     if(getenv_int("JSON_SORT_KEYS"))
         flags |= JSON_SORT_KEYS;
 
+    precision = getenv_int("JSON_REAL_PRECISION");
+    if(precision < 0 || precision > 31) {
+        fprintf(stderr, "invalid value for JSON_REAL_PRECISION: %d\n",
+                precision);
+        return 2;
+    }
+
     if(getenv("HASHSEED"))
         json_object_seed(getenv_int("HASHSEED"));
+
+    if(precision > 0)
+        flags |= JSON_REAL_PRECISION(precision);
 
     if(getenv_int("STRIP")) {
         /* Load to memory, strip leading and trailing whitespace */
         size_t size = 0, used = 0;
-        char *buffer = NULL;
+        char *buffer = NULL, *buf_ck = NULL;
 
         while(1) {
             size_t count;
 
             size = (size == 0 ? 128 : size * 2);
-            buffer = realloc(buffer, size);
-            if(!buffer) {
+            buf_ck = realloc(buffer, size);
+            if(!buf_ck) {
                 fprintf(stderr, "Unable to allocate %d bytes\n", (int)size);
+                free(buffer);
                 return 1;
             }
+            buffer = buf_ck;
 
             count = fread(buffer + used, 1, size - used, stdin);
             if(count < size - used) {

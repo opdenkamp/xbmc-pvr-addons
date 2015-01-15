@@ -18,11 +18,11 @@ msgstr ""
 
 msgctxt "#30000"
 msgid "MythTV Backend Hostname or IP"
-msgstr "Nome do servidor ou IP da Backend MythTV"
+msgstr "Nome do Hospedeiro MythTV Posterior ou IP"
 
 msgctxt "#30001"
 msgid "MythTV Backend Port"
-msgstr "Porta da Backend MythTV"
+msgstr "Porta MythTV Posterior"
 
 msgctxt "#30002"
 msgid "MythTV Database Username"
@@ -66,11 +66,15 @@ msgstr "Preferir TV em Directo e cancelar a gravação em conflito"
 
 msgctxt "#30012"
 msgid "MythTV Backend Ethernet address (WOL)"
-msgstr "Endereço Internet da Backend MythTV (WOL)"
+msgstr "Endereço da Ethernet MythTV Posterior (WOL)"
 
 msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
-msgstr "Porta para serviços API da Backend MythTV"
+msgstr "Porta MythTV Posterior para os erviços API"
+
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "Pin de segurança MythTV para serviços da API"
 
 msgctxt "#30019"
 msgid "General"
@@ -176,6 +180,18 @@ msgctxt "#30061"
 msgid "Never"
 msgstr "Nunca"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Bloquear encerramento posterior"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Habilitar ícones de canal"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "Habilitar gravação de fanart/miniaturas"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "Versão do protocolo: %i - Versão da base de dados: %i"
@@ -190,7 +206,7 @@ msgstr "Uma da lista de cortes ou omissões comerciais foram encontrados.\nVocê
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"
-msgstr "Falha na ligação a Backend MythTV"
+msgstr "Não foi possível conetar a MythTV posterior"
 
 msgctxt "#30301"
 msgid "Failed to connect to MythTV database"
@@ -198,7 +214,7 @@ msgstr "Falha de ligação à base de dados de MythTV"
 
 msgctxt "#30302"
 msgid "Connection to MythTV backend lost"
-msgstr "A ligação à backend MythTV foi perdida"
+msgstr "A conexão MythTV posterior foi perdida"
 
 msgctxt "#30303"
 msgid "Connection to MythTV restored"
@@ -206,7 +222,7 @@ msgstr "Ligação a MythTV restabelecida"
 
 msgctxt "#30304"
 msgid "No response from MythTV backend"
-msgstr "Sem resposta de backend MythTV"
+msgstr "Nenhuma resposta de MythTV posterior"
 
 msgctxt "#30305"
 msgid "Channel unavailable"

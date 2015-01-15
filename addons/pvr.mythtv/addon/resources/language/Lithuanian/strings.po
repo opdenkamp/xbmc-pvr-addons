@@ -72,6 +72,10 @@ msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
 msgstr "MythTV posistemės prievadas API paslaugoms"
 
+msgctxt "#30014"
+msgid "MythTV Security Pin for API services"
+msgstr "MythTV saugumo PIN kodas, skirtas API paslaugoms"
+
 msgctxt "#30019"
 msgid "General"
 msgstr "Pagrindinis"
@@ -179,6 +183,14 @@ msgstr "Niekada"
 msgctxt "#30062"
 msgid "Block backend shutdown"
 msgstr "Blokuoti posistemės išjungimą"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Įjungti kanalų piktogramas"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "Įjungti fanart/miniatiūrų įrašymą"
 
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"

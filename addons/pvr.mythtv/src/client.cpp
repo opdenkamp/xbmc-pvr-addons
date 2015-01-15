@@ -35,10 +35,13 @@ std::string   g_szMythHostname          = DEFAULT_HOST;                     ///<
 std::string   g_szMythHostEther         = "";                               ///< The Host MAC address of the mythtv server
 int           g_iProtoPort              = DEFAULT_PROTO_PORT;               ///< The mythtv protocol port (default is 6543)
 int           g_iWSApiPort              = DEFAULT_WSAPI_PORT;               ///< The mythtv sevice API port (default is 6544)
+std::string   g_szWSSecurityPin         = DEFAULT_WSAPI_SECURITY_PIN;       ///< The default security pin for the mythtv wsapi
 bool          g_bExtraDebug             = DEFAULT_EXTRA_DEBUG;              ///< Output extensive debug information to the log
 bool          g_bLiveTV                 = DEFAULT_LIVETV;                   ///< LiveTV support (or recordings only)
 bool          g_bLiveTVPriority         = DEFAULT_LIVETV_PRIORITY;          ///< MythTV Backend setting to allow live TV to move scheduled shows
 int           g_iLiveTVConflictStrategy = DEFAULT_LIVETV_CONFLICT_STRATEGY; ///< Conflict resolving strategy (0=
+bool          g_bChannelIcons           = DEFAULT_CHANNEL_ICONS;            ///< Load Channel Icons
+bool          g_bRecordingIcons         = DEFAULT_RECORDING_ICONS;          ///< Load Recording Icons (Fanart/Thumbnails)
 int           g_iRecTemplateType        = DEFAULT_RECORD_TEMPLATE;          ///< Template type for new record (0=Internal, 1=MythTV)
 bool          g_bRecAutoMetadata        = true;
 bool          g_bRecAutoCommFlag        = false;
@@ -170,6 +173,17 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     g_iWSApiPort = DEFAULT_WSAPI_PORT;
   }
 
+  /* Read setting "wssecuritypin" from settings.xml */
+  if (XBMC->GetSetting("wssecuritypin", buffer))
+    g_szWSSecurityPin = buffer;
+  else
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'wssecuritypin' setting, falling back to '%s' as default", DEFAULT_WSAPI_SECURITY_PIN);
+    g_szWSSecurityPin = DEFAULT_WSAPI_SECURITY_PIN;
+  }
+  buffer[0] = 0;
+
   /* Read setting "extradebug" from settings.xml */
   if (!XBMC->GetSetting("extradebug", &g_bExtraDebug))
   {
@@ -269,6 +283,22 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
     /* If setting is unknown fallback to defaults */
     XBMC->Log(LOG_ERROR, "Couldn't get 'block_shutdown' setting, falling back to '%b' as default", DEFAULT_BLOCK_SHUTDOWN);
     g_bBlockMythShutdown = DEFAULT_BLOCK_SHUTDOWN;
+  }
+
+  /* Read setting "channel_icons" from settings.xml */
+  if (!XBMC->GetSetting("channel_icons", &g_bChannelIcons))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'channel_icons' setting, falling back to '%b' as default", DEFAULT_CHANNEL_ICONS);
+    g_bChannelIcons = DEFAULT_CHANNEL_ICONS;
+  }
+
+  /* Read setting "recording_icons" from settings.xml */
+  if (!XBMC->GetSetting("recording_icons", &g_bRecordingIcons))
+  {
+    /* If setting is unknown fallback to defaults */
+    XBMC->Log(LOG_ERROR, "Couldn't get 'recording_icons' setting, falling back to '%b' as default", DEFAULT_RECORDING_ICONS);
+    g_bRecordingIcons = DEFAULT_RECORDING_ICONS;
   }
 
   free (buffer);
@@ -446,10 +476,31 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       return ADDON_STATUS_NEED_RESTART;
     }
   }
+  else if (str == "wssecuritypin")
+  {
+    std::string tmp_sWSSecurityPin;
+    XBMC->Log(LOG_INFO, "Changed Setting 'wssecuritypin' from %s to %s", g_szWSSecurityPin.c_str(), (const char*)settingValue);
+    tmp_sWSSecurityPin = g_szWSSecurityPin;
+    g_szWSSecurityPin = (const char*)settingValue;
+    if (tmp_sWSSecurityPin != g_szWSSecurityPin)
+      return ADDON_STATUS_NEED_RESTART;
+  }
   else if (str == "demuxing")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'demuxing' from %u to %u", g_bDemuxing, *(bool*)settingValue);
     if (g_bDemuxing != *(bool*)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (str == "channel_icons")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'channel_icons' from %u to %u", g_bChannelIcons, *(bool*)settingValue);
+    if (g_bChannelIcons != *(bool*)settingValue)
+      return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (str == "recording_icons")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'recording_icons' from %u to %u", g_bRecordingIcons, *(bool*)settingValue);
+    if (g_bRecordingIcons != *(bool*)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (str == "host_ether")
@@ -655,6 +706,11 @@ const char *GetBackendVersion()
 const char *GetConnectionString()
 {
   return g_client->GetConnectionString();
+}
+
+const char *GetBackendHostname(void)
+{
+  return g_szMythHostname.c_str();
 }
 
 PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)

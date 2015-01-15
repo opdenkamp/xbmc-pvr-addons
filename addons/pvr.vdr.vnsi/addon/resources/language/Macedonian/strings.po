@@ -30,11 +30,11 @@ msgstr "Приоритет"
 
 msgctxt "#30003"
 msgid "Character Set Conversion"
-msgstr "Конверзија на вид на карактери"
+msgstr "Конверзија на вид букви"
 
 msgctxt "#30004"
 msgid "Connect timeout (s)"
-msgstr "Тајмаут на поврзување (с)"
+msgstr "Истече времето за поврзување (s)"
 
 msgctxt "#30005"
 msgid "Allow VDR Messages"
@@ -42,11 +42,11 @@ msgstr "Дозволи VDR пораки"
 
 msgctxt "#30006"
 msgid "Read recordings from directory"
-msgstr "Читај снимки од директориум"
+msgstr "Читај снимки од локација"
 
 msgctxt "#30007"
 msgid "VDR recordings directory"
-msgstr "VDR директориум на снимки"
+msgstr "Локација на VDR снимки"
 
 msgctxt "#30008"
 msgid "Channel search"
@@ -58,7 +58,7 @@ msgstr "Барање на канали - Поставки"
 
 msgctxt "#30010"
 msgid "Start Channel search"
-msgstr "Почни барање канали"
+msgstr "Започни со барање канали"
 
 msgctxt "#30011"
 msgid "Source Type"
@@ -118,7 +118,7 @@ msgstr "Назад"
 
 msgctxt "#30025"
 msgid "Channel search - running... %i %%"
-msgstr "Барање канали - бара... %i %%"
+msgstr "Барање канали... %i %%"
 
 msgctxt "#30026"
 msgid "Type:"
@@ -130,7 +130,7 @@ msgstr "Уред:"
 
 msgctxt "#30028"
 msgid "Scan: %i"
-msgstr "Барај: %i"
+msgstr "Пребарај: %i"
 
 msgctxt "#30029"
 msgid "Signal: %i %%"
@@ -204,13 +204,65 @@ msgctxt "#30046"
 msgid "Create channel groups automatically on the server"
 msgstr "Автоматски креирај група на канали на сервер"
 
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "Побарај Timeshift"
+
+msgctxt "#30048"
+msgid "Path to channel icons"
+msgstr "Локација на иконите за канали"
+
+msgctxt "#30049"
+msgid "VDR Server MAC for Wake-on-LAN"
+msgstr "VDR Server MAC адреса за Wake-on-LAN"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR OSD"
+
 msgctxt "#30101"
 msgid "Setup"
 msgstr "Конфигурација"
 
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Контролирање на дисплејот - притисни „инфо“ за да излезеш"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Одбери за да го контролираш дисплејот"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Timeshift режим"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Timeshift Buffer (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Timeshift Buffer (File) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Админ"
+
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Канали"
+
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Листа на одобрени провајдери"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Листа на блокирани канали"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Смени филтери"
 
 msgctxt "#30112"
 msgid "Radio Channels"
@@ -219,3 +271,7 @@ msgstr "Радио Канали"
 msgctxt "#30113"
 msgid "Save filters"
 msgstr "Зачувај филтри"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Непознат провајдер"

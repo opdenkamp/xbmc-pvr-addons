@@ -266,7 +266,7 @@ namespace PLATFORM
 
         while (!bReturn)
         {
-          if ((bReturn = callback(param)))
+          if ((bReturn = callback(param)) == true)
             break;
           uint32_t iMsLeft = timeout.TimeLeft();
           if ((iTimeout != 0) && (iMsLeft == 0))

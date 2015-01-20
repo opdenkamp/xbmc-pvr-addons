@@ -397,7 +397,7 @@ htsmsg_field_get_string(htsmsg_field_t *f)
   case HMF_STR:
     break;
   case HMF_S64:
-    snprintf(buf, sizeof(buf), "%"PRId64, f->hmf_s64);
+    snprintf(buf, sizeof(buf), "%" PRId64, f->hmf_s64);
     f->hmf_str = strdup(buf);
     f->hmf_type = HMF_STR;
     break;

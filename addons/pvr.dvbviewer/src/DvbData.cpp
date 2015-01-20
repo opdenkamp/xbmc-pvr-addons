@@ -180,7 +180,7 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
 {
   DvbChannel *myChannel = m_channels[channel.iUniqueId - 1];
 
-  CStdString url = BuildURL("api/epg.html?lvl=2&channel=%"PRIu64"&start=%f&end=%f",
+  CStdString url = BuildURL("api/epg.html?lvl=2&channel=%" PRIu64 "&start=%f&end=%f",
       myChannel->epgId, iStart/86400.0 + DELPHI_DATE, iEnd/86400.0 + DELPHI_DATE);
   CStdString req = GetHttpXML(url);
 
@@ -1054,12 +1054,12 @@ void Dvb::GenerateTimer(const PVR_TIMER& timer, bool newTimer)
   uint64_t iChannelId = m_channels[timer.iClientChannelUid - 1]->backendIds.front();
   CStdString url;
   if (newTimer)
-    url = BuildURL("api/timeradd.html?ch=%"PRIu64"&dor=%u&enable=1&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
+    url = BuildURL("api/timeradd.html?ch=%" PRIu64 "&dor=%u&enable=1&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
         iChannelId, date, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
   else
   {
     short enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
-    url = BuildURL("api/timeredit.html?id=%d&ch=%"PRIu64"&dor=%u&enable=%d&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
+    url = BuildURL("api/timeredit.html?id=%d&ch=%" PRIu64 "&dor=%u&enable=%d&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
         GetTimerId(timer), iChannelId, date, enabled, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
   }
 

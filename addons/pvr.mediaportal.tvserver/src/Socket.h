@@ -18,9 +18,6 @@
  */
 #pragma once
 
-namespace MPTV //Prevent name clash with Live555 Socket
-{
-
 //Include platform specific datatypes, header files, defines and constants:
 #if defined TARGET_WINDOWS
   #define WIN32_LEAN_AND_MEAN           // Enable LEAN_AND_MEAN support
@@ -73,6 +70,9 @@ namespace MPTV //Prevent name clash with Live555 Socket
 using namespace std;
 
 #include <vector>
+
+namespace MPTV //Prevent name clash with Live555 Socket
+{
 
 #define MAXCONNECTIONS 1  ///< Maximum number of pending connections before "Connection refused"
 #define MAXRECV 1500      ///< Maximum packet size

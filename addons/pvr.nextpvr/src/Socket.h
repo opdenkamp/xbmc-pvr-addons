@@ -18,9 +18,6 @@
  */
 #pragma once
 
-namespace NextPVR 
-{
-
 //Include platform specific datatypes, header files, defines and constants:
 #if defined TARGET_WINDOWS
   #define WIN32_LEAN_AND_MEAN           // Enable LEAN_AND_MEAN support
@@ -70,6 +67,9 @@ namespace NextPVR
 using namespace std;
 
 #include <vector>
+
+namespace NextPVR
+{
 
 #define MAXCONNECTIONS 1  ///< Maximum number of pending connections before "Connection refused"
 #define MAXRECV 1500      ///< Maximum packet size

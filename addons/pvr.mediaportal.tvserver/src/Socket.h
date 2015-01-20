@@ -67,7 +67,6 @@
   #error Platform specific socket support is not yet available on this platform!
 #endif
 
-using namespace std;
 
 #include <vector>
 
@@ -270,7 +269,7 @@ class Socket
 
     bool set_non_blocking ( const bool );
 
-    bool ReadLine (string& line);
+    bool ReadLine (std::string& line);
 
     bool is_valid() const;
 

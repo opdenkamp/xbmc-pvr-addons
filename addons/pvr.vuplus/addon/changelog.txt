@@ -1,5 +1,6 @@
 1.9.22
 - updated language files from Transifex
+- minor changes to conform with C++11
 
 1.9.21
 - added getBackendHostname function

@@ -1,5 +1,6 @@
 v1.9.26
 - Updated language files from Transifex
+- Minor changes to conform with C++11
 
 v1.9.25
 - Updated language files from Transifex

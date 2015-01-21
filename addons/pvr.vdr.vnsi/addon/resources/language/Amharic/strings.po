@@ -20,6 +20,10 @@ msgctxt "#30002"
 msgid "Priority"
 msgstr "ቅድሚያ"
 
+msgctxt "#30004"
+msgid "Connect timeout (s)"
+msgstr "ግንኙነት ጊዜው አልፏል (ሰ)"
+
 msgctxt "#30008"
 msgid "Channel search"
 msgstr "ጣቢያ መፈለጊያ"

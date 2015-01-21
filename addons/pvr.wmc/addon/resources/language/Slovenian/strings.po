@@ -28,6 +28,10 @@ msgctxt "#30002"
 msgid "Port Number"
 msgstr "Številka vrat"
 
+msgctxt "#30003"
+msgid "Stream timeout, unknown problem"
+msgstr "Časovna prekoračitev pretoka, razlog ni znan"
+
 msgctxt "#30004"
 msgid "No video data found on this channel"
 msgstr "Za ta program slika ni na voljo"
@@ -56,6 +60,10 @@ msgctxt "#30010"
 msgid "Alternate time chosen: "
 msgstr "Izbran nadomestni čas:"
 
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Ni mogoče zagnati, sprejemnik ni več na voljo"
+
 msgctxt "#30012"
 msgid "Channel content is protected"
 msgstr "Vsebina programa je zaščitena"
@@ -68,6 +76,14 @@ msgctxt "#30014"
 msgid "Enable SignalStatus calls"
 msgstr "Omogoči klice SignalStatus"
 
+msgctxt "#30015"
+msgid "Refresh SignalStatus Interval (sec)"
+msgstr "Interval osveževanja SignalStatus (s)"
+
+msgctxt "#30016"
+msgid "Store Resume/Watched status on server"
+msgstr "Shrani stanje Nadaljuj/Pogledano na strežniku"
+
 msgctxt "#30017"
 msgid "Recorded TV folder not found"
 msgstr "Mape posnetkov TV ni mogoče najti"
@@ -79,6 +95,26 @@ msgstr "Mape posnetkov TV ni mogoče odpreti"
 msgctxt "#30019"
 msgid "ServerWMC version update is available (%s)"
 msgstr "Na voljo je posodobitev različice ServerWMC (%s)"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Vsi sprejemniki za ta program so zasedeni"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "TV v živo je prekoračila čas"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "Napaka TV v živo, prezgodnji izhod"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Snemalni pretok je prekoračil čas"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Snemalni pretok se je prezgodaj zaprl"
 
 msgctxt "#30025"
 msgid "Use WakeOnLAN to wake up server"

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.wmc"
-  version="0.4.001"
+  version="0.4.2"
   name="PVR WMC Client"
   provider-name="KrustyReturns and scarecrow420">
   <requires>
@@ -76,6 +76,7 @@
     <description lang="pt">@ OS @ @  ARQUITETURA @ Edition. Um cliente de PVR para fazer a interface com a gravação e serviços dev EPG  do Windows Media Center. Graças a Tomba73 e Hoopsdavis. Um agradecimento especial a DBurckh.</description>
     <description lang="pt_BR">Edição @OS@ @ARCHITECTURE@. Um cliente de PVR para fazer a ponte com recurso de gravação e serviços de EPG do Windows Media Center.  Obrigado Tomba73 e Hoopsdavis. Agradecimento Especial a DBurckh.</description>
     <description lang="ru">Редакция @OS@ @ARCHITECTURE@.Клиент PVR для взаимодействия с записью Windows Media Center и сервисом EPG. Благодарности Tomba73 и Hoopsdavis. Особые благодарности DBurckh.</description>
+    <description lang="sl">@OS@ izdaja @ARCHITECTURE@. Odjemalec PVR kot vmesnik za storitve snemanja in EPG na Windows Media Center. Zahvale: Tomba73 in Hoopsdavis. Posebna zahvala: DBurckh.</description>
     <description lang="sv">@OS@ @ARCHITECTURE@ Utgåva. En PVR-klient för att hantera Windows Media Centers inspelnings- och EPG-tjänst. Tack till Tomba73 och Hoopsdavis. Speciellt tack till DBurckh.</description>
     <description lang="zh">@OS@ @ARCHITECTURE@ 版。针对 Windows 媒体中心录像和电子节目单服务的 PVR 客户端界面。感谢 Tomba73 和 Hoopsdavis，特别感谢 DBurckh。</description>
     <disclaimer lang="bg">Това е експериментален софтуер. Използвайте го на свой собствен риск.</disclaimer>

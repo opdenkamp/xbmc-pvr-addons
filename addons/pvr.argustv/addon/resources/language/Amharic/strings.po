@@ -20,6 +20,10 @@ msgctxt "#30002"
 msgid "Include Radio"
 msgstr "ሬዲዮ ማካተቻ"
 
+msgctxt "#30003"
+msgid "Connect timeout (s)"
+msgstr "ግንኙነት ጊዜው አልፏል (ሰ)"
+
 msgctxt "#30005"
 msgid "Password"
 msgstr "የመግቢያ ቃል"

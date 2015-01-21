@@ -141,6 +141,12 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     <ClInclude Include="..\..\src\Socket.h" />
     <ClInclude Include="..\..\src\uri.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml.in" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\addon\changelog.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

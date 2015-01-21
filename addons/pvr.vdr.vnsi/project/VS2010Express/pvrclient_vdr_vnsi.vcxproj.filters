@@ -78,4 +78,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml.in" />
+  </ItemGroup>
 </Project>

@@ -85,7 +85,7 @@ void CPmtParser::OnNewSection(CSection& section)
       pointer += (descriptorLen+2);
     }
     // loop 2
-    vector<TempPid> tempPids;
+    std::vector<TempPid> tempPids;
 
     m_pidInfo.Reset();
     m_pidInfo.PmtPid = GetPid();

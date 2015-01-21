@@ -1,5 +1,6 @@
 [B]Version 1.9.15[/B]
 Updated: language files from Transifex
+Fixed: Minor changes to conform with C++11
 
 [B]Version 1.9.14[/B]
 Updated: language files from Transifex

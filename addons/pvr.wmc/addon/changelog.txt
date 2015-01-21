@@ -1,5 +1,6 @@
 0.4.2
 - Updated Language files from Transifex
+- Minor changes to conform with C++11
 
 0.4.001
 - Kodi 15 versions will now be numbered 0.4.*

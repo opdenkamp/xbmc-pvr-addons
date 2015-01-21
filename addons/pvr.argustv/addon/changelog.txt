@@ -1,5 +1,6 @@
 v1.9.189 (21-01-2015)
 - Updated language files from Transifex
+- Minor changes to conform with C++11
 v1.9.188 (13-01-2015)
 - Updated language files from Transifex
 v1.9.187 (28-12-2014)

@@ -18,9 +18,6 @@
  */
 #pragma once
 
-namespace NextPVR 
-{
-
 //Include platform specific datatypes, header files, defines and constants:
 #if defined TARGET_WINDOWS
   #define WIN32_LEAN_AND_MEAN           // Enable LEAN_AND_MEAN support
@@ -67,9 +64,11 @@ namespace NextPVR
   #error Platform specific socket support is not yet available on this platform!
 #endif
 
-using namespace std;
 
 #include <vector>
+
+namespace NextPVR
+{
 
 #define MAXCONNECTIONS 1  ///< Maximum number of pending connections before "Connection refused"
 #define MAXRECV 1500      ///< Maximum packet size
@@ -278,7 +277,7 @@ class Socket
 
     bool set_non_blocking ( const bool );
 
-    bool ReadResponse (int &code, vector<string> &lines);
+    bool ReadResponse (int &code, std::vector<std::string> &lines);
 
     bool is_valid() const;
 

@@ -1,5 +1,6 @@
 v1.11.4
 - Updated language files from Transifex
+- Minor changes to conform with C++11
 
 v1.11.3
 - Updated language files from Transifex

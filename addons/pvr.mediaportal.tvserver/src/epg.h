@@ -31,25 +31,24 @@
 #include "GenreTable.h"
 #include "DateTime.h"
 
-using namespace std;
 
 class cEpg
 {
 private:
   unsigned int m_uid;
-  string m_title;
-  string m_shortText;
-  string m_description;
+  std::string m_title;
+  std::string m_shortText;
+  std::string m_description;
   MPTV::CDateTime m_startTime;
   MPTV::CDateTime m_endTime;
   MPTV::CDateTime m_originalAirDate;
   int m_duration;
-  string m_genre;
+  std::string m_genre;
   int m_genre_type;
   int m_genre_subtype;
   int m_episodeNumber;
-  string m_episodePart;
-  string m_episodeName;
+  std::string m_episodePart;
+  std::string m_episodeName;
   int m_seriesNumber;
   int m_starRating;
   int m_parentalRating;
@@ -60,7 +59,7 @@ public:
   virtual ~cEpg();
   void Reset();
 
-  bool ParseLine(string& data);
+  bool ParseLine(std::string& data);
   int UniqueId(void) const { return m_uid; }
   time_t StartTime(void) const;
   time_t EndTime(void) const;

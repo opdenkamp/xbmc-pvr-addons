@@ -24,7 +24,6 @@
 #include "TSHeader.h"
 #include "PidTable.h"
 #include <map>
-using namespace std;
 
 #define SERVICE_TYPE_VIDEO_UNKNOWN  -1
 #define SERVICE_TYPE_VIDEO_MPEG1    0x01

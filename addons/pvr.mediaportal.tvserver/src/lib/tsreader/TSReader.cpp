@@ -40,6 +40,7 @@
 #endif
 #include "FileUtils.h"
 
+using namespace std;
 using namespace ADDON;
 
 CTsReader::CTsReader(): m_demultiplexer( *this )

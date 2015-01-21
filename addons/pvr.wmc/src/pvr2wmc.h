@@ -80,8 +80,8 @@ public:
 	PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus);
 	
 	bool CheckErrorOnServer();
-	void TriggerUpdates(vector<CStdString> results);
-	void ExtractDriveSpace(vector<CStdString> results);
+	void TriggerUpdates(std::vector<CStdString> results);
+	void ExtractDriveSpace(std::vector<CStdString> results);
 
 private:
 	int _serverBuild;

@@ -68,7 +68,7 @@ public:
    * \brief Override the search directory for timeshift buffer files
    * \param the new search directory
    */
-  void SetDirectory( string& directory );
+  void SetDirectory( std::string& directory );
   void SetCardId( int id );
   bool IsTimeShifting();
   bool IsSeeking();
@@ -98,7 +98,7 @@ private:
 #endif
   CCards*         m_cardSettings;     ///< Pointer to the MediaPortal card settings. Will be used to determine the base path of the timeshift buffer
   int             m_cardId;           ///< Card id for the current Card used for this timeshift buffer
-  string          m_basePath;         ///< The base path shared by all timeshift buffers (to be determined from the Card settings)
+  std::string     m_basePath;         ///< The base path shared by all timeshift buffers (to be determined from the Card settings)
   TsReaderState   m_State;            ///< The current state of the TsReader
   unsigned long   m_lastPause;        ///< Last time instance at which the playback was paused
   int             m_WaitForSeekToEof;

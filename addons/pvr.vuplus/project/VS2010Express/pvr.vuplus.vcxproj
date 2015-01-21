@@ -106,6 +106,12 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
       <Project>{bdc7d21d-9fd9-41aa-bec8-8b70e1448c50}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\addon\addon.xml.in" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\addon\changelog.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

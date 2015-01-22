@@ -1,4 +1,4 @@
-0.4.2
+﻿0.4.002
 - Updated Language files from Transifex
 - Minor changes to conform with C++11
 

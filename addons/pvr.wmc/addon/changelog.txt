@@ -1,3 +1,6 @@
+﻿0.3.111
+- Revise previous ServerWMC stream stuttering fix
+
 0.3.110
 - fix stuttering when using new ServerWMC streams of completed WTV recordings
 

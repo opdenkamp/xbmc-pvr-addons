@@ -19,6 +19,8 @@
 #include "libXBMC_addon.h"
 #include <string>
 #include "platform/os.h"
+#include "platform/util/timeutils.h"
+
 #include "client.h"
 #include "Socket.h"
 
@@ -214,8 +216,15 @@ int Socket::send ( const std::string& data )
   {
     return 0;
   }
-
-  int status = Socket::send( (const char*) data.c_str(), (const unsigned int) data.size());
+  int status = 0;
+  do 
+  {
+    status = Socket::send( (const char*) data.c_str(), (const unsigned int) data.size());    
+#if defined(TARGET_WINDOWS)
+  } while (status == SOCKET_ERROR && errno == WSAEWOULDBLOCK);
+#else
+  } while (status == SOCKET_ERROR && errno == EAGAIN);
+#endif
 
   return status;
 }
@@ -249,10 +258,15 @@ int Socket::send ( const char* data, const unsigned int len )
     _sd = INVALID_SOCKET;
     return 0;
   }
-
-  int status = ::send(_sd, data, len, 0 );
-
-  if (status == -1)
+  int status = 0;
+  do {
+    status = ::send(_sd, data, len, 0 );
+#if defined(TARGET_WINDOWS)
+  } while (status == SOCKET_ERROR && errno == WSAEWOULDBLOCK);
+#else
+  } while (status == SOCKET_ERROR && errno == EAGAIN);
+#endif
+  if (status == SOCKET_ERROR)
   {
     errormessage( getLastError(), "Socket::send");
     XBMC->Log(LOG_ERROR, "Socket::send  - failed to send data");
@@ -436,11 +450,18 @@ int Socket::receive ( char* data, const unsigned int buffersize, const unsigned 
       int lasterror = getLastError();
 #if defined(TARGET_WINDOWS)
       if ( lasterror != WSAEWOULDBLOCK)
-        errormessage( lasterror, "Socket::receive" );
 #else
-      if ( lasterror != EAGAIN && lasterror != EWOULDBLOCK )
-        errormessage( lasterror, "Socket::receive" );
+      if ( lasterror != EAGAIN )
 #endif
+      {
+        errormessage( lasterror, "Socket::receive" );
+      }
+      else
+      {
+		XBMC->Log(LOG_ERROR, "Socket::read EAGAIN");
+        usleep(50000);
+		continue;
+      }
       return status;
     }
 

@@ -37,14 +37,14 @@ public:
   void Clear();
   bool ReadData(char *buf, unsigned int size);
   bool ReadData(CRingBuffer &rBuf, unsigned int size);
-  bool WriteData(char *buf, unsigned int size);
+  bool WriteData(const char *buf, unsigned int size);
   bool WriteData(CRingBuffer &rBuf, unsigned int size);
   bool SkipBytes(int skipSize);
   bool Append(CRingBuffer &rBuf);
   bool Copy(CRingBuffer &rBuf);
   char *getBuffer();
   unsigned int getSize();
-  unsigned int getReadPtr();
+  unsigned int getReadPtr() const;
   unsigned int getWritePtr();
   unsigned int getMaxReadSize();
   unsigned int getMaxWriteSize();

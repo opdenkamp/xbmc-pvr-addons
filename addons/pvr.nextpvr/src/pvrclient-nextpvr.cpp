@@ -34,6 +34,8 @@
 
 #if defined(TARGET_WINDOWS)
   #define atoll(S) _atoi64(S) 
+#else
+  #define MAXINT64 ULONG_MAX
 #endif 
 
 
@@ -124,6 +126,7 @@ cPVRClientNextPVR::cPVRClientNextPVR()
 
   m_pLiveShiftSource       = NULL;
 
+  m_lastRecordingUpdateTime = MAXINT64;	// time of last recording check - force forever
   m_incomingStreamBuffer.Create(188*2000);
 }
 
@@ -267,6 +270,44 @@ void cPVRClientNextPVR::Disconnect()
  */
 bool cPVRClientNextPVR::IsUp()
 {
+	// check time since last time Recordings were updated, update if it has been awhile
+	if (m_bConnected == true && m_lastRecordingUpdateTime != MAXINT64 &&  time(0) > (m_lastRecordingUpdateTime + 60 ))
+	{
+		TiXmlDocument doc;
+		char request[512];
+		sprintf(request, "/service?method=recording.lastupdated");
+		CStdString response;
+		if (DoRequest(request, response) == HTTP_OK)
+		{
+			if (doc.Parse(response) != NULL)
+			{
+				TiXmlElement* last_update = doc.RootElement()->FirstChildElement("last_update");
+				if (last_update != NULL)
+				{
+					int64_t update_time = atoll(last_update->GetText());
+					if (update_time > m_lastRecordingUpdateTime)
+					{
+						m_lastRecordingUpdateTime = MAXINT64;
+						PVR->TriggerRecordingUpdate();
+						PVR->TriggerTimerUpdate();
+					}
+					else
+					{						
+						m_lastRecordingUpdateTime = time(0);
+					}
+				}
+				else
+				{
+					m_lastRecordingUpdateTime = MAXINT64;
+				}
+			}
+		}
+		else
+		{
+			m_lastRecordingUpdateTime = MAXINT64;
+			XBMC->Log(LOG_NOTICE, "Disabling recording update.  Update NextPVR to v3.4");
+		}
+	}
   return m_bConnected;
 }
 
@@ -771,6 +812,7 @@ PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
         PVR->TransferRecordingEntry(handle, &tag);
       }
     }
+	XBMC->Log(LOG_DEBUG, "Updated recordings %lld", m_lastRecordingUpdateTime);
   }
 
   // ...and any in-progress recordings
@@ -810,7 +852,7 @@ PVR_ERROR cPVRClientNextPVR::GetRecordings(ADDON_HANDLE handle)
       }
     }
   }
-  
+  m_lastRecordingUpdateTime = time(0);
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -862,6 +904,7 @@ PVR_ERROR cPVRClientNextPVR::SetRecordingLastPlayedPosition(const PVR_RECORDING 
       XBMC->Log(LOG_DEBUG, "SetRecordingLastPlayedPosition failed");
       return PVR_ERROR_FAILED;
     }
+	PVR->TriggerRecordingUpdate();
   }
   return PVR_ERROR_NO_ERROR;
 }

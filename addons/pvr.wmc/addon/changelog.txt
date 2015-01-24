@@ -1,4 +1,7 @@
-﻿0.4.002
+﻿0.4.003
+- Revise previous ServerWMC stream stuttering fix
+
+0.4.002
 - Updated Language files from Transifex
 - Minor changes to conform with C++11
 

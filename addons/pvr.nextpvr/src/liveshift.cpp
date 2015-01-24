@@ -164,7 +164,15 @@ unsigned int LiveShiftSource::Read(unsigned char *buffer, unsigned int length)
     memset(request, 0, sizeof(request));
     snprintf(request, sizeof(request), "Range: bytes=%llu-%llu-%d", blockOffset, (blockOffset+length), m_requestNumber);
     LOG("sending request: %s\n", request);
-    int sent = m_pSocket->send(request, sizeof(request));
+    int sent;
+    do 
+    {
+	sent = m_pSocket->send(request, sizeof(request));
+#if defined(TARGET_WINDOWS)
+    } while (sent < 0 && errno == WSAEWOULDBLOCK);
+#else
+    } while (sent < 0 && errno == EAGAIN);
+#endif
     if (sent != sizeof(request))
     {
       LOG("NOT ALL BYTES SENT! Only sent %d bytes\n", sent);
@@ -196,7 +204,16 @@ unsigned int LiveShiftSource::Read(unsigned char *buffer, unsigned int length)
       {
         LOG("got: %s\n", response);
       }
-
+#if defined(TARGET_WINDOWS)
+      else if (responseByteCount < 0 && errno == WSAEWOULDBLOCK)
+#else
+      else if (responseByteCount < 0 && errno == EAGAIN)
+#endif
+      {
+	usleep(50000);
+        LOG("got: EAGAIN");
+	continue;
+      }
       // drop out if response header looks incorrect
       if (responseByteCount != sizeof(response))
       {
@@ -212,8 +229,14 @@ unsigned int LiveShiftSource::Read(unsigned char *buffer, unsigned int length)
       m_lastKnownLength = fileSize;
 
       // read response payload
-      bytesRead = m_pSocket->receive((char *)buffer, length, payloadSize); 
-
+      do 
+      {
+	bytesRead = m_pSocket->receive((char *)buffer, length, payloadSize); 
+#if defined(TARGET_WINDOWS)
+      } while (bytesRead < 0 && errno == WSAEWOULDBLOCK);
+#else
+      } while (bytesRead < 0 && errno == EAGAIN);
+#endif
       // if it's from the start of the file, then cache it
       if (m_startupCache != NULL && ((payloadOffset + payloadSize) < STARTUP_CACHE_SIZE))
       {

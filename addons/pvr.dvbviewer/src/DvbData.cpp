@@ -1095,8 +1095,6 @@ bool Dvb::CheckBackendVersion()
   {
     XBMC->Log(LOG_ERROR, "Unable to connect to the backend service. Error: %s",
         doc.ErrorDesc());
-    XBMC->QueueNotification(QUEUE_ERROR, XBMC->GetLocalizedString(30500));
-    Sleep(10000);
     return false;
   }
 

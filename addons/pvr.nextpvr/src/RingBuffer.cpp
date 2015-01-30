@@ -1,6 +1,6 @@
 /*
- *      Copyright (C) 2010 Team XBMC
- *      http://www.xbmc.org
+ *      Copyright (C) 2010-2013 Team XBMC
+ *      http://xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -13,10 +13,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
- *  MA 02110-1301  USA
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -128,7 +126,7 @@ bool CRingBuffer::ReadData(CRingBuffer &rBuf, unsigned int size)
 /* Write data to ring buffer from buffer specified in 'buf'. Amount read in is
  * specified by 'size'.
  */
-bool CRingBuffer::WriteData(char *buf, unsigned int size)
+bool CRingBuffer::WriteData(const char *buf, unsigned int size)
 {
   if (size > m_size - m_fillCount)
   {
@@ -225,7 +223,7 @@ unsigned int CRingBuffer::getSize()
   return m_size;
 }
 
-unsigned int CRingBuffer::getReadPtr()
+unsigned int CRingBuffer::getReadPtr() const
 {
   return m_readPtr;
 }

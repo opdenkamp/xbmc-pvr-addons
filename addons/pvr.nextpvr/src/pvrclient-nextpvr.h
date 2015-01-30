@@ -134,6 +134,8 @@ private:
   CStdString              m_PlaybackURL;
   LiveShiftSource        *m_pLiveShiftSource;
 
+  int64_t                 m_lastRecordingUpdateTime;
+
   char                    m_sid[64];
 
   int                     m_iChannelCount;  

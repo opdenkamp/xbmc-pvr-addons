@@ -14,7 +14,7 @@
   </category>
 
   <category label="30102">
-    <setting label="30050" id="grouprecordings" type="enum" lvalues="30051|30052|30053|30054|30055|30056" default="30051" />
+    <setting label="30050" id="grouprecordings" type="enum" lvalues="30051|30052|30053|30054|30055|30056" default="0" />
   </category>
 
   <category label="30101">

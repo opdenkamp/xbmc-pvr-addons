@@ -100,7 +100,29 @@ msgctxt "#30056"
 msgid "by series"
 msgstr ""
 
-#empty strings from id 30057 to 30099
+#empty strings from id 30057 to 30059
+
+msgctxt "#30060"
+msgid "Put outline (e.g. subtitles) before plot"
+msgstr ""
+
+msgctxt "#30061"
+msgid "Never"
+msgstr ""
+
+msgctxt "#30062"
+msgid "In EPG only"
+msgstr ""
+
+msgctxt "#30063"
+msgid "In recordings only"
+msgstr ""
+
+msgctxt "#30064"
+msgid "Always"
+msgstr ""
+
+#empty strings from id 30065 to 30099
 #sections
 
 msgctxt "#30100"
@@ -144,4 +166,8 @@ msgstr ""
 
 msgctxt "#30506"
 msgid "Unable to parse timer list"
+msgstr ""
+
+msgctxt "#30507"
+msgid "Please reset the EPG database and restart Kodi afterwards"
 msgstr ""

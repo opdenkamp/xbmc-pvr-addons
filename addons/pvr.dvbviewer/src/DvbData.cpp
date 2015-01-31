@@ -221,8 +221,16 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
     if (xEvents)
     {
       XMLUtils::GetString(xEvents, "event", entry.strPlotOutline);
-      if (!entry.strPlotOutline.empty() && entry.strPlot.empty())
+      if (entry.strPlot.empty())
+      {
         entry.strPlot = entry.strPlotOutline;
+        entry.strPlotOutline.clear();
+      }
+      else if (PrependOutline::test(PrependOutline::InEPG))
+      {
+        entry.strPlot.insert(0, entry.strPlotOutline + "\n");
+        entry.strPlotOutline.clear();
+      }
     }
 
     XMLUtils::GetUInt(xEntry, "content", entry.genre);
@@ -411,7 +419,15 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     XMLUtils::GetString(xRecording, "info",    recording.plotOutline);
     XMLUtils::GetString(xRecording, "desc",    recording.plot);
     if (recording.plot.empty())
+    {
       recording.plot = recording.plotOutline;
+      recording.plotOutline.clear();
+    }
+    else if (PrependOutline::test(PrependOutline::InRecordings))
+    {
+      recording.plot.insert(0, recording.plotOutline + "\n");
+      recording.plotOutline.clear();
+    }
 
     recording.streamURL = BuildExtURL(streamURL, "%s.ts", recording.id.c_str());
 
@@ -1169,11 +1185,11 @@ bool Dvb::UpdateBackendStatus(bool updateSettings)
       m_diskspace.used += (size - free) / 1024;
     }
 
-    if (updateSettings && g_groupRecordings != DvbRecording::GroupDisabled)
+    if (updateSettings && g_groupRecordings != DvbRecording::GroupingDisabled)
       m_recfolders.push_back(CStdString(xFolder->GetText()).ToLower());
   }
 
-  if (updateSettings && g_groupRecordings != DvbRecording::GroupDisabled)
+  if (updateSettings && g_groupRecordings != DvbRecording::GroupingDisabled)
     std::sort(m_recfolders.begin(), m_recfolders.end(), StringGreaterThan);
 
   return true;

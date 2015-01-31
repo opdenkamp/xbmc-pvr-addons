@@ -41,10 +41,11 @@ CStdString g_password             = "";
 bool       g_useFavourites        = false;
 bool       g_useFavouritesFile    = false;
 CStdString g_favouritesFile       = "";
-int        g_groupRecordings      = DvbRecording::GroupDisabled;
+int        g_groupRecordings      = DvbRecording::GroupingDisabled;
 bool       g_useTimeshift         = false;
 CStdString g_timeshiftBufferPath  = DEFAULT_TSBUFFERPATH;
 bool       g_useRTSP              = false;
+int        g_prependOutline       = PrependOutline::InEPG;
 bool       g_lowPerformance       = false;
 
 CHelper_libXBMC_addon *XBMC = NULL;
@@ -79,7 +80,7 @@ void ADDON_ReadSettings(void)
     g_favouritesFile = buffer;
 
   if (!XBMC->GetSetting("grouprecordings", &g_groupRecordings))
-    g_groupRecordings = DvbRecording::GroupDisabled;
+    g_groupRecordings = DvbRecording::GroupingDisabled;
 
   if (!XBMC->GetSetting("usetimeshift", &g_useTimeshift))
     g_useTimeshift = false;
@@ -89,6 +90,9 @@ void ADDON_ReadSettings(void)
 
   if (!XBMC->GetSetting("usertsp", &g_useRTSP) || g_useTimeshift)
     g_useRTSP = false;
+
+  if (!XBMC->GetSetting("prependoutline", &g_prependOutline))
+    g_prependOutline = PrependOutline::InEPG;
 
   if (!XBMC->GetSetting("lowperformance", &g_lowPerformance))
     g_lowPerformance = false;
@@ -105,12 +109,14 @@ void ADDON_ReadSettings(void)
   XBMC->Log(LOG_DEBUG, "Use favourites: %s", (g_useFavourites) ? "yes" : "no");
   if (g_useFavouritesFile)
     XBMC->Log(LOG_DEBUG, "Favourites file: %s", g_favouritesFile.c_str());
-  if (g_groupRecordings != DvbRecording::GroupDisabled)
+  if (g_groupRecordings != DvbRecording::GroupingDisabled)
     XBMC->Log(LOG_DEBUG, "Group recordings: %d", g_groupRecordings);
   XBMC->Log(LOG_DEBUG, "Timeshift: %s", (g_useTimeshift) ? "enabled" : "disabled");
   if (g_useTimeshift)
     XBMC->Log(LOG_DEBUG, "Timeshift buffer path: %s", g_timeshiftBufferPath.c_str());
   XBMC->Log(LOG_DEBUG, "Use RTSP: %s", (g_useRTSP) ? "yes" : "no");
+  if (g_prependOutline != PrependOutline::Never)
+    XBMC->Log(LOG_DEBUG, "Prepend outline: %d", g_prependOutline);
   XBMC->Log(LOG_DEBUG, "Low performance mode: %s", (g_lowPerformance) ? "yes" : "no");
 }
 
@@ -249,6 +255,17 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   {
     if (g_useRTSP != *(bool *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (sname == "prependoutline")
+  {
+    PrependOutline::options newValue = *(const PrependOutline::options *)settingValue;
+    if (g_prependOutline != newValue)
+    {
+      g_prependOutline = newValue;
+      // EPG view seems cached, so TriggerEpgUpdate isn't reliable
+      // also if PVR is currently disabled we don't get notified at all
+      XBMC->QueueNotification(QUEUE_WARNING, XBMC->GetLocalizedString(30507));
+    }
   }
   else if (sname == "lowperformance")
   {

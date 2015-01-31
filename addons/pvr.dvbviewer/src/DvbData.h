@@ -143,12 +143,12 @@ class DvbRecording
 public:
   enum Group
   {
-    GroupDisabled = 0,
+    GroupingDisabled = 0,
     GroupByDirectory,
     GroupByDate,
     GroupByFirstLetter,
     GroupByTVChannel,
-    GroupBySeries,
+    GroupBySeries
   };
 
 public:

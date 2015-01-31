@@ -404,29 +404,42 @@ void LiveTVPlayback::HandleBackendMessage(const EventMessage& msg)
       }
       break;
     case EVENT_UPDATE_FILE_SIZE:
-      if (msg.subject.size() >= 4)
+      if (msg.subject.size() >= 3)
       {
         PLATFORM::CLockObject lock(*m_mutex); // Lock chain
         if (m_chain.lastSequence > 0)
         {
           int64_t newsize;
-          uint32_t chanid;
-          time_t startts;
-          if (str2uint32(msg.subject[1].c_str(), &chanid) == 0
-                  && str2time(msg.subject[2].c_str(), &startts) == 0
-                  && m_chain.chained[m_chain.lastSequence -1].second->channel.chanId == chanid
-                  && m_chain.chained[m_chain.lastSequence -1].second->recording.startTs == startts
-                  && str2int64(msg.subject[3].c_str(), &newsize) == 0
-                  && m_chain.chained[m_chain.lastSequence - 1].first->fileSize < newsize)
+          // Message contains chanid + starttime as recorded key
+          if (msg.subject.size() >= 4)
           {
-            // Update transfer file size
-            m_chain.chained[m_chain.lastSequence - 1].first->fileSize = newsize;
-            // Is wait the filling before switching ?
-            if (m_chain.switchOnCreate && SwitchChainLast())
-              m_chain.switchOnCreate = false;
-            DBG(MYTH_DBG_DEBUG, "%s: liveTV (%s): chain last (%u) filesize %" PRIi64 "\n", __FUNCTION__,
-                    m_chain.UID.c_str(), m_chain.lastSequence, newsize);
+            uint32_t chanid;
+            time_t startts;
+            if (str2uint32(msg.subject[1].c_str(), &chanid)
+                    || str2time(msg.subject[2].c_str(), &startts)
+                    || m_chain.chained[m_chain.lastSequence -1].second->channel.chanId != chanid
+                    || m_chain.chained[m_chain.lastSequence -1].second->recording.startTs != startts
+                    || str2int64(msg.subject[3].c_str(), &newsize)
+                    || m_chain.chained[m_chain.lastSequence - 1].first->fileSize >= newsize)
+              break;
           }
+          // Message contains recordedid as key
+          else
+          {
+            uint32_t recordedid;
+            if (str2uint32(msg.subject[1].c_str(), &recordedid)
+                    || m_chain.chained[m_chain.lastSequence -1].second->recording.recordedId != recordedid
+                    || str2int64(msg.subject[2].c_str(), &newsize)
+                    || m_chain.chained[m_chain.lastSequence - 1].first->fileSize >= newsize)
+              break;
+          }
+          // Update transfer file size
+          m_chain.chained[m_chain.lastSequence - 1].first->fileSize = newsize;
+          // Is wait the filling before switching ?
+          if (m_chain.switchOnCreate && SwitchChainLast())
+            m_chain.switchOnCreate = false;
+          DBG(MYTH_DBG_DEBUG, "%s: liveTV (%s): chain last (%u) filesize %" PRIi64 "\n", __FUNCTION__,
+                  m_chain.UID.c_str(), m_chain.lastSequence, newsize);
         }
       }
       break;

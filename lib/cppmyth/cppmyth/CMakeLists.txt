@@ -14,23 +14,22 @@ endif ()
 
 ###############################################################################
 # set lib version here
-set (CPPMYTH_LIB_VERSION "1.1.3")
+set (CPPMYTH_LIB_VERSION "1.1.10")
 set (CPPMYTH_LIB_SOVERSION "1.1")
 
 ###############################################################################
 # add definitions
 if (MSVC)
   # Turn off Microsofts "security" warnings.
-  add_definitions("/W3 /D_USE_32BIT_TIME_T /D_CRT_SECURE_NO_WARNINGS /wd4005 /wd4996 /nologo")
+  add_definitions ("/W3 /D_USE_32BIT_TIME_T /D_CRT_SECURE_NO_WARNINGS /wd4005 /wd4996 /nologo")
   if (STATIC_CRT)
     set (CMAKE_C_FLAGS_RELEASE "/MT")
     set (CMAKE_C_FLAGS_DEBUG "/MTd")
   endif ()
 endif ()
 
-if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-   set (CMAKE_C_FLAGS "-fPIC")
-   set (CMAKE_CXX_FLAGS "-fPIC")
+if (NOT WIN32 AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX))
+   add_definitions ("-fPIC")
 endif ()
 
 ###############################################################################
@@ -120,8 +119,7 @@ file (COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/proto/mythprototransfer.h
            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include/proto/)
 
 include_directories (
-  ${CMAKE_CURRENT_BINARY_DIR}/include/.
-  ${CMAKE_BINARY_DIR}/jansson/include/.)
+  ${CMAKE_CURRENT_BINARY_DIR}/include/.)
 
 ###############################################################################
 # add sources
@@ -147,7 +145,16 @@ set (CPPMYTH_SOURCES
 # add targets
 if (BUILD_SHARED_LIBS)
   add_library (cppmyth SHARED ${CPPMYTH_SOURCES})
-  target_link_libraries (cppmyth pthread jansson)
+  if (MSVC)
+    set (DEPLIBS ws2_32)
+  else ()
+    set (DEPLIBS pthread m)
+    find_library (LIBRT rt)
+    if (LIBRT)
+      list (APPEND DEPLIBS rt)
+    endif ()
+  endif ()
+  target_link_libraries (cppmyth ${DEPLIBS})
   set_target_properties (cppmyth PROPERTIES
     VERSION "${CPPMYTH_LIB_VERSION}"
     SOVERSION "${CPPMYTH_LIB_SOVERSION}")

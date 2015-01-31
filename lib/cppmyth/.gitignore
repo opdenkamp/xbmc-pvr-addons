@@ -6,12 +6,6 @@ Makefile
 install_manifest.txt
 build/
 CMakeFiles/
-/jansson/CTestTestfile.cmake
-/jansson/include/
-/jansson/lib/
-/jansson/bin/
-/jansson/compile
-/jansson/test-driver
 /cppmyth/include/
 /cppmyth/lib/
 /cppmyth/bin/

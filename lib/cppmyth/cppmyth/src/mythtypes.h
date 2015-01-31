@@ -30,6 +30,10 @@
 #include <vector>
 #include <map>
 
+/**
+ * @namespace Myth
+ * @brief This is the main namespace that encloses all public classes
+ */
 namespace Myth
 {
   uint32_t StringToId(const std::string& str);

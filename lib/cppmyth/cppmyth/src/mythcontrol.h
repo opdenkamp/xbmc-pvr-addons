@@ -199,6 +199,16 @@ namespace Myth
     }
 
     /**
+     * @brief Query information on a single item from recordings
+     * @param recordedid
+     * @return ProgramPtr
+     */
+    ProgramPtr GetRecorded(uint32_t recordedid)
+    {
+      return m_wsapi.GetRecorded(recordedid);
+    }
+
+    /**
      * @brief Update watched status for a recorded
      * @param chanid
      * @param recstartts
@@ -206,6 +216,9 @@ namespace Myth
      */
     bool UpdateRecordedWatchedStatus(const Program& program, bool watched)
     {
+      WSServiceVersion_t wsv = m_wsapi.CheckService(WS_Dvr);
+      if (wsv.ranking >= 0x00060000)
+        return m_wsapi.UpdateRecordedWatchedStatus(program.recording.recordedId, watched);
       return m_wsapi.UpdateRecordedWatchedStatus(program.channel.chanId, program.recording.startTs, watched);
     }
 
@@ -219,6 +232,8 @@ namespace Myth
     bool DeleteRecording(const Program& program, bool forceDelete = false, bool allowRerecord = false)
     {
       WSServiceVersion_t wsv = m_wsapi.CheckService(WS_Dvr);
+      if (wsv.ranking >= 0x00060000)
+        return m_wsapi.DeleteRecording(program.recording.recordedId, forceDelete, allowRerecord);
       if (wsv.ranking >= 0x00020001)
         return m_wsapi.DeleteRecording(program.channel.chanId, program.recording.startTs, forceDelete, allowRerecord);
       return m_monitor.DeleteRecording(program, forceDelete, allowRerecord);
@@ -227,6 +242,8 @@ namespace Myth
     bool UndeleteRecording(const Program& program)
     {
       WSServiceVersion_t wsv = m_wsapi.CheckService(WS_Dvr);
+      if (wsv.ranking >= 0x00060000)
+        return m_wsapi.UnDeleteRecording(program.recording.recordedId);
       if (wsv.ranking >= 0x00020001)
         return m_wsapi.UnDeleteRecording(program.channel.chanId, program.recording.startTs);
       return m_monitor.UndeleteRecording(program);

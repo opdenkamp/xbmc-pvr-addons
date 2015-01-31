@@ -1,3 +1,7 @@
+v1.9.21
+- fixed issue where RPi user were unable to watch live tv due to subtle socket differences on that platform
+- fixed issue where recording list would get out of date and not reflect reality of backend
+
 v1.9.20
 - updated language files from Transifex
 - minor changes to conform with C++11

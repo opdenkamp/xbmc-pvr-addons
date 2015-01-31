@@ -1,7 +1,7 @@
 #pragma once
 /*
- *      Copyright (C) 2010 Team XBMC
- *      http://www.xbmc.org
+ *      Copyright (C) 2010-2013 Team XBMC
+ *      http://xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,10 +14,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
- *  MA 02110-1301  USA
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -37,14 +35,14 @@ public:
   void Clear();
   bool ReadData(char *buf, unsigned int size);
   bool ReadData(CRingBuffer &rBuf, unsigned int size);
-  bool WriteData(char *buf, unsigned int size);
+  bool WriteData(const char *buf, unsigned int size);
   bool WriteData(CRingBuffer &rBuf, unsigned int size);
   bool SkipBytes(int skipSize);
   bool Append(CRingBuffer &rBuf);
   bool Copy(CRingBuffer &rBuf);
   char *getBuffer();
   unsigned int getSize();
-  unsigned int getReadPtr();
+  unsigned int getReadPtr() const;
   unsigned int getWritePtr();
   unsigned int getMaxReadSize();
   unsigned int getMaxWriteSize();

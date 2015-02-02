@@ -52,14 +52,11 @@ Dvb::Dvb()
 
   m_updateTimers = false;
   m_updateEPG    = false;
-  m_tsBuffer     = NULL;
 }
 
 Dvb::~Dvb()
 {
   StopThread();
-  if (m_tsBuffer)
-    SAFE_DELETE(m_tsBuffer);
 
   for (DvbChannels_t::iterator channel = m_channels.begin();
       channel != m_channels.end(); ++channel)
@@ -70,8 +67,7 @@ bool Dvb::Open()
 {
   CLockObject lock(m_mutex);
 
-  m_connected = CheckBackendVersion();
-  if (!m_connected)
+  if (!(m_connected = CheckBackendVersion()))
     return false;
 
   if (!UpdateBackendStatus(true))
@@ -538,28 +534,12 @@ bool Dvb::OpenLiveStream(const PVR_CHANNEL& channelinfo)
     return true;
 
   SwitchChannel(channelinfo);
-  if (!g_useTimeshift)
-    return true;
-
-  if (m_tsBuffer)
-    SAFE_DELETE(m_tsBuffer);
-
-  CStdString streamURL = GetLiveStreamURL(channelinfo);
-  XBMC->Log(LOG_INFO, "Timeshift starts; url=%s", streamURL.c_str());
-  m_tsBuffer = new TimeshiftBuffer(streamURL, g_timeshiftBufferPath);
-  return m_tsBuffer->IsValid();
+  return true;
 }
 
 void Dvb::CloseLiveStream(void)
 {
   m_currentChannel = 0;
-  if (m_tsBuffer)
-    SAFE_DELETE(m_tsBuffer);
-}
-
-TimeshiftBuffer *Dvb::GetTimeshiftBuffer()
-{
-  return m_tsBuffer;
 }
 
 CStdString& Dvb::GetLiveStreamURL(const PVR_CHANNEL& channelinfo)

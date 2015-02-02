@@ -22,13 +22,12 @@
 
 #include "client.h"
 #include "DvbData.h"
+#include "TimeshiftBuffer.h"
 #include "xbmc_pvr_dll.h"
 #include "platform/util/util.h"
 #include <stdlib.h>
 
 using namespace ADDON;
-
-ADDON_STATUS m_curStatus = ADDON_STATUS_UNKNOWN;
 
 /* User adjustable settings are saved here.
  * Default values are defined inside client.h
@@ -48,9 +47,11 @@ bool       g_useRTSP              = false;
 int        g_prependOutline       = PrependOutline::InEPG;
 bool       g_lowPerformance       = false;
 
+ADDON_STATUS m_curStatus    = ADDON_STATUS_UNKNOWN;
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr   *PVR  = NULL;
 Dvb *DvbData                = NULL;
+TimeshiftBuffer *tsBuffer   = NULL;
 
 extern "C"
 {
@@ -503,17 +504,32 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
   return DvbData->GetChannelGroupMembers(handle, group);
 }
 
-void CloseLiveStream(void)
-{
-  DvbData->CloseLiveStream();
-}
-
 bool OpenLiveStream(const PVR_CHANNEL &channel)
 {
   if (!DvbData || !DvbData->IsConnected())
     return false;
 
-  return DvbData->OpenLiveStream(channel);
+  if (channel.iUniqueId == DvbData->GetCurrentClientChannel())
+    return true;
+
+  if (!DvbData->OpenLiveStream(channel))
+    return false;
+  if (!g_useTimeshift)
+    return true;
+
+  CStdString streamURL = DvbData->GetLiveStreamURL(channel);
+  XBMC->Log(LOG_INFO, "Timeshift starts; url=%s", streamURL.c_str());
+  if (tsBuffer)
+    SAFE_DELETE(tsBuffer);
+  tsBuffer = new TimeshiftBuffer(streamURL, g_timeshiftBufferPath);
+  return tsBuffer->IsValid();
+}
+
+void CloseLiveStream(void)
+{
+  DvbData->CloseLiveStream();
+  if (tsBuffer)
+    SAFE_DELETE(tsBuffer);
 }
 
 const char *GetLiveStreamURL(const PVR_CHANNEL &channel)
@@ -543,50 +559,50 @@ bool CanSeekStream(void)
 
 int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
 {
-  if (!DvbData || !DvbData->IsConnected() || !DvbData->GetTimeshiftBuffer())
+  if (!tsBuffer)
     return 0;
 
-  return DvbData->GetTimeshiftBuffer()->ReadData(pBuffer, iBufferSize);
+  return tsBuffer->ReadData(pBuffer, iBufferSize);
 }
 
 long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */)
 {
-  if (!DvbData || !DvbData->IsConnected() || !DvbData->GetTimeshiftBuffer())
+  if (!tsBuffer)
     return -1;
 
-  return DvbData->GetTimeshiftBuffer()->Seek(iPosition, iWhence);
+  return tsBuffer->Seek(iPosition, iWhence);
 }
 
 long long PositionLiveStream(void)
 {
-  if (!DvbData || !DvbData->IsConnected() || !DvbData->GetTimeshiftBuffer())
+  if (!tsBuffer)
     return -1;
 
-  return DvbData->GetTimeshiftBuffer()->Position();
+  return tsBuffer->Position();
 }
 
 long long LengthLiveStream(void)
 {
-  if (!DvbData || !DvbData->IsConnected() || !DvbData->GetTimeshiftBuffer())
+  if (!tsBuffer)
     return 0;
 
-  return DvbData->GetTimeshiftBuffer()->Length();
+  return tsBuffer->Length();
 }
 
 time_t GetBufferTimeStart()
 {
-  if (!DvbData || !DvbData->IsConnected() || !DvbData->GetTimeshiftBuffer())
+  if (!tsBuffer)
     return 0;
 
-  return DvbData->GetTimeshiftBuffer()->TimeStart();
+  return tsBuffer->TimeStart();
 }
 
 time_t GetBufferTimeEnd()
 {
-  if (!DvbData || !DvbData->IsConnected() || !DvbData->GetTimeshiftBuffer())
+  if (!tsBuffer)
     return 0;
 
-  return DvbData->GetTimeshiftBuffer()->TimeEnd();
+  return tsBuffer->TimeEnd();
 }
 
 time_t GetPlayingTime()
@@ -606,32 +622,32 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 }
 
 /** UNUSED API FUNCTIONS */
-PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* _UNUSED(pProperties)) { return PVR_ERROR_NOT_IMPLEMENTED; }
-void DemuxAbort(void) { return; }
-DemuxPacket* DemuxRead(void) { return NULL; }
-PVR_ERROR OpenDialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES *_UNUSED(pProperties)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &_UNUSED(menuhook), const PVR_MENUHOOK_DATA &_UNUSED(item)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR MoveChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+DemuxPacket *DemuxRead(void) { return NULL; }
+void DemuxAbort(void) {}
+void DemuxReset(void) {}
+void DemuxFlush(void) {}
 bool OpenRecordedStream(const PVR_RECORDING &_UNUSED(recording)) { return false; }
 void CloseRecordedStream(void) {}
 int ReadRecordedStream(unsigned char *_UNUSED(pBuffer), unsigned int _UNUSED(iBufferSize)) { return 0; }
 long long SeekRecordedStream(long long _UNUSED(iPosition), int _UNUSED(iWhence) /* = SEEK_SET */) { return 0; }
-void DemuxReset(void) {}
-void DemuxFlush(void) {}
 long long PositionRecordedStream(void) { return -1; }
 long long LengthRecordedStream(void) { return -1; }
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &_UNUSED(recording), int _UNUSED(count)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &_UNUSED(recording), int _UNUSED(lastplayedposition)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &_UNUSED(recording)) { return -1; }
 PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
+PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DeleteAllRecordingsFromTrash() { return PVR_ERROR_NOT_IMPLEMENTED; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 void PauseStream(bool _UNUSED(bPaused)) {}
 bool SeekTime(int, bool, double*) { return false; }
 void SetSpeed(int) {};
-PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DeleteAllRecordingsFromTrash() { return PVR_ERROR_NOT_IMPLEMENTED; }
 }

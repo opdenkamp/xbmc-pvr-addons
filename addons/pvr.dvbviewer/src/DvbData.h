@@ -4,7 +4,6 @@
 #define PVR_DVBVIEWER_DVBDATA_H
 
 #include "client.h"
-#include "TimeshiftBuffer.h"
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 #include <list>
@@ -209,7 +208,6 @@ public:
 
   bool OpenLiveStream(const PVR_CHANNEL& channelinfo);
   void CloseLiveStream();
-  TimeshiftBuffer *GetTimeshiftBuffer();
   CStdString& GetLiveStreamURL(const PVR_CHANNEL& channelinfo);
 
 protected:
@@ -260,7 +258,6 @@ private:
   bool m_updateTimers;
   bool m_updateEPG;
   unsigned int m_recordingAmount;
-  TimeshiftBuffer *m_tsBuffer;
 
   DvbTimers_t m_timers;
   unsigned int m_newTimerIndex;

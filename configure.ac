@@ -121,7 +121,7 @@ case "${host}" in
 esac
 
 ### External libraries checks
-AC_CHECK_LIB([GL],[main],have_gl=yes, have_gl=no)  
+AC_CHECK_LIB([GL],[main],have_gl=yes, have_gl=no)
 if test "$have_gl" = "yes"; then
   AC_DEFINE([HAVE_GL],[1],["Define to 1 if we have gl"])
 fi
@@ -136,7 +136,7 @@ else
 fi
 echo "GLES2: $have_gles2"
 
-### End external Libraries 
+### End external Libraries
 
 ### Build addons with dependencies
 if test "$build_addons_with_dependencies" = "yes"; then

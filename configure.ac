@@ -27,14 +27,14 @@ AC_ARG_ENABLE([release],
 
 ### iptv addon - external dependencies option
 AC_ARG_ENABLE([addon-filmon],
-              [AS_HELP_STRING([--enable-addon-filmon],
+  [AS_HELP_STRING([--enable-addon-filmon],
   [enable build of filmon addon - depends on external libraries (default is no)])],
   [build_addon_filmon=$enableval],
   [build_addon_filmon=no])
 
 ### filmon addon - external dependencies option
 AC_ARG_ENABLE([addon-iptv],
-              [AS_HELP_STRING([--enable-addon-iptv],
+  [AS_HELP_STRING([--enable-addon-iptv],
   [enable build of iptv addon - depends on external libraries (default is no)])],
   [build_addon_iptv=$enableval],
   [build_addon_iptv=no])

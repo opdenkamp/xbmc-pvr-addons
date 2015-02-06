@@ -234,46 +234,57 @@ if test "$build_addon_argustv" = "yes"; then
   echo "Building argustv addon"
 fi
 
+### Build demo addon
 if test "$build_addon_demo" = "yes"; then
   echo "Building demo addon"
 fi
 
+### Build dvblink addon
 if test "$build_addon_dvblink" = "yes"; then
   echo "Building dvblink addon"
 fi
 
+### Build dvbviewer addon
 if test "$build_addon_dvbviewer" = "yes"; then
   echo "Building dvbviewer addon"
 fi
 
+### Build hts addon
 if test "$build_addon_hts" = "yes"; then
   echo "Building hts addon"
 fi
 
+### Build mediaportal-tvserver addon
 if test "$build_addon_mediaportal_tvserver" = "yes"; then
   echo "Building mediaportal-tvserver addon"
 fi
 
+### Build mythtv addon
 if test "$build_addon_mythtv" = "yes"; then
   echo "Building mythtv addon"
 fi
 
+### Build nextpvr addon
 if test "$build_addon_nextpvr" = "yes"; then
   echo "Building nextpvr addon"
 fi
 
+### Build njoy addon
 if test "$build_addon_njoy" = "yes"; then
   echo "Building njoy addon"
 fi
 
+### Build vdr-vnsi addon
 if test "$build_addon_vdr_vnsi" = "yes"; then
   echo "Building vdr-vnsi addon"
 fi
 
+### Build vuplus addon
 if test "$build_addon_vuplus" = "yes"; then
   echo "Building vuplus addon"
 fi
 
+### Build wmc addon
 if test "$build_addon_wmc" = "yes"; then
   echo "Building wmc addon"
 fi

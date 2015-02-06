@@ -157,6 +157,7 @@ if test "$build_addon_iptv" = "yes"; then
     AC_SUBST(ZLIB_LIBS)
   fi
   echo "Zlib: $use_zlib"
+fi
 
 ### Build filmon addon with external dependencies
 if test "$build_addon_filmon" = "yes"; then

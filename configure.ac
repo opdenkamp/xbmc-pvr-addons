@@ -155,6 +155,7 @@ echo "GLES2: $have_gles2"
 ### Build argustv addon
 if test "$build_addon_argustv" = "yes"; then
   echo "Building argustv addon"
+fi
 
 ### Build iptv addon with external dependencies
 if test "$build_addon_iptv" = "yes"; then

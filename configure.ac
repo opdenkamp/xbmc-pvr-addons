@@ -436,7 +436,9 @@ else
 fi
 AC_SUBST(DATADIR)
 
-AC_CONFIG_SUBDIRS([lib/cppmyth])
+if test $build_addon_mythtv; then
+  AC_CONFIG_SUBDIRS([lib/cppmyth])
+fi
 
 ### Keep this in alphabetical order
 AC_CONFIG_FILES([Makefile \

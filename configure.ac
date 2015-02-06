@@ -29,8 +29,8 @@ AC_ARG_ENABLE([release],
 AC_ARG_ENABLE([addon-argustv],
   [AS_HELP_STRING([--enable-addon-argustv],
   [enable build of argustv addon (default is yes)])],
-  [build_addon_filmon=$enableval],
-  [build_addon_filmon=yes])
+  [build_addon_argustv=$enableval],
+  [build_addon_argustv=yes])
 
 ### demo addon
 AC_ARG_ENABLE([addon-demo],

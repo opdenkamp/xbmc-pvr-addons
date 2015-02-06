@@ -325,7 +325,7 @@ if test "$build_addon_filmon" = "yes"; then
 fi
 
 AM_CONDITIONAL([ADDON_ARGUSTV], [test "$build_addon_argustv" = "yes"])
-AM_CONDITIONAL([ADDON_DEMOTV], [test "$build_addon_demo" = "yes"])
+AM_CONDITIONAL([ADDON_DEMO], [test "$build_addon_demo" = "yes"])
 AM_CONDITIONAL([ADDON_DVBLINK], [test "$build_addon_dvblink" = "yes"])
 AM_CONDITIONAL([ADDON_DVBVIEWER], [test "$build_addon_dvbviewer" = "yes"])
 AM_CONDITIONAL([ADDON_HTS], [test "$build_addon_hts" = "yes"])

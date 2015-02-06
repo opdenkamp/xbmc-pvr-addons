@@ -25,14 +25,21 @@ AC_ARG_ENABLE([release],
   [use_release=$enableval],
   [use_release=no])
 
-### iptv addon - external dependencies option
+### argustv addon
+AC_ARG_ENABLE([addon-argustv],
+  [AS_HELP_STRING([--enable-addon-argustv],
+  [enable build of argustv addon libraries (default is yes)])],
+  [build_addon_filmon=$enableval],
+  [build_addon_filmon=yes])
+
+### filmon addon - external dependencies option
 AC_ARG_ENABLE([addon-filmon],
   [AS_HELP_STRING([--enable-addon-filmon],
   [enable build of filmon addon - depends on external libraries (default is no)])],
   [build_addon_filmon=$enableval],
   [build_addon_filmon=no])
 
-### filmon addon - external dependencies option
+### iptv addon - external dependencies option
 AC_ARG_ENABLE([addon-iptv],
   [AS_HELP_STRING([--enable-addon-iptv],
   [enable build of iptv addon - depends on external libraries (default is no)])],
@@ -145,6 +152,10 @@ echo "GLES2: $have_gles2"
 
 ### End external Libraries
 
+### Build argustv addon
+if test "$build_addon_argustv" = "yes"; then
+  echo "Building argustv addon"
+
 ### Build iptv addon with external dependencies
 if test "$build_addon_iptv" = "yes"; then
   echo "Building iptv addon"
@@ -192,6 +203,7 @@ if test "$build_addon_filmon" = "yes"; then
 fi
 
 ### Addons with dependencies
+AM_CONDITIONAL([ADDON_ARGUSTV], [test "$build_addon_argustv" = "yes"])
 AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addon_iptv" = "yes" -a "$use_zlib" = "yes"])
 AM_CONDITIONAL([ADDON_FILMON], [test "$build_addon_filmon" = "yes" -a "$use_curl" = "yes" -a "$use_jsoncpp" = "yes" -a "$use_cryptopp" = "yes"])
 

@@ -1,3 +1,6 @@
+if ADDON_ARGUSTV
+          ADDON_ARGUSTV_SUBDIRS = pvr.argustv
+endif
 if ADDON_FILMON
           ADDON_FILMON_SUBDIRS = pvr.filmon
 endif
@@ -6,8 +9,7 @@ if ADDON_IPTVSIMPLE
 endif
 
 ### Keep this in alphabetical order
-SUBDIRS = pvr.argustv \
-          pvr.demo \
+SUBDIRS = pvr.demo \
           pvr.dvblink \
           pvr.dvbviewer \
           pvr.hts \
@@ -18,6 +20,7 @@ SUBDIRS = pvr.argustv \
           pvr.vdr.vnsi \
           pvr.vuplus \
           pvr.wmc \
+	  $(ADDON_ARGUSTV_SUBDIRS) \
           $(ADDON_FILMON_SUBDIRS) \
           $(ADDON_IPTVSIMPLE_SUBDIRS) \
           $(ADDON_MYTHTV_SUBDIRS)

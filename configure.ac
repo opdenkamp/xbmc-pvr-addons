@@ -25,12 +25,19 @@ AC_ARG_ENABLE([release],
   [use_release=$enableval],
   [use_release=no])
 
-### External dependencies option
-AC_ARG_ENABLE([addons-with-dependencies],
-  [AS_HELP_STRING([--enable-addons-with-dependencies],
-  [enable build of addons that depend on external libraries (default is no)])],
-  [build_addons_with_dependencies=$enableval],
-  [build_addons_with_dependencies=no])
+### iptv addon - external dependencies option
+AC_ARG_ENABLE([addon-filmon],
+              [AS_HELP_STRING([--enable-addon-filmon],
+  [enable build of filmon addon - depends on external libraries (default is no)])],
+  [build_addon_filmon=$enableval],
+  [build_addon_filmon=no])
+
+### filmon addon - external dependencies option
+AC_ARG_ENABLE([addon-iptv],
+              [AS_HELP_STRING([--enable-addon-iptv],
+  [enable build of iptv addon - depends on external libraries (default is no)])],
+  [build_addon_iptv=$enableval],
+  [build_addon_iptv=no])
 
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
@@ -138,11 +145,11 @@ echo "GLES2: $have_gles2"
 
 ### End external Libraries
 
-### Build addons with dependencies
-if test "$build_addons_with_dependencies" = "yes"; then
-  echo "Building addons with dependencies"
+### Build iptv addon with external dependencies
+if test "$build_addon_iptv" = "yes"; then
+  echo "Building iptv addon"
 
-  ### Libs that addons depend on
+  ### For iptv addon
   AC_CHECK_LIB([z],[inflate], use_zlib=yes, use_zlib=no)
   if test "$use_zlib" = "yes"; then
     AC_DEFINE([HAVE_ZLIB],[1],["Define to 1 if we have the zlib library"])
@@ -151,7 +158,11 @@ if test "$build_addons_with_dependencies" = "yes"; then
   fi
   echo "Zlib: $use_zlib"
 
-  # For Filmon
+### Build filmon addon with external dependencies
+if test "$build_addon_filmon" = "yes"; then
+    echo "Building filmon addon"
+
+  # For Filmon addon
   AC_CHECK_LIB(curl, curl_easy_init, [use_curl=yes], [use_curl=no])
   if test "$use_curl" = "yes"; then
     AC_DEFINE([HAVE_CURL],[1],["Define to 1 if we have the curl library"])
@@ -180,8 +191,8 @@ if test "$build_addons_with_dependencies" = "yes"; then
 fi
 
 ### Addons with dependencies
-AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addons_with_dependencies" = "yes" -a "$use_zlib" = "yes"])
-AM_CONDITIONAL([ADDON_FILMON], [test "$build_addons_with_dependencies" = "yes" -a "$use_curl" = "yes" -a "$use_jsoncpp" = "yes" -a "$use_cryptopp" = "yes"])
+AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addon_iptv" = "yes" -a "$use_zlib" = "yes"])
+AM_CONDITIONAL([ADDON_FILMON], [test "$build_addon_filmon" = "yes" -a "$use_curl" = "yes" -a "$use_jsoncpp" = "yes" -a "$use_cryptopp" = "yes"])
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then

@@ -28,9 +28,86 @@ AC_ARG_ENABLE([release],
 ### argustv addon
 AC_ARG_ENABLE([addon-argustv],
   [AS_HELP_STRING([--enable-addon-argustv],
-  [enable build of argustv addon libraries (default is yes)])],
+  [enable build of argustv addon (default is yes)])],
   [build_addon_filmon=$enableval],
   [build_addon_filmon=yes])
+
+### demo addon
+AC_ARG_ENABLE([addon-demo],
+  [AS_HELP_STRING([--enable-addon-demo],
+  [enable build of demo addon (default is yes)])],
+  [build_addon_demo=$enableval],
+  [build_addon_demo=yes])
+
+### dvblink addon
+AC_ARG_ENABLE([addon-dvblink],
+  [AS_HELP_STRING([--enable-addon-dvblink],
+  [enable build of dvblink addon (default is yes)])],
+  [build_addon_dvblink=$enableval],
+  [build_addon_dvblink=yes])
+
+### dvbviewer addon
+AC_ARG_ENABLE([addon-dvbviewer],
+  [AS_HELP_STRING([--enable-addon-dvbviewer],
+  [enable build of dvbviewer addon (default is yes)])],
+  [build_addon_dvbviewer=$enableval],
+  [build_addon_dvbviewer=yes])
+
+### hts addon
+AC_ARG_ENABLE([addon-hts],
+  [AS_HELP_STRING([--enable-addon-hts],
+  [enable build of hts addon (default is yes)])],
+  [build_addon_hts=$enableval],
+  [build_addon_hts=yes])
+
+### mediaportal-tvserver addon
+AC_ARG_ENABLE([addon-mediaportal-tvserver],
+  [AS_HELP_STRING([--enable-addon-mediaportal-tvserver],
+  [enable build of mediaportal-tvserver addon (default is yes)])],
+  [build_addon_mediaportal_tvserver=$enableval],
+  [build_addon_mediaportal_tvserver=yes])
+
+### mythtv addon
+AC_ARG_ENABLE([addon-mythtv],
+  [AS_HELP_STRING([--enable-addon-mythtv],
+  [enable build of mythtv addon (default is yes)])],
+  [build_addon_mythtv=$enableval],
+  [build_addon_mythtv=yes])
+
+### nextpvr addon
+AC_ARG_ENABLE([addon-nextpvr],
+  [AS_HELP_STRING([--enable-addon-nextpvr],
+  [enable build of nextpvr addon (default is yes)])],
+  [build_addon_nextpvr=$enableval],
+  [build_addon_nextpvr=yes])
+
+### njoy addon
+AC_ARG_ENABLE([addon-njoy],
+  [AS_HELP_STRING([--enable-addon-njoy],
+  [enable build of njoy addon (default is yes)])],
+  [build_addon_njoy=$enableval],
+  [build_addon_njoy=yes])
+
+### vdr-vnsi addon
+AC_ARG_ENABLE([addon-vdr-vnsi],
+  [AS_HELP_STRING([--enable-addon-vdr-vnsi],
+  [enable build of vdr-vnsi addon (default is yes)])],
+  [build_addon_vdr_vnsi=$enableval],
+  [build_addon_vdr_vnsi=yes])
+
+### vuplus addon
+AC_ARG_ENABLE([addon-vuplus],
+  [AS_HELP_STRING([--enable-addon-vuplus],
+  [enable build of vuplus addon (default is yes)])],
+  [build_addon_vuplus=$enableval],
+  [build_addon_vuplus=yes])
+
+### wmc addon
+AC_ARG_ENABLE([addon-wmc],
+  [AS_HELP_STRING([--enable-addon-wmc],
+  [enable build of wmc addon (default is yes)])],
+  [build_addon_wmc=$enableval],
+  [build_addon_wmc=yes])
 
 ### filmon addon - external dependencies option
 AC_ARG_ENABLE([addon-filmon],
@@ -157,6 +234,50 @@ if test "$build_addon_argustv" = "yes"; then
   echo "Building argustv addon"
 fi
 
+if test "$build_addon_demo" = "yes"; then
+  echo "Building demo addon"
+fi
+
+if test "$build_addon_dvblink" = "yes"; then
+  echo "Building dvblink addon"
+fi
+
+if test "$build_addon_dvbviewer" = "yes"; then
+  echo "Building dvbviewer addon"
+fi
+
+if test "$build_addon_hts" = "yes"; then
+  echo "Building hts addon"
+fi
+
+if test "$build_addon_mediaportal_tvserver" = "yes"; then
+  echo "Building mediaportal-tvserver addon"
+fi
+
+if test "$build_addon_mythtv" = "yes"; then
+  echo "Building mythtv addon"
+fi
+
+if test "$build_addon_nextpvr" = "yes"; then
+  echo "Building nextpvr addon"
+fi
+
+if test "$build_addon_njoy" = "yes"; then
+  echo "Building njoy addon"
+fi
+
+if test "$build_addon_vdr_vnsi" = "yes"; then
+  echo "Building vdr-vnsi addon"
+fi
+
+if test "$build_addon_vuplus" = "yes"; then
+  echo "Building vuplus addon"
+fi
+
+if test "$build_addon_wmc" = "yes"; then
+  echo "Building wmc addon"
+fi
+
 ### Build iptv addon with external dependencies
 if test "$build_addon_iptv" = "yes"; then
   echo "Building iptv addon"
@@ -203,8 +324,20 @@ if test "$build_addon_filmon" = "yes"; then
   echo "CryptoCPP: $use_cryptopp"
 fi
 
-### Addons with dependencies
 AM_CONDITIONAL([ADDON_ARGUSTV], [test "$build_addon_argustv" = "yes"])
+AM_CONDITIONAL([ADDON_DEMOTV], [test "$build_addon_demo" = "yes"])
+AM_CONDITIONAL([ADDON_DVBLINK], [test "$build_addon_dvblink" = "yes"])
+AM_CONDITIONAL([ADDON_DVBVIEWER], [test "$build_addon_dvbviewer" = "yes"])
+AM_CONDITIONAL([ADDON_HTS], [test "$build_addon_hts" = "yes"])
+AM_CONDITIONAL([ADDON_MEDIAPORTAL_TVSERVER], [test "$build_addon_mediaportal_tvserver" = "yes"])
+AM_CONDITIONAL([ADDON_MYTHTV], [test "$build_addon_mythtv" = "yes"])
+AM_CONDITIONAL([ADDON_NEXTPVR], [test "$build_addon_nextpvr" = "yes"])
+AM_CONDITIONAL([ADDON_NJOY], [test "$build_addon_njoy" = "yes"])
+AM_CONDITIONAL([ADDON_VDR_VNSI], [test "$build_addon_vdr_vnsi" = "yes"])
+AM_CONDITIONAL([ADDON_VUPLUS], [test "$build_addon_vuplus" = "yes"])
+AM_CONDITIONAL([ADDON_WMC], [test "$build_addon_wmc" = "yes"])
+
+### Addons with dependencies
 AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addon_iptv" = "yes" -a "$use_zlib" = "yes"])
 AM_CONDITIONAL([ADDON_FILMON], [test "$build_addon_filmon" = "yes" -a "$use_curl" = "yes" -a "$use_jsoncpp" = "yes" -a "$use_cryptopp" = "yes"])
 

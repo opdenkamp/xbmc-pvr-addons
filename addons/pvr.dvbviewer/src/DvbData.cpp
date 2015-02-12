@@ -245,7 +245,7 @@ bool Dvb::GetEPGForChannel(ADDON_HANDLE handle,
     PVR->TransferEpgEntry(handle, &broadcast);
     ++iNumEPG;
 
-    XBMC->Log(LOG_DEBUG, "%s loaded EPG entry '%u:%s': start=%u, end=%u",
+    XBMC->Log(LOG_DEBUG, "%s: Loaded EPG entry '%u:%s': start=%u, end=%u",
         __FUNCTION__, broadcast.iUniqueBroadcastId, broadcast.strTitle,
         entry.startTime, entry.endTime);
   }
@@ -305,7 +305,7 @@ bool Dvb::GetChannelGroupMembers(ADDON_HANDLE handle,
 
       PVR->TransferChannelGroupMember(handle, &tag);
 
-      XBMC->Log(LOG_DEBUG, "%s add channel '%s' (%u) to group '%s'",
+      XBMC->Log(LOG_DEBUG, "%s: Add channel '%s' (%u) to group '%s'",
           __FUNCTION__, channel->name.c_str(), channel->backendNr,
           group->name.c_str());
     }
@@ -348,8 +348,8 @@ bool Dvb::AddTimer(const PVR_TIMER& timer, bool update)
 {
   // http://en.dvbviewer.tv/wiki/Recording_Service_Web_API#Add_a_timer
 
-  XBMC->Log(LOG_DEBUG, "%s iChannelUid=%u title='%s' epgid=%d",
-      __FUNCTION__, timer.iClientChannelUid, timer.strTitle, timer.iEpgUid);
+  XBMC->Log(LOG_DEBUG, "%s: channel=%u, title='%s'",
+      __FUNCTION__, timer.iClientChannelUid, timer.strTitle);
 
   time_t startTime = timer.startTime, endTime = timer.endTime;
   if (!startTime)
@@ -529,12 +529,12 @@ bool Dvb::GetRecordings(ADDON_HANDLE handle)
     PVR->TransferRecordingEntry(handle, &tag);
     ++m_recordingAmount;
 
-    XBMC->Log(LOG_DEBUG, "%s loaded Recording entry '%s': start=%u, length=%u",
+    XBMC->Log(LOG_DEBUG, "%s: Loaded recording entry '%s': start=%u, length=%u",
         __FUNCTION__, recording.title.c_str(), recording.startTime,
         recording.duration);
   }
 
-  XBMC->Log(LOG_INFO, "Loaded %u Recording Entries", m_recordingAmount);
+  XBMC->Log(LOG_INFO, "Loaded %u recording entries", m_recordingAmount);
   return true;
 }
 
@@ -560,7 +560,7 @@ unsigned int Dvb::GetRecordingsAmount()
 
 bool Dvb::OpenLiveStream(const PVR_CHANNEL& channelinfo)
 {
-  XBMC->Log(LOG_DEBUG, "%s channel=%u", __FUNCTION__, channelinfo.iUniqueId);
+  XBMC->Log(LOG_DEBUG, "%s: channel=%u", __FUNCTION__, channelinfo.iUniqueId);
 
   if (channelinfo.iUniqueId == m_currentChannel)
     return true;
@@ -583,7 +583,7 @@ CStdString& Dvb::GetLiveStreamURL(const PVR_CHANNEL& channelinfo)
 void *Dvb::Process()
 {
   int updateTimer = 0;
-  XBMC->Log(LOG_DEBUG, "%s starting", __FUNCTION__);
+  XBMC->Log(LOG_DEBUG, "%s: Running...", __FUNCTION__);
 
   while (!IsStopped())
   {
@@ -910,7 +910,7 @@ DvbTimers_t Dvb::LoadTimers()
 
     CStdString strTmp;
     if (XMLUtils::GetString(xTimer, "Descr", strTmp))
-      XBMC->Log(LOG_DEBUG, "%s Processing timer '%s'", __FUNCTION__, strTmp.c_str());
+      XBMC->Log(LOG_DEBUG, "%s: Processing timer '%s'", __FUNCTION__, strTmp.c_str());
 
     timer.strTitle = strTmp;
     timer.iChannelUid = GetChannelUid(xTimer->FirstChildElement("Channel")->Attribute("ID"));
@@ -959,11 +959,11 @@ DvbTimers_t Dvb::LoadTimers()
 
     timers.push_back(timer);
 
-    XBMC->Log(LOG_DEBUG, "%s loaded Timer entry '%s': start=%u, end=%u",
+    XBMC->Log(LOG_DEBUG, "%s: Loaded timer entry '%s': start=%u, end=%u",
         __FUNCTION__, timer.strTitle.c_str(), timer.startTime, timer.endTime);
   }
 
-  XBMC->Log(LOG_INFO, "Loaded %u Timer entries", timers.size());
+  XBMC->Log(LOG_INFO, "Loaded %u timer entries", timers.size());
   return timers;
 }
 
@@ -1015,7 +1015,7 @@ void Dvb::TimerUpdates()
   {
     if (it->iUpdateState == DVB_UPDATE_STATE_NONE)
     {
-      XBMC->Log(LOG_DEBUG, "%s Removed timer: '%s', ClientIndex: %u",
+      XBMC->Log(LOG_DEBUG, "%s: Removed timer '%s': id=%u",
           __FUNCTION__, it->strTitle.c_str(), it->iClientIndex);
       it = m_timers.erase(it);
       ++removed;
@@ -1030,7 +1030,7 @@ void Dvb::TimerUpdates()
     if (it->iUpdateState == DVB_UPDATE_STATE_NEW)
     {
       it->iClientIndex = m_newTimerIndex;
-      XBMC->Log(LOG_DEBUG, "%s New timer: '%s', ClientIndex: %u",
+      XBMC->Log(LOG_DEBUG, "%s: New timer '%s': id=%u",
           __FUNCTION__, it->strTitle.c_str(), m_newTimerIndex);
       m_timers.push_back(*it);
       ++m_newTimerIndex;
@@ -1038,7 +1038,7 @@ void Dvb::TimerUpdates()
     }
   }
 
-  XBMC->Log(LOG_DEBUG, "%s Timers update: removed=%u, untouched=%u, updated=%u, added=%u",
+  XBMC->Log(LOG_DEBUG, "%s: Timers update: removed=%u, unchanged=%u, updated=%u, added=%u",
       __FUNCTION__, removed, unchanged, updated, added);
 
   if (removed || updated || added)

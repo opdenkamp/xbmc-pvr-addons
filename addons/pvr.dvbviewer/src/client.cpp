@@ -363,20 +363,37 @@ const char *GetBackendHostname(void)
   return g_hostname.c_str();
 }
 
-PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
+PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 {
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->GetDriveSpace(iTotal, iUsed);
+  // the RS api doesn't provide information about signal quality (yet)
+  strncpy(signalStatus.strAdapterName, "DVBViewer Recording Service",
+      sizeof(signalStatus.strAdapterName));
+  strncpy(signalStatus.strAdapterStatus, "OK",
+      sizeof(signalStatus.strAdapterStatus));
+  return PVR_ERROR_NO_ERROR;
 }
 
-PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd)
+PVR_ERROR GetDriveSpace(long long *total, long long *used)
 {
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
+  return (DvbData && DvbData->IsConnected()
+      && DvbData->GetDriveSpace(total, used))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
+}
 
-  return DvbData->GetEPGForChannel(handle, channel, iStart, iEnd);
+/* channel functions */
+PVR_ERROR GetChannels(ADDON_HANDLE handle, bool radio)
+{
+  return (DvbData && DvbData->IsConnected()
+      && DvbData->GetChannels(handle, radio))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel,
+    time_t start, time_t end)
+{
+  return (DvbData && DvbData->IsConnected()
+      && DvbData->GetEPGForChannel(handle, channel, start, end))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
 }
 
 int GetChannelsAmount(void)
@@ -385,83 +402,6 @@ int GetChannelsAmount(void)
     return 0;
 
   return DvbData->GetChannelsAmount();
-}
-
-PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
-{
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->GetChannels(handle, bRadio);
-}
-
-int GetRecordingsAmount(bool deleted)
-{
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->GetRecordingsAmount();
-}
-
-PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted)
-{
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->GetRecordings(handle);
-}
-
-PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
-{
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->DeleteRecording(recording);
-}
-
-PVR_ERROR RenameRecording(const PVR_RECORDING &_UNUSED(recording))
-{
-  return PVR_ERROR_NOT_IMPLEMENTED;
-}
-
-int GetTimersAmount(void)
-{
-  if (!DvbData || !DvbData->IsConnected())
-    return 0;
-
-  return DvbData->GetTimersAmount();
-}
-
-PVR_ERROR GetTimers(ADDON_HANDLE handle)
-{
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->GetTimers(handle);
-}
-
-PVR_ERROR AddTimer(const PVR_TIMER &timer)
-{
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->AddTimer(timer);
-}
-
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool _UNUSED(bForceDelete))
-{
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->DeleteTimer(timer);
-}
-
-PVR_ERROR UpdateTimer(const PVR_TIMER &timer)
-{
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->UpdateTimer(timer);
 }
 
 int GetCurrentClientChannel(void)
@@ -480,30 +420,63 @@ bool SwitchChannel(const PVR_CHANNEL &channel)
   return DvbData->SwitchChannel(channel);
 }
 
+/* channel group functions */
 int GetChannelGroupsAmount(void)
 {
   if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
+    return 0;
 
   return DvbData->GetChannelGroupsAmount();
 }
 
-PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
+PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool radio)
 {
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->GetChannelGroups(handle, bRadio);
+  return (DvbData && DvbData->IsConnected()
+      && DvbData->GetChannelGroups(handle, radio))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
 }
 
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 {
-  if (!DvbData || !DvbData->IsConnected())
-    return PVR_ERROR_SERVER_ERROR;
-
-  return DvbData->GetChannelGroupMembers(handle, group);
+  return (DvbData && DvbData->IsConnected()
+      && DvbData->GetChannelGroupMembers(handle, group))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
 }
 
+/* timer functions */
+int GetTimersAmount(void)
+{
+  if (!DvbData || !DvbData->IsConnected())
+    return 0;
+
+  return DvbData->GetTimersAmount();
+}
+
+PVR_ERROR GetTimers(ADDON_HANDLE handle)
+{
+  return (DvbData && DvbData->IsConnected() && DvbData->GetTimers(handle))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR AddTimer(const PVR_TIMER &timer)
+{
+  return (DvbData && DvbData->IsConnected() && DvbData->AddTimer(timer))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR UpdateTimer(const PVR_TIMER &timer)
+{
+  return (DvbData && DvbData->IsConnected() && DvbData->AddTimer(timer, true))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool _UNUSED(bForceDelete))
+{
+  return (DvbData && DvbData->IsConnected() && DvbData->DeleteTimer(timer))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
+}
+
+/* live stream functions */
 bool OpenLiveStream(const PVR_CHANNEL &channel)
 {
   if (!DvbData || !DvbData->IsConnected())
@@ -557,20 +530,20 @@ bool CanSeekStream(void)
   return g_useTimeshift;
 }
 
-int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize)
+int ReadLiveStream(unsigned char *buffer, unsigned int size)
 {
   if (!tsBuffer)
     return 0;
 
-  return tsBuffer->ReadData(pBuffer, iBufferSize);
+  return tsBuffer->ReadData(buffer, size);
 }
 
-long long SeekLiveStream(long long iPosition, int iWhence /* = SEEK_SET */)
+long long SeekLiveStream(long long position, int whence)
 {
   if (!tsBuffer)
     return -1;
 
-  return tsBuffer->Seek(iPosition, iWhence);
+  return tsBuffer->Seek(position, whence);
 }
 
 long long PositionLiveStream(void)
@@ -584,7 +557,7 @@ long long PositionLiveStream(void)
 long long LengthLiveStream(void)
 {
   if (!tsBuffer)
-    return 0;
+    return -1;
 
   return tsBuffer->Length();
 }
@@ -611,14 +584,27 @@ time_t GetPlayingTime()
   return GetBufferTimeEnd();
 }
 
-PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
+/* recording stream functions */
+int GetRecordingsAmount(bool _UNUSED(deleted))
 {
-  // the RS api doesn't provide information about signal quality (yet)
-  strncpy(signalStatus.strAdapterName, "DVBViewer Recording Service",
-      sizeof(signalStatus.strAdapterName));
-  strncpy(signalStatus.strAdapterStatus, "OK",
-      sizeof(signalStatus.strAdapterStatus));
-  return PVR_ERROR_NO_ERROR;
+  if (!DvbData || !DvbData->IsConnected())
+    return PVR_ERROR_SERVER_ERROR;
+
+  return DvbData->GetRecordingsAmount();
+}
+
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool _UNUSED(deleted))
+{
+  return (DvbData && DvbData->IsConnected()
+      && DvbData->GetRecordings(handle))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
+}
+
+PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
+{
+  return (DvbData && DvbData->IsConnected()
+      && DvbData->DeleteRecording(recording))
+    ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
 }
 
 /** UNUSED API FUNCTIONS */
@@ -643,6 +629,7 @@ long long LengthRecordedStream(void) { return -1; }
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &_UNUSED(recording), int _UNUSED(count)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &_UNUSED(recording), int _UNUSED(lastplayedposition)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &_UNUSED(recording)) { return -1; }
+PVR_ERROR RenameRecording(const PVR_RECORDING &_UNUSED(recording)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteAllRecordingsFromTrash() { return PVR_ERROR_NOT_IMPLEMENTED; }

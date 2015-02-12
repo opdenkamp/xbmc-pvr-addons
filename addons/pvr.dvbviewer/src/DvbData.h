@@ -184,26 +184,27 @@ public:
 
   CStdString GetBackendName();
   CStdString GetBackendVersion();
-  PVR_ERROR GetDriveSpace(long long *total, long long *used);
+  bool GetDriveSpace(long long *total, long long *used);
 
-  bool SwitchChannel(const PVR_CHANNEL& channel);
+  bool SwitchChannel(const PVR_CHANNEL& channelinfo);
   unsigned int GetCurrentClientChannel(void);
-  PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
-  PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channel, time_t iStart, time_t iEnd);
+  bool GetChannels(ADDON_HANDLE handle, bool radio);
+  bool GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channelinfo,
+      time_t start, time_t end);
   unsigned int GetChannelsAmount(void);
 
-  PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio);
-  PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP& group);
+  bool GetChannelGroups(ADDON_HANDLE handle, bool radio);
+  bool GetChannelGroupMembers(ADDON_HANDLE handle,
+      const PVR_CHANNEL_GROUP& group);
   unsigned int GetChannelGroupsAmount(void);
 
-  PVR_ERROR GetTimers(ADDON_HANDLE handle);
-  PVR_ERROR AddTimer(const PVR_TIMER& timer);
-  PVR_ERROR UpdateTimer(const PVR_TIMER& timer);
-  PVR_ERROR DeleteTimer(const PVR_TIMER& timer);
+  bool GetTimers(ADDON_HANDLE handle);
+  bool AddTimer(const PVR_TIMER& timer, bool update = false);
+  bool DeleteTimer(const PVR_TIMER& timer);
   unsigned int GetTimersAmount(void);
 
-  PVR_ERROR GetRecordings(ADDON_HANDLE handle);
-  PVR_ERROR DeleteRecording(const PVR_RECORDING& recinfo);
+  bool GetRecordings(ADDON_HANDLE handle);
+  bool DeleteRecording(const PVR_RECORDING& recinfo);
   unsigned int GetRecordingsAmount();
 
   bool OpenLiveStream(const PVR_CHANNEL& channelinfo);
@@ -220,7 +221,6 @@ private:
   bool LoadChannels();
   DvbTimers_t LoadTimers();
   void TimerUpdates();
-  void GenerateTimer(const PVR_TIMER& timer, bool newtimer = true);
   int GetTimerId(const PVR_TIMER& timer);
 
   // helper functions

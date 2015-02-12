@@ -6,18 +6,14 @@
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 
-#define STREAM_READ_BUFFER_SIZE   32768
-#define BUFFER_READ_TIMEOUT       10000
-#define BUFFER_READ_WAITTIME      50
-
 class TimeshiftBuffer
   : public PLATFORM::CThread
 {
 public:
-  TimeshiftBuffer(CStdString streamPath, CStdString bufferPath);
+  TimeshiftBuffer(CStdString streamUrl, CStdString bufferPath);
   ~TimeshiftBuffer(void);
-  int ReadData(unsigned char *buffer, unsigned int size);
   bool IsValid();
+  int ReadData(unsigned char *buffer, unsigned int size);
   long long Seek(long long position, int whence);
   long long Position();
   long long Length();

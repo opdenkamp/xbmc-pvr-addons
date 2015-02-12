@@ -108,18 +108,18 @@ CStdString Dvb::GetBackendVersion()
   return version;
 }
 
-PVR_ERROR Dvb::GetDriveSpace(long long *total, long long *used)
+bool Dvb::GetDriveSpace(long long *total, long long *used)
 {
   if (!UpdateBackendStatus())
-    return PVR_ERROR_SERVER_ERROR;
+    return false;
   *total = m_diskspace.total;
   *used  = m_diskspace.used;
-  return PVR_ERROR_NO_ERROR;
+  return true;
 }
 
-bool Dvb::SwitchChannel(const PVR_CHANNEL& channel)
+bool Dvb::SwitchChannel(const PVR_CHANNEL& channelinfo)
 {
-  m_currentChannel = channel.iUniqueId;
+  m_currentChannel = channelinfo.iUniqueId;
   m_updateEPG = true;
   return true;
 }
@@ -129,7 +129,7 @@ unsigned int Dvb::GetCurrentClientChannel(void)
   return m_currentChannel;
 }
 
-PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
+bool Dvb::GetChannels(ADDON_HANDLE handle, bool radio)
 {
   for (DvbChannels_t::iterator it = m_channels.begin();
       it != m_channels.end(); ++it)
@@ -137,7 +137,7 @@ PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
     DvbChannel *channel = *it;
     if (channel->hidden)
       continue;
-    if (channel->radio != bRadio)
+    if (channel->radio != radio)
       continue;
 
     PVR_CHANNEL xbmcChannel;
@@ -165,19 +165,18 @@ PVR_ERROR Dvb::GetChannels(ADDON_HANDLE handle, bool bRadio)
 
     PVR->TransferChannelEntry(handle, &xbmcChannel);
   }
-
-  return PVR_ERROR_NO_ERROR;
+  return true;
 }
 
 //TODO: rewrite
 //TODO: missing epg v2 - there's no documention
-PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
-  const PVR_CHANNEL& channel, time_t iStart, time_t iEnd)
+bool Dvb::GetEPGForChannel(ADDON_HANDLE handle,
+  const PVR_CHANNEL& channelinfo, time_t start, time_t end)
 {
-  DvbChannel *myChannel = m_channels[channel.iUniqueId - 1];
+  DvbChannel *myChannel = m_channels[channelinfo.iUniqueId - 1];
 
   CStdString url = BuildURL("api/epg.html?lvl=2&channel=%" PRIu64 "&start=%f&end=%f",
-      myChannel->epgId, iStart/86400.0 + DELPHI_DATE, iEnd/86400.0 + DELPHI_DATE);
+      myChannel->epgId, start/86400.0 + DELPHI_DATE, end/86400.0 + DELPHI_DATE);
   CStdString req = GetHttpXML(url);
 
   TiXmlDocument doc;
@@ -194,11 +193,11 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
       xEntry; xEntry = xEntry->NextSiblingElement("programme"))
   {
     DvbEPGEntry entry;
-    entry.iChannelUid = channel.iUniqueId;
+    entry.iChannelUid = channelinfo.iUniqueId;
     entry.startTime = ParseDateTime(xEntry->Attribute("start"));
     entry.endTime = ParseDateTime(xEntry->Attribute("stop"));
 
-    if (iEnd > 1 && iEnd < entry.endTime)
+    if (end > 1 && end < entry.endTime)
        continue;
 
     if (!XMLUtils::GetInt(xEntry, "eventid", entry.iEventId))
@@ -235,7 +234,7 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
     memset(&broadcast, 0, sizeof(EPG_TAG));
     broadcast.iUniqueBroadcastId  = entry.iEventId;
     broadcast.strTitle            = entry.strTitle.c_str();
-    broadcast.iChannelNumber      = channel.iChannelNumber;
+    broadcast.iChannelNumber      = channelinfo.iChannelNumber;
     broadcast.startTime           = entry.startTime;
     broadcast.endTime             = entry.endTime;
     broadcast.strPlotOutline      = entry.strPlotOutline.c_str();
@@ -252,7 +251,7 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
   }
 
   XBMC->Log(LOG_INFO, "Loaded %u EPG entries for channel '%s'",
-      iNumEPG, channel.strChannelName);
+      iNumEPG, channelinfo.strChannelName);
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -262,14 +261,14 @@ unsigned int Dvb::GetChannelsAmount()
 }
 
 
-PVR_ERROR Dvb::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
+bool Dvb::GetChannelGroups(ADDON_HANDLE handle, bool radio)
 {
   for (DvbGroups_t::iterator group = m_groups.begin();
       group != m_groups.end(); ++group)
   {
     if (group->hidden)
       continue;
-    if (group->radio != bRadio)
+    if (group->radio != radio)
       continue;
 
     PVR_CHANNEL_GROUP tag;
@@ -279,11 +278,11 @@ PVR_ERROR Dvb::GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 
     PVR->TransferChannelGroup(handle, &tag);
   }
-
-  return PVR_ERROR_NO_ERROR;
+  return true;
 }
 
-PVR_ERROR Dvb::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP& pvrGroup)
+bool Dvb::GetChannelGroupMembers(ADDON_HANDLE handle,
+    const PVR_CHANNEL_GROUP& pvrGroup)
 {
   unsigned int channelNumberInGroup = 1;
 
@@ -311,7 +310,7 @@ PVR_ERROR Dvb::GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GRO
           group->name.c_str());
     }
   }
-  return PVR_ERROR_NO_ERROR;
+  return true;
 }
 
 unsigned int Dvb::GetChannelGroupsAmount()
@@ -320,7 +319,7 @@ unsigned int Dvb::GetChannelGroupsAmount()
 }
 
 
-PVR_ERROR Dvb::GetTimers(ADDON_HANDLE handle)
+bool Dvb::GetTimers(ADDON_HANDLE handle)
 {
   for (DvbTimers_t::iterator timer = m_timers.begin();
       timer != m_timers.end(); ++timer)
@@ -342,22 +341,57 @@ PVR_ERROR Dvb::GetTimers(ADDON_HANDLE handle)
 
     PVR->TransferTimerEntry(handle, &tag);
   }
-  return PVR_ERROR_NO_ERROR;
+  return true;
 }
 
-PVR_ERROR Dvb::AddTimer(const PVR_TIMER& timer)
+bool Dvb::AddTimer(const PVR_TIMER& timer, bool update)
 {
-  GenerateTimer(timer);
-  return PVR_ERROR_NO_ERROR;
+  // http://en.dvbviewer.tv/wiki/Recording_Service_Web_API#Add_a_timer
+
+  XBMC->Log(LOG_DEBUG, "%s iChannelUid=%u title='%s' epgid=%d",
+      __FUNCTION__, timer.iClientChannelUid, timer.strTitle, timer.iEpgUid);
+
+  time_t startTime = timer.startTime, endTime = timer.endTime;
+  if (!startTime)
+    startTime = time(NULL);
+  else
+  {
+    startTime -= timer.iMarginStart * 60;
+    endTime += timer.iMarginEnd * 60;
+  }
+
+  unsigned int date = ((startTime + m_timezone) / DAY_SECS) + DELPHI_DATE;
+  struct tm *timeinfo;
+  timeinfo = localtime(&startTime);
+  unsigned int start = timeinfo->tm_hour * 60 + timeinfo->tm_min;
+  timeinfo = localtime(&endTime);
+  unsigned int stop = timeinfo->tm_hour * 60 + timeinfo->tm_min;
+
+  char repeat[8] = "-------";
+  for (int i = 0; i < 7; ++i)
+  {
+    if (timer.iWeekdays & (1 << i))
+      repeat[i] = 'T';
+  }
+
+  uint64_t iChannelId = m_channels[timer.iClientChannelUid - 1]->backendIds.front();
+  CStdString url;
+  if (!update)
+    url = BuildURL("api/timeradd.html?ch=%" PRIu64 "&dor=%u&enable=1&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
+        iChannelId, date, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
+  else
+  {
+    short enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
+    url = BuildURL("api/timeredit.html?id=%d&ch=%" PRIu64 "&dor=%u&enable=%d&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
+        GetTimerId(timer), iChannelId, date, enabled, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
+  }
+
+  GetHttpXML(url);
+  m_updateTimers = true;
+  return true;
 }
 
-PVR_ERROR Dvb::UpdateTimer(const PVR_TIMER& timer)
-{
-  GenerateTimer(timer, false);
-  return PVR_ERROR_NO_ERROR;
-}
-
-PVR_ERROR Dvb::DeleteTimer(const PVR_TIMER& timer)
+bool Dvb::DeleteTimer(const PVR_TIMER& timer)
 {
   GetHttpXML(BuildURL("api/timerdelete.html?id=%d", GetTimerId(timer)));
 
@@ -365,7 +399,7 @@ PVR_ERROR Dvb::DeleteTimer(const PVR_TIMER& timer)
     PVR->TriggerRecordingUpdate();
 
   m_updateTimers = true;
-  return PVR_ERROR_NO_ERROR;
+  return true;
 }
 
 unsigned int Dvb::GetTimersAmount()
@@ -374,7 +408,7 @@ unsigned int Dvb::GetTimersAmount()
 }
 
 
-PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
+bool Dvb::GetRecordings(ADDON_HANDLE handle)
 {
   CStdString url = BuildURL("api/recordings.html?images=1");
   CStdString req = GetHttpXML(url);
@@ -501,11 +535,10 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
   }
 
   XBMC->Log(LOG_INFO, "Loaded %u Recording Entries", m_recordingAmount);
-
-  return PVR_ERROR_NO_ERROR;
+  return true;
 }
 
-PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
+bool Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
 {
   CStdString recid = recinfo.strRecordingId;
   CStdString::size_type pos = recid.find('_');
@@ -516,8 +549,7 @@ PVR_ERROR Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
   GetHttpXML(BuildURL("api/recdelete.html?recid=%s&delfile=1", recid.c_str()));
 
   PVR->TriggerRecordingUpdate();
-
-  return PVR_ERROR_NO_ERROR;
+  return true;
 }
 
 unsigned int Dvb::GetRecordingsAmount()
@@ -585,7 +617,6 @@ void *Dvb::Process()
 
   CLockObject lock(m_mutex);
   m_started.Broadcast();
-
   return NULL;
 }
 
@@ -1015,52 +1046,6 @@ void Dvb::TimerUpdates()
     XBMC->Log(LOG_INFO, "Changes in timerlist detected, triggering an update!");
     PVR->TriggerTimerUpdate();
   }
-}
-
-void Dvb::GenerateTimer(const PVR_TIMER& timer, bool newTimer)
-{
-  // http://en.dvbviewer.tv/wiki/Recording_Service_Web_API#Add_a_timer
-
-  XBMC->Log(LOG_DEBUG, "%s iChannelUid=%u title='%s' epgid=%d",
-      __FUNCTION__, timer.iClientChannelUid, timer.strTitle, timer.iEpgUid);
-
-  time_t startTime = timer.startTime, endTime = timer.endTime;
-  if (!startTime)
-    startTime = time(NULL);
-  else
-  {
-    startTime -= timer.iMarginStart * 60;
-    endTime += timer.iMarginEnd * 60;
-  }
-
-  unsigned int date = ((startTime + m_timezone) / DAY_SECS) + DELPHI_DATE;
-  struct tm *timeinfo;
-  timeinfo = localtime(&startTime);
-  unsigned int start = timeinfo->tm_hour * 60 + timeinfo->tm_min;
-  timeinfo = localtime(&endTime);
-  unsigned int stop = timeinfo->tm_hour * 60 + timeinfo->tm_min;
-
-  char repeat[8] = "-------";
-  for (int i = 0; i < 7; ++i)
-  {
-    if (timer.iWeekdays & (1 << i))
-      repeat[i] = 'T';
-  }
-
-  uint64_t iChannelId = m_channels[timer.iClientChannelUid - 1]->backendIds.front();
-  CStdString url;
-  if (newTimer)
-    url = BuildURL("api/timeradd.html?ch=%" PRIu64 "&dor=%u&enable=1&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
-        iChannelId, date, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
-  else
-  {
-    short enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
-    url = BuildURL("api/timeredit.html?id=%d&ch=%" PRIu64 "&dor=%u&enable=%d&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
-        GetTimerId(timer), iChannelId, date, enabled, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
-  }
-
-  GetHttpXML(url);
-  m_updateTimers = true;
 }
 
 int Dvb::GetTimerId(const PVR_TIMER& timer)

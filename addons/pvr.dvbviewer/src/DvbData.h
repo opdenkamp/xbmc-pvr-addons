@@ -30,14 +30,6 @@
 /* forward declaration */
 class DvbGroup;
 
-typedef enum DVB_UPDATE_STATE
-{
-  DVB_UPDATE_STATE_NONE,
-  DVB_UPDATE_STATE_FOUND,
-  DVB_UPDATE_STATE_UPDATED,
-  DVB_UPDATE_STATE_NEW
-} DVB_UPDATE_STATE;
-
 class DvbChannel
 {
 public:
@@ -96,48 +88,57 @@ public:
 class DvbTimer
 {
 public:
+  enum State
+  {
+    STATE_NONE,
+    STATE_NEW,
+    STATE_FOUND,
+    STATE_UPDATED
+  };
+
   DvbTimer()
-  {
-    iUpdateState = DVB_UPDATE_STATE_NEW;
-  }
+    : updateState(STATE_NEW)
+  {}
 
-  bool like(const DvbTimer& right) const
-  {
-    bool bChanged = true;
-    bChanged = bChanged && (startTime   == right.startTime);
-    bChanged = bChanged && (endTime     == right.endTime);
-    bChanged = bChanged && (iChannelUid == right.iChannelUid);
-    bChanged = bChanged && (bRepeating  == right.bRepeating);
-    bChanged = bChanged && (iWeekdays   == right.iWeekdays);
-    bChanged = bChanged && (iEpgId      == right.iEpgId);
-    return bChanged;
-  }
+#define TIMER_UPDATE_MEMBER(member) \
+  if (member != source.member) \
+  { \
+    member = source.member; \
+    updated = true; \
+   }
 
-  bool operator==(const DvbTimer& right) const
+  bool updateFrom(const DvbTimer &source)
   {
-    bool bChanged = true;
-    bChanged = bChanged && like(right);
-    bChanged = bChanged && (state    == right.state);
-    bChanged = bChanged && (strTitle == right.strTitle);
-    bChanged = bChanged && (strPlot  == right.strPlot);
-    return bChanged;
+    bool updated = false;
+    TIMER_UPDATE_MEMBER(channel);
+    TIMER_UPDATE_MEMBER(title);
+    TIMER_UPDATE_MEMBER(startTime);
+    TIMER_UPDATE_MEMBER(endTime);
+    TIMER_UPDATE_MEMBER(priority);
+    TIMER_UPDATE_MEMBER(weekdays);
+    TIMER_UPDATE_MEMBER(state);
+    return updated;
   }
 
 public:
-  CStdString strTitle;
-  CStdString strPlot;
-  unsigned int iChannelUid;
+  /*!< @brief unique id passed to xbmc database
+   * starts at 1 and increases by each new timer. never decreases.
+   */
+  unsigned int id;
+  /*!< @brief unique guid provided by backend. unique every time */
+  CStdString guid;
+  /*!< @brief timer id on backend. unique at a time */
+  unsigned int backendId;
+
+  DvbChannel *channel;
+  CStdString title;
+  uint64_t channelId;
   time_t startTime;
   time_t endTime;
-  bool bRepeating;
-  int iWeekdays;
-  int iEpgId;
-  int iTimerId;
-  int iPriority;
-  int iFirstDay;
+  int priority;
+  unsigned int weekdays;
   PVR_TIMER_STATE state;
-  DVB_UPDATE_STATE iUpdateState;
-  unsigned int iClientIndex;
+  State updateState;
 };
 
 class DvbRecording
@@ -224,16 +225,14 @@ private:
   bool LoadChannels();
   DvbTimers_t LoadTimers();
   void TimerUpdates();
-  int GetTimerId(const PVR_TIMER& timer);
+  DvbTimer *GetTimer(const PVR_TIMER& timer);
 
   // helper functions
   void RemoveNullChars(CStdString& str);
   bool CheckBackendVersion();
   bool UpdateBackendStatus(bool updateSettings = false);
   time_t ParseDateTime(const CStdString& strDate, bool iso8601 = true);
-  uint64_t ParseChannelString(const CStdString& str, CStdString& channelName);
-  unsigned int GetChannelUid(const CStdString& str);
-  unsigned int GetChannelUid(const uint64_t channelId);
+  DvbChannel *GetChannelByBackendId(const uint64_t backendId);
   CStdString BuildURL(const char* path, ...);
   CStdString BuildExtURL(const CStdString& baseURL, const char* path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
@@ -242,12 +241,11 @@ private:
 private:
   bool m_connected;
   unsigned int m_backendVersion;
+  CStdString m_url;
 
   long m_timezone;
   struct { long long total, used; } m_diskspace;
   std::vector<CStdString> m_recfolders;
-
-  CStdString m_url;
 
   /* channels */
   DvbChannels_t m_channels;
@@ -265,7 +263,7 @@ private:
   unsigned int m_recordingAmount;
 
   DvbTimers_t m_timers;
-  unsigned int m_newTimerIndex;
+  unsigned int m_nextTimerId;
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;

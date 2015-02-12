@@ -12,35 +12,9 @@
 using namespace ADDON;
 using namespace PLATFORM;
 
-template <class ContainerT>
-void tokenize(const CStdString& str, ContainerT& tokens,
-    const CStdString& delimiters = " ", const bool trimEmpty = false)
-{
-  CStdString::size_type pos, lastPos = 0;
-  while (true)
-  {
-    pos = str.find_first_of(delimiters, lastPos);
-    if (pos == CStdString::npos)
-    {
-      pos = str.length();
-
-      if (pos != lastPos || !trimEmpty)
-        tokens.push_back(typename ContainerT::value_type(str.data() + lastPos, pos - lastPos));
-      break;
-    }
-    else
-    {
-      if (pos != lastPos || !trimEmpty)
-        tokens.push_back(typename ContainerT::value_type(str.data() + lastPos, pos - lastPos));
-    }
-    lastPos = pos + 1;
-  }
-};
-
-
 Dvb::Dvb()
   : m_connected(false), m_backendVersion(0), m_currentChannel(0),
-  m_newTimerIndex(0)
+  m_nextTimerId(0)
 {
   // simply add user@pass in front of the URL if username/password is set
   CStdString auth("");
@@ -322,18 +296,16 @@ bool Dvb::GetTimers(ADDON_HANDLE handle)
   {
     PVR_TIMER tag;
     memset(&tag, 0, sizeof(PVR_TIMER));
-    PVR_STRCPY(tag.strTitle,   timer->strTitle.c_str());
-    PVR_STRCPY(tag.strSummary, timer->strPlot.c_str());
-    tag.iClientChannelUid = timer->iChannelUid;
+    PVR_STRCPY(tag.strTitle,   timer->title.c_str());
+    tag.iClientIndex      = timer->id;
+    tag.iClientChannelUid = timer->channel->id;
     tag.startTime         = timer->startTime;
     tag.endTime           = timer->endTime;
     tag.state             = timer->state;
-    tag.iPriority         = timer->iPriority;
-    tag.bIsRepeating      = timer->bRepeating;
-    tag.firstDay          = timer->iFirstDay;
-    tag.iWeekdays         = timer->iWeekdays;
-    tag.iEpgUid           = timer->iEpgId;
-    tag.iClientIndex      = timer->iClientIndex;
+    tag.iPriority         = timer->priority;
+    tag.bIsRepeating      = (timer->weekdays != 0);
+    tag.firstDay          = (timer->weekdays != 0) ? timer->startTime : 0;
+    tag.iWeekdays         = timer->weekdays;
 
     PVR->TransferTimerEntry(handle, &tag);
   }
@@ -342,8 +314,6 @@ bool Dvb::GetTimers(ADDON_HANDLE handle)
 
 bool Dvb::AddTimer(const PVR_TIMER& timer, bool update)
 {
-  // http://en.dvbviewer.tv/wiki/Recording_Service_Web_API#Add_a_timer
-
   XBMC->Log(LOG_DEBUG, "%s: channel=%u, title='%s'",
       __FUNCTION__, timer.iClientChannelUid, timer.strTitle);
 
@@ -353,7 +323,7 @@ bool Dvb::AddTimer(const PVR_TIMER& timer, bool update)
   else
   {
     startTime -= timer.iMarginStart * 60;
-    endTime += timer.iMarginEnd * 60;
+    endTime   += timer.iMarginEnd * 60;
   }
 
   unsigned int date = ((startTime + m_timezone) / DAY_SECS) + DELPHI_DATE;
@@ -370,27 +340,35 @@ bool Dvb::AddTimer(const PVR_TIMER& timer, bool update)
       repeat[i] = 'T';
   }
 
-  uint64_t iChannelId = m_channels[timer.iClientChannelUid - 1]->backendIds.front();
+  uint64_t channelId = m_channels[timer.iClientChannelUid - 1]->backendIds.front();
   CStdString url;
   if (!update)
     url = BuildURL("api/timeradd.html?ch=%" PRIu64 "&dor=%u&enable=1&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
-        iChannelId, date, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
+        channelId, date, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
   else
   {
+    DvbTimer *t = GetTimer(timer);
+    if (!t)
+      return false;
+
     short enabled = (timer.state == PVR_TIMER_STATE_CANCELLED) ? 0 : 1;
     url = BuildURL("api/timeredit.html?id=%d&ch=%" PRIu64 "&dor=%u&enable=%d&start=%u&stop=%u&prio=%d&days=%s&title=%s&encoding=255",
-        GetTimerId(timer), iChannelId, date, enabled, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
+        t->backendId, channelId, date, enabled, start, stop, timer.iPriority, repeat, URLEncodeInline(timer.strTitle).c_str());
   }
 
   GetHttpXML(url);
+  //TODO: instead of syncing all timers, we could only sync the new/modified
   m_updateTimers = true;
   return true;
 }
 
 bool Dvb::DeleteTimer(const PVR_TIMER& timer)
 {
-  GetHttpXML(BuildURL("api/timerdelete.html?id=%d", GetTimerId(timer)));
+  DvbTimer *t = GetTimer(timer);
+  if (!t)
+    return false;
 
+  GetHttpXML(BuildURL("api/timerdelete.html?id=%u", t->backendId));
   if (timer.state == PVR_TIMER_STATE_RECORDING)
     PVR->TriggerRecordingUpdate();
 
@@ -879,7 +857,6 @@ bool Dvb::LoadChannels()
   return true;
 }
 
-//TODO: rewrite
 DvbTimers_t Dvb::LoadTimers()
 {
   DvbTimers_t timers;
@@ -904,71 +881,59 @@ DvbTimers_t Dvb::LoadTimers()
   {
     DvbTimer timer;
 
-    CStdString strTmp;
-    if (XMLUtils::GetString(xTimer, "Descr", strTmp))
-      XBMC->Log(LOG_DEBUG, "%s: Processing timer '%s'", __FUNCTION__, strTmp.c_str());
-
-    timer.strTitle = strTmp;
-    timer.iChannelUid = GetChannelUid(xTimer->FirstChildElement("Channel")->Attribute("ID"));
-    if (timer.iChannelUid == 0)
+    if (!XMLUtils::GetString(xTimer, "GUID", timer.guid))
       continue;
-    timer.state = PVR_TIMER_STATE_SCHEDULED;
+    XMLUtils::GetUInt(xTimer, "ID", timer.backendId);
+    XMLUtils::GetString(xTimer, "Descr", timer.title);
 
-    CStdString DateTime = xTimer->Attribute("Date");
-    DateTime.append(xTimer->Attribute("Start"));
-    timer.startTime = ParseDateTime(DateTime, false);
-    timer.endTime = timer.startTime + atoi(xTimer->Attribute("Dur")) * 60;
+    uint64_t backendId = 0;
+    std::istringstream ss(xTimer->FirstChildElement("Channel")->Attribute("ID"));
+    ss >> backendId;
+    if (!backendId)
+      continue;
 
-    CStdString Weekdays = xTimer->Attribute("Days");
-    timer.iWeekdays = 0;
-    for (unsigned int j = 0; j < Weekdays.length(); ++j)
+    timer.channel = GetChannelByBackendId(backendId);
+    if (!timer.channel)
+      continue;
+
+    CStdString startDate = xTimer->Attribute("Date");
+    startDate += xTimer->Attribute("Start");
+    timer.startTime = ParseDateTime(startDate, false);
+    timer.endTime   = timer.startTime + atoi(xTimer->Attribute("Dur")) * 60;
+
+    CStdString weekdays = xTimer->Attribute("Days");
+    timer.weekdays = 0;
+    for (unsigned int j = 0; j < weekdays.length(); ++j)
     {
-      if (Weekdays.data()[j] != '-')
-        timer.iWeekdays += (1 << j);
+      if (weekdays.data()[j] != '-')
+        timer.weekdays += (1 << j);
     }
 
-    if (timer.iWeekdays != 0)
-    {
-      timer.iFirstDay = timer.startTime;
-      timer.bRepeating = true;
-    }
-    else
-      timer.bRepeating = false;
-
-    timer.iPriority = atoi(xTimer->Attribute("Priority"));
-
-    if (xTimer->Attribute("EPGEventID"))
-      timer.iEpgId = atoi(xTimer->Attribute("EPGEventID"));
-
+    timer.priority    = atoi(xTimer->Attribute("Priority"));
+    timer.updateState = DvbTimer::STATE_NEW;
+    timer.state       = PVR_TIMER_STATE_SCHEDULED;
     if (xTimer->Attribute("Enabled")[0] == '0')
       timer.state = PVR_TIMER_STATE_CANCELLED;
 
-    int iTmp;
-    if (XMLUtils::GetInt(xTimer, "Recording", iTmp))
-    {
-      if (iTmp == -1)
-        timer.state = PVR_TIMER_STATE_RECORDING;
-    }
-
-    if (XMLUtils::GetInt(xTimer, "ID", iTmp))
-      timer.iTimerId = iTmp;
+    int tmp;
+    XMLUtils::GetInt(xTimer, "Recording", tmp);
+    if (tmp == -1)
+      timer.state = PVR_TIMER_STATE_RECORDING;
 
     timers.push_back(timer);
-
     XBMC->Log(LOG_DEBUG, "%s: Loaded timer entry '%s': start=%u, end=%u",
-        __FUNCTION__, timer.strTitle.c_str(), timer.startTime, timer.endTime);
+        __FUNCTION__, timer.title.c_str(), timer.startTime, timer.endTime);
   }
 
   XBMC->Log(LOG_INFO, "Loaded %u timer entries", timers.size());
   return timers;
 }
 
-//TODO: rewrite
 void Dvb::TimerUpdates()
 {
   for (DvbTimers_t::iterator timer = m_timers.begin();
       timer != m_timers.end(); ++timer)
-    timer->iUpdateState = DVB_UPDATE_STATE_NONE;
+    timer->updateState = DvbTimer::STATE_NONE;
 
   DvbTimers_t newtimers = LoadTimers();
   unsigned int updated = 0, unchanged = 0;
@@ -978,30 +943,18 @@ void Dvb::TimerUpdates()
     for (DvbTimers_t::iterator timer = m_timers.begin();
         timer != m_timers.end(); ++timer)
     {
-      if (!timer->like(*newtimer))
+      if (timer->guid != newtimer->guid)
         continue;
 
-      if (*timer == *newtimer)
+      if (timer->updateFrom(*newtimer))
       {
-        timer->iUpdateState = newtimer->iUpdateState = DVB_UPDATE_STATE_FOUND;
-        ++unchanged;
+        timer->updateState = newtimer->updateState = DvbTimer::STATE_UPDATED;
+        ++updated;
       }
       else
       {
-        timer->iUpdateState = newtimer->iUpdateState = DVB_UPDATE_STATE_UPDATED;
-        timer->strTitle     = newtimer->strTitle;
-        timer->strPlot      = newtimer->strPlot;
-        timer->iChannelUid  = newtimer->iChannelUid;
-        timer->startTime    = newtimer->startTime;
-        timer->endTime      = newtimer->endTime;
-        timer->bRepeating   = newtimer->bRepeating;
-        timer->iWeekdays    = newtimer->iWeekdays;
-        timer->iEpgId       = newtimer->iEpgId;
-        timer->iTimerId     = newtimer->iTimerId;
-        timer->iPriority    = newtimer->iPriority;
-        timer->iFirstDay    = newtimer->iFirstDay;
-        timer->state        = newtimer->state;
-        ++updated;
+        timer->updateState = newtimer->updateState = DvbTimer::STATE_FOUND;
+        ++unchanged;
       }
     }
   }
@@ -1009,10 +962,10 @@ void Dvb::TimerUpdates()
   unsigned int removed = 0;
   for (DvbTimers_t::iterator it = m_timers.begin(); it != m_timers.end();)
   {
-    if (it->iUpdateState == DVB_UPDATE_STATE_NONE)
+    if (it->updateState == DvbTimer::STATE_NONE)
     {
-      XBMC->Log(LOG_DEBUG, "%s: Removed timer '%s': id=%u",
-          __FUNCTION__, it->strTitle.c_str(), it->iClientIndex);
+      XBMC->Log(LOG_DEBUG, "%s: Removed timer '%s': id=%u", __FUNCTION__,
+          it->title.c_str(), it->id);
       it = m_timers.erase(it);
       ++removed;
     }
@@ -1023,13 +976,13 @@ void Dvb::TimerUpdates()
   unsigned int added = 0;
   for (DvbTimers_t::iterator it = newtimers.begin(); it != newtimers.end(); ++it)
   {
-    if (it->iUpdateState == DVB_UPDATE_STATE_NEW)
+    if (it->updateState == DvbTimer::STATE_NEW)
     {
-      it->iClientIndex = m_newTimerIndex;
-      XBMC->Log(LOG_DEBUG, "%s: New timer '%s': id=%u",
-          __FUNCTION__, it->strTitle.c_str(), m_newTimerIndex);
+      it->id = m_nextTimerId;
+      XBMC->Log(LOG_DEBUG, "%s: New timer '%s': id=%u", __FUNCTION__,
+          it->title.c_str(), it->id);
       m_timers.push_back(*it);
-      ++m_newTimerIndex;
+      ++m_nextTimerId;
       ++added;
     }
   }
@@ -1044,14 +997,14 @@ void Dvb::TimerUpdates()
   }
 }
 
-int Dvb::GetTimerId(const PVR_TIMER& timer)
+DvbTimer *Dvb::GetTimer(const PVR_TIMER& timer)
 {
   for (DvbTimers_t::iterator it = m_timers.begin(); it != m_timers.end(); ++it)
   {
-    if (it->iClientIndex == timer.iClientIndex)
-      return it->iTimerId;
+    if (it->id == timer.iClientIndex)
+      return &*it;
   }
-  return 0;
+  return NULL;
 }
 
 
@@ -1176,55 +1129,20 @@ time_t Dvb::ParseDateTime(const CStdString& date, bool iso8601)
   return mktime(&timeinfo);
 }
 
-uint64_t Dvb::ParseChannelString(const CStdString& str, CStdString& channelName)
-{
-  std::vector<CStdString> tokenlist;
-  tokenize<std::vector<CStdString> >(str, tokenlist, "|");
-  if (tokenlist.size() < 1)
-  {
-    XBMC->Log(LOG_ERROR, "Unable to parse channel string: %s", str.c_str());
-    return 0;
-  }
-
-  uint64_t channelId = 0;
-  std::istringstream ss(tokenlist[0]);
-  ss >> channelId;
-  if (ss.fail())
-  {
-    XBMC->Log(LOG_ERROR, "Unable to parse channel id: %s",
-        tokenlist[0].c_str());
-    return 0;
-  }
-
-  channelName.clear();
-  if (tokenlist.size() >= 2)
-    channelName = ConvertToUtf8(tokenlist[1]);
-  return channelId;
-}
-
-unsigned int Dvb::GetChannelUid(const CStdString& str)
-{
-  CStdString channelName;
-  uint64_t channelId = ParseChannelString(str, channelName);
-  if (channelId == 0)
-    return 0;
-  return GetChannelUid(channelId);
-}
-
-unsigned int Dvb::GetChannelUid(const uint64_t channelId)
+DvbChannel *Dvb::GetChannelByBackendId(const uint64_t backendId)
 {
   for (DvbChannels_t::iterator it = m_channels.begin();
       it != m_channels.end(); ++it)
   {
     DvbChannel *channel = *it;
-    for (std::list<uint64_t>::iterator backendId = channel->backendIds.begin();
-        backendId != channel->backendIds.end(); backendId++)
+    for (std::list<uint64_t>::iterator it2 = channel->backendIds.begin();
+        it2 != channel->backendIds.end(); it2++)
     {
-      if (channelId == *backendId)
-        return channel->id;
+      if (backendId == *it2)
+        return channel;
     }
   }
-  return 0;
+  return NULL;
 }
 
 CStdString Dvb::BuildURL(const char* path, ...)

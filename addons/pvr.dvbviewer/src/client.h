@@ -84,10 +84,10 @@ extern CHelper_libXBMC_pvr *PVR;
 class PrependOutline
 {
 public:
-  enum options { Never = 0, InEPG, InRecordings, Always };
+  enum options { NEVER = 0, IN_EPG, IN_RECORDINGS, ALWAYS };
   static bool test(options flag)
   {
-    return (g_prependOutline == flag || g_prependOutline == Always);
+    return (g_prependOutline == flag || g_prependOutline == ALWAYS);
   }
 };
 

@@ -222,7 +222,7 @@ PVR_ERROR Dvb::GetEPGForChannel(ADDON_HANDLE handle,
         entry.strPlot = entry.strPlotOutline;
         entry.strPlotOutline.clear();
       }
-      else if (PrependOutline::test(PrependOutline::InEPG))
+      else if (PrependOutline::test(PrependOutline::IN_EPG))
       {
         entry.strPlot.insert(0, entry.strPlotOutline + "\n");
         entry.strPlotOutline.clear();
@@ -419,7 +419,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
       recording.plot = recording.plotOutline;
       recording.plotOutline.clear();
     }
-    else if (PrependOutline::test(PrependOutline::InRecordings))
+    else if (PrependOutline::test(PrependOutline::IN_RECORDINGS))
     {
       recording.plot.insert(0, recording.plotOutline + "\n");
       recording.plotOutline.clear();
@@ -458,7 +458,7 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
     CStdString tmp;
     switch(g_groupRecordings)
     {
-      case DvbRecording::GroupByDirectory:
+      case DvbRecording::GROUP_BY_DIRECTORY:
         XMLUtils::GetString(xRecording, "file", tmp);
         tmp.ToLower();
         for (std::vector<CStdString>::reverse_iterator recf = m_recfolders.rbegin();
@@ -472,18 +472,18 @@ PVR_ERROR Dvb::GetRecordings(ADDON_HANDLE handle)
           break;
         }
         break;
-      case DvbRecording::GroupByDate:
+      case DvbRecording::GROUP_BY_DATE:
         tmp.Format("%s/%s", startTime.substr(0, 4), startTime.substr(4, 2));
         PVR_STRCPY(tag.strDirectory, tmp.c_str());
         break;
-      case DvbRecording::GroupByFirstLetter:
+      case DvbRecording::GROUP_BY_FIRST_LETTER:
         tag.strDirectory[0] = recording.title[0];
         tag.strDirectory[1] = '\0';
         break;
-      case DvbRecording::GroupByTVChannel:
+      case DvbRecording::GROUP_BY_TV_CHANNEL:
         PVR_STRCPY(tag.strDirectory, recording.channelName.c_str());
         break;
-      case DvbRecording::GroupBySeries:
+      case DvbRecording::GROUP_BY_SERIES:
         tmp = "Unknown";
         XMLUtils::GetString(xRecording, "series", tmp);
         PVR_STRCPY(tag.strDirectory, tmp.c_str());
@@ -1165,11 +1165,11 @@ bool Dvb::UpdateBackendStatus(bool updateSettings)
       m_diskspace.used += (size - free) / 1024;
     }
 
-    if (updateSettings && g_groupRecordings != DvbRecording::GroupingDisabled)
+    if (updateSettings && g_groupRecordings != DvbRecording::GROUPING_DISABLED)
       m_recfolders.push_back(CStdString(xFolder->GetText()).ToLower());
   }
 
-  if (updateSettings && g_groupRecordings != DvbRecording::GroupingDisabled)
+  if (updateSettings && g_groupRecordings != DvbRecording::GROUPING_DISABLED)
     std::sort(m_recfolders.begin(), m_recfolders.end(), StringGreaterThan);
 
   return true;

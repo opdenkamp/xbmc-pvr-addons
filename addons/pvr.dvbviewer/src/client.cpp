@@ -40,11 +40,11 @@ CStdString g_password             = "";
 bool       g_useFavourites        = false;
 bool       g_useFavouritesFile    = false;
 CStdString g_favouritesFile       = "";
-int        g_groupRecordings      = DvbRecording::GroupingDisabled;
+int        g_groupRecordings      = DvbRecording::GROUPING_DISABLED;
 bool       g_useTimeshift         = false;
 CStdString g_timeshiftBufferPath  = DEFAULT_TSBUFFERPATH;
 bool       g_useRTSP              = false;
-int        g_prependOutline       = PrependOutline::InEPG;
+int        g_prependOutline       = PrependOutline::IN_EPG;
 bool       g_lowPerformance       = false;
 
 ADDON_STATUS m_curStatus    = ADDON_STATUS_UNKNOWN;
@@ -81,7 +81,7 @@ void ADDON_ReadSettings(void)
     g_favouritesFile = buffer;
 
   if (!XBMC->GetSetting("grouprecordings", &g_groupRecordings))
-    g_groupRecordings = DvbRecording::GroupingDisabled;
+    g_groupRecordings = DvbRecording::GROUPING_DISABLED;
 
   if (!XBMC->GetSetting("usetimeshift", &g_useTimeshift))
     g_useTimeshift = false;
@@ -93,7 +93,7 @@ void ADDON_ReadSettings(void)
     g_useRTSP = false;
 
   if (!XBMC->GetSetting("prependoutline", &g_prependOutline))
-    g_prependOutline = PrependOutline::InEPG;
+    g_prependOutline = PrependOutline::IN_EPG;
 
   if (!XBMC->GetSetting("lowperformance", &g_lowPerformance))
     g_lowPerformance = false;
@@ -110,13 +110,13 @@ void ADDON_ReadSettings(void)
   XBMC->Log(LOG_DEBUG, "Use favourites: %s", (g_useFavourites) ? "yes" : "no");
   if (g_useFavouritesFile)
     XBMC->Log(LOG_DEBUG, "Favourites file: %s", g_favouritesFile.c_str());
-  if (g_groupRecordings != DvbRecording::GroupingDisabled)
+  if (g_groupRecordings != DvbRecording::GROUPING_DISABLED)
     XBMC->Log(LOG_DEBUG, "Group recordings: %d", g_groupRecordings);
   XBMC->Log(LOG_DEBUG, "Timeshift: %s", (g_useTimeshift) ? "enabled" : "disabled");
   if (g_useTimeshift)
     XBMC->Log(LOG_DEBUG, "Timeshift buffer path: %s", g_timeshiftBufferPath.c_str());
   XBMC->Log(LOG_DEBUG, "Use RTSP: %s", (g_useRTSP) ? "yes" : "no");
-  if (g_prependOutline != PrependOutline::Never)
+  if (g_prependOutline != PrependOutline::NEVER)
     XBMC->Log(LOG_DEBUG, "Prepend outline: %d", g_prependOutline);
   XBMC->Log(LOG_DEBUG, "Low performance mode: %s", (g_lowPerformance) ? "yes" : "no");
 }
@@ -239,7 +239,7 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
   }
   else if (sname == "grouprecordings")
   {
-    if (g_groupRecordings != *(const DvbRecording::Group *)settingValue)
+    if (g_groupRecordings != *(const DvbRecording::Grouping *)settingValue)
       return ADDON_STATUS_NEED_RESTART;
   }
   else if (sname == "timeshiftpath")

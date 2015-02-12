@@ -39,16 +39,14 @@ void tokenize(const CStdString& str, ContainerT& tokens,
 
 
 Dvb::Dvb()
-  : m_connected(false), m_backendVersion(0)
+  : m_connected(false), m_backendVersion(0), m_currentChannel(0),
+  m_newTimerIndex(0)
 {
   // simply add user@pass in front of the URL if username/password is set
   CStdString auth("");
   if (!g_username.empty() && !g_password.empty())
     auth.Format("%s:%s@", g_username.c_str(), g_password.c_str());
   m_url.Format("http://%s%s:%u/", auth.c_str(), g_hostname.c_str(), g_webPort);
-
-  m_currentChannel = 0;
-  m_newTimerIndex  = 1;
 
   m_updateTimers = false;
   m_updateEPG    = false;
@@ -168,15 +166,13 @@ bool Dvb::GetChannels(ADDON_HANDLE handle, bool radio)
   return true;
 }
 
-//TODO: rewrite
-//TODO: missing epg v2 - there's no documention
-bool Dvb::GetEPGForChannel(ADDON_HANDLE handle,
-  const PVR_CHANNEL& channelinfo, time_t start, time_t end)
+bool Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channelinfo,
+    time_t start, time_t end)
 {
-  DvbChannel *myChannel = m_channels[channelinfo.iUniqueId - 1];
+  DvbChannel *channel = m_channels[channelinfo.iUniqueId - 1];
 
   CStdString url = BuildURL("api/epg.html?lvl=2&channel=%" PRIu64 "&start=%f&end=%f",
-      myChannel->epgId, start/86400.0 + DELPHI_DATE, end/86400.0 + DELPHI_DATE);
+      channel->epgId, start/86400.0 + DELPHI_DATE, end/86400.0 + DELPHI_DATE);
   CStdString req = GetHttpXML(url);
 
   TiXmlDocument doc;
@@ -188,43 +184,43 @@ bool Dvb::GetEPGForChannel(ADDON_HANDLE handle,
     return PVR_ERROR_SERVER_ERROR;
   }
 
-  unsigned iNumEPG = 0;
+  unsigned int numEPG = 0;
   for (TiXmlElement *xEntry = doc.RootElement()->FirstChildElement("programme");
       xEntry; xEntry = xEntry->NextSiblingElement("programme"))
   {
     DvbEPGEntry entry;
-    entry.iChannelUid = channelinfo.iUniqueId;
+    entry.channel   = channel;
     entry.startTime = ParseDateTime(xEntry->Attribute("start"));
-    entry.endTime = ParseDateTime(xEntry->Attribute("stop"));
+    entry.endTime   = ParseDateTime(xEntry->Attribute("stop"));
 
     if (end > 1 && end < entry.endTime)
        continue;
 
-    if (!XMLUtils::GetInt(xEntry, "eventid", entry.iEventId))
+    if (!XMLUtils::GetUInt(xEntry, "eventid", entry.id))
       continue;
 
     // since RS 1.26.0 the correct language is already merged into the elements
     TiXmlNode *xTitles = xEntry->FirstChild("titles");
-    if (!xTitles || !XMLUtils::GetString(xTitles, "title", entry.strTitle))
+    if (!xTitles || !XMLUtils::GetString(xTitles, "title", entry.title))
       continue;
 
     TiXmlNode *xDescriptions = xEntry->FirstChild("descriptions");
     if (xDescriptions)
-      XMLUtils::GetString(xDescriptions, "description", entry.strPlot);
+      XMLUtils::GetString(xDescriptions, "description", entry.plot);
 
     TiXmlNode *xEvents = xEntry->FirstChild("events");
     if (xEvents)
     {
-      XMLUtils::GetString(xEvents, "event", entry.strPlotOutline);
-      if (entry.strPlot.empty())
+      XMLUtils::GetString(xEvents, "event", entry.plotOutline);
+      if (entry.plot.empty())
       {
-        entry.strPlot = entry.strPlotOutline;
-        entry.strPlotOutline.clear();
+        entry.plot = entry.plotOutline;
+        entry.plotOutline.clear();
       }
       else if (PrependOutline::test(PrependOutline::IN_EPG))
       {
-        entry.strPlot.insert(0, entry.strPlotOutline + "\n");
-        entry.strPlotOutline.clear();
+        entry.plot.insert(0, entry.plotOutline + "\n");
+        entry.plotOutline.clear();
       }
     }
 
@@ -232,26 +228,26 @@ bool Dvb::GetEPGForChannel(ADDON_HANDLE handle,
 
     EPG_TAG broadcast;
     memset(&broadcast, 0, sizeof(EPG_TAG));
-    broadcast.iUniqueBroadcastId  = entry.iEventId;
-    broadcast.strTitle            = entry.strTitle.c_str();
+    broadcast.iUniqueBroadcastId  = entry.id;
+    broadcast.strTitle            = entry.title.c_str();
     broadcast.iChannelNumber      = channelinfo.iChannelNumber;
     broadcast.startTime           = entry.startTime;
     broadcast.endTime             = entry.endTime;
-    broadcast.strPlotOutline      = entry.strPlotOutline.c_str();
-    broadcast.strPlot             = entry.strPlot.c_str();
+    broadcast.strPlotOutline      = entry.plotOutline.c_str();
+    broadcast.strPlot             = entry.plot.c_str();
     broadcast.iGenreType          = entry.genre & 0xF0;
     broadcast.iGenreSubType       = entry.genre & 0x0F;
 
     PVR->TransferEpgEntry(handle, &broadcast);
-    ++iNumEPG;
+    ++numEPG;
 
     XBMC->Log(LOG_DEBUG, "%s: Loaded EPG entry '%u:%s': start=%u, end=%u",
-        __FUNCTION__, broadcast.iUniqueBroadcastId, broadcast.strTitle,
+        __FUNCTION__, entry.id, entry.title.c_str(),
         entry.startTime, entry.endTime);
   }
 
   XBMC->Log(LOG_INFO, "Loaded %u EPG entries for channel '%s'",
-      iNumEPG, channelinfo.strChannelName);
+      numEPG, channel->name.c_str());
   return PVR_ERROR_NO_ERROR;
 }
 

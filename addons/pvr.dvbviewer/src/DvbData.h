@@ -46,7 +46,10 @@ public:
   {}
 
 public:
-  /*!< @brief unique id passed to xbmc database. see FIXME for more details */
+  /*!< @brief unique id passed to xbmc database.
+   * starts at 1 and increases by each channel regardless of hidden state.
+   * see FIXME for more details
+   */
   unsigned int id;
   /*!< @brief backend number for generating the stream url */
   unsigned int backendNr;
@@ -80,14 +83,14 @@ public:
   {}
 
 public:
-  int iEventId;
-  CStdString strTitle;
-  unsigned int iChannelUid;
+  unsigned int id;
+  DvbChannel *channel;
+  CStdString title;
   time_t startTime;
   time_t endTime;
   unsigned int genre;
-  CStdString strPlotOutline;
-  CStdString strPlot;
+  CStdString plotOutline;
+  CStdString plot;
 };
 
 class DvbTimer
@@ -245,14 +248,16 @@ private:
   std::vector<CStdString> m_recfolders;
 
   CStdString m_url;
+
+  /* channels */
+  DvbChannels_t m_channels;
+  /* active (not hidden) channels */
+  unsigned int m_channelAmount;
   unsigned int m_currentChannel;
 
-  /* channels + active (not hidden) channels */
-  DvbChannels_t m_channels;
-  unsigned int m_channelAmount;
-
-  /* channel groups + active (not hidden) groups */
+  /* channel groups */
   DvbGroups_t m_groups;
+  /* active (not hidden) groups */
   unsigned int m_groupAmount;
 
   bool m_updateTimers;

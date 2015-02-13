@@ -1356,6 +1356,7 @@ bool cVNSIAdmin::OnResponsePacket(cResponsePacket* resp)
         m_osdRender->DisposeTexture(wnd);
       m_bIsOsdDirty = true;
       m_osdMutex.Unlock();
+      m_window->SetFocusId(CONTROL_MENU);
     }
     else if (resp->getOpCodeID() == VNSI_OSD_MOVEWINDOW)
     {

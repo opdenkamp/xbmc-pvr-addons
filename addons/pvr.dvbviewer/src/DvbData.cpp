@@ -155,7 +155,7 @@ bool Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channelinfo,
   {
     XBMC->Log(LOG_ERROR, "Unable to parse EPG. Error: %s",
         doc.ErrorDesc());
-    return PVR_ERROR_SERVER_ERROR;
+    return false;
   }
 
   unsigned int numEPG = 0;
@@ -163,11 +163,11 @@ bool Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channelinfo,
       xEntry; xEntry = xEntry->NextSiblingElement("programme"))
   {
     DvbEPGEntry entry;
-    entry.channel   = channel;
-    entry.startTime = ParseDateTime(xEntry->Attribute("start"));
-    entry.endTime   = ParseDateTime(xEntry->Attribute("stop"));
+    entry.channel = channel;
+    entry.start   = ParseDateTime(xEntry->Attribute("start"));
+    entry.end     = ParseDateTime(xEntry->Attribute("stop"));
 
-    if (end > 1 && end < entry.endTime)
+    if (end > 1 && end < entry.end)
        continue;
 
     if (!XMLUtils::GetUInt(xEntry, "eventid", entry.id))
@@ -205,8 +205,8 @@ bool Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channelinfo,
     broadcast.iUniqueBroadcastId  = entry.id;
     broadcast.strTitle            = entry.title.c_str();
     broadcast.iChannelNumber      = channelinfo.iChannelNumber;
-    broadcast.startTime           = entry.startTime;
-    broadcast.endTime             = entry.endTime;
+    broadcast.startTime           = entry.start;
+    broadcast.endTime             = entry.end;
     broadcast.strPlotOutline      = entry.plotOutline.c_str();
     broadcast.strPlot             = entry.plot.c_str();
     broadcast.iGenreType          = entry.genre & 0xF0;
@@ -217,12 +217,12 @@ bool Dvb::GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channelinfo,
 
     XBMC->Log(LOG_DEBUG, "%s: Loaded EPG entry '%u:%s': start=%u, end=%u",
         __FUNCTION__, entry.id, entry.title.c_str(),
-        entry.startTime, entry.endTime);
+        entry.start, entry.end);
   }
 
   XBMC->Log(LOG_INFO, "Loaded %u EPG entries for channel '%s'",
       numEPG, channel->name.c_str());
-  return PVR_ERROR_NO_ERROR;
+  return true;
 }
 
 unsigned int Dvb::GetChannelsAmount()
@@ -299,12 +299,12 @@ bool Dvb::GetTimers(ADDON_HANDLE handle)
     PVR_STRCPY(tag.strTitle,   timer->title.c_str());
     tag.iClientIndex      = timer->id;
     tag.iClientChannelUid = timer->channel->id;
-    tag.startTime         = timer->startTime;
-    tag.endTime           = timer->endTime;
+    tag.startTime         = timer->start;
+    tag.endTime           = timer->end;
     tag.state             = timer->state;
     tag.iPriority         = timer->priority;
     tag.bIsRepeating      = (timer->weekdays != 0);
-    tag.firstDay          = (timer->weekdays != 0) ? timer->startTime : 0;
+    tag.firstDay          = (timer->weekdays != 0) ? timer->start : 0;
     tag.iWeekdays         = timer->weekdays;
 
     PVR->TransferTimerEntry(handle, &tag);
@@ -317,14 +317,10 @@ bool Dvb::AddTimer(const PVR_TIMER& timer, bool update)
   XBMC->Log(LOG_DEBUG, "%s: channel=%u, title='%s'",
       __FUNCTION__, timer.iClientChannelUid, timer.strTitle);
 
-  time_t startTime = timer.startTime, endTime = timer.endTime;
-  if (!startTime)
+  time_t startTime = timer.startTime - timer.iMarginStart * 60;
+  time_t endTime   = timer.endTime   + timer.iMarginEnd * 60;
+  if (!timer.startTime)
     startTime = time(NULL);
-  else
-  {
-    startTime -= timer.iMarginStart * 60;
-    endTime   += timer.iMarginEnd * 60;
-  }
 
   unsigned int date = ((startTime + m_timezone) / DAY_SECS) + DELPHI_DATE;
   struct tm *timeinfo;
@@ -394,7 +390,7 @@ bool Dvb::GetRecordings(ADDON_HANDLE handle)
   {
     XBMC->Log(LOG_ERROR, "Unable to parse recordings. Error: %s",
         doc.ErrorDesc());
-    return PVR_ERROR_SERVER_ERROR;
+    return false;
   }
 
   CStdString streamURL, imageURL;
@@ -440,28 +436,25 @@ bool Dvb::GetRecordings(ADDON_HANDLE handle)
       recording.thumbnailPath = BuildExtURL(imageURL, "%s", thumbnail.c_str());
 
     CStdString startTime = xRecording->Attribute("start");
-    recording.startTime = ParseDateTime(startTime);
+    recording.start = ParseDateTime(startTime);
 
     int hours, mins, secs;
     sscanf(xRecording->Attribute("duration"), "%02d%02d%02d", &hours, &mins, &secs);
     recording.duration = hours*60*60 + mins*60 + secs;
 
-    // generate a more unique id
-    recording.id += "_" + startTime;
-
-    PVR_RECORDING tag;
-    memset(&tag, 0, sizeof(PVR_RECORDING));
-    PVR_STRCPY(tag.strRecordingId,   recording.id.c_str());
-    PVR_STRCPY(tag.strTitle,         recording.title.c_str());
-    PVR_STRCPY(tag.strStreamURL,     recording.streamURL.c_str());
-    PVR_STRCPY(tag.strPlotOutline,   recording.plotOutline.c_str());
-    PVR_STRCPY(tag.strPlot,          recording.plot.c_str());
-    PVR_STRCPY(tag.strChannelName,   recording.channelName.c_str());
-    PVR_STRCPY(tag.strThumbnailPath, recording.thumbnailPath.c_str());
-    tag.recordingTime = recording.startTime;
-    tag.iDuration     = recording.duration;
-    tag.iGenreType    = recording.genre & 0xF0;
-    tag.iGenreSubType = recording.genre & 0x0F;
+    PVR_RECORDING recinfo;
+    memset(&recinfo, 0, sizeof(PVR_RECORDING));
+    PVR_STRCPY(recinfo.strRecordingId,   recording.id.c_str());
+    PVR_STRCPY(recinfo.strTitle,         recording.title.c_str());
+    PVR_STRCPY(recinfo.strStreamURL,     recording.streamURL.c_str());
+    PVR_STRCPY(recinfo.strPlotOutline,   recording.plotOutline.c_str());
+    PVR_STRCPY(recinfo.strPlot,          recording.plot.c_str());
+    PVR_STRCPY(recinfo.strChannelName,   recording.channelName.c_str());
+    PVR_STRCPY(recinfo.strThumbnailPath, recording.thumbnailPath.c_str());
+    recinfo.recordingTime = recording.start;
+    recinfo.iDuration     = recording.duration;
+    recinfo.iGenreType    = recording.genre & 0xF0;
+    recinfo.iGenreSubType = recording.genre & 0x0F;
 
     CStdString tmp;
     switch(g_groupRecordings)
@@ -476,35 +469,35 @@ bool Dvb::GetRecordings(ADDON_HANDLE handle)
             continue;
           tmp = tmp.substr(recf->length(), tmp.ReverseFind('\\') - recf->length());
           tmp.Replace('\\', '/');
-          PVR_STRCPY(tag.strDirectory, tmp.c_str() + 1);
+          PVR_STRCPY(recinfo.strDirectory, tmp.c_str() + 1);
           break;
         }
         break;
       case DvbRecording::GROUP_BY_DATE:
         tmp.Format("%s/%s", startTime.substr(0, 4), startTime.substr(4, 2));
-        PVR_STRCPY(tag.strDirectory, tmp.c_str());
+        PVR_STRCPY(recinfo.strDirectory, tmp.c_str());
         break;
       case DvbRecording::GROUP_BY_FIRST_LETTER:
-        tag.strDirectory[0] = recording.title[0];
-        tag.strDirectory[1] = '\0';
+        recinfo.strDirectory[0] = recording.title[0];
+        recinfo.strDirectory[1] = '\0';
         break;
       case DvbRecording::GROUP_BY_TV_CHANNEL:
-        PVR_STRCPY(tag.strDirectory, recording.channelName.c_str());
+        PVR_STRCPY(recinfo.strDirectory, recording.channelName.c_str());
         break;
       case DvbRecording::GROUP_BY_SERIES:
         tmp = "Unknown";
         XMLUtils::GetString(xRecording, "series", tmp);
-        PVR_STRCPY(tag.strDirectory, tmp.c_str());
+        PVR_STRCPY(recinfo.strDirectory, tmp.c_str());
         break;
       default:
         break;
     }
 
-    PVR->TransferRecordingEntry(handle, &tag);
+    PVR->TransferRecordingEntry(handle, &recinfo);
     ++m_recordingAmount;
 
     XBMC->Log(LOG_DEBUG, "%s: Loaded recording entry '%s': start=%u, length=%u",
-        __FUNCTION__, recording.title.c_str(), recording.startTime,
+        __FUNCTION__, recording.title.c_str(), recording.start,
         recording.duration);
   }
 
@@ -514,13 +507,9 @@ bool Dvb::GetRecordings(ADDON_HANDLE handle)
 
 bool Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
 {
-  CStdString recid = recinfo.strRecordingId;
-  CStdString::size_type pos = recid.find('_');
-  if (pos != CStdString::npos)
-    recid.erase(pos);
-
   // RS api doesn't return a result
-  GetHttpXML(BuildURL("api/recdelete.html?recid=%s&delfile=1", recid.c_str()));
+  GetHttpXML(BuildURL("api/recdelete.html?recid=%s&delfile=1",
+        recinfo.strRecordingId));
 
   PVR->TriggerRecordingUpdate();
   return true;
@@ -898,8 +887,8 @@ DvbTimers_t Dvb::LoadTimers()
 
     CStdString startDate = xTimer->Attribute("Date");
     startDate += xTimer->Attribute("Start");
-    timer.startTime = ParseDateTime(startDate, false);
-    timer.endTime   = timer.startTime + atoi(xTimer->Attribute("Dur")) * 60;
+    timer.start = ParseDateTime(startDate, false);
+    timer.end   = timer.start + atoi(xTimer->Attribute("Dur")) * 60;
 
     CStdString weekdays = xTimer->Attribute("Days");
     timer.weekdays = 0;
@@ -922,7 +911,7 @@ DvbTimers_t Dvb::LoadTimers()
 
     timers.push_back(timer);
     XBMC->Log(LOG_DEBUG, "%s: Loaded timer entry '%s': start=%u, end=%u",
-        __FUNCTION__, timer.title.c_str(), timer.startTime, timer.endTime);
+        __FUNCTION__, timer.title.c_str(), timer.start, timer.end);
   }
 
   XBMC->Log(LOG_INFO, "Loaded %u timer entries", timers.size());

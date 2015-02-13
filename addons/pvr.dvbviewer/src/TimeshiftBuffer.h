@@ -10,7 +10,7 @@ class TimeshiftBuffer
   : public PLATFORM::CThread
 {
 public:
-  TimeshiftBuffer(CStdString streamUrl, CStdString bufferPath);
+  TimeshiftBuffer(CStdString streamURL, CStdString bufferPath);
   ~TimeshiftBuffer(void);
   bool IsValid();
   int ReadData(unsigned char *buffer, unsigned int size);

@@ -78,8 +78,8 @@ public:
   unsigned int id;
   DvbChannel *channel;
   CStdString title;
-  time_t startTime;
-  time_t endTime;
+  time_t start;
+  time_t end;
   unsigned int genre;
   CStdString plotOutline;
   CStdString plot;
@@ -112,8 +112,8 @@ public:
     bool updated = false;
     TIMER_UPDATE_MEMBER(channel);
     TIMER_UPDATE_MEMBER(title);
-    TIMER_UPDATE_MEMBER(startTime);
-    TIMER_UPDATE_MEMBER(endTime);
+    TIMER_UPDATE_MEMBER(start);
+    TIMER_UPDATE_MEMBER(end);
     TIMER_UPDATE_MEMBER(priority);
     TIMER_UPDATE_MEMBER(weekdays);
     TIMER_UPDATE_MEMBER(state);
@@ -133,8 +133,8 @@ public:
   DvbChannel *channel;
   CStdString title;
   uint64_t channelId;
-  time_t startTime;
-  time_t endTime;
+  time_t start;
+  time_t end;
   int priority;
   unsigned int weekdays;
   PVR_TIMER_STATE state;
@@ -161,7 +161,7 @@ public:
 
 public:
   CStdString id;
-  time_t startTime;
+  time_t start;
   int duration;
   unsigned int genre;
   CStdString title;

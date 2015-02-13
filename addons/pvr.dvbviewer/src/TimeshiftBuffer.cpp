@@ -8,10 +8,10 @@
 
 using namespace ADDON;
 
-TimeshiftBuffer::TimeshiftBuffer(CStdString streamUrl, CStdString bufferPath)
+TimeshiftBuffer::TimeshiftBuffer(CStdString streamURL, CStdString bufferPath)
   : m_bufferPath(bufferPath)
 {
-  m_streamHandle = XBMC->OpenFile(streamUrl, READ_NO_CACHE);
+  m_streamHandle = XBMC->OpenFile(streamURL, READ_NO_CACHE);
   m_bufferPath += "/tsbuffer.ts";
   m_filebufferWriteHandle = XBMC->OpenFileForWrite(m_bufferPath, true);
 #ifndef TARGET_POSIX

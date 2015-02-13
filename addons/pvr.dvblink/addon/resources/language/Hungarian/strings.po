@@ -108,6 +108,10 @@ msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
 msgstr "Kombinálja a címed és az epizódnevet a felvtelhez"
 
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Csoport felvételek Sorozat szerint"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
 msgstr "Kapcsolódva a DVBLink Kiszolgálóhoz '%s'"

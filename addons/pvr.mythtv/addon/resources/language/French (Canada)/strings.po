@@ -226,11 +226,11 @@ msgstr "Aucune réponse du dorsal MythTV"
 
 msgctxt "#30305"
 msgid "Channel unavailable"
-msgstr "Chaîne indisponible"
+msgstr "Chaîne non disponible"
 
 msgctxt "#30306"
 msgid "Recorder unavailable"
-msgstr "Enregistreur indisponible"
+msgstr "Enregistreur non disponible"
 
 msgctxt "#30307"
 msgid "Canceling conflicting recording: %s"

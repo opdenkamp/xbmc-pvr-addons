@@ -110,7 +110,7 @@ msgstr "Usługa Recording Service wymagana w wersji %s lub nowszej"
 
 msgctxt "#30502"
 msgid "Unable to parse channel list"
-msgstr "Błąd parsowania listy kanałów"
+msgstr "Błąd przetwarzania listy kanałów"
 
 msgctxt "#30503"
 msgid "Check Kodi log for more information"
@@ -122,8 +122,8 @@ msgstr "Nie można otworzyć pliku favourites.xml"
 
 msgctxt "#30505"
 msgid "Unable to parse favourites list"
-msgstr "Błąd parsowania listy ulubionych"
+msgstr "Błąd przetwarzania listy ulubionych"
 
 msgctxt "#30506"
 msgid "Unable to parse timer list"
-msgstr "Błąd parsowania harmonogramu nagrań"
+msgstr "Błąd przetwarzania harmonogramu nagrań"

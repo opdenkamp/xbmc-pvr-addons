@@ -94,7 +94,7 @@ msgstr "Le dossier de la télé enregistrée ne peut pas être ouvert"
 
 msgctxt "#30019"
 msgid "ServerWMC version update is available (%s)"
-msgstr "Une mise à jour de version (%s) est disponible pour ServerWMC"
+msgstr "Une mise à jour de version (%s) est proposée pour ServerWMC"
 
 msgctxt "#30020"
 msgid "All tuners for this channel are busy"

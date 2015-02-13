@@ -31,3 +31,7 @@ msgstr "Umumiy"
 msgctxt "#30019"
 msgid "Channels"
 msgstr "Kanallar"
+
+msgctxt "#30021"
+msgid "HTTP"
+msgstr "HTTP"

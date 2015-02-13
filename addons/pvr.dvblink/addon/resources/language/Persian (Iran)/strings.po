@@ -31,3 +31,15 @@ msgstr "رمز عبور"
 msgctxt "#30105"
 msgid "Bitrate"
 msgstr "نرخ بیت"
+
+msgctxt "#30107"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#30200"
+msgid "Advanced"
+msgstr "پیشرفته"
+
+msgctxt "#32014"
+msgid "Delete timer"
+msgstr "حذف تایمر"

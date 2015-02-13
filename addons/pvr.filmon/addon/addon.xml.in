@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.filmon"
-  version="0.4.7"
+  version="0.4.8"
   name="PVR Filmon Client"
   provider-name="Stephen Denham">
   <requires>
@@ -68,6 +68,7 @@
     <description lang="hu">Filmon előtér-kiszolgáló. Támogatja az Élő TV-t, felvételeket, EPG-t. Filmon regisztráció szükséges. Engedélyezése előtt: (a) a Filmon-ban állítsa be kedvencként a csatornát hogy megjelenjen a Kodi-ban (b) írja be a felhasználónevet és a jelszót a kiegészítő beállításainál. Megjegyzés: a felvételek befejezése után előfordulhat hogy csak egy idő mulva jelennek meg a felvételi listában.</description>
     <description lang="id">Front end Filmon. Mendukung siaran TV, rekaman, EPG. Memerlukan langganan Filmon. Sebelum mengaktifkan: (a) dalam menetapkan saluran Filmon sebagai favorit untuk melihat mereka di Kodi (b) masukkan nama penggunan dan sandi pada pengaturan addon ini. Catatan : rekaman bisa memerlukan beberapa menit untuk muncul setelah timer selesai</description>
     <description lang="is">Filmon framendi. Styður beina útsendingu, upptökur, rafræna dagskrárupplýsingar. Þarfnast Filmon áskriftar. Áður en þú gerir virkt: (a) í Filmon settu rásir sem uppáhalds til að sjá þær í Kodi. (b) settu inn notandanafn þitt og lykilorð í uppsetningu viðbótarinnar. Taktu eftir: það getur tekið nokkrar mínútur þangað til upptaka verður sýnileg eftir að upptöku líkur.</description>
+    <description lang="it">Frontend Filmon. Supporta TV in diretta, registrazioni, EPG. Richiede l'abbonamento a Filmon. Prima di abilitare: (a) in Filmon, imposta i canali come preferiti per visualizzarli in Kodi (b) inserisci i tuoi username e password nelle impostazioni dell'addon. Nota: le registrazioni potrebbero apparire dopo alcuni minuti dallo scadere del timer.</description>
     <description lang="ko">Filmon 프론트엔드. 라이브 TV, 녹화, EPG 지원. Filmon 계정정보 필요. 활성화하기 전에: (a) Kodi에서 보려면 Filmon에서 채널을 즐겨찾기에 등록하세요. (b) 애드온 설정에 사용자명과 비밀번호를 입력하세요. 노트: 녹화물은 타이머가 만료된 후 몇 분 뒤에 나타날 수 있습니다.</description>
     <description lang="lt">Filmon naudotojo sąsaja. Palaiko TV transliaciją, laidų įrašymą, EPG. Reikalinga Filmon paskyra. Prieš įjungiant: (a) Filmon puslapyje nustatykite kanalus, kuriuos norite matyti Kodi, kaip mėgstamiausius (b) įveskite savo vartotojo vardą ir slaptažodį šio priedo nustatymuose. Pastaba: įrašymo atsiradimui gali prireikti keleto minučių po laikmačio sukūrimo.</description>
     <description lang="mk">Интерфејс за Filmon. Поддржува ТВ во живо, снимки, EPG. Бара Filmon претплата. Пред да го вклучите: (а) во Filmon поставете канали како омилени за да можете да ги видите во Kodi (б) внесете го вашето име и лозинка во подесувањата за овој аддон. Белешка: на снимките може да им требаат неколку минути за да се појават откако тајмерот ќе заврши.</description>

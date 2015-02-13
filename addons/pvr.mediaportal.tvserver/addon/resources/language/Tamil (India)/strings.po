@@ -24,6 +24,10 @@ msgctxt "#30103"
 msgid "Channels"
 msgstr "சேனல்கள்"
 
+msgctxt "#30104"
+msgid "Keep"
+msgstr "வை"
+
 msgctxt "#30132"
 msgid "Days"
 msgstr "நாட்கள்"

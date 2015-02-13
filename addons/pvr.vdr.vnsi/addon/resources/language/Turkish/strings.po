@@ -92,6 +92,18 @@ msgctxt "#30018"
 msgid "Cable Inversion"
 msgstr "Kabloluya çevir"
 
+msgctxt "#30019"
+msgid "Cable Symbolrate"
+msgstr "Kablo Sembol Oranı"
+
+msgctxt "#30020"
+msgid "Cable modulation"
+msgstr "Kablo Modülasyonu"
+
+msgctxt "#30021"
+msgid "Terr Inversion"
+msgstr "Terr Ters Dönüştürmesi"
+
 msgctxt "#30022"
 msgid "Satellite"
 msgstr "Uydu"
@@ -103,6 +115,10 @@ msgstr "ATSC Tipi"
 msgctxt "#30024"
 msgid "Back"
 msgstr "Geri"
+
+msgctxt "#30025"
+msgid "Channel search - running... %i %%"
+msgstr "Kanal Araması - İlerliyor... %i %%"
 
 msgctxt "#30026"
 msgid "Type:"
@@ -136,6 +152,10 @@ msgctxt "#30033"
 msgid "Analog Radio"
 msgstr "Analog Radyo"
 
+msgctxt "#30034"
+msgid "Transponder:"
+msgstr "Verici"
+
 msgctxt "#30035"
 msgid "New channels"
 msgstr "Yeni kanallar"
@@ -143,6 +163,14 @@ msgstr "Yeni kanallar"
 msgctxt "#30036"
 msgid "Channel search - Finished"
 msgstr "Kanal araması - Tamamlandı"
+
+msgctxt "#30037"
+msgid "No device available - exiting"
+msgstr "Aygıt bulunamadı - çıkılıyor"
+
+msgctxt "#30038"
+msgid "No DVB-S2 device available - trying fallback to DVB-S"
+msgstr "DVB-S2 aygıtı bulunamadı - DVB-S'e geri dönmeyi deniyor"
 
 msgctxt "#30039"
 msgid "Running"
@@ -168,14 +196,82 @@ msgctxt "#30044"
 msgid "Lost connection to VDR Server"
 msgstr "VDR Sunucusun bağlantısı kaybedildi"
 
+msgctxt "#30045"
+msgid "Connection to VDR Server restored"
+msgstr "VDR Sunucusu Bağlantısı Kaydedildi"
+
+msgctxt "#30046"
+msgid "Create channel groups automatically on the server"
+msgstr "Kanal Gruplarını Bu Sunucuda Kendiliğinden Kaydet"
+
+msgctxt "#30047"
+msgid "Request Timeshift"
+msgstr "İstenilen zaman kaydırması"
+
+msgctxt "#30048"
+msgid "Path to channel icons"
+msgstr "Kanal simgeleri kaynağı"
+
+msgctxt "#30049"
+msgid "VDR Server MAC for Wake-on-LAN"
+msgstr "Ağ Üzerinden Uyandırma (Wake-on-Lan) için VDR Sunucusu Mac Adresi"
+
+msgctxt "#30100"
+msgid "VDR OSD"
+msgstr "VDR Göstergesi"
+
 msgctxt "#30101"
 msgid "Setup"
 msgstr "Yapılandırma"
+
+msgctxt "#30102"
+msgid "Controlling OSD - press info to exit"
+msgstr "Gösterge Kontrol Ediliyor - Çıkmak için \"info\" tuşuna basın"
+
+msgctxt "#30103"
+msgid "Select to control OSD"
+msgstr "Kontrol İçin Göstergeyi Seçin"
+
+msgctxt "#30104"
+msgid "Timeshift Mode"
+msgstr "Zaman Kaydırması Modu"
+
+msgctxt "#30105"
+msgid "Timeshift Buffer (RAM) x100 MB"
+msgstr "Zaman Kaydırma Önbelleği (RAM) x100 MB"
+
+msgctxt "#30106"
+msgid "Timeshift Buffer (File) x1 GB"
+msgstr "Zaman Kaydırma Önbelleği (DOSYA) x1 GB"
+
+msgctxt "#30107"
+msgid "VDR Admin"
+msgstr "VDR Yöneticisi"
 
 msgctxt "#30108"
 msgid "Channels"
 msgstr "Kanallar"
 
+msgctxt "#30109"
+msgid "Provider whitelist"
+msgstr "Sağlayıcı Beyaz Listesi"
+
+msgctxt "#30110"
+msgid "Channel blacklist"
+msgstr "Kanal Kara Listesi"
+
+msgctxt "#30111"
+msgid "Channel filters"
+msgstr "Kanal Filtreleri"
+
 msgctxt "#30112"
 msgid "Radio Channels"
 msgstr "Radyo Kanalları"
+
+msgctxt "#30113"
+msgid "Save filters"
+msgstr "Filtreyi Kaydet"
+
+msgctxt "#30114"
+msgid "Provider Unknown"
+msgstr "Bilinmeyen Sağlayıcı"

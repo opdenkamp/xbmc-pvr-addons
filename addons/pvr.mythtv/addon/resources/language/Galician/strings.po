@@ -144,6 +144,10 @@ msgctxt "#30052"
 msgid "Enable demuxing MPEG-TS"
 msgstr "Activar demux MPEG-TS"
 
+msgctxt "#30053"
+msgid "Tuning delay (sec)"
+msgstr "Retardo na sintonización (seg)"
+
 msgctxt "#30054"
 msgid "Group recordings by title"
 msgstr "Agrupar gravacións por título"
@@ -175,6 +179,14 @@ msgstr "diálogo"
 msgctxt "#30061"
 msgid "Never"
 msgstr "Nunca"
+
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "Bloquear o apagado do motor"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "Permitir iconas das canles"
 
 msgctxt "#30064"
 msgid "Enable recording fanart/thumbnails"

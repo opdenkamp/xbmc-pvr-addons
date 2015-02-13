@@ -20,6 +20,14 @@ msgctxt "#30004"
 msgid "Connect timeout (s)"
 msgstr "Истек времена за повезивање (с)"
 
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "TV kanali"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "Radio kanali"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "Država"
@@ -35,3 +43,7 @@ msgstr "Pokretanje"
 msgctxt "#30101"
 msgid "Setup"
 msgstr "Konfiguracija"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "Kanali"

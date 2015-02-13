@@ -228,6 +228,14 @@ msgctxt "#30126"
 msgid "Any Channel"
 msgstr "Qualunque canale"
 
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Fino a spazio necessario"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Fino a Guardato"
+
 msgctxt "#30132"
 msgid "Days"
 msgstr "Giorni"

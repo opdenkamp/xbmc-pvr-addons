@@ -148,6 +148,10 @@ msgctxt "#32010"
 msgid "Could not get stream for channel %s (Error code : %d)"
 msgstr "Non foi posíbel obter o fluxo da canle %s (código do erro: %d)"
 
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Gravación de series"
+
 msgctxt "#32012"
 msgid "Record this episode only"
 msgstr "Gravar só este episodio"

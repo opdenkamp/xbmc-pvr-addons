@@ -148,25 +148,61 @@ msgctxt "#30053"
 msgid "Tuning delay (sec)"
 msgstr "同調遅延 (秒)"
 
+msgctxt "#30054"
+msgid "Group recordings by title"
+msgstr "タイトルでグループ化"
+
 msgctxt "#30055"
 msgid "Always"
 msgstr "常に"
+
+msgctxt "#30056"
+msgid "Only for series"
+msgstr "シリーズのみ"
 
 msgctxt "#30057"
 msgid "Never"
 msgstr "使用しない"
 
+msgctxt "#30058"
+msgid "Enable commercial skips (EDL)"
+msgstr "CMスキップ(EDL)有効"
+
 msgctxt "#30059"
 msgid "Always"
 msgstr "常に"
+
+msgctxt "#30060"
+msgid "Dialog"
+msgstr "メッセージ"
 
 msgctxt "#30061"
 msgid "Never"
 msgstr "使用しない"
 
+msgctxt "#30062"
+msgid "Block backend shutdown"
+msgstr "バックエンドの電源が切れるのを阻止する"
+
+msgctxt "#30063"
+msgid "Enable channel icons"
+msgstr "チャンネル アイコン を有効"
+
+msgctxt "#30064"
+msgid "Enable recording fanart/thumbnails"
+msgstr "録画に関する画像・サムネール有効"
+
 msgctxt "#30100"
 msgid "Protocol version: %i - Database version: %i"
 msgstr "プロトコルのバージョン: %i - データベースのバージョン: %i"
+
+msgctxt "#30110"
+msgid "Enabling EDL"
+msgstr "EDL有効"
+
+msgctxt "#30111"
+msgid "A cut list or commercial skips have been found.\nDo you want to activate EDL functionality for this show ?"
+msgstr "カットリストもしくはCMスキップデータがあります。\nEDL機能を利用しますか?"
 
 msgctxt "#30300"
 msgid "Failed to connect to MythTV backend"

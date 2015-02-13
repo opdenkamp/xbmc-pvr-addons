@@ -56,9 +56,37 @@ msgctxt "#30030"
 msgid "Use RTSP streaming for live TV"
 msgstr "Ползвай RTSP стрийминг за телевизия на живо"
 
+msgctxt "#30040"
+msgid "Enable low performance mode (disables logos & thumbnails)"
+msgstr "Включи режим на слаба производителност (изключва емблемите и умалените изображения)"
+
+msgctxt "#30050"
+msgid "Group recordings"
+msgstr "Групирай записите"
+
 msgctxt "#30051"
 msgid "disabled"
 msgstr "изключено"
+
+msgctxt "#30052"
+msgid "by recording directory"
+msgstr "по папка, в която се записват"
+
+msgctxt "#30053"
+msgid "by recording date"
+msgstr "по дата на записване"
+
+msgctxt "#30054"
+msgid "by first letter"
+msgstr "по първа буква"
+
+msgctxt "#30055"
+msgid "by tv channel"
+msgstr "по тв канал"
+
+msgctxt "#30056"
+msgid "by series"
+msgstr "по сериал"
 
 msgctxt "#30100"
 msgid "General"
@@ -71,6 +99,14 @@ msgstr "Допълнителни"
 msgctxt "#30102"
 msgid "Recordings"
 msgstr "Записи"
+
+msgctxt "#30500"
+msgid "Unable to connect to the DVBViewer Recording Service"
+msgstr "Неуспешно свързване към DVBViewer услуга за записване"
+
+msgctxt "#30501"
+msgid "DVBViewer Recording Service version %s or higher required"
+msgstr "Версията на DVBViewer услугата за записване трябва да е поне %s"
 
 msgctxt "#30502"
 msgid "Unable to parse channel list"
@@ -90,4 +126,4 @@ msgstr "Не може да се анализира списъка с любим�
 
 msgctxt "#30506"
 msgid "Unable to parse timer list"
-msgstr "Не може да се анализира списъка с броячи"
+msgstr "Списъкът с броячи не може да бъде анализиран"

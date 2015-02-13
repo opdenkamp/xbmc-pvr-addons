@@ -28,6 +28,10 @@ msgctxt "#30008"
 msgid "Recording file not found"
 msgstr "Записаният файл не е открит"
 
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "Изпращане на WakeOnLAN към сървъра..."
+
 msgctxt "#30101"
 msgid "Record this episode only"
 msgstr "Запиши само този епизод"
@@ -40,6 +44,14 @@ msgctxt "#30108"
 msgid "Any Channel"
 msgstr "Всеки канал"
 
+msgctxt "#30111"
+msgid "Anytime"
+msgstr "Всеки път"
+
 msgctxt "#30120"
 msgid "Delete Timer"
 msgstr "Изтрий брояча"
+
+msgctxt "#30122"
+msgid "Delete the entire series"
+msgstr "Изтрий целия сериал"

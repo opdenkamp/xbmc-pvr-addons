@@ -32,6 +32,10 @@ msgctxt "#30105"
 msgid "Bitrate"
 msgstr "Bitreyt"
 
+msgctxt "#30107"
+msgid "HTTP"
+msgstr "HTTP"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Taymerni o'chirish"

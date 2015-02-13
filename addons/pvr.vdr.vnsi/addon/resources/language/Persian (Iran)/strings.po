@@ -16,6 +16,14 @@ msgstr ""
 "Language: fa_IR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30012"
+msgid "TV channels"
+msgstr "کانال های تلویزیونی"
+
+msgctxt "#30013"
+msgid "Radio channels"
+msgstr "کانال های رادیویی"
+
 msgctxt "#30017"
 msgid "Country"
 msgstr "کشور"
@@ -27,3 +35,7 @@ msgstr "نوع:"
 msgctxt "#30101"
 msgid "Setup"
 msgstr "پیکربندی"
+
+msgctxt "#30108"
+msgid "Channels"
+msgstr "کانال ها"

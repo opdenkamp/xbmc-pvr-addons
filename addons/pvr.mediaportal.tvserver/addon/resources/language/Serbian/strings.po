@@ -28,6 +28,10 @@ msgctxt "#30042"
 msgid "Playback"
 msgstr "Reprodukcija"
 
+msgctxt "#30103"
+msgid "Channels"
+msgstr "Kanali"
+
 msgctxt "#30132"
 msgid "Days"
 msgstr "dana"

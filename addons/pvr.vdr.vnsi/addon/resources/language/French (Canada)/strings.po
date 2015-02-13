@@ -166,7 +166,7 @@ msgstr "Recherche de chaînes - Terminée"
 
 msgctxt "#30037"
 msgid "No device available - exiting"
-msgstr "Aucun dispositif disponible - Sortie"
+msgstr "Aucun dispositif disponible - fermeture"
 
 msgctxt "#30038"
 msgid "No DVB-S2 device available - trying fallback to DVB-S"

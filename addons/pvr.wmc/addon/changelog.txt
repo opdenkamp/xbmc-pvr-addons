@@ -1,3 +1,6 @@
+0.4.4
+- Updated Language files from Transifex
+
 ﻿0.4.003
 - Revise previous ServerWMC stream stuttering fix
 

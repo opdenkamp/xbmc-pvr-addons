@@ -16,6 +16,14 @@ msgstr ""
 "Language: fa_IR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgctxt "#30041"
+msgid "Advanced"
+msgstr "پیشرفته"
+
+msgctxt "#30130"
+msgid "Keep"
+msgstr "حفظ شود"
+
 msgctxt "#30135"
 msgid "Default"
 msgstr "پیش فرض"

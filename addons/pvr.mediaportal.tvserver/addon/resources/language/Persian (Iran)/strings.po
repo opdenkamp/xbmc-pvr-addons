@@ -20,6 +20,14 @@ msgctxt "#30042"
 msgid "Playback"
 msgstr "پخش"
 
+msgctxt "#30103"
+msgid "Channels"
+msgstr "کانال ها"
+
+msgctxt "#30104"
+msgid "Keep"
+msgstr "حفظ شود"
+
 msgctxt "#30132"
 msgid "Days"
 msgstr "روز"

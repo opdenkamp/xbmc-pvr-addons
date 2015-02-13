@@ -70,7 +70,7 @@ msgstr "Интернет адрес на MythTV сървъра (WOL)"
 
 msgctxt "#30013"
 msgid "MythTV Backend Port for API services"
-msgstr "Порт на MythTV сървъра за API услугите"
+msgstr "Порт на MythTV сървъра за ППИ услугите"
 
 msgctxt "#30019"
 msgid "General"

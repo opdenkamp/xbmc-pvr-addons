@@ -20,6 +20,10 @@ msgctxt "#30041"
 msgid "Advanced"
 msgstr "மேம்பட்ட"
 
+msgctxt "#30130"
+msgid "Keep"
+msgstr "வை"
+
 msgctxt "#30135"
 msgid "Default"
 msgstr "இயல்புநிலை"

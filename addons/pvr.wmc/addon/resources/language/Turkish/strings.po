@@ -32,6 +32,10 @@ msgctxt "#30004"
 msgid "No video data found on this channel"
 msgstr "Bu kanalda video verisi bulunamadı"
 
+msgctxt "#30005"
+msgid "Tuner is needed for recording"
+msgstr "Kayıt için alıcı gereklidir."
+
 msgctxt "#30006"
 msgid "Recording delete failed, file in use or write protected"
 msgstr "Kayıt silme başarısız, dosya kullanımda veya yazma korumalı"
@@ -51,6 +55,54 @@ msgstr "Seçilen alternatif kanal:"
 msgctxt "#30010"
 msgid "Alternate time chosen: "
 msgstr "Seçilen alternatif zaman:"
+
+msgctxt "#30011"
+msgid "Can't start, tuner is no longer available"
+msgstr "Başlayamadı, alıcı uzun süre algılanamadı"
+
+msgctxt "#30012"
+msgid "Channel content is protected"
+msgstr "Kanal içeriği korumalı"
+
+msgctxt "#30017"
+msgid "Recorded TV folder not found"
+msgstr "Kaydedilenler klasörü bulunamadı"
+
+msgctxt "#30018"
+msgid "Recorded TV folder cannot be opened"
+msgstr "Kaydedilenler klasörü açılamadı"
+
+msgctxt "#30019"
+msgid "ServerWMC version update is available (%s)"
+msgstr "Sunucu WMC sürümü güncellemesi gerçekleşiyor (%s)"
+
+msgctxt "#30020"
+msgid "All tuners for this channel are busy"
+msgstr "Tüm alıcılar bu kanal için meşgul"
+
+msgctxt "#30021"
+msgid "LiveTV timed-out"
+msgstr "Canlı yayın zaman aşımına uğradı"
+
+msgctxt "#30022"
+msgid "LiveTV error, exited early"
+msgstr "Canlı yayın hatası, erken çıkıldı"
+
+msgctxt "#30023"
+msgid "Recording stream timed-out"
+msgstr "Kayıt akışı zaman aşımına uğradı"
+
+msgctxt "#30024"
+msgid "Recording stream exited early"
+msgstr "Kayıt akışından erken çıkıldı"
+
+msgctxt "#30025"
+msgid "Use WakeOnLAN to wake up server"
+msgstr "Sunucuyu uyandırmak için WakeOnLan özelliğini kullan"
+
+msgctxt "#30026"
+msgid "Sending WakeOnLAN to server..."
+msgstr "WakeOnLAN isteği sunucuya gönderiliyor"
 
 msgctxt "#30100"
 msgid "Recording Preference"

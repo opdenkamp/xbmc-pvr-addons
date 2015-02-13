@@ -238,7 +238,7 @@ msgstr "충돌하는 녹화를 취소: %s"
 
 msgctxt "#30308"
 msgid "Stopping Live TV due to conflicting recording: %s"
-msgstr "녹화와 충돌하므로 라이브 TV 정지: %s "
+msgstr "녹화와 충돌하므로 라이브 TV 중지: %s "
 
 msgctxt "#30309"
 msgid "Not recording"

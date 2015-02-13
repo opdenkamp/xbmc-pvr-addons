@@ -178,7 +178,7 @@ msgstr "실행중"
 
 msgctxt "#30040"
 msgid "Stopped"
-msgstr "정지"
+msgstr "중지"
 
 msgctxt "#30041"
 msgid "Finished"

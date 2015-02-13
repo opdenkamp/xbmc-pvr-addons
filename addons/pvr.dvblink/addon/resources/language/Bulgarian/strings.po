@@ -96,17 +96,41 @@ msgctxt "#30200"
 msgid "Advanced"
 msgstr "Допълнителни"
 
+msgctxt "#30201"
+msgid "Use channel handle instead of client id"
+msgstr "Използвай идентификатора на канала вместо този на клиента"
+
 msgctxt "#30202"
 msgid "Show information messages"
 msgstr "Показвай информативни съобщения"
 
+msgctxt "#30203"
+msgid "Combine title and episode name for recordings"
+msgstr "Комбинирай заглавието и името на епизода при записване"
+
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr "Групирай записите по сериал"
+
 msgctxt "#32001"
 msgid "Connected to DVBLink Server '%s'"
-msgstr "Свързан към DVBLink сървъра '%s'"
+msgstr "Свързан към DVBLink сървъра „%s“"
 
 msgctxt "#32002"
 msgid "Found '%d' channels"
-msgstr "Открити са '%d' канала"
+msgstr "Открити са %d канала"
+
+msgctxt "#32003"
+msgid "Could not connect to DVBLink Server '%s' (Error code : %d)"
+msgstr "Неуспешно свързване към DVBLink сървъра „%s“ (код на грешката : %d)"
+
+msgctxt "#32004"
+msgid "Could not get recordings (Error code : %d)"
+msgstr "Неуспешно получаване на записи (кода на грешката : %d)"
+
+msgctxt "#32006"
+msgid "Could not get timers(Error code : %d)"
+msgstr "Неуспешно получаване на броячи (код на грешката : %d)"
 
 msgctxt "#32007"
 msgid "Found %d EPG timers"
@@ -120,10 +144,30 @@ msgctxt "#32009"
 msgid "Found %d recordings"
 msgstr "Открити са %d записа"
 
+msgctxt "#32010"
+msgid "Could not get stream for channel %s (Error code : %d)"
+msgstr "Неуспешно получаване на потока за канала %s (код на грешката : %d)"
+
+msgctxt "#32011"
+msgid "Series recording"
+msgstr "Запис на сериал"
+
 msgctxt "#32012"
 msgid "Record this episode only"
 msgstr "Запиши само този епизод"
 
+msgctxt "#32013"
+msgid "Record all episodes"
+msgstr "Запиши всички епизоди"
+
 msgctxt "#32014"
 msgid "Delete timer"
 msgstr "Изтрий брояча"
+
+msgctxt "#32015"
+msgid "Delete this timer only"
+msgstr "Изтрий само този брояч"
+
+msgctxt "#32016"
+msgid "Delete the entire series"
+msgstr "Изтрий целия сериал"

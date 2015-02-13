@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.vdr.vnsi"
-  version="1.9.28"
+  version="1.9.29"
   name="VDR VNSI Client"
   provider-name="FernetMenta, Team XBMC">
   <requires>
@@ -61,6 +61,7 @@
     <summary lang="sl">Odjemalec PVR za povezavo VDR in Kodija preko vmesnika VNSI</summary>
     <summary lang="sq">Klient PVR për lidhjen e VDR dhe Kodi mbi ndërfaqjen VNSI</summary>
     <summary lang="sv">PVR-klient för att ansluta VDR till Kodi över VNSI-gränsnittet</summary>
+    <summary lang="tr">Kayıt Sunucusu VDR'ye Kodi'yle VNSI Arayüzü Üzerinden Bağlanır</summary>
     <summary lang="uk">Клієнт PVR для зв’язку VDR з Kodi через інтерфейс VNSI</summary>
     <summary lang="vi">Trình PVR để kết nối VDR với Kodi qua giao tiếp VNSI</summary>
     <summary lang="zh">让 Kodi 通过 VNSI 界面与 VDR 连接的 PVR 客户端</summary>

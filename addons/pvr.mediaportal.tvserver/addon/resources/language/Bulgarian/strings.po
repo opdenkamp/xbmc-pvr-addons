@@ -38,15 +38,15 @@ msgstr "Бързо превключване на канали (не спирай
 
 msgctxt "#30005"
 msgid "Connect timeout (s)"
-msgstr "Таймаут при свързване (с)"
+msgstr "Време на изчакване при свързване (с)"
 
 msgctxt "#30006"
 msgid "Import only TV Channels from group"
-msgstr "Импортирай само ТВ каналите от групата"
+msgstr "Внеси само ТВ каналите от групата"
 
 msgctxt "#30007"
 msgid "Import only Radio Channels from group"
-msgstr "Импортирай само радио каналите от групата"
+msgstr "Внеси само радио каналите от групата"
 
 msgctxt "#30008"
 msgid "Convert hostname to IP-adress"
@@ -54,7 +54,7 @@ msgstr "Конвертирай хост името в IP адрес"
 
 msgctxt "#30009"
 msgid "EPG: Read genre strings (slow)"
-msgstr "ЕПС: получавай жанровете (бавно)"
+msgstr "ЕПС: получавай имената на жанровете (бавно)"
 
 msgctxt "#30010"
 msgid "Wait time after tuning a channel (ms)"
@@ -62,7 +62,7 @@ msgstr "Интервал на очакване след настройка на 
 
 msgctxt "#30015"
 msgid "Streaming method"
-msgstr "Стрийминг метод"
+msgstr "Метод на поточно излъчване"
 
 msgctxt "#30016"
 msgid "Windows user account (SMB)"
@@ -106,7 +106,7 @@ msgstr "Всички карти са заети"
 
 msgctxt "#30061"
 msgid "Channel is scrambled"
-msgstr "Канала е кодиран"
+msgstr "Каналът е кодиран"
 
 msgctxt "#30062"
 msgid "No video or audio detected"
@@ -122,7 +122,7 @@ msgstr "Неизвестна грешка"
 
 msgctxt "#30065"
 msgid "Unable to start graph"
-msgstr "Неуспешно стартиране на на графиката"
+msgstr "Неуспешно стартиране на графиката"
 
 msgctxt "#30066"
 msgid "Unknown channel"
@@ -134,7 +134,7 @@ msgstr "Няма детайли за настройка"
 
 msgctxt "#30068"
 msgid "Channel is not mapped to any card"
-msgstr "Канала не е свързан към нито една карта"
+msgstr "Каналът не е свързан към нито една карта"
 
 msgctxt "#30069"
 msgid "Card is disabled"
@@ -164,9 +164,17 @@ msgctxt "#30075"
 msgid "No PMT found"
 msgstr "PMT не е намерена"
 
+msgctxt "#30100"
+msgid "Schedule settings"
+msgstr "Настройки на графика"
+
 msgctxt "#30101"
 msgid "Frequency"
 msgstr "Честота"
+
+msgctxt "#30102"
+msgid "Airtime"
+msgstr "Време на излъчване"
 
 msgctxt "#30103"
 msgid "Channels"
@@ -176,9 +184,41 @@ msgctxt "#30104"
 msgid "Keep"
 msgstr "Запази"
 
+msgctxt "#30105"
+msgid "Record minutes before start"
+msgstr "Минути на записване преди началото"
+
+msgctxt "#30106"
+msgid "Record minutes after end"
+msgstr "Минути на записване след края"
+
 msgctxt "#30110"
 msgid "Record Once"
-msgstr "Запис само веднъж"
+msgstr "Записване само веднъж"
+
+msgctxt "#30111"
+msgid "Record Daily (This program)"
+msgstr "Записване ежедневно (това предаване)"
+
+msgctxt "#30112"
+msgid "Record Weekly"
+msgstr "Записване ежеседмично"
+
+msgctxt "#30113"
+msgid "Record Weekends"
+msgstr "Записване през събота и неделя"
+
+msgctxt "#30114"
+msgid "Record Week Days"
+msgstr "Записване през дните от седмицата"
+
+msgctxt "#30120"
+msgid "This time"
+msgstr "Този път"
+
+msgctxt "#30121"
+msgid "Anytime"
+msgstr "Всеки път"
 
 msgctxt "#30125"
 msgid "This Channel"
@@ -187,6 +227,14 @@ msgstr "Този канал"
 msgctxt "#30126"
 msgid "Any Channel"
 msgstr "Всеки канал"
+
+msgctxt "#30130"
+msgid "Until space needed"
+msgstr "Докато няма недостиг на място"
+
+msgctxt "#30131"
+msgid "Until Watched"
+msgstr "Докато не са изгледани"
 
 msgctxt "#30132"
 msgid "Days"

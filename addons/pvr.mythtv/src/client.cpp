@@ -378,6 +378,13 @@ ADDON_STATUS ADDON_Create(void *hdl, void *props)
   menuhookEpgRec5.iHookId = MENUHOOK_EPG_REC_NEW_EPISODES;
   menuhookEpgRec5.iLocalizedStringId = 30435;
   PVR->AddMenuHook(&menuhookEpgRec5);
+
+  PVR_MENUHOOK menuhookSettingRCI;
+  menuhookSettingRCI.category = PVR_MENUHOOK_SETTING;
+  menuhookSettingRCI.iHookId = MENUHOOK_REFRESH_CHANNEL_ICONS;
+  menuhookSettingRCI.iLocalizedStringId = 30422;
+  PVR->AddMenuHook(&menuhookSettingRCI);
+
   XBMC->Log(LOG_DEBUG, "Creating menu hooks...done");
 
   XBMC->Log(LOG_DEBUG, "Addon created successfully");

@@ -52,7 +52,7 @@ void AVInfoLog(int level, char *msg)
       break;
     }
     if (XBMC && doLog)
-      XBMC->Log(loglevel, LOGTAG"%s", msg);
+      XBMC->Log(loglevel, LOGTAG "%s", msg);
   }
 }
 
@@ -88,7 +88,7 @@ AVInfo::AVInfo(Myth::Stream* file)
   }
   else
   {
-    XBMC->Log(LOG_ERROR, LOGTAG"alloc AV buffer failed");
+    XBMC->Log(LOG_ERROR, LOGTAG "alloc AV buffer failed");
   }
 }
 
@@ -101,7 +101,7 @@ AVInfo::~AVInfo()
   if (m_av_buf)
   {
     if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG, LOGTAG"free AV buffer: allocated size was %zu", m_av_buf_size);
+      XBMC->Log(LOG_DEBUG, LOGTAG "free AV buffer: allocated size was %zu", m_av_buf_size);
     free(m_av_buf);
     m_av_buf = NULL;
   }
@@ -165,7 +165,7 @@ void AVInfo::Process()
 {
   if (!m_AVContext)
   {
-    XBMC->Log(LOG_ERROR, LOGTAG"%s: no AVContext", __FUNCTION__);
+    XBMC->Log(LOG_ERROR, LOGTAG "%s: no AVContext", __FUNCTION__);
     return;
   }
 
@@ -207,7 +207,7 @@ void AVInfo::Process()
     }
 
     if (ret < 0)
-      XBMC->Log(LOG_NOTICE, LOGTAG"%s: error %d", __FUNCTION__, ret);
+      XBMC->Log(LOG_NOTICE, LOGTAG "%s: error %d", __FUNCTION__, ret);
 
     if (ret == AVCONTEXT_TS_ERROR)
       m_AVContext->Shift();
@@ -217,7 +217,7 @@ void AVInfo::Process()
 
   m_AVStatus = ret;
   m_file->Seek(0, Myth::WHENCE_SET);
-  XBMC->Log(LOG_DEBUG, LOGTAG"%s: terminated with status %d", __FUNCTION__, ret);
+  XBMC->Log(LOG_DEBUG, LOGTAG "%s: terminated with status %d", __FUNCTION__, ret);
 }
 
 bool AVInfo::GetMainStream(STREAM_AVINFO *info) const
@@ -305,7 +305,7 @@ void AVInfo::populate_pvr_streams()
         m_nosetup.insert((*it)->pid);
 
       if (g_bExtraDebug)
-        XBMC->Log(LOG_DEBUG, LOGTAG"%s: register PES %.4x %s", __FUNCTION__, (*it)->pid, codec_name);
+        XBMC->Log(LOG_DEBUG, LOGTAG "%s: register PES %.4x %s", __FUNCTION__, (*it)->pid, codec_name);
     }
   }
   // Renew main stream
@@ -319,7 +319,7 @@ bool AVInfo::update_pvr_stream(uint16_t pid)
     return false;
 
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, LOGTAG"%s: update info PES %.4x %s", __FUNCTION__, es->pid, es->GetStreamCodecName());
+    XBMC->Log(LOG_DEBUG, LOGTAG "%s: update info PES %.4x %s", __FUNCTION__, es->pid, es->GetStreamCodecName());
 
   if (es->has_stream_info)
   {
@@ -329,7 +329,7 @@ bool AVInfo::update_pvr_stream(uint16_t pid)
     {
       m_nosetup.erase(it);
       if (m_nosetup.empty())
-        XBMC->Log(LOG_DEBUG, LOGTAG"%s: setup is completed", __FUNCTION__);
+        XBMC->Log(LOG_DEBUG, LOGTAG "%s: setup is completed", __FUNCTION__);
     }
   }
   return true;

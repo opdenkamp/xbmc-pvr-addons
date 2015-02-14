@@ -611,31 +611,44 @@
         <channelid>1</channelid>
         <starttime>03:15</starttime>
         <endtime>04:45</endtime>
-        <state>0</state>
+        <state>1</state>
+        <type>-1</type>
         <summary>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</summary>
     </timer>
     <timer>
         <title>Demo Timer entry #2</title>
+        <channelid>1</channelid>
+        <starttime>04:15</starttime>
+        <endtime>05:30</endtime>
+        <state>1</state>
+        <type>-2</type>
+        <summary>Manual timer</summary>
+    </timer>
+    <timer>
+        <title>Demo Timer entry #3</title>
         <channelid>2</channelid>
         <starttime>07:10</starttime>
         <endtime>09:55</endtime>
         <state>1</state>
-        <summary>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</summary>
-    </timer>
-    <timer>
-        <title>Demo Timer entry #3</title>
-        <channelid>3</channelid>
-        <starttime>10:00</starttime>
-        <endtime>11:15</endtime>
-        <state>2</state>
+        <type>1</type>
         <summary>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</summary>
     </timer>
     <timer>
         <title>Demo Timer entry #4</title>
+        <channelid>3</channelid>
+        <starttime>10:00</starttime>
+        <endtime>11:15</endtime>
+        <state>2</state>
+        <type>2</type>
+        <summary>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</summary>
+    </timer>
+    <timer>
+        <title>Demo Timer entry #5</title>
         <channelid>4</channelid>
         <starttime>15:00</starttime>
         <endtime>16:45</endtime>
         <state>3</state>
+        <type>3</type>
         <summary>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus consectetur ipsum, eu tincidunt dui aliquam ac. Sed scelerisque, augue eu lacinia ultrices, libero ante ullamcorper augue, vel malesuada justo risus ac nulla. Quisque ac libero libero. Sed tincidunt, orci eu condimentum laoreet, felis odio mattis est, et lacinia metus enim in leo. Fusce faucibus tristique risus in varius. Etiam sagittis venenatis ligula nec rutrum. Etiam gravida dictum hendrerit. Sed sodales felis in sapien rutrum non malesuada nisi lobortis. Mauris iaculis ante odio. Nunc gravida erat convallis purus dignissim et ultricies orci dapibus. Aliquam erat volutpat. Vestibulum mi felis, malesuada ac tincidunt sit amet, pulvinar nec dolor. Pellentesque vehicula est vulputate mi adipiscing euismod. Donec ac mauris nulla. Nullam suscipit felis eu quam sodales ac bibendum nisi interdum. Curabitur non lectus a ante venenatis semper eget id justo. Ut facilisis, ligula pretium dictum congue, lacus dolor commodo nibh, sit amet sodales sed.</summary>
     </timer>
   </timers>

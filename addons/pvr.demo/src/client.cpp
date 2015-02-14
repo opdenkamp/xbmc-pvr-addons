@@ -85,6 +85,36 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   ADDON_ReadSettings();
 
+  // Weekly at this time
+  PVR_TIMERTYPE serie1;
+  serie1.iTypeId = 1;
+  serie1.iLocalizedStringId = 1;
+  serie1.bDependsNewEpisodes = true;
+  serie1.bDependsTime = true;
+  serie1.bDependsChannel = true;
+  serie1.bReadOnly = false;
+  PVR->AddTimerType(&serie1);
+
+  // Daily at this time
+  PVR_TIMERTYPE serie2;
+  serie2.iTypeId = 2;
+  serie2.iLocalizedStringId = 2;
+  serie2.bDependsNewEpisodes = false;
+  serie2.bDependsTime = true;
+  serie2.bDependsChannel = true;
+  serie2.bReadOnly = false;
+  PVR->AddTimerType(&serie2);
+
+  // Every time
+  PVR_TIMERTYPE serie3;
+  serie3.iTypeId = 3;
+  serie3.iLocalizedStringId = 3;
+  serie3.bDependsNewEpisodes = false;
+  serie3.bDependsTime = false;
+  serie3.bDependsChannel = true;
+  serie3.bReadOnly = true;
+  PVR->AddTimerType(&serie3);
+
   m_data = new PVRDemoData;
   m_CurStatus = ADDON_STATUS_OK;
   m_bCreated = true;

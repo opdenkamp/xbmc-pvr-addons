@@ -535,7 +535,7 @@ PVR_ERROR CTvheadend::GetTimers ( ADDON_HANDLE handle )
       tmr.state             = rit->second.state;
       tmr.iPriority         = rit->second.priority;
       tmr.iLifetime         = rit->second.retention;
-      tmr.bIsRepeating      = false; // unused
+      tmr.iTimerType        = PVR_TIMERTYPE_MANUAL_ONCE;
       tmr.firstDay          = 0;     // unused
       tmr.iWeekdays         = 0;     // unused
       tmr.iEpgUid           = 0;     // unused

@@ -330,7 +330,7 @@ PVR_ERROR Dvb::GetTimers(ADDON_HANDLE handle)
     tag.endTime           = timer->endTime;
     tag.state             = timer->state;
     tag.iPriority         = timer->iPriority;
-    tag.bIsRepeating      = timer->bRepeating;
+    tag.iTimerType        = timer->bRepeating ? PVR_TIMERTYPE_MANUAL_SERIE : PVR_TIMERTYPE_MANUAL_ONCE;
     tag.firstDay          = timer->iFirstDay;
     tag.iWeekdays         = timer->iWeekdays;
     tag.iEpgUid           = timer->iEpgId;

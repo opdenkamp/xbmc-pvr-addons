@@ -913,7 +913,7 @@ PVR_ERROR cPVRClientArgusTV::GetTimers(ADDON_HANDLE handle)
       tag.strSummary[0]     = '\0';
       tag.iPriority         = 0;
       tag.iLifetime         = 0;
-      tag.bIsRepeating      = false;
+      tag.iTimerType        = PVR_TIMERTYPE_MANUAL_ONCE;
       tag.firstDay          = 0;
       tag.iWeekdays         = 0;
       tag.iEpgUid           = 0;

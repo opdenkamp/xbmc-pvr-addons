@@ -558,6 +558,7 @@ PVR_ERROR PVRDemoData::GetTimers(ADDON_HANDLE handle)
     xbmcTimer.startTime         = timer.startTime;
     xbmcTimer.endTime           = timer.endTime;
     xbmcTimer.state             = timer.state;
+    xbmcTimer.iTimerType        = PVR_TIMERTYPE_MANUAL_ONCE;
 
     strncpy(xbmcTimer.strTitle, timer.strTitle.c_str(), sizeof(timer.strTitle) - 1);
     strncpy(xbmcTimer.strSummary, timer.strSummary.c_str(), sizeof(timer.strSummary) - 1);

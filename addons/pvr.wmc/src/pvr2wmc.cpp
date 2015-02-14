@@ -635,7 +635,7 @@ CStdString Pvr2Wmc::Timer2String(const PVR_TIMER &xTmr)
 
 	tStr.Format("|%d|%d|%d|%d|%d|%s|%d|%d|%d|%d|%d",													// format for 11 params:
 		xTmr.iClientIndex, xTmr.iClientChannelUid, xTmr.startTime, xTmr.endTime, PVR_TIMER_STATE_NEW,		// 5 params
-		xTmr.strTitle, xTmr.iPriority,  xTmr.iMarginStart, xTmr.iMarginEnd, xTmr.bIsRepeating,				// 5 params
+		xTmr.strTitle, xTmr.iPriority,  xTmr.iMarginStart, xTmr.iMarginEnd, xTmr.iTimerType == PVR_TIMERTYPE_MANUAL_SERIE,				// 5 params
 		xTmr.iEpgUid);																						// 1 param
 
 	return tStr;
@@ -648,7 +648,7 @@ PVR_ERROR Pvr2Wmc::DeleteTimer(const PVR_TIMER &xTmr, bool bForceDelete)
 
 	bool deleteSeries = false;
 
-	if (xTmr.bIsRepeating)									// if timer is a series timer, ask if want to cancel series
+	if (xTmr.iTimerType != PVR_TIMERTYPE_MANUAL_ONCE) // if timer is a series timer, ask if want to cancel series
 	{
 		CDialogDeleteTimer vWindow(deleteSeries, xTmr.strTitle);
 		int dlogResult = vWindow.DoModal();
@@ -718,7 +718,7 @@ PVR_ERROR Pvr2Wmc::GetTimers(ADDON_HANDLE handle)
 		STRCPY(xTmr.strDirectory, v[6].c_str());			// rec directory
 		STRCPY(xTmr.strSummary, v[7].c_str());				// currently set to episode title
 		xTmr.iPriority = atoi(v[8].c_str());				// rec priority
-		xTmr.bIsRepeating = Str2Bool(v[9].c_str());			// repeating rec (set to series flag)
+		xTmr.iTimerType = Str2Bool(v[9].c_str()) ? PVR_TIMERTYPE_MANUAL_SERIE : PVR_TIMERTYPE_MANUAL_ONCE; // repeating rec (set to series flag)
 
 		xTmr.iEpgUid = atoi(v[10].c_str());					// epg ID (same as client ID, except for a 'manual' record)
 		xTmr.iMarginStart = atoi(v[11].c_str());			// rec margin at start (sec)

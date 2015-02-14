@@ -629,7 +629,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer)
   return PVR_ERROR_FAILED;
 }
 
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete, bool bDeleteSchedule)
 {
   if (dvblinkclient)
     return dvblinkclient->DeleteTimer(timer);

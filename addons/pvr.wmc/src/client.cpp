@@ -472,7 +472,7 @@ extern "C" {
 		return PVR_ERROR_NO_ERROR;
 	}
 
-	PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) 
+	PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete, bool bDeleteSchedule)
 	{
 		if (_wmc)
 			return _wmc->DeleteTimer(timer, bForceDelete);

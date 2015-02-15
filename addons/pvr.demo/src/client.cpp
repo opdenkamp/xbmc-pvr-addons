@@ -165,7 +165,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsRadio           = true;
   pCapabilities->bSupportsChannelGroups   = true;
   pCapabilities->bSupportsRecordings      = true;
-  pCapabilities->bSupportsRecordingsUndelete = false;
+  pCapabilities->bSupportsRecordingsUndelete = true;
   pCapabilities->bSupportsTimers          = true;
 
   return PVR_ERROR_NO_ERROR;
@@ -298,7 +298,7 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 int GetRecordingsAmount(bool deleted)
 {
   if (m_data)
-    return m_data->GetRecordingsAmount();
+    return m_data->GetRecordingsAmount(deleted);
 
   return -1;
 }
@@ -306,7 +306,7 @@ int GetRecordingsAmount(bool deleted)
 PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted)
 {
   if (m_data)
-    return m_data->GetRecordings(handle);
+    return m_data->GetRecordings(handle, deleted);
 
   return PVR_ERROR_NOT_IMPLEMENTED;
 }

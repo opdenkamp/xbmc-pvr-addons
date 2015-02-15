@@ -24,7 +24,10 @@
 #define VNSI_COMMAND_H
 
 /** Current VNSI Protocol Version number */
-#define VNSI_PROTOCOLVERSION 6
+#define VNSI_PROTOCOLVERSION 8
+
+/** Start of RDS support protocol Version */
+#define VNSI_RDS_PROTOCOLVERSION 8
 
 /** Minimum VNSI Protocol Version number */
 #define VNSI_MIN_PROTOCOLVERSION 5
@@ -44,6 +47,9 @@
 #define CONFNAME_TIMESHIFT "Timeshift"
 #define CONFNAME_TIMESHIFTBUFFERSIZE "TimeshiftBufferSize"
 #define CONFNAME_TIMESHIFTBUFFERFILESIZE "TimeshiftBufferFileSize"
+#define CONFNAME_TIMESHIFTBUFFERDIR "TimeshiftBufferDir"
+#define CONFNAME_PLAYRECORDING "PlayRecording"
+#define CONFNAME_AVOIDEPGSCAN "AvoidEPGScan"
 
 /* OPCODE 1 - 19: VNSI network functions for general purpose */
 #define VNSI_LOGIN                 1

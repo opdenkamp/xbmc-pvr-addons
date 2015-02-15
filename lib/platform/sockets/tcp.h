@@ -67,6 +67,7 @@ namespace PLATFORM
             {
               TcpSocketClose(m_socket);
               m_strError = strerror(m_iError);
+              m_socket = INVALID_SOCKET_VALUE;
             }
             else
             {

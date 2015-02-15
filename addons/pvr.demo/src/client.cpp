@@ -85,6 +85,36 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
 
   ADDON_ReadSettings();
 
+  // Weekly at this time
+  PVR_TIMERTYPE serie1;
+  serie1.iTypeId = 1;
+  serie1.iLocalizedStringId = 1;
+  serie1.bDependsNewEpisodes = true;
+  serie1.bDependsTime = true;
+  serie1.bDependsChannel = true;
+  serie1.bReadOnly = false;
+  PVR->AddTimerType(&serie1);
+
+  // Daily at this time
+  PVR_TIMERTYPE serie2;
+  serie2.iTypeId = 2;
+  serie2.iLocalizedStringId = 2;
+  serie2.bDependsNewEpisodes = false;
+  serie2.bDependsTime = true;
+  serie2.bDependsChannel = true;
+  serie2.bReadOnly = false;
+  PVR->AddTimerType(&serie2);
+
+  // Every time
+  PVR_TIMERTYPE serie3;
+  serie3.iTypeId = 3;
+  serie3.iLocalizedStringId = 3;
+  serie3.bDependsNewEpisodes = false;
+  serie3.bDependsTime = false;
+  serie3.bDependsChannel = true;
+  serie3.bReadOnly = true;
+  PVR->AddTimerType(&serie3);
+
   m_data = new PVRDemoData;
   m_CurStatus = ADDON_STATUS_OK;
   m_bCreated = true;
@@ -354,7 +384,7 @@ PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &recording, int las
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &recording) { return -1; }
 PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
 PVR_ERROR AddTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete, bool bDeleteSchedule) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR UpdateTimer(const PVR_TIMER &timer) { return PVR_ERROR_NOT_IMPLEMENTED; }
 void DemuxAbort(void) {}
 DemuxPacket* DemuxRead(void) { return NULL; }

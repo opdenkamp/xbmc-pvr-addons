@@ -1006,7 +1006,7 @@ PVR_ERROR Vu::GetTimers(ADDON_HANDLE handle)
     tag.state             = timer.state;
     tag.iPriority         = 0;     // unused
     tag.iLifetime         = 0;     // unused
-    tag.bIsRepeating      = timer.bRepeating;
+    tag.iTimerType        = timer.bRepeating ? PVR_TIMERTYPE_MANUAL_SERIE : PVR_TIMERTYPE_MANUAL_ONCE;
     tag.firstDay          = 0;     // unused
     tag.iWeekdays         = timer.iWeekdays;
     tag.iEpgUid           = timer.iEpgID;

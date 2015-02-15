@@ -356,7 +356,7 @@ PVR_ERROR PVRFilmonData::GetTimers(ADDON_HANDLE handle) {
 				xbmcTimer.startTime = timer.startTime;
 				xbmcTimer.endTime = timer.endTime;
 				xbmcTimer.state = (PVR_TIMER_STATE) timer.state;
-				xbmcTimer.bIsRepeating = timer.bIsRepeating;
+				xbmcTimer.iTimerType = timer.bIsRepeating ? PVR_TIMERTYPE_MANUAL_SERIE : PVR_TIMERTYPE_MANUAL_ONCE;
 				xbmcTimer.firstDay = timer.firstDay;
 				xbmcTimer.iWeekdays = timer.iWeekdays;
 				xbmcTimer.iEpgUid = timer.iEpgUid;

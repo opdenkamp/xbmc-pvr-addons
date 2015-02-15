@@ -429,7 +429,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer)
   return DvbData->AddTimer(timer);
 }
 
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool _UNUSED(bForceDelete))
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool _UNUSED(bForceDelete), bool _UNUSED(bDeleteSchedule))
 {
   if (!DvbData || !DvbData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;

@@ -457,7 +457,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer)
   return VuData->AddTimer(timer);
 }
 
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete, bool bDeleteSchedule)
 {
   if (!VuData || !VuData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;

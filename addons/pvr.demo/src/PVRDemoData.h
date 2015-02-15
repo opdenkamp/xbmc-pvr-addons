@@ -78,6 +78,7 @@ struct PVRDemoRecording
 struct PVRDemoTimer
 {
   int             iChannelId;
+  int             iTimerType;
   time_t          startTime;
   time_t          endTime;
   PVR_TIMER_STATE state;

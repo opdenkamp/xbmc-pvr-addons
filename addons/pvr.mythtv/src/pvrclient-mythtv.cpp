@@ -1229,7 +1229,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
       tag.iMarginEnd = rule.EndOffset();
       tag.iMarginStart = rule.StartOffset();
       tag.firstDay = it->second->RecordingStartTime();
-      tag.bIsRepeating = meta.isRepeating;
+      tag.iTimerType = meta.isRepeating ? PVR_TIMERTYPE_MANUAL_SERIE : PVR_TIMERTYPE_MANUAL_ONCE;
       tag.iWeekdays = meta.weekDays;
       if (*(meta.marker))
         rulemarker.append("(").append(meta.marker).append(")");
@@ -1240,7 +1240,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
       tag.iMarginEnd = 0;
       tag.iMarginStart = 0;
       tag.firstDay = 0;
-      tag.bIsRepeating = false;
+      tag.iTimerType = PVR_TIMERTYPE_MANUAL_ONCE;
       tag.iWeekdays = 0;
     }
 
@@ -1423,7 +1423,7 @@ MythRecordingRule PVRClientMythTV::PVRtoMythRecordingRule(const PVR_TIMER &timer
   }
 
   // Depending of timer type, create the best rule
-  if (timer.bIsRepeating)
+  if (timer.iTimerType == PVR_TIMERTYPE_MANUAL_SERIE)
   {
     if (timer.iWeekdays < 0x7F && timer.iWeekdays > 0)
     {
@@ -1533,7 +1533,7 @@ PVR_ERROR PVRClientMythTV::UpdateTimer(const PVR_TIMER &timer)
   {
     if (old->second->iClientChannelUid != timer.iClientChannelUid)
       diffmask |= CTTimer;
-    if (old->second->bIsRepeating != timer.bIsRepeating || old->second->iWeekdays != timer.iWeekdays)
+    if (old->second->iTimerType != timer.iTimerType || old->second->iWeekdays != timer.iWeekdays)
       diffmask |= CTTimer;
     if (old->second->startTime != timer.startTime || old->second->endTime != timer.endTime)
       diffmask |= CTTimer;

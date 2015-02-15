@@ -551,7 +551,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer)
   return VNSIData->AddTimer(timer);
 }
 
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForce)
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForce, bool bDeleteSchedule)
 {
   if (!VNSIData)
     return PVR_ERROR_SERVER_ERROR;

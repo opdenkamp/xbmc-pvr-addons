@@ -989,7 +989,7 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
         
         PVR_STRCPY(tag.strSummary, "summary");
 
-        tag.bIsRepeating = true;
+        tag.iTimerType = PVR_TIMERTYPE_MANUAL_SERIE;
 
         // pass timer to xbmc
         PVR->TransferTimerEntry(handle, &tag);
@@ -1012,7 +1012,7 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
       {
         memset(&tag, 0, sizeof(tag));
 
-
+        tag.iTimerType = PVR_TIMERTYPE_MANUAL_ONCE;
         tag.iClientIndex = atoi(pRecordingNode->FirstChildElement("id")->FirstChild()->Value());
         tag.iClientChannelUid = atoi(pRecordingNode->FirstChildElement("channel_id")->FirstChild()->Value());
 
@@ -1049,7 +1049,7 @@ PVR_ERROR cPVRClientNextPVR::GetTimers(ADDON_HANDLE handle)
         {
           if (strcmp(pRecordingNode->FirstChildElement("recurring")->FirstChild()->Value(), "true") == 0)
           {
-            tag.bIsRepeating = true;
+            tag.iTimerType = PVR_TIMERTYPE_MANUAL_SERIE;
           }
         }
 

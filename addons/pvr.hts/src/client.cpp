@@ -517,7 +517,7 @@ PVR_ERROR AddTimer(const PVR_TIMER &timer)
   return tvh->AddTimer(timer);
 }
 
-PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete)
+PVR_ERROR DeleteTimer(const PVR_TIMER &timer, bool bForceDelete, bool bDeleteSchedule)
 {
   return tvh->DeleteTimer(timer, bForceDelete);
 }

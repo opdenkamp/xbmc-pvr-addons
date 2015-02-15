@@ -112,7 +112,7 @@ cTimer::cTimer(const PVR_TIMER& timerinfo)
 
   SetKeepMethod(timerinfo.iLifetime);
 
-  if(timerinfo.bIsRepeating)
+  if(timerinfo.iTimerType == PVR_TIMERTYPE_MANUAL_SERIE)
   {
     m_schedtype = RepeatFlags2SchedRecType(timerinfo.iWeekdays);
     m_series = true;
@@ -180,7 +180,7 @@ void cTimer::GetPVRtimerinfo(PVR_TIMER &tag)
   }
   tag.iPriority         = Priority();
   tag.iLifetime         = GetLifetime();
-  tag.bIsRepeating      = Repeat();
+  tag.iTimerType        = Repeat() ? PVR_TIMERTYPE_MANUAL_SERIE : PVR_TIMERTYPE_MANUAL_ONCE;
   tag.iWeekdays         = RepeatFlags();
   tag.iMarginStart      = m_prerecordinterval;
   tag.iMarginEnd        = m_postrecordinterval;

@@ -1308,7 +1308,7 @@ PVR_ERROR PVRClientMythTV::GetTimers(ADDON_HANDLE handle)
     PVR->TransferTimerEntry(handle, &tag);
     // Add it to memorandom: cf UpdateTimer()
     MYTH_SHARED_PTR<PVR_TIMER> pTag = MYTH_SHARED_PTR<PVR_TIMER>(new PVR_TIMER(tag));
-    m_PVRtimerMemorandum.insert(std::make_pair(tag.iClientIndex, pTag));
+    m_PVRtimerMemorandum.insert(std::make_pair((unsigned int&)tag.iClientIndex, pTag));
   }
 
   if (g_bExtraDebug)

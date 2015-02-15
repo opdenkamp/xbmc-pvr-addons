@@ -110,6 +110,14 @@
 #define VNSI_OSD_DISCONNECT        161
 #define VNSI_OSD_HITKEY            162
 
+/* OPCODE 180 - 189: VNSI network functions for deleted recording access */
+#define VNSI_RECORDINGS_DELETED_ACCESS_SUPPORTED 180
+#define VNSI_RECORDINGS_DELETED_GETCOUNT         181
+#define VNSI_RECORDINGS_DELETED_GETLIST          182
+#define VNSI_RECORDINGS_DELETED_DELETE           183
+#define VNSI_RECORDINGS_DELETED_UNDELETE         184
+#define VNSI_RECORDINGS_DELETED_DELETE_ALL       185
+
 /** Stream packet types (server -> client) */
 #define VNSI_STREAM_CHANGE       1
 #define VNSI_STREAM_STATUS       2

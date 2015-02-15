@@ -169,6 +169,33 @@ bool cVNSIData::SupportChannelScan()
   return ret == VNSI_RET_OK ? true : false;
 }
 
+bool cVNSIData::SupportRecordingsUndelete()
+{
+  if (GetProtocol() > 7)
+  {
+    cRequestPacket vrp;
+    if (!vrp.init(VNSI_RECORDINGS_DELETED_ACCESS_SUPPORTED))
+    {
+      XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+      return false;
+    }
+
+    cResponsePacket* vresp = ReadResult(&vrp);
+    if (!vresp)
+    {
+      XBMC->Log(LOG_INFO, "%s - Can't get response packed", __FUNCTION__);
+      return false;
+    }
+
+    uint32_t ret = vresp->extract_U32();
+    delete vresp;
+    return ret == VNSI_RET_OK ? true : false;
+  }
+
+  XBMC->Log(LOG_INFO, "%s - Undelete not supported on backend (min. Ver. 1.3.0; Protocol 7)", __FUNCTION__);
+  return false;
+}
+
 bool cVNSIData::EnableStatusInterface(bool onOff)
 {
   cRequestPacket vrp;
@@ -556,19 +583,17 @@ PVR_ERROR cVNSIData::DeleteTimer(const PVR_TIMER &timerinfo, bool force)
     delete vresp;
     return PVR_ERROR_UNKNOWN;
   }
-
   uint32_t returnCode = vresp->extract_U32();
   delete vresp;
 
   if (returnCode == VNSI_RET_DATALOCKED)
     return PVR_ERROR_FAILED;
-  if (returnCode == VNSI_RET_RECRUNNING)
+  else if (returnCode == VNSI_RET_RECRUNNING)
     return PVR_ERROR_RECORDING_RUNNING;
   else if (returnCode == VNSI_RET_DATAINVALID)
     return PVR_ERROR_INVALID_PARAMETERS;
   else if (returnCode == VNSI_RET_ERROR)
     return PVR_ERROR_SERVER_ERROR;
-
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -669,6 +694,7 @@ PVR_ERROR cVNSIData::GetRecordingsList(ADDON_HANDLE handle)
     tag.iDuration       = vresp->extract_U32();
     tag.iPriority       = vresp->extract_U32();
     tag.iLifetime       = vresp->extract_U32();
+    tag.bIsDeleted      = false;
 
     char *strChannelName = vresp->extract_String();
     strncpy(tag.strChannelName, strChannelName, sizeof(tag.strChannelName) - 1);
@@ -739,7 +765,7 @@ PVR_ERROR cVNSIData::RenameRecording(const PVR_RECORDING& recinfo, const char* n
 PVR_ERROR cVNSIData::DeleteRecording(const PVR_RECORDING& recinfo)
 {
   cRequestPacket vrp;
-  if (!vrp.init(VNSI_RECORDINGS_DELETE))
+  if (!vrp.init(recinfo.bIsDeleted ? VNSI_RECORDINGS_DELETED_DELETE : VNSI_RECORDINGS_DELETE))
   {
     XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
     return PVR_ERROR_UNKNOWN;
@@ -805,6 +831,164 @@ PVR_ERROR cVNSIData::GetRecordingEdl(const PVR_RECORDING& recinfo, PVR_EDL_ENTRY
   }
 
   delete vresp;
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+int cVNSIData::GetDeletedRecordingsCount()
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_RECORDINGS_DELETED_GETCOUNT))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return -1;
+  }
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (!vresp)
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't get response packed", __FUNCTION__);
+    return -1;
+  }
+
+  uint32_t count = vresp->extract_U32();
+
+  delete vresp;
+  return count;
+}
+
+PVR_ERROR cVNSIData::GetDeletedRecordingsList(ADDON_HANDLE handle)
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_RECORDINGS_DELETED_GETLIST))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (!vresp)
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't get response packed", __FUNCTION__);
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  CStdString strRecordingId;
+  while (!vresp->end())
+  {
+    PVR_RECORDING tag;
+    memset(&tag, 0, sizeof(tag));
+    tag.recordingTime   = vresp->extract_U32();
+    tag.iDuration       = vresp->extract_U32();
+    tag.iPriority       = vresp->extract_U32();
+    tag.iLifetime       = vresp->extract_U32();
+    tag.bIsDeleted      = true;
+
+    char *strChannelName = vresp->extract_String();
+    strncpy(tag.strChannelName, strChannelName, sizeof(tag.strChannelName) - 1);
+
+    char *strTitle = vresp->extract_String();
+    strncpy(tag.strTitle, strTitle, sizeof(tag.strTitle) - 1);
+
+    char *strPlotOutline = vresp->extract_String();
+    strncpy(tag.strPlotOutline, strPlotOutline, sizeof(tag.strPlotOutline) - 1);
+
+    char *strPlot = vresp->extract_String();
+    strncpy(tag.strPlot, strPlot, sizeof(tag.strPlot) - 1);
+
+    char *strDirectory = vresp->extract_String();
+    strncpy(tag.strDirectory, strDirectory, sizeof(tag.strDirectory) - 1);
+
+    strRecordingId.Format("%i", vresp->extract_U32());
+    strncpy(tag.strRecordingId, strRecordingId.c_str(), sizeof(tag.strRecordingId) - 1);
+
+    PVR->TransferRecordingEntry(handle, &tag);
+
+    delete[] strChannelName;
+    delete[] strTitle;
+    delete[] strPlotOutline;
+    delete[] strPlot;
+    delete[] strDirectory;
+  }
+
+  delete vresp;
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR cVNSIData::UndeleteRecording(const PVR_RECORDING& recinfo)
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_RECORDINGS_DELETED_UNDELETE))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  if (!vrp.add_U32(atoi(recinfo.strRecordingId)))
+    return PVR_ERROR_UNKNOWN;
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (vresp == NULL || vresp->noResponse())
+  {
+    delete vresp;
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  uint32_t returnCode = vresp->extract_U32();
+  delete vresp;
+
+  switch(returnCode)
+  {
+    case VNSI_RET_DATALOCKED:
+      return PVR_ERROR_FAILED;
+
+    case VNSI_RET_RECRUNNING:
+      return PVR_ERROR_RECORDING_RUNNING;
+
+    case VNSI_RET_DATAINVALID:
+      return PVR_ERROR_INVALID_PARAMETERS;
+
+    case VNSI_RET_ERROR:
+      return PVR_ERROR_SERVER_ERROR;
+  }
+
+  return PVR_ERROR_NO_ERROR;
+}
+
+PVR_ERROR cVNSIData::DeleteAllRecordingsFromTrash()
+{
+  cRequestPacket vrp;
+  if (!vrp.init(VNSI_RECORDINGS_DELETED_DELETE_ALL))
+  {
+    XBMC->Log(LOG_ERROR, "%s - Can't init cRequestPacket", __FUNCTION__);
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  cResponsePacket* vresp = ReadResult(&vrp);
+  if (vresp == NULL || vresp->noResponse())
+  {
+    delete vresp;
+    return PVR_ERROR_UNKNOWN;
+  }
+
+  uint32_t returnCode = vresp->extract_U32();
+  delete vresp;
+
+  switch(returnCode)
+  {
+    case VNSI_RET_DATALOCKED:
+      return PVR_ERROR_FAILED;
+
+    case VNSI_RET_RECRUNNING:
+      return PVR_ERROR_RECORDING_RUNNING;
+
+    case VNSI_RET_DATAINVALID:
+      return PVR_ERROR_INVALID_PARAMETERS;
+
+    case VNSI_RET_ERROR:
+      return PVR_ERROR_SERVER_ERROR;
+  }
 
   return PVR_ERROR_NO_ERROR;
 }

@@ -1,4 +1,7 @@
-﻿0.3.111
+﻿0.3.112
+- platform fixes
+
+0.3.111
 - Revise previous ServerWMC stream stuttering fix
 
 0.3.110

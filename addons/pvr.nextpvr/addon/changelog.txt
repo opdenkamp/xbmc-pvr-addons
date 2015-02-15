@@ -1,3 +1,6 @@
+v1.9.21
+- platform fixes
+
 v1.9.20
 - fixed issue where RPi user were unable to watch live tv due to subtle differences on that platform
 - fixed issue where recording list would get out of date and not reflect reality of backend

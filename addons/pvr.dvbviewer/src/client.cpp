@@ -287,7 +287,7 @@ void ADDON_FreeSettings()
 {
 }
 
-void ADDON_Announce(const char *flag, const char *sender,
+void ADDON_Announce(const char *_UNUSED(flag), const char *sender,
     const char *message, const void *_UNUSED(data))
 {
   if (recReader != NULL && strcmp(sender, "xbmc") == 0)
@@ -676,7 +676,7 @@ PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &_UNUSED(recording)
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &_UNUSED(recording)) { return -1; }
 PVR_ERROR RenameRecording(const PVR_RECORDING &_UNUSED(recording)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR GetRecordingEdl(const PVR_RECORDING&, PVR_EDL_ENTRY[], int*) { return PVR_ERROR_NOT_IMPLEMENTED; };
-PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR UndeleteRecording(const PVR_RECORDING& _UNUSED(recording)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteAllRecordingsFromTrash() { return PVR_ERROR_NOT_IMPLEMENTED; }
 unsigned int GetChannelSwitchDelay(void) { return 0; }
 void PauseStream(bool _UNUSED(bPaused)) {}

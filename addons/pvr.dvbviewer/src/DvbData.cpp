@@ -393,9 +393,10 @@ bool Dvb::GetRecordings(ADDON_HANDLE handle)
     return false;
   }
 
-  CStdString streamURL, imageURL;
+  CStdString imageURL;
   TiXmlElement *root = doc.RootElement();
-  XMLUtils::GetString(root, "serverURL", streamURL);
+  // refresh in case this has changed
+  XMLUtils::GetString(root, "serverURL", m_recordingURL);
   XMLUtils::GetString(root, "imageURL",  imageURL);
 
   // there's no need to merge new recordings in older ones as XBMC does this
@@ -429,8 +430,6 @@ bool Dvb::GetRecordings(ADDON_HANDLE handle)
       recording.plotOutline.clear();
     }
 
-    recording.streamURL = BuildExtURL(streamURL, "%s.ts", recording.id.c_str());
-
     CStdString thumbnail;
     if (!g_lowPerformance && XMLUtils::GetString(xRecording, "image", thumbnail))
       recording.thumbnailPath = BuildExtURL(imageURL, "%s", thumbnail.c_str());
@@ -446,7 +445,6 @@ bool Dvb::GetRecordings(ADDON_HANDLE handle)
     memset(&recinfo, 0, sizeof(PVR_RECORDING));
     PVR_STRCPY(recinfo.strRecordingId,   recording.id.c_str());
     PVR_STRCPY(recinfo.strTitle,         recording.title.c_str());
-    PVR_STRCPY(recinfo.strStreamURL,     recording.streamURL.c_str());
     PVR_STRCPY(recinfo.strPlotOutline,   recording.plotOutline.c_str());
     PVR_STRCPY(recinfo.strPlot,          recording.plot.c_str());
     PVR_STRCPY(recinfo.strChannelName,   recording.channelName.c_str());
@@ -518,6 +516,26 @@ bool Dvb::DeleteRecording(const PVR_RECORDING& recinfo)
 unsigned int Dvb::GetRecordingsAmount()
 {
   return m_recordingAmount;
+}
+
+RecordingReader *Dvb::OpenRecordedStream(const PVR_RECORDING &recinfo)
+{
+  time_t now = time(NULL), end = 0;
+  CStdString channelName = recinfo.strChannelName;
+  for (DvbTimers_t::iterator timer = m_timers.begin();
+      timer != m_timers.end(); ++timer)
+  {
+    if (timer->start <= now && now <= timer->end
+        && timer->state != PVR_TIMER_STATE_CANCELLED
+        && timer->channel->name.compare(0, channelName.length(), channelName) == 0)
+    {
+      end = timer->end;
+      break;
+    }
+  }
+
+  return new RecordingReader(BuildExtURL(m_recordingURL, "%s.ts",
+        recinfo.strRecordingId), end);
 }
 
 

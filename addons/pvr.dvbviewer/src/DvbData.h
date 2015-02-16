@@ -4,6 +4,7 @@
 #define PVR_DVBVIEWER_DVBDATA_H
 
 #include "client.h"
+#include "RecordingReader.h"
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 #include <list>
@@ -165,7 +166,6 @@ public:
   int duration;
   unsigned int genre;
   CStdString title;
-  CStdString streamURL;
   CStdString plot;
   CStdString plotOutline;
   CStdString channelName;
@@ -210,6 +210,7 @@ public:
   bool GetRecordings(ADDON_HANDLE handle);
   bool DeleteRecording(const PVR_RECORDING& recinfo);
   unsigned int GetRecordingsAmount();
+  RecordingReader *OpenRecordedStream(const PVR_RECORDING &recinfo);
 
   bool OpenLiveStream(const PVR_CHANNEL& channelinfo);
   void CloseLiveStream();
@@ -242,6 +243,7 @@ private:
   bool m_connected;
   unsigned int m_backendVersion;
   CStdString m_url;
+  CStdString m_recordingURL;
 
   long m_timezone;
   struct { long long total, used; } m_diskspace;

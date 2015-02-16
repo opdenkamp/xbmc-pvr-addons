@@ -51,7 +51,7 @@ void TimeshiftBuffer::Stop()
 
 void *TimeshiftBuffer::Process()
 {
-  XBMC->Log(LOG_DEBUG, "Timeshift: thread started");
+  XBMC->Log(LOG_DEBUG, "Timeshift: Thread started");
   byte buffer[STREAM_READ_BUFFER_SIZE];
 
   while (m_start)
@@ -65,7 +65,7 @@ void *TimeshiftBuffer::Process()
     m_mutex.Unlock();
 #endif
   }
-  XBMC->Log(LOG_DEBUG, "Timeshift: thread stopped");
+  XBMC->Log(LOG_DEBUG, "Timeshift: Thread stopped");
   return NULL;
 }
 

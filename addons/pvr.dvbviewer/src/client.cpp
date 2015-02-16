@@ -23,6 +23,7 @@
 #include "client.h"
 #include "DvbData.h"
 #include "TimeshiftBuffer.h"
+#include "RecordingReader.h"
 #include "xbmc_pvr_dll.h"
 #include "platform/util/util.h"
 #include <stdlib.h>
@@ -52,6 +53,7 @@ CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr   *PVR  = NULL;
 Dvb *DvbData                = NULL;
 TimeshiftBuffer *tsBuffer   = NULL;
+RecordingReader *recReader  = NULL;
 
 extern "C"
 {
@@ -285,9 +287,11 @@ void ADDON_FreeSettings()
 {
 }
 
-void ADDON_Announce(const char *_UNUSED(flag), const char *_UNUSED(sender),
-    const char *_UNUSED(message), const void *_UNUSED(data))
+void ADDON_Announce(const char *flag, const char *sender,
+    const char *message, const void *_UNUSED(data))
 {
+  if (recReader != NULL && strcmp(sender, "xbmc") == 0)
+    recReader->Announce(message);
 }
 
 /***********************************************************
@@ -608,6 +612,52 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
     ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR;
 }
 
+bool OpenRecordedStream(const PVR_RECORDING &recording)
+{
+  if (recReader)
+    SAFE_DELETE(recReader);
+  recReader = DvbData->OpenRecordedStream(recording);
+  return recReader->IsValid();
+}
+
+void CloseRecordedStream(void)
+{
+  if (recReader)
+    SAFE_DELETE(recReader);
+}
+
+int ReadRecordedStream(unsigned char *buffer, unsigned int size)
+{
+  if (!recReader)
+    return 0;
+
+  return recReader->ReadData(buffer, size);
+}
+
+long long SeekRecordedStream(long long position, int whence)
+{
+  if (!recReader)
+    return 0;
+
+  return recReader->Seek(position, whence);
+}
+
+long long PositionRecordedStream(void)
+{
+  if (!recReader)
+    return -1;
+
+  return recReader->Position();
+}
+
+long long LengthRecordedStream(void)
+{
+  if (!recReader)
+    return -1;
+
+  return recReader->Length();
+}
+
 /** UNUSED API FUNCTIONS */
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES *_UNUSED(pProperties)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &_UNUSED(menuhook), const PVR_MENUHOOK_DATA &_UNUSED(item)) { return PVR_ERROR_NOT_IMPLEMENTED; }
@@ -621,12 +671,6 @@ DemuxPacket *DemuxRead(void) { return NULL; }
 void DemuxAbort(void) {}
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
-bool OpenRecordedStream(const PVR_RECORDING &_UNUSED(recording)) { return false; }
-void CloseRecordedStream(void) {}
-int ReadRecordedStream(unsigned char *_UNUSED(pBuffer), unsigned int _UNUSED(iBufferSize)) { return 0; }
-long long SeekRecordedStream(long long _UNUSED(iPosition), int _UNUSED(iWhence) /* = SEEK_SET */) { return 0; }
-long long PositionRecordedStream(void) { return -1; }
-long long LengthRecordedStream(void) { return -1; }
 PVR_ERROR SetRecordingPlayCount(const PVR_RECORDING &_UNUSED(recording), int _UNUSED(count)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR SetRecordingLastPlayedPosition(const PVR_RECORDING &_UNUSED(recording), int _UNUSED(lastplayedposition)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 int GetRecordingLastPlayedPosition(const PVR_RECORDING &_UNUSED(recording)) { return -1; }

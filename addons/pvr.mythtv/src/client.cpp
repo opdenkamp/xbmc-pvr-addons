@@ -682,6 +682,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
     pCapabilities->bHandlesDemuxing               = g_bDemuxing;
 
     pCapabilities->bSupportsRecordings            = true;
+    pCapabilities->bSupportsRecordingsUndelete    = false;
     pCapabilities->bSupportsRecordingPlayCount    = true;
     pCapabilities->bSupportsLastPlayedPosition    = false;
     pCapabilities->bSupportsRecordingEdl          = true;
@@ -721,7 +722,7 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
   return g_client->GetDriveSpace(iTotal, iUsed);
 }
 
-PVR_ERROR DialogChannelScan()
+PVR_ERROR OpenDialogChannelScan()
 {
   return PVR_ERROR_FAILED;
 }
@@ -789,13 +790,13 @@ PVR_ERROR MoveChannel(const PVR_CHANNEL &channel)
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channel)
+PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &channel)
 {
   (void)channel;
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channel)
+PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &channel)
 {
   (void)channel;
   return PVR_ERROR_NOT_IMPLEMENTED;
@@ -829,7 +830,7 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
  * PVR Recording Functions
  */
 
-int GetRecordingsAmount(void)
+int GetRecordingsAmount(bool deleted)
 {
   if (g_client == NULL)
     return 0;
@@ -837,7 +838,7 @@ int GetRecordingsAmount(void)
   return g_client->GetRecordingsAmount();
 }
 
-PVR_ERROR GetRecordings(ADDON_HANDLE handle)
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted)
 {
   if (g_client == NULL)
     return PVR_ERROR_SERVER_ERROR;
@@ -1159,5 +1160,7 @@ time_t GetBufferTimeEnd()
 void DemuxReset() {}
 const char * GetLiveStreamURL(const PVR_CHANNEL &) { return ""; }
 void SetSpeed(int) {};
+PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DeleteAllRecordingsFromTrash() { return PVR_ERROR_NOT_IMPLEMENTED; }
 
 } //end extern "C"

@@ -1283,7 +1283,7 @@ CStdString Dvb::BuildExtURL(const CStdString& baseURL, const char* path, ...)
 
 CStdString Dvb::ConvertToUtf8(const CStdString& src)
 {
-  char *tmp = XBMC->UnknownToUTF8(src);
+  const char *tmp = XBMC->UnknownToUTF8(src);
   CStdString dest(tmp);
   XBMC->FreeString(tmp);
   return dest;

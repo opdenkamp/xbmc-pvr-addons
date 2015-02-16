@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.demo"
-  version="1.9.16"
+  version="1.10.0"
   name="PVR Demo Client"
   provider-name="Pulse-Eight Ltd.">
   <requires>
     <c-pluff version="0.1"/>
-    <import addon="xbmc.pvr" version="1.9.3"/>
+    <import addon="xbmc.pvr" version="1.9.4"/>
   </requires>
   <extension
     point="xbmc.pvrclient"
     library_linux="Kodi_Demo.pvr"
-	library_osx="Kodi_Demo.pvr"
+    library_osx="Kodi_Demo.pvr"
     library_freebsd="Kodi_Demo.pvr"
     library_wingl="Kodi_Demo_win32.dll"
     library_windx="Kodi_Demo_win32.dll"

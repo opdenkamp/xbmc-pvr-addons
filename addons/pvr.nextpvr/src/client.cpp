@@ -303,6 +303,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES *pCapabilities)
   //pCapabilities->bSupportsTimeshift          = true; //removed from Frodo API
   pCapabilities->bSupportsEPG                = true;
   pCapabilities->bSupportsRecordings         = true;
+  pCapabilities->bSupportsRecordingsUndelete = false;
   pCapabilities->bSupportsTimers             = true;
   pCapabilities->bSupportsTV                 = true;
   pCapabilities->bSupportsRadio              = true;
@@ -381,7 +382,7 @@ PVR_ERROR GetBackendTime(time_t *localTime, int *gmtOffset)
     return g_client->GetBackendTime(localTime, gmtOffset);
 }
 
-PVR_ERROR DialogChannelScan()
+PVR_ERROR OpenDialogChannelScan()
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -433,12 +434,12 @@ PVR_ERROR RenameChannel(const PVR_CHANNEL &channel)
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channelinfo)
+PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &channelinfo)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
-PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channelinfo)
+PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &channelinfo)
 {
   return PVR_ERROR_NOT_IMPLEMENTED;
 }
@@ -475,7 +476,7 @@ PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &g
 /*******************************************/
 /** PVR Recording Functions               **/
 
-int GetRecordingsAmount(void)
+int GetRecordingsAmount(bool deleted)
 {
   if (!g_client)
     return 0;
@@ -483,7 +484,7 @@ int GetRecordingsAmount(void)
     return g_client->GetNumRecordings();
 }
 
-PVR_ERROR GetRecordings(ADDON_HANDLE handle)
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted)
 {
   if (!g_client)
     return PVR_ERROR_SERVER_ERROR;
@@ -737,4 +738,6 @@ void SetSpeed(int) {};
 time_t GetPlayingTime() { return 0; }
 time_t GetBufferTimeStart() { return 0; }
 time_t GetBufferTimeEnd() { return 0; }
+PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DeleteAllRecordingsFromTrash() { return PVR_ERROR_NOT_IMPLEMENTED; }
 } //end extern "C"

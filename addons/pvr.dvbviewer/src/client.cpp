@@ -305,6 +305,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsTV              = true;
   pCapabilities->bSupportsRadio           = true;
   pCapabilities->bSupportsRecordings      = true;
+  pCapabilities->bSupportsRecordingsUndelete = false;
   pCapabilities->bSupportsTimers          = true;
   pCapabilities->bSupportsChannelGroups   = true;
   pCapabilities->bSupportsChannelScan     = false;
@@ -376,7 +377,7 @@ PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio)
   return DvbData->GetChannels(handle, bRadio);
 }
 
-int GetRecordingsAmount(void)
+int GetRecordingsAmount(bool deleted)
 {
   if (!DvbData || !DvbData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
@@ -384,7 +385,7 @@ int GetRecordingsAmount(void)
   return DvbData->GetRecordingsAmount();
 }
 
-PVR_ERROR GetRecordings(ADDON_HANDLE handle)
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted)
 {
   if (!DvbData || !DvbData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
@@ -591,13 +592,13 @@ PVR_ERROR SignalStatus(PVR_SIGNAL_STATUS &signalStatus)
 PVR_ERROR GetStreamProperties(PVR_STREAM_PROPERTIES* _UNUSED(pProperties)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 void DemuxAbort(void) { return; }
 DemuxPacket* DemuxRead(void) { return NULL; }
-PVR_ERROR DialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR CallMenuHook(const PVR_MENUHOOK &_UNUSED(menuhook), const PVR_MENUHOOK_DATA &_UNUSED(item)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR MoveChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DialogAddChannel(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &_UNUSED(channel)) { return PVR_ERROR_NOT_IMPLEMENTED; }
 bool OpenRecordedStream(const PVR_RECORDING &_UNUSED(recording)) { return false; }
 void CloseRecordedStream(void) {}
 int ReadRecordedStream(unsigned char *_UNUSED(pBuffer), unsigned int _UNUSED(iBufferSize)) { return 0; }
@@ -614,4 +615,6 @@ unsigned int GetChannelSwitchDelay(void) { return 0; }
 void PauseStream(bool _UNUSED(bPaused)) {}
 bool SeekTime(int, bool, double*) { return false; }
 void SetSpeed(int) {};
+PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DeleteAllRecordingsFromTrash() { return PVR_ERROR_NOT_IMPLEMENTED; }
 }

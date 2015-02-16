@@ -405,6 +405,8 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bHandlesDemuxing            = true;
   if (VNSIData && VNSIData->SupportChannelScan())
     pCapabilities->bSupportsChannelScan      = true;
+  if (VNSIData && VNSIData->SupportRecordingsUndelete())
+    pCapabilities->bSupportsRecordingsUndelete = true;
 
   return PVR_ERROR_NO_ERROR;
 }
@@ -454,7 +456,7 @@ PVR_ERROR GetDriveSpace(long long *iTotal, long long *iUsed)
   return (VNSIData->GetDriveSpace(iTotal, iUsed) ? PVR_ERROR_NO_ERROR : PVR_ERROR_SERVER_ERROR);
 }
 
-PVR_ERROR DialogChannelScan(void)
+PVR_ERROR OpenDialogChannelScan(void)
 {
   cVNSIChannelScan scanner;
   scanner.Open(g_szHostname, g_iPort);
@@ -571,20 +573,26 @@ PVR_ERROR UpdateTimer(const PVR_TIMER &timer)
 /*******************************************/
 /** PVR Recording Functions               **/
 
-int GetRecordingsAmount(void)
+int GetRecordingsAmount(bool deleted)
 {
   if (!VNSIData)
     return 0;
 
-  return VNSIData->GetRecordingsCount();
+  if (!deleted)
+    return VNSIData->GetRecordingsCount();
+  else
+    return VNSIData->GetDeletedRecordingsCount();
 }
 
-PVR_ERROR GetRecordings(ADDON_HANDLE handle)
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted)
 {
   if (!VNSIData)
     return PVR_ERROR_SERVER_ERROR;
 
-  return VNSIData->GetRecordingsList(handle);
+  if (!deleted)
+    return VNSIData->GetRecordingsList(handle);
+  else
+    return VNSIData->GetDeletedRecordingsList(handle);
 }
 
 PVR_ERROR RenameRecording(const PVR_RECORDING &recording)
@@ -601,6 +609,22 @@ PVR_ERROR DeleteRecording(const PVR_RECORDING &recording)
     return PVR_ERROR_SERVER_ERROR;
 
   return VNSIData->DeleteRecording(recording);
+}
+
+PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording)
+{
+  if (!VNSIData)
+    return PVR_ERROR_SERVER_ERROR;
+
+  return VNSIData->UndeleteRecording(recording);
+}
+
+PVR_ERROR DeleteAllRecordingsFromTrash()
+{
+  if (!VNSIData)
+    return PVR_ERROR_SERVER_ERROR;
+
+  return VNSIData->DeleteAllRecordingsFromTrash();
 }
 
 /*******************************************/
@@ -803,8 +827,8 @@ PVR_ERROR CallMenuHook(const PVR_MENUHOOK &menuhook, const PVR_MENUHOOK_DATA &it
 PVR_ERROR DeleteChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR RenameChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 PVR_ERROR MoveChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DialogChannelSettings(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
-PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 void DemuxReset(void) {}
 void DemuxFlush(void) {}
 int ReadLiveStream(unsigned char *pBuffer, unsigned int iBufferSize) { return 0; }

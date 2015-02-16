@@ -109,8 +109,8 @@ public:
 
   virtual PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time_t iStart, time_t iEnd);
 
-  virtual int GetRecordingsAmount(void);
-  virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle);
+  virtual int GetRecordingsAmount(bool bDeleted);
+  virtual PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool bDeleted);
 
   virtual int GetTimersAmount(void);
   virtual PVR_ERROR GetTimers(ADDON_HANDLE handle);
@@ -122,6 +122,7 @@ private:
   std::vector<PVRDemoChannelGroup> m_groups;
   std::vector<PVRDemoChannel>      m_channels;
   std::vector<PVRDemoRecording>    m_recordings;
+  std::vector<PVRDemoRecording>    m_recordingsDeleted;
   std::vector<PVRDemoTimer>        m_timers;
   time_t                           m_iEpgStart;
   CStdString                       m_strDefaultIcon;

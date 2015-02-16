@@ -41,6 +41,7 @@ public:
   bool        Login();
 
   bool        SupportChannelScan();
+  bool        SupportRecordingsUndelete();
   bool        EnableStatusInterface(bool onOff);
   bool        GetDriveSpace(long long *total, long long *used);
 
@@ -65,6 +66,11 @@ public:
   PVR_ERROR   RenameRecording(const PVR_RECORDING& recinfo, const char* newname);
   PVR_ERROR   DeleteRecording(const PVR_RECORDING& recinfo);
   PVR_ERROR   GetRecordingEdl(const PVR_RECORDING& recinfo, PVR_EDL_ENTRY edl[], int *size);
+  int         GetDeletedRecordingsCount();
+  PVR_ERROR   GetDeletedRecordingsList(ADDON_HANDLE handle);
+  PVR_ERROR   UndeleteRecording(const PVR_RECORDING& recording);
+  PVR_ERROR   DeleteAllRecordingsFromTrash();
+  PVR_ERROR   UndeleteAllRecordingsFromTrash();
 
   cResponsePacket*  ReadResult(cRequestPacket* vrp);
 

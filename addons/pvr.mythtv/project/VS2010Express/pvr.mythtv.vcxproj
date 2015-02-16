@@ -70,9 +70,6 @@
     <ProjectReference Include="..\..\..\..\lib\cppmyth\project\VS2010Express\cppmyth\libcppmyth.vcxproj">
       <Project>{086b2f32-c84b-481c-bb7e-accb4b2a0671}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\lib\cppmyth\project\VS2010Express\jansson\libjansson.vcxproj">
-      <Project>{e95631f0-9035-4be4-b8e1-e2c6b0e3f0c3}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">
       <Project>{fe4573f6-a794-4ad3-b37f-49e51f1140e6}</Project>
     </ProjectReference>

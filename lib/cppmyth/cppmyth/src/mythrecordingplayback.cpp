@@ -191,24 +191,35 @@ void RecordingPlayback::HandleBackendMessage(const EventMessage& msg)
   switch (msg.event)
   {
     case EVENT_UPDATE_FILE_SIZE:
-      if (msg.subject.size() >= 4 && recording && transfer)
+      if (msg.subject.size() >= 3 && recording && transfer)
       {
-        uint32_t chanid;
-        time_t startts;
-        if (str2uint32(msg.subject[1].c_str(), &chanid) || str2time(msg.subject[2].c_str(), &startts))
-          break;
-        if (recording->channel.chanId == chanid && recording->recording.startTs == startts)
+        int64_t newsize;
+        // Message contains chanid + starttime as recorded key
+        if (msg.subject.size() >= 4)
         {
-          int64_t newsize;
-          if (0 == str2int64(msg.subject[3].c_str(), &newsize))
-          {
-            // The file grows. Allow reading ahead
-            m_readAhead = true;
-            recording->fileSize = transfer->fileSize = newsize;
-            DBG(MYTH_DBG_DEBUG, "%s: (%d) %s %" PRIi64 "\n", __FUNCTION__,
-                    msg.event, recording->fileName.c_str(), newsize);
-          }
+          uint32_t chanid;
+          time_t startts;
+          if (str2uint32(msg.subject[1].c_str(), &chanid)
+                  || str2time(msg.subject[2].c_str(), &startts)
+                  || recording->channel.chanId != chanid
+                  || recording->recording.startTs != startts
+                  || str2int64(msg.subject[3].c_str(), &newsize))
+            break;
         }
+        // Message contains recordedid as key
+        else
+        {
+          uint32_t recordedid;
+          if (str2uint32(msg.subject[1].c_str(), &recordedid)
+                  || recording->recording.recordedId != recordedid
+                  || str2int64(msg.subject[2].c_str(), &newsize))
+            break;
+        }
+        // The file grows. Allow reading ahead
+        m_readAhead = true;
+        recording->fileSize = transfer->fileSize = newsize;
+        DBG(MYTH_DBG_DEBUG, "%s: (%d) %s %" PRIi64 "\n", __FUNCTION__,
+                msg.event, recording->fileName.c_str(), newsize);
       }
       break;
     //case EVENT_HANDLER_STATUS:

@@ -32,12 +32,6 @@
  *     http://www.pulse-eight.net/
  */
 
-#if defined(TARGET_DARWIN)
-#  ifndef PTHREAD_MUTEX_RECURSIVE_NP
-#    define PTHREAD_MUTEX_RECURSIVE_NP PTHREAD_MUTEX_RECURSIVE
-#  endif
-#endif
-
 namespace PLATFORM
 {
   inline pthread_mutexattr_t *GetRecursiveMutexAttribute(void)
@@ -72,7 +66,20 @@ namespace PLATFORM
 
   typedef pthread_t thread_t;
 
-  #define ThreadsCreate(thread, func, arg)         (pthread_create(&thread, NULL, (void *(*) (void *))func, (void *)arg) == 0)
+  inline pthread_attr_t *GetDetachedThreadAttribute(void)
+  {
+    static pthread_attr_t g_threadAttr;
+    static bool bAttributeInitialised = false;
+    if (!bAttributeInitialised)
+    {
+      pthread_attr_init(&g_threadAttr);
+      pthread_attr_setdetachstate(&g_threadAttr, PTHREAD_CREATE_DETACHED);
+      bAttributeInitialised = true;
+    }
+    return &g_threadAttr;
+  }
+
+  #define ThreadsCreate(thread, func, arg)         (pthread_create(&thread, GetDetachedThreadAttribute(), (void *(*) (void *))func, (void *)arg) == 0)
   #define ThreadsWait(thread, retval)              (pthread_join(thread, retval) == 0)
 
   typedef pthread_mutex_t mutex_t;

@@ -105,6 +105,8 @@ public:
   void Suspend();
   void Resume();
 
+  void CleanChannelIcons();
+
 protected:
   void *Process();
 

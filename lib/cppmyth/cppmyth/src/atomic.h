@@ -45,6 +45,33 @@ typedef volatile int32_t atomic_t;
 typedef volatile unsigned atomic_t;
 #endif
 
+#if defined __arm__ && (!defined __thumb__ || defined __thumb2__)
+/* The __ARM_ARCH define is provided by gcc 4.8.  Construct it otherwise.  */
+#ifndef __ARM_ARCH
+#ifdef __ARM_ARCH_2__
+#define __ARM_ARCH 2
+#elif defined (__ARM_ARCH_3__) || defined (__ARM_ARCH_3M__)
+#define __ARM_ARCH 3
+#elif defined (__ARM_ARCH_4__) || defined (__ARM_ARCH_4T__)
+#define __ARM_ARCH 4
+#elif defined (__ARM_ARCH_5__) || defined (__ARM_ARCH_5E__) \
+        || defined(__ARM_ARCH_5T__) || defined(__ARM_ARCH_5TE__) \
+        || defined(__ARM_ARCH_5TEJ__)
+#define __ARM_ARCH 5
+#elif defined (__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) \
+        || defined (__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) \
+        || defined (__ARM_ARCH_6K__) || defined(__ARM_ARCH_6T2__)
+#define __ARM_ARCH 6
+#elif defined (__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) \
+        || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) \
+        || defined(__ARM_ARCH_7EM__)
+#define __ARM_ARCH 7
+#else
+#warning could not detect ARM architecture
+#define __ARM_ARCH 8
+#endif
+#endif
+#endif
 
 /**
  * Atomically incremente a reference count variable.
@@ -118,7 +145,20 @@ static CC_INLINE unsigned atomic_increment(atomic_t *valp)
   /* The value for __val is in '__oldval' */
   __val = __oldval;
 
-#elif defined __arm__ && !defined __thumb__
+#elif (defined __ARM_ARCH && __ARM_ARCH >= 6)
+  int inc = 1;
+  __asm__ volatile (
+    "1:"
+    "ldrex   %0, [%1]\n"
+    "add     %0, %0,  %2\n"
+    "strex   r1, %0, [%1]\n"
+    "cmp     r1, #0\n"
+    "bne     1b\n"
+    : "=&r" (__val)
+    : "r"(valp), "r"(inc)
+    : "r1");
+
+#elif (defined __ARM_ARCH && __ARM_ARCH < 6)
   int tmp1, tmp2;
   int inc = 1;
   __asm__ volatile (
@@ -221,7 +261,20 @@ static CC_INLINE unsigned atomic_decrement(atomic_t *valp)
   /* The value for __val is in '__oldval' */
   __val = __oldval;
 
-#elif defined __arm__ && !defined __thumb__
+#elif (defined __ARM_ARCH && __ARM_ARCH >= 6)
+  int dec = 1;
+  __asm__ volatile (
+    "1:"
+    "ldrex   %0, [%1]\n"
+    "sub     %0, %0,  %2\n"
+    "strex   r1, %0, [%1]\n"
+    "cmp     r1, #0\n"
+    "bne     1b\n"
+    : "=&r" (__val)
+    : "r"(valp), "r"(dec)
+    : "r1");
+
+#elif (defined __ARM_ARCH && __ARM_ARCH < 6)
   int tmp1, tmp2;
   int inc = -1;
   __asm__ volatile (

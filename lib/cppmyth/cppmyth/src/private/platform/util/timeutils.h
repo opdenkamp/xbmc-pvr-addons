@@ -45,48 +45,15 @@
 
 namespace PLATFORM
 {
-  #if defined(__WINDOWS__)
-  struct timezone
-  {
-    int	tz_minuteswest;
-    int	tz_dsttime;
-  };
-
-  #define usleep(t) Sleep((DWORD)(t)/1000)
-  #define sleep(t)  Sleep((DWORD)(t)*1000)
-
-  inline int gettimeofday(struct timeval *pcur_time, struct timezone *tz)
-  {
-    if (pcur_time == NULL)
-    {
-      SetLastError(EFAULT);
-      return -1;
-    }
-    struct _timeb current;
-
-    _ftime(&current);
-
-    pcur_time->tv_sec = (long) current.time;
-    pcur_time->tv_usec = current.millitm * 1000L;
-    if (tz)
-    {
-      tz->tz_minuteswest = current.timezone;	/* minutes west of Greenwich  */
-      tz->tz_dsttime = current.dstflag;	      /* type of dst correction  */
-    }
-    return 0;
-  }
-  #endif
-
   inline int64_t GetTimeMs()
   {
   #if defined(__APPLE__)
+    // Recommended by Apple's QA1398.
     int64_t ticks = 0;
     static mach_timebase_info_data_t timebase;
-    if (timebase.denom == 0) {
-      // Get the timebase if this is the first time we run.
-      // Recommended by Apple's QA1398.
+    // Get the timebase if this is the first time we run.
+    if (timebase.denom == 0)
       (void)mach_timebase_info(&timebase);
-    }
     // Use timebase to convert absolute time tick units into nanoseconds.
     ticks = mach_absolute_time() * timebase.numer / timebase.denom;
     return ticks / 1000000;

@@ -28,9 +28,8 @@
 #include <cstdio>
 #include <errno.h>
 
-void MythJSON::BindObject(const json_t *json, void *obj, const bindings_t *bl)
+void MythJSON::BindObject(const Node& node, void *obj, const bindings_t *bl)
 {
-  const char *value;
   int i, err;
 
   if (bl == NULL)
@@ -38,84 +37,83 @@ void MythJSON::BindObject(const json_t *json, void *obj, const bindings_t *bl)
 
   for (i = 0; i < bl->attr_count; ++i)
   {
-    // jansson
-    json_t *field = json_object_get(json, bl->attr_bind[i].field);
-    if (field == NULL)
+    const Node& field = node.GetObjectValue(bl->attr_bind[i].field);
+    if (field.IsNull())
       continue;
-    value = json_string_value(field);
-    if (value != NULL)
+    if (field.IsString())
     {
+      std::string value(field.GetStringValue());
       err = 0;
       switch (bl->attr_bind[i].type)
       {
         case IS_STRING:
-          bl->attr_bind[i].set(obj, value);
+          bl->attr_bind[i].set(obj, value.c_str());
           break;
         case IS_INT8:
         {
           int8_t num = 0;
-          err = str2int8(value, &num);
+          err = str2int8(value.c_str(), &num);
           bl->attr_bind[i].set(obj, &num);
           break;
         }
         case IS_INT16:
         {
           int16_t num = 0;
-          err = str2int16(value, &num);
+          err = str2int16(value.c_str(), &num);
           bl->attr_bind[i].set(obj, &num);
           break;
         }
         case IS_INT32:
         {
           int32_t num = 0;
-          err = str2int32(value, &num);
+          err = str2int32(value.c_str(), &num);
           bl->attr_bind[i].set(obj, &num);
           break;
         }
         case IS_INT64:
         {
           int64_t num = 0;
-          err = str2int64(value, &num);
+          err = str2int64(value.c_str(), &num);
           bl->attr_bind[i].set(obj, &num);
           break;
         }
         case IS_UINT8:
         {
           uint8_t num = 0;
-          err = str2uint8(value, &num);
+          err = str2uint8(value.c_str(), &num);
           bl->attr_bind[i].set(obj, &num);
           break;
         }
         case IS_UINT16:
         {
           uint16_t num = 0;
-          err = str2uint16(value, &num);
+          err = str2uint16(value.c_str(), &num);
           bl->attr_bind[i].set(obj, &num);
           break;
         }
         case IS_UINT32:
         {
           uint32_t num = 0;
-          err = str2uint32(value, &num);
+          err = str2uint32(value.c_str(), &num);
           bl->attr_bind[i].set(obj, &num);
           break;
         }
         case IS_DOUBLE:
         {
-          double num = atof(value);
+          double num = atof(value.c_str());
           bl->attr_bind[i].set(obj, &num);
           break;
         }
         case IS_BOOLEAN:
         {
-          bool b = (strcmp(value, "true") == 0 ? true : false);
+          bool b = (strcmp(value.c_str(), "true") == 0 ? true : false);
           bl->attr_bind[i].set(obj, &b);
           break;
         }
         case IS_TIME:
         {
           time_t time = 0;
-          err = str2time(value, &time);
+          err = str2time(value.c_str(), &time);
           bl->attr_bind[i].set(obj, &time);
           break;
         }
@@ -123,9 +121,9 @@ void MythJSON::BindObject(const json_t *json, void *obj, const bindings_t *bl)
           break;
       }
       if (err)
-        Myth::DBG(MYTH_DBG_ERROR, "%s: failed (%d) field \"%s\" type %d: %s\n", __FUNCTION__, err, bl->attr_bind[i].field, bl->attr_bind[i].type, value);
+        Myth::DBG(MYTH_DBG_ERROR, "%s: failed (%d) field \"%s\" type %d: %s\n", __FUNCTION__, err, bl->attr_bind[i].field, bl->attr_bind[i].type, value.c_str());
     }
     else
-      Myth::DBG(MYTH_DBG_WARN, "%s: no value for field \"%s\" type %d\n", __FUNCTION__, bl->attr_bind[i].field, bl->attr_bind[i].type);
+      Myth::DBG(MYTH_DBG_WARN, "%s: invalid value for field \"%s\" type %d\n", __FUNCTION__, bl->attr_bind[i].field, bl->attr_bind[i].type);
   }
 }

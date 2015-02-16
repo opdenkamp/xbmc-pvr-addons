@@ -144,8 +144,9 @@ int __tValToNum(protoref_t *map, unsigned sz, unsigned proto, int tVal, int unk)
 
 static protoref_t ruleType[] =
 {
+  { 79, RT_TemplateRecord,    11, "Recording Template" },
+  { 79, RT_NotRecording,      0,  "Not Recording" },
   { 76, RT_OneRecord,         6,  "Record One" },
-  { 75, RT_NotRecording,      0,  "Not Recording" },
   { 75, RT_SingleRecord,      1,  "Single Record" },
   { 75, RT_DailyRecord,       2,  "Record Daily" },
   { 75, RT_ChannelRecord,     3,  "Channel Record" },
@@ -156,7 +157,8 @@ static protoref_t ruleType[] =
   { 75, RT_DontRecord,        8,  "Do not Record" },
   { 75, RT_FindDailyRecord,   9,  "Find Daily" },
   { 75, RT_FindWeeklyRecord,  10, "Find Weekly" },
-  { 75, RT_TemplateRecord,    11, "Recording Template" },
+  { 75, RT_TemplateRecord,    11, "Not Recording" },
+  { 75, RT_NotRecording,      0,  "Not Recording" },
 };
 
 RT_t Myth::RuleTypeFromString(unsigned proto, const std::string& type)

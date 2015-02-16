@@ -4,7 +4,6 @@ cmake_policy (VERSION 2.6)
 # Every module has a CMakeLists.txt in it's root. As we saw, those files
 # provide the necessary directions to build each module.
 set (MODULES
-  ${CMAKE_SOURCE_DIR}/jansson
   ${CMAKE_SOURCE_DIR}/cppmyth
 
 #

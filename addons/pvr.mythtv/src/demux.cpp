@@ -57,7 +57,7 @@ void DemuxLog(int level, char *msg)
       break;
     }
     if (XBMC && doLog)
-      XBMC->Log(loglevel, LOGTAG"%s", msg);
+      XBMC->Log(loglevel, LOGTAG "%s", msg);
   }
 }
 
@@ -98,7 +98,7 @@ Demux::Demux(Myth::Stream *file)
   }
   else
   {
-    XBMC->Log(LOG_ERROR, LOGTAG"alloc AV buffer failed");
+    XBMC->Log(LOG_ERROR, LOGTAG "alloc AV buffer failed");
   }
 }
 
@@ -113,7 +113,7 @@ Demux::~Demux()
   if (m_av_buf)
   {
     if (g_bExtraDebug)
-      XBMC->Log(LOG_DEBUG, LOGTAG"free AV buffer: allocated size was %zu", m_av_buf_size);
+      XBMC->Log(LOG_DEBUG, LOGTAG "free AV buffer: allocated size was %zu", m_av_buf_size);
     free(m_av_buf);
     m_av_buf = NULL;
   }
@@ -177,7 +177,7 @@ void* Demux::Process()
 {
   if (!m_AVContext)
   {
-    XBMC->Log(LOG_ERROR, LOGTAG"%s: no AVContext", __FUNCTION__);
+    XBMC->Log(LOG_ERROR, LOGTAG "%s: no AVContext", __FUNCTION__);
     return NULL;
   }
 
@@ -221,7 +221,7 @@ void* Demux::Process()
     }
 
     if (ret < 0)
-      XBMC->Log(LOG_NOTICE, LOGTAG"%s: error %d", __FUNCTION__, ret);
+      XBMC->Log(LOG_NOTICE, LOGTAG "%s: error %d", __FUNCTION__, ret);
 
     if (ret == AVCONTEXT_TS_ERROR)
       m_AVContext->Shift();
@@ -229,14 +229,14 @@ void* Demux::Process()
       m_AVContext->GoNext();
   }
 
-  XBMC->Log(LOG_DEBUG, LOGTAG"%s: stopped with status %d", __FUNCTION__, ret);
+  XBMC->Log(LOG_DEBUG, LOGTAG "%s: stopped with status %d", __FUNCTION__, ret);
   return NULL;
 }
 
 bool Demux::GetStreamProperties(PVR_STREAM_PROPERTIES* props)
 {
   if (!m_nosetup.empty())
-    XBMC->Log(LOG_NOTICE, LOGTAG"%s: incomplete setup", __FUNCTION__);
+    XBMC->Log(LOG_NOTICE, LOGTAG "%s: incomplete setup", __FUNCTION__);
 
   CLockObject lock(m_mutex);
   m_isChangePlaced = false;
@@ -287,7 +287,7 @@ bool Demux::SeekTime(int time, bool backwards, double* startpts)
   int64_t desired = m_curTime + offset;
 
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, LOGTAG"%s: bw:%d tm:%d tm_pts:%" PRId64 " c_pts:%" PRIu64 " offset:%+6.3f c_tm:%+6.3f n_tm:%+6.3f", __FUNCTION__,
+    XBMC->Log(LOG_DEBUG, LOGTAG "%s: bw:%d tm:%d tm_pts:%" PRId64 " c_pts:%" PRIu64 " offset:%+6.3f c_tm:%+6.3f n_tm:%+6.3f", __FUNCTION__,
             backwards, time, pts, m_PTS, (double)offset / PTS_TIME_BASE, (double)m_curTime / PTS_TIME_BASE, (double)desired / PTS_TIME_BASE);
 
   CLockObject lock(m_mutex);
@@ -301,7 +301,7 @@ bool Demux::SeekTime(int time, bool backwards, double* startpts)
     int64_t new_time = it->first;
     uint64_t new_pos = it->second.av_pos;
     uint64_t new_pts = it->second.av_pts;
-    XBMC->Log(LOG_DEBUG, LOGTAG"seek to %" PRId64 " pts=%" PRIu64, new_time, new_pts);
+    XBMC->Log(LOG_DEBUG, LOGTAG "seek to %" PRId64 " pts=%" PRIu64, new_time, new_pts);
 
     Flush();
     m_AVContext->GoPosition(new_pos);
@@ -456,7 +456,7 @@ void Demux::populate_pvr_streams()
         m_nosetup.insert((*it)->pid);
 
       if (g_bExtraDebug)
-        XBMC->Log(LOG_DEBUG, LOGTAG"%s: register PES %.4x %s", __FUNCTION__, (*it)->pid, codec_name);
+        XBMC->Log(LOG_DEBUG, LOGTAG "%s: register PES %.4x %s", __FUNCTION__, (*it)->pid, codec_name);
     }
   }
   m_streams.UpdateStreams(new_streams);
@@ -473,7 +473,7 @@ bool Demux::update_pvr_stream(uint16_t pid)
   const char* codec_name = es->GetStreamCodecName();
   xbmc_codec_t codec = CODEC->GetCodecByName(codec_name);
   if (g_bExtraDebug)
-    XBMC->Log(LOG_DEBUG, LOGTAG"%s: update info PES %.4x %s", __FUNCTION__, es->pid, codec_name);
+    XBMC->Log(LOG_DEBUG, LOGTAG "%s: update info PES %.4x %s", __FUNCTION__, es->pid, codec_name);
 
   CLockObject Lock(m_mutex);
 
@@ -503,7 +503,7 @@ bool Demux::update_pvr_stream(uint16_t pid)
       {
         m_nosetup.erase(it);
         if (m_nosetup.empty())
-          XBMC->Log(LOG_DEBUG, LOGTAG"%s: setup is completed", __FUNCTION__);
+          XBMC->Log(LOG_DEBUG, LOGTAG "%s: setup is completed", __FUNCTION__);
       }
     }
     return true;
@@ -526,7 +526,7 @@ void Demux::push_stream_change()
     else
     {
       m_isChangePlaced = true;
-      XBMC->Log(LOG_DEBUG, LOGTAG"%s: done", __FUNCTION__);
+      XBMC->Log(LOG_DEBUG, LOGTAG "%s: done", __FUNCTION__);
     }
   }
 }

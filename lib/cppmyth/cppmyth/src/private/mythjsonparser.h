@@ -22,12 +22,67 @@
 #ifndef MYTHJSONPARSER_H
 #define	MYTHJSONPARSER_H
 
-#include "janssonptr.h"
 #include "mythwsresponse.h"
+#include "sajson.h"
+#include "platform/os.h"
+#include "platform/util/util.h"
+
+#include <string>
 
 namespace MythJSON
 {
-  JanssonPtr ParseResponseJSON(Myth::WSResponse& resp);
+  class Node
+  {
+  public:
+    Node();
+    Node(const sajson::value& value);
+    ~Node() { }
+
+    bool IsNull() const;
+    bool IsObject() const;
+    bool IsArray() const;
+    bool IsString() const;
+    bool IsDouble() const;
+    bool IsInt() const;
+    bool IsTrue() const;
+    bool IsFalse() const;
+
+    std::string GetStringValue() const;
+    size_t GetStringSize() const;
+    double GetDoubleValue() const;
+    int64_t GetBigIntValue() const;
+    int32_t GetIntValue() const;
+
+    size_t Size() const;
+    Node GetArrayElement(size_t index) const;
+    std::string GetObjectKey(size_t index) const;
+    Node GetObjectValue(size_t index) const;
+    Node GetObjectValue(const char *key) const;
+
+  private:
+    sajson::value m_value;
+  };
+
+  class Document
+  {
+  public:
+    Document(Myth::WSResponse& resp);
+    ~Document()
+    {
+      SAFE_DELETE(m_document);
+    }
+
+    bool IsValid() const
+    {
+      return m_isValid;
+    }
+
+    Node GetRoot() const;
+
+  private:
+    bool m_isValid;
+    sajson::document *m_document;
+  };
 }
 
 #endif	/* MYTHJSONPARSER_H */

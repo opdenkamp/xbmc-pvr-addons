@@ -24,26 +24,182 @@
 
 using namespace Myth;
 
-JanssonPtr MythJSON::ParseResponseJSON(Myth::WSResponse& resp)
+///////////////////////////////////////////////////////////////////////////////
+////
+//// Node
+////
+
+MythJSON::Node::Node()
+: m_value(sajson::TYPE_NULL, 0, 0)
+{
+}
+
+MythJSON::Node::Node(const sajson::value& value)
+: m_value(value)
+{
+}
+
+bool MythJSON::Node::IsNull() const
+{
+  return (m_value.get_type() == sajson::TYPE_NULL);
+}
+
+bool MythJSON::Node::IsObject() const
+{
+  return (m_value.get_type() == sajson::TYPE_OBJECT);
+}
+
+bool MythJSON::Node::IsArray() const
+{
+  return (m_value.get_type() == sajson::TYPE_ARRAY);
+}
+
+bool MythJSON::Node::IsString() const
+{
+  return (m_value.get_type() == sajson::TYPE_STRING);
+}
+
+bool MythJSON::Node::IsDouble() const
+{
+  return (m_value.get_type() == sajson::TYPE_DOUBLE);
+}
+
+bool MythJSON::Node::IsInt() const
+{
+  return (m_value.get_type() == sajson::TYPE_INTEGER);
+}
+
+bool MythJSON::Node::IsTrue() const
+{
+  return (m_value.get_type() == sajson::TYPE_TRUE);
+}
+
+bool MythJSON::Node::IsFalse() const
+{
+  return (m_value.get_type() == sajson::TYPE_FALSE);
+}
+
+std::string MythJSON::Node::GetStringValue() const
+{
+  if (m_value.get_type() == sajson::TYPE_STRING)
+    return m_value.as_string();
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return std::string();
+}
+
+size_t MythJSON::Node::GetStringSize() const
+{
+  if (m_value.get_type() == sajson::TYPE_STRING)
+    return m_value.get_string_length();
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return 0;
+}
+
+double MythJSON::Node::GetDoubleValue() const
+{
+  if (m_value.get_type() == sajson::TYPE_DOUBLE)
+    return m_value.get_double_value();
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return 0.0;
+}
+
+int64_t MythJSON::Node::GetBigIntValue() const
+{
+  if (m_value.get_type() == sajson::TYPE_DOUBLE || m_value.get_type() == sajson::TYPE_INTEGER)
+    return (int64_t) m_value.get_number_value();
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return 0;
+}
+
+int32_t MythJSON::Node::GetIntValue() const
+{
+  if (m_value.get_type() == sajson::TYPE_INTEGER)
+    return (int32_t) m_value.get_integer_value();
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return 0;
+}
+
+size_t MythJSON::Node::Size() const
+{
+  if (m_value.get_type() == sajson::TYPE_ARRAY || m_value.get_type() == sajson::TYPE_OBJECT)
+    return m_value.get_length();
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return 0;
+}
+
+MythJSON::Node MythJSON::Node::GetArrayElement(size_t index) const
+{
+  if (m_value.get_type() == sajson::TYPE_ARRAY)
+    return Node(m_value.get_array_element(index));
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return Node();
+}
+
+std::string MythJSON::Node::GetObjectKey(size_t index) const
+{
+  if (m_value.get_type() == sajson::TYPE_OBJECT)
+    return m_value.get_object_key(index).as_string();
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return std::string();
+}
+
+MythJSON::Node MythJSON::Node::GetObjectValue(size_t index) const
+{
+  if (m_value.get_type() == sajson::TYPE_OBJECT)
+    return Node(m_value.get_object_value(index));
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return Node();
+}
+
+MythJSON::Node MythJSON::Node::GetObjectValue(const char *key) const
+{
+  if (m_value.get_type() == sajson::TYPE_OBJECT)
+  {
+    size_t idx = m_value.find_object_key(sajson::literal(key));
+    if (idx < m_value.get_length())
+      return Node(m_value.get_object_value(idx));
+    return Node();
+  }
+  DBG(MYTH_DBG_ERROR, "%s: bad type (%d)\n", __FUNCTION__, (int) m_value.get_type());
+  return Node();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+////
+//// Document
+////
+
+MythJSON::Document::Document(Myth::WSResponse& resp)
+: m_isValid(false)
+, m_document(NULL)
 {
   // Read content response
-  JanssonPtr root;
   size_t r, content_length = resp.GetContentLength();
   char *content = new char[content_length + 1];
   if ((r = resp.ReadContent(content, content_length)) == content_length)
   {
-    json_error_t error;
     content[content_length] = '\0';
-    DBG(MYTH_DBG_PROTO,"%s: %s\n", __FUNCTION__, content);
+    DBG(MYTH_DBG_PROTO, "%s: %s\n", __FUNCTION__, content);
     // Parse JSON content
-    root.reset(json_loads(content, 0, &error));
-    if (!root.isValid())
-      DBG(MYTH_DBG_ERROR, "%s: failed to parse: %d: %s\n", __FUNCTION__, error.line, error.text);
+    m_document = new sajson::document(sajson::parse(sajson::string(content, content_length)));
+    if (!m_document)
+      DBG(MYTH_DBG_ERROR, "%s: memory allocation failed\n", __FUNCTION__);
+    else if (!m_document->is_valid())
+      DBG(MYTH_DBG_ERROR, "%s: failed to parse: %d: %s\n", __FUNCTION__, (int)m_document->get_error_line(), m_document->get_error_message().c_str());
+    else
+      m_isValid = true;
   }
   else
   {
     DBG(MYTH_DBG_ERROR, "%s: read error\n", __FUNCTION__);
   }
   delete[] content;
-  return root;
 }
+
+MythJSON::Node MythJSON::Document::GetRoot() const
+{
+  if (m_document)
+    return Node(m_document->get_root());
+  return Node();
+}
+

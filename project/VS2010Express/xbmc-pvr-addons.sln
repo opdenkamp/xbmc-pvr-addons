@@ -51,8 +51,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.wmc", "..\..\addons\pvr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pvr.mythtv", "..\..\addons\pvr.mythtv\project\VS2010Express\pvr.mythtv.vcxproj", "{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjansson", "..\..\lib\cppmyth\project\VS2010Express\jansson\libjansson.vcxproj", "{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcppmyth", "..\..\lib\cppmyth\project\VS2010Express\cppmyth\libcppmyth.vcxproj", "{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}"
 EndProject
 Global
@@ -295,18 +293,6 @@ Global
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.RelWithDebInfo|Win32.Build.0 = Release|Win32
 		{A7F105B4-D41C-4BAE-B9A5-8E322C97A6D5}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Debug|Win32.Build.0 = Debug|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Debug|x64.ActiveCfg = Debug|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.MinSizeRel|x64.ActiveCfg = MinSizeRel|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Release|Win32.ActiveCfg = Release|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Release|Win32.Build.0 = Release|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.Release|x64.ActiveCfg = Release|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
-		{E95631F0-9035-4BE4-B8E1-E2C6B0E3F0C3}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|Win32
 		{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}.Debug|Win32.ActiveCfg = Debug|Win32
 		{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}.Debug|Win32.Build.0 = Debug|Win32
 		{086B2F32-C84B-481C-BB7E-ACCB4B2A0671}.Debug|x64.ActiveCfg = Debug|Win32

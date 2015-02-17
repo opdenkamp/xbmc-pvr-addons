@@ -1,3 +1,11 @@
+v1.10.2
+- fixed issue where RPi user were unable to watch live tv due to subtle socket differences on that platform
+- fixed issue where recording list would get out of date and not reflect reality of backend
+
+v1.10.1
+- Updated to PVR API v1.9.4
+- Updated to GUI API v5.8.0
+
 v1.9.21
 - fixed issue where RPi user were unable to watch live tv due to subtle socket differences on that platform
 - fixed issue where recording list would get out of date and not reflect reality of backend

@@ -165,7 +165,7 @@ unsigned int LiveShiftSource::Read(unsigned char *buffer, unsigned int length)
     int sent;
     do 
     {
-	    sent = m_pSocket->send(request, sizeof(request));
+      sent = m_pSocket->send(request, sizeof(request));
 #if defined(TARGET_WINDOWS)
     } while (sent < 0 && errno == WSAEWOULDBLOCK);
 #else
@@ -208,9 +208,9 @@ unsigned int LiveShiftSource::Read(unsigned char *buffer, unsigned int length)
       else if (responseByteCount < 0 && errno == EAGAIN)
 #endif
       {
-	      usleep(50000);
+        usleep(50000);
         LOG("got: EAGAIN");
-	      continue;
+        continue;
       }
       // drop out if response header looks incorrect
       if (responseByteCount != sizeof(response))
@@ -229,7 +229,7 @@ unsigned int LiveShiftSource::Read(unsigned char *buffer, unsigned int length)
       // read response payload
       do 
       {
-	      bytesRead = m_pSocket->receive((char *)buffer, length, payloadSize); 
+        bytesRead = m_pSocket->receive((char *)buffer, length, payloadSize); 
 #if defined(TARGET_WINDOWS)
       } while (bytesRead < 0 && errno == WSAEWOULDBLOCK);
 #else

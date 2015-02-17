@@ -1,4 +1,4 @@
-[B]Version 1.10.0[/B]
+[B]Version 1.10.1[/B]
 Updated to PVR API v1.9.4
 
 [B]Version 1.9.16[/B]

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.vdr.vnsi"
-  version="1.10.0"
+  version="1.10.1"
   name="VDR VNSI Client"
   provider-name="FernetMenta, Team XBMC">
   <requires>

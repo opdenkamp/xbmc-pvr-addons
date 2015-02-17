@@ -1,4 +1,4 @@
-v2.0.1
+v2.0.2
 - Support protocol 0.28-pre:85
 - Support protocol 0.28-pre:84
 - Handles MasterBackendOverride (kaptain-iglu)

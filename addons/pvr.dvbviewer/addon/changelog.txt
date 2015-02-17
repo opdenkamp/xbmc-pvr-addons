@@ -1,4 +1,4 @@
-1.10.28
+1.10.29
 [added] RecordingReader: Allows playback of ongoing recordings
         There are still some minor quirks. e.g. In case we reach the end during
         playback/seek we'll sleep until the next refresh. This should happen

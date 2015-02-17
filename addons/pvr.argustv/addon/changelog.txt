@@ -1,4 +1,4 @@
-v1.10.0 (15-02-2015)
+v1.10.1 (17-02-2015)
 - Updated to PVR API v1.9.4
 v1.9.189 (21-01-2015)
 - Updated language files from Transifex

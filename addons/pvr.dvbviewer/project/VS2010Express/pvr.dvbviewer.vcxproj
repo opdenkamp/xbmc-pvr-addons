@@ -96,11 +96,13 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     <ClCompile Include="..\..\src\client.cpp" />
     <ClCompile Include="..\..\src\DvbData.cpp" />
     <ClCompile Include="..\..\src\TimeshiftBuffer.cpp" />
+    <ClCompile Include="..\..\src\RecordingReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\client.h" />
     <ClInclude Include="..\..\src\DvbData.h" />
     <ClInclude Include="..\..\src\TimeshiftBuffer.h" />
+    <ClInclude Include="..\..\src\RecordingReader.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\project\VS2010Express\platform\platform.vcxproj">

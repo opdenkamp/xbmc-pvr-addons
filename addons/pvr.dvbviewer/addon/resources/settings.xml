@@ -13,18 +13,19 @@
     <setting label="30012" id="favouritesfile"    type="file" default="" enable="eq(-1,true)" />
   </category>
 
+  <!-- recordings -->
   <category label="30102">
-    <setting label="30050" id="grouprecordings" type="enum" lvalues="30051|30052|30053|30054|30055|30056" default="30051" />
+    <setting label="30050" id="grouprecordings" type="enum" lvalues="30051|30052|30053|30054|30055|30056" default="0" />
   </category>
 
+  <!-- advanced -->
   <category label="30101">
     <setting label="30020" id="usetimeshift"  type="bool"   default="false" />
     <setting label="30021" id="timeshiftpath" type="folder" default="special://userdata/addon_data/pvr.dvbviewer" option="writeable" enable="eq(-1,true)" />
 
     <setting id="sep3" type="sep" />
     <setting label="30030" id="usertsp" type="bool" default="false" enable="eq(-3,false)" />
-
-    <setting id="sep4" type="sep" />
+    <setting label="30060" id="prependoutline" type="enum" lvalues="30061|30062|30063|30064" default="1" />
     <setting label="30040" id="lowperformance" type="bool" default="false" />
   </category>
 </settings>

@@ -4,7 +4,7 @@
 #define PVR_DVBVIEWER_DVBDATA_H
 
 #include "client.h"
-#include "TimeshiftBuffer.h"
+#include "RecordingReader.h"
 #include "platform/util/StdString.h"
 #include "platform/threads/threads.h"
 #include <list>
@@ -31,14 +31,6 @@
 /* forward declaration */
 class DvbGroup;
 
-typedef enum DVB_UPDATE_STATE
-{
-  DVB_UPDATE_STATE_NONE,
-  DVB_UPDATE_STATE_FOUND,
-  DVB_UPDATE_STATE_UPDATED,
-  DVB_UPDATE_STATE_NEW
-} DVB_UPDATE_STATE;
-
 class DvbChannel
 {
 public:
@@ -47,7 +39,10 @@ public:
   {}
 
 public:
-  /*!< @brief unique id passed to xbmc database. see FIXME for more details */
+  /*!< @brief unique id passed to xbmc database.
+   * starts at 1 and increases by each channel regardless of hidden state.
+   * see FIXME for more details
+   */
   unsigned int id;
   /*!< @brief backend number for generating the stream url */
   unsigned int backendNr;
@@ -81,74 +76,83 @@ public:
   {}
 
 public:
-  int iEventId;
-  CStdString strTitle;
-  unsigned int iChannelUid;
-  time_t startTime;
-  time_t endTime;
+  unsigned int id;
+  DvbChannel *channel;
+  CStdString title;
+  time_t start;
+  time_t end;
   unsigned int genre;
-  CStdString strPlotOutline;
-  CStdString strPlot;
+  CStdString plotOutline;
+  CStdString plot;
 };
 
 class DvbTimer
 {
 public:
+  enum State
+  {
+    STATE_NONE,
+    STATE_NEW,
+    STATE_FOUND,
+    STATE_UPDATED
+  };
+
   DvbTimer()
-  {
-    iUpdateState = DVB_UPDATE_STATE_NEW;
-  }
+    : updateState(STATE_NEW)
+  {}
 
-  bool like(const DvbTimer& right) const
-  {
-    bool bChanged = true;
-    bChanged = bChanged && (startTime   == right.startTime);
-    bChanged = bChanged && (endTime     == right.endTime);
-    bChanged = bChanged && (iChannelUid == right.iChannelUid);
-    bChanged = bChanged && (bRepeating  == right.bRepeating);
-    bChanged = bChanged && (iWeekdays   == right.iWeekdays);
-    bChanged = bChanged && (iEpgId      == right.iEpgId);
-    return bChanged;
-  }
+#define TIMER_UPDATE_MEMBER(member) \
+  if (member != source.member) \
+  { \
+    member = source.member; \
+    updated = true; \
+   }
 
-  bool operator==(const DvbTimer& right) const
+  bool updateFrom(const DvbTimer &source)
   {
-    bool bChanged = true;
-    bChanged = bChanged && like(right);
-    bChanged = bChanged && (state    == right.state);
-    bChanged = bChanged && (strTitle == right.strTitle);
-    bChanged = bChanged && (strPlot  == right.strPlot);
-    return bChanged;
+    bool updated = false;
+    TIMER_UPDATE_MEMBER(channel);
+    TIMER_UPDATE_MEMBER(title);
+    TIMER_UPDATE_MEMBER(start);
+    TIMER_UPDATE_MEMBER(end);
+    TIMER_UPDATE_MEMBER(priority);
+    TIMER_UPDATE_MEMBER(weekdays);
+    TIMER_UPDATE_MEMBER(state);
+    return updated;
   }
 
 public:
-  CStdString strTitle;
-  CStdString strPlot;
-  unsigned int iChannelUid;
-  time_t startTime;
-  time_t endTime;
-  bool bRepeating;
-  int iWeekdays;
-  int iEpgId;
-  int iTimerId;
-  int iPriority;
-  int iFirstDay;
+  /*!< @brief unique id passed to xbmc database
+   * starts at 1 and increases by each new timer. never decreases.
+   */
+  unsigned int id;
+  /*!< @brief unique guid provided by backend. unique every time */
+  CStdString guid;
+  /*!< @brief timer id on backend. unique at a time */
+  unsigned int backendId;
+
+  DvbChannel *channel;
+  CStdString title;
+  uint64_t channelId;
+  time_t start;
+  time_t end;
+  int priority;
+  unsigned int weekdays;
   PVR_TIMER_STATE state;
-  DVB_UPDATE_STATE iUpdateState;
-  unsigned int iClientIndex;
+  State updateState;
 };
 
 class DvbRecording
 {
 public:
-  enum Group
+  enum Grouping
   {
-    GroupDisabled = 0,
-    GroupByDirectory,
-    GroupByDate,
-    GroupByFirstLetter,
-    GroupByTVChannel,
-    GroupBySeries,
+    GROUPING_DISABLED = 0,
+    GROUP_BY_DIRECTORY,
+    GROUP_BY_DATE,
+    GROUP_BY_FIRST_LETTER,
+    GROUP_BY_TV_CHANNEL,
+    GROUP_BY_SERIES
   };
 
 public:
@@ -158,11 +162,10 @@ public:
 
 public:
   CStdString id;
-  time_t startTime;
+  time_t start;
   int duration;
   unsigned int genre;
   CStdString title;
-  CStdString streamURL;
   CStdString plot;
   CStdString plotOutline;
   CStdString channelName;
@@ -185,31 +188,32 @@ public:
 
   CStdString GetBackendName();
   CStdString GetBackendVersion();
-  PVR_ERROR GetDriveSpace(long long *total, long long *used);
+  bool GetDriveSpace(long long *total, long long *used);
 
-  bool SwitchChannel(const PVR_CHANNEL& channel);
+  bool SwitchChannel(const PVR_CHANNEL& channelinfo);
   unsigned int GetCurrentClientChannel(void);
-  PVR_ERROR GetChannels(ADDON_HANDLE handle, bool bRadio);
-  PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channel, time_t iStart, time_t iEnd);
+  bool GetChannels(ADDON_HANDLE handle, bool radio);
+  bool GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL& channelinfo,
+      time_t start, time_t end);
   unsigned int GetChannelsAmount(void);
 
-  PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio);
-  PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP& group);
+  bool GetChannelGroups(ADDON_HANDLE handle, bool radio);
+  bool GetChannelGroupMembers(ADDON_HANDLE handle,
+      const PVR_CHANNEL_GROUP& group);
   unsigned int GetChannelGroupsAmount(void);
 
-  PVR_ERROR GetTimers(ADDON_HANDLE handle);
-  PVR_ERROR AddTimer(const PVR_TIMER& timer);
-  PVR_ERROR UpdateTimer(const PVR_TIMER& timer);
-  PVR_ERROR DeleteTimer(const PVR_TIMER& timer);
+  bool GetTimers(ADDON_HANDLE handle);
+  bool AddTimer(const PVR_TIMER& timer, bool update = false);
+  bool DeleteTimer(const PVR_TIMER& timer);
   unsigned int GetTimersAmount(void);
 
-  PVR_ERROR GetRecordings(ADDON_HANDLE handle);
-  PVR_ERROR DeleteRecording(const PVR_RECORDING& recinfo);
+  bool GetRecordings(ADDON_HANDLE handle);
+  bool DeleteRecording(const PVR_RECORDING& recinfo);
   unsigned int GetRecordingsAmount();
+  RecordingReader *OpenRecordedStream(const PVR_RECORDING &recinfo);
 
   bool OpenLiveStream(const PVR_CHANNEL& channelinfo);
   void CloseLiveStream();
-  TimeshiftBuffer *GetTimeshiftBuffer();
   CStdString& GetLiveStreamURL(const PVR_CHANNEL& channelinfo);
 
 protected:
@@ -222,17 +226,14 @@ private:
   bool LoadChannels();
   DvbTimers_t LoadTimers();
   void TimerUpdates();
-  void GenerateTimer(const PVR_TIMER& timer, bool newtimer = true);
-  int GetTimerId(const PVR_TIMER& timer);
+  DvbTimer *GetTimer(const PVR_TIMER& timer);
 
   // helper functions
   void RemoveNullChars(CStdString& str);
   bool CheckBackendVersion();
   bool UpdateBackendStatus(bool updateSettings = false);
   time_t ParseDateTime(const CStdString& strDate, bool iso8601 = true);
-  uint64_t ParseChannelString(const CStdString& str, CStdString& channelName);
-  unsigned int GetChannelUid(const CStdString& str);
-  unsigned int GetChannelUid(const uint64_t channelId);
+  DvbChannel *GetChannelByBackendId(const uint64_t backendId);
   CStdString BuildURL(const char* path, ...);
   CStdString BuildExtURL(const CStdString& baseURL, const char* path, ...);
   CStdString ConvertToUtf8(const CStdString& src);
@@ -241,29 +242,30 @@ private:
 private:
   bool m_connected;
   unsigned int m_backendVersion;
+  CStdString m_url;
+  CStdString m_recordingURL;
 
   long m_timezone;
   struct { long long total, used; } m_diskspace;
   std::vector<CStdString> m_recfolders;
 
-  CStdString m_url;
+  /* channels */
+  DvbChannels_t m_channels;
+  /* active (not hidden) channels */
+  unsigned int m_channelAmount;
   unsigned int m_currentChannel;
 
-  /* channels + active (not hidden) channels */
-  DvbChannels_t m_channels;
-  unsigned int m_channelAmount;
-
-  /* channel groups + active (not hidden) groups */
+  /* channel groups */
   DvbGroups_t m_groups;
+  /* active (not hidden) groups */
   unsigned int m_groupAmount;
 
   bool m_updateTimers;
   bool m_updateEPG;
   unsigned int m_recordingAmount;
-  TimeshiftBuffer *m_tsBuffer;
 
   DvbTimers_t m_timers;
-  unsigned int m_newTimerIndex;
+  unsigned int m_nextTimerId;
 
   PLATFORM::CMutex m_mutex;
   PLATFORM::CCondition<bool> m_started;

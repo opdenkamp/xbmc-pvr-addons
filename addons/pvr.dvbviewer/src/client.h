@@ -74,9 +74,21 @@ extern int           g_groupRecordings;
 extern bool          g_useTimeshift;
 extern CStdString    g_timeshiftBufferPath;
 extern bool          g_useRTSP;
+extern int           g_prependOutline;
 extern bool          g_lowPerformance;
 
 extern ADDON::CHelper_libXBMC_addon *XBMC;
 extern CHelper_libXBMC_pvr *PVR;
+
+//TODO: convert to enum class as soon as c++11 is available
+class PrependOutline
+{
+public:
+  enum options { NEVER = 0, IN_EPG, IN_RECORDINGS, ALWAYS };
+  static bool test(options flag)
+  {
+    return (g_prependOutline == flag || g_prependOutline == ALWAYS);
+  }
+};
 
 #endif

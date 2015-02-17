@@ -2,12 +2,16 @@
 #include "client.h"
 #include "platform/util/util.h"
 
+#define STREAM_READ_BUFFER_SIZE   32768
+#define BUFFER_READ_TIMEOUT       10000
+#define BUFFER_READ_WAITTIME      50
+
 using namespace ADDON;
 
-TimeshiftBuffer::TimeshiftBuffer(CStdString streampath, CStdString bufferpath)
-  : m_bufferPath(bufferpath)
+TimeshiftBuffer::TimeshiftBuffer(CStdString streamURL, CStdString bufferPath)
+  : m_bufferPath(bufferPath)
 {
-  m_streamHandle = XBMC->OpenFile(streampath, READ_NO_CACHE);
+  m_streamHandle = XBMC->OpenFile(streamURL, READ_NO_CACHE);
   m_bufferPath += "/tsbuffer.ts";
   m_filebufferWriteHandle = XBMC->OpenFileForWrite(m_bufferPath, true);
 #ifndef TARGET_POSIX
@@ -35,7 +39,9 @@ TimeshiftBuffer::~TimeshiftBuffer(void)
 
 bool TimeshiftBuffer::IsValid()
 {
-  return (m_streamHandle != NULL);
+  return (m_streamHandle != NULL
+      && m_filebufferWriteHandle != NULL
+      && m_filebufferReadHandle != NULL);
 }
 
 void TimeshiftBuffer::Stop()
@@ -45,7 +51,7 @@ void TimeshiftBuffer::Stop()
 
 void *TimeshiftBuffer::Process()
 {
-  XBMC->Log(LOG_DEBUG, "Timeshift: thread started");
+  XBMC->Log(LOG_DEBUG, "Timeshift: Thread started");
   byte buffer[STREAM_READ_BUFFER_SIZE];
 
   while (m_start)
@@ -59,29 +65,22 @@ void *TimeshiftBuffer::Process()
     m_mutex.Unlock();
 #endif
   }
-  XBMC->Log(LOG_DEBUG, "Timeshift: thread stopped");
+  XBMC->Log(LOG_DEBUG, "Timeshift: Thread stopped");
   return NULL;
 }
 
 long long TimeshiftBuffer::Seek(long long position, int whence)
 {
-  if (m_filebufferReadHandle)
-    return XBMC->SeekFile(m_filebufferReadHandle, position, whence);
-  return -1;
+  return XBMC->SeekFile(m_filebufferReadHandle, position, whence);
 }
 
 long long TimeshiftBuffer::Position()
 {
-  if (m_filebufferReadHandle)
-    return XBMC->GetFilePosition(m_filebufferReadHandle);
-  return -1;
+  return XBMC->GetFilePosition(m_filebufferReadHandle);
 }
 
 long long TimeshiftBuffer::Length()
 {
-  if (!m_filebufferReadHandle || !m_filebufferWriteHandle)
-    return 0;
-
   // We can't use GetFileLength here as it's value will be cached
   // by XBMC until we read or seek above it.
   // see xbm/xbmc/filesystem/HDFile.cpp CHDFile::GetLength()
@@ -102,11 +101,8 @@ long long TimeshiftBuffer::Length()
 
 int TimeshiftBuffer::ReadData(unsigned char *buffer, unsigned int size)
 {
-  if (!m_filebufferReadHandle || !m_filebufferWriteHandle)
-    return 0;
-
   /* make sure we never read above the current write position */
-  int64_t readPos  = XBMC->GetFilePosition(m_filebufferReadHandle);
+  int64_t readPos = XBMC->GetFilePosition(m_filebufferReadHandle);
   unsigned int timeWaited = 0;
   while (readPos + size > Length())
   {

@@ -1,54 +1,51 @@
-1.10.0
+1.10.28
+[added] RecordingReader: Allows playback of ongoing recordings
+        There are still some minor quirks. e.g. In case we reach the end during
+        playback/seek we'll sleep until the next refresh. This should happen
+        once but sometimes this happens twice.
+[added] Support for putting outline before plot
+[fixed] Removed custom notification if backend is unavailable
+[fixed] A new timer has been removed and re-added again shortly after it has
+        been added the first time
 
+1.10.0
 [updated] to PVR API v1.9.4
 
 1.9.27
-
 [updated] Language files from Transifex
 
 1.9.26
-
 [updated] Language files from Transifex
 [fixed] Minor changes to conform with C++11
 
 1.9.25
-
 [added] getBackendHostname function
 
 1.9.24
-
 [fixed] mime-type for MPEG-TS
 
 1.9.23
-
 [updated] Language files from Transifex
 
 1.9.22
-
 change library name to Kodi
 
 1.9.21
-
 [fixed] deadlock when activating the addon on some darwin (osx, ios) runtimes
 
 1.9.20
-
 [updated] Language files from Transifex
 
 1.9.19
-
 [updated] Language files from Transifex
 
 1.9.18
-
 [updated] to API v1.9.2
 
 1.9.16
-
 [updated] Language files from Transifex
 
 1.9.15
-
 [updated] Speed up timeshift startup time
 [added] If available add genre to EPG
 [added] Support for grouping recordings. Grouping can be by rec. directory,
@@ -56,25 +53,21 @@ change library name to Kodi
 [fixed] Another timezone offsets fix
 
 1.9.14
-
 [updated] Require DVB Viewer Recording Service 1.26.0 or later
 [updated] Removed external XML library. Use TinyXML instead
 [added] Low performance mode for devices like the raspberry pi
 [fixed] Timers starting near 12pm could have wrong date
 
 1.9.13
-
 [updated] Language files from Transifex
 
 1.9.12
-
 [updated] Language files from Transifex
 
 1.9.11
 [added] add timeshift buffer functions
 
 1.8.10
-
 [updated] Require DVB Viewer Recording Service 1.25.0 or later
 [updated] In general use RS XML API instead of HTML/channeldat parsing
 [updated] Rewrote channel parsing. Use favourites if you want fast startups.
@@ -87,23 +80,18 @@ change library name to Kodi
 [fixed] possible crash (2x)
 
 1.8.9
-
 [updated] sync with PVR API v1.8.0
 
 1.7.9
-
 [fixed] loading favourites without groups/folders
 
 1.7.8
-
 [fixed] fix crash with Recording Service 1.25.0
 
 1.7.7
-
 [fixed] fix possible crash during timer updates
 
 1.7.6
-
 [added] Basic timeshift support.
 [added] Use channel names from favourites. This allows easy channelname changes.
 [fixed] Use 64 bit channel ids. Fall back to 32 bit if favourites.xml still contain the old ones.
@@ -111,35 +99,28 @@ change library name to Kodi
 [updated] A lot of code cleanup
 
 1.7.5
-
 [updated] Bump after PVR API version bump
 
 1.6.5
-
 [updated] Language files from Transifex
 
 1.6.4
-
 [fixed] Use utf-8 encoding to get and set the timers.
 [fixed] Channel names with more than 25 chars could crash the add-on.
 
 1.6.3
-
 [updated] Language files from Transifex
 
 1.6.2
-
 New version number by Team XBMC
 
 0.1.8
-
 [fixed] Changed the way timers are calculated. This should fix problems with scheduled and instant recordings on some machines.
 [fixed] Favourites didn't show channels if the audio track wasn't the first one.
 [fixed] Channel settings weren't saved/restored after a channel switch with the channels OSD.
 [fixed] XBMC could hang after a channel switch with the channels OSD.
 
 0.1.7
-
 [added] The Recording Service version 1.21 or higher is now required. Download the latest version from the DVBViewer members area and install it.
 [added] Display a notification if the add-on can't connect to the Recording Service. Please, check that the RS is enabled and the IP, webinterface port, username and pass are correct.
 [added] If the favourites.xml selector is empty, the favourites are loaded from the web interface.
@@ -149,7 +130,6 @@ New version number by Team XBMC
 [fixed] Channel names with more than 25 chars.
 
 0.1.5
-
 [added] Timers support.
 [added] An option to load the channels from favourites.xml instead of from channels.dat (a reset of the PVR database is required).
         It is usually located at c:\ProgramData\CMUV\DVBViewer\
@@ -161,5 +141,4 @@ New version number by Team XBMC
 [fixed] When the EPG is missing the description entry, the event entry is used instead.
 
 0.1.0
-
 First version.

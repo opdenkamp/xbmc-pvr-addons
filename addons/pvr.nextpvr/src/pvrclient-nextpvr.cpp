@@ -1372,7 +1372,7 @@ int cPVRClientNextPVR::ReadLiveStream(unsigned char *pBuffer, unsigned int iBuff
       // is it taking too long?
       if (read_timeouts > 200)
       {
-        const char *str = XBMC->GetLocalizedString(30053);
+        char *str = XBMC->GetLocalizedString(30053);
         bufferMore = false;
         if (str != NULL)
         {

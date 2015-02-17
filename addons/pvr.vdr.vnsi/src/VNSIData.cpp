@@ -1041,8 +1041,8 @@ void *cVNSIData::Process()
       if (vresp->getRequestID() == VNSI_STATUS_MESSAGE)
       {
         uint32_t type = vresp->extract_U32();
-        const char* msgstr  = vresp->extract_String();
-        const char* strMessageTranslated(NULL);
+        char* msgstr  = vresp->extract_String();
+        char* strMessageTranslated(NULL);
 
         if (g_bCharsetConv)
           strMessageTranslated = XBMC->UnknownToUTF8(msgstr);

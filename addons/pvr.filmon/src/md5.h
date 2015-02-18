@@ -1,6 +1,6 @@
 /*
- *      Copyright (C) 2009 Team XBMC
- *      http://www.xbmc.org
+ *      Copyright (C) 2009-2013 Team XBMC
+ *      http://xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -13,18 +13,16 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
- *  MA 02110-1301  USA
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
 #ifndef _MD5_H_
-#define _MD5_H_ 1
+#define _MD5_H_
 
-#include "platform/util/StdString.h"
-
+#include <string>
+#include <stdint.h>
 
 struct MD5Context {
 	uint32_t buf[4];
@@ -40,15 +38,15 @@ namespace PVRXBMC
     XBMC_MD5(void);
     ~XBMC_MD5(void);
     void append(const void *inBuf, size_t inLen);
-    void append(const CStdString& str);
+    void append(const std::string& str);
     void getDigest(unsigned char digest[16]);
-    void getDigest(CStdString& digest);
-    
+    std::string getDigest();
+
     /*! \brief Get the MD5 digest of the given text
      \param text text to compute the MD5 for
      \return MD5 digest
      */
-    static CStdString GetMD5(const CStdString &text);
+    static std::string GetMD5(const std::string &text);
 private:
     MD5Context m_ctx;
   };

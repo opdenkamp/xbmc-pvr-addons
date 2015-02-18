@@ -1,6 +1,6 @@
 /*
- *      Copyright (C) 2009 Team XBMC
- *      http://www.xbmc.org
+ *      Copyright (C) 2009-2013 Team XBMC
+ *      http://xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -13,10 +13,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
- *  MA 02110-1301  USA
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -43,7 +41,7 @@ void PVRXBMC::XBMC_MD5::append(const void *inBuf, size_t inLen)
   MD5Update(&m_ctx, (md5byte*)inBuf, inLen);
 }
 
-void PVRXBMC::XBMC_MD5::append(const CStdString& str)
+void PVRXBMC::XBMC_MD5::append(const std::string& str)
 {
   append((unsigned char*) str.c_str(), (unsigned int) str.length());
 }
@@ -53,26 +51,27 @@ void PVRXBMC::XBMC_MD5::getDigest(unsigned char digest[16])
   MD5Final(digest, &m_ctx);
 }
 
-void PVRXBMC::XBMC_MD5::getDigest(CStdString& digest)
+std::string PVRXBMC::XBMC_MD5::getDigest()
 {
   unsigned char szBuf[16] = {'\0'};
   getDigest(szBuf);
-  digest.Format("%02X%02X%02X%02X%02X%02X%02X%02X"\
-      "%02X%02X%02X%02X%02X%02X%02X%02X", szBuf[0], szBuf[1], szBuf[2],
-      szBuf[3], szBuf[4], szBuf[5], szBuf[6], szBuf[7], szBuf[8],
-      szBuf[9], szBuf[10], szBuf[11], szBuf[12], szBuf[13], szBuf[14],
-      szBuf[15]);
+  std::string result;
+  result.reserve(32);
+  for (std::size_t i = 0; i != 16; ++i)
+  {
+    result += "0123456789ABCDEF"[szBuf[i] / 16];
+    result += "0123456789ABCDEF"[szBuf[i] % 16];
+  }
+  return result;
 }
 
-CStdString PVRXBMC::XBMC_MD5::GetMD5(const CStdString &text)
+std::string PVRXBMC::XBMC_MD5::GetMD5(const std::string &text)
 {
-  if (text.IsEmpty())
+  if (text.empty())
     return "";
   XBMC_MD5 state;
-  CStdString digest;
   state.append(text);
-  state.getDigest(digest);
-  return digest;
+  return state.getDigest();
 }
 
 /*
@@ -101,7 +100,7 @@ CStdString PVRXBMC::XBMC_MD5::GetMD5(const CStdString &text)
 
 #include <sys/types.h>		/* for stupid systems */
 #include <string.h>		/* for memcpy() */
-#if defined(HAVE_CONFIG_H) && !defined(_WIN32)
+#if defined(HAVE_CONFIG_H) && !defined(TARGET_WINDOWS)
 #include "../config.h"
 #endif
 
@@ -235,7 +234,7 @@ MD5Final(md5byte digest[16], struct MD5Context *ctx)
 static void
 MD5Transform(uint32_t buf[4], uint32_t const in[16])
 {
-	register uint32_t a, b, c, d;
+	uint32_t a, b, c, d;
 
 	a = buf[0];
 	b = buf[1];

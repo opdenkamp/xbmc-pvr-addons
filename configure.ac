@@ -150,38 +150,10 @@ if test "$build_addons_with_dependencies" = "yes"; then
     AC_SUBST(ZLIB_LIBS)
   fi
   echo "Zlib: $use_zlib"
-
-  # For Filmon
-  AC_CHECK_LIB(curl, curl_easy_init, [use_curl=yes], [use_curl=no])
-  if test "$use_curl" = "yes"; then
-    AC_DEFINE([HAVE_CURL],[1],["Define to 1 if we have the curl library"])
-    CURL_LIBS='-lcurl'
-    AC_SUBST(CURL_LIBS)
-  fi
-  echo "Curl: $use_curl"
-
-  # For Filmon
-  AC_CHECK_LIB(jsoncpp, _ZNK4Json5Value4sizeEv, [use_jsoncpp=yes], [use_jsoncpp=no])
-  if test "$use_jsoncpp" = "yes"; then
-    AC_DEFINE([HAVE_JSONCPP],[1],["Define to 1 if we have the jsoncpp library"])
-    JSONCPP_LIBS='-ljsoncpp'
-    AC_SUBST(JSONCPP_LIBS)
-  fi
-  echo "JsonCPP: $use_jsoncpp"
-
-  # For Filmon
-  AC_CHECK_LIB(cryptopp, main, [use_cryptopp=yes], [use_cryptopp=no])
-  if test "$use_cryptopp" = "yes"; then
-    AC_DEFINE([HAVE_CRYPTOPP],[1],["Define to 1 if we have the cryptopp library"])
-    CRYPTOPP_LIBS='-lcryptopp'
-    AC_SUBST(CRYPTOPP_LIBS)
-  fi
-  echo "CryptoCPP: $use_cryptopp"
 fi
 
 ### Addons with dependencies
 AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addons_with_dependencies" = "yes" -a "$use_zlib" = "yes"])
-AM_CONDITIONAL([ADDON_FILMON], [test "$build_addons_with_dependencies" = "yes" -a "$use_curl" = "yes" -a "$use_jsoncpp" = "yes" -a "$use_cryptopp" = "yes"])
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then

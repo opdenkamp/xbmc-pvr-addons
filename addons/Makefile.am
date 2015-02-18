@@ -1,6 +1,3 @@
-if ADDON_FILMON
-          ADDON_FILMON_SUBDIRS = pvr.filmon
-endif
 if ADDON_IPTVSIMPLE
           ADDON_IPTVSIMPLE_SUBDIRS = pvr.iptvsimple
 endif
@@ -18,7 +15,7 @@ SUBDIRS = pvr.argustv \
           pvr.vdr.vnsi \
           pvr.vuplus \
           pvr.wmc \
-          $(ADDON_FILMON_SUBDIRS) \
+          pvr.filmon \
           $(ADDON_IPTVSIMPLE_SUBDIRS) \
           $(ADDON_MYTHTV_SUBDIRS)
 

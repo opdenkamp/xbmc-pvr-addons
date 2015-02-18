@@ -25,29 +25,28 @@
 #include <cstdio>
 #include <sstream>
 
-#include <curl/curl.h>
-#include <jsoncpp/json/json.h>
-#include <cryptopp/md5.h>
-#include <cryptopp/hex.h>
+#include <json/json.h>
 
 #include <unistd.h>
 
 #include "FilmonAPI.h"
+#include "client.h"
+#include "md5.h"
 
 #define FILMON_URL "http://www.filmon.com/"
 #define FILMON_ONE_HOUR_RECORDING_SIZE 508831234
-#define USER_AGENT "AppleCoreMedia/1.0.0.8F455 (AppleTV; U; CPU OS 4_3 like Mac OS X; de_de)"
-#define REQUEST_LENGTH 1024
-#define REQUEST_TIMEOUT 30 // 30s
-#define REQUEST_CONNECTION_TIMEOUT 30 // 30s
 #define REQUEST_RETRIES 4
 #define REQUEST_RETRY_TIMEOUT 500000 // 0.5s
 #define RESPONSE_OUTPUT_LENGTH 128
-#define DNS_CACHE_TIME -1 // Forever
 
 #define RECORDED_STATUS "Recorded"
 #define TIMER_STATUS "Accepted"
 #define OFF_AIR "Off Air"
+
+/* open without caching. regardless to file type. */
+#define READ_NO_CACHE 0x08
+
+using namespace ADDON;
 
 // Attempt at genres
 typedef struct {
@@ -76,7 +75,8 @@ static genreEntry genreTable[] = {
 
 #define GENRE_TABLE_LEN sizeof(genreTable)/sizeof(genreTable[0])
 
-bool filmonRequest(std::string path, std::string params = "");
+bool filmonRequest(std::string path, std::string params = "",
+	unsigned int retries = REQUEST_RETRIES);
 bool filmonAPIgetRecordingsTimers(bool completed = false);
 
 std::string filmonUsername = "";
@@ -92,22 +92,9 @@ std::vector<FILMON_CHANNEL_GROUP> groups;
 std::vector<FILMON_RECORDING> recordings;
 std::vector<FILMON_TIMER> timers;
 
-CURL *curl = NULL;
-CURLcode curlResult;
-bool curlConnected = false;
+bool connected = false;
 
-struct responseType {
-	char *memory;
-	size_t size;
-};
-struct responseType response;
-
-void toLowerCase(std::string &str) {
-	const int length = str.length();
-	for (int i = 0; i < length; ++i) {
-		str[i] = std::tolower(str[i]);
-	}
-}
+std::string response;
 
 std::string intToString(unsigned int i) {
 	std::ostringstream oss;
@@ -137,69 +124,26 @@ void setTimerDefaults(FILMON_TIMER *t) {
 	t->iMarginEnd = 0;
 }
 
-// Libcurl response is memory
-static size_t getResponse(void *contents, size_t size, size_t nmemb,
-		void *userp) {
-	size_t realsize = size * nmemb;
-	struct responseType *mem = (struct responseType *) userp;
 
-	mem->memory = (char*) (realloc(mem->memory, mem->size + realsize + 1));
-	if (mem->memory == NULL) {
-		std::cerr << "FilmonAPI: not enough memory for response" << std::endl;
-		return 0;
-	}
-
-	memcpy(&(mem->memory[mem->size]), contents, realsize);
-	mem->size += realsize;
-	mem->memory[mem->size] = 0;
-
-	return realsize;
-}
-
-// Free libcurl response
+// Free response
 void clearResponse() {
-	if (response.memory) {
-		free(response.memory);
-		std::cerr << "FilmonAPI: cleared response" << std::endl;
-	}
+	response.clear();
 }
 
 // Initialize connection
 bool filmonAPICreate(void) {
-	if (curl == NULL || curlConnected == false) {
-		curl_global_init (CURL_GLOBAL_ALL);
-		curl = curl_easy_init();
-		if (curl != NULL) {
-			curl = curl_easy_init();
-			curl_easy_setopt(curl, CURLOPT_DNS_CACHE_TIMEOUT, DNS_CACHE_TIME);
-			curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT,
-					REQUEST_CONNECTION_TIMEOUT);
-			curl_easy_setopt(curl, CURLOPT_TIMEOUT, REQUEST_TIMEOUT);
-			curl_easy_setopt(curl, CURLOPT_USERAGENT, USER_AGENT);
-			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, getResponse);
-			curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) &response);
-			std::cerr << "FilmonAPI: connection created" << std::endl;
-			curlConnected = true;
-		}
-	} else {
-		curlConnected = true;
-	}
-	return curlConnected;
+	connected = true;
+	return connected;
 }
 
 // Remove connection
 void filmonAPIDelete(void) {
-	if (curlConnected) {
-		curl_easy_cleanup(curl);
-		curl_global_cleanup();
-		curlConnected = false;
-	}
-	std::cerr << "FilmonAPI: connection deleted" << std::endl;
+	connected = false;
 }
 
 // Connection URL
 std::string filmonAPIConnection() {
-	if (curlConnected) {
+	if (connected) {
 		return std::string(FILMON_URL);
 	} else {
 		return std::string(OFF_AIR);
@@ -207,11 +151,9 @@ std::string filmonAPIConnection() {
 }
 
 // Make a request
-bool filmonRequest(std::string path, std::string params) {
-	curlResult = CURLE_OK;
+bool filmonRequest(std::string path, std::string params,
+		unsigned int retries) {
 	std::string request = FILMON_URL;
-	int retries = REQUEST_RETRIES;
-	long http_code = 0;
 
 	// Add params
 	request.append(path);
@@ -222,30 +164,24 @@ bool filmonRequest(std::string path, std::string params) {
 
 	// Allow request retries
 	do {
-		std::cerr << "FilmonAPI: request is '" << request << "'" << std::endl;
-
-		response.memory = (char*) (malloc(1));
-		response.size = 0;
-
-		if (curl) {
-			curl_easy_setopt(curl, CURLOPT_URL, request.c_str());
-			curlResult = curl_easy_perform(curl);
-			if (curlResult == CURLE_OK) {
-				curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-			}
-		}
-		std::cerr << "FilmonAPI: response is "
-				<< std::string(response.memory).substr(0,
-						RESPONSE_OUTPUT_LENGTH) << std::endl;
-		if (curlResult != CURLE_OK || http_code != 200) {
-			std::cerr << "FilmonAPI: request failure with HTTP code "
-					<< http_code << std::endl;
+		XBMC->Log(LOG_DEBUG, "request is %s", request.c_str());
+		void *fileHandle = XBMC->OpenFile(request.c_str(), READ_NO_CACHE);
+		if (!fileHandle) {
+			XBMC->Log(LOG_ERROR,  "request failure");
 			clearResponse();
 			usleep(REQUEST_RETRY_TIMEOUT);
-		}
-	} while (http_code != 200 && --retries > 0);
+		} else {
+			char buffer[4096];
+			while (int read = XBMC->ReadFile(fileHandle, buffer, 4096))
+				response.append(buffer, read);
+			XBMC->CloseFile(fileHandle);
 
-	if (curlResult == CURLE_OK && http_code == 200) {
+			XBMC->Log(LOG_DEBUG, "response is %s",
+				response.substr(0, RESPONSE_OUTPUT_LENGTH).c_str());
+		}
+	} while (response.empty() && --retries > 0);
+
+	if (!response.empty()) {
 		return true;
 	} else {
 		filmonAPIDelete();
@@ -281,13 +217,12 @@ bool filmonAPIgetSessionKey(void) {
 	if (res == true) {
 		Json::Value root;
 		Json::Reader reader;
-		reader.parse(&response.memory[0],
-				&response.memory[(long) response.size - 1], root);
+		reader.parse(response, root);
 		Json::Value sessionKey = root["session_key"];
 		sessionKeyParam = "session_key=";
 		sessionKeyParam.append(sessionKey.asString());
-		std::cerr << "FilmonAPI: got session key '" << sessionKey.asString()
-						<< "'" << std::endl;
+		XBMC->Log(LOG_DEBUG, "got session key %s",
+			sessionKey.asString().c_str());
 		clearResponse();
 	}
 	return res;
@@ -298,27 +233,19 @@ bool filmonAPIlogin(std::string username, std::string password) {
 
 	bool res = filmonAPIgetSessionKey();
 	if (res) {
-		std::cerr << "FilmonAPI: logging in user" << std::endl;
+		XBMC->Log(LOG_DEBUG, "logging in user");
 		filmonUsername = username;
 		filmonpassword = password;
-		// Password is MD5 hex
-		CryptoPP::Weak1::MD5 hash;
-		byte digest[CryptoPP::Weak1::MD5::DIGESTSIZE];
-		hash.CalculateDigest(digest, (byte*) password.c_str(),
-				password.length());
-		CryptoPP::HexEncoder encoder;
-		std::string md5pwd;
-		encoder.Attach(new CryptoPP::StringSink(md5pwd));
-		encoder.Put(digest, sizeof(digest));
-		encoder.MessageEnd();
-		toLowerCase(md5pwd);
+
+		std::string md5pwd = PVRXBMC::XBMC_MD5::GetMD5(password);
+		std::transform(md5pwd.begin(), md5pwd.end(), md5pwd.begin(), ::tolower);
+
 		std::string params = "login=" + username + "&password=" + md5pwd;
-		res = filmonRequest("tv/api/login", sessionKeyParam + "&" + params);
+		res = filmonRequest("tv/api/login", sessionKeyParam + "&" + params, 1);
 		if (res) {
 			Json::Value root;
 			Json::Reader reader;
-			reader.parse(&response.memory[0],
-					&response.memory[(long) response.size - 1], root);
+			reader.parse(response, root);
 			// Favorite channels
 			channelList.clear();
 			Json::Value favouriteChannels = root["favorite-channels"];
@@ -326,8 +253,8 @@ bool filmonAPIlogin(std::string username, std::string password) {
 			for (unsigned int channel = 0; channel < channelCount; channel++) {
 				Json::Value chId = favouriteChannels[channel]["channel"]["id"];
 				channelList.push_back(chId.asUInt());
-				std::cerr << "FilmonAPI: added channel " << chId.asUInt()
-								<< std::endl;
+				XBMC->Log(LOG_INFO, "added channel %u",
+					chId.asUInt());
 			}
 			clearResponse();
 		}
@@ -341,8 +268,8 @@ void filmonAPIgetswfPlayer() {
 			"/tv/modules/FilmOnTV/files/flashapp/filmon/FilmonPlayer.swf?v=56");
 	bool res = filmonRequest("tv/", "");
 	if (res == true) {
-		char *resp = (char *) malloc(response.size);
-		strcpy(resp, response.memory);
+		char *resp = (char *) malloc(response.length());
+		strcpy(resp, response.c_str());
 		char *token = strtok(resp, " ");
 		while (token != NULL) {
 			if (strcmp(token, "flash_config") == 0) {
@@ -357,13 +284,13 @@ void filmonAPIgetswfPlayer() {
 		if (reader.parse(std::string(token), root)) {
 			Json::Value streamer = root["streamer"];
 			swfPlayer = streamer.asString();
-			std::cerr << "FilmonAPI: parsed flash config " << swfPlayer
-					<< std::endl;
+			XBMC->Log(LOG_DEBUG, "parsed flash config %s",
+					swfPlayer.c_str());
 		}
 		clearResponse();
 	}
 	swfPlayer = std::string("http://www.filmon.com") + swfPlayer;
-	std::cerr << "FilmonAPI: swfPlayer is " << swfPlayer << std::endl;
+	XBMC->Log(LOG_INFO, "swfPlayer is %s", swfPlayer.c_str());
 }
 
 int filmonAPIgetGenre(std::string group) {
@@ -394,7 +321,7 @@ std::string filmonAPIgetRtmpStream(std::string url, std::string name) {
 				+ " live=1 timeout=10 swfVfy=1";
 		return streamUrl;
 	} else {
-		std::cerr << "FilmonAPI: no stream available" << std::endl;
+		XBMC->Log(LOG_ERROR, "no stream available");
 		return std::string("");
 	}
 }
@@ -406,8 +333,7 @@ bool filmonAPIgetChannel(unsigned int channelId, FILMON_CHANNEL *channel) {
 	if (res == true) {
 		Json::Value root;
 		Json::Reader reader;
-		reader.parse(&response.memory[0],
-				&response.memory[(long) response.size - 1], root);
+		reader.parse(response, root);
 		Json::Value title = root["title"];
 		Json::Value group = root["group"];
 		Json::Value icon = root["extra_big_logo"];
@@ -419,10 +345,10 @@ bool filmonAPIgetChannel(unsigned int channelId, FILMON_CHANNEL *channel) {
 		for (stream = 0; stream < streamCount; stream++) {
 			std::string quality = streams[stream]["quality"].asString();
 			if (quality.compare(std::string("high")) == 0 || quality.compare(std::string("480p")) == 0 || quality.compare(std::string("HD")) == 0) {
-				std::cerr << "FilmonAPI: high quality stream found: " << quality << std::endl;
+				XBMC->Log(LOG_DEBUG, "high quality stream found: %s", quality.c_str());
 				break;
 			} else {
-				std::cerr << "FilmonAPI: low quality stream found: " << quality << std::endl;
+				XBMC->Log(LOG_DEBUG, "low quality stream found: %s", quality.c_str());
 			}
 		}
 		std::string chTitle = title.asString();
@@ -430,9 +356,9 @@ bool filmonAPIgetChannel(unsigned int channelId, FILMON_CHANNEL *channel) {
 		streamURL = streams[stream]["url"].asString();
 		if (streamURL.find("rtmp://") == 0) {
 			streamURL = filmonAPIgetRtmpStream(streamURL, streams[stream]["name"].asString());
-			std::cerr << "FilmonAPI: RTMP stream available: " << streamURL << std::endl;
+			XBMC->Log(LOG_DEBUG, "RTMP stream available: %s", streamURL.c_str());
 		} else {
-			std::cerr << "FilmonAPI: HLS stream available: " << streamURL << std::endl;
+			XBMC->Log(LOG_DEBUG, "HLS stream available: %s", streamURL.c_str());
 		}
 
 		// Fix channel names logos
@@ -448,7 +374,7 @@ bool filmonAPIgetChannel(unsigned int channelId, FILMON_CHANNEL *channel) {
 					std::string(
 							"https://dl.dropboxusercontent.com/u/3129606/tvicons/BBC%20THREE.png");
 		}
-		std::cerr << "FilmonAPI: title is " << chTitle << std::endl;
+		XBMC->Log(LOG_DEBUG, "title is %s", chTitle.c_str());
 
 		channel->bRadio = false;
 		channel->iUniqueId = channelId;
@@ -460,7 +386,7 @@ bool filmonAPIgetChannel(unsigned int channelId, FILMON_CHANNEL *channel) {
 		(channel->epg).clear();
 
 		// Get EPG
-		std::cerr << "FilmonAPI: building EPG" << std::endl;
+		XBMC->Log(LOG_DEBUG, "building EPG");
 		unsigned int entries = 0;
 		unsigned int programmeCount = tvguide.size();
 		std::string offAir = std::string("OFF_AIR");
@@ -480,7 +406,7 @@ bool filmonAPIgetChannel(unsigned int channelId, FILMON_CHANNEL *channel) {
 					epgEntry.strPlot = plot.asString();
 				}
 				if (!images.empty()) {
-					Json::Value programmeIcon = images[0]["url"];
+					Json::Value programmeIcon = images[(unsigned int)0]["url"];
 					epgEntry.strIconPath = programmeIcon.asString();
 				} else {
 					epgEntry.strIconPath = "";
@@ -505,8 +431,7 @@ bool filmonAPIgetChannel(unsigned int channelId, FILMON_CHANNEL *channel) {
 			(channel->epg).push_back(epgEntry);
 			entries++;
 		}
-		std::cerr << "FilmonAPI: number of EPG entries is " << entries
-				<< std::endl;
+		XBMC->Log(LOG_DEBUG, "number of EPG entries is %u", entries);
 		clearResponse();
 	}
 	return res;
@@ -518,8 +443,7 @@ std::vector<FILMON_CHANNEL_GROUP> filmonAPIgetChannelGroups() {
 	if (res == true) {
 		Json::Value root;
 		Json::Reader reader;
-		reader.parse(&response.memory[0],
-				&response.memory[(long) response.size - 1], root);
+		reader.parse(response, root);
 		for (unsigned int i = 0; i < root.size(); i++) {
 			Json::Value groupName = root[i]["group"];
 			Json::Value groupId = root[i]["group_id"];
@@ -536,15 +460,15 @@ std::vector<FILMON_CHANNEL_GROUP> filmonAPIgetChannelGroups() {
 				if (std::find(channelList.begin(), channelList.end(), ch)
 				!= channelList.end()) {
 					members.push_back(ch);
-					std::cerr << "FilmonAPI: added channel " << ch
-							<< " to group " << group.strGroupName << std::endl;
+					XBMC->Log(LOG_INFO, "added channel %u to group %s",
+						ch, group.strGroupName.c_str());
 				}
 			}
 			if (members.size() > 0) {
 				group.members = members;
 				groups.push_back(group);
-				std::cerr << "FilmonAPI: added group " << group.strGroupName
-						<< std::endl;
+				XBMC->Log(LOG_INFO, "added group %s",
+					group.strGroupName.c_str());
 			}
 		}
 		clearResponse();
@@ -571,18 +495,15 @@ bool filmonAPIgetRecordingsTimers(bool completed) {
 	if (res == true) {
 		Json::Value root;
 		Json::Reader reader;
-		reader.parse(&response.memory[0],
-				&response.memory[(long) response.size - 1], root);
+		reader.parse(response, root);
 
 		// Usage
 		Json::Value total = root["userStorage"]["total"];
 		Json::Value used = root["userStorage"]["recorded"];
-		storageTotal = (long long int) (total.asFloat() * FILMON_ONE_HOUR_RECORDING_SIZE); // bytes
-		storageUsed = (long long int) (used.asFloat() * FILMON_ONE_HOUR_RECORDING_SIZE); // bytes
-		std::cerr << "FilmonAPI: recordings total is " << storageTotal
-				<< std::endl;
-		std::cerr << "FilmonAPI: recordings used is " << storageUsed
-				<< std::endl;
+		storageTotal = (long long int) (total.asDouble() * FILMON_ONE_HOUR_RECORDING_SIZE); // bytes
+		storageUsed = (long long int) (used.asDouble() * FILMON_ONE_HOUR_RECORDING_SIZE); // bytes
+		XBMC->Log(LOG_DEBUG, "recordings total is %u", storageTotal);
+		XBMC->Log(LOG_DEBUG, "recordings used is %u", storageUsed);
 
 		bool timersCleared = false;
 		bool recordingsCleared = false;
@@ -617,8 +538,7 @@ bool filmonAPIgetRecordingsTimers(bool completed) {
 				recording.strIconPath =	recordingsTimers[recordingId]["images"]["channel_logo"].asString();
 				recording.strThumbnailPath = recordingsTimers[recordingId]["images"]["poster"].asString();
 				recordings.push_back(recording);
-				std::cerr << "FilmonAPI: found completed recording "
-						<< recording.strTitle << std::endl;
+				XBMC->Log(LOG_DEBUG, "found completed recording %s", recording.strTitle.c_str());
 			} else if (status.asString().compare(std::string(TIMER_STATUS))
 					== 0) {
 				if (timersCleared == false) {
@@ -639,16 +559,13 @@ bool filmonAPIgetRecordingsTimers(bool completed) {
 				setTimerDefaults(&timer);
 				time_t t = time(0);
 				if (t >= timer.startTime && t <= timer.endTime) {
-					std::cerr << "FilmonAPI: found active timer "
-							<< timer.strTitle << std::endl;
+					XBMC->Log(LOG_DEBUG, "found active timer %s", timer.strTitle.c_str());
 					timer.state = FILMON_TIMER_STATE_RECORDING;
 				} else if (t < timer.startTime) {
-					std::cerr << "FilmonAPI: found scheduled timer "
-							<< timer.strTitle << std::endl;
+					XBMC->Log(LOG_DEBUG, "found scheduled timer %s", timer.strTitle.c_str());
 					timer.state = FILMON_TIMER_STATE_SCHEDULED;
 				} else if (t > timer.endTime) {
-					std::cerr << "FilmonAPI: found completed timer "
-							<< timer.strTitle << std::endl;
+					XBMC->Log(LOG_DEBUG, "found completed timer %s", timer.strTitle.c_str());
 					timer.state = FILMON_TIMER_STATE_COMPLETED;
 				}
 				timers.push_back(timer);
@@ -663,7 +580,7 @@ bool filmonAPIgetRecordingsTimers(bool completed) {
 std::vector<FILMON_RECORDING> filmonAPIgetRecordings(void) {
 	bool completed = true;
 	if (filmonAPIgetRecordingsTimers(completed) != true) {
-		std::cerr << "FilmonAPI: failed to get recordings" << std::endl;
+		XBMC->Log(LOG_ERROR, "failed to get recordings");
 	}
 	return recordings;
 }
@@ -671,9 +588,9 @@ std::vector<FILMON_RECORDING> filmonAPIgetRecordings(void) {
 // Delete a recording
 bool filmonAPIdeleteRecording(unsigned int recordingId) {
 	bool res = false;
-	std::cerr << "FilmonAPI: number recordings is " << recordings.size() << std::endl;
+	XBMC->Log(LOG_DEBUG, "number recordings is %u", recordings.size());
 	for (unsigned int i = 0; i < recordings.size(); i++) {
-		std::cerr << "FilmonAPI: looking for recording " <<  intToString(recordingId) << std::endl;
+		XBMC->Log(LOG_DEBUG, "looking for recording %u", recordingId);
 		if ((recordings[i].strRecordingId).compare(intToString(recordingId)) == 0) {
 			std::string params = "record_id=" + recordings[i].strRecordingId;
 			res = filmonRequest("tv/api/dvr/remove",
@@ -681,11 +598,10 @@ bool filmonAPIdeleteRecording(unsigned int recordingId) {
 			if (res) {
 				Json::Value root;
 				Json::Reader reader;
-				reader.parse(&response.memory[0],
-						&response.memory[(long) response.size - 1], root);
+				reader.parse(response, root);
 				if (root["success"].asBool()) {
 					recordings.erase(recordings.begin() + i);
-					std::cerr << "FilmonAPI: deleted recording" << std::endl;
+					XBMC->Log(LOG_DEBUG, "deleted recording");
 				} else {
 					res = false;
 				}
@@ -693,7 +609,7 @@ bool filmonAPIdeleteRecording(unsigned int recordingId) {
 			}
 			break;
 		}
-		std::cerr << "FilmonAPI: found recording " <<  recordings[i].strRecordingId << std::endl;
+		XBMC->Log(LOG_DEBUG, "found recording %u", recordings[i].strRecordingId.c_str());
 	}
 	return res;
 }
@@ -701,7 +617,7 @@ bool filmonAPIdeleteRecording(unsigned int recordingId) {
 // Get timers
 std::vector<FILMON_TIMER> filmonAPIgetTimers(void) {
 	if (filmonAPIgetRecordingsTimers() != true) {
-		std::cerr << "FilmonAPI: failed to get timers" << std::endl;
+		XBMC->Log(LOG_ERROR, "failed to get timers");
 	}
 	return timers;
 }
@@ -713,8 +629,7 @@ bool filmonAPIaddTimer(int channelId, time_t startTime, time_t endTime) {
 	if (res) {
 		Json::Value root;
 		Json::Reader reader;
-		reader.parse(&response.memory[0],
-				&response.memory[(long) response.size - 1], root);
+		reader.parse(response, root);
 		for (unsigned int i = 0; i < root.size(); i++) {
 			Json::Value start = root[i]["startdatetime"];
 			Json::Value end = root[i]["enddatetime"];
@@ -743,8 +658,7 @@ bool filmonAPIaddTimer(int channelId, time_t startTime, time_t endTime) {
 				if (res) {
 					Json::Value root;
 					Json::Reader reader;
-					reader.parse(&response.memory[0],
-							&response.memory[(long) response.size - 1], root);
+					reader.parse(response, root);
 					if (root["success"].asBool()) {
 						FILMON_TIMER timer;
 						timer.iClientIndex = stringToInt(programmeId);
@@ -761,7 +675,7 @@ bool filmonAPIaddTimer(int channelId, time_t startTime, time_t endTime) {
 						}
 						setTimerDefaults(&timer);
 						timers.push_back(timer);
-						std::cerr << "FilmonAPI: added timer" << std::endl;
+						XBMC->Log(LOG_DEBUG, "addded timer");
 					} else {
 						res = false;
 					}
@@ -778,7 +692,7 @@ bool filmonAPIaddTimer(int channelId, time_t startTime, time_t endTime) {
 bool filmonAPIdeleteTimer(unsigned int timerId, bool bForceDelete) {
 	bool res = true;
 	for (unsigned int i = 0; i < timers.size(); i++) {
-		std::cerr << "FilmonAPI: looking for timer " <<  timerId << std::endl;
+		XBMC->Log(LOG_DEBUG, "looking for timer %u", timerId);
 		if (timers[i].iClientIndex == timerId) {
 			time_t t = time(0);
 			if ((t >= timers[i].startTime && t <= timers[i].endTime
@@ -790,11 +704,10 @@ bool filmonAPIdeleteTimer(unsigned int timerId, bool bForceDelete) {
 				if (res) {
 					Json::Value root;
 					Json::Reader reader;
-					reader.parse(&response.memory[0],
-							&response.memory[(long) response.size - 1], root);
+					reader.parse(response, root);
 					if (root["success"].asBool()) {
 						timers.erase(timers.begin() + i);
-						std::cerr << "FilmonAPI: deleted timer" << std::endl;
+						XBMC->Log(LOG_DEBUG, "deleted timer");
 					} else {
 						res = false;
 					}
@@ -803,7 +716,7 @@ bool filmonAPIdeleteTimer(unsigned int timerId, bool bForceDelete) {
 			}
 			break;
 		}
-		std::cerr << "FilmonAPI: found timer " <<  timerId << std::endl;
+		XBMC->Log(LOG_DEBUG, "found timer %u", timerId);
 	}
 	return res;
 }

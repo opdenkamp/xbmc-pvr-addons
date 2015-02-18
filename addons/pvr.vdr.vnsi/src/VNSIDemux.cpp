@@ -257,8 +257,9 @@ bool cVNSIDemux::GetSignalStatus(PVR_SIGNAL_STATUS &qualityinfo)
 
 time_t cVNSIDemux::GetPlayingTime()
 {
-  time_t ret;
-  ret = m_ReferenceTime + (m_CurrentDTS - m_ReferenceDTS) / DVD_TIME_BASE;
+  time_t ret = 0;
+  if (m_ReferenceTime)
+    ret = m_ReferenceTime + (m_CurrentDTS - m_ReferenceDTS) / DVD_TIME_BASE;
   return ret;
 }
 

@@ -302,7 +302,7 @@ int GetRecordingsAmount(bool deleted) {
 	return -1;
 }
 
-PVR_ERROR GetRecordings(ADDON_HANDLE, bool deleted) {
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted) {
 	if (m_data)
 		return m_data->GetRecordings(handle);
 

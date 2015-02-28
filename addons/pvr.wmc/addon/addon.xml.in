@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="pvr.wmc"
-  version="0.5.1"
+  version="0.5.2"
   name="PVR WMC Client"
   provider-name="KrustyReturns and scarecrow420">
   <requires>
     <c-pluff version="0.1"/>
-    <import addon="xbmc.pvr" version="1.9.4"/>
+    <import addon="xbmc.pvr" version="1.9.5"/>
     <import addon="xbmc.gui" version="5.8.0"/>
   </requires>
   <extension

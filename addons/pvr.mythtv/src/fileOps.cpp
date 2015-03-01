@@ -189,6 +189,41 @@ void FileOps::Resume()
   }
 }
 
+void FileOps::CleanChannelIcons()
+{
+  // Currently XBMC's addon lib doesn't provide a way to list files in a directory.
+  // Therefore we currently can't clean only leftover files.
+
+  XBMC->Log(LOG_DEBUG, "%s: Cleaning channel icons %s", __FUNCTION__, m_localBasePath.c_str());
+
+  CLockObject lock(m_lock);
+
+  // Remove cache sub directories
+  std::vector<FileType>::const_iterator it;
+  std::vector<FileType> fileTypes = GetFileTypes();
+  std::vector<std::string> directories;
+  for (it = fileTypes.begin(); it != fileTypes.end(); ++it)
+  {
+    if (*it == FileTypeChannelIcon)
+    {
+      std::string directory(GetTypeNameByFileType(*it));
+      if (!directory.empty())
+        directories.push_back(m_localBasePath + directory);
+    }
+  }
+  std::vector<std::string>::const_iterator it2;
+  for (it2 = directories.begin(); it2 != directories.end(); ++it2)
+  {
+    if (XBMC->DirectoryExists(it2->c_str()) && !XBMC->RemoveDirectory(it2->c_str()))
+    {
+      XBMC->Log(LOG_ERROR, "%s: Failed to remove cache sub directory %s", __FUNCTION__, it2->c_str());
+    }
+  }
+
+  // Clear the cached local filenames so that new cache jobs get generated
+  m_icons.clear();
+}
+
 void *FileOps::Process()
 {
   XBMC->Log(LOG_DEBUG, "%s: FileOps Thread Started", __FUNCTION__);
@@ -462,7 +497,6 @@ void FileOps::CleanCache()
   }
 
   // Clear the cached local filenames so that new cache jobs get generated
-  m_icons.clear();
   m_preview.clear();
   m_artworks.clear();
 

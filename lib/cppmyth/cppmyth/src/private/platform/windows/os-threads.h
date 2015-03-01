@@ -32,6 +32,8 @@
  *     http://www.pulse-eight.net/
  */
 
+namespace Myth
+{
 namespace PLATFORM
 {
   #define thread_t                                 HANDLE
@@ -63,4 +65,5 @@ namespace PLATFORM
     CONDITION_VARIABLE *m_conditionVista;
     HANDLE              m_conditionPreVista;
   };
+}
 }

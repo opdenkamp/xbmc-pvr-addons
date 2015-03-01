@@ -71,7 +71,7 @@ typedef struct
 
 /**
  * @namespace MythDTO
- * @brief DTO Helper
+ * @brief This namespace contains all DTO definitions
  */
 namespace MythDTO
 {

@@ -42,6 +42,8 @@
 
 #include "../util/timeutils.h"
 
+namespace Myth
+{
 namespace PLATFORM
 {
   class PreventCopy
@@ -351,4 +353,5 @@ namespace PLATFORM
     unsigned int              m_iWaitingThreads;
     bool                      m_bAutoReset;
   };
+}
 }

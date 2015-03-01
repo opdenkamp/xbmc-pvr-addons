@@ -34,6 +34,8 @@
 
 #include "mutex.h"
 
+namespace Myth
+{
 namespace PLATFORM
 {
   class CThread
@@ -151,4 +153,5 @@ namespace PLATFORM
     CMutex           m_threadMutex;
     thread_t         m_thread;
   };
-};
+}
+}

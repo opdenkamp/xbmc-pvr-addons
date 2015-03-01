@@ -80,10 +80,10 @@ typedef LONG HRESULT;
 #define E_OUTOFMEMORY              0x8007000EL
 #define E_FAIL                     0x8004005EL
 
-#ifdef TARGET_LINUX
+#if defined(__linux__)
 #include <limits.h>
 #define MAX_PATH PATH_MAX
-#elif defined TARGET_DARWIN || defined __FreeBSD__
+#elif defined(__APPLE__) || defined(__FreeBSD__)
 #include <sys/syslimits.h>
 #define MAX_PATH PATH_MAX
 #else
@@ -129,27 +129,34 @@ typedef unsigned char byte;
 #define PATH_SEPARATOR_STRING "/"
 #endif
 
-#ifdef TARGET_LINUX
-// Retrieve the number of milliseconds that have elapsed since the system was started
+/* This is a replacement of the Windows GetTickCount() function which retrieve
+ * the number of milliseconds that have elapsed since the system was started
+ */
+#define GetTickCount __GetTickCount
+#if defined(__APPLE__)
+#include <sys/time.h>
+#include <mach/mach_time.h>
+__inline__ unsigned long GetTickCount(void)
+{
+  int64_t ticks = 0;
+  static mach_timebase_info_data_t timebase;
+  /* Get the timebase if this is the first time we run. */
+  if (timebase.denom == 0)
+    (void)mach_timebase_info(&timebase);
+  /* Use timebase to convert absolute time tick units into nanoseconds. */
+  ticks = mach_absolute_time() * timebase.numer / timebase.denom;
+  return (unsigned long)(ticks / 1000000);
+}
+#else
 #include <time.h>
-inline unsigned long GetTickCount(void)
+__inline__ unsigned long GetTickCount(void)
 {
   struct timespec ts;
   if(clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
-  {
     return 0;
-  }
   return (unsigned long)( (ts.tv_sec * 1000) + (ts.tv_nsec / 1000000) );
 };
-#else
-#include <time.h>
-inline unsigned long GetTickCount(void)
-{
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  return (unsigned long)( (tv.tv_sec * 1000) + (tv.tv_usec / 1000) );
-};
-#endif /* TARGET_LINUX || TARGET_DARWIN */
+#endif
 
 /* Handling of 2-byte Windows wchar strings on non-Windows targets */
 typedef uint16_t Wchar_t; /* sizeof(wchar_t) = 4 bytes on Linux */
@@ -158,7 +165,8 @@ typedef uint16_t Wchar_t; /* sizeof(wchar_t) = 4 bytes on Linux */
  * wchar_t is a 2-byte character.
  * It is used for processing Windows wchar strings
  */
-inline size_t WcsLen(const Wchar_t *str)
+#define WcsLen __WcsLen
+__inline__ size_t WcsLen(const Wchar_t *str)
 {
   const unsigned short *eos = (const unsigned short*)str;
   while( *eos++ ) ;
@@ -169,7 +177,8 @@ inline size_t WcsLen(const Wchar_t *str)
  * wchar_t is a 2-byte character.
  * It is used for processing Windows wchar strings
  */
-inline size_t WcsToMbs(char *s, const Wchar_t *w, size_t n)
+#define WcsToMbs __WcsToMbs
+__inline__ size_t WcsToMbs(char *s, const Wchar_t *w, size_t n)
 {
   size_t i = 0;
   const unsigned short *wc = (const unsigned short*) w;

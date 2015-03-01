@@ -291,7 +291,11 @@ msgctxt "#30421"
 msgid "Show/hide rules with status 'Not Recording'"
 msgstr ""
 
-#empty strings from id 30422 to 30430
+msgctxt "#30422"
+msgid "Refresh cache for channel icons"
+msgstr ""
+
+#empty strings from id 30423 to 30430
 
 msgctxt "#30431"
 msgid "Record all showings (this channel)"

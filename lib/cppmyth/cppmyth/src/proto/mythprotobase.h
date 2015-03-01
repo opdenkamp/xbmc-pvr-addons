@@ -31,13 +31,13 @@
 #define PROTO_STR_SEPARATOR       "[]:[]"
 #define PROTO_STR_SEPARATOR_LEN   (sizeof(PROTO_STR_SEPARATOR) - 1)
 
-namespace PLATFORM
-{
-  class CMutex;
-}
-
 namespace Myth
 {
+
+  namespace PLATFORM
+  {
+    class CMutex;
+  }
 
   class TcpSocket;
 

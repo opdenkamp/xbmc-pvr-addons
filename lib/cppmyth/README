@@ -15,10 +15,19 @@ mkdir build
 cd build
 cmake <root path of cppmyth>
 
-Then build the lib:
+Then build the lib and demo:
 
 make
 
+Running liveTV demo:
+--------------------
+
+Choose a server and a channel to spawn, here 1001 from localhost, and pipe the
+stream to mplayer:
+
+./demo/livetvdemo 127.0.0.1 1001 | mplayer -
+
+Sources of demo are in <root path of cppmyth>/demo/src/
 
 Generate the documentation:
 ---------------------------

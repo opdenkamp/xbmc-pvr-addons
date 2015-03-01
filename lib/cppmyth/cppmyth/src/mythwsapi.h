@@ -26,15 +26,15 @@
 #include "mythwsstream.h"
 
 #define MYTH_API_VERSION_MIN_RANKING 0x00020000
-#define MYTH_API_VERSION_MAX_RANKING 0x0004FFFF
-
-namespace PLATFORM
-{
-  class CMutex;
-}
+#define MYTH_API_VERSION_MAX_RANKING 0x0005FFFF
 
 namespace Myth
 {
+
+  namespace PLATFORM
+  {
+    class CMutex;
+  }
 
   typedef enum
   {
@@ -73,6 +73,7 @@ namespace Myth
     SettingPtr GetSetting(const std::string& key, const std::string& hostname)
     {
       WSServiceVersion_t wsv = CheckService(WS_Myth);
+      if (wsv.ranking >= 0x00050000) return GetSetting5_0(key, hostname);
       if (wsv.ranking >= 0x00020000) return GetSetting2_0(key, hostname);
       return SettingPtr();
     }
@@ -88,6 +89,7 @@ namespace Myth
     SettingMapPtr GetSettings(const std::string& hostname)
     {
       WSServiceVersion_t wsv = CheckService(WS_Myth);
+      if (wsv.ranking >= 0x00050000) return GetSettings5_0(hostname);
       if (wsv.ranking >= 0x00020000) return GetSettings2_0(hostname);
       return SettingMapPtr(new SettingMap);
     }
@@ -169,12 +171,32 @@ namespace Myth
     }
 
     /**
+     * @brief GET Dvr/GetRecorded
+     */
+    ProgramPtr GetRecorded(uint32_t recordedid)
+    {
+      WSServiceVersion_t wsv = CheckService(WS_Dvr);
+      if (wsv.ranking >= 0x00060000) return GetRecorded6_0(recordedid);
+      return ProgramPtr();
+    }
+
+    /**
      * @brief POST Dvr/UpdateRecordedWatchedStatus
      */
     bool UpdateRecordedWatchedStatus(uint32_t chanid, time_t recstartts, bool watched)
     {
       WSServiceVersion_t wsv = CheckService(WS_Dvr);
       if (wsv.ranking >= 0x00040005) return UpdateRecordedWatchedStatus4_5(chanid, recstartts, watched);
+      return false;
+    }
+
+    /**
+     * @brief POST Dvr/UpdateRecordedWatchedStatus
+     */
+    bool UpdateRecordedWatchedStatus(uint32_t recordedid, bool watched)
+    {
+      WSServiceVersion_t wsv = CheckService(WS_Dvr);
+      if (wsv.ranking >= 0x00060000) return UpdateRecordedWatchedStatus6_0(recordedid, watched);
       return false;
     }
 
@@ -189,12 +211,32 @@ namespace Myth
     }
 
     /**
+     * @brief POST Dvr/DeleteRecording
+     */
+    bool DeleteRecording(uint32_t recordedid, bool forceDelete = false, bool allowRerecord = false)
+    {
+      WSServiceVersion_t wsv = CheckService(WS_Dvr);
+      if (wsv.ranking >= 0x00060000) return DeleteRecording6_0(recordedid, forceDelete, allowRerecord);
+      return false;
+    }
+
+    /**
      * @brief POST Dvr/UnDeleteRecording
      */
     bool UnDeleteRecording(uint32_t chanid, time_t recstartts)
     {
       WSServiceVersion_t wsv = CheckService(WS_Dvr);
       if (wsv.ranking >= 0x00020001) return UnDeleteRecording2_1(chanid, recstartts);
+      return false;
+    }
+
+    /**
+     * @brief POST Dvr/UnDeleteRecording
+     */
+    bool UnDeleteRecording(uint32_t recordedid)
+    {
+      WSServiceVersion_t wsv = CheckService(WS_Dvr);
+      if (wsv.ranking >= 0x00060000) return UnDeleteRecording6_0(recordedid);
       return false;
     }
 
@@ -371,7 +413,9 @@ namespace Myth
     bool CheckVersion2_0();
 
     SettingPtr GetSetting2_0(const std::string& key, const std::string& hostname);
+    SettingPtr GetSetting5_0(const std::string& key, const std::string& hostname);
     SettingMapPtr GetSettings2_0(const std::string& hostname);
+    SettingMapPtr GetSettings5_0(const std::string& hostname);
     bool PutSetting2_0(const std::string& key, const std::string& value, bool myhost);
 
     CaptureCardListPtr GetCaptureCardList1_4();
@@ -384,9 +428,13 @@ namespace Myth
 
     ProgramListPtr GetRecordedList1_5(unsigned n, bool descending);
     ProgramPtr GetRecorded1_5(uint32_t chanid, time_t recstartts);
+    ProgramPtr GetRecorded6_0(uint32_t recordedid);
     bool DeleteRecording2_1(uint32_t chanid, time_t recstartts, bool forceDelete, bool allowRerecord);
+    bool DeleteRecording6_0(uint32_t recordedid, bool forceDelete, bool allowRerecord);
     bool UnDeleteRecording2_1(uint32_t chanid, time_t recstartts);
+    bool UnDeleteRecording6_0(uint32_t recordedid);
     bool UpdateRecordedWatchedStatus4_5(uint32_t chanid, time_t recstartts, bool watched);
+    bool UpdateRecordedWatchedStatus6_0(uint32_t recordedid, bool watched);
 
     RecordScheduleListPtr GetRecordScheduleList1_5();
     RecordSchedulePtr GetRecordSchedule1_5(uint32_t recordid);

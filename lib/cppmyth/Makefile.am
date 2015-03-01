@@ -1,2 +1,2 @@
-SUBDIRS = jansson cppmyth
+SUBDIRS = cppmyth
 

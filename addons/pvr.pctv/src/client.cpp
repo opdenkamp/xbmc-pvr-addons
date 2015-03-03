@@ -365,6 +365,11 @@ const char *GetBackendVersion(void)
   return strBackendVersion;
 }
 
+const char *GetBackendHostname(void)
+{
+    return g_strHostname.c_str();
+}
+
 const char *GetConnectionString(void)
 {
   //static CStdString strConnectionString = "connected";
@@ -445,7 +450,7 @@ PVR_ERROR GetEPGForChannel(ADDON_HANDLE handle, const PVR_CHANNEL &channel, time
   return PctvData->GetEPGForChannel(handle, channel, iStart, iEnd);
 }
 
-int GetRecordingsAmount(void)
+int GetRecordingsAmount(bool deleted)
 {
   if (!PctvData || !PctvData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
@@ -453,7 +458,7 @@ int GetRecordingsAmount(void)
   return PctvData->GetRecordingsAmount();
 }
 
-PVR_ERROR GetRecordings(ADDON_HANDLE handle)
+PVR_ERROR GetRecordings(ADDON_HANDLE handle, bool deleted)
 {
   if (!PctvData || !PctvData->IsConnected())
     return PVR_ERROR_SERVER_ERROR;
@@ -556,4 +561,9 @@ void SetSpeed(int) {};
 time_t GetPlayingTime() { return 0; }
 time_t GetBufferTimeStart() { return 0; }
 time_t GetBufferTimeEnd() { return 0; }
+PVR_ERROR UndeleteRecording(const PVR_RECORDING& recording) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR DeleteAllRecordingsFromTrash() { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelScan(void) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelSettings(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
+PVR_ERROR OpenDialogChannelAdd(const PVR_CHANNEL &channel) { return PVR_ERROR_NOT_IMPLEMENTED; }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+  <!-- general -->
+  <category label="30100">
+    <setting id="host" type="text" label="30000" default="192.168.1.20" />
+    <setting id="webport" type="number" label="30001" default="80"/>
+    <setting id="usepin" type="bool" label="30021" default="false" />
+    <setting id="pin" type="number" label="30002" visible="eq(-1,true)" default="0000" option="hidden" />
+    <setting type="sep"/>
+    <setting id="transcode" type="bool" label="30020" default="false" />
+    <setting id="bitrate" type="labelenum" label="30030" visible="eq(-1,true)" values="400|650|900|1200|2200|4200|6500|8500" default="1200" />
+  </category>  
+</settings>

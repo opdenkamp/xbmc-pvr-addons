@@ -1,0 +1,19 @@
+0.1.5
+- improved DistanTV mobile support
+- minor fixes
+
+0.1.4
+- changed PIN configuration
+
+0.1.3
+- display record storage space
+- minor changes
+
+0.1.2
+- sort all channels by name (almost like Broadway)
+
+0.1.1
+- fix: add timer
+
+0.1.0
+- initial version

@@ -1,3 +1,5 @@
+v1.10.2 (22-03-2015)
+- Fix race condition on Channel GUID cache
 v1.10.1 (17-02-2015)
 - Updated to PVR API v1.9.4
 v1.9.189 (21-01-2015)

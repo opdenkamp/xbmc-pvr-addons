@@ -418,6 +418,7 @@ int cPVRClientArgusTV::GetNumChannels()
 
 PVR_ERROR cPVRClientArgusTV::GetChannels(ADDON_HANDLE handle, bool bRadio)
 {
+  CLockObject lock(m_ChannelCacheMutex);
   Json::Value response;
   int retval = -1;
 
@@ -1123,6 +1124,7 @@ cChannel* cPVRClientArgusTV::FetchChannel(int channelid, bool LogError)
 
 cChannel* cPVRClientArgusTV::FetchChannel(std::vector<cChannel*> m_Channels, int channelid, bool LogError)
 {
+  CLockObject lock(m_ChannelCacheMutex);
   // Search for this channel in our local channel list to find the original ChannelID back:
   vector<cChannel*>::iterator it;
 

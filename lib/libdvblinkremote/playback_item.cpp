@@ -95,7 +95,8 @@ RecordedTvItem::RecordedTvItem(const std::string& objectId, const std::string& p
     ChannelName(""),
     ChannelNumber(0),
     ChannelSubNumber(0),
-    State(RecordedTvItem::RECORDED_TV_ITEM_STATE_IN_PROGRESS)
+    State(RecordedTvItem::RECORDED_TV_ITEM_STATE_IN_PROGRESS),
+    SeriesSchedule(false)
 {
 
 }
@@ -195,6 +196,21 @@ bool GetPlaybackObjectResponseSerializer::PlaybackItemXmlDataDeserializer::Visit
       if (m_parent.HasChildElement(element, "state")) 
       {
         recordedTvitem->State = (RecordedTvItem::DVBLinkRecordedTvItemState)Util::GetXmlFirstChildElementTextAsInt(&element, "state");
+      }
+
+      if (m_parent.HasChildElement(element, "schedule_id"))
+      {
+          recordedTvitem->ScheduleId = Util::GetXmlFirstChildElementText(&element, "schedule_id");
+      }
+
+      if (m_parent.HasChildElement(element, "schedule_name"))
+      {
+          recordedTvitem->ScheduleName = Util::GetXmlFirstChildElementText(&element, "schedule_name");
+      }
+
+      if (m_parent.HasChildElement(element, "schedule_series"))
+      {
+          recordedTvitem->SeriesSchedule = true;
       }
 
       item = (PlaybackItem*)recordedTvitem;

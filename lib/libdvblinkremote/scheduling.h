@@ -49,8 +49,10 @@ namespace dvblinkremote {
       * @param channelId a constant string reference representing the channel identifier.
       * @param recordingsToKeep an optional constant integer representing how many recordings to 
       * keep for a repeated recording. Default value is <tt>0</tt>, i.e. keep all recordings.
+      * @param marginBefore a constant int, specifying a margin in minutes before recording starts (-1 - use default)
+      * @param marginAfter a constant int, specifying a margin in minutes after recording ends (-1 - use default)
       */
-    Schedule(const DVBLinkScheduleType scheduleType, const std::string& channelId, const int recordingsToKeep = 0);
+    Schedule(const DVBLinkScheduleType scheduleType, const std::string& channelId, const int recordingsToKeep = 0, const int marginBefore = -1, const int marginAfter = -1);
 
     /**
       * Initializes a new instance of the dvblinkremote::Schedule class.
@@ -60,8 +62,10 @@ namespace dvblinkremote {
       * @param channelId a constant string reference representing the channel identifier.
       * @param recordingsToKeep an optional constant integer representing how many recordings to 
       * keep for a repeated recording. Default value is <tt>0</tt>, i.e. keep all recordings.
+      * @param marginBefore a constant int, specifying a margin in minutes before recording starts (-1 - use default)
+      * @param marginAfter a constant int, specifying a margin in minutes after recording ends (-1 - use default)
       */
-    Schedule(const DVBLinkScheduleType scheduleType, const std::string& id, const std::string& channelId, const int recordingsToKeep = 0);
+    Schedule(const DVBLinkScheduleType scheduleType, const std::string& id, const std::string& channelId, const int recordingsToKeep = 0, const int marginBefore = -1, const int marginAfter = -1);
 
     /**
       * Pure virtual destructor for cleaning up allocated memory.
@@ -96,6 +100,16 @@ namespace dvblinkremote {
       * \remark Possible values (1, 2, 3, 4, 5, 6, 7, 10; 0 - keep all)
       */
     int RecordingsToKeep;
+
+    /**
+    * Indicates margin in minutes before recording starts (-1 - use default margin)
+    */
+    int MarginBefore;
+
+    /**
+    * Indicates margin in minutes after recording ends (-1 - use default margin)
+    */
+    int MarginAfter;
 
     /**
       * Gets the type for the schedule .
@@ -159,7 +173,7 @@ namespace dvblinkremote {
       * @see DVBLinkManualScheduleDayMask
       * @param title of schedule
       */
-    ManualSchedule(const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title = "");
+    ManualSchedule(const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title = "", const int recordingsToKeep = 0, const int marginBefore = -1, const int marginAfter = -1);
 
     /**
       * Initializes a new instance of the dvblinkremote::ManualSchedule class.
@@ -172,7 +186,7 @@ namespace dvblinkremote {
       * @see DVBLinkManualScheduleDayMask
       * @param title of schedule
       */
-    ManualSchedule(const std::string& id, const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title = "");
+    ManualSchedule(const std::string& id, const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title = "", const int recordingsToKeep = 0, const int marginBefore = -1, const int marginAfter = -1);
 
     /**
       * Pure virtual destructor for cleaning up allocated memory.
@@ -236,8 +250,9 @@ namespace dvblinkremote {
       * @param recordSeriesAnytime an optional constant boolean representing whether to 
       * record only series starting around original program start time or any of them. 
       * Default value is <tt>false</tt>.
-    */
-    EpgSchedule(const std::string& channelId, const std::string& programId, const bool repeat = false, const bool newOnly = false, const bool recordSeriesAnytime = false);
+      * @param recordingsToKeep defines a number of recordings to keep in case of series recordings (0 - keep all).
+      */
+      EpgSchedule(const std::string& channelId, const std::string& programId, const bool repeat = false, const bool newOnly = false, const bool recordSeriesAnytime = false, const int recordingsToKeep = 0, const int marginBefore = -1, const int marginAfter = -1);
 
     /**
       * Initializes a new instance of the dvblinkremote::EpgSchedule class.
@@ -251,8 +266,9 @@ namespace dvblinkremote {
       * @param recordSeriesAnytime an optional constant boolean representing whether to 
       * record only series starting around original program start time or any of them. 
       * Default value is <tt>false</tt>.
-    */
-    EpgSchedule(const std::string& id, const std::string& channelId, const std::string& programId, const bool repeat = false, const bool newOnly = false, const bool recordSeriesAnytime = false);
+      * @param recordingsToKeep defines a number of recordings to keep in case of series recordings (0 - keep all).
+      */
+      EpgSchedule(const std::string& id, const std::string& channelId, const std::string& programId, const bool repeat = false, const bool newOnly = false, const bool recordSeriesAnytime = false, const int recordingsToKeep = 0, const int marginBefore = -1, const int marginAfter = -1);
 
     /**
       * Pure virtual destructor for cleaning up allocated memory.

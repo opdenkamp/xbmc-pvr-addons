@@ -92,6 +92,7 @@ HttpPostClient::HttpPostClient(CHelper_libXBMC_addon  *XBMC, const std::string& 
 
 int HttpPostClient::SendPostRequest(HttpWebRequest& request)
 {
+  int ret_code = -100;
   std::string buffer;
   std::string message;
   char content_header[100];
@@ -141,51 +142,50 @@ int HttpPostClient::SendPostRequest(HttpWebRequest& request)
 
   SEND_RQ(buffer.c_str());
 
-  char c1[1];
-  int l,line_length;
-  bool loop = true;
-  bool bHeader = false;
+  const int read_buffer_size = 4096;
+  char read_buffer[read_buffer_size];
+  int read_size = 0;
+  std::string response;
+  while ((read_size = recv(sock, read_buffer, read_buffer_size, 0)) > 0)
+      response.append(read_buffer, read_buffer + read_size);
 
+  close(sock);
 
-  while (loop)
+  if (response.size() > 0)
   {
-    l = recv(sock, c1, 1, 0);
-    if (l<0) loop = false;
-    if (c1[0]=='\n')
-    {
-      if (line_length == 0)
-        loop = false;
-      line_length = 0;
-      if (message.find("401 Unauthorized") != std::string::npos)
+      //header
+      std::string::size_type n = response.find("\r\n");
+      if (n != std::string::npos)
       {
-        close(sock);
-        return -401;
+          std::string header = response.substr(0, n);
+          if (header.find("200 OK") != std::string::npos)
+            ret_code = 200;
+          if (header.find("401 Unauthorized") != std::string::npos)
+              ret_code = -401;
+
+          if (ret_code == 200)
+          {
+              //body
+              const char* body_sep = "\r\n\r\n";
+              n = response.find(body_sep);
+              if (n != std::string::npos)
+              {
+                  m_responseData.assign(response.c_str() + n + strlen(body_sep));
+              } else
+              {
+                  ret_code = -105;
+              }
+          }
       }
-      if (message.find("200 OK") != std::string::npos)
-        bHeader = true;
-    }
-    else if (c1[0]!='\r')
-    {
-      line_length++;
-    }
-    message += c1[0];
+      else
+      {
+          ret_code = -104;
+      }
   }
-
-  message="";
-  if (bHeader)
+  else
   {
-    char p[1024];
-    while ((l = recv(sock,p,1023,0)) > 0)  {
-      p[l] = '\0';
-      message += p;
-    }
+    ret_code = -102;
   }
-  else 
-  {
-    close(sock);
-    return -102;
-  }
-
   //TODO: Use xbmc file code when it allows to post content-type application/x-www-form-urlencoded and authentication
   /*
   void* hFile = XBMC->OpenFileForWrite(request.GetUrl().c_str(), 0);
@@ -215,11 +215,8 @@ int HttpPostClient::SendPostRequest(HttpWebRequest& request)
   }
 
   */
-  m_responseData.clear();
-  m_responseData.append(message);
-  close(sock);
 
-  return 200;
+  return ret_code;
 }
 
 bool HttpPostClient::SendRequest(HttpWebRequest& request)

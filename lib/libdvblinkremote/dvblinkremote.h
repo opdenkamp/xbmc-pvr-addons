@@ -187,6 +187,16 @@ namespace dvblinkremote
   const std::string DVBLINK_REMOTE_SET_RECORDING_SETTING_CMD = "set_recording_settings";
 
   /**
+  * A constant string representing the DVBLink command for retrieving channel favorites lists.
+  */
+  const std::string DVBLINK_REMOTE_GET_FAVORITES_CMD = "get_favorites";
+
+  /**
+  * A constant string representing the DVBLink command for retrieving server information.
+  */
+  const std::string DVBLINK_REMOTE_GET_SERVER_INFO_CMD = "get_server_info";
+
+  /**
     * A constant string representing a Real Time Transport Protocol stream type for Android devices.
     */
   const std::string DVBLINK_REMOTE_STREAM_TYPE_ANDROID = "rtp";
@@ -461,6 +471,22 @@ namespace dvblinkremote
       * @return            A DVBLinkRemoteStatusCode representing the status of the executed method.
       */
     virtual DVBLinkRemoteStatusCode SetRecordingSettings(const SetRecordingSettingsRequest& request) = 0;
+
+    /**
+    * Gets favorites lists.
+    * @param[in]      request   A constant GetFavoritesRequest reference representing the get favorites request criterias.
+    * @param[in,out]  response  A ChannelFavorites reference that will be populated with channel favorites.
+    * @return                   A DVBLinkRemoteStatusCode representing the status of the executed method.
+    */
+    virtual DVBLinkRemoteStatusCode GetFavorites(const GetFavoritesRequest& request, ChannelFavorites& response) = 0;
+
+    /**
+    * Gets server information - id, version and build number.
+    * @param[in]      request   A constant GetServerInfoRequest reference representing the get server info request criterias.
+    * @param[in,out]  response  A ServerInfo reference that will be populated with server information.
+    * @return                   A DVBLinkRemoteStatusCode representing the status of the executed method.
+    */
+    virtual DVBLinkRemoteStatusCode GetServerInfo(const GetServerInfoRequest& request, ServerInfo& response) = 0;
 
     /**
       * Gets a description of the last occured error.

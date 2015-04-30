@@ -226,6 +226,16 @@ DVBLinkRemoteStatusCode DVBLinkRemoteCommunication::GetM3uPlaylist(const GetM3uP
   return GetData(DVBLINK_REMOTE_GET_PLAYLIST_M3U_CMD, request, response);
 }
 
+DVBLinkRemoteStatusCode DVBLinkRemoteCommunication::GetFavorites(const GetFavoritesRequest& request, ChannelFavorites& response)
+{
+    return GetData(DVBLINK_REMOTE_GET_FAVORITES_CMD, request, response);
+}
+
+DVBLinkRemoteStatusCode DVBLinkRemoteCommunication::GetServerInfo(const GetServerInfoRequest& request, ServerInfo& response)
+{
+    return GetData(DVBLINK_REMOTE_GET_SERVER_INFO_CMD, request, response);
+}
+
 std::string DVBLinkRemoteCommunication::GetUrl()
 {
   char buffer[2000];

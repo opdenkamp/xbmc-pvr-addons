@@ -1059,6 +1059,22 @@ namespace dvblinkremote {
       * The state of the recored TV item.
       */
     DVBLinkRecordedTvItemState State;
+
+    /**
+    * Id of the schedule, this recorded tv item belongs to
+    */
+    std::string ScheduleId;
+
+    /**
+    * Name of the schedule, this recorded tv item belongs to
+    */
+    std::string ScheduleName;
+
+    /**
+    * Indicates if the schedule was/is part of the series recordings
+    */
+    bool SeriesSchedule;
+
   };
 
   /**
@@ -1290,4 +1306,82 @@ namespace dvblinkremote {
       */
     long AvailableSpace;
   };
+
+  class ChannelFavorite
+  {
+    public:
+        typedef std::vector<std::string> favorite_channel_list_t;
+
+    public:
+        ChannelFavorite(std::string& id, std::string& name, favorite_channel_list_t& channels);
+
+        ~ChannelFavorite();
+
+        std::string& get_id() {return id_;}
+        std::string& get_name() { return name_; }
+        favorite_channel_list_t& get_channels() { return channels_; }
+
+    private:
+        std::string id_;
+        std::string name_;
+        favorite_channel_list_t channels_;
+  };
+
+  /**
+  * Represent channel favorites which is used as output parameter for the
+  * IDVBLinkRemoteConnection::GetFavorites method.
+  * @see IDVBLinkRemoteConnection::GetFavorites()
+  */
+  class ChannelFavorites : public Response
+  {
+  public:
+      typedef std::vector<ChannelFavorite> favorites_list_t;
+
+  public:
+      /**
+      * Initializes a new instance of the dvblinkremote::ChannelFavorites class.
+      */
+      ChannelFavorites();
+
+      /**
+      * Initializes a new instance of the dvblinkremote::ChannelFavorites class by coping another
+      * dvblinkremote::ChannelFavorites instance.
+      * @param recordingSettings a dvblinkremote::ChannelFavorites reference.
+      */
+      ChannelFavorites(ChannelFavorites& favorites);
+
+      /**
+      * Destructor for cleaning up allocated memory.
+      */
+      ~ChannelFavorites();
+
+      favorites_list_t favorites_;
+  };
+
+  class ServerInfo : public Response
+  {
+  public:
+      /**
+      * Initializes a new instance of the dvblinkremote::ServerInfo class.
+      */
+      ServerInfo();
+
+      /**
+      * Initializes a new instance of the dvblinkremote::ServerInfo class by coping another
+      * dvblinkremote::ServerInfo instance.
+      * @param server_info a dvblinkremote::ServerInfo reference.
+      */
+      ServerInfo(ServerInfo& server_info);
+
+      /**
+      * Destructor for cleaning up allocated memory.
+      */
+      ~ServerInfo();
+
+      std::string install_id_;
+      std::string server_id_;
+      std::string version_;
+      std::string build_;
+  };
+
 }

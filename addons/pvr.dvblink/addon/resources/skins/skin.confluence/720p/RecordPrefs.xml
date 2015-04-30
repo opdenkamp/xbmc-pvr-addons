@@ -12,7 +12,7 @@
       <posx>0</posx>
       <posy>0</posy>
       <width>800</width>
-      <height>300</height>
+      <height>530</height>
       <texture border="40">DialogBack.png</texture>
     </control>
     <control type="image">
@@ -54,11 +54,11 @@
       <visible>system.getbool(input.enablemouse)</visible>
     </control>
     
-    <control type="group" description ="radio buttons">
+    <control type="group" description ="record prefs">
       <posx>40</posx>
       <posy>100</posy>
       <width>720</width>
-      <height>100</height>
+      <height>360</height>
       <control type="radiobutton" id="10">
         <description>episode recording</description>
         <posx>0</posx>
@@ -92,13 +92,109 @@
         <onright>11</onright>
         <onleft>11</onleft>
         <onup>10</onup>
-        <ondown>1</ondown>
+        <ondown>12</ondown>
       </control>
-    </control>
 
+      <control type="image" id="108">
+        <description>Separator</description>
+        <posx>0</posx>
+        <posy>95</posy>
+        <height>2</height>
+        <width>720</width>
+        <aspectratio align="left" aligny="top">stretch</aspectratio>
+        <texture>separator2.png</texture>
+      </control>
+	  
+      <control type="spincontrolex" id="12">
+        <description>Record minutes before</description>
+        <posx>0</posx>
+        <posy>107</posy>
+        <height>40</height>
+        <width>720</width>
+        <label>$ADDON[pvr.dvblink 32017]</label>
+        <onright>11</onright>
+        <onleft>11</onleft>
+        <onup>11</onup>
+        <ondown>13</ondown>
+      </control>
+
+      <control type="spincontrolex" id="13">
+        <description>Record minutes after</description>
+        <posx>0</posx>
+        <posy>154</posy>
+        <height>40</height>
+        <width>720</width>
+        <label>$ADDON[pvr.dvblink 32018]</label>
+        <onright>11</onright>
+        <onleft>11</onleft>
+        <onup>12</onup>
+        <ondown>14</ondown>
+      </control>
+
+      <control type="image" id="109">
+        <description>Separator</description>
+        <posx>0</posx>
+        <posy>204</posy>
+        <height>2</height>
+        <width>720</width>
+        <aspectratio align="left" aligny="top">stretch</aspectratio>
+        <texture>separator2.png</texture>
+      </control>
+
+      <control type="radiobutton" id="14">
+        <description>new only</description>
+        <posx>0</posx>
+        <posy>216</posy>
+        <height>40</height>
+        <width>720</width>
+        <label>$ADDON[pvr.dvblink 32019]</label>
+        <font>font13</font>
+        <textcolor>grey2</textcolor>
+        <focusedcolor>white</focusedcolor>
+        <texturenofocus border="5">button-nofocus.png</texturenofocus>
+        <texturefocus border="5">button-focus2.png</texturefocus>
+        <onright>10</onright>
+        <onleft>10</onleft>
+        <onup>13</onup>
+        <ondown>15</ondown>
+      </control>
+
+      <control type="radiobutton" id="15">
+        <description>anytime</description>
+        <posx>0</posx>
+        <posy>261</posy>
+        <height>40</height>
+        <width>720</width>
+        <label>$ADDON[pvr.dvblink 32020]</label>
+        <font>font13</font>
+        <textcolor>grey2</textcolor>
+        <focusedcolor>white</focusedcolor>
+        <texturenofocus border="5">button-nofocus.png</texturenofocus>
+        <texturefocus border="5">button-focus2.png</texturefocus>
+        <onright>11</onright>
+        <onleft>11</onleft>
+        <onup>14</onup>
+        <ondown>16</ondown>
+      </control>
+
+      <control type="spincontrolex" id="16">
+        <description>number to keep</description>
+        <posx>0</posx>
+        <posy>306</posy>
+        <height>40</height>
+        <width>720</width>
+        <label>$ADDON[pvr.dvblink 32021]</label>
+        <onright>11</onright>
+        <onleft>11</onleft>
+        <onup>15</onup>
+        <ondown>1</ondown>
+      </control>	  
+	  
+	</control>
+	
     <control type="group" id="9001">
       <posx>190</posx>
-      <posy>235</posy>
+      <posy>455</posy>
       <control type="button" id="1">
         <description>Ok Button</description>
         <posx>0</posx>
@@ -111,7 +207,7 @@
         <texturefocus border="5">button-focus.png</texturefocus>
         <label>186</label>
         <font>font12_title</font>
-        <onup>11</onup>
+        <onup>16</onup>
         <onleft>2</onleft>
         <onright>2</onright>
         <ondown>10</ondown>
@@ -128,7 +224,7 @@
         <texturefocus border="5">button-focus.png</texturefocus>
         <label>222</label>
         <font>font12_title</font>
-        <onup>11</onup>
+        <onup>16</onup>
         <onleft>1</onleft>
         <onright>1</onright>
         <ondown>10</ondown>

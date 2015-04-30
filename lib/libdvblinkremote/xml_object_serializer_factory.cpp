@@ -106,6 +106,14 @@ bool XmlObjectSerializerFactory::Serialize(const std::string& dvbLinkCommand, co
     requestSerializer = (XmlObjectSerializer<Request>*)new SetRecordingSettingsRequestSerializer();
     result = ((SetRecordingSettingsRequestSerializer*)requestSerializer)->WriteObject(serializedData, (SetRecordingSettingsRequest&)request);
   }
+  else if (dvbLinkCommand == DVBLINK_REMOTE_GET_SERVER_INFO_CMD) {
+      requestSerializer = (XmlObjectSerializer<Request>*)new GetServerInfoRequestSerializer();
+      result = ((GetServerInfoRequestSerializer*)requestSerializer)->WriteObject(serializedData, (GetServerInfoRequest&)request);
+  }
+  else if (dvbLinkCommand == DVBLINK_REMOTE_GET_FAVORITES_CMD) {
+      requestSerializer = (XmlObjectSerializer<Request>*)new GetFavoritesRequestSerializer();
+      result = ((GetFavoritesRequestSerializer*)requestSerializer)->WriteObject(serializedData, (GetFavoritesRequest&)request);
+  }
   else {
     result = false;
   }
@@ -159,7 +167,15 @@ bool XmlObjectSerializerFactory::Deserialize(const std::string& dvbLinkCommand, 
     responseSerializer = (XmlObjectSerializer<Response>*)new RecordingSettingsSerializer();
     result = ((RecordingSettingsSerializer*)responseSerializer)->ReadObject((RecordingSettings&)response, serializedData);
   }
-  else if (dvbLinkCommand == DVBLINK_REMOTE_ADD_SCHEDULE_CMD || 
+  else if (dvbLinkCommand == DVBLINK_REMOTE_GET_FAVORITES_CMD) {
+      responseSerializer = (XmlObjectSerializer<Response>*)new ChannelFavoritesSerializer();
+      result = ((ChannelFavoritesSerializer*)responseSerializer)->ReadObject((ChannelFavorites&)response, serializedData);
+  }
+  else if (dvbLinkCommand == DVBLINK_REMOTE_GET_SERVER_INFO_CMD) {
+      responseSerializer = (XmlObjectSerializer<Response>*)new ServerInfoSerializer();
+      result = ((ServerInfoSerializer*)responseSerializer)->ReadObject((ServerInfo&)response, serializedData);
+  }
+  else if (dvbLinkCommand == DVBLINK_REMOTE_ADD_SCHEDULE_CMD ||
            dvbLinkCommand == DVBLINK_REMOTE_UPDATE_SCHEDULE_CMD ||
            dvbLinkCommand == DVBLINK_REMOTE_REMOVE_SCHEDULE_CMD ||
            dvbLinkCommand == DVBLINK_REMOTE_REMOVE_RECORDING_CMD || 

@@ -751,7 +751,7 @@ namespace dvblinkremote {
       * @see DVBLinkManualScheduleDayMask
     * @param title of schedule
       */
-    AddManualScheduleRequest(const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title = "");
+      AddManualScheduleRequest(const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title = "", const int recordingsToKeep = 0, const int marginBefore = -1, const int marginAfter = -1);
 
     /**
       * Destructor for cleaning up allocated memory.
@@ -778,8 +778,9 @@ namespace dvblinkremote {
       * @param recordSeriesAnytime an optional constant boolean representing whether to 
       * record only series starting around original program start time or any of them. 
       * Default value is <tt>false</tt>.
-    */
-    AddScheduleByEpgRequest(const std::string& channelId, const std::string& programId, const bool repeat = false, const bool newOnly = false, const bool recordSeriesAnytime = false);
+      * @param recordingsToKeep defines anumbr of recordings to keep in case of series recordings (0 - keep all).
+      */
+      AddScheduleByEpgRequest(const std::string& channelId, const std::string& programId, const bool repeat = false, const bool newOnly = false, const bool recordSeriesAnytime = false, const int recordingsToKeep = 0, const int marginBefore = -1, const int marginAfter = -1);
 
     /**
       * Destructor for cleaning up allocated memory.
@@ -1319,4 +1320,42 @@ namespace dvblinkremote {
     int m_timeMarginAfterScheduledRecordings;
     std::string m_recordingPath;
   };
+
+    /**
+    * Class for getting channel favorites requests.
+    * This is used as input parameter for the IDVBLinkRemoteConnection::GetFavorites method.
+    * @see IDVBLinkRemoteConnection::GetFavorites()
+    */
+    class GetFavoritesRequest : public Request
+    {
+    public:
+        /**
+        * Initializes a new instance of the dvblinkremote::GetFavoritesRequest class.
+        */
+        GetFavoritesRequest();
+
+        /**
+        * Destructor for cleaning up allocated memory.
+        */
+        ~GetFavoritesRequest();
+    };
+
+    /**
+    * Class for getting server information requests.
+    * This is used as input parameter for the IDVBLinkRemoteConnection::GetServerInfo method.
+    * @see IDVBLinkRemoteConnection::GetServerInfo()
+    */
+    class GetServerInfoRequest : public Request
+    {
+    public:
+        /**
+        * Initializes a new instance of the dvblinkremote::GetServerInfoRequest class.
+        */
+        GetServerInfoRequest();
+
+        /**
+        * Destructor for cleaning up allocated memory.
+        */
+        ~GetServerInfoRequest();
+    };
 }

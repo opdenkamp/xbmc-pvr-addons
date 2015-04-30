@@ -118,7 +118,12 @@ msgctxt "#30203"
 msgid "Combine title and episode name for recordings"
 msgstr ""
 
-#empty strings from id 30204 to 32000
+msgctxt "#30204"
+msgid "Group Recordings by Series"
+msgstr ""
+
+#empty strings from id 30205 to 32000
+
 #category labels
 
 msgctxt "#32001"
@@ -181,4 +186,40 @@ msgstr ""
 
 msgctxt "#32016"
 msgid "Delete the entire series"
+msgstr ""
+
+msgctxt "#32017"
+msgid "Margin before (minutes)"
+msgstr ""
+
+msgctxt "#32018"
+msgid "Margin after (minutes)"
+msgstr ""
+
+msgctxt "#32019"
+msgid "New episodes only"
+msgstr ""
+
+msgctxt "#32020"
+msgid "Broadcast anytime"
+msgstr ""
+
+msgctxt "#32021"
+msgid "Number of episodes to keep"
+msgstr ""
+
+msgctxt "#32022"
+msgid "Default"
+msgstr ""
+
+msgctxt "#32023"
+msgid "Keep all"
+msgstr ""
+
+msgctxt "#32024"
+msgid "Playback failed. Server does not support transcoding"
+msgstr ""
+
+msgctxt "#32025"
+msgid "Do not group single recordings"
 msgstr ""

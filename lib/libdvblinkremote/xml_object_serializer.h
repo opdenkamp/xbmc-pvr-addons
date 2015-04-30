@@ -359,6 +359,47 @@ namespace dvblinkremoteserialization {
     bool WriteObject(std::string& serializedData, SetRecordingSettingsRequest& objectGraph);
   };
 
+  class GetFavoritesRequestSerializer : public XmlObjectSerializer<GetFavoritesRequest>
+  {
+  public:
+      GetFavoritesRequestSerializer() : XmlObjectSerializer<GetFavoritesRequest>() { }
+      bool WriteObject(std::string& serializedData, GetFavoritesRequest& objectGraph);
+  };
+
+  class ChannelFavoritesSerializer : public XmlObjectSerializer<ChannelFavorites>
+  {
+  public:
+      ChannelFavoritesSerializer() : XmlObjectSerializer<ChannelFavorites>() { }
+      bool ReadObject(ChannelFavorites& object, const std::string& xml);
+
+  private:
+      class GetFavoritesResponseXmlDataDeserializer : public tinyxml2::XMLVisitor
+      {
+      private:
+          ChannelFavoritesSerializer& m_parent;
+          ChannelFavorites& m_favoritesList;
+
+      public:
+          GetFavoritesResponseXmlDataDeserializer(ChannelFavoritesSerializer& parent, ChannelFavorites& favoritesList);
+          ~GetFavoritesResponseXmlDataDeserializer();
+          bool VisitEnter(const tinyxml2::XMLElement& element, const tinyxml2::XMLAttribute* attribute);
+      };
+  };
+
+  class GetServerInfoRequestSerializer : public XmlObjectSerializer<GetServerInfoRequest>
+  {
+  public:
+      GetServerInfoRequestSerializer() : XmlObjectSerializer<GetServerInfoRequest>() { }
+      bool WriteObject(std::string& serializedData, GetServerInfoRequest& objectGraph);
+  };
+
+  class ServerInfoSerializer : public XmlObjectSerializer<ServerInfo>
+  {
+  public:
+      ServerInfoSerializer() : XmlObjectSerializer<ServerInfo>() { }
+      bool ReadObject(ServerInfo& object, const std::string& xml);
+  };
+
   class ItemMetadataSerializer
   {
   public:

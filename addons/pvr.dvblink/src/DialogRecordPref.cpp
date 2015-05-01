@@ -120,8 +120,6 @@ void CDialogRecordPref::PopulateKeepSpin(CAddonGUISpinControl* spin)
     spin->AddLabel("5", 5);
     spin->AddLabel("6", 6);
     spin->AddLabel("7", 7);
-    spin->AddLabel("8", 8);
-    spin->AddLabel("9", 9);
     spin->AddLabel("10", 10);
 }
 

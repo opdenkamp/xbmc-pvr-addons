@@ -10,11 +10,11 @@ ADDONNAME       = pvr.dvblink
 LIBNAME         = libdvblink-addon
 lib_LTLIBRARIES = libdvblink-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/libdvblinkremote/libdvblinkremote.la
+LIBS            = @abs_top_builddir@/lib/libdvblinkremote/libdvblinkremote.la
 
 include ../Makefile.include.am
 
-INCLUDES+=-Isrc
+INCLUDES+=-I@abs_srcdir@/src
 
 libdvblink_addon_la_SOURCES = src/client.cpp \
                               src/base64.cpp \

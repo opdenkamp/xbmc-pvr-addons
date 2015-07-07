@@ -4,7 +4,7 @@ libjsoncpp_la_SOURCES = src/lib_json/json_reader.cpp \
                         src/lib_json/json_value.cpp \
                         src/lib_json/json_writer.cpp
 
-INCLUDES=-Iinclude/
+INCLUDES=-I@abs_srcdir@/include/
 
 $(LIB): libjsoncpp.la
 	cp -f .libs/libjsoncpp.a .

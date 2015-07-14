@@ -27,7 +27,11 @@
 class CDialogRecordPref
 {
 public:
-    CDialogRecordPref(ADDON::CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_gui* gui, bool recSeries);
+    static const int c_keep_all_recordings = 0;
+    static const int c_default_margin = -1;
+
+public:
+    CDialogRecordPref(ADDON::CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_gui* gui);
 	virtual ~CDialogRecordPref();
 
 	bool Show();
@@ -35,11 +39,21 @@ public:
 	int DoModal();						// returns -1=> load failed, 0=>canceled, 1=>confirmed
 
   // dialog specific params
-	bool RecSeries;						// values returned
-	
+	bool RecSeries;
+    bool newOnly;
+    bool anytime;
+    int marginBefore;
+    int marginAfter;
+    int numberToKeep;
+
 private:
 	CAddonGUIRadioButton *_radioRecEpisode;
 	CAddonGUIRadioButton *_radioRecSeries;
+    CAddonGUIRadioButton *_radioNewOnly;
+    CAddonGUIRadioButton *_radioAnytime;
+    CAddonGUISpinControl *_marginBefore;
+    CAddonGUISpinControl *_marginAfter;
+    CAddonGUISpinControl *_marginNumberToKeep;
 
   // following is needed for every dialog
 private:
@@ -52,6 +66,10 @@ private:
     bool OnFocus(int controlId);
     bool OnInit();
     bool OnAction(int actionId);
+
+    void HideShowSeriesControls(bool bShow);
+    void PopulateMarginSpin(CAddonGUISpinControl* spin);
+    void PopulateKeepSpin(CAddonGUISpinControl* spin);
 
     static bool OnClickCB(GUIHANDLE cbhdl, int controlId);
     static bool OnFocusCB(GUIHANDLE cbhdl, int controlId);

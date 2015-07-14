@@ -1,3 +1,15 @@
+[B]Version 1.9.13.1[/B]
+Added: Extended series settings dialog
+Added: "No grouping for single recording" setting
+Fixed: Long delay when starting transcoded stream from server that does not support it
+Speed and memory use optimizations
+
+[B]Version 1.9.13[/B]
+Fixed: no timers are added from EPG of DVBLink TV Adviser product
+Added: Grouping recordings by series
+Added: Year to the episode title
+Fixed: incorrect available disk space calculations
+
 [B]Version 1.9.12[/B]
 Fixed: platform fixes
 

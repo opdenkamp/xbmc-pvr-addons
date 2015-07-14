@@ -17,6 +17,8 @@ libdvblinkremote_la_SOURCES = channel.cpp \
 			recording_settings.cpp \
 			remove_playback_object_request.cpp \
 			scheduling.cpp \
+			favorites.cpp \
+			server_info.cpp \
 			stop_stream_request.cpp \
 			stream.cpp \
 			stream_request.cpp \

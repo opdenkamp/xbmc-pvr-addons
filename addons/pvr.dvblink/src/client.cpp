@@ -59,6 +59,8 @@ int         g_iBitrate              = DEFAULT_BITRATE;               ///< Bitrat
 std::string g_szAudiotrack          = DEFAULT_AUDIOTRACK;            ///< Audiotrack to include in stream when using transcoding
 bool        g_bUseTimeshift         = DEFAULT_USETIMESHIFT;          ///< Use timeshift
 bool        g_bAddRecEpisode2title  = DEFAULT_ADDRECEPISODE2TITLE;   ///< Concatenate title and episode info for recordings
+bool        g_bGroupRecBySeries = DEFAULT_GROUPRECBYSERIES;         ///< Group Recordings as Directories by series
+bool        g_bNoGroupSingleRec = DEFAULT_NOGROUP_SINGLE_REC;         ///< Do not group single recordings
 CHelper_libXBMC_addon *XBMC = NULL;
 CHelper_libXBMC_pvr   *PVR          = NULL;
 CHelper_libXBMC_gui   *GUI          = NULL;
@@ -212,6 +214,22 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
       g_bAddRecEpisode2title = DEFAULT_ADDRECEPISODE2TITLE;
   }
 
+    /* Read setting "Group recordings by title" from settings.xml */
+    if (!XBMC->GetSetting("group_recordings_by_series", &g_bGroupRecBySeries))
+    {
+        /* If setting is unknown fallback to defaults */
+        XBMC->Log(LOG_ERROR, "Couldn't get 'group_recordings_by_series' setting, falling back to 'true' as default");
+        g_bGroupRecBySeries = DEFAULT_GROUPRECBYSERIES;
+    }
+
+    /* Read setting "Group recordings by title" from settings.xml */
+    if (!XBMC->GetSetting("no_group_for_single_record", &g_bNoGroupSingleRec))
+    {
+        /* If setting is unknown fallback to defaults */
+        XBMC->Log(LOG_ERROR, "Couldn't get 'no_group_for_single_record' setting, falling back to 'false' as default");
+        g_bNoGroupSingleRec = DEFAULT_NOGROUP_SINGLE_REC;
+    }
+
   /* Read setting "height" from settings.xml */
   if (!XBMC->GetSetting("height", &g_iHeight))
   {
@@ -250,7 +268,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   /* Log the current settings for debugging purposes */
   XBMC->Log(LOG_DEBUG, "settings: enable_transcoding='%i' host='%s', port=%i", g_bUseTranscoding, g_szHostname.c_str(), g_lPort);
   
-  dvblinkclient = new DVBLinkClient(XBMC, PVR, GUI, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword, g_bAddRecEpisode2title);
+  dvblinkclient = new DVBLinkClient(XBMC, PVR, GUI, g_szClientname, g_szHostname, g_lPort, g_bShowInfoMSG, g_szUsername, g_szPassword, g_bAddRecEpisode2title, g_bGroupRecBySeries, g_bNoGroupSingleRec);
 
     if (dvblinkclient->GetStatus())
         m_CurStatus = ADDON_STATUS_OK;
@@ -349,6 +367,18 @@ ADDON_STATUS ADDON_SetSetting(const char *settingName, const void *settingValue)
       g_bAddRecEpisode2title = *(bool*)settingValue;
       return ADDON_STATUS_NEED_RESTART;
   }
+  else if (str == "group_recordings_by_series")
+  {
+    XBMC->Log(LOG_INFO, "Changed Setting 'group_recordings_by_series' from %u to %u", g_bGroupRecBySeries, *(int*)settingValue);
+    g_bGroupRecBySeries = *(bool*)settingValue;
+    return ADDON_STATUS_NEED_RESTART;
+  }
+  else if (str == "no_group_for_single_record")
+  {
+      XBMC->Log(LOG_INFO, "Changed Setting 'no_group_for_single_record' from %u to %u", g_bNoGroupSingleRec, *(int*)settingValue);
+      g_bNoGroupSingleRec = *(bool*)settingValue;
+      return ADDON_STATUS_NEED_RESTART;
+  }
   else if (str == "height")
   {
     XBMC->Log(LOG_INFO, "Changed Setting 'height' from %u to %u", g_iHeight, *(int*) settingValue);
@@ -424,6 +454,7 @@ PVR_ERROR GetAddonCapabilities(PVR_ADDON_CAPABILITIES* pCapabilities)
   pCapabilities->bSupportsTV                 = true;
   pCapabilities->bSupportsRadio              = true;
   pCapabilities->bHandlesInputStream         = true;
+  pCapabilities->bSupportsChannelGroups      = true;
   return PVR_ERROR_NO_ERROR;
 }
 
@@ -786,17 +817,26 @@ PVR_ERROR DialogAddChannel(const PVR_CHANNEL &channel)
 
 int GetChannelGroupsAmount(void)
 {
-  return -1;
+    if (dvblinkclient)
+        return dvblinkclient->GetChannelGroupsAmount();
+
+    return -1;
 }
 
 PVR_ERROR GetChannelGroups(ADDON_HANDLE handle, bool bRadio)
 {
-  return PVR_ERROR_NOT_IMPLEMENTED;
+    if (dvblinkclient)
+        return dvblinkclient->GetChannelGroups(handle, bRadio);
+
+    return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 PVR_ERROR GetChannelGroupMembers(ADDON_HANDLE handle, const PVR_CHANNEL_GROUP &group)
 {
-  return PVR_ERROR_NOT_IMPLEMENTED;
+    if (dvblinkclient)
+        return dvblinkclient->GetChannelGroupMembers(handle, group);
+
+    return PVR_ERROR_NOT_IMPLEMENTED;
 }
 
 void DemuxReset(void)

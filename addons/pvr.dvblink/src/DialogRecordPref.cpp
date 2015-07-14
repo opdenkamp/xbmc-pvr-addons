@@ -31,10 +31,21 @@ using namespace ADDON;
 
 #define RADIO_BUTTON_EPISODE			10
 #define RADIO_BUTTON_SERIES				11
+#define SPIN_MARGIN_BEFORE  			12
+#define SPIN_MARGIN_AFTER				13
+#define RADIO_BUTTON_NEW_ONLY			14
+#define RADIO_BUTTON_ANYTIME			15
+#define SPIN_REC_TO_KEEP				16
 
-CDialogRecordPref::CDialogRecordPref(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_gui* gui, bool recSeries)
+CDialogRecordPref::CDialogRecordPref(CHelper_libXBMC_addon* xbmc, CHelper_libXBMC_gui* gui)
 {
-	RecSeries = recSeries;
+	RecSeries = false;
+    newOnly = true;
+    anytime = true;
+    marginBefore = c_default_margin;
+    marginAfter = c_default_margin;
+    numberToKeep = c_keep_all_recordings;
+
     GUI = gui;
     XBMC = xbmc;
 
@@ -58,10 +69,58 @@ bool CDialogRecordPref::OnInit()
 	// init radio buttons
 	_radioRecEpisode = GUI->Control_getRadioButton(_window, RADIO_BUTTON_EPISODE);
 	_radioRecSeries = GUI->Control_getRadioButton(_window, RADIO_BUTTON_SERIES);
+    _radioNewOnly = GUI->Control_getRadioButton(_window, RADIO_BUTTON_NEW_ONLY);
+    _radioAnytime = GUI->Control_getRadioButton(_window, RADIO_BUTTON_ANYTIME);
+    _marginBefore = GUI->Control_getSpin(_window, SPIN_MARGIN_BEFORE);
+    _marginAfter = GUI->Control_getSpin(_window, SPIN_MARGIN_AFTER);
+    _marginNumberToKeep = GUI->Control_getSpin(_window, SPIN_REC_TO_KEEP);
+
 	_radioRecEpisode->SetSelected(!RecSeries);
-	_radioRecSeries->SetSelected(RecSeries);  
+	_radioRecSeries->SetSelected(RecSeries);
+
+    PopulateMarginSpin(_marginBefore);
+    _marginBefore->SetValue(marginBefore);
+
+    PopulateMarginSpin(_marginAfter);
+    _marginAfter->SetValue(marginAfter);
+
+    PopulateKeepSpin(_marginNumberToKeep);
+    _marginNumberToKeep->SetValue(numberToKeep);
+
+    _radioNewOnly->SetSelected(newOnly);
+    _radioAnytime->SetSelected(anytime);
+
+    HideShowSeriesControls(RecSeries);
 
   return true;
+}
+
+void CDialogRecordPref::PopulateMarginSpin(CAddonGUISpinControl* spin)
+{
+    spin->AddLabel(XBMC->GetLocalizedString(32022), c_default_margin);
+    spin->AddLabel("0", 0);
+    spin->AddLabel("1", 1);
+    spin->AddLabel("2", 2);
+    spin->AddLabel("3", 3);
+    spin->AddLabel("4", 4);
+    spin->AddLabel("5", 5);
+    spin->AddLabel("10", 10);
+    spin->AddLabel("15", 15);
+    spin->AddLabel("30", 30);
+    spin->AddLabel("60", 60);
+}
+
+void CDialogRecordPref::PopulateKeepSpin(CAddonGUISpinControl* spin)
+{
+    spin->AddLabel(XBMC->GetLocalizedString(32023), c_keep_all_recordings);
+    spin->AddLabel("1", 1);
+    spin->AddLabel("2", 2);
+    spin->AddLabel("3", 3);
+    spin->AddLabel("4", 4);
+    spin->AddLabel("5", 5);
+    spin->AddLabel("6", 6);
+    spin->AddLabel("7", 7);
+    spin->AddLabel("10", 10);
 }
 
 bool CDialogRecordPref::OnClick(int controlId)
@@ -70,25 +129,44 @@ bool CDialogRecordPref::OnClick(int controlId)
 	{
 		case BUTTON_OK:				// save value from GUI, then FALLS THROUGH TO CANCEL
 			RecSeries = _radioRecSeries->IsSelected();
-		case BUTTON_CANCEL:
+            newOnly = _radioNewOnly->IsSelected();
+            anytime = _radioAnytime->IsSelected();
+            marginBefore = _marginBefore->GetValue();
+            marginAfter = _marginAfter->GetValue();
+            numberToKeep = _marginNumberToKeep->GetValue();
+        case BUTTON_CANCEL:
 		case BUTTON_CLOSE:
 			if (_confirmed == -1)		// if not previously confirmed, set to cancel value
 				_confirmed = 0;			
 			_window->Close();
 			GUI->Control_releaseRadioButton(_radioRecEpisode);
 			GUI->Control_releaseRadioButton(_radioRecSeries);
-			break;
+            GUI->Control_releaseRadioButton(_radioNewOnly);
+            GUI->Control_releaseRadioButton(_radioAnytime);
+            GUI->Control_releaseSpin(_marginBefore);
+            GUI->Control_releaseSpin(_marginAfter);
+            GUI->Control_releaseSpin(_marginNumberToKeep);
+            break;
 		case RADIO_BUTTON_EPISODE:
 			RecSeries = !_radioRecEpisode->IsSelected();
 			_radioRecSeries->SetSelected(RecSeries);
+            HideShowSeriesControls(RecSeries);
 			break;
 		case RADIO_BUTTON_SERIES:
 			RecSeries = _radioRecSeries->IsSelected();
 			_radioRecEpisode->SetSelected(!RecSeries);
+            HideShowSeriesControls(RecSeries);
 			break;
 	}
 
   return true;
+}
+
+void CDialogRecordPref::HideShowSeriesControls(bool bShow)
+{
+    _radioNewOnly->SetVisible(bShow);
+    _radioAnytime->SetVisible(bShow);
+    _marginNumberToKeep->SetVisible(bShow);
 }
 
 bool CDialogRecordPref::OnInitCB(GUIHANDLE cbhdl)

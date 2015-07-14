@@ -16,6 +16,7 @@
     <ClCompile Include="..\..\dvblinkremotecommunication.cpp" />
     <ClCompile Include="..\..\dvblinkremotehttp.cpp" />
     <ClCompile Include="..\..\epg.cpp" />
+    <ClCompile Include="..\..\favorites.cpp" />
     <ClCompile Include="..\..\generic_response.cpp" />
     <ClCompile Include="..\..\item_metadata.cpp" />
     <ClCompile Include="..\..\m3u_playlist.cpp" />
@@ -28,6 +29,7 @@
     <ClCompile Include="..\..\recording_settings.cpp" />
     <ClCompile Include="..\..\remove_playback_object_request.cpp" />
     <ClCompile Include="..\..\scheduling.cpp" />
+    <ClCompile Include="..\..\server_info.cpp" />
     <ClCompile Include="..\..\stop_stream_request.cpp" />
     <ClCompile Include="..\..\stream.cpp" />
     <ClCompile Include="..\..\streaming_capabilities.cpp" />

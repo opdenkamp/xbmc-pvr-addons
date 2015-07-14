@@ -63,6 +63,8 @@ namespace dvblinkremote
     DVBLinkRemoteStatusCode GetStreamingCapabilities(const GetStreamingCapabilitiesRequest& request, StreamingCapabilities& response);
     DVBLinkRemoteStatusCode GetRecordingSettings(const GetRecordingSettingsRequest& request, RecordingSettings& response);
     DVBLinkRemoteStatusCode SetRecordingSettings(const SetRecordingSettingsRequest& request);
+    DVBLinkRemoteStatusCode GetFavorites(const GetFavoritesRequest& request, ChannelFavorites& response);
+    DVBLinkRemoteStatusCode GetServerInfo(const GetServerInfoRequest& request, ServerInfo& response);
     void GetLastError(std::string& err);
 
   private:

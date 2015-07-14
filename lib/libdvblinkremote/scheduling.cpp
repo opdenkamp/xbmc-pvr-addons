@@ -32,22 +32,26 @@ Schedule::Schedule()
 
 }
 
-Schedule::Schedule(const DVBLinkScheduleType scheduleType, const std::string& channelId, const int recordingsToKeep) 
+Schedule::Schedule(const DVBLinkScheduleType scheduleType, const std::string& channelId, const int recordingsToKeep, const int marginBefore, const int marginAfter)
   : m_scheduleType(scheduleType), 
     m_channelId(channelId), 
-    RecordingsToKeep(recordingsToKeep)
-{ 
+    RecordingsToKeep(recordingsToKeep),
+    MarginBefore(marginBefore),
+    MarginAfter(marginAfter)
+{
   m_id = "";
   UserParameter = "";
   ForceAdd = false;
 }
 
-Schedule::Schedule(const DVBLinkScheduleType scheduleType, const std::string& id, const std::string& channelId, const int recordingsToKeep) 
+Schedule::Schedule(const DVBLinkScheduleType scheduleType, const std::string& id, const std::string& channelId, const int recordingsToKeep, const int marginBefore, const int marginAfter)
   : m_scheduleType(scheduleType), 
     m_id(id),
     m_channelId(channelId), 
-    RecordingsToKeep(recordingsToKeep)
-{ 
+    RecordingsToKeep(recordingsToKeep),
+    MarginBefore(marginBefore),
+    MarginAfter(marginAfter)
+{
   UserParameter = "";
   ForceAdd = false;
 }
@@ -72,8 +76,8 @@ Schedule::DVBLinkScheduleType& Schedule::GetScheduleType()
   return m_scheduleType; 
 }
 
-ManualSchedule::ManualSchedule(const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title)
-  : Schedule(SCHEDULE_TYPE_MANUAL, channelId), 
+ManualSchedule::ManualSchedule(const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title, const int recordingsToKeep, const int marginBefore, const int marginAfter)
+    : Schedule(SCHEDULE_TYPE_MANUAL, channelId, recordingsToKeep, marginBefore, marginAfter),
     m_startTime(startTime), 
     m_duration(duration), 
     m_dayMask(dayMask), 
@@ -82,8 +86,8 @@ ManualSchedule::ManualSchedule(const std::string& channelId, const long startTim
 
 }
 
-ManualSchedule::ManualSchedule(const std::string& id, const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title)
-  : Schedule(SCHEDULE_TYPE_MANUAL, id, channelId), 
+ManualSchedule::ManualSchedule(const std::string& id, const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title, const int recordingsToKeep, const int marginBefore, const int marginAfter)
+    : Schedule(SCHEDULE_TYPE_MANUAL, id, channelId, recordingsToKeep, marginBefore, marginAfter),
     m_startTime(startTime), 
     m_duration(duration), 
     m_dayMask(dayMask), 
@@ -112,8 +116,8 @@ long ManualSchedule::GetDayMask()
   return m_dayMask; 
 }
 
-EpgSchedule::EpgSchedule(const std::string& channelId, const std::string& programId, const bool repeat, const bool newOnly, const bool recordSeriesAnytime)
-  : Schedule(SCHEDULE_TYPE_BY_EPG, channelId), 
+EpgSchedule::EpgSchedule(const std::string& channelId, const std::string& programId, const bool repeat, const bool newOnly, const bool recordSeriesAnytime, const int recordingsToKeep, const int marginBefore, const int marginAfter)
+    : Schedule(SCHEDULE_TYPE_BY_EPG, channelId, recordingsToKeep, marginBefore, marginAfter),
     m_programId(programId), 
     Repeat(repeat), 
     NewOnly(newOnly), 
@@ -122,8 +126,9 @@ EpgSchedule::EpgSchedule(const std::string& channelId, const std::string& progra
 
 }
 
-EpgSchedule::EpgSchedule(const std::string& id, const std::string& channelId, const std::string& programId, const bool repeat, const bool newOnly, const bool recordSeriesAnytime)
-  : Schedule(SCHEDULE_TYPE_BY_EPG, id, channelId), 
+EpgSchedule::EpgSchedule(const std::string& id, const std::string& channelId, const std::string& programId, const bool repeat, const bool newOnly, 
+    const bool recordSeriesAnytime, const int recordingsToKeep, const int marginBefore, const int marginAfter)
+    : Schedule(SCHEDULE_TYPE_BY_EPG, id, channelId, recordingsToKeep, marginBefore, marginAfter),
     m_programId(programId), 
     Repeat(repeat), 
     NewOnly(newOnly), 
@@ -153,8 +158,8 @@ AddScheduleRequest::~AddScheduleRequest()
 }
 
 
-AddManualScheduleRequest::AddManualScheduleRequest(const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title)
-  : ManualSchedule(channelId, startTime, duration, dayMask, title), AddScheduleRequest(), Schedule(Schedule::SCHEDULE_TYPE_MANUAL, channelId)
+AddManualScheduleRequest::AddManualScheduleRequest(const std::string& channelId, const long startTime, const long duration, const long dayMask, const std::string& title, const int recordingsToKeep, const int marginBefore, const int marginAfter)
+    : ManualSchedule(channelId, startTime, duration, dayMask, title, recordingsToKeep, marginBefore, marginAfter), AddScheduleRequest(), Schedule(Schedule::SCHEDULE_TYPE_MANUAL, channelId, recordingsToKeep, marginBefore, marginAfter)
 {
 
 }
@@ -164,8 +169,9 @@ AddManualScheduleRequest::~AddManualScheduleRequest()
 
 }
 
-AddScheduleByEpgRequest::AddScheduleByEpgRequest(const std::string& channelId, const std::string& programId, const bool repeat, const bool newOnly, const bool recordSeriesAnytime)
-  : EpgSchedule(channelId, programId, repeat, newOnly, recordSeriesAnytime), AddScheduleRequest(), Schedule(Schedule::SCHEDULE_TYPE_BY_EPG, channelId)
+AddScheduleByEpgRequest::AddScheduleByEpgRequest(const std::string& channelId, const std::string& programId, const bool repeat, const bool newOnly, 
+    const bool recordSeriesAnytime, const int recordingsToKeep, const int marginBefore, const int marginAfter)
+    : EpgSchedule(channelId, programId, repeat, newOnly, recordSeriesAnytime, recordingsToKeep, marginBefore, marginAfter), AddScheduleRequest(), Schedule(Schedule::SCHEDULE_TYPE_BY_EPG, channelId, recordingsToKeep, marginBefore, marginAfter)
 {
 
 }
@@ -186,6 +192,9 @@ bool AddScheduleRequestSerializer::WriteObject(std::string& serializedData, AddS
   if (objectGraph.ForceAdd) {
     rootElement->InsertEndChild(Util::CreateXmlElementWithText(&GetXmlDocument(), "force_add", objectGraph.ForceAdd));
   }
+
+  rootElement->InsertEndChild(Util::CreateXmlElementWithText(&GetXmlDocument(), "margine_before", objectGraph.MarginBefore));
+  rootElement->InsertEndChild(Util::CreateXmlElementWithText(&GetXmlDocument(), "margine_after", objectGraph.MarginAfter));
 
   if (objectGraph.GetScheduleType() == objectGraph.SCHEDULE_TYPE_MANUAL) {
     AddManualScheduleRequest& addManualScheduleRequest = (AddManualScheduleRequest&)objectGraph;

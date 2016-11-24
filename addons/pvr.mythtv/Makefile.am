@@ -10,14 +10,14 @@ ADDONNAME       = pvr.mythtv
 LIBNAME         = libmythtv-addon
 lib_LTLIBRARIES = libmythtv-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/cppmyth/cppmyth/libcppmyth.la
+LIBS            = @abs_top_builddir@/lib/cppmyth/cppmyth/libcppmyth.la
 
 AM_CPPFLAGS = -I@abs_top_srcdir@/lib/cppmyth/cppmyth/src
 
 include ../Makefile.include.am
 
 if HAVE_VERSION_SCRIPT
-libmythtv_addon_la_LDFLAGS = -Wl,--version-script=src/addon.map \
+libmythtv_addon_la_LDFLAGS = -Wl,--version-script=@abs_srcdir@/src/addon.map \
                                   @TARGET_LDFLAGS@
 else
 libmythtv_addon_la_LDFLAGS = @TARGET_LDFLAGS@

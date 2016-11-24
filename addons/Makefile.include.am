@@ -6,10 +6,10 @@ INCLUDES        = -I. -I$(abs_top_srcdir)/xbmc -I$(abs_top_srcdir)/lib @HOST_INC
 WARNINGS        = -Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses
 DEFINES         = @ARCH_DEFINES@ -DUSE_DEMUX -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS
 AM_CXXFLAGS     = -g -O2 -fPIC $(WARNINGS) $(DEFINES) @HOST_CXXFLAGS@
-LIB             = @abs_top_srcdir@/addons/$(ADDONNAME)/addon/@BINPREFIX@$(ADDONBINNAME)@BIN_EXT@
+LIB             = @abs_top_builddir@/addons/$(ADDONNAME)/addon/@BINPREFIX@$(ADDONBINNAME)@BIN_EXT@
 
 clean:
-	-rm -r -f $(LIB) @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@ @abs_top_srcdir@/addons/$(ADDONNAME).@OS@-@ARCHITECTURE@.zip @abs_top_srcdir@/addons/.build/$(ADDONNAME) *.so *.lo *.o *.la *.a *.P *~
+	-rm -r -f $(LIB) @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@ @abs_top_builddir@/addons/$(ADDONNAME).@OS@-@ARCHITECTURE@.zip @abs_top_builddir@/addons/.build/$(ADDONNAME) *.so *.lo *.o *.la *.a *.P *~
 if IS_INTREE_BUILD
 	rm -rf ../../../addons/$(ADDONNAME)
 endif
@@ -25,9 +25,9 @@ $(LIB): @BUILD_TYPE@
 	cp -f @BINPREFIX@$(ADDONBINNAME)@BIN_EXT@ $(LIB)
 
 zip: $(LIB)
-	mkdir -p @abs_top_srcdir@/addons/.build
-	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon @abs_top_srcdir@/addons/.build/$(ADDONNAME)
-	cd @abs_top_srcdir@/addons/.build ; zip -0 -x $(ADDONNAME)/addon.xml.in -r @abs_top_srcdir@/addons/$(ADDONNAME)-@OS@-@ARCHITECTURE@.zip $(ADDONNAME)
+	mkdir -p @abs_top_builddir@/addons/.build
+	cp -r -f @abs_top_srcdir@/addons/$(ADDONNAME)/addon @abs_top_builddir@/addons/.build/$(ADDONNAME)
+	cd @abs_top_builddir@/addons/.build ; zip -0 -x $(ADDONNAME)/addon.xml.in -r @abs_top_builddir@/addons/$(ADDONNAME)-@OS@-@ARCHITECTURE@.zip $(ADDONNAME)
 
 install: @BUILD_TYPE@
 if IS_INTREE_BUILD

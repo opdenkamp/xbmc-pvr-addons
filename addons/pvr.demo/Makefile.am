@@ -10,7 +10,7 @@ ADDONNAME       = pvr.demo
 LIBNAME         = libpvrdemo-addon
 lib_LTLIBRARIES = libpvrdemo-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la
+LIBS            = @abs_top_builddir@/lib/tinyxml/libtinyxml.la
 
 include ../Makefile.include.am
 

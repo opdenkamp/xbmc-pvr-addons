@@ -10,7 +10,7 @@ ADDONNAME       = pvr.dvbviewer
 LIBNAME         = libdvbviewer-addon
 lib_LTLIBRARIES = libdvbviewer-addon.la
 
-LIBS            = @abs_top_srcdir@/lib/tinyxml/libtinyxml.la
+LIBS            = @abs_top_builddir@/lib/tinyxml/libtinyxml.la
 
 include ../Makefile.include.am
 

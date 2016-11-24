@@ -28,9 +28,9 @@ libdvblinkremote_la_SOURCES = channel.cpp \
 			util.cpp \
 			xml_object_serializer_factory.cpp
 
-LIBS= @abs_top_srcdir@/lib/tinyxml2/libtinyxml2.la
+LDADD = @abs_top_builddir@/lib/tinyxml2/libtinyxml2.la
  
-INCLUDES=-I..
+INCLUDES=-I@abs_srcdir@/..
 
 $(LIB): libdvblinkremote.la
 	cp -f .libs/libdvblinkremote.a .

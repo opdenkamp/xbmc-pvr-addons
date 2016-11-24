@@ -241,6 +241,10 @@ AM_CONDITIONAL([HAVE_VERSION_SCRIPT], [test "${HAVE_VERSION_SCRIPT}" = "yes"])
 rm -f tmp.ver
 ### End Linker extra flags
 
+### C++11 support
+m4_include([m4/ax_cxx_compile_stdcxx_11.m4])
+AX_CXX_COMPILE_STDCXX_11(,[mandatory])
+
 HOST_CXXFLAGS="-Wall -Wextra -Wno-missing-field-initializers -Woverloaded-virtual -Wno-parentheses -fPIC $HOST_CXXFLAGS"
 
 AC_SUBST(ARCHITECTURE)

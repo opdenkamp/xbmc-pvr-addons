@@ -25,12 +25,103 @@ AC_ARG_ENABLE([release],
   [use_release=$enableval],
   [use_release=no])
 
-### External dependencies option
-AC_ARG_ENABLE([addons-with-dependencies],
-  [AS_HELP_STRING([--enable-addons-with-dependencies],
-  [enable build of addons that depend on external libraries (default is no)])],
-  [build_addons_with_dependencies=$enableval],
-  [build_addons_with_dependencies=no])
+### argustv addon
+AC_ARG_ENABLE([addon-argustv],
+  [AS_HELP_STRING([--enable-addon-argustv],
+  [enable build of argustv addon (default is yes)])],
+  [build_addon_argustv=$enableval],
+  [build_addon_argustv=yes])
+
+### demo addon
+AC_ARG_ENABLE([addon-demo],
+  [AS_HELP_STRING([--enable-addon-demo],
+  [enable build of demo addon (default is yes)])],
+  [build_addon_demo=$enableval],
+  [build_addon_demo=yes])
+
+### dvblink addon
+AC_ARG_ENABLE([addon-dvblink],
+  [AS_HELP_STRING([--enable-addon-dvblink],
+  [enable build of dvblink addon (default is yes)])],
+  [build_addon_dvblink=$enableval],
+  [build_addon_dvblink=yes])
+
+### dvbviewer addon
+AC_ARG_ENABLE([addon-dvbviewer],
+  [AS_HELP_STRING([--enable-addon-dvbviewer],
+  [enable build of dvbviewer addon (default is yes)])],
+  [build_addon_dvbviewer=$enableval],
+  [build_addon_dvbviewer=yes])
+
+### hts addon
+AC_ARG_ENABLE([addon-hts],
+  [AS_HELP_STRING([--enable-addon-hts],
+  [enable build of hts addon (default is yes)])],
+  [build_addon_hts=$enableval],
+  [build_addon_hts=yes])
+
+### mediaportal-tvserver addon
+AC_ARG_ENABLE([addon-mediaportal-tvserver],
+  [AS_HELP_STRING([--enable-addon-mediaportal-tvserver],
+  [enable build of mediaportal-tvserver addon (default is yes)])],
+  [build_addon_mediaportal_tvserver=$enableval],
+  [build_addon_mediaportal_tvserver=yes])
+
+### mythtv addon
+AC_ARG_ENABLE([addon-mythtv],
+  [AS_HELP_STRING([--enable-addon-mythtv],
+  [enable build of mythtv addon (default is yes)])],
+  [build_addon_mythtv=$enableval],
+  [build_addon_mythtv=yes])
+
+### nextpvr addon
+AC_ARG_ENABLE([addon-nextpvr],
+  [AS_HELP_STRING([--enable-addon-nextpvr],
+  [enable build of nextpvr addon (default is yes)])],
+  [build_addon_nextpvr=$enableval],
+  [build_addon_nextpvr=yes])
+
+### njoy addon
+AC_ARG_ENABLE([addon-njoy],
+  [AS_HELP_STRING([--enable-addon-njoy],
+  [enable build of njoy addon (default is yes)])],
+  [build_addon_njoy=$enableval],
+  [build_addon_njoy=yes])
+
+### vdr-vnsi addon
+AC_ARG_ENABLE([addon-vdr-vnsi],
+  [AS_HELP_STRING([--enable-addon-vdr-vnsi],
+  [enable build of vdr-vnsi addon (default is yes)])],
+  [build_addon_vdr_vnsi=$enableval],
+  [build_addon_vdr_vnsi=yes])
+
+### vuplus addon
+AC_ARG_ENABLE([addon-vuplus],
+  [AS_HELP_STRING([--enable-addon-vuplus],
+  [enable build of vuplus addon (default is yes)])],
+  [build_addon_vuplus=$enableval],
+  [build_addon_vuplus=yes])
+
+### wmc addon
+AC_ARG_ENABLE([addon-wmc],
+  [AS_HELP_STRING([--enable-addon-wmc],
+  [enable build of wmc addon (default is yes)])],
+  [build_addon_wmc=$enableval],
+  [build_addon_wmc=yes])
+
+### filmon addon - external dependencies option
+AC_ARG_ENABLE([addon-filmon],
+  [AS_HELP_STRING([--enable-addon-filmon],
+  [enable build of filmon addon - depends on external libraries (default is no)])],
+  [build_addon_filmon=$enableval],
+  [build_addon_filmon=no])
+
+### iptv addon - external dependencies option
+AC_ARG_ENABLE([addon-iptv],
+  [AS_HELP_STRING([--enable-addon-iptv],
+  [enable build of iptv addon - depends on external libraries (default is no)])],
+  [build_addon_iptv=$enableval],
+  [build_addon_iptv=no])
 
 BUILD_TYPE="debug"
 if test "$use_release" = "yes"; then
@@ -121,7 +212,7 @@ case "${host}" in
 esac
 
 ### External libraries checks
-AC_CHECK_LIB([GL],[main],have_gl=yes, have_gl=no)  
+AC_CHECK_LIB([GL],[main],have_gl=yes, have_gl=no)
 if test "$have_gl" = "yes"; then
   AC_DEFINE([HAVE_GL],[1],["Define to 1 if we have gl"])
 fi
@@ -136,13 +227,73 @@ else
 fi
 echo "GLES2: $have_gles2"
 
-### End external Libraries 
+### End external Libraries
 
-### Build addons with dependencies
-if test "$build_addons_with_dependencies" = "yes"; then
-  echo "Building addons with dependencies"
+### Build argustv addon
+if test "$build_addon_argustv" = "yes"; then
+  echo "Building argustv addon"
+fi
 
-  ### Libs that addons depend on
+### Build demo addon
+if test "$build_addon_demo" = "yes"; then
+  echo "Building demo addon"
+fi
+
+### Build dvblink addon
+if test "$build_addon_dvblink" = "yes"; then
+  echo "Building dvblink addon"
+fi
+
+### Build dvbviewer addon
+if test "$build_addon_dvbviewer" = "yes"; then
+  echo "Building dvbviewer addon"
+fi
+
+### Build hts addon
+if test "$build_addon_hts" = "yes"; then
+  echo "Building hts addon"
+fi
+
+### Build mediaportal-tvserver addon
+if test "$build_addon_mediaportal_tvserver" = "yes"; then
+  echo "Building mediaportal-tvserver addon"
+fi
+
+### Build mythtv addon
+if test "$build_addon_mythtv" = "yes"; then
+  echo "Building mythtv addon"
+fi
+
+### Build nextpvr addon
+if test "$build_addon_nextpvr" = "yes"; then
+  echo "Building nextpvr addon"
+fi
+
+### Build njoy addon
+if test "$build_addon_njoy" = "yes"; then
+  echo "Building njoy addon"
+fi
+
+### Build vdr-vnsi addon
+if test "$build_addon_vdr_vnsi" = "yes"; then
+  echo "Building vdr-vnsi addon"
+fi
+
+### Build vuplus addon
+if test "$build_addon_vuplus" = "yes"; then
+  echo "Building vuplus addon"
+fi
+
+### Build wmc addon
+if test "$build_addon_wmc" = "yes"; then
+  echo "Building wmc addon"
+fi
+
+### Build iptv addon with external dependencies
+if test "$build_addon_iptv" = "yes"; then
+  echo "Building iptv addon"
+
+  ### For iptv addon
   AC_CHECK_LIB([z],[inflate], use_zlib=yes, use_zlib=no)
   if test "$use_zlib" = "yes"; then
     AC_DEFINE([HAVE_ZLIB],[1],["Define to 1 if we have the zlib library"])
@@ -150,8 +301,13 @@ if test "$build_addons_with_dependencies" = "yes"; then
     AC_SUBST(ZLIB_LIBS)
   fi
   echo "Zlib: $use_zlib"
+fi
 
-  # For Filmon
+### Build filmon addon with external dependencies
+if test "$build_addon_filmon" = "yes"; then
+    echo "Building filmon addon"
+
+  # For Filmon addon
   AC_CHECK_LIB(curl, curl_easy_init, [use_curl=yes], [use_curl=no])
   if test "$use_curl" = "yes"; then
     AC_DEFINE([HAVE_CURL],[1],["Define to 1 if we have the curl library"])
@@ -179,9 +335,22 @@ if test "$build_addons_with_dependencies" = "yes"; then
   echo "CryptoCPP: $use_cryptopp"
 fi
 
+AM_CONDITIONAL([ADDON_ARGUSTV], [test "$build_addon_argustv" = "yes"])
+AM_CONDITIONAL([ADDON_DEMO], [test "$build_addon_demo" = "yes"])
+AM_CONDITIONAL([ADDON_DVBLINK], [test "$build_addon_dvblink" = "yes"])
+AM_CONDITIONAL([ADDON_DVBVIEWER], [test "$build_addon_dvbviewer" = "yes"])
+AM_CONDITIONAL([ADDON_HTS], [test "$build_addon_hts" = "yes"])
+AM_CONDITIONAL([ADDON_MEDIAPORTAL_TVSERVER], [test "$build_addon_mediaportal_tvserver" = "yes"])
+AM_CONDITIONAL([ADDON_MYTHTV], [test "$build_addon_mythtv" = "yes"])
+AM_CONDITIONAL([ADDON_NEXTPVR], [test "$build_addon_nextpvr" = "yes"])
+AM_CONDITIONAL([ADDON_NJOY], [test "$build_addon_njoy" = "yes"])
+AM_CONDITIONAL([ADDON_VDR_VNSI], [test "$build_addon_vdr_vnsi" = "yes"])
+AM_CONDITIONAL([ADDON_VUPLUS], [test "$build_addon_vuplus" = "yes"])
+AM_CONDITIONAL([ADDON_WMC], [test "$build_addon_wmc" = "yes"])
+
 ### Addons with dependencies
-AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addons_with_dependencies" = "yes" -a "$use_zlib" = "yes"])
-AM_CONDITIONAL([ADDON_FILMON], [test "$build_addons_with_dependencies" = "yes" -a "$use_curl" = "yes" -a "$use_jsoncpp" = "yes" -a "$use_cryptopp" = "yes"])
+AM_CONDITIONAL([ADDON_IPTVSIMPLE], [test "$build_addon_iptv" = "yes" -a "$use_zlib" = "yes"])
+AM_CONDITIONAL([ADDON_FILMON], [test "$build_addon_filmon" = "yes" -a "$use_curl" = "yes" -a "$use_jsoncpp" = "yes" -a "$use_cryptopp" = "yes"])
 
 ### Check for Intree building
 if test "x${cross_compiling}" = "xyes" || test "x${cross_compiling}" = "xmaybe"; then
@@ -278,7 +447,9 @@ else
 fi
 AC_SUBST(DATADIR)
 
-AC_CONFIG_SUBDIRS([lib/cppmyth])
+if test $build_addon_mythtv; then
+  AC_CONFIG_SUBDIRS([lib/cppmyth])
+fi
 
 ### Keep this in alphabetical order
 AC_CONFIG_FILES([Makefile \
